@@ -29,7 +29,9 @@ test('display entry imports a closed passive graph without publishing namespaces
   // validators, including checked measurement-interval scope. The graph still
   // excludes application adapters and all IO.
   // Native aligned plots add only the shared pure histogram-value formatter.
-  assert.equal(visited.size, 40);
+  // Count bars and canonical temporal charts share the passive key-range gesture helper.
+  assert.ok(visited.has(new URL('../ui/interval-range.mjs', import.meta.url).href));
+  assert.equal(visited.size, 41);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

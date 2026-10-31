@@ -1,5 +1,38 @@
 # Validation record
 
+## Canonical duration timelines — 287
+
+Saved timelines support count and query-supported raw-span mean/p95 using the
+existing interval dataset and canonical renderer. See
+[contract](docs/SAVED_COUNT_TIMELINE.md),
+[storyboard](journeys/287-duration-timeline-storyboard.md) and
+[source/visual review](docs/reviews/DURATION_TIMELINE_REVIEW_287.md).
+
+- Full root `go test ./...` and all 886 frontend tests pass. Workbench/API checks
+  cover finite measures, requested summary support, hidden-child destination
+  eligibility and unchanged width rules. OpenAPI checks pass for 97 operations
+  and 13 observed source-offline handler responses. No evaluator, source operation
+  or dataset schema changed.
+- 100 Hegel Go/JavaScript support/reuse cases and thirteen-step Quint checks pass,
+  rejecting six mutated traces and an unfinished prefix.
+- Final duration journey passes in 38.2 s; count timeline journey281 regression
+  passes in 21.2 s. Exact mean/p95 values, empirical method and support, valid zero,
+  empty intervals, complete-only, held paging, actual pointer/keyboard ranges,
+  staged Run, Reset and saved reopen are checked. Six documentation frames are refreshed.
+- Bombadil passes 30 seconds / 587 snapshots / fifteen phases, independently
+  reaching an applied p95 timeline with four source requests, no pending selection,
+  no overflow and no uncaught errors. Measure/kind/complete-only changes add no reads.
+- The live adapter failure is fixed by omitting absent optional title keys; the
+  real canonical validator is exercised by boundary tests. Screenshot review
+  caught and corrected the zero/no-data legend mismatch. The final four-key
+  duration legend matches cell rendering; authored titles are preserved.
+- Local image `d4ac7236333206d5aa87e49cef782aba841e15f4543717c6c8ee0f193d367773`
+  is built and deployed; eight changed/new UI/API files match served bytes, and
+  the removed count-specific module returns 404. Telemetry and XTDB volumes remain
+  intact. Disposable campaign/capture/browser copies are cleaned; compact results
+  and documentation frames remain.
+
+
 ## Focused-signal authoring — 286
 
 Customize logs/spans stages an exact chosen root query with offset zero in the

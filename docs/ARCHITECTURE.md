@@ -1527,3 +1527,14 @@ parent metadata suggestions, never parent datasets or action bindings. Return re
 only configuration controls, preserving retired source owners and held parent inputs.
 Detached close/focus controls are checked against the current child and mount. See
 [contract](RECENT_ACTIVITY.md#customize-one-signal--286).
+
+
+## Canonical duration timelines — 287
+
+The saved timeline profile accepts count and query-supported duration mean/p95 using
+existing Go measure fields and interval datasets. timeline-view.mjs replaces
+count-specific geometry with the canonical renderer. A shared passive interval-range
+helper emits keys; H1 still derives checked bounds and owns staging. Query support, cell
+availability and interval completeness remain independent. No source operation,
+evaluator or dataset schema was added. See [contract](SAVED_COUNT_TIMELINE.md) and
+[source/visual review](reviews/DURATION_TIMELINE_REVIEW_287.md).

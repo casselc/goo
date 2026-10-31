@@ -9,6 +9,7 @@ import (
 // TimelineViewDeclaration consumes the supplied unsplit time dataset. Bucket
 // width belongs to the parent query; this declaration never requests data or
 // promotes captured counts to rates, population shares or complete telemetry.
+// Duration measures require raw-span summaries from the checked parent query.
 type TimelineViewDeclaration struct {
 	Version string               `json:"version"`
 	Scope   ViewDeclarationScope `json:"scope"`
@@ -37,8 +38,17 @@ func (d TimelineViewDeclaration) Validate(q exploration.Query) error {
 	if err := q.Validate(); err != nil {
 		return err
 	}
-	if d.Display.Value != "count" {
-		return errors.New("timeline supports captured record counts only")
+	available := d.Display.Value == "count"
+	if q.Signal == "spans" && q.Summary == "span-duration" && (d.Display.Value == "duration.mean" || d.Display.Value == "duration.p95") {
+		for _, field := range exploration.ViewMeasureFields(q) {
+			if field.Key == d.Display.Value && field.Aggregation != nil && field.Aggregation.Family == "duration" {
+				available = true
+				break
+			}
+		}
+	}
+	if !available {
+		return errors.New("choose count or a mean/p95 duration supplied by the checked span query")
 	}
 	if !text(d.Display.Title, 120, d.Display.Title != "", false) {
 		return errors.New("timeline title must be bounded valid text")

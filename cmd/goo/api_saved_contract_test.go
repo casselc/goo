@@ -101,11 +101,12 @@ func TestAPISavedEvidenceObservedContracts(t *testing.T) {
 	viewQuery := query
 	viewQuery.GroupBy = []exploration.Field{{Kind: "column", Key: "service"}}
 	viewQuery.BucketMS = 10000
+	viewQuery.Summary = "span-duration"
 	view := workbench.ExplorationView{Version: 1, Title: "Pinned composed definition", Queries: []exploration.Query{viewQuery}, Composition: &workbench.ViewComposition{
 		Version: "goo.composition/1", Kind: workbench.CompositionKind{Name: "stack", Version: 1}, Children: []workbench.ViewCompositionChild{
 			{Aggregate: &workbench.ViewDeclaration{Version: "goo.view/1", Scope: workbench.ViewDeclarationScope{Kind: "record-query", Signal: "spans"}, Kind: workbench.ViewKind{Name: "bar", Version: 1}, Display: workbench.ViewDisplay{Category: "category", Value: "count"}}},
 			{Records: &workbench.RecordViewDeclaration{Version: "goo.view/1", Scope: workbench.ViewDeclarationScope{Kind: "record-query", Signal: "spans"}, Kind: workbench.RecordViewKind{Name: "record-table", Version: 1}, Display: workbench.RecordViewDisplay{Columns: []string{"utc", "summary"}}}},
-			{Timeline: &workbench.TimelineViewDeclaration{Version: "goo.view/1", Scope: workbench.ViewDeclarationScope{Kind: "record-query", Signal: "spans"}, Kind: workbench.TimelineViewKind{Name: "time-bar", Version: 1}, Display: workbench.TimelineViewDisplay{Value: "count"}}},
+			{Timeline: &workbench.TimelineViewDeclaration{Version: "goo.view/1", Scope: workbench.ViewDeclarationScope{Kind: "record-query", Signal: "spans"}, Kind: workbench.TimelineViewKind{Name: "time-bar", Version: 1}, Display: workbench.TimelineViewDisplay{Value: "duration.p95"}}},
 		}}}
 	raw = call("POST", "/exploration-views", "/exploration-views", view, 201)
 	var pinnedView workbench.ExplorationView

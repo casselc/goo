@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+287 extends [saved timelines](SAVED_COUNT_TIMELINE.md) with query-supported raw-span
+duration mean/p95. Numeric/native metrics, rates and grouped time-series authoring
+remain separate. Duration requires an already configured span-duration summary;
+complete intervals do not imply valid duration samples or complete upstream telemetry.
+
 286 adds [focused-signal authoring](RECENT_ACTIVITY.md#customize-one-signal--286)
 from recent activity. Ordinary grouping uses the existing single-query composition;
 missing grouping remains explicit. Specialized histogram/grouped-time questions

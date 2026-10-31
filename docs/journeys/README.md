@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey287](../../journeys/287-duration-timeline-storyboard.md) switches a saved
+span timeline between count, mean and p95, checks exact support and zero/no-data
+semantics, then selects a shared window and saves/reopens for explicit Run.
+
 [Journey286](../../journeys/286-focused-authoring-storyboard.md) customizes one
 root signal into a saved composition, checks explicit grouping for the companion,
 and returns to the held parent page without reading.

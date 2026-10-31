@@ -42638,7 +42638,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.TimelineViewDeclaration",
         "additionalProperties": false,
-        "description": "Captured record counts over the parent query explicit positive bucket width. Exact clipped interval bounds and completeness belong to the supplied time dataset, never the declaration. No rate or population-share semantics."
+        "description": "Captured record counts or query-supported raw-span mean/p95 duration over the parent query explicit positive bucket width. Duration requires spans with summary span-duration, checked semantically by Go. Exact clipped bounds, per-cell support/availability and completeness belong to the supplied time dataset, never the declaration. No rate, population-share or percentile-averaging semantics."
       },
       "workbench.TimelineViewDeclarationInput": {
         "additionalProperties": false,
@@ -42700,7 +42700,7 @@
           "kind",
           "display"
         ],
-        "description": "Captured record counts over the parent query explicit positive bucket width. Exact clipped interval bounds and completeness belong to the supplied time dataset, never the declaration. No rate or population-share semantics."
+        "description": "Captured record counts or query-supported raw-span mean/p95 duration over the parent query explicit positive bucket width. Duration requires spans with summary span-duration, checked semantically by Go. Exact clipped bounds, per-cell support/availability and completeness belong to the supplied time dataset, never the declaration. No rate, population-share or percentile-averaging semantics."
       },
       "workbench.TimelineViewDisplay": {
         "properties": {
@@ -42713,7 +42713,11 @@
           },
           "value": {
             "type": "string",
-            "const": "count"
+            "enum": [
+              "count",
+              "duration.mean",
+              "duration.p95"
+            ]
           }
         },
         "required": [
@@ -42757,7 +42761,11 @@
                 "type": "null"
               }
             ],
-            "const": "count"
+            "enum": [
+              "count",
+              "duration.mean",
+              "duration.p95"
+            ]
           }
         },
         "type": "object",
@@ -42902,7 +42910,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewComposition",
         "additionalProperties": false,
-        "description": "One fixed record query supplies one aggregate, one bounded record-page child and an optional count timeline with explicit query bucket width. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
+        "description": "One fixed record query supplies one aggregate, one bounded record-page child and an optional count/mean/p95 duration timeline with explicit query bucket width. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
       },
       "workbench.ViewCompositionChild": {
         "properties": {
@@ -43237,7 +43245,7 @@
           "kind",
           "children"
         ],
-        "description": "One fixed record query supplies one aggregate, one bounded record-page child and an optional count timeline with explicit query bucket width. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
+        "description": "One fixed record query supplies one aggregate, one bounded record-page child and an optional count/mean/p95 duration timeline with explicit query bucket width. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
       },
       "workbench.ViewDeclaration": {
         "properties": {

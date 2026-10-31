@@ -1,9 +1,9 @@
 # Implementation plan
 
-> Current checkpoint286: focused-signal authoring now connects recent populations
-> to the existing single-query composition and save workflow, retaining exact scope
-> and held parents. Next: supported duration measures in saved timelines, then
-> preservation controls. See the [roadmap](ROADMAP_2026_10_30.md#delivery-and-flow-review-after285).
+> Current checkpoint287: saved timelines use canonical count/duration rendering,
+> query-supported mean/p95 and shared checked interval selection. Next: clarify
+> preservation at the current context while keeping question intent, saved view
+> definitions and captured evidence distinct. See the [roadmap](ROADMAP_2026_10_30.md#delivery-and-flow-review-after285).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),

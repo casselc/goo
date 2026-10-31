@@ -119,14 +119,14 @@ for suffix in ('', 'Input'):
  schemas['workbench.ExplorationView'+suffix]['properties']['displays'].update(maxProperties=2,propertyNames={'enum':['spans','logs']})
  schemas['workbench.ExplorationView'+suffix].setdefault('allOf',[]).extend([{'not':{'required':['displays','breakdowns'],'properties':{'displays':{'required':[signal]},'breakdowns':{'required':[signal]}}}} for signal in ('spans','logs')])
 
-# Bounded composition: required aggregate/records and optional count timeline.
+# Bounded composition: required aggregate/records and optional query-supported timeline.
 for suffix in ('', 'Input'):
  composition=schemas['workbench.ViewComposition'+suffix]
  composition['additionalProperties']=False
  composition['required']=['version','kind','children']
  composition['properties']['kind']['type']='object'
  composition['properties']['version']['const']='goo.composition/1'
- composition['description']='One fixed record query supplies one aggregate, one bounded record-page child and an optional count timeline with explicit query bucket width. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees.'
+ composition['description']='One fixed record query supplies one aggregate, one bounded record-page child and an optional count/mean/p95 duration timeline with explicit query bucket width. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees.'
  for name,kind_name in [('CompositionKind','stack'),('RecordViewKind','record-table')]:
   kind=schemas['workbench.'+name+suffix];kind['additionalProperties']=False
   kind['required']=['name','version']
@@ -145,11 +145,11 @@ for suffix in ('', 'Input'):
  timeline['properties']['version']['const']='goo.view/1'
  for field in ('scope','kind','display'):timeline['properties'][field]['type']='object'
  timeline['properties']['scope']['required']=['kind','signal']
- timeline['description']='Captured record counts over the parent query explicit positive bucket width. Exact clipped interval bounds and completeness belong to the supplied time dataset, never the declaration. No rate or population-share semantics.'
+ timeline['description']='Captured record counts or query-supported raw-span mean/p95 duration over the parent query explicit positive bucket width. Duration requires spans with summary span-duration, checked semantically by Go. Exact clipped bounds, per-cell support/availability and completeness belong to the supplied time dataset, never the declaration. No rate, population-share or percentile-averaging semantics.'
  kind=schemas['workbench.TimelineViewKind'+suffix];kind['additionalProperties']=False;kind['required']=['name','version']
  kind['properties']['name']['enum']=['time-bar','table'];kind['properties']['version']['const']=1
  display=schemas['workbench.TimelineViewDisplay'+suffix];display['additionalProperties']=False;display['required']=['value']
- display['properties']['value']['const']='count';display['properties']['title']['maxLength']=120
+ display['properties']['value']['enum']=['count','duration.mean','duration.p95'];display['properties']['title']['maxLength']=120
  display['properties']['requiresComplete']['type']='boolean'
  record=schemas['workbench.RecordViewDeclaration'+suffix];record['additionalProperties']=False
  record['required']=['version','scope','kind','display']

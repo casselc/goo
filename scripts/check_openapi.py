@@ -571,7 +571,7 @@ def check_document_view_card(spec):
 
 
 def check_timeline_composition(spec):
-    """Temporal intent is optional, count-only and separate from ranked options."""
+    """Temporal intent is optional, finite and separate from ranked options."""
     aggregate = {'version':'goo.view/1','scope':{'kind':'record-query','signal':'spans'},
                  'kind':{'name':'bar','version':1},'display':{'category':'category','value':'count'}}
     records = {'version':'goo.view/1','scope':aggregate['scope'],
@@ -585,8 +585,10 @@ def check_timeline_composition(spec):
         check.validate(valid)
         two = copy.deepcopy(valid); two['children'].pop(); check.validate(two)
         table = copy.deepcopy(valid); table['children'][2]['timeline']['kind']['name']='table'; check.validate(table)
+        for measure in ('duration.mean','duration.p95'):
+            duration=copy.deepcopy(valid);duration['children'][2]['timeline']['display']['value']=measure;check.validate(duration)
         invalid = []
-        for key,value in [('value','rate'),('scale','population'),('start','startMs')]:
+        for key,value in [('value','rate'),('value','duration.p50'),('value','duration.max'),('value','numeric.mean'),('scale','population'),('start','startMs')]:
             bad=copy.deepcopy(valid);bad['children'][2]['timeline']['display'][key]=value;invalid.append(bad)
         bad=copy.deepcopy(valid);bad['children'][2]['timeline']=None;invalid.append(bad)
         bad=copy.deepcopy(valid);bad['children'][2]['records']=records;invalid.append(bad)

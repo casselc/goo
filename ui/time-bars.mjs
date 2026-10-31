@@ -1,3 +1,4 @@
+import {bindIntervalRange} from './interval-range.mjs';
 /* Supplied count-bar snapshots. Question scope and source actions belong to adapters. */
 const global = globalThis;
  const uint=value=>typeof value==='string'&&/^(0|[1-9][0-9]*)$/.test(value)&&value.length<=128;
@@ -27,29 +28,22 @@ const global = globalThis;
    clearRange(){this._clearRange?.();this.selectedKey=null}
    syncSelection(){for(const bar of this.querySelectorAll(':scope > .time-bars-figure > .time-bars > .time-bar')){const selected=this.selectedKey===bar.dataset.key;if(bar.tagName==='BUTTON')bar.setAttribute('aria-pressed',String(selected));else if(bar.tagName==='A'){if(selected)bar.setAttribute('aria-current','true');else bar.removeAttribute('aria-current')}}}
    render(){
-    this.onpointerdown=this.onpointermove=this.onpointerup=this.onpointercancel=this.onkeydown=null;this._ignoreClick=false;this._clearRange=null;const m=model(this.data);this.replaceChildren();this.dataset.state=m.state;
+    this._rangeGesture?.clear();
+    this.onpointerdown=this.onpointermove=this.onpointerup=this.onpointercancel=this.onkeydown=null;this._ignoreClick=false;this._rangeGesture=null;this._clearRange=null;const m=model(this.data);this.replaceChildren();this.dataset.state=m.state;
     if(m.state!=='observed'){this.append(node('p','Time chart unavailable.','time-bars-unavailable'));return}
     const figure=node('figure',undefined,'time-bars-figure'),caption=node('figcaption',m.title),scale=node('p','0–'+m.ceiling+' '+m.unit+' · supplied scale','time-bars-scale'),bars=node('div',undefined,'time-bars');
     for(const p of m.points){const href=safeHref(p.href),tag=href?'a':m.interactive?'button':'span',bar=node(tag,undefined,'time-bar');if(tag==='button')bar.type='button';if(href)bar.href=href;
      bar.dataset.key=p.key;bar.dataset.state=p.state;bar.dataset.positive=String(p.positive);if(p.value!==null)bar.dataset.count=p.value;bar.style.setProperty('--bar-height',p.height+'%');bar.setAttribute('aria-label',p.label);bar.title=p.label;
      if(tag==='span'){bar.setAttribute('role','img')}
-     if(tag==='button'){bar.setAttribute('aria-pressed',String(this.selectedKey===p.key));bar.addEventListener('click',e=>{if(this._ignoreClick&&e.detail>0){this._ignoreClick=false;return}this.dispatchEvent(new CustomEvent('goo-time-select',{bubbles:true,detail:{key:p.key}}))})}else if(href&&this.selectedKey===p.key)bar.setAttribute('aria-current','true');
+     if(tag==='button'){bar.setAttribute('aria-pressed',String(this.selectedKey===p.key));bar.addEventListener('click',e=>{if(!this.isConnected||!this.contains(bar))return;if(this._rangeGesture?.ignoreClick(e)){return}this.dispatchEvent(new CustomEvent('goo-time-select',{bubbles:true,detail:{key:p.key}}))})}else if(href&&this.selectedKey===p.key)bar.setAttribute('aria-current','true');
      if(p.state==='no_data')bar.classList.add('no-data');bars.append(bar)
     }
     const axis=node('div',undefined,'time-axis');axis.append(node('span',m.fromLabel),node('span',m.toLabel));figure.append(caption,scale,bars,axis);this.append(figure);if(m.interactive&&this.hasAttribute('range-select')&&!m.points.some(p=>p.href))this.bindRange(m);
    }
 
    bindRange(m){
-    const currentPlot=()=>this.querySelector(':scope > .time-bars-figure > .time-bars');const currentBars=()=>[...(currentPlot()?.children||[])];let anchor=null,end=null,committed=null,pointer=null;
-    const at=e=>{const b=e.target.closest?.('.time-bar');return b&&currentPlot()?.contains(b)?currentBars().indexOf(b):-1};
-    const paint=()=>{const range=anchor===null?committed:[Math.min(anchor,end),Math.max(anchor,end)];currentBars().forEach((b,i)=>{b.dataset.rangeSelected=String(!!range&&i>=range[0]&&i<=range[1])})};
-    const release=()=>{const live=currentPlot();if(pointer!==null&&live?.hasPointerCapture(pointer))live.releasePointerCapture(pointer);pointer=null};
-    const commit=()=>{if(anchor===null)return;const bars=currentBars();if(bars.length!==m.points.length||!bars[anchor]||!bars[end]||bars.some((b,i)=>b.dataset.key!==m.points[i]?.key)){anchor=end=null;return}committed=[Math.min(anchor,end),Math.max(anchor,end)];this.dispatchEvent(new CustomEvent('goo-time-range',{bubbles:true,detail:{fromKey:bars[committed[0]].dataset.key,toKey:bars[committed[1]].dataset.key}}));anchor=end=null;paint()};
-    const cancel=()=>{release();anchor=end=null;paint()};this._clearRange=()=>{committed=null;cancel()};
-    this.onpointerdown=e=>{const i=at(e);if(e.button!==0||e.pointerType==='touch'||i<0)return;this._ignoreClick=false;anchor=end=i;pointer=e.pointerId;currentPlot().onlostpointercapture=()=>{if(pointer!==null)cancel()};currentPlot().setPointerCapture(pointer);paint();e.preventDefault()};
-    this.onpointermove=e=>{if(pointer!==e.pointerId)return;const x=e.clientX;let nearest=0,distance=Infinity;currentBars().forEach((b,i)=>{const r=b.getBoundingClientRect(),d=Math.abs(x-(r.left+r.width/2));if(d<distance){distance=d;nearest=i}});end=nearest;paint()};
-    this.onpointerup=e=>{if(pointer!==e.pointerId)return;release();this._ignoreClick=true;commit()};this.onpointercancel=cancel;
-    this.onkeydown=e=>{const i=at(e);if(i<0)return;if(e.key==='Escape'){cancel();e.preventDefault();return}if(e.key===' '){e.preventDefault();e.stopPropagation();if(anchor===null){anchor=end=i;paint()}else{end=i;commit()}return}if(e.shiftKey&&['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();anchor=anchor??i;end=Math.max(0,Math.min(currentBars().length-1,i+(e.key==='ArrowRight'?1:-1)));currentBars()[end].focus();paint()}if(e.key==='Enter'&&anchor!==null){e.preventDefault();e.stopPropagation();end=i;commit()}};
+    this._rangeGesture=bindIntervalRange(this,{plot:()=>this.querySelector(':scope > .time-bars-figure > .time-bars'),items:()=>[...(this.querySelector(':scope > .time-bars-figure > .time-bars')?.children||[])],keys:m.points.map(point=>point.key),onRange:(fromKey,toKey)=>this.dispatchEvent(new CustomEvent('goo-time-range',{bubbles:true,detail:{fromKey,toKey}}))});
+    this._clearRange=()=>this._rangeGesture.clear();
    }
 
   }

@@ -611,3 +611,12 @@ Customize logs/spans stages one exact root question from recent activity, with t
 multi-signal parent retained. Grouped questions open an existing composition; missing
 grouping requires an explicit choice. Run remains explicit. See [focused
 authoring](docs/RECENT_ACTIVITY.md#customize-one-signal--286).
+
+
+### Duration measures in saved timelines — 287
+
+Saved timelines now plot count, mean duration or p95 when the span query requests
+duration summaries. Canonical charts retain human units, exact values and support, with
+distinct zero, no-data and unavailable states. Measure changes are local; selected
+windows still stage an explicit Run. See [timeline
+contract](docs/SAVED_COUNT_TIMELINE.md).

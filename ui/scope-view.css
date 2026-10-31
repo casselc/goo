@@ -47,3 +47,9 @@ goo-aligned-histogram{display:block;min-width:0;max-width:100%}goo-aligned-histo
 .scope-histogram-bin-labels{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:2px;font-size:10px;line-height:1.3;text-align:center;font-variant-numeric:tabular-nums}.scope-histogram-bin-labels>span{min-width:0;white-space:normal}.scope-histogram-bin-labels>span>span{display:inline-block;white-space:nowrap}.scope-histogram-bin-unit{display:block;font-size:10px;color:var(--muted,#98a8bf);margin-top:3px}
 
 .scope-native-bin-labels>span>span{white-space:normal;overflow-wrap:anywhere}
+
+.scope-time-interval[data-range-selected=true]{outline:2px solid var(--accent,#79ddc6);outline-offset:-2px;background:#79ddc620}.scope-time-track:has(.scope-time-interval[data-range-selected=true]) .scope-time-interval:not([data-range-selected=true]){opacity:.55}
+
+.scope-time-interval[data-known-zero=true]{border-bottom:3px solid var(--accent,#79ddc6);height:12px}.scope-time-interval[data-state=no_data][data-value-kind=measure]{height:100%;border-bottom:0;background:var(--border,#2b3545);opacity:.2}
+
+.scope-time-legend>.scope-time-no-data-key:before{background:var(--border,#2b3545);opacity:.2}

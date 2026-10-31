@@ -1,3 +1,4 @@
+import {bindIntervalRange} from './interval-range.mjs';
 /* Public passive scoped displays. The host owns scope, requests and selection. */
 import {validateSnapshot, validateDisplay, selectionIntent, scopeIntent, measureValue, supportsSelection, capabilities,displayRows,populationShare,fractionFacts,histogramIntent} from './view-model.mjs';
 import {formatCell,supportText,exactText,categoryText,isFraction,fractionContextText} from './view-values.mjs';
@@ -10,7 +11,7 @@ const n=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefi
 const exact=categoryText;
 const emit=(host,name,detail)=>host.dispatchEvent(new CustomEvent(name,{detail,bubbles:true,composed:true}));
 const svgNode=(tag,attrs)=>{const node=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [key,value] of Object.entries(attrs))node.setAttribute(key,String(value));return node};
-function frozenConfig(value){
+export function frozenConfig(value){
   if(value===undefined)return undefined;
   if(!value||typeof value!=='object'||Array.isArray(value)||![Object.prototype,null].includes(Object.getPrototypeOf(value)))throw TypeError('Supply display options.');
   const keys=Reflect.ownKeys(value);if(keys.length>10)throw TypeError('Too many display options.');
@@ -75,6 +76,8 @@ function table(host,snapshot,display,rows=displayRows(snapshot,display)){
   table.append(head,body);frame.append(table);return frame;
 }
 
+export function timeState(row,key,value){return key==='count'?row.state:value.coordinate!==null?'observed':row.cells?.[key]?.state==='no_data'?'no_data':'unknown'}
+export function timeLegend(field,key){return key==='count'?[['Captured records','scope-time-observed-key'],['No data · zero','scope-time-empty-key'],['Unknown / unreported','scope-time-unknown-key']]:[[field.label+(isFraction(field)?' · 0–100%':''),'scope-time-observed-key'],['Known zero','scope-time-empty-key'],['No data','scope-time-no-data-key'],['Unavailable / unreported','scope-time-unknown-key']];}
 function timeBars(host,snapshot,display){
   const figure=n('figure',undefined,'scope-time'),track=n('div',undefined,'scope-time-track');
   const valueKey=display.value||'count',field=snapshot.fields.find(item=>item.key===valueKey);
@@ -91,17 +94,18 @@ function timeBars(host,snapshot,display){
     const start=BigInt(row.values.fromMs),end=BigInt(row.values.toMs);
     if(start>cursor)addGap(cursor,start);
     cursor=end;
-    const value=values[index],cell=row.cells?.[valueKey],state=valueKey==='count'?row.state:value.coordinate===null?'unknown':value.coordinate===0?'no_data':'observed',button=n('button',undefined,'scope-time-interval');button.type='button';button.dataset.key=row.key;button.dataset.state=state;button.dataset.cellState=value.state;
+    const value=values[index],cell=row.cells?.[valueKey],state=timeState(row,valueKey,value),button=n('button',undefined,'scope-time-interval');button.type='button';button.dataset.key=row.key;button.dataset.state=state;button.dataset.cellState=value.state;button.dataset.valueKind=valueKey==='count'?'count':'measure';button.dataset.knownZero=String(value.coordinate===0);
     button.style.left=percent(start-from)+'%';button.style.width=percent(end-start)+'%';
     const range=utc(row.values.fromMs)+' → '+utc(row.values.toMs),meaning=valueKey==='count'&&row.state==='unknown'?'Unknown coverage':formatCell(field,row.values[valueKey],cell);
     button.title=range+' · '+meaning+' · '+exactText(field,row.values[valueKey],cell,fractionFacts(snapshot,row,valueKey))+(value.reason?' · '+value.reason:'')+' · ['+row.values.fromMs+', '+row.values.toMs+') ms';button.setAttribute('aria-label','Select '+range+' · '+field.label+': '+meaning+(isFraction(field)?' · '+fractionContextText(fractionFacts(snapshot,row,valueKey)):'')+(supportText(cell)?' · '+supportText(cell):''));
     const fill=n('span',undefined,'scope-time-fill');fill.setAttribute('aria-hidden','true');fill.style.height=(value.coordinate!==null&&max?value.coordinate/max*100:0)+'%';button.append(fill);
     if(state==='observed'){const count=n('span',formatCell(field,row.values[valueKey],cell),'scope-time-count');count.setAttribute('aria-hidden','true');button.append(count)}
-    button.onclick=()=>emit(host,'goo-select',selectionIntent(snapshot,row.key));track.append(button);
+    button.onclick=event=>{if(track.isConnected&&host.contains(track)&&!track._rangeGesture?.ignoreClick(event))emit(host,'goo-select',selectionIntent(snapshot,row.key))};track.append(button);
   }
   if(cursor<to)addGap(cursor,to);
+  if(host.hasAttribute('range-select'))track._rangeGesture=bindIntervalRange(track,{plot:()=>track,items:()=>[...track.querySelectorAll('.scope-time-interval')],keys:rows.map(row=>row.key),onRange:(fromKey,toKey)=>emit(host,'goo-interval-range',{fromKey,toKey})});
   const axis=n('figcaption',undefined,'scope-time-axis');axis.append(n('span',utc(snapshot.interval.fromMs)),n('span',utc(snapshot.interval.toMs)));
-  const legend=n('p',undefined,'scope-time-legend');legend.append(n('span',valueKey==='count'?'Captured records':field.label+(isFraction(field)?' · 0–100%':''),'scope-time-observed-key'),n('span',valueKey==='count'?'No data · zero':'Known zero','scope-time-empty-key'),n('span',valueKey==='count'?'Unknown / unreported':'Unavailable / unreported','scope-time-unknown-key'));
+  const legend=n('p',undefined,'scope-time-legend');for(const [label,kind]of timeLegend(field,valueKey))legend.append(n('span',label,kind));
   figure.append(measureLabel(field),track,axis,legend);
   if(gaps.length){const details=n('details',undefined,'scope-view-values');details.append(n('summary',gaps.length+' unreported interval'+(gaps.length===1?'':'s')));const list=n('ul');for(const [start,end] of gaps)list.append(n('li',utc(start.toString())+' → '+utc(end.toString())+' · Unknown, not zero'));details.append(list);figure.append(details)}
   return figure;
@@ -170,8 +174,8 @@ function line(snapshot,display){
 }
 
 class SuppliedElement extends (globalThis.HTMLElement||class {}) {
-  static get observedAttributes(){return ['snapshot','display','field']}
-  connectedCallback(){for(const key of ['snapshot','display','field'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];this[key]=value}this.render()}
+  static get observedAttributes(){return ['snapshot','display','field','range-select']}
+  connectedCallback(){for(const key of ['snapshot','display','field','range-select'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];this[key]=value}this.render()}
   attributeChangedCallback(){this.render()}
   set snapshot(value){this.setInput('snapshot',value)}
   get snapshot(){return this.read('snapshot')}
@@ -190,7 +194,7 @@ class SuppliedElement extends (globalThis.HTMLElement||class {}) {
 class Chart extends SuppliedElement {
   set display(value){this.setInput('display',value)}
   get display(){return this.read('display')}
-  clearRange(){this.querySelector('goo-time-bars')?.clearRange()}
+  clearRange(){this.querySelector('goo-time-bars')?.clearRange();this.querySelector('.scope-time-track')?._rangeGesture?.clear()}
   set selectedKey(value){const bars=this.querySelector('goo-time-bars');if(bars)bars.selectedKey=value}
   get selectedKey(){return this.querySelector('goo-time-bars')?.selectedKey??null}
   render(){

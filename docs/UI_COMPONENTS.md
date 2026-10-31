@@ -1550,10 +1550,11 @@ optional record selection-state controller/notification guards both catalog Appl
 actions. Clearing live configuration is local and preserves record/Keep drafts.
 
 
-## Count timeline presenter — 281
+## Record timeline presenter — 281, 287
 
-`count-timeline.mjs` consumes one supplied time dataset and a typed count declaration.
-It reuses `goo-time-bars` pointer/keyboard range gestures and the shared table display.
+`timeline-view.mjs` consumes one supplied time dataset and a typed count/duration declaration.
+It uses canonical `goo-chart` rendering for intervals and tables, with shared passive
+pointer/keyboard range gestures.
 It emits interval-key intents; the application owns validation, query staging and reads.
 Complete-only follows interval coverage, independently of record paging. See
 [contract](SAVED_COUNT_TIMELINE.md).
@@ -1565,3 +1566,16 @@ Complete-only follows interval coverage, independently of record paging. See
 saved/destination guards. The existing population owner and investigation editor perform
 staging and publication. Display components receive no source or storage authority. See
 [workflow](SAVED_VIEW_FINDINGS.md).
+
+
+## Canonical saved timeline measures — 287
+
+The application timeline presenter uses `goo-chart` for both interval plots and
+all-field tables. `goo-chart[range-select]` emits `goo-interval-range` with ordered
+fromKey/toKey only. The shared passive `interval-range.mjs` binds pointer/keyboard
+gestures for canonical tracks and the existing time-bars primitive; the host still
+validates membership, current owner and exact staged query bounds. No component
+reads telemetry. Valid zero, no-data cells and unknown coverage remain separate;
+canonical formatting retains human units, exact values, support and quantile methods.
+Optional display keys are omitted rather than supplied as undefined. See
+[contract](SAVED_COUNT_TIMELINE.md).
