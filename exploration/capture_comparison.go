@@ -245,6 +245,10 @@ func CompareEvidence(a, b *SavedCapture) (*EvidenceComparison, error) {
 			if err != nil {
 				return nil, err
 			}
+			// Existing evidence receipt algorithms freeze their established bounded
+			// result. The optional authored group profile belongs to pure /compare;
+			// duplicating it here can exceed the immutable receipt's storage budget.
+			r.Breakdown.GroupComparison = nil
 			// Provenance here is validated immutable storage, not caller-held metadata.
 			r.Breakdown.Warnings = []string{"Complete captured group aggregates; never retained inspection rows. Separate source reads, sampling and ingestion coverage remain unverified.", "Share changes are percentage points, not causal attribution. Absent groups have zero captured records; their duration and error shares remain unavailable."}
 		}

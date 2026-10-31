@@ -86,6 +86,7 @@ func CompareCohorts(request ComparisonRequest) (*CohortComparison, error) {
 		return nil, err
 	}
 	result.ViewComparison = cohortViewComparison(request)
+	result.GroupComparison = cohortGroupCountComparison(request, result.ViewComparison)
 	result.HistogramComparison = cohortHistogramComparison(request)
 	return result, nil
 }

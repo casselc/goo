@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+291 adds [aligned group-count comparison](GROUP_COUNT_COMPARISON.md) to the same
+prepared pair. Supplied accounting is not proof of complete upstream telemetry.
+Diagnostic counts/differences are withheld; group scope gestures remain deferred
+until a side-specific action contract is reviewed. Local Find/pages affect display
+only. Existing stored comparison receipts omit the extra transient payload to
+preserve their storage budget and algorithm.
+
 290 adds [authored captured-count comparisons](CAPTURED_COUNT_COMPARISON.md) for
 one ordinary grouping and an exact compatible capture baseline. It compares raw
 record counts only; different filters, numeric/native/status profiles, latency

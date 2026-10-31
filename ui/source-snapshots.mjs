@@ -1,3 +1,4 @@
+import {asGroupComparison,categoryKey} from './group-count-comparison.mjs';
 /* Trusted application admission for known Go exploration response slots.
    Generic components/imports never promote JSON claims into source guarantees. */
 import {createSourceAdapter,asComparison,importSnapshot,getSnapshotInfo,asHistogramComparison} from './snapshots.mjs';
@@ -86,10 +87,26 @@ export function importComparisonResult(data,requested){
   for(const side of ['baseline','selection'])sameQuestion(requested?.[side]?.question,data.histogramComparison?.[side]?.scope?.selector);
   normalized={...data,histogramComparison:asHistogramComparison({...data.histogramComparison,baseline:held(data.histogramComparison.baseline),selection:held(data.histogramComparison.selection)})};
  }
- if(data.viewComparison===undefined||data.viewComparison===null)return normalized;
+ if(data.viewComparison===undefined||data.viewComparison===null){if(data.groupComparison!==undefined)throw Error('Group comparison requires its prepared summary comparison.');return normalized;}
   for(const side of ['baseline','selection'])sameQuestion(requested?.[side]?.question,data.viewComparison?.[side]?.scope?.selector);
   // /compare computes over browser-supplied cohorts. The HTTP response is not a
   // fresh authoritative source read; both operands remain conservative imports.
 
-  return {...normalized,viewComparison:asComparison({...data.viewComparison,baseline:held(data.viewComparison.baseline),selection:held(data.viewComparison.selection)})};
+  const viewComparison=asComparison({...data.viewComparison,baseline:held(data.viewComparison.baseline),selection:held(data.viewComparison.selection)});
+  if(data.groupComparison===undefined)return {...normalized,viewComparison};
+  if(data.groupComparison===null)throw Error('Omit an unavailable group comparison rather than null.');
+  const canonical=x=>Array.isArray(x)?x.map(canonical):x&&typeof x==='object'?Object.fromEntries(Object.keys(x).sort().map(k=>[k,canonical(x[k])])):x;
+  const group=asGroupComparison(data.groupComparison),equal=(a,b)=>JSON.stringify(canonical(a))===JSON.stringify(canonical(b));
+  if(group.state!==data.viewComparison.state||(group.reason||'')!==(data.viewComparison.reason||''))throw Error('Group comparison decision differs from its summary comparison.');
+  for(const side of ['baseline','selection']){
+   sameQuestion(requested?.[side]?.question,group[side]?.scope?.selector);
+   if(!equal(group[side],data.viewComparison[side]))throw Error('Group comparison differs from the prepared summary operand.');
+   const input=requested[side],accounting=input.state==='changed_between_reads'?'diagnostic':'coherent';
+   if(group[side].sourceBasis!==input.basis||(group[side].capturedAt||'')!==(input.capturedAt||'')||group[side].rows[0].values.count!==input.count)throw Error('Group operand identity, clock or total differs from its requested held observation.');
+   if(group[side+'Accounting']!==accounting)throw Error('Group accounting differs from its requested held observation.');
+  }
+  const maps={};for(const side of ['baseline','selection']){const groups=requested[side].groups;if(!Array.isArray(groups)||groups.length>1000)throw Error('Requested group partition is unavailable.');maps[side]=new Map(groups.map(row=>[categoryKey(row.g0===undefined?null:row.g0),row]));if(maps[side].size!==groups.length)throw Error('Duplicate requested group.');}
+  const union=new Set([...maps.baseline.keys(),...maps.selection.keys()]);if(union.size!==group.rows.length||group.rows.some(row=>!union.has(row.key)))throw Error('Returned group comparison differs from the full requested union.');
+  for(const row of group.rows)for(const side of ['baseline','selection']){const original=maps[side].get(row.key),diagnostic=group[side+'Accounting']==='diagnostic',presence=original?'present':diagnostic?'unknown':'absent';if(row[side].presence!==presence||!diagnostic&&row[side].value!==(original?.count||'0'))throw Error('Returned group membership/count differs from the requested observation.');}
+  return {...normalized,viewComparison,groupComparison:asGroupComparison({...group,baseline:viewComparison.baseline,selection:viewComparison.selection})};
 }

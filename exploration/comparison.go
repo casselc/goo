@@ -46,6 +46,7 @@ type ValueComparison struct {
 	DifferencePP     string             `json:"differencePP"`
 }
 type CohortComparison struct {
+	GroupComparison     *GroupCountComparison    `json:"groupComparison,omitempty"`
 	HistogramComparison *ViewHistogramComparison `json:"histogramComparison,omitempty"`
 	ViewComparison      *ViewComparison          `json:"viewComparison,omitempty"`
 	AggregateOnly       bool                     `json:"aggregateOnly,omitempty"`

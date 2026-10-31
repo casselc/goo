@@ -329,3 +329,69 @@ func TestDistributionEvidenceReceiptPreservesExplicitAlgorithm(t *testing.T) {
 		t.Fatal("old numeric evidence reinterpreted", e)
 	}
 }
+
+func TestSavedComparisonKeepsReceiptBudgetSeparateFromAuthoredGroups(t *testing.T) {
+	const groups = 400
+	makeCapture := func(id string, count int) *exploration.SavedCapture {
+		q := exploration.Query{Signal: "spans", Environment: "prod", FromMS: 1000, ToMS: 61000, Limit: 100, GroupBy: []exploration.Field{{Kind: "attribute", Key: "service"}}}
+		r := &exploration.Result{Question: q, CapturedAt: "2026-10-31T00:00:00Z", Count: fmt.Sprint(groups * count), State: "observed", Basis: strings.Repeat("c", 64)}
+		for i := range groups {
+			r.Groups = append(r.Groups, json.RawMessage(fmt.Sprintf(`{"g0":"group-%04d","count":"%d"}`, i, count)))
+		}
+		return &exploration.SavedCapture{CaptureReceipt: exploration.CaptureReceipt{Version: 1, ID: id, Title: "Stored groups", CapturedAt: r.CapturedAt, Question: exploration.CaptureQuestion{Kind: "explore", Explore: &q}}, Explore: r}
+	}
+	a, b := makeCapture(strings.Repeat("a", 64), 1), makeCapture(strings.Repeat("b", 64), 2)
+	ac, err := exploration.CohortFromResult(a.Explore)
+	if err != nil {
+		t.Fatal(err)
+	}
+	bc, err := exploration.CohortFromResult(b.Explore)
+	if err != nil {
+		t.Fatal(err)
+	}
+	pure, err := exploration.CompareCohorts(exploration.ComparisonRequest{Baseline: ac, Selection: bc})
+	if err != nil || pure.GroupComparison == nil || len(pure.GroupComparison.Rows) != groups {
+		t.Fatal("authored comparison lost its group profile", err)
+	}
+	expected, err := exploration.CompareEvidence(a, b)
+	if err != nil || expected.Breakdown == nil || expected.Breakdown.GroupComparison != nil || len(expected.Breakdown.Rows) != groups {
+		t.Fatal("receipt profile changed", err)
+	}
+	// Guard the actual failure boundary, not a constant byte-for-byte fixture:
+	// the independently useful authored profile must not inflate this receipt.
+	receipt := ComparisonReceipt{Version: 1, Algorithm: ComparisonAlgorithm, RecordedAt: "2026-10-31T00:00:00Z", Result: expected}
+	before, err := json.Marshal(receipt)
+	if err != nil || len(before) >= MaxBytes {
+		t.Fatal("established receipt no longer fits", len(before), err)
+	}
+	copyResult := *expected
+	copyBreakdown := *expected.Breakdown
+	copyBreakdown.GroupComparison = pure.GroupComparison
+	copyResult.Breakdown = &copyBreakdown
+	receipt.Result = &copyResult
+	inflated, err := json.Marshal(receipt)
+	if err != nil || len(inflated) <= MaxBytes {
+		t.Fatal("fixture no longer exercises receipt budget regression", len(inflated), err)
+	}
+	store := Store{Dir: t.TempDir()}
+	saved, err := store.CreateComparison(a.ID, b.ID, expected, func(id string) (*exploration.SavedCapture, error) {
+		if id == a.ID {
+			return a, nil
+		}
+		if id == b.ID {
+			return b, nil
+		}
+		return nil, fmt.Errorf("missing capture")
+	})
+	if err != nil {
+		t.Fatal("previously bounded comparison cannot publish", err)
+	}
+	reopened, err := store.LoadComparison(saved.ID)
+	if err != nil || reopened.Algorithm != ComparisonAlgorithm || reopened.Result.Breakdown.GroupComparison != nil || len(reopened.Result.Breakdown.Rows) != groups {
+		t.Fatal("receipt reopen changed established result", err)
+	}
+	if pure.GroupComparison == nil || len(pure.GroupComparison.Rows) != groups {
+		t.Fatal("receipt projection mutated pure comparison")
+	}
+	t.Logf("groups=%d receipt=%d authored-profile-inflated=%d budget=%d", groups, len(before), len(inflated), MaxBytes)
+}

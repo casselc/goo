@@ -22,6 +22,8 @@ type CapturedCountViewKind struct {
 }
 type CapturedCountViewDisplay struct {
 	Value string `json:"value"`
+	View  string `json:"view,omitempty"`
+	Order string `json:"order,omitempty"`
 	Title string `json:"title,omitempty"`
 }
 
@@ -30,8 +32,10 @@ func (d *CapturedCountViewDisplay) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &fields); err != nil {
 		return err
 	}
-	if title, ok := fields["title"]; ok && bytes.Equal(bytes.TrimSpace(title), []byte("null")) {
-		return errors.New("omit unused comparison title rather than supplying null")
+	for _, name := range []string{"title", "view", "order"} {
+		if raw, ok := fields[name]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+			return errors.New("omit unused comparison display options rather than supplying null")
+		}
 	}
 	type wire CapturedCountViewDisplay
 	var value wire
@@ -53,6 +57,12 @@ func (d CapturedCountViewDeclaration) Validate(q exploration.Query) error {
 	}
 	if !text(d.Display.Title, 120, d.Display.Title != "", false) {
 		return errors.New("comparison title must be bounded valid text")
+	}
+	if d.Display.View != "" && d.Display.View != "summary" && d.Display.View != "groups" {
+		return errors.New("comparison view requires summary or groups")
+	}
+	if d.Display.Order != "" && d.Display.Order != "change" && d.Display.Order != "label" {
+		return errors.New("comparison order requires change or label")
 	}
 	return exploration.ValidateCapturedCountQuery(q)
 }

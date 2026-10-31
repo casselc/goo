@@ -1,5 +1,12 @@
 # Architecture
 
+[Aligned group-count comparison](GROUP_COUNT_COMPARISON.md) is an optional closed
+profile on the existing pure comparison response. It shares summary operands,
+validates supplied partition accounting and admits exact aligned rows without
+source attestations. The passive component owns local display operations; the
+application binds the pair to requested cohorts. Existing evidence algorithms
+omit the extra envelope so receipt budgets remain unchanged.
+
 [Authored captured-count comparison](CAPTURED_COUNT_COMPARISON.md) adds one closed
 composition role referencing an immutable capture ID. The application prepares
 stored evidence, checks both root definitions and invokes existing pure cohort

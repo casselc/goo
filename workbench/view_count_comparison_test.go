@@ -93,3 +93,34 @@ func TestCapturedCountCompositionRejectsMalformedRolesAndEligibility(t *testing.
 		t.Fatal("second display vocabulary accepted")
 	}
 }
+
+func TestCapturedCountGroupsPresentationIsBoundedAndReusable(t *testing.T) {
+	v := compositionView()
+	declaration := countComparison(v.Queries[0])
+	declaration.Display.View = "groups"
+	declaration.Display.Order = "label"
+	v.Composition.Children = append(v.Composition.Children, ViewCompositionChild{Comparison: declaration})
+	if err := v.Validate(); err != nil {
+		t.Fatal(err)
+	}
+	reused, err := ReuseViewComposition(*v.Composition, v.Queries[0], v.Queries[0])
+	if err != nil || reused.Children[2].Comparison.Display.View != "groups" || reused.Children[2].Comparison.Display.Order != "label" {
+		t.Fatal("presentation lost on reuse", err)
+	}
+	for _, bad := range []CapturedCountViewDisplay{{Value: "count", View: "histogram"}, {Value: "count", Order: "rate"}} {
+		declaration.Display = bad
+		if declaration.Validate(v.Queries[0]) == nil {
+			t.Fatal("unknown group display accepted")
+		}
+	}
+	for _, raw := range []string{`{"value":"count","view":null}`, `{"value":"count","order":null}`, `{"value":"count","find":"hidden-query"}`} {
+		var d CapturedCountViewDisplay
+		if json.Unmarshal([]byte(raw), &d) == nil {
+			t.Fatal("unknown or null display option accepted", raw)
+		}
+	}
+	declaration.Display = CapturedCountViewDisplay{Value: "count", View: "", Order: ""}
+	if err := declaration.Validate(v.Queries[0]); err != nil {
+		t.Fatal("optional default convention changed", err)
+	}
+}

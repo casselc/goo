@@ -192,3 +192,8 @@ are optional unique siblings, at most four children, with local order/visibility
 The comparison uses the parent held aggregate and an explicitly prepared baseline;
 record paging never replaces either compared count. Saving stores the reference,
 not comparison evidence.
+
+
+291 adds [Groups presentation](GROUP_COUNT_COMPARISON.md) within the existing
+comparison child. It creates no additional role, query or preparation action.
+Local presentation changes retain pending record selection and the held pair.

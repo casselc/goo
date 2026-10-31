@@ -76,3 +76,12 @@ flowchart LR
 The [reviewed proposal](AUTHORED_COMPARISON_PROPOSAL.md) records the design history;
 [delivery review](reviews/AUTHORED_COMPARISON_REVIEW_290.md) and
 [validation](../VALIDATION.md) distinguish source review from executed checks.
+
+
+## Compare groups — 291
+
+[Groups](GROUP_COUNT_COMPARISON.md) is a local alternative to Summary over the
+same prepared pair, with exact aligned counts, bounded search/order/display pages
+and a shared scale. Optional `display.view` and `display.order` save presentation
+without saving evidence. The original acquisition, eligibility and retirement
+rules remain in force.

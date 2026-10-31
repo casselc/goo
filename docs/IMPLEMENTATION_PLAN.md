@@ -1,10 +1,9 @@
 # Implementation plan
 
-> Current checkpoint290: an authored comparison uses one immutable captured
-> baseline and the held parent count, with explicit acquisition and canonical
-> zero/disagreement semantics. Next: design a bounded aligned group-count breakdown
-> answering which groups account for the total change, before expanding measures.
-> See the [roadmap](ROADMAP_2026_10_30.md#captured-count-comparison-delivery-and-next-investigation-step--290).
+> Current checkpoint291: aligned group counts reuse a prepared pair through local
+> display controls, saved presentation and held record paging. Next: design an
+> explicit side-specific group staging contract before adding scope actions.
+> See the [roadmap](ROADMAP_2026_10_30.md#aligned-group-count-delivery-and-next-scope-contract--291).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),

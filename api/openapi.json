@@ -10078,6 +10078,16 @@
           "field": {
             "$ref": "#/components/schemas/exploration.Field"
           },
+          "groupComparison": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.GroupCountComparison"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "histogramComparison": {
             "anyOf": [
               {
@@ -10208,6 +10218,23 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/exploration.FieldInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "groupComparison": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.GroupCountComparisonInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
                 "type": "null"
@@ -12692,6 +12719,793 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.GaugeChange"
+      },
+      "exploration.GroupCountCell": {
+        "properties": {
+          "presence": {
+            "type": "string",
+            "enum": [
+              "present",
+              "absent",
+              "unknown"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "derived",
+              "unavailable"
+            ]
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)$",
+                "maxLength": 20
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "presence",
+          "state",
+          "value"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.GroupCountCell",
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "properties": {
+              "state": {
+                "const": "derived"
+              },
+              "presence": {
+                "const": "present"
+              },
+              "value": {
+                "type": "string",
+                "pattern": "^[1-9][0-9]*$"
+              }
+            }
+          },
+          {
+            "properties": {
+              "state": {
+                "const": "derived"
+              },
+              "presence": {
+                "const": "absent"
+              },
+              "value": {
+                "const": "0"
+              }
+            }
+          },
+          {
+            "properties": {
+              "state": {
+                "const": "unavailable"
+              },
+              "presence": {
+                "enum": [
+                  "present",
+                  "unknown"
+                ]
+              },
+              "value": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "reason"
+            ]
+          }
+        ]
+      },
+      "exploration.GroupCountCellInput": {
+        "additionalProperties": false,
+        "properties": {
+          "presence": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "value": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.GroupCountCell"
+      },
+      "exploration.GroupCountComparison": {
+        "properties": {
+          "baseline": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/scopedview.Dataset"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object",
+            "properties": {
+              "shape": {
+                "const": "summary"
+              },
+              "origin": {
+                "const": "browser-held"
+              },
+              "quality": {
+                "properties": {
+                  "extent": {
+                    "const": "unknown"
+                  },
+                  "sampling": {
+                    "const": "unknown"
+                  }
+                }
+              }
+            },
+            "not": {
+              "required": [
+                "completeness"
+              ]
+            }
+          },
+          "baselineAccounting": {
+            "type": "string",
+            "enum": [
+              "coherent",
+              "diagnostic"
+            ]
+          },
+          "field": {
+            "$ref": "#/components/schemas/exploration.Field"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "rows": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.GroupCountRow"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "array",
+            "maxItems": 2000
+          },
+          "selection": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/scopedview.Dataset"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object",
+            "properties": {
+              "shape": {
+                "const": "summary"
+              },
+              "origin": {
+                "const": "browser-held"
+              },
+              "quality": {
+                "properties": {
+                  "extent": {
+                    "const": "unknown"
+                  },
+                  "sampling": {
+                    "const": "unknown"
+                  }
+                }
+              }
+            },
+            "not": {
+              "required": [
+                "completeness"
+              ]
+            }
+          },
+          "selectionAccounting": {
+            "type": "string",
+            "enum": [
+              "coherent",
+              "diagnostic"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "no_data",
+              "diagnostic"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "const": "goo.group-count-comparison/1"
+          }
+        },
+        "required": [
+          "version",
+          "baseline",
+          "selection",
+          "field",
+          "state",
+          "baselineAccounting",
+          "selectionAccounting",
+          "rows"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.GroupCountComparison",
+        "additionalProperties": false,
+        "description": "Exact aligned count union of compatible supplied partitions, sharing summary operand identities. Coherent accounting proves only supplied group sums; no source completeness witness. Diagnostic side counts and every delta are withheld. No extra source read or causal/statistical attribution.",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "baselineAccounting": {
+                  "const": "diagnostic"
+                }
+              },
+              "required": [
+                "baselineAccounting"
+              ]
+            },
+            "then": {
+              "properties": {
+                "rows": {
+                  "items": {
+                    "properties": {
+                      "baseline": {
+                        "properties": {
+                          "state": {
+                            "const": "unavailable"
+                          },
+                          "value": {
+                            "type": "null"
+                          },
+                          "presence": {
+                            "enum": [
+                              "present",
+                              "unknown"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "rows": {
+                  "items": {
+                    "properties": {
+                      "baseline": {
+                        "properties": {
+                          "state": {
+                            "const": "derived"
+                          },
+                          "value": {
+                            "type": "string"
+                          },
+                          "presence": {
+                            "enum": [
+                              "present",
+                              "absent"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "selectionAccounting": {
+                  "const": "diagnostic"
+                }
+              },
+              "required": [
+                "selectionAccounting"
+              ]
+            },
+            "then": {
+              "properties": {
+                "rows": {
+                  "items": {
+                    "properties": {
+                      "selection": {
+                        "properties": {
+                          "state": {
+                            "const": "unavailable"
+                          },
+                          "value": {
+                            "type": "null"
+                          },
+                          "presence": {
+                            "enum": [
+                              "present",
+                              "unknown"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "rows": {
+                  "items": {
+                    "properties": {
+                      "selection": {
+                        "properties": {
+                          "state": {
+                            "const": "derived"
+                          },
+                          "value": {
+                            "type": "string"
+                          },
+                          "presence": {
+                            "enum": [
+                              "present",
+                              "absent"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baselineAccounting": {
+                      "const": "diagnostic"
+                    }
+                  },
+                  "required": [
+                    "baselineAccounting"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selectionAccounting": {
+                      "const": "diagnostic"
+                    }
+                  },
+                  "required": [
+                    "selectionAccounting"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "rows": {
+                  "items": {
+                    "properties": {
+                      "change": {
+                        "properties": {
+                          "state": {
+                            "const": "unavailable"
+                          },
+                          "value": {
+                            "type": "null"
+                          }
+                        },
+                        "required": [
+                          "reason"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "state": {
+                  "const": "diagnostic"
+                }
+              },
+              "required": [
+                "reason"
+              ]
+            },
+            "else": {
+              "properties": {
+                "rows": {
+                  "items": {
+                    "properties": {
+                      "change": {
+                        "properties": {
+                          "state": {
+                            "const": "derived"
+                          },
+                          "value": {
+                            "type": "string",
+                            "pattern": "^(0|-?[1-9][0-9]*)$",
+                            "maxLength": 21
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "state": {
+                  "enum": [
+                    "observed",
+                    "no_data"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "exploration.GroupCountComparisonInput": {
+        "additionalProperties": false,
+        "properties": {
+          "baseline": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/scopedview.DatasetInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "baselineAccounting": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "field": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.FieldInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rows": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.GroupCountRowInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "selection": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/scopedview.DatasetInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "selectionAccounting": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.GroupCountComparison"
+      },
+      "exploration.GroupCountRow": {
+        "properties": {
+          "baseline": {
+            "$ref": "#/components/schemas/exploration.GroupCountCell"
+          },
+          "change": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "state",
+              "value",
+              "unit"
+            ],
+            "properties": {
+              "state": {
+                "enum": [
+                  "derived",
+                  "unavailable"
+                ]
+              },
+              "value": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^(0|-?[1-9][0-9]*)$",
+                    "maxLength": 21
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "unit": {
+                "const": "records"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            }
+          },
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4097,
+            "description": "Exactly 0 for null, otherwise 1 plus the category value; runtime enforces the 4097 UTF-8 byte bound."
+          },
+          "selection": {
+            "$ref": "#/components/schemas/exploration.GroupCountCell"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4096
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "key",
+          "value",
+          "baseline",
+          "selection",
+          "change"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.GroupCountRow",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "anyOf": [
+              {
+                "properties": {
+                  "baseline": {
+                    "properties": {
+                      "presence": {
+                        "const": "present"
+                      }
+                    },
+                    "required": [
+                      "presence"
+                    ]
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "selection": {
+                    "properties": {
+                      "presence": {
+                        "const": "present"
+                      }
+                    },
+                    "required": [
+                      "presence"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "exploration.GroupCountRowInput": {
+        "additionalProperties": false,
+        "properties": {
+          "baseline": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.GroupCountCellInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "change": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ViewChangeInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "selection": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.GroupCountCellInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "value": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.GroupCountRow"
       },
       "exploration.InstrumentationHandoff": {
         "properties": {
@@ -40482,6 +41296,14 @@
       },
       "workbench.CapturedCountViewDisplay": {
         "properties": {
+          "order": {
+            "type": "string",
+            "enum": [
+              "",
+              "change",
+              "label"
+            ]
+          },
           "title": {
             "type": "string",
             "maxLength": 120
@@ -40489,6 +41311,14 @@
           "value": {
             "type": "string",
             "const": "count"
+          },
+          "view": {
+            "type": "string",
+            "enum": [
+              "",
+              "summary",
+              "groups"
+            ]
           }
         },
         "required": [
@@ -40501,6 +41331,21 @@
       "workbench.CapturedCountViewDisplayInput": {
         "additionalProperties": false,
         "properties": {
+          "order": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "",
+              "change",
+              "label"
+            ]
+          },
           "title": {
             "anyOf": [
               {
@@ -40522,6 +41367,21 @@
               }
             ],
             "const": "count"
+          },
+          "view": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "",
+              "summary",
+              "groups"
+            ]
           }
         },
         "type": "object",

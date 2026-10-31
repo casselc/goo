@@ -3618,6 +3618,16 @@
       "field": {
         "$ref": "#/components/schemas/exploration.Field"
       },
+      "groupComparison": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.GroupCountComparison"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "histogramComparison": {
         "anyOf": [
           {
@@ -3748,6 +3758,23 @@
         "anyOf": [
           {
             "$ref": "#/components/schemas/exploration.FieldInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "groupComparison": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.GroupCountComparisonInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"
@@ -6206,6 +6233,377 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.GaugeChange"
+  },
+  "exploration.GroupCountCell": {
+    "properties": {
+      "presence": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "presence",
+      "state",
+      "value"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.GroupCountCell"
+  },
+  "exploration.GroupCountCellInput": {
+    "additionalProperties": false,
+    "properties": {
+      "presence": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "reason": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "state": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "value": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.GroupCountCell"
+  },
+  "exploration.GroupCountComparison": {
+    "properties": {
+      "baseline": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/scopedview.Dataset"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "baselineAccounting": {
+        "type": "string"
+      },
+      "field": {
+        "$ref": "#/components/schemas/exploration.Field"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "rows": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.GroupCountRow"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selection": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/scopedview.Dataset"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selectionAccounting": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "baseline",
+      "selection",
+      "field",
+      "state",
+      "baselineAccounting",
+      "selectionAccounting",
+      "rows"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.GroupCountComparison"
+  },
+  "exploration.GroupCountComparisonInput": {
+    "additionalProperties": false,
+    "properties": {
+      "baseline": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/scopedview.DatasetInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "baselineAccounting": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "field": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.FieldInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "reason": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "rows": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/exploration.GroupCountRowInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selection": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/scopedview.DatasetInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selectionAccounting": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "state": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.GroupCountComparison"
+  },
+  "exploration.GroupCountRow": {
+    "properties": {
+      "baseline": {
+        "$ref": "#/components/schemas/exploration.GroupCountCell"
+      },
+      "change": {
+        "$ref": "#/components/schemas/exploration.ViewChange"
+      },
+      "key": {
+        "type": "string"
+      },
+      "selection": {
+        "$ref": "#/components/schemas/exploration.GroupCountCell"
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "key",
+      "value",
+      "baseline",
+      "selection",
+      "change"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.GroupCountRow"
+  },
+  "exploration.GroupCountRowInput": {
+    "additionalProperties": false,
+    "properties": {
+      "baseline": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.GroupCountCellInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "change": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ViewChangeInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "key": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selection": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.GroupCountCellInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "value": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.GroupCountRow"
   },
   "exploration.InstrumentationHandoff": {
     "properties": {
@@ -24423,10 +24821,16 @@
   },
   "workbench.CapturedCountViewDisplay": {
     "properties": {
+      "order": {
+        "type": "string"
+      },
       "title": {
         "type": "string"
       },
       "value": {
+        "type": "string"
+      },
+      "view": {
         "type": "string"
       }
     },
@@ -24439,6 +24843,16 @@
   "workbench.CapturedCountViewDisplayInput": {
     "additionalProperties": false,
     "properties": {
+      "order": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "title": {
         "anyOf": [
           {
@@ -24450,6 +24864,16 @@
         ]
       },
       "value": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "view": {
         "anyOf": [
           {
             "type": "string"

@@ -7,9 +7,10 @@ const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 function closed(x,keys){if(!object(x)||Object.keys(x).some(k=>!keys.includes(k)))throw Error('Unknown captured-count comparison fields.');}
 export function eligible(q){return aggregateEligible(q)&&!q.numeric&&!q.numericHistogram&&!q.reportedEdge&&!q.spanStatus&&!q.groupTimeSeries;}
 export function validate(value,q){
- validateRecordQuestion(q);closed(value,['version','scope','kind','baselineCapture','display']);closed(value.scope,['kind','signal']);closed(value.kind,['name','version']);closed(value.display,['value','title']);
+ validateRecordQuestion(q);closed(value,['version','scope','kind','baselineCapture','display']);closed(value.scope,['kind','signal']);closed(value.kind,['name','version']);closed(value.display,['value','title','view','order']);
  if(!eligible(q))throw Error('Captured count comparison requires one ordinary grouping without status, numeric or reported-edge measures.');
  if(value.version!=='goo.view/1'||value.scope.kind!=='record-query'||value.scope.signal!==q.signal||value.kind.name!=='captured-count-comparison'||value.kind.version!==1||value.display.value!=='count'||typeof value.baselineCapture!=='string'||!/^[a-f0-9]{64}$/.test(value.baselineCapture))throw Error('Choose an exact capture and a pinned captured-count comparison.');
+ if(value.display.view!==undefined&&!['','summary','groups'].includes(value.display.view)||value.display.order!==undefined&&!['','change','label'].includes(value.display.order))throw Error('Choose summary/groups and change/label order.');
  const title=value.display.title;if(title!==undefined&&(typeof title!=='string'||!title.isWellFormed()||new TextEncoder().encode(title).length>120||/\p{Cc}/u.test(title)||title!==''&&!title.trim()))throw Error('Comparison title must be bounded valid text.');
  return structuredClone(value);
 }

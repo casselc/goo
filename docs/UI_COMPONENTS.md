@@ -1605,3 +1605,12 @@ and detached cohort helpers; it never reads or publishes. The population owner
 loads the explicit stored baseline, calls the existing pure comparison endpoint
 and guards the held pair by generation, baseline ID and parent result identity.
 See [contract](CAPTURED_COUNT_COMPARISON.md).
+
+
+### Aligned group-count display — 291
+
+`goo-group-count-comparison` consumes the closed canonical profile via property
+or JSON attribute, with bounded order/title options. It reuses shared paired-count
+geometry and `goo-table`; no source reads, navigation or publication. Local search
+and display paging retain a full-union scale. Errors remain unavailable until
+valid replacement input arrives. See [contract](GROUP_COUNT_COMPARISON.md).

@@ -2734,3 +2734,11 @@ The [executable storyboard](../../journeys/290-authored-comparison-storyboard.md
 shows catalog selection, explicit preparation, exact count change, held operands
 through newer record pages, staged save/reopen and known-zero/refusal states.
 [Contract and architecture diagram](../CAPTURED_COUNT_COMPARISON.md).
+
+
+## 291. See count changes by group
+
+The [executable storyboard](../../journeys/291-group-count-comparison-storyboard.md)
+shows typed missing/empty categories, exact aligned counts, local controls, held
+pair/fresh page, saved Groups reopening and a known-empty baseline.
+[Contract and diagram](../GROUP_COUNT_COMPARISON.md).

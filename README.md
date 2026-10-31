@@ -1,5 +1,8 @@
 # goo — Grammar of Observability
 
+[Count change by group](docs/GROUP_COUNT_COMPARISON.md) aligns the same prepared
+baseline/current pair on a shared scale, with local search and exact changes.
+
 [Captured-count comparisons](docs/CAPTURED_COUNT_COMPARISON.md) add an explicitly
 chosen capture baseline to an authored view, keeping both evidence bases distinct.
 

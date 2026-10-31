@@ -151,6 +151,7 @@ for suffix in ('', 'Input'):
  kind['properties']['name']['const']='captured-count-comparison';kind['properties']['version']['const']=1
  display=schemas['workbench.CapturedCountViewDisplay'+suffix];display['additionalProperties']=False;display['required']=['value']
  display['properties']['value']['const']='count';display['properties']['title']['maxLength']=120
+ display['properties']['view']['enum']=['','summary','groups'];display['properties']['order']['enum']=['','change','label']
  timeline=schemas['workbench.TimelineViewDeclaration'+suffix];timeline['additionalProperties']=False
  timeline['required']=['version','scope','kind','display']
  timeline['properties']['version']['const']='goo.view/1'
@@ -511,6 +512,43 @@ for name in ('metrics.CounterResult',):
  schemas[name]['properties']['valueDomain'].update({'enum':['nonnegative-decimal'],'description':'Explicit bounded nonnegative decimal arithmetic. Omitted retains uint64 input/count semantics.'})
 schemas['metrics.CounterInterval']['properties']['delta'].update({'maxLength':1024,'description':'Exact canonical base-ten interval difference, present only for ok intervals. Decimal differences can be longer than individual input values.'})
 schemas['metrics.CounterInterval']['properties']['exactPerSecond'].update({'maxLength':2048,'pattern':'^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$','description':'Reduced exact nonnegative rational rate for opted-in decimal counters, in source units per second. perSecond is its finite floating-point display approximation.'})
+# Supplied count partitions: internal accounting, never a source completeness witness.
+group=schemas['exploration.GroupCountComparison'];group['additionalProperties']=False
+group['description']='Exact aligned count union of compatible supplied partitions, sharing summary operand identities. Coherent accounting proves only supplied group sums; no source completeness witness. Diagnostic side counts and every delta are withheld. No extra source read or causal/statistical attribution.'
+gp=group['properties'];gp['version']['const']='goo.group-count-comparison/1';gp['state']['enum']=['observed','no_data','diagnostic']
+for side in ('baseline','selection'):
+ gp[side].update(type='object',properties={'shape':{'const':'summary'},'origin':{'const':'browser-held'},'quality':{'properties':{'extent':{'const':'unknown'},'sampling':{'const':'unknown'}}}},**{'not':{'required':['completeness']}})
+ gp[side+'Accounting']['enum']=['coherent','diagnostic']
+gp['reason'].update(minLength=1,maxLength=1024)
+gp['rows'].update(type='array',maxItems=2000)
+row=schemas['exploration.GroupCountRow'];row['additionalProperties']=False
+row['properties']['key'].update(minLength=1,maxLength=4097,description='Exactly 0 for null, otherwise 1 plus the category value; runtime enforces the 4097 UTF-8 byte bound.')
+row['properties']['value']={'anyOf':[{'type':'string','maxLength':4096},{'type':'null'}]}
+row['properties']['change']={'type':'object','additionalProperties':False,'required':['state','value','unit'],'properties':{'state':{'enum':['derived','unavailable']},'value':{'anyOf':[{'type':'string','pattern':'^(0|-?[1-9][0-9]*)$','maxLength':21},{'type':'null'}]},'unit':{'const':'records'},'reason':{'type':'string','minLength':1,'maxLength':1024}}}
+row['allOf']=[{'anyOf':[{'properties':{side:{'properties':{'presence':{'const':'present'}},'required':['presence']}}} for side in ('baseline','selection')]}]
+cell=schemas['exploration.GroupCountCell'];cell['additionalProperties']=False
+cp=cell['properties'];cp['presence']['enum']=['present','absent','unknown'];cp['state']['enum']=['derived','unavailable'];cp['reason'].update(minLength=1,maxLength=1024)
+cp['value']={'anyOf':[{'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':20},{'type':'null'}]}
+cell['oneOf']=[{'properties':{'state':{'const':'derived'},'presence':{'const':'present'},'value':{'type':'string','pattern':'^[1-9][0-9]*$'}}},{'properties':{'state':{'const':'derived'},'presence':{'const':'absent'},'value':{'const':'0'}}},{'properties':{'state':{'const':'unavailable'},'presence':{'enum':['present','unknown']},'value':{'type':'null'}},'required':['reason']}]
+def group_rows(properties):
+ return {'properties':{'rows':{'items':{'properties':properties}}}}
+
+group['allOf']=[]
+for side in ('baseline','selection'):
+ unavailable={'properties':{'state':{'const':'unavailable'},'value':{'type':'null'},'presence':{'enum':['present','unknown']}}}
+ known={'properties':{'state':{'const':'derived'},'value':{'type':'string'},'presence':{'enum':['present','absent']}}}
+ group['allOf'].append({
+  'if':{'properties':{side+'Accounting':{'const':'diagnostic'}},'required':[side+'Accounting']},
+  'then':group_rows({side:unavailable}),'else':group_rows({side:known})})
+
+diagnostic={'anyOf':[{'properties':{side+'Accounting':{'const':'diagnostic'}},'required':[side+'Accounting']} for side in ('baseline','selection')]}
+withheld=group_rows({'change':{'properties':{'state':{'const':'unavailable'},'value':{'type':'null'}},'required':['reason']}})
+withheld['properties']['state']={'const':'diagnostic'}
+withheld['required']=['reason']
+known=group_rows({'change':{'properties':{'state':{'const':'derived'},'value':{'type':'string','pattern':'^(0|-?[1-9][0-9]*)$','maxLength':21}}}})
+known['properties']['state']={'enum':['observed','no_data']}
+group['allOf'].append({'if':diagnostic,'then':withheld,'else':known})
+
 schemas['metrics.CounterResult']['description']='Per-stream native counter intervals. Explicit decimal domain adds exact decimal deltas/rational rates; count ratios/fleet and window-comparison contracts do not accept that domain. Unknown intervals have no rate; resets, gaps, missing values and clipped boundaries are not interpolated.'
 # Additive cumulative nonmonotonic sum observations, distinct from counter rates.
 schemas['metrics.StockResult']['description']='Per-stream cumulative nonmonotonic sum observations. Signed finite fractional values and accumulation epochs are preserved; decreases are not resets. No delta integration, fleet total, rate, capacity or utilization is inferred.'

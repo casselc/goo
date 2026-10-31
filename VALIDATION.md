@@ -1,5 +1,44 @@
 # Validation record
 
+## Aligned group-count comparison — 291
+
+[Contract/diagram](docs/GROUP_COUNT_COMPARISON.md) ·
+[storyboard](journeys/291-group-count-comparison-storyboard.md) ·
+[design](docs/reviews/GROUP_COUNT_DESIGN_291.md) and
+[architecture review](docs/reviews/GROUP_COUNT_ARCHITECTURE_291.md).
+
+- Full final root `go test ./...` and all 905 frontend tests pass. Tests cover
+  exact uint64/signed differences, zero/diagnostic accounting, typed categories,
+  conservative input lifecycle, descriptor/deep-freeze bounds and source admission.
+- OpenAPI validates 98 operations /649 schemas and seven actual observed API
+  requests/responses. Four frozen HTTP cases gain only the new optional payload;
+  requests, status, headers and all preexisting response fields remain unchanged.
+- Hegel100 generated cases, the 2,000-group union boundary and both-empty case
+  pass through real Go output and strict browser admission. The twelve-step Quint
+  lifecycle rejects six corrupted ledgers and an unfinished prefix.
+- Final real OTLP journey passes43.3s: baseline61/current63, 61-group union, shared
+  domain3, missing/empty/literal/one-sided groups, local Find/order/pages, selection
+  and focus retention, long Unicode keyboard disclosure, saved Groups/order and
+  staged reopen. A late arrival yields page64 while compared current63 stays held.
+  Known-empty baseline and narrow layout pass. Local display controls make no
+  storage, telemetry or comparison call.
+- Independent Bombadil passes30seconds /484 snapshots /8 phases, reaching rendered
+  groups and saved staged reopen with one full Run, page, baseline GET, pure
+  comparison and metadata save; no overflow/errors. Regressions289 (22.0s) and
+  290 (25.8s) pass. Three focused actual frames include explicit unknown-upstream
+  quality; design review finds no remaining visual blockers.
+- A measured receipt regression is fixed:400 groups publish/reopen at58,864 bytes;
+  duplicating the new transient payload would be152,948 bytes, above128KiB.
+  Existing evidence algorithms omit it. No storage budget/type/version changed.
+- Review corrections include per-side group limits, full-request/summary identity
+  binding, diagnostic empty/no-hit clarity, persistent invalid-input refusal and
+  recovery, long-label disclosure, omitted g0/null parity and accessible aligned zeros.
+- Local image `6a1a6a97cabfcf60ee12cd04b3139c1e0b3cf7d53d50a06bbe6d433cbd72e3d1`
+  is built/deployed. All seven changed/new UI/API assets match served bytes, and
+  the deployed pure handler emits schema-valid groups for the exact large-count
+  fixture without source reads. Telemetry/XTDB volumes remain intact; successful
+  raw capture/campaign copies are cleaned, retaining compact results and frames.
+
 ## Authored captured-count comparison — 290
 
 [Contract and diagram](docs/CAPTURED_COUNT_COMPARISON.md) ·
