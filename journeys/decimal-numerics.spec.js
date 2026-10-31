@@ -772,7 +772,7 @@ for (const signal of ['spans', 'logs']) test('180 ' + signal + ' exact decimal f
   // Capture and grammar reuse preserve explicit scale; capture rereads are named.
   await page.goto(base + '/' + questionLink(parentQuery));
   const parentAgain = await execute(page, f.records);
-  await page.locator('#exploreSaveCapture').click();
+  await require('./support/explore').openPreserve(page);await page.locator('#exploreSaveCapture').click();
   await page.locator('#captureDraftTitle').fill('Exact ' + signal + ' decimal amount evidence');
   let response = page.waitForResponse(r => isResponse('captures', r));
   await page.locator('#captureDraftConfirm').click();

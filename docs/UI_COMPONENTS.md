@@ -1579,3 +1579,11 @@ reads telemetry. Valid zero, no-data cells and unknown coverage remain separate;
 canonical formatting retains human units, exact values, support and quantile methods.
 Optional display keys are omitted rather than supplied as undefined. See
 [contract](SAVED_COUNT_TIMELINE.md).
+
+
+### Contextual preservation — 288
+
+`ui/preservation.mjs` supplies a native disclosure, concise object meanings and
+pure checked query selection/availability helpers. It performs no reads or
+publication. Existing application owners supply commands and retain all source,
+draft and navigation authority. See [Preserve](PRESERVATION.md).

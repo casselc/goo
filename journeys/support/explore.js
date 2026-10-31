@@ -15,3 +15,7 @@ module.exports={removeFilter,openFilters,openMeasures,inspectedRecords,addFilter
 
 async function chooseGrouping(page,field){await openFilters(page);const control=page.locator('#exploreFilterEditor goo-grouping-control'),pick=control.getByRole('combobox',{name:'Choose grouping field',exact:true});if((await control.evaluate(el=>el.data.grouping.length))>0)await pick.selectOption('clear');if(!field)return;const value=JSON.stringify(field);if(await pick.locator('option').evaluateAll((xs,v)=>xs.some(x=>x.value===v),value))await pick.selectOption(value);else{const details=control.locator('.grouping-custom');if(!await details.evaluate(e=>e.open))await details.locator('summary').click();await control.getByRole('textbox',{name:'Custom grouping field'}).fill(field.kind+':'+field.key);await control.getByRole('button',{name:'Add field',exact:true}).click()}}
 module.exports.chooseGrouping=chooseGrouping;
+
+// Open only the active fixed-question preservation disclosure; other capture surfaces keep their own controls.
+async function openPreserve(page,container=page){const panel=container.locator('.question-preserve').filter({visible:true});if(!await panel.evaluate(e=>e.open))await panel.locator(':scope > summary').click()}
+module.exports.openPreserve=openPreserve;

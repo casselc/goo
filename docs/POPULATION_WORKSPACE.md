@@ -28,7 +28,7 @@ and half-open window. Each signal's exact selector, source basis and failure sta
 remain inspectable. Temporal alignment and shared predicates do not establish
 trace identity, a causal relationship or complete source coverage.
 
-**Save this exploration view** stores configuration: a bounded title, one or two
+**Preserve → Save exploration view** stores configuration: a bounded title, one or two
 fixed queries, a charts-and-records or records-only layout, and visible record
 columns. UTC and summary remain required. The Go workbench store publishes a
 content-addressed immutable artifact; saving the same configuration returns the

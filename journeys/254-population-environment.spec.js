@@ -8,7 +8,7 @@ test('254 population owner restores selector baselines and refuses changed-polic
   await page.evaluate(async()=>{const {mount}=await import('/population-workspace.mjs'),host=document.createElement('section');host.id='population-owner-254';host.style.marginLeft='260px';host.style.width='1000px';document.body.append(host);window.population254=mount(host,{current:()=>null,table:()=>{},prefix:'p254',active:()=>true})});
   const host=page.locator('#population-owner-254'),toMs=Date.now(),q={signal:'spans',environmentSelector:{version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'unreported'}},fromMs:toMs-60000,toMs,where:{field:{kind:'column',key:'service'},op:'eq',value:'owned-no-match-254'},groupBy:[{kind:'column',key:'service'}],limit:100,offset:0};
   const before=requests.length;await page.evaluate(q=>window.population254.stage([q],{recent:false,breakdowns:{spans:{baseline:{...q,fromMs:q.fromMs-60000,toMs:q.toMs-60000}}}}),q);expect(requests).toHaveLength(before);
-  await expect(host.locator('.population-save > button')).toBeEnabled();
+  await expect(host.locator('.population-view-publish')).toBeEnabled();
   await host.getByRole('button',{name:'Run population view',exact:true}).click();await expect.poll(()=>requests.filter(r=>r.path==='/api/explore').length).toBe(2);await expect(host.locator('[id$=baselineStatus]')).toContainText('Baseline: 0 records');
   expect(requests.filter(r=>r.path==='/api/explore').every(r=>JSON.stringify(r.body.environmentSelector)===JSON.stringify(q.environmentSelector))).toBe(true);await expect.poll(()=>requests.some(r=>r.path==='/api/compare')).toBe(true);
   // Save configuration, including the typed baseline selector, without another

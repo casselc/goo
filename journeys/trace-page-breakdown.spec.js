@@ -177,7 +177,7 @@ test('184 observed trace page separates inclusive intervals and direct-child uni
   await page.locator('#exploreContextClose').click();
   await page.setViewportSize({ width: 1440, height: 1100 });
   const beforeCapture = state.source;
-  await page.locator('#exploreSaveCapture').click();
+  await require('./support/explore').openPreserve(page);await page.locator('#exploreSaveCapture').click();
   await page.locator('#captureDraftTitle').fill('Observed trace page timing');
   const pending = page.waitForResponse(r => new URL(r.url()).pathname === '/api/captures' && r.request().method() === 'POST');
   await page.locator('#captureDraftConfirm').click();

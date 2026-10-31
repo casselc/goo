@@ -1,5 +1,34 @@
 # Validation record
 
+## Contextual preservation — 288
+
+[Preserve](docs/PRESERVATION.md) groups existing question, view-definition and
+independent evidence commands. The [storyboard](journeys/288-preservation-storyboard.md)
+and [source/visual review](docs/reviews/PRESERVATION_REVIEW_288.md) document the cut.
+
+- Full root `go test ./...` and all 889 frontend tests pass. No production Go,
+  API or durable schema changes were needed.
+- 100 Hegel query-selection cases and Quint observed-ledger checks pass,
+  rejecting six corrupted ledgers and an unfinished prefix.
+- The live journey verifies displayed3 → captured4 → source5 → held4, one
+  Explore request and one independent capture, explicit signal choice, separate
+  question/evidence/view investigation cards and visible pending-note refusal.
+- Independent Bombadil passes 30 seconds / 523 snapshots / eight phases, with
+  zero source reads, implicit cards, overflow or uncaught errors.
+- Shared journey helpers and existing executable selectors now open Preserve
+  explicitly; native and measurement capture entry points remain independent.
+  Changed journey JavaScript passes syntax checks. Historical journeys were not
+  all rerun. Final288 passes in30.8s; regressions284 (26.9s),286 (32.1s),
+  287 (25.0s) and capture-search242 (27.4s) pass. Back preserves exact
+  root intent without another read, and retired Save controls make no POST.
+- Review caught and fixed moved composition-editor ancestry, held-parent Back
+  ownership, and stale/duplicate view Save invocation. Three new documentation
+  frames show actual running UI, alongside refreshed regression frames.
+- Local image `e3ff85e526f5b5a561d8e78262bf48b6b04545cd720f2255b83fea3faaf9a080`
+  is built and deployed; all five changed/new UI assets match served bytes.
+  Existing telemetry/XTDB volumes remain intact. Successful raw campaign and
+  capture copies are removed; compact summaries and documentation frames remain.
+
 ## Canonical duration timelines — 287
 
 Saved timelines support count and query-supported raw-span mean/p95 using the

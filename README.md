@@ -1,5 +1,8 @@
 # goo — Grammar of Observability
 
+[Preserve the current context](docs/PRESERVATION.md): share a question, save a view
+definition, or open a fresh evidence capture. Each keeps its own meaning and read effects.
+
 [Reusable saved displays](docs/SAVED_DISPLAY_DECLARATIONS.md) let checked exploration
 queries reopen with count, numeric or duration bar/table displays. Apply a compatible
 saved display to the current population without replacing its query.

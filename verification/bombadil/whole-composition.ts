@@ -17,9 +17,9 @@ const step=registerCustomAction('goo.reuseWholeComposition',async(document,windo
  else if(phase==='selected')button('Clear live configuration').click();
  else if(phase==='clearLive')button('Clear selected records').click();
  else if(phase==='cleared')button('Apply composition').click();
- else if(phase==='apply'){open('Save this exploration view');open('Composition');const input=document.querySelector<HTMLInputElement>('input[aria-label="Show records"]')!;input.checked=true;input.dispatchEvent(new Event('change'))}
+ else if(phase==='apply'){open('View settings');open('Composition');const input=document.querySelector<HTMLInputElement>('input[aria-label="Show records"]')!;input.checked=true;input.dispatchEvent(new Event('change'))}
  else if(phase==='visible')button('Next spans page').click();
- else if(phase==='page'){open('Save this exploration view');button('Save exploration view').click()}
+ else if(phase==='page'){open('Preserve');button('Save exploration view').click()}
  else if(phase==='save')window.location.hash=document.querySelector<HTMLAnchorElement>('.population-save-status a')!.hash;
  else if(phase==='reopen'){if(window.performance.getEntriesByType('resource').filter(e=>new URL(e.name).pathname==='/api/explore').length!==2)throw Error('Reopening configuration read telemetry')}
  document.documentElement.dataset.wholePhase=({initial:'read',read:'catalog',catalog:'inspect',inspect:'selected',selected:'clearLive',clearLive:'cleared',cleared:'apply',apply:'visible',visible:'page',page:'save',save:'reopen',reopen:'complete'} as any)[phase];

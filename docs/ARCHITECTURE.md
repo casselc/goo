@@ -1,5 +1,11 @@
 # Architecture
 
+[Contextual preservation](PRESERVATION.md) groups existing application commands
+through a passive disclosure. Owners retain query selection, pending-state guards,
+navigation and publication. Question intent, immutable saved-view references and
+independently captured evidence retain their existing codecs and storage paths;
+no new API or durable union object is introduced.
+
 Native capture comparisons now carry compact source identity once per side,
 without duplicating source rows/intervals or eagerly materializing histogram pairs.
 The app constructs a held pair from the existing evaluated window summaries and

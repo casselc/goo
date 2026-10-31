@@ -11,7 +11,7 @@ const step=registerCustomAction('goo.recentScope',async(document,window,phase:st
  else if(phase==='recent'){open('Select a time range');const input=pop().querySelector<HTMLInputElement>('goo-time-range input[aria-label="Range start (UTC)"]')!;input.value=String(Math.round((Number(input.min)+Number(input.max))/2));input.dispatchEvent(new Event('input',{bubbles:true}))}
  else if(phase==='select')button('Open selected population').click();
  else if(phase==='child'||phase==='reopen'){[...pop().querySelectorAll<HTMLButtonElement>('button')].find(b=>/^Run (population view|selected population)$/.test(b.textContent||''))!.click()}
- else if(phase==='execute'){open('View settings');open('Save this exploration view');const title=pop().querySelector<HTMLInputElement>('[aria-label="Exploration view title"]')!;title.value='Bombadil recent typed scope';title.dispatchEvent(new Event('input',{bubbles:true}));button('Save exploration view').click()}
+ else if(phase==='execute'){open('View settings');open('Preserve');const title=pop().querySelector<HTMLInputElement>('[aria-label="Exploration view title"]')!;title.value='Bombadil recent typed scope';title.dispatchEvent(new Event('input',{bubbles:true}));button('Save exploration view').click()}
  else if(phase==='save')window.location.hash=pop().querySelector<HTMLAnchorElement>('.population-save-status a')!.hash;
  document.documentElement.dataset.recentScopePhase=({initial:'recent',recent:'select',select:'child',child:'execute',execute:'save',save:'reopen',reopen:'executing',executing:'complete'} as any)[phase];
 });

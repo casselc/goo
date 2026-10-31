@@ -1,9 +1,9 @@
 # Implementation plan
 
-> Current checkpoint287: saved timelines use canonical count/duration rendering,
-> query-supported mean/p95 and shared checked interval selection. Next: clarify
-> preservation at the current context while keeping question intent, saved view
-> definitions and captured evidence distinct. See the [roadmap](ROADMAP_2026_10_30.md#delivery-and-flow-review-after285).
+> Current checkpoint288: contextual Preserve distinguishes question intent, whole
+> view definitions and independently captured evidence through existing destinations.
+> Next: review the completed Activity → focus → author → preserve flow and measure
+> paging costs before selecting the next capability. See the [roadmap](ROADMAP_2026_10_30.md#delivery-and-flow-review-after285).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),

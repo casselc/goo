@@ -1,6 +1,6 @@
 # Saved display declarations — 275–277
 
-The existing **Save this exploration view** flow can save a reusable record-measure display
+Use **View settings** to author a display; the existing **Preserve → Save exploration view** flow can save a reusable record-measure display
 alongside its checked queries. Reopen it from **Saved exploration views**, then
 **Run population view** explicitly. Browsing or reopening configurations does not
 read telemetry. A saved view is configuration; captures preserve frozen evidence.

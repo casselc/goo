@@ -1508,3 +1508,10 @@ td details {
 /* A selected native distribution uses page scrolling; its own plot/table keep
    horizontal overflow local rather than nesting a tall chart in a 24rem pane. */
 .native-timeline-selection .ui-inspector-body:has(.native-interval-histogram){max-height:none;overflow:visible;overscroll-behavior:auto;scrollbar-gutter:auto}
+.preserve-menu>.preserve-section{padding:.45rem 0;border-top:1px solid var(--border)}
+.preserve-section>strong{display:block;font-size:.82rem}
+.preserve-section>small{display:block;font-size:.75rem;color:var(--muted);margin:.15rem 0 .35rem}
+.preserve-section>.controls{display:flex;flex-wrap:wrap;gap:.35rem;margin:.25rem 0}
+.population-workspace .preserve-section>label{display:flex;align-items:center;gap:.4rem;font-size:.8rem;margin:.3rem 0}
+.preserve-status{font-size:.8rem;margin:.3rem 0}
+.preserve-status:empty{display:none}

@@ -654,7 +654,7 @@ for (const signal of ['spans', 'logs']) test('181 ' + signal + ' contextual plot
   // Capture the actual plotted parent, then declare from frozen observed attributes.
   await page.goto(base + '/' + questionLink(parentAgain.question, 'Distribution'));
   await runPlot(page, f.records);
-  await page.locator('#exploreSaveCapture').click();
+  await require('./support/explore').openPreserve(page);await page.locator('#exploreSaveCapture').click();
   await page.locator('#captureDraftTitle').fill('Contextual ' + signal + ' value distribution');
   const captureResponse = page.waitForResponse(r => isResponse('captures', r));
   await page.locator('#captureDraftConfirm').click();

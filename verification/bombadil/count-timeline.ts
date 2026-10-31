@@ -13,7 +13,7 @@ const step=registerCustomAction('goo.countTimeline',async(document,window,phase:
  else if(phase==='page')document.querySelector<HTMLButtonElement>('[data-composition-role="timeline"] .scope-time-interval')!.click();
  else if(phase==='select')button('Stage selected interval').click();
  else if(phase==='narrow')[...document.querySelectorAll<HTMLButtonElement>('button')].find(b=>/^Reset (timeline |starting )?window$/.test(b.textContent||''))!.click();
- else if(phase==='reset'){open('Save this exploration view');button('Save exploration view').click()}
+ else if(phase==='reset'){open('Preserve');button('Save exploration view').click()}
  else if(phase==='save')window.location.hash=document.querySelector<HTMLAnchorElement>('.population-save-status a')!.hash;
  document.documentElement.dataset.timelinePhase=({initial:'read',read:'page',page:'select',select:'stage',stage:'narrow',narrow:'reset',reset:'save',save:'reopen',reopen:'complete'} as any)[phase];
 });

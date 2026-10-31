@@ -10,7 +10,7 @@ const step=registerCustomAction('goo.focusAuthoring',async(document,window,phase
  if(phase==='initial')document.querySelector<HTMLButtonElement>('#exploreRecent')!.click();
  else if(phase==='recent')button('Customize logs').click();
  else if(phase==='focus'||phase==='reopen')button('Run population view').click();
- else if(phase==='execute'){open('Save this exploration view');const title=pop().querySelector<HTMLInputElement>('[aria-label="Exploration view title"]')!;title.value='Bombadil focused logs';title.dispatchEvent(new Event('input',{bubbles:true}));button('Save exploration view').click()}
+ else if(phase==='execute'){open('Preserve');const title=pop().querySelector<HTMLInputElement>('[aria-label="Exploration view title"]')!;title.value='Bombadil focused logs';title.dispatchEvent(new Event('input',{bubbles:true}));button('Save exploration view').click()}
  else if(phase==='save')window.location.hash=pop().querySelector<HTMLAnchorElement>('.population-save-status a')!.hash;
  document.documentElement.dataset.focusAuthoringPhase=({initial:'recent',recent:'focus',focus:'execute',execute:'save',save:'reopen',reopen:'executing',executing:'complete'} as any)[phase];
 });

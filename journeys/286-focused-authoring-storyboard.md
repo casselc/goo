@@ -40,3 +40,7 @@ policies, both signals and grouped/ungrouped configurations. Quint checks the
 observed lifecycle, rejecting six mutated traces and an unfinished prefix.
 Bombadil exercises recent activity, focus, Run, Save/reopen and final independently
 observed Run completion, guarding source requests and viewport overflow.
+
+288 regression also returns to the held parent, chooses Logs in Preserve, and
+shares the original root question at offset zero without another source read.
+The parent inspection page remains held at offset100.

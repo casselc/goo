@@ -17,7 +17,7 @@ const step=registerCustomAction('goo.durationTimeline',async(document,window,pha
  else if(phase==='bars')button('Next spans page').click();
  else if(phase==='page')document.querySelector<HTMLButtonElement>('[data-composition-role="timeline"] .scope-time-interval')!.click();
  else if(phase==='preview')button('Stage selected interval').click();
- else if(phase==='narrow'){const s=[...document.querySelectorAll<HTMLElement>('summary')].find(e=>e.textContent==='Save this exploration view')!;(s.parentElement as HTMLDetailsElement).open=true;button('Save exploration view').click()}
+ else if(phase==='narrow'){const s=[...document.querySelectorAll<HTMLElement>('summary')].find(e=>e.textContent==='Preserve')!;(s.parentElement as HTMLDetailsElement).open=true;button('Save exploration view').click()}
  else if(phase==='save')window.location.hash=document.querySelector<HTMLAnchorElement>('.population-save-status a')!.hash;
  document.documentElement.dataset.durationPhase=({initial:'read',read:'count',count:'mean',mean:'p95',p95:'table',table:'bars',bars:'page',page:'preview',preview:'stage',stage:'narrow',narrow:'save',save:'reopen',reopen:'executing',executing:'complete'} as any)[phase];
 });

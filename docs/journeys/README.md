@@ -2711,3 +2711,10 @@ journeys remain the behavioral acceptance for delivered features.
 [Desktop Activity](screenshots/235-review-activity-desktop.png) ·
 [Mobile Activity](screenshots/235-review-activity-mobile.png) ·
 [Saved](screenshots/235-review-investigations.png)
+
+
+## 288. Preserve the current context
+
+The [executable storyboard](../../journeys/288-preservation-storyboard.md) covers
+explicit signal choice, independent capture freshness, held evidence and three
+distinct investigation pieces. [Contract](../PRESERVATION.md).

@@ -87,7 +87,7 @@ test('191 isolated generic startup observes Python-tagged OTel without lab asset
     await page.locator('#exploreRun').click(); const result = await json(await pending);
     expect(result.count).toBe('140'); expect(result.rows).toHaveLength(100);
     expect(result.question.environment).toBe(facts.environment);
-    await page.locator('#exploreSaveCapture').click();
+    await require('./support/explore').openPreserve(page);await page.locator('#exploreSaveCapture').click();
     await page.locator('#captureDraftTitle').fill('Ordinary Python HTTP evidence');
     pending = page.waitForResponse(response => response.url().endsWith('/api/captures') && response.request().method() === 'POST');
     await page.locator('#captureDraftConfirm').click(); const saved = await json(await pending);

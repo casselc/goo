@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+288 consolidates [Preserve](PRESERVATION.md) without combining durable objects.
+Multi-signal views require an explicit signal for question/evidence actions; saving
+a view preserves its whole configuration. Capture confirmation performs a new
+independent read, not a snapshot of the displayed page or an atomic multi-query capture.
+
 287 extends [saved timelines](SAVED_COUNT_TIMELINE.md) with query-supported raw-span
 duration mean/p95. Numeric/native metrics, rates and grouped time-series authoring
 remain separate. Duration requires an already configured span-duration summary;

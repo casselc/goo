@@ -320,7 +320,7 @@ test('182 real log patterns retain full-population counts, exact trends and immu
   await page.goto(base + '/' + questionLink(original));
   const parentAgain = await run(page, f.records);
   expect(parentAgain.groups).toEqual(result.groups);
-  await page.locator('#exploreSaveCapture').click();
+  await require('./support/explore').openPreserve(page);await page.locator('#exploreSaveCapture').click();
   await page.locator('#captureDraftTitle').fill('Observed log patterns in fixed service scope');
   const captured = page.waitForResponse(response => isResponse('captures', response));
   await page.locator('#captureDraftConfirm').click();

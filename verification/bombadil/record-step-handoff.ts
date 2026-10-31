@@ -8,7 +8,7 @@ export const viewport=always(()=>!state.current.overflow);
 const step=registerCustomAction('goo.recordStepHandoff',async(document,window,phase:string)=>{
  const click=(id:string)=>document.querySelector<HTMLButtonElement>('#'+id)!.click();
  if(phase==='initial'||phase==='question')click('exploreRun');
- else if(phase==='read')click('exploreAddStep');
+ else if(phase==='read'){document.querySelector<HTMLDetailsElement>('.question-preserve')!.open=true;click('exploreAddStep')}
  else if(phase==='pin')click('documentSave');
  else if(phase==='savedoc')[...document.querySelectorAll<HTMLButtonElement>('#documentCards button')].find(b=>b.textContent==='Reopen question')!.click();
  document.documentElement.dataset.stepHandoffPhase=({initial:'read',read:'pin',pin:'savedoc',savedoc:'question',question:'executing',executing:'complete'} as any)[phase];
