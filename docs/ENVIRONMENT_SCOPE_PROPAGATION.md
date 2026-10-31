@@ -1,4 +1,4 @@
-# Record environment propagation — historical audit and updates through 284
+# Record environment propagation — historical audit and updates through 285
 
 > 250 implements the [server record API cut](RECORD_SELECTOR_API.md). Browser
 > handoffs remain gated; the historical table below is not the current support list.
@@ -145,3 +145,17 @@ same policy comparison. Opening stages configuration for Run. See
 
 Measurement definitions/packages and recent-population entry remain separate
 capability work; the record codec does not silently enable those bridges.
+
+
+## Recent-population update — 285
+
+The recent entry now forwards checked typed scope to the existing population
+planner. Planner responses retain exact policy, predicates and fixed bounds; a
+nonportable predicate withholds the companion rather than dropping it. Selected
+time links use the checked question codec, and scope summaries format policy
+instead of reading an absent legacy name. See
+[recent populations](RECENT_ACTIVITY.md#typed-recent-populations--285).
+
+The record handoff chain is now covered from Activity and recent entry through
+fixed questions, saved views and investigation steps. Separate measurement/package
+and native/service identity contracts are not implicitly enabled.

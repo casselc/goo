@@ -1,9 +1,16 @@
 # Known issues and gaps
 
+285 enables [typed recent populations](RECENT_ACTIVITY.md#typed-recent-populations--285)
+with the existing planner and independent signal reads. Selected-time links and
+saved child views retain checked scope. Measurement/package and unsupported
+native/service bridges remain separate. Multi-signal recent views still require
+an explicit single-signal authoring path before they can use a composition.
+
 284 enables [typed record question handoffs](INVESTIGATION_STEPS.md#typed-record-question-handoffs--284)
 through links, investigation cards and same-tab recovery. Opening stages exact
-fixed scope for Run; capture evidence remains separate. Measurement/package codecs,
-recent-population entry and unsupported native/service bridges retain their limits.
+fixed scope for Run; capture evidence remains separate. Measurement/package codecs
+and unsupported native/service bridges retain their limits. Recent entry follows
+in 285.
 
 283 enables [typed saved Activity scopes](ACTIVITY_VIEWS.md#typed-environment-round-trip--283)
 through publication, exact-scope discovery and staged reopen. Start remains

@@ -124,3 +124,44 @@ The full timeline composition remains available to service dashboards.
 This is the first applied-result portion of queue A1. The blank Explore entry's
 competing recent/fixed execution controls and broader action consolidation remain
 open; this slice does not claim to finish every A1 acceptance item.
+
+
+## Typed recent populations — 285
+
+Show recent activity accepts the existing checked record environment scopes:
+current-only named, effective named, effective empty label and effective unreported.
+It preserves the current predicates, resolves one fresh fixed window and asks the
+existing source-free population planner for supported signal questions. The button
+is the explicit read action; opening a saved view or selected child remains staged.
+
+Both planned signals retain the same checked policy and bounds. Portable predicates
+travel unchanged. A signal-specific predicate can withhold the companion rather
+than dropping its filter to manufacture matching records. The notice explains that
+result. Independently configured companion predicates remain independent.
+
+Scope labels show current/legacy policy, empty-label and unreported populations.
+Selected-time links retain typed scope and exact bounds using the existing question
+codec. Opening a link or retained child stages it; only its explicit Run reads.
+Save/reopen keeps the fixed scope and predicates without turning a configuration
+into stored telemetry or automatically starting a live subscription.
+
+Planner responses are checked before source requests: changed policy, predicates,
+signal or bounds refuse. Retired generations cannot publish a plan or result after
+navigation or scope replacement. Existing Go omission defaults are compared through
+the established query identity helper, without rewriting saved intent.
+
+```mermaid
+flowchart LR
+  Q[Checked environment and predicates] -->|Show recent activity| W[Resolve fresh fixed window once]
+  W --> P[Existing source-free population planner]
+  P --> C[Checked supported questions]
+  C -->|Explicit requested read| R[Independent span and log results]
+  R -->|Select time or facets| S[Staged fixed child]
+  S -->|Explicit Run| N[New independent results]
+  R -->|Save configuration| V[Fixed saved view]
+  V -->|Open| S
+```
+
+This closes the recent-population entry gate, not the separate measurement/package,
+native or service identity capability limits. Missing telemetry remains unknown;
+aligned windows and selectors establish neither event identity nor an atomic read.

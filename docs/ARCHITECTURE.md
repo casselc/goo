@@ -1505,3 +1505,14 @@ separate named-only contract. The browser question/link validator and recovery p
 share the record selector checks, with display labels using checked policy. Source reads
 and evidence custody remain with existing owners. See [contract and
 flow](INVESTIGATION_STEPS.md#typed-record-question-handoffs--284).
+
+
+## Recent-population scope entry — 285
+
+The existing Go planner already preserves checked environment scope and withholds
+incompatible companions without dropping predicates. The UI entry now reaches that
+contract, uses typed scope labels and routes selected-time links through the checked
+question codec. Existing generation/abort ownership withdraws obsolete plans before
+execution. Source reads, staging and independent evidence remain with current owners.
+The [flow reviews](ROADMAP_2026_10_30.md#delivery-and-flow-review-after285) prioritize
+focused-signal authoring before duration timelines.

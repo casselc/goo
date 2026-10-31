@@ -1,5 +1,44 @@
 # Validation record
 
+## Typed recent populations — 285
+
+The recent entry forwards checked environment scope to the existing planner.
+Initial Show/Refresh recent activity explicitly plans and reads supported signals;
+selected children and saved views reopen staged. See
+[contract](docs/RECENT_ACTIVITY.md#typed-recent-populations--285) and
+[storyboard](journeys/285-recent-scope-storyboard.md).
+
+- Full root `go test ./...` and all 876 frontend tests pass. New planner/HTTP
+  coverage checks all four typed modes, detached input, exact scope/window and
+  portable predicates; incompatible companions refuse or are withheld without
+  dropping filters. No production Go, API endpoint or schema changes were needed.
+- UI checks cover fresh-window validation, Go omission defaults, forged planner
+  policy/filter/window refusal and actual typed selected-range link round trips.
+  Existing generation/abort checks retire obsolete plan publication.
+- 100 Hegel Go-plan/browser-admission cases pass for all four typed policies.
+  The nine-step Quint smoke and observed replay pass, rejecting six mutated
+  traces and an unfinished prefix.
+- Real OTLP recent-population journey plus Bombadil passes in 48.9 s; question
+  sharing/recovery journey284 regression passes in 20.5 s. Three new and three
+  regression documentation frames are regenerated.
+- Request ledger `[0,2,2,2,2,4,4,4,6]` covers three explicit pairs of independent
+  exploration requests, with one separate source-free plan request. Preview,
+  opening a selected child, Save and reopen add no source reads. Exact checked
+  policy, portable predicates and selected bounds survive; source errors are empty.
+- Bombadil passes 30 seconds / 450 snapshots / nine phases, independently
+  observing the final applied state with six source requests and one plan,
+  a saved definition and no overflow or uncaught errors.
+- Product and architecture checkpoints are reconciled in the
+  [next delivery sequence](docs/ROADMAP_2026_10_30.md#delivery-and-flow-review-after285):
+  focused-signal authoring precedes duration timelines and preservation cleanup.
+  Actual-frame review found no visual handoff blocker; compact facets and quieter
+  unknown markers remain bounded accompanying polish.
+- Local image `a158a8cda0edad0a6dc47486456effc6a00c88ea9fdc3d9689de2448a538bb58`
+  is built and deployed; all three changed UI modules match served bytes.
+  Telemetry and XTDB volumes remain intact. Disposable campaign/browser/capture
+  copies are cleaned; compact results and documentation frames remain.
+
+
 ## Typed record question handoffs — 284
 
 Fixed record questions retain checked environment scope through question links,

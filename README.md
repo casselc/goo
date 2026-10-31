@@ -595,3 +595,11 @@ views](docs/ACTIVITY_VIEWS.md#typed-environment-round-trip--283).
 Fixed record questions retain typed environment scope through sharing, investigation
 cards and draft recovery. Reopening stages the exact scope for explicit Run. See
 [question handoffs](docs/INVESTIGATION_STEPS.md#typed-record-question-handoffs--284).
+
+
+### Typed recent populations — 285
+
+Show recent activity now retains typed environment scope through planning, selected-time
+links and saved child views. The explicit action reads supported signals independently;
+opening a child or saved definition remains staged. See [recent
+populations](docs/RECENT_ACTIVITY.md#typed-recent-populations--285).

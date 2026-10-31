@@ -1,20 +1,11 @@
-> 284 adds [typed record question handoffs](INVESTIGATION_STEPS.md#typed-record-question-handoffs--284)
-> across share links, investigation cards and recovery. Recent-population entry is
-> the remaining immediate scope handoff before a whole-flow review.
-
-> 283 adds [typed saved Activity scopes](ACTIVITY_VIEWS.md#typed-environment-round-trip--283)
-> across publication, exact-scope discovery and staged reopen. Remaining recent
-> population and reusable-question/share handoffs are next.
-
-> 282 adds [saved definition findings](SAVED_VIEW_FINDINGS.md) to investigation
-> revisions, separately from captured evidence. Activity portability follows in 283;
-> remaining reusable-question handoffs retain their explicit gates.
-
-> 281 adds the optional [saved count timeline](SAVED_COUNT_TIMELINE.md), exact
-> interval-range staging and held paging under the existing query owner.
-> 282 preserves composed definitions and separately referenced evidence in investigations.
-
 # Implementation plan
+
+> Current checkpoint285: typed record scope now reaches recent populations, saved
+> Activity views, fixed question links and investigation recovery. See the
+> [reconciled roadmap](ROADMAP_2026_10_30.md#delivery-and-flow-review-after285).
+> Next: focus a recent signal into single-query authoring, then add supported
+> duration measures to saved timelines. Broader native/package adoption stays separate.
+
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),
 > including safe supplied-row projection and runtime guarantee lineage.

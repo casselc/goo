@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey285](../../journeys/285-recent-scope-storyboard.md) enters typed recent
+populations, stages a selected two-signal child, and saves/reopens its exact scope
+with explicit source reads.
+
 [Journey284](../../journeys/284-record-step-handoff-storyboard.md) carries typed
 Activity scope through fixed analysis, sharing, investigation draft recovery and
 staged question reopen with explicit Run.
