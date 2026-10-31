@@ -52,7 +52,7 @@ func summaryViewDataset(r *Result, exhaustiveSummary bool) *ViewDataset {
 		return nil
 	}
 	d.Fields = []ViewField{{Key: "count", Label: "Captured records", Type: "number", Unit: "records"}}
-	d.Fields = append(d.Fields, viewMeasureFields(r.Question)...)
+	d.Fields = append(d.Fields, ViewMeasureFields(r.Question)...)
 	values := ViewValues{"count": viewText(r.Count)}
 	cells, ok := viewMeasureCells(r.Question, r.Count, r.Numeric, r.Duration, r.SpanStatus, false, values)
 	if !ok {

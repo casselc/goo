@@ -236,3 +236,21 @@ func TestSourceSuppliesMeasureDatasetsWithoutAdditionalReads(t *testing.T) {
 		t.Fatal(result)
 	}
 }
+
+func TestViewMeasureMetadataIsFreshAndDescribesQueryIntent(t *testing.T) {
+	b := numericBinding()
+	q := Query{Numeric: &b, Summary: "span-duration", SpanStatus: true}
+	first := ViewMeasureFields(q)
+	if len(first) != 15 || first[0].Key != "numeric.mean" || first[0].Unit != b.Unit || first[4].Key != "duration.mean" || first[4].Unit != "ns" {
+		t.Fatal("query measure metadata differs from canonical fields", first)
+	}
+	first[0].Unit = "changed"
+	first[0].Aggregation.Family = "changed"
+	next := ViewMeasureFields(q)
+	if next[0].Unit != b.Unit || next[0].Aggregation.Family != "numeric" || q.Numeric.Unit != b.Unit {
+		t.Fatal("metadata retained mutable shared state", next)
+	}
+	if len(ViewMeasureFields(Query{})) != 0 {
+		t.Fatal("unrequested measures advertised")
+	}
+}

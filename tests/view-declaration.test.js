@@ -15,3 +15,13 @@ test('unsupported kinds, fields, owners, source payloads and group profiles fail
 });
 
 test('Find drafts reject controls and byte overflow before replacing applied intent',()=>{const applied=D.create(q),before=structuredClone(applied);for(const query of ['api\u0001','api\t','😀'.repeat(65)])assert.throws(()=>D.withQuery(applied,query,q));assert.deepEqual(applied,before);const next=D.withQuery(applied,'api',q);assert.equal(next.display.query,'api');assert.deepEqual(applied,before)});
+
+const binding={field:{kind:'attribute',key:'amount'},type:'int64',unit:'USD',parse:'canonical-decimal'};
+test('query-supported numeric and duration measures preserve declared units, intent and local display settings',()=>{
+ const supported={...q,numeric:binding,summary:'span-duration'},expected=['count','numeric.mean','numeric.sum','numeric.min','numeric.max','duration.mean','duration.min','duration.max','duration.p50','duration.p95','duration.p99'];
+ assert.deepEqual(D.availableMeasures(supported),expected);assert.deepEqual(D.availableMeasures(q),['count']);assert.deepEqual(D.availableMeasures({...q,spanStatus:true}),['count']);assert.deepEqual(D.availableMeasures({...q,signal:'logs',numeric:binding}),expected.slice(0,5));
+ for(const value of expected){const d=D.create(supported);d.display.value=value;d.display.scale=value==='count'?'population':'max';const before=structuredClone(d),accepted=D.validate(d,supported),props=D.presentation(accepted);assert.equal(props.value,value);const next=D.update(accepted,{...props,query:'worker',order:'label',kind:'table'},supported);assert.equal(next.display.value,value);assert.equal(next.display.query,'worker');assert.deepEqual(d,before);assert.equal(next.kind.name,'table');assert.equal(supported.numeric.unit,'USD');}
+ const numeric=D.create(supported);numeric.display.value='numeric.mean';assert.throws(()=>D.validate(numeric,supported),/Population share/);numeric.display.scale='max';assert.throws(()=>D.validate(numeric,q),/supported/);assert.throws(()=>D.validate(numeric,{...supported,numeric:undefined}),/supported/);
+ const duration=D.create(supported);duration.display.value='duration.p95';delete duration.display.scale;assert.equal(D.presentation(D.validate(duration,supported)).scale,'max');assert.throws(()=>D.validate(duration,{...supported,summary:undefined}),/supported/);
+ for(const value of ['status.error','status.error_fraction','numeric.p95','duration.sum','amount']){const d=D.create(supported);d.display.value=value;d.display.scale='max';assert.throws(()=>D.validate(d,supported));}
+});

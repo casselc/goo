@@ -63,7 +63,7 @@ func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
 		d.Dimensions = append(d.Dimensions, categoryField(i))
 	}
 	d.Fields = append(d.Fields, ViewField{Key: "count", Label: "Captured records", Type: "number", Unit: "records"})
-	d.Fields = append(d.Fields, viewMeasureFields(q)...)
+	d.Fields = append(d.Fields, ViewMeasureFields(q)...)
 	seen := map[string]bool{}
 	var partitionTotal uint64
 	partitionOverflow := false
@@ -144,7 +144,7 @@ func timeViewDataset(r *Result, exhaustiveIntervals bool) *ViewDataset {
 	}
 	d.Interval = &ViewInterval{FromMS: strconv.FormatInt(q.FromMS, 10), ToMS: strconv.FormatInt(q.ToMS, 10), BucketMS: strconv.FormatInt(q.BucketMS, 10)}
 	d.Fields = []ViewField{{Key: "fromMs", Label: "Interval start", Type: "timestamp", Unit: "ms"}, {Key: "toMs", Label: "Interval end", Type: "timestamp", Unit: "ms"}, {Key: "count", Label: "Captured records", Type: "number", Unit: "records", Nullable: true}}
-	d.Fields = append(d.Fields, viewMeasureFields(q)...)
+	d.Fields = append(d.Fields, ViewMeasureFields(q)...)
 	previousEnd := q.FromMS
 	for _, p := range r.TimeSeries {
 		if p.FromMS < previousEnd || p.FromMS < q.FromMS || p.FromMS >= q.ToMS || (p.FromMS-q.FromMS)%q.BucketMS != 0 || p.ToMS != min(p.FromMS+q.BucketMS, q.ToMS) {

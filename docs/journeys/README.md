@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey276](../../journeys/276-saved-measures-storyboard.md) follows saved numeric
+and duration measures, signed-table fallback and unavailable support through local
+edits and explicit save/reopen/Run.
+
 [Journey275](../../journeys/275-view-authoring-storyboard.md) exercises reusable
 count display edits, checked source, immutable save/reopen and explicit Run over
 real OTel spans, including invalid drafts and delayed save acknowledgement.

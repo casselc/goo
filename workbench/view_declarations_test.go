@@ -106,3 +106,73 @@ func TestExplorationViewTypedEnvironmentParity(t *testing.T) {
 		})
 	}
 }
+
+func TestAuthoredViewMeasuresFollowCheckedQuery(t *testing.T) {
+	binding := exploration.NumericBinding{Field: exploration.Field{Kind: "attribute", Key: "db.response.returned_rows"}, Type: "int64", Unit: "{row}", Parse: "canonical-decimal"}
+	for _, signal := range []string{"spans", "logs"} {
+		for _, measure := range []string{"numeric.mean", "numeric.sum", "numeric.min", "numeric.max"} {
+			t.Run(signal+"/"+measure, func(t *testing.T) {
+				v := authoredView()
+				v.Queries[0].Signal = signal
+				v.Queries[0].Numeric = &binding
+				d := v.Displays["spans"]
+				d.Scope.Signal, d.Display.Value = signal, measure
+				v.Displays = map[string]ViewDeclaration{signal: d}
+				assertMeasureRevision(t, v, signal, measure)
+				v.Queries[0].Numeric = nil
+				if v.Validate() == nil {
+					t.Fatal("numeric display accepted without a numeric binding")
+				}
+			})
+		}
+	}
+	for _, measure := range []string{"duration.mean", "duration.min", "duration.max", "duration.p50", "duration.p95", "duration.p99"} {
+		t.Run(measure, func(t *testing.T) {
+			v := authoredView()
+			v.Queries[0].Summary = "span-duration"
+			d := v.Displays["spans"]
+			d.Display.Value = measure
+			v.Displays["spans"] = d
+			assertMeasureRevision(t, v, "spans", measure)
+			v.Queries[0].Summary = ""
+			if v.Validate() == nil {
+				t.Fatal("duration display accepted without its checked summary")
+			}
+		})
+	}
+	v := authoredView()
+	v.Queries[0].SpanStatus = true
+	d := v.Displays["spans"]
+	d.Display.Value = "status.error_fraction"
+	v.Displays["spans"] = d
+	if v.Validate() == nil {
+		t.Fatal("out-of-profile status measure accepted")
+	}
+}
+
+func assertMeasureRevision(t *testing.T, v ExplorationView, signal, measure string) {
+	t.Helper()
+	store := Store{Dir: t.TempDir()}
+	d := v.Displays[signal]
+	for _, scale := range []string{"", "max"} {
+		d.Display.Scale = scale
+		v.Displays[signal] = d
+		for _, kind := range []string{"bar", "table"} {
+			d.Kind.Name = kind
+			v.Displays[signal] = d
+			saved, err := store.CreateExplorationView(v)
+			if err != nil {
+				t.Fatal(err)
+			}
+			loaded, err := store.LoadExplorationView(saved.ID)
+			if err != nil || loaded.Displays[signal].Display.Value != measure || loaded.Displays[signal].Kind.Name != kind || loaded.Queries[0].Numeric != nil && loaded.Queries[0].Numeric.Unit != "{row}" {
+				t.Fatal("measure configuration lost in immutable revision", loaded, err)
+			}
+		}
+	}
+	d.Display.Scale = "population"
+	v.Displays[signal] = d
+	if v.Validate() == nil {
+		t.Fatal("non-count population share accepted")
+	}
+}

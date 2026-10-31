@@ -1,8 +1,9 @@
 # Known issues and gaps
 
-275 adds [saved count displays](SAVED_DISPLAY_DECLARATIONS.md) to the existing
-exploration-view workflow. The first profile is bar/table, count only, one ordinary
-grouping; native metrics, histograms, multi-field/time-series and authored baseline
+275–276 add [saved record-measure displays](SAVED_DISPLAY_DECLARATIONS.md) to the
+existing exploration-view workflow. The profile is bar/table over one ordinary
+grouping, with count and query-supported numeric/duration measures. Recorded status
+fractions, native metrics, histograms, multi-field/time-series and authored baseline
 comparisons remain unsupported. No whole-screen or WYSIWYG editor is claimed.
 
 274 consolidates [native captured-window comparisons](SCOPED_NATIVE_HISTOGRAM_COMPARISONS.md)

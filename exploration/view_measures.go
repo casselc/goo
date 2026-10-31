@@ -9,7 +9,10 @@ type ViewAggregation = scopedview.Aggregation
 type ViewCell = scopedview.Cell
 type ViewSupport = scopedview.Support
 
-func viewMeasureFields(q Query) []ViewField {
+// ViewMeasureFields describes the measures requested by a checked record query.
+// It returns fresh metadata, without reading telemetry or attesting availability,
+// support or completeness. Callers must validate the query independently.
+func ViewMeasureFields(q Query) []ViewField {
 	fields := []ViewField{}
 	add := func(family, key, label, kind, method, unit, quantile string) {
 		fields = append(fields, ViewField{Key: family + "." + key, Label: label, Type: "rational", Unit: unit, Nullable: true, Aggregation: &ViewAggregation{Family: family, Kind: kind, Method: method, Quantile: quantile}})
@@ -45,7 +48,7 @@ func viewRational(coefficient string, denominator *big.Int) *string {
 // coefficients into exact human units. Unavailable sums stay null rather than
 // inheriting the arithmetic identity zero from an empty source aggregate.
 func viewMeasureCells(q Query, count string, numeric *NumericSummary, duration *DurationSummary, status *SpanStatusSummary, unknown bool, values ViewValues) (map[string]ViewCell, bool) {
-	fields := viewMeasureFields(q)
+	fields := ViewMeasureFields(q)
 	if len(fields) == 0 {
 		return nil, numeric == nil && duration == nil && status == nil
 	}

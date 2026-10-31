@@ -67,14 +67,15 @@ for suffix in ('', 'Input'):
  declaration=schemas['workbench.ViewDeclaration'+suffix]
  declaration['additionalProperties']=False
  declaration['properties']['version']['const']='goo.view/1'
- declaration['description']='Pinned ordinary single-field record count display. Scope references a checked parent query; save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported.'
+ declaration['description']='Pinned ordinary single-field count, numeric or duration display. Numeric/duration fields require the corresponding checked parent-query binding/summary; runtime validates that relationship. Scope references a checked parent query; save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported.'
  scope=schemas['workbench.ViewDeclarationScope'+suffix];scope['additionalProperties']=False
  scope['properties']['kind']['const']='record-query';scope['properties']['signal']['enum']=['spans','logs']
  kind=schemas['workbench.ViewKind'+suffix];kind['additionalProperties']=False
  kind['properties']['name']['enum']=['bar','table'];kind['properties']['version']['const']=1
  display=schemas['workbench.ViewDisplay'+suffix];display['additionalProperties']=False
- display['properties']['category']['const']='category';display['properties']['value']['const']='count'
+ display['properties']['category']['const']='category';display['properties']['value']['enum']=['count','numeric.mean','numeric.sum','numeric.min','numeric.max','duration.mean','duration.min','duration.max','duration.p50','duration.p95','duration.p99']
  display['properties']['scale']['enum']=['','max','population']
+ display['allOf']=[{'if':{'required':['value'],'properties':{'value':{'not':{'const':'count'}}}},'then':{'properties':{'scale':{'enum':['','max']}}}}]
  display['properties']['order']['enum']=['','source','label','value-desc','value-asc']
  for field,bound in [('query',256),('title',120)]:
   display['properties'][field].update(maxLength=bound,description=f'At most {bound} UTF-8 bytes; runtime enforces the byte limit and rejects control characters.')

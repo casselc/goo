@@ -1502,3 +1502,12 @@ and percentile-range diagnostics. See [contract](SCOPED_NATIVE_HISTOGRAM_COMPARI
 owns scope and reads; a per-signal declaration owns bounded local display intent.
 Source/property edits share one AST, while invalid source remains an explicit
 unsaved draft. Immutable saved configurations carry no dataset or runtime witness.
+
+
+## Saved numeric/duration measures — 276
+
+[Saved declarations](SAVED_DISPLAY_DECLARATIONS.md#supported-measures--276) select
+query-supported canonical measures through the existing `ScopedBreakdown` selector.
+Go reuses the dataset producer’s field metadata for compatibility. No new reducer,
+source endpoint or component is introduced; units/support and signed-value table
+fallback stay in the common renderer. Non-count population shares are refused.

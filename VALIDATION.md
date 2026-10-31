@@ -1,5 +1,49 @@
 # Validation record
 
+## Saved numeric and duration measures — 276
+
+Saved declarations now select count, query-bound numeric mean/sum/min/max, and
+span-duration mean/min/max/p50/p95/p99 through the existing Measure control.
+Compatibility is checked before save/source Apply. Go reuses canonical field
+metadata; unavailable values remain honest runtime results, while missing query
+bindings/summaries are configuration errors. Non-count population shares are
+refused. No reducer, source endpoint or component was added. See the
+[contract/diagram](docs/SAVED_DISPLAY_DECLARATIONS.md#supported-measures--276) and
+[storyboard](journeys/276-saved-measures-storyboard.md).
+
+Checks:
+
+- Full root `go test ./...` and all 826 frontend tests pass.
+- Focused metadata freshness, immutable save/reopen and HTTP measure
+  acceptance/refusal checks pass. OpenAPI remains 589 reflected / 611 schemas;
+  96 operations, 429 response fixtures, 159 admitted requests, 28 mux refusals,
+  negative controls and SSE checks pass.
+- Hegel: 100 finite Go↔JS cases (50 valid / 50 refused). Quint smoke passes nine
+  observed-stage actions and rejects six mutants plus an unfinished prefix.
+  The first verification launch lacked a writable Hegel cache; setting the existing
+  workspace cache fixed it. A model import harness issue was fixed with an explicit
+  read-budget constant. Neither required a product change.
+- Real OTLP spans produce seven captured records with one inspection row. Signed
+  mean −3 items retains requested bar intent and exact-table fallback, with 2/5
+  valid, one missing, one empty and one invalid value. A no-valid group remains
+  unavailable. Duration P95 is 9/13 ms; count return shows ≈71.4% for five of seven records.
+  Switching measures/scale is local, and invalid non-count share source blocks Save.
+- The real journey passes in 1.0 min with two explicit source reads. Observed Quint
+  replay passes (6.68 s) and rejects the six mutations/unfinished prefix. Bombadil
+  passes 30 seconds / 557 snapshots / all nine phases, ending staged with one read,
+  no overflow and no uncaught errors. Three real frames are current.
+- Existing count-authoring journey275 passes again (17.7 s); its three frames are
+  refreshed for the current UI. Source/draft guards and count save/reopen remain intact.
+- Final local image `bfad28e4735fe764fa0164d442959bb486502e8170765d742cea82f5636333b9`
+  is deployed; served bytes match all three changed UI/API files. Existing telemetry
+  and XTDB data remain intact. Raw successful campaign and temporary browser output
+  were removed; compact summaries/model ledgers and documentation frames remain.
+- Product and architecture checkpoint reviews are complete. The reconciled
+  [continuation](docs/ROADMAP_2026_10_30.md#reviewed-continuation-after-276) prioritizes
+  applying saved displays in the current checked scope, then one OTel service
+  record template through the same authoring path.
+
+
 ## Reusable saved count-display declarations — 275
 
 The existing exploration-view catalog now saves pinned bar/table declarations

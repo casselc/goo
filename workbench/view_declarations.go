@@ -25,7 +25,7 @@ type ViewKind struct {
 	Version int    `json:"version"`
 }
 
-// ViewDisplay is the bounded ordinary count profile of the public display
+// ViewDisplay is the bounded ordinary record-measure profile of the public display
 // contract. Empty optional strings mean the renderer's defaults, not new queries.
 type ViewDisplay struct {
 	Category         string `json:"category"`
@@ -44,11 +44,21 @@ func (d ViewDeclaration) Validate(q exploration.Query) error {
 	if len(q.GroupBy) != 1 || q.NumericHistogram != nil || q.GroupTimeSeries || q.GroupBy[0].Kind == "column" && (q.GroupBy[0].Key == "body_pattern_v1" || q.GroupBy[0].Key == "duration_bucket") {
 		return errors.New("authored displays require an ordinary single-field record breakdown")
 	}
-	if d.Display.Category != "category" || d.Display.Value != "count" {
-		return errors.New("the authored count profile requires category and count fields")
+	available := d.Display.Value == "count"
+	for _, field := range exploration.ViewMeasureFields(q) {
+		if field.Key == d.Display.Value && field.Aggregation != nil && (field.Aggregation.Family == "numeric" || field.Aggregation.Family == "duration") {
+			available = true
+			break
+		}
+	}
+	if d.Display.Category != "category" || !available {
+		return errors.New("choose a count, numeric or duration measure supplied by the checked query")
 	}
 	if d.Display.Scale != "" && d.Display.Scale != "max" && d.Display.Scale != "population" {
 		return errors.New("choose max or population display scale")
+	}
+	if d.Display.Value != "count" && d.Display.Scale == "population" {
+		return errors.New("population share is available only for captured record counts")
 	}
 	if d.Display.Order != "" && d.Display.Order != "source" && d.Display.Order != "label" && d.Display.Order != "value-desc" && d.Display.Order != "value-asc" {
 		return errors.New("choose a supported local display order")

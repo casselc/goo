@@ -41640,7 +41640,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewDeclaration",
         "additionalProperties": false,
-        "description": "Pinned ordinary single-field record count display. Scope references a checked parent query; save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported."
+        "description": "Pinned ordinary single-field count, numeric or duration display. Numeric/duration fields require the corresponding checked parent-query binding/summary; runtime validates that relationship. Scope references a checked parent query; save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported."
       },
       "workbench.ViewDeclarationInput": {
         "additionalProperties": false,
@@ -41689,7 +41689,7 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewDeclaration",
-        "description": "Pinned ordinary single-field record count display. Scope references a checked parent query; save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported."
+        "description": "Pinned ordinary single-field count, numeric or duration display. Numeric/duration fields require the corresponding checked parent-query binding/summary; runtime validates that relationship. Scope references a checked parent query; save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported."
       },
       "workbench.ViewDeclarationScope": {
         "properties": {
@@ -41784,7 +41784,19 @@
           },
           "value": {
             "type": "string",
-            "const": "count"
+            "enum": [
+              "count",
+              "numeric.mean",
+              "numeric.sum",
+              "numeric.min",
+              "numeric.max",
+              "duration.mean",
+              "duration.min",
+              "duration.max",
+              "duration.p50",
+              "duration.p95",
+              "duration.p99"
+            ]
           }
         },
         "required": [
@@ -41793,7 +41805,33 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewDisplay",
-        "additionalProperties": false
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "value": {
+                  "not": {
+                    "const": "count"
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "scale": {
+                  "enum": [
+                    "",
+                    "max"
+                  ]
+                }
+              }
+            }
+          }
+        ]
       },
       "workbench.ViewDisplayInput": {
         "additionalProperties": false,
@@ -41884,11 +41922,49 @@
                 "type": "null"
               }
             ],
-            "const": "count"
+            "enum": [
+              "count",
+              "numeric.mean",
+              "numeric.sum",
+              "numeric.min",
+              "numeric.max",
+              "duration.mean",
+              "duration.min",
+              "duration.max",
+              "duration.p50",
+              "duration.p95",
+              "duration.p99"
+            ]
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.ViewDisplay"
+        "x-go-type": "github.com/casselc/goo/workbench.ViewDisplay",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "value": {
+                  "not": {
+                    "const": "count"
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "scale": {
+                  "enum": [
+                    "",
+                    "max"
+                  ]
+                }
+              }
+            }
+          }
+        ]
       },
       "workbench.ViewKind": {
         "properties": {

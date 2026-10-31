@@ -11,12 +11,15 @@
 > and captured side continuation. 271 delivers [raw-span duration histograms](SCOPED_DURATION_HISTOGRAMS.md)
 > with exact open-tail geometry and captured action guards. 272 adds [native interval histograms](SCOPED_NATIVE_HISTOGRAMS.md)
 > with explicit measurement scope and lazy selected-interval projection. 273 adds
-> [selected fixed-time histogram buckets](SCOPED_HISTOGRAM_TIME_BUCKETS.md). Next:
+> [selected fixed-time histogram buckets](SCOPED_HISTOGRAM_TIME_BUCKETS.md).
 > 274 consolidates [native comparisons](SCOPED_NATIVE_HISTOGRAM_COMPARISONS.md).
-> The [finite adoption checkpoint](VIEW_AUTHORING_CHECKPOINT_274.md) moves next to
+> After the [finite adoption checkpoint](VIEW_AUTHORING_CHECKPOINT_274.md),
 > 275 delivers [reusable count declarations](SAVED_DISPLAY_DECLARATIONS.md) in the
-> existing saved-view workflow. Next extend this checked profile to numeric/duration
-> measures; specialized owners are documented limits, not an open-ended authoring gate.
+> existing saved-view workflow. 276 extends it to query-supported numeric/duration
+> measures. The [product](reviews/AUTHORING_PRODUCT_REVIEW_276.md) and
+> [architecture](reviews/AUTHORING_ARCHITECTURE_REVIEW_276.md) checkpoint selects
+> 277: apply an existing saved display to the current checked fixed population,
+> followed by one OTel service record template; specialized owners remain explicit limits.
 > [Pit-of-success review](MODEL_PIT_OF_SUCCESS_264.md) gates further renderer/editor expansion.
 
 > Current continuation proposal: [view grammar260](VIEW_GRAMMAR_PROPOSAL_260.md)

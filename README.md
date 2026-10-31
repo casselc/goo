@@ -1,7 +1,7 @@
 # goo — Grammar of Observability
 
 [Reusable saved displays](docs/SAVED_DISPLAY_DECLARATIONS.md) let checked exploration
-queries reopen with a count bar/table and local display preferences.
+queries reopen with count, numeric or duration bar/table displays and local preferences.
 
 Start with what is happening now. Narrow logs and spans, inspect a population,
 compare evidence, and preserve an explanation you can revisit or reuse. Goo works
