@@ -130,16 +130,50 @@ func (s Source) captureRows(ctx context.Context, q Query) (*Result, error) {
 }
 
 func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, error) {
+	return s.fetchProfile(ctx, q, rowLimit, false)
+}
+
+func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnly bool) (*Result, error) {
 	q = q.WithEnvironmentFrom(q)
+	if err := q.Validate(); err != nil {
+		return nil, err
+	}
+	question := q
+	if pageOnly {
+		// The original question remains the page's scope. Presentation/aggregate
+		// requirements are not independent source work for record inspection.
+		q.GroupBy = nil
+		q.BucketMS = 0
+		q.GroupTimeSeries = false
+		q.Summary = ""
+		q.SpanStatus = false
+		q.Numeric = nil
+		q.NumericHistogram = nil
+	}
 	plan, e := compile(q, rowLimit)
 	if e != nil {
 		return nil, e
 	}
-	r := &Result{Question: q, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), Rows: []json.RawMessage{}, Groups: []json.RawMessage{}, Fields: []Field{}, Plan: plan, Warnings: []string{"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.", "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.", "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."}}
+	countParameters := plan.Parameters
+	if pageOnly {
+		// Compile projection from the original question: grouping and measure
+		// declarations can require derived record columns, even though their
+		// aggregates are not acquired for a page.
+		originalPlan, err := compile(question, rowLimit)
+		if err != nil {
+			return nil, err
+		}
+		plan.Rows = originalPlan.Rows
+		plan.Parameters = originalPlan.Parameters
+	}
+	r := &Result{Question: question, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), Rows: []json.RawMessage{}, Groups: []json.RawMessage{}, Fields: []Field{}, Plan: plan, Warnings: []string{"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.", "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.", "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."}}
+	if pageOnly {
+		r.Warnings = []string{"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.", "The matching count and bounded record page are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; the count never derives from this page.", "Aggregates, timelines and field discovery were not acquired by this page read. Existing charts retain their own basis and read clock.", "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."}
+	}
 	if q.ReportedEdge != nil {
 		r.Warnings = append(r.Warnings, "Reported-edge population: child span records with one parent service owner in the original discovery environment/window/namespace scope. Parent ownership is resolved before child filters. Late parent evidence may change resolution on reread; captures reopen stored rows without a parent lookup. This is not unique calls, end-to-end latency or async causality.")
 	}
-	count, e := s.read(ctx, plan.Count, plan.Parameters)
+	count, e := s.read(ctx, plan.Count, countParameters)
 	if e != nil {
 		return nil, e
 	}
@@ -236,47 +270,49 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 			r.State = "changed_between_reads"
 		}
 	}
-	fields, e := s.read(ctx, plan.Fields, plan.Parameters)
-	if e != nil {
-		return nil, e
-	}
-	if len(fields) > 129 {
-		return nil, fmt.Errorf("source exceeded discovery budget")
-	}
-	if r.Count == "0" && len(fields) > 0 {
-		r.State = "changed_between_reads"
-	}
-	r.FieldsLimited = len(fields) > 128
-	if r.FieldsLimited {
-		fields = fields[:128]
-	}
-	names := []string{}
-	for k := range columns {
-		if _, e := (Field{"column", k}).Type(q.Signal); e == nil {
-			names = append(names, k)
+	if !pageOnly {
+		fields, e := s.read(ctx, plan.Fields, plan.Parameters)
+		if e != nil {
+			return nil, e
 		}
-	}
-	sort.Strings(names)
-	for _, k := range names {
-		r.Fields = append(r.Fields, Field{"column", k})
-	}
-	for _, raw := range fields {
-		var v struct {
-			Field string `json:"field"`
+		if len(fields) > 129 {
+			return nil, fmt.Errorf("source exceeded discovery budget")
 		}
-		if json.Unmarshal(raw, &v) != nil {
-			return nil, fmt.Errorf("invalid field result")
+		if r.Count == "0" && len(fields) > 0 {
+			r.State = "changed_between_reads"
 		}
-		parts := strings.SplitN(v.Field, ":", 2)
-		if len(parts) != 2 {
-			return nil, fmt.Errorf("invalid discovered field")
+		r.FieldsLimited = len(fields) > 128
+		if r.FieldsLimited {
+			fields = fields[:128]
 		}
-		f := Field{parts[0], parts[1]}
-		if _, e = f.Type(q.Signal); e != nil {
-			r.FieldsLimited = true
-			continue
+		names := []string{}
+		for k := range columns {
+			if _, e := (Field{"column", k}).Type(q.Signal); e == nil {
+				names = append(names, k)
+			}
 		}
-		r.Fields = append(r.Fields, f)
+		sort.Strings(names)
+		for _, k := range names {
+			r.Fields = append(r.Fields, Field{"column", k})
+		}
+		for _, raw := range fields {
+			var v struct {
+				Field string `json:"field"`
+			}
+			if json.Unmarshal(raw, &v) != nil {
+				return nil, fmt.Errorf("invalid field result")
+			}
+			parts := strings.SplitN(v.Field, ":", 2)
+			if len(parts) != 2 {
+				return nil, fmt.Errorf("invalid discovered field")
+			}
+			f := Field{parts[0], parts[1]}
+			if _, e = f.Type(q.Signal); e != nil {
+				r.FieldsLimited = true
+				continue
+			}
+			r.Fields = append(r.Fields, f)
+		}
 	}
 	if q.BucketMS != 0 {
 		series, err := s.read(ctx, plan.TimeSeries, plan.Parameters)
@@ -314,9 +350,15 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 		}
 	}
 	if r.State == "changed_between_reads" {
-		r.Warnings = append(r.Warnings, "Source reads disagree; do not treat count, groups and page as one population snapshot. Rerun to capture new evidence.")
+		warning := "Source reads disagree; do not treat count, groups and page as one population snapshot. Rerun to capture new evidence."
+		if pageOnly {
+			warning = "Source count and bounded rows disagree; do not treat them as one population snapshot. Rerun to capture new evidence."
+		}
+		r.Warnings = append(r.Warnings, warning)
 	}
-	r.TraceExamples = SelectTraceExamples(*r)
+	if !pageOnly {
+		r.TraceExamples = SelectTraceExamples(*r)
+	}
 	// Timestamp is a receipt, not part of the evidence basis. Hash captured query,
 	// plan and results with exact JSON numbers retained by RawMessage.
 	basis := *r
@@ -327,6 +369,9 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 	}
 	h := sha256.Sum256(b)
 	r.Basis = hex.EncodeToString(h[:])
+	if pageOnly {
+		return r, nil
+	}
 	r.ViewDataset = groupViewDataset(r, plan.Groups != "")
 	r.TimeDataset = timeViewDataset(r, plan.TimeSeries != "")
 	r.SummaryDataset = summaryViewDataset(r, true)

@@ -1,5 +1,8 @@
 # goo — Grammar of Observability
 
+[Composed record paging](docs/RECORD_PAGE_PROFILE.md) reads a fresh count and record
+page while keeping aggregate and timeline evidence held.
+
 [Preserve the current context](docs/PRESERVATION.md): share a question, save a view
 definition, or open a fresh evidence capture. Each keeps its own meaning and read effects.
 

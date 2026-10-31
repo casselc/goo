@@ -1,9 +1,10 @@
 # Implementation plan
 
-> Current checkpoint288: contextual Preserve distinguishes question intent, whole
-> view definitions and independently captured evidence through existing destinations.
-> Next: review the completed Activity → focus → author → preserve flow and measure
-> paging costs before selecting the next capability. See the [roadmap](ROADMAP_2026_10_30.md#delivery-and-flow-review-after285).
+> Current checkpoint289: composed record paging uses a measured count-plus-rows
+> profile while retaining held aggregate/timeline basis and exact record custody.
+> Whole-flow reviews prioritize a bounded authored comparison with an explicitly
+> chosen held baseline next. Its [proposed count-only contract](AUTHORED_COMPARISON_PROPOSAL.md)
+> is reviewed but unimplemented. See the [roadmap](ROADMAP_2026_10_30.md#whole-flow-review-after288-and-delivery289).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),

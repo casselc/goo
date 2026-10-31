@@ -77,3 +77,8 @@ bounds from contiguous known supplied rows rather than component milliseconds.
 This profile is fixed-window and single-query. Numeric/native metric timelines,
 rates, grouped time series, live subscriptions and arbitrary nested layouts remain
 separate work. The HTTP service template keeps its two-child default.
+
+
+289 uses the [count-plus-rows profile](RECORD_PAGE_PROFILE.md) when paging the
+records child. It does not reacquire or replace the held timeline. The page's
+fresh matching count and clock are independent of the timeline's source basis.

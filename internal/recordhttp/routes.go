@@ -37,6 +37,18 @@ func Register(mux *http.ServeMux, source exploration.Source, snapshots *explorat
 		_, err := exploration.CompileTraceSearch(request)
 		return err
 	}, source.SearchTraces)
+	registerRead(mux, "/explore/page", exploration.Query.Validate, func(ctx context.Context, q exploration.Query) (*exploration.RecordPageResult, error) {
+		result, err := source.FetchRecordPage(ctx, q)
+		if err != nil {
+			return nil, err
+		}
+		if token, err := snapshots.Freeze(result); err == nil {
+			result.ResultToken = token
+		} else {
+			result.Warnings = append(result.Warnings, "Live selection retention unavailable: "+err.Error())
+		}
+		return exploration.RecordPageResponse(result), nil
+	})
 	registerRead(mux, "/explore", exploration.Query.Validate, func(ctx context.Context, q exploration.Query) (*exploration.Result, error) {
 		result, err := source.Fetch(ctx, q)
 		if err != nil {

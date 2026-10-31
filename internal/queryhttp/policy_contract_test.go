@@ -33,7 +33,7 @@ func TestFamilyPoliciesMatchPublishedAPIBoundaries(t *testing.T) {
 		lookup func(string, string) (queryhttp.Policy, bool)
 		count  int
 	}{
-		"record":      {recordhttp.PolicyFor, 9},
+		"record":      {recordhttp.PolicyFor, 10},
 		"native":      {nativehttp.PolicyFor, 7},
 		"explanation": {explanationhttp.PolicyFor, 3},
 		"capture":     {capturehttp.PolicyFor, 2},

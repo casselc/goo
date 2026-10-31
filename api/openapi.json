@@ -4314,6 +4314,93 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/explore/page": {
+      "post": {
+        "operationId": "post_explore_page",
+        "summary": "POST /explore/page",
+        "tags": [
+          "explore"
+        ],
+        "description": "Current owner: internal/recordhttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/recordhttp/routes.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordPageResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordQuery"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 16384,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/host-dashboard/plan": {
       "post": {
         "operationId": "post_host_dashboard_plan",
@@ -7463,6 +7550,9 @@
       },
       "RecordAggregatesResult": {
         "$ref": "#/components/schemas/exploration.RecordAggregatesResult"
+      },
+      "RecordPageResult": {
+        "$ref": "#/components/schemas/exploration.RecordPageResult"
       },
       "RecordQuery": {
         "anyOf": [
@@ -16345,6 +16435,80 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.RecordMeasurePlan"
+      },
+      "exploration.RecordPageResult": {
+        "properties": {
+          "basis": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "capturedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "count": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "question": {
+            "$ref": "#/components/schemas/exploration.Query"
+          },
+          "resultToken": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "rows": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxItems": 200
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "no_data",
+              "changed_between_reads"
+            ]
+          },
+          "warnings": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "question",
+          "capturedAt",
+          "basis",
+          "count",
+          "state",
+          "rows",
+          "hasMore",
+          "warnings"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.RecordPageResult",
+        "additionalProperties": false,
+        "description": "Independent fresh count and bounded record page. No group, field-discovery, timeline, summary or completeness claims. The page token supports exact record retention, not whole-exploration capture promotion. Held composition aggregates keep their prior basis and clock."
       },
       "exploration.RecordSeriesPair": {
         "properties": {

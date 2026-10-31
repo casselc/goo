@@ -21,7 +21,7 @@ func TestAdmissionDistinguishesPureComparisonFromRecordReads(t *testing.T) {
 		policy, ok := recordhttp.PolicyFor(r.Method, r.URL.Path)
 		return ok && policy.Effect != queryhttp.Pure
 	})
-	for _, path := range []string{"/environment-scopes", "/environment-scopes/records", "/inventory", "/discovery", "/explore", "/record-aggregates", "/explore/counted-values", "/trace-search"} {
+	for _, path := range []string{"/environment-scopes", "/environment-scopes/records", "/inventory", "/discovery", "/explore", "/explore/page", "/record-aggregates", "/explore/counted-values", "/trace-search"} {
 		t.Run(path, func(t *testing.T) {
 			w := httptest.NewRecorder()
 			budget.ServeHTTP(w, httptest.NewRequest("POST", path, strings.NewReader(`{}`)))
@@ -73,5 +73,43 @@ func TestRegistrationsKeepSuppliedSnapshotBanksIndependent(t *testing.T) {
 		if _, err := banks[1-i].Load(result.ResultToken); err == nil {
 			t.Fatal("result token leaked across supplied snapshot banks")
 		}
+	}
+}
+
+type recordPageTransport struct{ reads int }
+
+func (s *recordPageTransport) RoundTrip(r *http.Request) (*http.Response, error) {
+	s.reads++
+	body, _ := io.ReadAll(r.Body)
+	out := ""
+	if strings.Contains(string(body), "count()") {
+		out = `{"count":"0"}`
+	}
+	return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(out))}, nil
+}
+func TestRecordPageRouteNarrowResponseAndIndependentSnapshot(t *testing.T) {
+	transport := &recordPageTransport{}
+	bank := &exploration.ResultSnapshots{}
+	mux := http.NewServeMux()
+	recordhttp.Register(mux, exploration.Source{Endpoint: "http://recording.invalid", Client: &http.Client{Transport: transport}}, bank)
+	body := `{"signal":"spans","environment":"prod","fromMs":1,"toMs":60001,"limit":100,"offset":100,"groupBy":[{"kind":"column","key":"service"}],"summary":"span-duration","bucketMs":10000}`
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, httptest.NewRequest("POST", "/explore/page", strings.NewReader(body)))
+	var wire map[string]json.RawMessage
+	var page exploration.RecordPageResult
+	if w.Code != 200 || json.Unmarshal(w.Body.Bytes(), &wire) != nil || json.Unmarshal(w.Body.Bytes(), &page) != nil || transport.reads != 2 {
+		t.Fatalf("page read failed %d %s reads%d", w.Code, w.Body.String(), transport.reads)
+	}
+	if len(wire) != 9 || page.ResultToken == "" || page.Question.Offset != 100 || page.Question.Summary != "span-duration" {
+		t.Fatal("page contract lost", w.Body.String())
+	}
+	held, err := bank.Load(page.ResultToken)
+	if err != nil || held.Explore.Basis != page.Basis || held.Explore.Question.BucketMS != 10000 {
+		t.Fatal("exact page not held", err)
+	}
+	invalid := httptest.NewRecorder()
+	mux.ServeHTTP(invalid, httptest.NewRequest("POST", "/explore/page", strings.NewReader(strings.Replace(body, "span-duration", "invalid", 1))))
+	if invalid.Code != 400 || transport.reads != 2 {
+		t.Fatal("invalid original question reached source")
 	}
 }

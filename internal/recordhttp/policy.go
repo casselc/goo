@@ -17,6 +17,7 @@ var policies = map[string]queryhttp.Policy{
 	"/discovery":                  {Effect: queryhttp.Read, BodyLimit: 16384, Timeout: 30 * time.Second, TrailingMessage: "expected one JSON object"},
 	"/record-aggregates":          {Effect: queryhttp.Read, BodyLimit: 16384, Timeout: 55 * time.Second, TrailingMessage: "expected one JSON object"},
 	"/explore/counted-values":     {Effect: queryhttp.Read, BodyLimit: 16384, Timeout: 55 * time.Second, TrailingMessage: "expected one JSON object"},
+	"/explore/page":               {Effect: queryhttp.ReadAndSnapshot, BodyLimit: 16384, Timeout: 55 * time.Second, TrailingMessage: "expected one JSON object"},
 	"/explore":                    {Effect: queryhttp.ReadAndSnapshot, BodyLimit: 16384, Timeout: 55 * time.Second, TrailingMessage: "expected one JSON object"},
 	"/trace-search":               {Effect: queryhttp.Read, BodyLimit: 65536, Timeout: 55 * time.Second, TrailingMessage: "expected one JSON object"},
 }

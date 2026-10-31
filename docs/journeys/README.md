@@ -2718,3 +2718,11 @@ journeys remain the behavioral acceptance for delivered features.
 The [executable storyboard](../../journeys/288-preservation-storyboard.md) covers
 explicit signal choice, independent capture freshness, held evidence and three
 distinct investigation pieces. [Contract](../PRESERVATION.md).
+
+
+## 289. Inspect records while charts stay held
+
+The [executable storyboard](../../journeys/289-record-page-profile-storyboard.md)
+shows a late arrival, fresh count/page, held aggregate and duration timeline, exact
+selected-record retention, stale response refusal and unchanged ordinary/capture
+paths. [Acquisition contract](../RECORD_PAGE_PROFILE.md).

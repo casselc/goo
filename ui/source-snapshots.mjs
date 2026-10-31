@@ -52,6 +52,22 @@ export function getRecordPage(data){
 
 export function adoptExploration(data,requestedQuestion){return admit(data,requestedQuestion,source)}
 
+// /explore/page reads only a fresh count and bounded rows. Its wrapper is not a
+// full exploration result and cannot carry aggregate or completeness authority.
+export function adoptRecordPage(data,requestedQuestion){
+ if(!record(data)||![Object.prototype,null].includes(Object.getPrototypeOf(data)))throw Error('A record-page response is required.');
+ const allowed=new Set(['question','basis','capturedAt','count','state','rows','hasMore','resultToken','warnings']);
+ if(Object.keys(data).some(key=>!allowed.has(key)))throw Error('Record-page response contains unsupported aggregate or source slots.');
+ sameQuestion(requestedQuestion,data.question);
+ if(typeof data.count!=='string'||!/^(0|[1-9][0-9]*)$/.test(data.count)||data.count.length>20||BigInt(data.count)>18446744073709551615n)throw Error('Record-page count must be a captured unsigned record total.');
+ if(data.resultToken!==undefined&&(typeof data.resultToken!=='string'||!/^([a-f0-9]{64})?$/.test(data.resultToken)))throw Error('Invalid record-page retention token.');
+ if(data.warnings!==undefined&&(!Array.isArray(data.warnings)||data.warnings.some(value=>typeof value!=='string')))throw Error('Invalid record-page warnings.');
+ if(typeof data.hasMore!=='boolean')throw Error('Record-page continuation is required.');
+ const page=recordPageFromExploration(data),result={...data,question:page.question,rows:page.rows,recordPage:page};
+ if(data.warnings)result.warnings=Object.freeze([...data.warnings]);
+ recordPages.set(result,page);return result;
+}
+
 export function adoptStoredExplore(page){
   validateSaved(page);
   if(page?.receipt?.question?.kind!=='explore'||!record(page.explore))throw Error('A verified stored exploration page is required.');

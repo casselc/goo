@@ -1,5 +1,11 @@
 # Architecture
 
+[Record-page acquisition](RECORD_PAGE_PROFILE.md) returns only a fresh count and
+bounded rows through the existing record HTTP budget and snapshot bank. Composed
+views admit this narrow response without aggregate guarantees; their existing
+chart snapshots stay held. Original query row projection and independent page
+basis are retained. Ordinary exploration/capture paths retain full acquisition.
+
 [Contextual preservation](PRESERVATION.md) groups existing application commands
 through a passive disclosure. Owners retain query selection, pending-state guards,
 navigation and publication. Question intent, immutable saved-view references and

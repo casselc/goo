@@ -1,6 +1,6 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const {fromExploration}=require('../ui/record-page.mjs');
-const {adoptExploration,adoptStoredExplore,getRecordPage}=require('../ui/source-snapshots.mjs');
+const {adoptExploration,adoptRecordPage,adoptStoredExplore,getRecordPage}=require('../ui/source-snapshots.mjs');
 const {isSnapshot,hasGuarantee}=require('../ui/snapshots.mjs');
 const query=()=>({signal:'spans',environment:'prod',fromMs:1000,toMs:2000,limit:2,offset:4,groupBy:[{kind:'column',key:'service'}]});
 const response=()=>({question:query(),basis:'a'.repeat(64),capturedAt:'2026-10-31T05:00:00.123456789Z',state:'observed',count:'500',hasMore:true,resultToken:'owner-only-token',rows:[{timestamp_ns:'1793422800123456789',SpanId:'0000000000000001',Attributes:{empty:'',missing:null,nested:['value',{number:1}]},ResourceAttributes:{'service.namespace':'team'}}]});
@@ -37,4 +37,27 @@ test('stored delivery pages retain their actual bounds and source clock rather t
 test('record page validation refuses malformed bounds, source metadata and non-JSON mutable payloads',()=>{
  for(const mutate of [x=>x.rows.push({},{}),x=>x.rows=[null],x=>x.rows=[new Date()],x=>x.rows=[{value:new Map()}],x=>x.rows=[{value:NaN}],x=>x.rows=[{value:undefined}],x=>x.rows=[{value:1n}],x=>x.rows=[{value:'\ud800'}],x=>x.rows=[{get value(){throw Error('getter executed')}}],x=>{const row={};row.loop=row;x.rows=[row]},x=>{x.rows=[];x.rows.length=1},x=>x.hasMore='yes',x=>x.basis='forged',x=>x.capturedAt='yesterday',x=>x.capturedAt='2026-02-30T00:00:00Z',x=>x.state='complete',x=>x.question.limit=0]){const raw=response();mutate(raw);assert.throws(()=>fromExploration(raw));}
  const raw=response();Object.defineProperty(raw,'rows',{get(){throw Error('top getter executed')}});assert.throws(()=>fromExploration(raw),/data properties/);
+});
+
+
+test('count-and-row source admission keeps page retention without aggregate authority',()=>{
+ const raw={...response(),resultToken:'c'.repeat(64),warnings:['Independent count and row reads.']},before=structuredClone(raw),admitted=adoptRecordPage(raw,raw.question),page=getRecordPage(admitted);
+ assert(page);assert.equal(admitted.count,'500');assert.equal(admitted.resultToken,raw.resultToken);assert.equal(page.question.offset,4);assert.equal(page.page.returned,1);
+ assert(!isSnapshot(page));assert(!hasGuarantee(page,'summary'));assert(!hasGuarantee(page,'groups'));assert(!Object.hasOwn(page,'count'));assert(!Object.hasOwn(page,'resultToken'));
+ assert(!Object.hasOwn(admitted,'summaryDataset'));assert(!Object.hasOwn(admitted,'viewDataset'));assert.equal(getRecordPage({...admitted}),null);
+ raw.rows[0].Attributes.nested[1].number=99;raw.question.offset=6;raw.warnings.push('new');assert.deepEqual(admitted.rows,before.rows);assert.equal(admitted.question.offset,4);assert.deepEqual(admitted.warnings,before.warnings);
+ const unavailable={...before};delete unavailable.resultToken;assert(getRecordPage(adoptRecordPage(unavailable,unavailable.question)));
+});
+
+test('page-only admission rejects scope drift, full-result slots and invented count/token metadata',()=>{
+ const valid=()=>({...response(),resultToken:'d'.repeat(64)});
+ for(const mutate of [x=>x.question.offset=0,x=>x.question.environment='other',x=>x.question.toMs++,x=>x.count='1.5',x=>x.count='-1',x=>x.count='01',x=>x.count='18446744073709551616',x=>x.count=500,x=>x.resultToken='foreign-token',x=>x.warnings=[{}],x=>delete x.hasMore,x=>x.rows=null]){const raw=valid(),q=structuredClone(raw.question);mutate(raw);assert.throws(()=>adoptRecordPage(raw,q))}
+ for(const slot of ['summaryDataset','viewDataset','timeDataset','histogramDataset','groups','fields','duration','numeric','timeSeries','plan','completeness']){const raw=valid();raw[slot]=null;assert.throws(()=>adoptRecordPage(raw,raw.question),/unsupported/)}
+});
+
+test('an empty late record page does not borrow held whole-population state or totals',()=>{
+ const held=response(),late={...response(),basis:'b'.repeat(64),capturedAt:'2026-10-31T06:00:00Z',resultToken:'e'.repeat(64),count:'0',rows:[],hasMore:false,state:'no_data'};
+ const admitted=adoptRecordPage(late,late.question),page=getRecordPage(admitted);
+ assert.equal(page.page.returned,0);assert.equal(page.quality.extent,'bounded-page');assert.equal(page.quality.state,'no_data');assert.equal(admitted.count,'0');assert.equal(held.count,'500');assert.equal(held.state,'observed');assert.notEqual(page.basis,held.basis);assert(!hasGuarantee(page,'summary'));
+ const changed={...late,rows:held.rows,state:'changed_between_reads'};assert.equal(getRecordPage(adoptRecordPage(changed,changed.question)).quality.state,'changed_between_reads');
 });

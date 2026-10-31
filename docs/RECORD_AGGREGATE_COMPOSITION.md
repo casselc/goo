@@ -103,11 +103,10 @@ transaction. Hiding or reordering content does not change the query or denominat
 A one-row inspection page does not reduce a full-group population share.
 
 Page navigation advances a separate admitted record result. The aggregate snapshot,
-read clock, exact denominator and local presentation stay held. The current API
-may return aggregate data with that page request; composed views ignore those
-replacement aggregates. No page-only SQL optimization is claimed here. Parent
-saved queries remain at offset zero, and each record page displays its own bounds
-and read clock.
+read clock, exact denominator and local presentation stay held. Since289, the
+[count-plus-rows profile](RECORD_PAGE_PROFILE.md) avoids acquiring replacement
+aggregates, field discovery and timelines. Parent saved queries remain at offset
+zero, and each record page displays its own bounds and read clock.
 
 A per-page request serial prevents out-of-order publication. Pending page reads
 disable paging and retire old record-action owners; success or failure establishes
@@ -175,3 +174,11 @@ opens this composition directly; a missing grouping requires an explicit choice
 before enabling the reusable aggregate. Run reads the child, while Back restores
 the held multi-signal parent without reading. See
 [focused authoring](RECENT_ACTIVITY.md#customize-one-signal--286).
+
+
+## Bounded record-page acquisition — 289
+
+Paging the records child reads only a fresh count and bounded rows through the
+[page profile](RECORD_PAGE_PROFILE.md). Held aggregate/timeline snapshots retain
+their original denominator, basis and clock. The page's independently fresh count
+is labelled separately. Initial/full Run and capture retain full acquisition.

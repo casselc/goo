@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+289 adds a [count-plus-rows page profile](RECORD_PAGE_PROFILE.md) for composed views.
+Ordinary paging still refreshes full exploration. Offset pages can shift with late
+arrivals; a fresh page count and held chart totals have independent bases. Source
+statement reduction is measured, not a production latency or throughput claim.
+
 288 consolidates [Preserve](PRESERVATION.md) without combining durable objects.
 Multi-signal views require an explicit signal for question/evidence actions; saving
 a view preserves its whole configuration. Capture confirmation performs a new

@@ -1587,3 +1587,11 @@ Optional display keys are omitted rather than supplied as undefined. See
 pure checked query selection/availability helpers. It performs no reads or
 publication. Existing application owners supply commands and retain all source,
 draft and navigation authority. See [Preserve](PRESERVATION.md).
+
+
+### Narrow page admission — 289
+
+The existing bounded record-page model also consumes the application's explicit
+count-plus-rows response. `source-snapshots.adoptRecordPage` checks exact scope and
+rejects aggregate/dataset slots; no display component acquires source authority.
+The application retains source reads, record custody tokens and stale-owner checks.

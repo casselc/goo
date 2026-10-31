@@ -1,5 +1,51 @@
 # Validation record
 
+## Composed record-page acquisition — 289
+
+[Contract](docs/RECORD_PAGE_PROFILE.md) ·
+[measurement](docs/reviews/PAGING_MEASUREMENT_289.md) ·
+[product](docs/reviews/FLOW_PRODUCT_289.md) and
+[architecture review](docs/reviews/FLOW_ARCHITECTURE_289.md).
+
+- Full final root `go test ./...` and all 892 frontend tests pass. Targeted
+  tests check source failures, original query validation, count/row consistency,
+  exact retained rows and derived-column SQL/parameter parity.
+- Deterministic recording HTTP transport measures 3 ordinary / 4 grouped /
+  5 grouped-timeline source statements for full exploration, versus 2 for the
+  narrow profile. Only composed paging adopts it; ordinary paging keeps full
+  acquisition. This is not a ClickHouse latency/throughput benchmark.
+- OpenAPI validates 98 operations, 429 fixture responses, 159 admitted requests
+  and 28 mux refusals. The new response admits only bounded page/count fields;
+  aggregate injection and malformed count/state/page size negative controls pass.
+- Source review corrected a derived-column regression before delivery: record
+  projection and its parameters use the original question, while only count
+  acquisition drops aggregate requirements. No new durable schema/token family.
+- 100 Hegel admission cases and the nine-step Quint lifecycle pass, rejecting
+  six corrupted ledgers and an unfinished prefix.
+- Real OTLP journey passes: held chart population3 → fresh page count4; both
+  aggregate/timeline identities and clocks remain unchanged. Exact selected row,
+  indexes, query and basis survive Keep and independent exact-ID reopen. Empty
+  offset100 returns count4/rows[]/observed; it does not claim no-data population.
+  A page token cannot promote a full capture, retired page responses are ignored,
+  and ordinary paging/full capture still acquire the expected full results.
+- Independent Bombadil passes30 seconds /387 snapshots /5 phases, completing one
+  full Run and two narrow pages with held charts, no overflow or uncaught errors.
+  Four observed full/page API responses and requests conform to OpenAPI.
+- Two real documentation frames and the executable storyboard are updated. Parent
+  visual review confirms held chart3 and fresh page4 are distinct; the Keep frame
+  shows one exact retained observation. No new page mode/control was introduced.
+- Final duration287 regression passes18.6s; whole-composition reuse280 passes23.4s.
+  Older catalog helpers now open the actual View settings ancestor; changed
+  executable journey/Bombadil selectors pass syntax checks.277 is mechanically
+  updated but not rerun live. No production changes followed the passing suites.
+- Local image `5ac23272785068bea74e44f07333be51ff693f083c746e226a4e2f804c5ad280`
+  is built and deployed. All three changed UI/API assets match served bytes;
+  the new deployed endpoint rejects invalid scope before source execution.
+  Telemetry/XTDB volumes remain intact; successful raw capture/campaign copies
+  are cleaned, retaining compact ledgers, summaries and documentation frames.
+- The next captured-count comparison has a product/architecture-reviewed
+  [proposal](docs/AUTHORED_COMPARISON_PROPOSAL.md); it remains unimplemented.
+
 ## Contextual preservation — 288
 
 [Preserve](docs/PRESERVATION.md) groups existing question, view-definition and

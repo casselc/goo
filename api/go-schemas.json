@@ -1153,6 +1153,9 @@
   "RecordAggregatesResult": {
     "$ref": "#/components/schemas/exploration.RecordAggregatesResult"
   },
+  "RecordPageResult": {
+    "$ref": "#/components/schemas/exploration.RecordPageResult"
+  },
   "RecordQuery": {
     "anyOf": [
       {
@@ -9724,6 +9727,67 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.RecordMeasurePlan"
+  },
+  "exploration.RecordPageResult": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "capturedAt": {
+        "type": "string"
+      },
+      "count": {
+        "type": "string"
+      },
+      "hasMore": {
+        "type": "boolean"
+      },
+      "question": {
+        "$ref": "#/components/schemas/exploration.Query"
+      },
+      "resultToken": {
+        "type": "string"
+      },
+      "rows": {
+        "anyOf": [
+          {
+            "items": {},
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "state": {
+        "type": "string"
+      },
+      "warnings": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "question",
+      "capturedAt",
+      "basis",
+      "count",
+      "state",
+      "rows",
+      "hasMore",
+      "warnings"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.RecordPageResult"
   },
   "exploration.RecordSeriesPair": {
     "properties": {
