@@ -2750,3 +2750,5 @@ The [executable storyboard](../../journeys/292-group-side-staging-storyboard.md)
 shows source-free baseline/current staging, exact scope, independent child Run,
 held parent return, fresh focus and refusal of retired controls.
 [Contract and diagram](../GROUP_SIDE_STAGING.md).
+
+- [293: optional Preserve attachment and retired-control safety](../../journeys/293-preserve-attachment-storyboard.md).

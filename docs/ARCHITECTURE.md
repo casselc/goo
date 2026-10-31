@@ -1571,3 +1571,9 @@ helper emits keys; H1 still derives checked bounds and owns staging. Query suppo
 availability and interval completeness remain independent. No source operation,
 evaluator or dataset schema was added. See [contract](SAVED_COUNT_TIMELINE.md) and
 [source/visual review](reviews/DURATION_TIMELINE_REVIEW_287.md).
+
+## Saved attachment ownership — 293
+
+[Attachment controls](PRESERVE_ATTACHMENT.md) bind saved ID/title/revisions at publication.
+This metadata lease is distinct from telemetry execution leases. The existing document
+staging destination guard remains authoritative; disclosure changes perform no IO.

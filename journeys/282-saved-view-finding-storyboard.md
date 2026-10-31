@@ -2,10 +2,12 @@
 
 Executable: [282-saved-view-finding.spec.js](282-saved-view-finding.spec.js).
 The journey sends three spans through real OTLP and reads them from ClickHouse in
-an isolated Go runtime. No telemetry responses or display snapshots are mocked.
+an isolated Go runtime. Its saved timeline uses the shared scoped-interval
+renderer; native disclosures are opened idempotently so retained open state is
+respected. No telemetry responses or display snapshots are mocked.
 
 1. Run a saved composition containing count intervals, service counts and a bounded
-   record page. Edit its title: Add saved view to investigation becomes unavailable
+   record page. Open **Preserve → Add to investigation**. Edit its title: Add saved view to investigation becomes unavailable
    until that exact configuration is saved. Write a finding and save a new definition.
 2. Add the saved definition to investigation notes. Its exact immutable ID, title
    and finding travel together; records, cursors, aggregate snapshots and capture

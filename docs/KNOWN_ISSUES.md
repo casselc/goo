@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+293 collapses optional saved-view findings and binds attachment controls to exact
+saved publication identity. The whole-flow review comparison parent was API-seeded;
+its trace screenshot captured loading, not completed inspection. Full unseeded
+Activity-to-comparison/reopen validation remains the next roadmap task.
+
 292 adds [explicit group-side staging](GROUP_SIDE_STAGING.md) for positive reported
 counts in a coherent comparison. A baseline action stages its question, not stored
 rows; Run is a new independent read. Aligned absent zeros and diagnostic/unknown

@@ -60,3 +60,6 @@ draft and destination guards still apply, and retired controls cannot act on a
 newer context. No new durable object, capture-fusion operation or storage API is
 introduced. Rolling Activity views/Keep and specialized/native preservation paths
 retain their existing entry points in this cut.
+
+The optional finding form is collapsed under **Add to investigation**. Save view
+remains directly available. See [attachment ownership](PRESERVE_ATTACHMENT.md).

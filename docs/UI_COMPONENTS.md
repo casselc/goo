@@ -1624,3 +1624,9 @@ render epoch; redraw/rebind/disconnect retire old handlers. No JSON permission,
 source read, navigation or generic query event is added. The app binds its private
 owner and uses `group-side-staging.mjs`; Go `StageGroupSide` is the equivalent
 semantic planner. See [contract](GROUP_SIDE_STAGING.md), including identity frames.
+
+## Preserve attachment — 293
+
+The application owns a native details/summary disclosure and stable finding textarea.
+`ViewFinding.sameAttachment` compares saved publication identity without IO; the host
+retires action buttons when identity changes. No reusable display element reads or writes.

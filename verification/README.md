@@ -3325,3 +3325,20 @@ prefix must fail. These effect claims concern browser source requests after
 capture setup; explicitly saving captures remains a separate source operation.
 Keep compact model/ledger/campaign summaries and documentation frames, then remove
 successful raw campaign artifacts and the disposable isolated capture store.
+
+### Optional saved-view findings —293
+
+`GOO_ATTACHMENT_BOMBADIL=1 playwright test journeys/293-preserve-attachment.spec.js --workers=1`
+runs the isolated generic Go server against the real OTLP/ClickHouse lab. One
+explicit Run precedes source-free disclosure, retained-child/Back, stale-control,
+fresh-Save and pending-destination checks. Exact saved IDs and finding text must
+survive into two explicitly published investigation revisions. The independent
+Bombadil campaign completes only after observing its exact card and stored
+revision, with zero telemetry reads.
+
+The nine-step observed Quint replay is
+`GOO_PRESERVE_ATTACHMENT_LEDGER=../artifacts/attachment-293/model-trace.json go test -run TestQuintPreserveAttachmentObservedBrowserLedger -count=1`
+from this module. Six corrupted observations and an unfinished prefix must fail.
+The actual JavaScript identity helper has direct frontend tests; no duplicate Go
+implementation is used as a property oracle. Keep compact ledgers/results and the
+three generated storyboard frames; discard successful raw campaign/store copies.

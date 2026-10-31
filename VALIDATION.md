@@ -1,5 +1,41 @@
 # Validation record
 
+## Optional Preserve attachment and owner safety — 293
+
+[Contract](docs/PRESERVE_ATTACHMENT.md) ·
+[storyboard](journeys/293-preserve-attachment-storyboard.md) ·
+[architecture](docs/reviews/RESPONDER_FLOW_ARCHITECTURE_293.md),
+[design](docs/reviews/RESPONDER_FLOW_DESIGN_293.md) and
+[live walkthrough](docs/reviews/RESPONDER_FLOW_WALK_293.md).
+
+- Full root `go test ./...` and all 910 frontend tests pass. The frontend suite
+  requires local socket access for its real streamed-response cancellation test;
+  the initial sandboxed run failed there, then the socket-enabled full run passed.
+- OpenAPI validation passes: 98 operations, 429 fixture responses, 159 admitted
+  requests and 28 mux refusals, including negative controls and SSE schemas.
+  No API, durable schema or product Go handler changed.
+- Real OTLP browser 293 passes with one explicit Run and two explicit investigation
+  revision writes. Closed disclosure, hidden retained parent, changed saved ID,
+  retired textarea and pending destination refuse safely; Back retains the note.
+- The nine-step observed Quint replay passes and rejects six corrupted ledgers
+  plus an unfinished prefix. The independent 30-second Bombadil campaign observes
+  the exact card and stored revision, with 621 snapshots and zero source reads.
+  An initial fixture/layout and Quint adapter parser error were corrected before
+  the passing run. Keyboard disclosure was not separately exercised.
+- Browser regressions 282, 288 and 292 pass. 282's independent 30-second campaign
+  passes with 533 snapshots across seven phases and two explicit reads. Its stale
+  timeline selector and always-closed disclosure assumption were updated to match
+  the current component and retained native disclosure. Affected frames were regenerated.
+- Final default Preserve frame passes design review: Save stays visible and the
+  optional finding is collapsed. Preliminary `293-review-child-*` screenshots
+  intentionally document the earlier layout; they are not delivered-layout proof.
+- Compose configuration and CA-backed Go image build pass. Local lab runs image
+  `b1d78703d8d70c6861e6394a5abc4a5e40f3ba3b536b85c85dca695e7138cbaf`;
+  both changed UI modules match served bytes. Existing volumes and the separate
+  XTDB container were retained. Overview/contract/review/storyboard links resolve.
+- The whole-flow walkthrough used an API-seeded comparison parent; its trace frame
+  showed loading. A complete unseeded responder journey remains the next task.
+
 ## Explicit group-side question staging — 292
 
 [Contract/diagram](docs/GROUP_SIDE_STAGING.md) ·

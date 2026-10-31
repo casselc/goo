@@ -1,37 +1,23 @@
 # goo — Grammar of Observability
 
-[Explore a compared group](docs/GROUP_SIDE_STAGING.md) from an explicit baseline
-or current count, staging its exact question while retaining the parent comparison.
-
-[Count change by group](docs/GROUP_COUNT_COMPARISON.md) aligns the same prepared
-baseline/current pair on a shared scale, with local search and exact changes.
-
-[Captured-count comparisons](docs/CAPTURED_COUNT_COMPARISON.md) add an explicitly
-chosen capture baseline to an authored view, keeping both evidence bases distinct.
-
-[Composed record paging](docs/RECORD_PAGE_PROFILE.md) reads a fresh count and record
-page while keeping aggregate and timeline evidence held.
-
-[Preserve the current context](docs/PRESERVATION.md): share a question, save a view
-definition, or open a fresh evidence capture. Each keeps its own meaning and read effects.
-
-[Reusable saved displays](docs/SAVED_DISPLAY_DECLARATIONS.md) let checked exploration
-queries reopen with count, numeric or duration bar/table displays. Apply a compatible
-saved display to the current population without replacing its query.
-[Customize an HTTP service view](docs/HTTP_SERVICE_VIEW_TEMPLATE.md) stages a shipped
-route template in the same editor, preserving the service widget’s query.
-[Composed record and aggregate views](docs/RECORD_AGGREGATE_COMPOSITION.md) share one
-query owner, with local ordering, visibility and child-specific display settings.
-Apply a compatible whole composition in the current scope without replacing its
-query or reading telemetry.
-
 Start with what is happening now. Narrow logs and spans, inspect a population,
 compare evidence, and preserve an explanation you can revisit or reuse. Goo works
 with ordinary OpenTelemetry data; application manifests and Go annotations add
 shared definitions when available. Logs/Spans switching preserves shared filters;
 incompatible fields stay as explicit drafts ([scope continuity](journeys/239-activity-signal-scope-storyboard.md)).
 
-[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Reviewed roadmap](docs/ROADMAP_2026_10_29.md) · [Execution backlog](docs/BACKLOG_2026_10_29.md) ·
+Explore and narrow live telemetry, then [compare captured counts](docs/CAPTURED_COUNT_COMPARISON.md),
+[inspect group changes](docs/GROUP_COUNT_COMPARISON.md), and
+[stage a chosen group](docs/GROUP_SIDE_STAGING.md) for an independent read.
+[Preserve](docs/PRESERVATION.md) a question, reusable view, or independent evidence capture.
+Optional [investigation findings](docs/PRESERVE_ATTACHMENT.md) stay behind Add to investigation.
+
+Build reusable views with [saved displays](docs/SAVED_DISPLAY_DECLARATIONS.md),
+[service templates](docs/HTTP_SERVICE_VIEW_TEMPLATE.md), and
+[record/aggregate compositions](docs/RECORD_AGGREGATE_COMPOSITION.md).
+[Record paging](docs/RECORD_PAGE_PROFILE.md) retains the held aggregate and timeline.
+
+[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Reviewed roadmap](docs/ROADMAP_2026_10_30.md) · [Execution backlog](docs/BACKLOG_2026_10_29.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
 [Go/frontend library review and proposal](docs/LIBRARY_REFACTOR_PLAN_2026_10_28.md)
 
@@ -459,7 +445,7 @@ For supplied native observations, `measurements.Evaluate(question, rows, at)` is
 storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
 
-Current priorities and acceptance are in the [2026-10-29 roadmap](docs/ROADMAP_2026_10_29.md),
+Current priorities and acceptance are in the [2026-10-30 roadmap](docs/ROADMAP_2026_10_30.md),
 reconciled against [six delegated reviews](docs/reviews/INDEPENDENT_REVIEW_SUMMARY_236.md).
 
 Go library entry points: `subjectfacts` provides portable prepared-fact aggregation

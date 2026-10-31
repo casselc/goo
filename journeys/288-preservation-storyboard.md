@@ -11,7 +11,7 @@ A responder investigates one fixed UTC window over real OTLP spans, then keeps t
 
 ![Two-query preservation requires an explicit signal](../docs/journeys/screenshots/288-explicit-signal.png)
 
-4. **Keep the composition.** Open a single-query composition, apply its valid source through **View settings → Composition**, then save a new view through **Preserve**. Applying presentation and saving definitions make no telemetry read. An unfinished investigation note blocks adding a question with visible feedback, without losing the note or adding a duplicate. Clear the note, add the current saved definition and its finding, and save the investigation revision. Its cards remain distinct question intent, captured evidence and view definition.
+4. **Keep the composition.** Open a single-query composition, apply its valid source through **View settings → Composition**, then save a new view through **Preserve**. Applying presentation and saving definitions make no telemetry read. An unfinished investigation note blocks adding a question with visible feedback, without losing the note or adding a duplicate. Open **Add to investigation** for the optional finding. Clear the note, add the current saved definition and its finding, and save the investigation revision. Its cards remain distinct question intent, captured evidence and view definition.
 
 ![Three composable preserved pieces](../docs/journeys/screenshots/288-preserved-pieces.png)
 

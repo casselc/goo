@@ -1,9 +1,10 @@
 # Implementation plan
 
-> Current checkpoint292: explicit baseline/current group staging preserves exact
-> side scope, retained parents and private action retirement. Next: review the
-> whole responder flow and choose an observed bounded improvement before adding
-> more measures or actions. See the [roadmap](ROADMAP_2026_10_30.md#side-specific-staging-delivery-and-flow-checkpoint--292).
+> Current checkpoint 293: responder-flow reviews led to a compact optional
+> Preserve attachment and exact saved-publication ownership. Next: validate the
+> unseeded Activity-to-comparison/reopen journey and completed trace inspection,
+> then choose the next observed workflow improvement. See the
+> [roadmap](ROADMAP_2026_10_30.md#responder-flow-review--293).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),
@@ -1659,3 +1660,10 @@ repeats an ordinary canonical group chart. Source trace inspection has a separat
 pure membership check, so legal parent predicate budgets do not block trace
 context. Status/error-rate, histogram, multidimensional/error-triage and native
 families remain explicit specializations until their semantics migrate.
+
+## 293 — responder-flow checkpoint
+
+Whole-flow architecture, design and live walkthrough reviews selected optional Preserve
+attachment disclosure and saved-publication ownership as the bounded next improvement.
+Save stays visible, drafts survive retained Back, retired controls refuse safely.
+See [contract](PRESERVE_ATTACHMENT.md) and review reports.

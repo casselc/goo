@@ -4,3 +4,5 @@ function text(value,max,multiline=false){if(typeof value!=='string'||new TextEnc
 export function card(reference,caption='',finding=''){if(!ID.test(reference))throw Error('Save this view before adding its definition.');text(caption,160);text(finding,4000,true);return {kind:'view',reference,...(caption?{caption}:{}),...(finding?{text:finding}:{})};}
 export function savedReason({id,savedRevision,draftRevision,busy=false,pending=false,active=true}){if(!active)return 'Return to the active view before adding its definition.';if(busy)return 'Wait for the current operation to finish.';if(pending)return 'Apply or clear pending selections and query drafts first.';if(!ID.test(id)||savedRevision!==draftRevision)return 'Save the current view before adding its definition.';return '';}
 export function destinationCurrent(expected,actual){return !actual?.busy&&!actual?.pending&&(expected?!!actual&&expected.token===actual.token&&expected.generation===actual.generation:actual===null);}
+
+export function sameAttachment(expected,actual){return !!expected&&!!actual&&['id','title','savedRevision','draftRevision'].every(key=>expected[key]===actual[key]);}

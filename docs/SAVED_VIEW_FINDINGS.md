@@ -4,7 +4,7 @@ An investigation can retain an exact saved view definition and an authored findi
 The definition records the checked query, component order, display choices and
 interval width. It does not store the records or chart inputs previously displayed.
 
-Save the current view, enter an optional finding and choose **Add saved view to investigation**. This stages a card in the existing investigation editor. Save its
+Save the current view, open **Add to investigation**, enter an optional finding and choose **Add saved view to investigation**. This stages a card in the existing investigation editor. Save its
 revision to preserve it. If a view has unsaved changes, save those first so the
 reference cannot accidentally point to an earlier configuration.
 
