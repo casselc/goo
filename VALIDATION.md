@@ -1,5 +1,56 @@
 # Validation record
 
+## Explicit record/aggregate compositions — 279
+
+Single-query fixed views now declare an ordered aggregate and record-table child,
+with node-owned options and local visibility/order. Flat presentation options,
+child query overrides and all-hidden stacks are refused. The HTTP template emits
+this composition directly; the existing catalog can extract/reuse its aggregate.
+Records use a separate immutable bounded-page input, never aggregate completeness.
+See [contract/diagram](docs/RECORD_AGGREGATE_COMPOSITION.md) and
+[storyboard](journeys/279-composition-storyboard.md).
+
+Validation:
+
+- Full root `go test ./...` and all 849 frontend tests pass. Focused Go persistence/
+  HTTP tests cover strict null/empty field ownership, typed children, independent
+  immutable revisions and unchanged query intent. API checks pass: 607 reflected /
+  629 OpenAPI schemas, 97 operations, 429 response fixtures, 159 admitted requests,
+  28 mux refusals, negative controls and SSE checks.
+- 100 finite JSON-decoded Go↔JS composition cases pass (50 valid / 50 refused).
+  Eight-step Quint smoke and observed replay pass, rejecting six altered traces
+  and an unfinished prefix. Latest observed replay takes 5.68 s.
+- Five record-page tests plus four existing source-admission tests pass: exact rich
+  rows/nanosecond strings, detached deep freeze, private result binding, stored page
+  clocks/bounds, unknown continuation and rejection of mutable/non-JSON/bad metadata.
+- Main real OTLP journey passes (19.7 s final frame run). Three matching spans and a
+  one-row page share one query owner. Compose/reorder/hide/show/source/column edits
+  add no reads; invalid source preserves the last applied view and blocks Save.
+  Paging preserves the aggregate ID, revision, clock and denominator while advancing
+  record-page ownership. A stale detached trace button cannot open an inspector.
+  Save omits conflicting flat options, leaves the original revision unchanged and
+  reopens configuration without reading.
+- Main source-read ledger is `[1,1,1,1,2,2,2,3]`: initial Run, explicit Next page,
+  explicit Run after reopen. Source errors are empty. The API still returns unused
+  aggregates on a page request; no page-only SQL optimization or atomic read is claimed.
+- Bombadil passes 30 seconds / 691 snapshots / ten phases, including actual Compose,
+  order/visibility controls, paging and save/reopen. Final state is staged with two
+  source reads, no overflow or uncaught errors. The updated HTTP-template journey278
+  also passes (21.5 s), including composition expansion and preserved service scope.
+- Three composition frames were refreshed in a final main-only run at 1280×1400 so
+  sticky application chrome does not obscure page bounds/read clocks. No generated
+  image was edited. A qualified Unicode field-key mismatch was corrected in the
+  common record-column validator, with focused valid/invalid/byte-bound checks.
+- Final design review confirms hidden aggregate revocation, latest-page publication,
+  pending pager retirement, Trace/context/plot/selection/column owner guards, source
+  draft handling and no completeness transfer between input profiles. Read-only
+  Saved inspection retains its existing default when the optional owner hook is absent.
+- Local image `aae470d2f4b5061e99e8775de85c0e4118ae41aa1af48591cf860af270e7d92a`
+  is built and deployed. Served bytes match all eight changed/new UI/API files;
+  existing telemetry and XTDB volumes remain intact. Raw successful campaigns and
+  disposable capture copies were removed; compact ledgers/summaries and frames remain.
+
+
 ## HTTP service view template — 278
 
 The HTTP-server route widget now expands the shipped `otel.http-server-routes/1`

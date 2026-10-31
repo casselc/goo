@@ -25,28 +25,20 @@ type ExplorationView struct {
 	ID           string                          `json:"id,omitempty"`
 	Title        string                          `json:"title"`
 	Queries      []exploration.Query             `json:"queries"`
-	Layout       string                          `json:"layout"`
-	Columns      []string                        `json:"columns"`
+	Layout       string                          `json:"layout,omitempty"`
+	Columns      []string                        `json:"columns,omitempty"`
 	FieldColumns []exploration.Field             `json:"fieldColumns,omitempty"`
 	Tail         *ExplorationTail                `json:"tail,omitempty"`
 	Breakdowns   map[string]ExplorationBreakdown `json:"breakdowns,omitempty"`
 	Displays     map[string]ViewDeclaration      `json:"displays,omitempty"`
+	Composition  *ViewComposition                `json:"composition,omitempty"`
 }
 
 func (v ExplorationView) Validate() error {
-	if v.Version != 1 || !text(v.Title, 120, true, false) || len(v.Queries) < 1 || len(v.Queries) > 2 || (v.Layout != "charts-records" && v.Layout != "records") || len(v.Columns) < 2 || len(v.Columns) > 4 {
-		return errors.New("require bounded title, 1..2 fixed queries, supported layout and 2..4 columns")
+	if v.Version != 1 || !text(v.Title, 120, true, false) || len(v.Queries) < 1 || len(v.Queries) > 2 {
+		return errors.New("require bounded title and 1..2 fixed queries")
 	}
-	seen := map[string]bool{}
-	for _, c := range v.Columns {
-		if seen[c] || (c != "utc" && c != "service" && c != "summary" && c != "context") {
-			return errors.New("invalid or duplicate view column")
-		}
-		seen[c] = true
-	}
-	if !seen["utc"] || !seen["summary"] {
-		return errors.New("UTC and summary columns required")
-	}
+
 	signals := map[string]bool{}
 	first := v.Queries[0]
 	for _, q := range v.Queries {
@@ -59,24 +51,17 @@ func (v ExplorationView) Validate() error {
 		}
 	}
 
-	if len(v.FieldColumns) > 8 {
-		return errors.New("at most eight record field columns")
+	if v.Composition != nil {
+		if len(v.Queries) != 1 || v.Layout != "" || len(v.Columns) != 0 || len(v.FieldColumns) != 0 || len(v.Displays) != 0 || len(v.Breakdowns) != 0 || v.Tail != nil {
+			return errors.New("composition requires one fixed query and owns all child presentation; omit flat layout, columns, displays, comparisons and tail")
+		}
+		return v.Composition.Validate(first)
 	}
-	fields := map[exploration.Field]bool{}
-	for _, field := range v.FieldColumns {
-		if fields[field] {
-			return errors.New("duplicate record field column")
-		}
-		fields[field] = true
-		valid := false
-		for _, q := range v.Queries {
-			if _, err := field.Type(q.Signal); err == nil {
-				valid = true
-			}
-		}
-		if !valid {
-			return errors.New("unsupported record field column")
-		}
+	if v.Layout != "charts-records" && v.Layout != "records" {
+		return errors.New("choose a supported view layout")
+	}
+	if err := validateRecordColumns(v.Columns, v.FieldColumns, v.Queries); err != nil {
+		return err
 	}
 
 	if v.Tail != nil {

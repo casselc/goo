@@ -20,8 +20,9 @@
 > [architecture](reviews/AUTHORING_ARCHITECTURE_REVIEW_276.md) checkpoint selects
 > 277: apply an existing saved display to the current checked fixed population.
 > 278 adds [one HTTP service record template](HTTP_SERVICE_VIEW_TEMPLATE.md) and
-> contextual Customize entry. Next is small records-plus-aggregate composition
-> under one query owner; specialized owners remain explicit limits.
+> contextual Customize entry. 279 adds [records-plus-aggregate composition](RECORD_AGGREGATE_COMPOSITION.md)
+> under one query owner. Next280 reuses a whole composition in the current checked
+> scope, preserving destination queries and held inputs; specialized owners remain explicit limits.
 > [Pit-of-success review](MODEL_PIT_OF_SUCCESS_264.md) gates further renderer/editor expansion.
 
 > Current continuation proposal: [view grammar260](VIEW_GRAMMAR_PROPOSAL_260.md)

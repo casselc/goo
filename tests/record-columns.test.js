@@ -1,3 +1,12 @@
 const{test}=require('node:test'),assert=require('node:assert/strict'),{fields,value,validate}=require('../ui/record-columns.mjs');
 test('qualified supplied fields retain absence, empty strings and exact integer text',()=>{const r={Body:'log',ResourceAttributes:{region:'resource'},LogAttributes:{region:'',large:'9007199254740993'}};assert.equal(fields([r]).filter(f=>f.key==='region').length,2);assert.deepEqual(value(r,{kind:'attribute',key:'region'}),{present:true,value:''});assert.deepEqual(value(r,{kind:'attribute',key:'absent'}),{present:false});assert.equal(value(r,{kind:'attribute',key:'large'}).value,'9007199254740993');assert.equal(value(r,{kind:'resource',key:'region'}).value,'resource')});
 test('display layout detaches ordered fields and preserves required core columns',()=>{const v={columns:['summary','utc'],fieldColumns:[{kind:'resource',key:'x'},{kind:'attribute',key:'x'}]},out=validate(v);out.fieldColumns[0].key='changed';assert.equal(v.fieldColumns[0].key,'x');for(const layout of [{columns:['utc']},{columns:['utc','summary','utc']},{columns:['utc','summary'],fieldColumns:[{kind:'attribute',key:'x'},{kind:'attribute',key:'x'}]},{columns:['utc','summary'],fieldColumns:Array.from({length:9},(_,i)=>({kind:'attribute',key:String(i)}))}])assert.throws(()=>validate(layout))});
+
+
+test('qualified record columns preserve well-formed Unicode under the Go UTF-8 byte bound',()=>{
+ const C=require('../ui/record-columns.mjs'),field={kind:'attribute',key:'team.🚀'};
+ assert.deepEqual(C.validate({columns:['utc','summary'],fieldColumns:[field]}).fieldColumns,[field]);
+ assert(C.fields([{SpanAttributes:{'team.🚀':'launch'}}]).some(f=>f.kind==='attribute'&&f.key==='team.🚀'));
+ assert.deepEqual(C.validate({columns:['utc','summary'],fieldColumns:[{kind:'attribute',key:'🚀'.repeat(32)}]}).fieldColumns[0].key,'🚀'.repeat(32));
+ for(const key of ['\ud800','x\0y','🚀'.repeat(33)])assert.throws(()=>C.validate({columns:['utc','summary'],fieldColumns:[{kind:'attribute',key}]}));
+});

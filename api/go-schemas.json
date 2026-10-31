@@ -24487,6 +24487,49 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.ComparisonReceipt"
   },
+  "workbench.CompositionKind": {
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "version": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "name",
+      "version"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CompositionKind"
+  },
+  "workbench.CompositionKindInput": {
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CompositionKind"
+  },
   "workbench.Deployment": {
     "properties": {
       "environment": {
@@ -24944,6 +24987,16 @@
           }
         ]
       },
+      "composition": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewComposition"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "displays": {
         "anyOf": [
           {
@@ -25009,9 +25062,7 @@
     "required": [
       "version",
       "title",
-      "queries",
-      "layout",
-      "columns"
+      "queries"
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.ExplorationView"
@@ -25053,6 +25104,23 @@
               ]
             },
             "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "composition": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ViewCompositionInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"
@@ -25551,6 +25619,202 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.MeaningWindow"
   },
+  "workbench.RecordViewDeclaration": {
+    "properties": {
+      "display": {
+        "$ref": "#/components/schemas/workbench.RecordViewDisplay"
+      },
+      "kind": {
+        "$ref": "#/components/schemas/workbench.RecordViewKind"
+      },
+      "scope": {
+        "$ref": "#/components/schemas/workbench.ViewDeclarationScope"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "scope",
+      "kind",
+      "display"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.RecordViewDeclaration"
+  },
+  "workbench.RecordViewDeclarationInput": {
+    "additionalProperties": false,
+    "properties": {
+      "display": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.RecordViewDisplayInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "kind": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.RecordViewKindInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scope": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewDeclarationScopeInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.RecordViewDeclaration"
+  },
+  "workbench.RecordViewDisplay": {
+    "properties": {
+      "columns": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fieldColumns": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.Field"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "columns"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.RecordViewDisplay"
+  },
+  "workbench.RecordViewDisplayInput": {
+    "additionalProperties": false,
+    "properties": {
+      "columns": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fieldColumns": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/exploration.FieldInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.RecordViewDisplay"
+  },
+  "workbench.RecordViewKind": {
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "version": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "name",
+      "version"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.RecordViewKind"
+  },
+  "workbench.RecordViewKindInput": {
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.RecordViewKind"
+  },
   "workbench.Step": {
     "properties": {
       "kind": {
@@ -25758,6 +26022,164 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.StepScope"
+  },
+  "workbench.ViewComposition": {
+    "properties": {
+      "children": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/workbench.ViewCompositionChild"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "kind": {
+        "$ref": "#/components/schemas/workbench.CompositionKind"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "kind",
+      "children"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewComposition"
+  },
+  "workbench.ViewCompositionChild": {
+    "properties": {
+      "aggregate": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewDeclaration"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "hidden": {
+        "type": "boolean"
+      },
+      "records": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.RecordViewDeclaration"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewCompositionChild"
+  },
+  "workbench.ViewCompositionChildInput": {
+    "additionalProperties": false,
+    "properties": {
+      "aggregate": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ViewDeclarationInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "hidden": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "records": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.RecordViewDeclarationInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewCompositionChild"
+  },
+  "workbench.ViewCompositionInput": {
+    "additionalProperties": false,
+    "properties": {
+      "children": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/workbench.ViewCompositionChildInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "kind": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.CompositionKindInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewComposition"
   },
   "workbench.ViewDeclaration": {
     "properties": {

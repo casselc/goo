@@ -1449,3 +1449,13 @@ HTTP route widget into an existing exploration-view configuration. The server ow
 template compatibility and detached expansion; the current service owner guards
 the asynchronous response, then the existing trail stages a population. No data
 or source witness crosses the handoff, and Run remains explicit.
+
+
+## Records-plus-aggregate composition — 279
+
+[The composition contract](RECORD_AGGREGATE_COMPOSITION.md) gives one checked query
+two typed children, each with its own display options. The source owner supplies
+a canonical aggregate dataset and a separate immutable record-page profile. Local
+order/visibility do not fetch; paging advances only record ownership while keeping
+aggregate provenance and denominator held. Flat and composed presentation settings
+cannot coexist in one saved configuration.

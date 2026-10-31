@@ -5,10 +5,12 @@ import {identity} from './question-session.mjs';
 import {validateRecordQuestion} from './question-protocol.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
 import {validate as validateSaved} from './saved-capture-protocol.mjs';
+import {fromExploration as recordPageFromExploration} from './record-page.mjs';
 
 const source=createSourceAdapter({id:'goo.explore'}),stored=createSourceAdapter({id:'goo.verified-saved-explore'});
 const slots=Object.freeze({viewDataset:'ranked',timeDataset:'time-series',summaryDataset:'summary',histogramDataset:'histogram'});
 const record=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
+const recordPages=new WeakMap();
 function questionKey(question,paging=false){
   validateRecordQuestion(question);validatePredicate(question.where,question.signal);
   const copy=structuredClone(question);if(paging){delete copy.offset;delete copy.limit}return identity(copy);
@@ -30,7 +32,22 @@ function admit(data,expected,adapter,{paging=false}={}){
     // independently checked original selector and original source read clock.
     result[slot]=adapter.adoptSnapshot(value,{question:paging?value.scope.selector:expected});
   }
+  // A record page has independent bounded delivery semantics. It never receives
+  // an exhaustive-groups witness, even when a sibling aggregate has one.
+  delete result.recordPage;
+  if(data.rows!==undefined&&data.rows!==null){
+    const page=recordPageFromExploration(data);
+    result.recordPage=page;result.rows=page.rows;result.question=page.question;
+    recordPages.set(result,page);
+  }
   return result;
+}
+
+// Bind passive pages to their admitted response wrapper, not merely a forgeable
+// JSON label or a page moved from another question/result.
+export function getRecordPage(data){
+ const page=recordPages.get(data);
+ return page&&data.recordPage===page&&data.rows===page.rows&&data.question===page.question&&data.basis===page.basis&&data.capturedAt===page.capturedAt&&data.state===page.quality.state?page:null;
 }
 
 export function adoptExploration(data,requestedQuestion){return admit(data,requestedQuestion,source)}

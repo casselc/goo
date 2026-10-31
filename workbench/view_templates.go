@@ -40,9 +40,7 @@ type recordViewTemplate struct {
 	Group        exploration.Field       `json:"group"`
 	ServiceField exploration.Field       `json:"serviceField"`
 	Required     []exploration.Predicate `json:"required"`
-	Layout       string                  `json:"layout"`
-	Columns      []string                `json:"columns"`
-	Display      ViewDeclaration         `json:"display"`
+	Composition  ViewComposition         `json:"composition"`
 }
 
 // ExpandViewTemplate stages existing authored-view configuration. It neither
@@ -102,7 +100,7 @@ func ExpandViewTemplate(in ViewTemplateExpansionRequest) (ViewTemplateExpansion,
 		return out, err
 	}
 	out.Template = template.ViewTemplateReference
-	out.View = ExplorationView{Version: 1, Title: template.Title, Queries: []exploration.Query{query}, Layout: template.Layout, Columns: template.Columns, Displays: map[string]ViewDeclaration{template.Signal: template.Display}}
+	out.View = ExplorationView{Version: 1, Title: template.Title, Queries: []exploration.Query{query}, Composition: &template.Composition}
 	if err := out.View.Validate(); err != nil {
 		return ViewTemplateExpansion{}, err
 	}

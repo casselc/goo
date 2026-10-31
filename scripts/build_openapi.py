@@ -96,6 +96,41 @@ for suffix in ('', 'Input'):
  schemas['workbench.ExplorationView'+suffix]['properties']['displays'].update(maxProperties=2,propertyNames={'enum':['spans','logs']})
  schemas['workbench.ExplorationView'+suffix].setdefault('allOf',[]).extend([{'not':{'required':['displays','breakdowns'],'properties':{'displays':{'required':[signal]},'breakdowns':{'required':[signal]}}}} for signal in ('spans','logs')])
 
+# Bounded composition: two typed supplied aspects of the same checked query.
+for suffix in ('', 'Input'):
+ composition=schemas['workbench.ViewComposition'+suffix]
+ composition['additionalProperties']=False
+ composition['required']=['version','kind','children']
+ composition['properties']['kind']['type']='object'
+ composition['properties']['version']['const']='goo.composition/1'
+ composition['description']='One fixed record query supplies one aggregate and one bounded record-page child. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees.'
+ for name,kind_name in [('CompositionKind','stack'),('RecordViewKind','record-table')]:
+  kind=schemas['workbench.'+name+suffix];kind['additionalProperties']=False
+  kind['required']=['name','version']
+  kind['properties']['name']['const']=kind_name;kind['properties']['version']['const']=1
+ child=schemas['workbench.ViewCompositionChild'+suffix];child['additionalProperties']=False
+ child['properties']['hidden']['type']='boolean'
+ child['oneOf']=[{'required':['aggregate'],'not':{'required':['records']}},{'required':['records'],'not':{'required':['aggregate']}}]
+ for field in ('aggregate','records'):
+  child['properties'][field]['type']='object'
+ children=composition['properties']['children'];children.update(type='array',minItems=2,maxItems=2,items={'$ref':'#/components/schemas/workbench.ViewCompositionChild'+suffix,'type':'object'})
+ children['allOf']=[{'contains':{'required':[role]},'minContains':1,'maxContains':1} for role in ('aggregate','records')]
+ children['allOf'].append({'contains':{'properties':{'hidden':{'const':False}}},'minContains':1})
+ record=schemas['workbench.RecordViewDeclaration'+suffix];record['additionalProperties']=False
+ record['required']=['version','scope','kind','display']
+ for field in ('scope','kind','display'): record['properties'][field]['type']='object'
+ record['properties']['scope']['required']=['kind','signal']
+ record['properties']['version']['const']='goo.view/1'
+ record['description']='Pinned record-table presentation over a supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator.'
+ display=schemas['workbench.RecordViewDisplay'+suffix];display['additionalProperties']=False
+ display['required']=['columns']
+ display['properties']['columns'].update(type='array',minItems=2,maxItems=4,uniqueItems=True,items={'enum':['utc','service','summary','context']},allOf=[{'contains':{'const':core}} for core in ('utc','summary')])
+ display['properties']['fieldColumns'].update(type='array',maxItems=8,uniqueItems=True)
+ view=schemas['workbench.ExplorationView'+suffix]
+ view['properties']['composition']['type']='object'
+ flat=['layout','columns','fieldColumns','displays','breakdowns','tail']
+ view.setdefault('allOf',[]).append({'if':{'required':['composition']},'then':{'required':['version','title','queries'],'properties':{'version':{'const':1},'queries':{'type':'array','minItems':1,'maxItems':1}},'not':{'anyOf':[{'required':[field]} for field in flat]}},'else':{'required':['layout','columns']}})
+
 # Immutable selected observations, independent of source and annotation storage.
 keep=schemas['exploration.KeepTailIntentInput']
 keep['required']=['version','requestID','connection','selector','refs']

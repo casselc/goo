@@ -5,18 +5,79 @@
   "family": "http-server",
   "grain": "server-span-record",
   "signal": "spans",
-  "group": {"kind": "attribute", "key": "http.route"},
-  "serviceField": {"kind": "column", "key": "service"},
+  "group": {
+    "kind": "attribute",
+    "key": "http.route"
+  },
+  "serviceField": {
+    "kind": "column",
+    "key": "service"
+  },
   "required": [
-    {"field": {"kind": "column", "key": "kind"}, "op": "eq", "value": "Server"},
-    {"field": {"kind": "attribute", "key": "http.request.method"}, "op": "ne"}
+    {
+      "field": {
+        "kind": "column",
+        "key": "kind"
+      },
+      "op": "eq",
+      "value": "Server"
+    },
+    {
+      "field": {
+        "kind": "attribute",
+        "key": "http.request.method"
+      },
+      "op": "ne"
+    }
   ],
-  "layout": "charts-records",
-  "columns": ["utc", "service", "summary", "context"],
-  "display": {
-    "version": "goo.view/1",
-    "scope": {"kind": "record-query", "signal": "spans"},
-    "kind": {"name": "bar", "version": 1},
-    "display": {"category": "category", "value": "count", "scale": "population", "order": "value-desc", "title": "HTTP server routes"}
+  "composition": {
+    "version": "goo.composition/1",
+    "kind": {
+      "name": "stack",
+      "version": 1
+    },
+    "children": [
+      {
+        "aggregate": {
+          "version": "goo.view/1",
+          "scope": {
+            "kind": "record-query",
+            "signal": "spans"
+          },
+          "kind": {
+            "name": "bar",
+            "version": 1
+          },
+          "display": {
+            "category": "category",
+            "value": "count",
+            "scale": "population",
+            "order": "value-desc",
+            "title": "HTTP server routes"
+          }
+        }
+      },
+      {
+        "records": {
+          "version": "goo.view/1",
+          "scope": {
+            "kind": "record-query",
+            "signal": "spans"
+          },
+          "kind": {
+            "name": "record-table",
+            "version": 1
+          },
+          "display": {
+            "columns": [
+              "utc",
+              "service",
+              "summary",
+              "context"
+            ]
+          }
+        }
+      }
+    ]
   }
 }

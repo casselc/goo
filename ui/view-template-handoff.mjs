@@ -1,3 +1,4 @@
+import * as Composition from './view-composition.mjs';
 /* Checked configuration handoff only. No source data, witnesses or navigation. */
 import {validateRecordQuestion} from './question-protocol.mjs';
 import * as ViewDeclaration from './view-declaration.mjs';
@@ -9,9 +10,9 @@ export function title(value){if(typeof value!=='string'||!value.trim()||new Text
 export function eligible(widget){const q=widget?.query;return widget?.state==='supported'&&widget.family==='http-server'&&widget.key==='dimension'&&q?.signal==='spans'&&q.groupBy?.length===1&&q.groupBy[0].kind==='attribute'&&q.groupBy[0].key==='http.route'&&!widget.measurement&&!q.numericHistogram&&!q.groupTimeSeries;}
 export function request(widget){if(!eligible(widget))throw Error('Customize requires a supported HTTP server route widget.');validateRecordQuestion(widget.query);return {template:id,version,widget:structuredClone(widget)};}
 export function stagedView(value,question){
- validateRecordQuestion(question);closed(value,['version','title','queries','layout','columns','displays']);
- if(value.version!==1||!['charts-records','records'].includes(value.layout)||!Array.isArray(value.queries)||value.queries.length!==1||JSON.stringify(stable(value.queries[0]))!==JSON.stringify(stable(question)))throw Error('Template changed the current widget question.');
- title(value.title);validateRecordQuestion(value.queries[0]);
+ validateRecordQuestion(question);closed(value,['version','title','queries','layout','columns','displays','composition']);
+ if(value.version!==1||!Array.isArray(value.queries)||value.queries.length!==1||JSON.stringify(stable(value.queries[0]))!==JSON.stringify(stable(question)))throw Error('Template changed the current widget question.');
+ title(value.title);validateRecordQuestion(value.queries[0]);if(Object.hasOwn(value,'composition'))return Composition.view(value);if(!['charts-records','records'].includes(value.layout))throw Error('Invalid template layout.');
  if(!Array.isArray(value.columns)||value.columns.length<2||value.columns.length>4||new Set(value.columns).size!==value.columns.length||!value.columns.includes('utc')||!value.columns.includes('summary')||value.columns.some(k=>!['utc','service','summary','context'].includes(k)))throw Error('Invalid template record columns.');
  closed(value.displays,[question.signal]);if(!value.displays[question.signal])throw Error('Template requires a display for its question.');ViewDeclaration.validate(value.displays[question.signal],question);
  return structuredClone(value);

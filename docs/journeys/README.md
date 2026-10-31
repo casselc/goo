@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey279](../../journeys/279-composition-storyboard.md) composes a record page
+and aggregate, changes their order/visibility locally, pages without replacing
+the aggregate, and saves/reopens the explicit declaration.
+
 [Journey278](../../journeys/278-http-template-storyboard.md) customizes an OTel HTTP
 service route widget, preserves its query, and saves/reopens through the existing
 population editor with explicit telemetry reads.

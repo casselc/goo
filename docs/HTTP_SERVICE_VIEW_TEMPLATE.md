@@ -5,6 +5,7 @@ aggregate result. It expands a shipped template into the existing fixed-populati
 editor. This is the same query/display/save workflow as manually authored views;
 there is no separate dashboard designer or second view catalog.
 
+279 expands this template as an explicit records-plus-aggregate composition.
 The first default is a compact count bar with population share. Its checked query
 retains duration summaries, so **Measure** can select duration statistics locally
 after Run. Counts describe captured server-span records, not unique requests,
@@ -77,6 +78,6 @@ composition are not added. Existing prepared-table prebuilts remain separate;
 this descriptor does not claim to replace their measurement/policy bindings.
 Saved views materialize the expansion; they do not subscribe to later template revisions.
 
-Next, compose a small records-plus-aggregate view under one query/read owner using
-these public contracts. Extend templates only when the profile's scope, units,
+279 delivers [records-plus-aggregate composition](RECORD_AGGREGATE_COMPOSITION.md)
+under one query/read owner. Extend templates only when the profile's scope, units,
 quality and action rules are explicit; another renderer migration is not a gate.

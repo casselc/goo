@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+279 adds [two-child fixed compositions](RECORD_AGGREGATE_COMPOSITION.md). Rich
+records use an explicit immutable bounded-page profile, not a generic ranked dataset
+or aggregate completeness. Paging retains the aggregate; the API may still perform
+unused aggregate work on a page request. Arbitrary nesting, multi-query/live/baseline
+children and whole-screen layout remain outside this cut.
+
 278 adds one [HTTP server-route view template](HTTP_SERVICE_VIEW_TEMPLATE.md).
 Other service/native families, arbitrary template upload and whole-screen layout
 are outside this cut. Customize stages query/display intent, not observed data or

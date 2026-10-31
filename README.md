@@ -5,6 +5,8 @@ queries reopen with count, numeric or duration bar/table displays. Apply a compa
 saved display to the current population without replacing its query.
 [Customize an HTTP service view](docs/HTTP_SERVICE_VIEW_TEMPLATE.md) stages a shipped
 route template in the same editor, preserving the service widget’s query.
+[Composed record and aggregate views](docs/RECORD_AGGREGATE_COMPOSITION.md) share one
+query owner, with local ordering, visibility and child-specific display settings.
 
 Start with what is happening now. Narrow logs and spans, inspect a population,
 compare evidence, and preserve an explanation you can revisit or reuse. Goo works

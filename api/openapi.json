@@ -40406,6 +40406,58 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ComparisonReceipt"
       },
+      "workbench.CompositionKind": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "const": "stack"
+          },
+          "version": {
+            "type": "integer",
+            "const": 1
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CompositionKind",
+        "additionalProperties": false
+      },
+      "workbench.CompositionKindInput": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "stack"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": 1
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CompositionKind",
+        "required": [
+          "name",
+          "version"
+        ]
+      },
       "workbench.Deployment": {
         "properties": {
           "environment": {
@@ -40863,6 +40915,17 @@
               }
             ]
           },
+          "composition": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ViewComposition"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
           "displays": {
             "anyOf": [
               {
@@ -40935,9 +40998,7 @@
         "required": [
           "version",
           "title",
-          "queries",
-          "layout",
-          "columns"
+          "queries"
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ExplorationView",
@@ -40980,6 +41041,70 @@
                   ]
                 }
               }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ]
+            },
+            "then": {
+              "required": [
+                "version",
+                "title",
+                "queries"
+              ],
+              "properties": {
+                "version": {
+                  "const": 1
+                },
+                "queries": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 1
+                }
+              },
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "layout"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "columns"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "fieldColumns"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "displays"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "breakdowns"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "tail"
+                    ]
+                  }
+                ]
+              }
+            },
+            "else": {
+              "required": [
+                "layout",
+                "columns"
+              ]
             }
           }
         ]
@@ -41026,6 +41151,24 @@
                 "type": "null"
               }
             ]
+          },
+          "composition": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.ViewCompositionInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
           },
           "displays": {
             "anyOf": [
@@ -41193,6 +41336,70 @@
                   ]
                 }
               }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ]
+            },
+            "then": {
+              "required": [
+                "version",
+                "title",
+                "queries"
+              ],
+              "properties": {
+                "version": {
+                  "const": 1
+                },
+                "queries": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 1
+                }
+              },
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "layout"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "columns"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "fieldColumns"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "displays"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "breakdowns"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "tail"
+                    ]
+                  }
+                ]
+              }
+            },
+            "else": {
+              "required": [
+                "layout",
+                "columns"
+              ]
             }
           }
         ]
@@ -41568,6 +41775,294 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.MeaningWindow"
       },
+      "workbench.RecordViewDeclaration": {
+        "properties": {
+          "display": {
+            "$ref": "#/components/schemas/workbench.RecordViewDisplay",
+            "type": "object"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/workbench.RecordViewKind",
+            "type": "object"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/workbench.ViewDeclarationScope",
+            "type": "object",
+            "required": [
+              "kind",
+              "signal"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "const": "goo.view/1"
+          }
+        },
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "display"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.RecordViewDeclaration",
+        "additionalProperties": false,
+        "description": "Pinned record-table presentation over a supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator."
+      },
+      "workbench.RecordViewDeclarationInput": {
+        "additionalProperties": false,
+        "properties": {
+          "display": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.RecordViewDisplayInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.RecordViewKindInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ViewDeclarationScopeInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object",
+            "required": [
+              "kind",
+              "signal"
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "goo.view/1"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.RecordViewDeclaration",
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "display"
+        ],
+        "description": "Pinned record-table presentation over a supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator."
+      },
+      "workbench.RecordViewDisplay": {
+        "properties": {
+          "columns": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 4,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "utc",
+                "service",
+                "summary",
+                "context"
+              ]
+            },
+            "allOf": [
+              {
+                "contains": {
+                  "const": "utc"
+                }
+              },
+              {
+                "contains": {
+                  "const": "summary"
+                }
+              }
+            ]
+          },
+          "fieldColumns": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/exploration.Field"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "array",
+            "maxItems": 8,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "columns"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.RecordViewDisplay",
+        "additionalProperties": false
+      },
+      "workbench.RecordViewDisplayInput": {
+        "additionalProperties": false,
+        "properties": {
+          "columns": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 4,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "utc",
+                "service",
+                "summary",
+                "context"
+              ]
+            },
+            "allOf": [
+              {
+                "contains": {
+                  "const": "utc"
+                }
+              },
+              {
+                "contains": {
+                  "const": "summary"
+                }
+              }
+            ]
+          },
+          "fieldColumns": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/exploration.FieldInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "array",
+            "maxItems": 8,
+            "uniqueItems": true
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.RecordViewDisplay",
+        "required": [
+          "columns"
+        ]
+      },
+      "workbench.RecordViewKind": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "const": "record-table"
+          },
+          "version": {
+            "type": "integer",
+            "const": 1
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.RecordViewKind",
+        "additionalProperties": false
+      },
+      "workbench.RecordViewKindInput": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "record-table"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": 1
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.RecordViewKind",
+        "required": [
+          "name",
+          "version"
+        ]
+      },
       "workbench.Step": {
         "properties": {
           "kind": {
@@ -41775,6 +42270,300 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.StepScope"
+      },
+      "workbench.ViewComposition": {
+        "properties": {
+          "children": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/workbench.ViewCompositionChild"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "$ref": "#/components/schemas/workbench.ViewCompositionChild",
+              "type": "object"
+            },
+            "allOf": [
+              {
+                "contains": {
+                  "required": [
+                    "aggregate"
+                  ]
+                },
+                "minContains": 1,
+                "maxContains": 1
+              },
+              {
+                "contains": {
+                  "required": [
+                    "records"
+                  ]
+                },
+                "minContains": 1,
+                "maxContains": 1
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "hidden": {
+                      "const": false
+                    }
+                  }
+                },
+                "minContains": 1
+              }
+            ]
+          },
+          "kind": {
+            "$ref": "#/components/schemas/workbench.CompositionKind",
+            "type": "object"
+          },
+          "version": {
+            "type": "string",
+            "const": "goo.composition/1"
+          }
+        },
+        "required": [
+          "version",
+          "kind",
+          "children"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewComposition",
+        "additionalProperties": false,
+        "description": "One fixed record query supplies one aggregate and one bounded record-page child. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
+      },
+      "workbench.ViewCompositionChild": {
+        "properties": {
+          "aggregate": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ViewDeclaration"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "hidden": {
+            "type": "boolean"
+          },
+          "records": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.RecordViewDeclaration"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          }
+        },
+        "required": [],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewCompositionChild",
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "required": [
+              "aggregate"
+            ],
+            "not": {
+              "required": [
+                "records"
+              ]
+            }
+          },
+          {
+            "required": [
+              "records"
+            ],
+            "not": {
+              "required": [
+                "aggregate"
+              ]
+            }
+          }
+        ]
+      },
+      "workbench.ViewCompositionChildInput": {
+        "additionalProperties": false,
+        "properties": {
+          "aggregate": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.ViewDeclarationInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "hidden": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "boolean"
+          },
+          "records": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.RecordViewDeclarationInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewCompositionChild",
+        "oneOf": [
+          {
+            "required": [
+              "aggregate"
+            ],
+            "not": {
+              "required": [
+                "records"
+              ]
+            }
+          },
+          {
+            "required": [
+              "records"
+            ],
+            "not": {
+              "required": [
+                "aggregate"
+              ]
+            }
+          }
+        ]
+      },
+      "workbench.ViewCompositionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "children": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/workbench.ViewCompositionChildInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "$ref": "#/components/schemas/workbench.ViewCompositionChildInput",
+              "type": "object"
+            },
+            "allOf": [
+              {
+                "contains": {
+                  "required": [
+                    "aggregate"
+                  ]
+                },
+                "minContains": 1,
+                "maxContains": 1
+              },
+              {
+                "contains": {
+                  "required": [
+                    "records"
+                  ]
+                },
+                "minContains": 1,
+                "maxContains": 1
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "hidden": {
+                      "const": false
+                    }
+                  }
+                },
+                "minContains": 1
+              }
+            ]
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.CompositionKindInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "goo.composition/1"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewComposition",
+        "required": [
+          "version",
+          "kind",
+          "children"
+        ],
+        "description": "One fixed record query supplies one aggregate and one bounded record-page child. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
       },
       "workbench.ViewDeclaration": {
         "properties": {

@@ -48,7 +48,7 @@ func TestViewTemplatePreservesCheckedHTTPQueryAndDetaches(t *testing.T) {
 	if !reflect.DeepEqual(out.View.Queries[0], *in.Widget.Query) || out.Template.ID != in.Template || out.Template.Version != 1 || out.View.ID != "" || out.View.Tail != nil {
 		t.Fatal("template changed query or published configuration", out)
 	}
-	d := out.View.Displays["spans"]
+	d := *out.View.Composition.Children[0].Aggregate
 	if d.Kind.Name != "bar" || d.Display.Value != "count" || d.Display.Scale != "population" {
 		t.Fatal("wrong shipped display", d)
 	}
@@ -56,15 +56,15 @@ func TestViewTemplatePreservesCheckedHTTPQueryAndDetaches(t *testing.T) {
 	out.View.Queries[0].GroupBy[0].Key = "changed"
 	out.View.Queries[0].Numeric.Unit = "changed"
 	out.View.Queries[0].EnvironmentSelector.Scope.Mode = "empty"
-	out.View.Columns[0] = "changed"
+	out.View.Composition.Children[1].Records.Display.Columns[0] = "changed"
 	d.Display.Title = "changed"
-	out.View.Displays["spans"] = d
+	*out.View.Composition.Children[0].Aggregate = d
 	after, _ := json.Marshal(in)
 	if string(original) != string(after) {
 		t.Fatal("expansion aliases widget query")
 	}
 	next, err := ExpandViewTemplate(in)
-	if err != nil || next.View.Columns[0] != "utc" || next.View.Displays["spans"].Display.Title != "HTTP server routes" {
+	if err != nil || next.View.Composition.Children[1].Records.Display.Columns[0] != "utc" || next.View.Composition.Children[0].Aggregate.Display.Title != "HTTP server routes" {
 		t.Fatal("expansion aliases shipped defaults", err)
 	}
 	store := Store{Dir: t.TempDir()}

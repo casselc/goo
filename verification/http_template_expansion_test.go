@@ -12,11 +12,11 @@ import (
 )
 
 const httpTemplatePublicJS = `
-import assert from 'node:assert/strict';import fs from 'node:fs';import {validate} from '../ui/view-declaration.mjs';
+import assert from 'node:assert/strict';import fs from 'node:fs';import {validate} from '../ui/view-declaration.mjs';import * as C from '../ui/view-composition.mjs';
 const {source,expanded}=JSON.parse(fs.readFileSync(0,'utf8'));
 assert.deepEqual(expanded.view.queries,[source]);assert.equal(expanded.template.id,'otel.http-server-routes');assert.equal(expanded.template.version,1);
-const d=expanded.view.displays.spans;assert.deepEqual(validate(d,source),d);assert.equal(d.kind.name,'bar');assert.equal(d.display.value,'count');assert.equal(d.display.scale,'population');
-for(const key of ['rows','snapshot','sourceBasis','completeness','tail','breakdowns'])assert.equal(expanded.view[key],undefined);
+C.view(expanded.view);const d=C.aggregate(expanded.view.composition);assert.deepEqual(validate(d,source),d);assert.equal(d.kind.name,'bar');assert.equal(d.display.value,'count');assert.equal(d.display.scale,'population');
+for(const key of ['rows','snapshot','sourceBasis','completeness','tail','breakdowns','layout','columns','displays'])assert.equal(expanded.view[key],undefined);
 `
 
 func httpTemplateCase(t interface{ Fatal(...any) }, seed, mutation int) {
