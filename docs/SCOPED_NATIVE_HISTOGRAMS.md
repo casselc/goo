@@ -1,5 +1,8 @@
 # Native interval histograms in scoped views — 272
 
+273 extends this contract to [selected fixed-time buckets](SCOPED_HISTOGRAM_TIME_BUCKETS.md),
+with explicit anchored width/index and derived coverage semantics.
+
 This is the implemented bounded contract. Actual checks and remaining adoption
 limits are recorded in [VALIDATION.md](../VALIDATION.md).
 

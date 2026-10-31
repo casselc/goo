@@ -833,6 +833,9 @@
   "NativeHistogramSelector": {
     "$ref": "#/components/schemas/measurements.HistogramViewSelector"
   },
+  "NativeHistogramTimeSelector": {
+    "$ref": "#/components/schemas/measurements.HistogramTimeViewSelector"
+  },
   "NativePlanRequest": {
     "anyOf": [
       {
@@ -14839,6 +14842,42 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.DiscoveryResult"
+  },
+  "measurements.HistogramTimeViewSelector": {
+    "properties": {
+      "bucketIndex": {
+        "type": "integer"
+      },
+      "fromNS": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string"
+      },
+      "question": {
+        "$ref": "#/components/schemas/measurements.Question"
+      },
+      "stream": {
+        "$ref": "#/components/schemas/metrics.Stream"
+      },
+      "toNS": {
+        "type": "string"
+      },
+      "widthNS": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind",
+      "question",
+      "stream",
+      "fromNS",
+      "toNS",
+      "widthNS",
+      "bucketIndex"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HistogramTimeViewSelector"
   },
   "measurements.HistogramViewSelector": {
     "properties": {

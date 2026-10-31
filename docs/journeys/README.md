@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey273](../../journeys/273-native-time-histogram-storyboard.md) covers
+whole-export time buckets, known-zero and unavailable coverage, short final
+windows, local time/export switches and held Saved inspection.
+
 [Journey272](../../journeys/272-native-histogram-storyboard.md) follows delta and
 cumulative instrument observations through selected-interval histogram/table
 inspection, known zero/reset/missing states and held Saved reopening.

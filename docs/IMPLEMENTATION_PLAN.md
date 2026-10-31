@@ -10,8 +10,9 @@
 > displays and H1 range planning. 270 delivers [aligned comparison operands](SCOPED_HISTOGRAM_COMPARISONS.md)
 > and captured side continuation. 271 delivers [raw-span duration histograms](SCOPED_DURATION_HISTOGRAMS.md)
 > with exact open-tail geometry and captured action guards. 272 adds [native interval histograms](SCOPED_NATIVE_HISTOGRAMS.md)
-> with explicit measurement scope and lazy selected-interval projection. Next:
-> native time buckets/comparisons and specialized V0 families before renderer/editor expansion.
+> with explicit measurement scope and lazy selected-interval projection. 273 adds
+> [selected fixed-time histogram buckets](SCOPED_HISTOGRAM_TIME_BUCKETS.md). Next:
+> native comparisons and specialized V0 families before renderer/editor expansion.
 > [Pit-of-success review](MODEL_PIT_OF_SUCCESS_264.md) gates further renderer/editor expansion.
 
 > Current continuation proposal: [view grammar260](VIEW_GRAMMAR_PROPOSAL_260.md)

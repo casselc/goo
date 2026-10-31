@@ -7086,6 +7086,9 @@
       "NativeHistogramSelector": {
         "$ref": "#/components/schemas/measurements.HistogramViewSelector"
       },
+      "NativeHistogramTimeSelector": {
+        "$ref": "#/components/schemas/measurements.HistogramTimeViewSelector"
+      },
       "NativePlanRequest": {
         "anyOf": [
           {
@@ -23438,6 +23441,75 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.DiscoveryResult"
       },
+      "measurements.HistogramTimeViewSelector": {
+        "properties": {
+          "bucketIndex": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 199
+          },
+          "fromNS": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 19
+          },
+          "kind": {
+            "const": "measurement-time-bucket"
+          },
+          "question": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/measurements.Question"
+              },
+              {
+                "properties": {
+                  "definition": {
+                    "properties": {
+                      "kind": {
+                        "const": "histogram"
+                      },
+                      "grain": {
+                        "enum": [
+                          "per-stream",
+                          "consumer-group"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "histogramBucketMs"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "stream": {
+            "$ref": "#/components/schemas/metrics.Stream"
+          },
+          "toNS": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 19
+          },
+          "widthNS": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$",
+            "maxLength": 13
+          }
+        },
+        "required": [
+          "kind",
+          "question",
+          "stream",
+          "fromNS",
+          "toNS",
+          "widthNS",
+          "bucketIndex"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HistogramTimeViewSelector",
+        "additionalProperties": false
+      },
       "measurements.HistogramViewSelector": {
         "properties": {
           "fromNS": {
@@ -23461,7 +23533,10 @@
                         "const": "histogram"
                       },
                       "grain": {
-                        "const": "per-stream"
+                        "enum": [
+                          "per-stream",
+                          "consumer-group"
+                        ]
                       }
                     }
                   }
@@ -31910,7 +31985,7 @@
           },
           "scopeId": {
             "type": "string",
-            "pattern": "^[a-f0-9]{64}(:native:(0|[1-9][0-9]*):(0|[1-9][0-9]*))?$"
+            "pattern": "^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*))?$"
           }
         },
         "required": [
@@ -32029,7 +32104,7 @@
           },
           "id": {
             "type": "string",
-            "pattern": "^[a-f0-9]{64}:(groups|intervals|summary|bins|native:(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins)$"
+            "pattern": "^[a-f0-9]{64}:(groups|intervals|summary|bins|native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins)$"
           },
           "interval": {
             "anyOf": [
@@ -34570,7 +34645,14 @@
                     "const": "metrics"
                   },
                   "selector": {
-                    "$ref": "#/components/schemas/measurements.HistogramViewSelector"
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/measurements.HistogramViewSelector"
+                      },
+                      {
+                        "$ref": "#/components/schemas/measurements.HistogramTimeViewSelector"
+                      }
+                    ]
                   }
                 }
               },
@@ -34856,7 +34938,71 @@
                 "type": "string",
                 "pattern": "^[a-f0-9]{64}$"
               }
-            }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "scope": {
+                      "properties": {
+                        "selector": {
+                          "properties": {
+                            "kind": {
+                              "const": "measurement-interval"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "scope": {
+                      "properties": {
+                        "id": {
+                          "pattern": "^[a-f0-9]{64}:native:(0|[1-9][0-9]*):(0|[1-9][0-9]*)$"
+                        }
+                      }
+                    },
+                    "id": {
+                      "pattern": "^[a-f0-9]{64}:native:(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins$"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "scope": {
+                      "properties": {
+                        "selector": {
+                          "properties": {
+                            "kind": {
+                              "const": "measurement-time-bucket"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "scope": {
+                      "properties": {
+                        "id": {
+                          "pattern": "^[a-f0-9]{64}:native-time:(0|[1-9][0-9]*):(0|[1-9][0-9]*)$"
+                        }
+                      }
+                    },
+                    "id": {
+                      "pattern": "^[a-f0-9]{64}:native-time:(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins$"
+                    }
+                  }
+                }
+              }
+            ]
           }
         ],
         "allOf": [
@@ -34935,7 +35081,7 @@
                 "scope": {
                   "properties": {
                     "id": {
-                      "pattern": "^[a-f0-9]{64}:native:(0|[1-9][0-9]*):(0|[1-9][0-9]*)$"
+                      "pattern": "^[a-f0-9]{64}:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)$"
                     }
                   }
                 }
@@ -38855,7 +39001,7 @@
           },
           "id": {
             "type": "string",
-            "pattern": "^[a-f0-9]{64}(:native:(0|[1-9][0-9]*):(0|[1-9][0-9]*))?$"
+            "pattern": "^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*))?$"
           },
           "selector": {
             "oneOf": [
@@ -38864,6 +39010,9 @@
               },
               {
                 "$ref": "#/components/schemas/measurements.HistogramViewSelector"
+              },
+              {
+                "$ref": "#/components/schemas/measurements.HistogramTimeViewSelector"
               }
             ]
           },

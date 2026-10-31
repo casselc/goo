@@ -3281,3 +3281,21 @@ Set `GOO_NATIVE_HISTOGRAM_BOMBADIL=1` to exercise Saved known/table/zero/unknown
 transitions with zero POST requests. Documentation frames show the selected chart
 or diagnostic directly. Retain compact trace/ledger/summary; successful raw
 campaign screenshots and disposable isolated capture stores can be removed.
+
+## Native fixed-time histogram projections — 273
+
+`native_histogram_time_contract_test.go` generates 100 actual measurement/evaluator
+cases and compares lazy Go/JS selected-time-bucket DTOs. Coverage includes declared
+width greater than per-export gap, exact nanosecond anchors, short final windows,
+delta/cumulative increments, known-zero reasons and malformed source/scope policy.
+Six actual evaluator cases verify refusal of missing values, boundary crossings,
+layout changes, incomplete windows, clipped question boundaries and reset data.
+The deterministic null-reasons control rejects malformed observed metadata.
+
+`journeys/273-native-time-histogram.spec.js` ingests actual OTLP exports and records
+local selected/table/zero/unknown/final/Saved effects. Its observed Quint ledger
+requires exact width/index/span facts; ten altered traces and an unfinished prefix
+must fail. `GOO_NATIVE_HISTOGRAM_TIME_BOMBADIL=1` enables the Saved 30-second campaign
+covering all six local inspection states with zero POSTs. Explicit captures and
+independent QA requests are separate from the browser measurement-effect ledger.
+Keep only compact ledgers/model trace/campaign summary under `artifacts/scoped-273`.

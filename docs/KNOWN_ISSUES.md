@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+273 adopts [selected native fixed-time histogram buckets](SCOPED_HISTOGRAM_TIME_BUCKETS.md).
+Only whole-export covered buckets project; unavailable diagnostics, known empty
+observations and clipped final windows remain distinct. Counts are not rates.
+Native comparisons, heatmaps and merges retain specialized owners. No editor,
+automatic fleet merge or contributor-span selection is added.
+
 272 adds [native selected-interval histograms](SCOPED_NATIVE_HISTOGRAMS.md):
 explicit measurement scope, exact right-closed instrument buckets and lazy
 projection from retained evaluated data. Current support follows the evaluator’s

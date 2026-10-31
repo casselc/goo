@@ -64,8 +64,22 @@ func HistogramView(r *Result, seriesIndex, intervalIndex int) (*scopedview.Datas
 	if e1 != nil || e2 != nil || strconv.FormatInt(a, 10) != in.FromNS || strconv.FormatInt(b, 10) != in.ToNS || a < lo || b > hi || a >= b || b-a > r.Question.Definition.MaxGapMS*1000000 || in.State != "ok" || in.Reason != "" || in.Distribution == nil {
 		return refuse("selected interval is unavailable or outside the measurement window")
 	}
-	dist := in.Distribution
-	if dist.Unit != s.Stream.Unit || metrics.ValidateDurationBounds(dist.Bounds) != nil || len(dist.BucketCounts) != len(dist.Bounds)+1 {
+	if in.Distribution.Unit != s.Stream.Unit {
+		return refuse("distribution unit differs from its stream")
+	}
+	selector := HistogramViewSelector{Kind: "measurement-interval", Question: r.Question, Stream: s.Stream, FromNS: in.FromNS, ToNS: in.ToNS}
+	scopeID := r.Basis + ":native:" + strconv.Itoa(seriesIndex) + ":" + strconv.Itoa(intervalIndex)
+	return histogramDistributionView(r, selector, scopeID, h.Basis, s.Temporality, in.Distribution)
+}
+
+// histogramDistributionView shares geometry and accounting between retained
+// export intervals and whole-export fixed-time buckets. Its callers validate
+// their distinct scope, membership and coverage policies first.
+func histogramDistributionView(r *Result, selector any, scopeID, sourceBasis, temporality string, dist *metrics.Distribution) (*scopedview.Dataset, error) {
+	refuse := func(reason string) (*scopedview.Dataset, error) {
+		return nil, fmt.Errorf("native histogram view: %s", reason)
+	}
+	if dist == nil || (dist.Unit != "s" && dist.Unit != "ms") || metrics.ValidateDurationBounds(dist.Bounds) != nil || len(dist.BucketCounts) != len(dist.Bounds)+1 {
 		return refuse("invalid explicit bucket layout")
 	}
 	total, err := strconv.ParseUint(dist.Count, 10, 64)
@@ -87,12 +101,11 @@ func HistogramView(r *Result, seriesIndex, intervalIndex int) (*scopedview.Datas
 	if sum != total {
 		return refuse("bucket counts do not conserve observations")
 	}
-	selector, err := json.Marshal(HistogramViewSelector{Kind: "measurement-interval", Question: r.Question, Stream: s.Stream, FromNS: in.FromNS, ToNS: in.ToNS})
+	encodedSelector, err := json.Marshal(selector)
 	if err != nil {
 		return refuse("invalid scope encoding")
 	}
-	scopeID := r.Basis + ":native:" + strconv.Itoa(seriesIndex) + ":" + strconv.Itoa(intervalIndex)
-	d := &scopedview.Dataset{Version: "goo.dataset/1", ID: scopeID + ":bins", Revision: r.Basis, Scope: scopedview.Scope{ID: scopeID, Generation: r.Basis, Signal: "metrics", Selector: selector}, Shape: "histogram", Origin: "source-read", SourceBasis: h.Basis, CapturedAt: r.ReadAt, Fields: []scopedview.Field{{Key: "from", Label: "Bin start (exclusive)", Type: "histogram-bound", Unit: dist.Unit}, {Key: "to", Label: "Bin end (inclusive)", Type: "histogram-bound", Unit: dist.Unit}, {Key: "count", Label: "Instrument observations", Type: "number", Unit: "observations"}}, Rows: []scopedview.Row{}, Quality: scopedview.Quality{Extent: "complete", Basis: "captured-query", Value: "derived", Sampling: "unknown", Freshness: "fixed"}, Completeness: &scopedview.Completeness{Basis: "captured-query", Revision: r.Basis, ScopeID: scopeID, Aspects: []string{"bins"}}, Histogram: &scopedview.Histogram{Kind: "otel-explicit", Binning: "explicit", Grain: "observations", Temporality: s.Temporality, Unit: dist.Unit, Total: dist.Count, Closure: "left-open-right-closed"}}
+	d := &scopedview.Dataset{Version: "goo.dataset/1", ID: scopeID + ":bins", Revision: r.Basis, Scope: scopedview.Scope{ID: scopeID, Generation: r.Basis, Signal: "metrics", Selector: encodedSelector}, Shape: "histogram", Origin: "source-read", SourceBasis: sourceBasis, CapturedAt: r.ReadAt, Fields: []scopedview.Field{{Key: "from", Label: "Bin start (exclusive)", Type: "histogram-bound", Unit: dist.Unit}, {Key: "to", Label: "Bin end (inclusive)", Type: "histogram-bound", Unit: dist.Unit}, {Key: "count", Label: "Instrument observations", Type: "number", Unit: "observations"}}, Rows: []scopedview.Row{}, Quality: scopedview.Quality{Extent: "complete", Basis: "captured-query", Value: "derived", Sampling: "unknown", Freshness: "fixed"}, Completeness: &scopedview.Completeness{Basis: "captured-query", Revision: r.Basis, ScopeID: scopeID, Aspects: []string{"bins"}}, Histogram: &scopedview.Histogram{Kind: "otel-explicit", Binning: "explicit", Grain: "observations", Temporality: temporality, Unit: dist.Unit, Total: dist.Count, Closure: "left-open-right-closed"}}
 	lower := "-inf"
 	for i, count := range dist.BucketCounts {
 		upper := "+inf"

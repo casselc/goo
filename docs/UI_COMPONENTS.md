@@ -1471,3 +1471,14 @@ matching selected-interval projection; default/Saved render callers remain held.
 Shared Go DTOs live in `scopedview`; `measurements.HistogramView` and the pure JS
 constructor project only the selected retained interval, without new reads or
 eagerly multiplying every result interval. See [contract/diagram](SCOPED_NATIVE_HISTOGRAMS.md).
+
+## Selected fixed-time histogram buckets273
+
+The existing `otel-explicit` histogram/table display also consumes a checked
+`measurement-time-bucket` scope. It retains declared width, exact anchored bounds,
+index and full stream identity, with a derived basis linked to the original
+evaluated result. The component distinguishes a fixed-time bucket from one export
+interval in its context. Known-empty data remains zero observations; unavailable
+data has no histogram fallback. Hosts lazily project the original retained bucket
+when selected; local time/export/kind switches do not fetch. Saved remains held.
+See [contract and diagram](SCOPED_HISTOGRAM_TIME_BUCKETS.md).

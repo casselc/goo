@@ -1,5 +1,68 @@
 # Validation record
 
+## Selected native fixed-time histogram buckets — 273
+
+Fixed-time native buckets now use the same canonical histogram/table display as
+individual export intervals. The explicit time-bucket scope retains width, index,
+exact anchored bounds, full stream identity and the derived source basis. A known
+bucket may combine several exports and exceed their individual maximum-gap limit.
+The shorter final bucket retains its declared width and exact clipped end.
+Observation counts remain counts, not rates or export-row totals.
+
+Go and browser projections consume one original retained derived bucket without
+new reads, splitting increments, re-evaluating coverage or eagerly expanding all
+intervals. Known-empty buckets preserve `empty-distribution`; unavailable reasons
+never produce a partial histogram or an earlier-value fallback. Full stream
+matching survives reordered inventories and refuses ambiguous membership. Live
+owners explicitly admit matching data; Saved/default views stay held. Native
+record-population action refusal remains in place. The former selected-time-bucket
+table is replaced by the shared display; heatmaps/comparisons/merges retain their
+existing owners. See [contract/diagram](docs/SCOPED_HISTOGRAM_TIME_BUCKETS.md) and
+[storyboard](journeys/273-native-time-histogram-storyboard.md).
+
+Validation:
+
+- Full root Go suite and all 807 frontend tests pass, with no frontend skips.
+  New Go/JS cases cover width greater than export gap, anchored/clipped membership,
+  exact source-basis chain, original/derived duplicate streams, null reasons,
+  observed/empty state consistency and unchanged input. Nine core contracts and
+  four app adapter tests cover source versus held data, known zero/unavailable,
+  short final buckets, source ownership and record-action refusal.
+- Generated 575 Go types and 597 OpenAPI schemas pass 96 operations, 429 response
+  fixtures, 159 admitted requests and 28 mux refusals. Actual observed, empty,
+  short-final and consumer-group time DTOs validate; twelve metadata mutations
+  fail. Existing native interval DTOs and ten malformed controls also pass. The
+  schema now agrees with existing Go/JS consumer-group grain admission.
+- Chromium conformance extends the existing native checks with time-bucket source
+  admission, histogram/table switching, fixed-time context, held SSR width/index
+  and no source I/O. Existing 257-bin and 260px text-ink containment checks pass.
+- The real OTLP→ClickHouse→isolated Go preflight passes: first bucket 7, known zero,
+  unavailable gap/layout and clipped final bucket 4 remain distinct. Local
+  time/export/kind switches read nothing. Saved 390px views are held, carry no
+  private bins witness, fit the page and use natural inspector page scrolling.
+  The actual seven-step browser Quint trace passes; ten altered traces and an
+  unfinished prefix fail. This model checks retained facts/effects, not source
+  authenticity or upstream collection completeness.
+
+- Hegel passes 100 actual Go-evaluator Go/JS cases (70 parity, 30 malformed),
+  six evaluator refusal cases and a null-reasons control. Exact nanosecond anchors,
+  cumulative differencing, extreme bounds/counts and short-final membership pass.
+  A generated cumulative fixture's epoch mismatch was corrected; the evaluator's
+  original unknown result was valid, and its cached reproduction now passes.
+- The new Saved 30-second Bombadil campaign passes 397 snapshots across seven
+  phases, with zero POSTs and no invariant violation. The same frozen campaign
+  passed after a transient debugger timeout; no product behavior was changed.
+  Existing native timeline77 passes. The updated fixed-time journey81, its
+  observed Quint ledger and 30-second Bombadil campaign pass on isolated rerun;
+  the first concurrent attempt hit the Go harness deadline rather than a semantic
+  failure. Documentation screenshots and compact ledgers/traces/summaries remain;
+  successful raw campaigns and superseded browser failure reports were removed.
+- Compose configuration and CA-aware build passed. Recovered lab deployment:
+  `sha256:7f373d11f2863d9dbd18ed6217bcbe526258478858945a4d7d1b2233296a4c37`.
+  All five changed embedded UI/API assets match final source bytes. Telemetry and
+  XTDB volumes remain intact. Environment execution recovery was required before
+  the final validation record and commit; the pending old journey had completed.
+
 ## Native histogram interval projections — 272
 
 Selected evaluated native histogram intervals now use the same passive

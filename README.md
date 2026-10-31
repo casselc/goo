@@ -550,6 +550,8 @@ share scales. [Captured span-duration histograms](docs/SCOPED_DURATION_HISTOGRAM
 now share histogram/table displays with exact open-tail bounds and guarded
 selected/rest actions. [Native interval histograms](docs/SCOPED_NATIVE_HISTOGRAMS.md)
 now project one selected instrument interval into the same display, preserving
-observation counts, right-closed buckets and exact bounds. Remaining native time
-buckets, comparisons and specialized families still need adoption before
+observation counts, right-closed buckets and exact bounds. [Fixed-time histogram
+buckets](docs/SCOPED_HISTOGRAM_TIME_BUCKETS.md) now share those displays with
+anchored windows, whole-export coverage and clipped final buckets. Native
+comparisons and remaining specialized families still need adoption before
 renderer or contributed-view expansion.

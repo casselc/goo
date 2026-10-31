@@ -35,10 +35,25 @@ export function validateHistogramMeasurementQuestion(question){
  return {fromNS:String(from),toNS:String(to)};
 }
 export function validateMeasurementIntervalSelector(selector){
+ if(selector?.kind==='measurement-time-bucket')return validateMeasurementTimeBucketSelector(selector);
  if(!keys(selector,['kind','question','stream','fromNS','toNS'])||Object.keys(selector).length!==5||selector.kind!=='measurement-interval')fail('An explicit native measurement interval selector is required');
  const bounds=validateHistogramMeasurementQuestion(selector.question);checkedStream(selector.stream,selector.question.definition);
  const exact=selector.question.definition.source.exactStream;if(exact&&!sameNativeStream(exact,selector.stream))fail('Selected stream differs from the exact measurement binding');
  const from=ns(selector.fromNS),to=ns(selector.toNS);if(to<=from||from<BigInt(bounds.fromNS)||to>BigInt(bounds.toNS)||to-from>BigInt(selector.question.definition.maxGapMs)*1000000n)fail('Selected native interval is outside its measurement question');
+ return selector;
+}
+// Fixed-time buckets combine whole evaluated exports, so their width is not
+// limited by the per-export maximum gap policy.
+export function validateMeasurementTimeBucketSelector(selector){
+ if(!keys(selector,['kind','question','stream','fromNS','toNS','widthNS','bucketIndex'])||Object.keys(selector).length!==7||selector.kind!=='measurement-time-bucket')fail('An explicit native measurement time bucket selector is required');
+ const bounds=validateHistogramMeasurementQuestion(selector.question),widthMS=selector.question.definition.histogramBucketMs;
+ if(widthMS===undefined)fail('A fixed histogram bucket policy is required');
+ checkedStream(selector.stream,selector.question.definition);
+ const exact=selector.question.definition.source.exactStream;if(exact&&!sameNativeStream(exact,selector.stream))fail('Selected stream differs from the exact measurement binding');
+ const width=BigInt(widthMS)*1000000n,from=ns(selector.fromNS),to=ns(selector.toNS),parentFrom=BigInt(bounds.fromNS),parentTo=BigInt(bounds.toNS),index=selector.bucketIndex;
+ if(selector.widthNS!==String(width)||!Number.isSafeInteger(index)||index<0||index>199)fail('Invalid fixed histogram bucket width or index');
+ const expectedFrom=parentFrom+BigInt(index)*width,expectedTo=expectedFrom+width<parentTo?expectedFrom+width:parentTo;
+ if(expectedFrom>=parentTo||from!==expectedFrom||to!==expectedTo||to<=from)fail('Selected histogram bucket differs from its anchored fixed window');
  return selector;
 }
 // Exact binary64 boundaries remain rationals in the model, never decimal guesses.

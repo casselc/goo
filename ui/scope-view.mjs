@@ -110,7 +110,7 @@ function timeBars(host,snapshot,display){
 
 function histogram(host,snapshot){
  const figure=n('section',undefined,'scope-histogram'),facts=histogramFacts(snapshot),support=facts.support,h=snapshot.histogram,native=h.kind==='otel-explicit';
- const context=n('p',support?support.valid+'/'+support.total+' captured records have valid numeric values · '+support.missing+' missing · '+support.empty+' empty · '+support.invalid+' invalid':native?facts.total+' instrument observations · '+h.temporality+' exports · one evaluated interval':facts.total+' captured spans · fixed duration buckets','scope-time-legend');
+ const context=n('p',support?support.valid+'/'+support.total+' captured records have valid numeric values · '+support.missing+' missing · '+support.empty+' empty · '+support.invalid+' invalid':native?facts.total+' instrument observations · '+h.temporality+' exports · '+(snapshot.scope.selector.kind==='measurement-time-bucket'?'one fixed time bucket':'one evaluated interval'):facts.total+' captured spans · fixed duration buckets','scope-time-legend');
  figure.append(context);
  if(facts.represented==='0'){figure.append(n('p',facts.total==='0'?(native?'No instrument observations. The evaluated buckets are known empty.':'No captured records. The fixed bins are known empty.'):'No valid numeric values. Empty bins do not imply an empty captured population.','scope-view-empty'));return figure}
  const all=snapshot.rows,first=all.findIndex(row=>row.values.count!=='0');let last=all.length-1;while(last>first&&all[last].values.count==='0')last--;

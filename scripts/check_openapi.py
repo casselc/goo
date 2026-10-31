@@ -247,6 +247,31 @@ def check_native_histogram_views(spec,path):
     print('Actual Go native histogram views valid: observed/empty; ten family/scope/boundary negatives rejected')
 
 
+
+def check_native_histogram_time_views(spec,path):
+    fixtures=json.loads(Path(path).read_text())
+    assert set(fixtures)=={'observed','empty','shortFinal','consumerGroup'}
+    check=validator(spec,{'$ref':'#/components/schemas/scopedview.Dataset'})
+    for value in fixtures.values():check.validate(value)
+    for mutate in [
+        lambda x:x['scope']['selector'].update(widthNS='0'),
+        lambda x:x['scope']['selector'].update(bucketIndex=200),
+        lambda x:x['scope']['selector'].pop('widthNS'),
+        lambda x:x['scope']['selector']['question']['definition'].pop('histogramBucketMs'),
+        lambda x:x['scope'].update(id='a'*64+':native:0:0'),
+        lambda x:x.update(id='a'*64+':native:0:0:bins'),
+        lambda x:x.update(sourceBasis='bad'),
+        lambda x:x['histogram'].update(grain='records'),
+        lambda x:x['histogram'].update(closure='left-closed-right-open'),
+        lambda x:x['scope']['selector'].update(kind='measurement-interval'),
+        lambda x:x['rows'][0]['values'].update(**{'from':None}),
+        lambda x:x['fields'][2].update(unit='records'),
+    ]:
+        mutant=copy.deepcopy(fixtures['observed']);mutate(mutant)
+        assert not check.is_valid(mutant),'Malformed native time-bucket metadata accepted'
+    print('Actual Go native time-bucket views valid: observed/empty/short-final/consumer-group; twelve metadata negatives rejected')
+
+
 def check_histogram_observed(spec, path):
     fixtures=json.loads(Path(path).read_text())
     assert set(fixtures)=={'uint64','uint64-empty','int64','int64-empty','decimal64','decimal64-empty'}
@@ -962,9 +987,12 @@ if __name__ == '__main__':
     parser.add_argument('--pod-phase-discovery-observations')
     parser.add_argument('--container-discovery-observations')
     parser.add_argument('--native-histogram-view-observations')
+    parser.add_argument('--native-histogram-time-view-observations')
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.native_histogram_time_view_observations:
+        check_native_histogram_time_views(spec,args.native_histogram_time_view_observations)
     if args.native_histogram_view_observations:
         check_native_histogram_views(spec,args.native_histogram_view_observations)
     if args.duration_histogram_observations:

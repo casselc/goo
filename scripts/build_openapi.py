@@ -167,7 +167,7 @@ view=schemas['scopedview.Dataset'];view_props=view['properties']
 view_props['partition']=ref('scopedview.Partition')
 view['description']='Supplied immutable captured-record snapshot: ranked groups, explicit intervals or population summaries with optional exact numeric/duration measures. An optional ranked partition derives its denominator from the same exhaustive group read. Result-aspect completeness never certifies raw-record paging, upstream ingestion/sampling or a transactional count/page pair. Scope/revision equality, partition sums and interval coverage are runtime checked.'
 view_props['version']['const']='goo.dataset/1';view_props['shape']['enum']=['ranked','time-series','summary','histogram']
-view_props['id']['pattern']='^[a-f0-9]{64}:(groups|intervals|summary|bins|native:(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins)$';view_props['revision']['pattern']='^[a-f0-9]{64}$';view_props['capturedAt']['format']='date-time'
+view_props['id']['pattern']='^[a-f0-9]{64}:(groups|intervals|summary|bins|native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins)$';view_props['revision']['pattern']='^[a-f0-9]{64}$';view_props['capturedAt']['format']='date-time'
 view_props['origin']['enum']=['source-read','browser-held']
 view_props['sourceBasis'].update(minLength=1,maxLength=128,description='Unverified caller-claimed source basis, separate from the content-hashed held revision. Not a signed receipt.')
 view_props['fields']={'type':'array','minItems':2,'maxItems':18,'items':ref('scopedview.Field')}
@@ -175,8 +175,8 @@ view_props['rows']={'type':'array','maxItems':1000,'items':ref('scopedview.Row')
 view_props['dimensions']={'type':'array','minItems':1,'maxItems':2,'uniqueItems':True,'items':{'enum':['category','category1']}}
 view_scope=schemas['scopedview.Scope']['properties']
 for name in ('id','generation'):view_scope[name]['pattern']='^[a-f0-9]{64}$'
-view_scope['id']['pattern']='^[a-f0-9]{64}(:native:(0|[1-9][0-9]*):(0|[1-9][0-9]*))?$'
-view_scope['signal']['enum']=['logs','spans','metrics'];view_scope['selector']={'oneOf':[ref('exploration.Query'),ref('measurements.HistogramViewSelector')]}
+view_scope['id']['pattern']='^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*))?$'
+view_scope['signal']['enum']=['logs','spans','metrics'];view_scope['selector']={'oneOf':[ref('exploration.Query'),ref('measurements.HistogramViewSelector'),ref('measurements.HistogramTimeViewSelector')]}
 view_field=schemas['scopedview.Field']['properties'];view_field['key']['enum']=['category','category1','count','fromMs','toMs','from','to']+list(measure_specs);view_field['type']['enum']=['string','number','timestamp','rational','histogram-bound']
 schemas['scopedview.Field']['allOf']=[]
 for key,spec in measure_specs.items():
@@ -189,7 +189,7 @@ view_quality['sampling']['description']='Upstream sampling and collection comple
 view_quality['extent']['description']='Only groups/intervals as named by shape; disagreement or unproved coverage remains unknown.'
 view_complete=schemas['scopedview.Completeness']['properties'];view_complete['basis']['const']='captured-query';view_complete['aspects']={'type':'array','minItems':1,'maxItems':1,'items':{'enum':['groups','intervals','summary','bins']}}
 view_complete['revision']['pattern']='^[a-f0-9]{64}$'
-view_complete['scopeId']['pattern']='^[a-f0-9]{64}(:native:(0|[1-9][0-9]*):(0|[1-9][0-9]*))?$'
+view_complete['scopeId']['pattern']='^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*))?$'
 schemas['scopedview.Completeness']['description']='Bound to enclosing revision/scope ID; runtime enforces equality. Intervals require exhaustive contiguous known-state coverage. Never inferred from page length or a separate count.'
 interval_props=schemas['scopedview.Interval']['properties']
 for name in ('fromMs','toMs'):interval_props[name]=copy.deepcopy(epoch_ms)
@@ -287,11 +287,20 @@ duration_shape['properties']['scope']={'properties':{'signal':{'const':'spans'},
 duration_shape['allOf']=[]
 native_selector=schemas['measurements.HistogramViewSelector'];native_selector['additionalProperties']=False
 native_selector['properties']['kind']={'const':'measurement-interval'}
-native_selector['properties']['question']={'allOf':[ref('measurements.Question'),{'properties':{'definition':{'properties':{'kind':{'const':'histogram'},'grain':{'const':'per-stream'}}}}}]}
+native_selector['properties']['question']={'allOf':[ref('measurements.Question'),{'properties':{'definition':{'properties':{'kind':{'const':'histogram'},'grain':{'enum':['per-stream','consumer-group']}}}}}]}
 for k in ('fromNS','toNS'):native_selector['properties'][k]={'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':19}
+native_time_selector=schemas['measurements.HistogramTimeViewSelector'];native_time_selector['additionalProperties']=False
+native_time_selector['properties']['kind']={'const':'measurement-time-bucket'}
+native_time_selector['properties']['question']=copy.deepcopy(native_selector['properties']['question'])
+native_time_selector['properties']['question']['allOf'][1]['properties']['definition']['required']=['histogramBucketMs']
+for k in ('fromNS','toNS'):native_time_selector['properties'][k]=copy.deepcopy(native_selector['properties'][k])
+native_time_selector['properties']['widthNS']={'type':'string','pattern':'^[1-9][0-9]*$','maxLength':13}
+native_time_selector['properties']['bucketIndex']={'type':'integer','minimum':0,'maximum':199}
+native_selector_union={'oneOf':[ref('measurements.HistogramViewSelector'),ref('measurements.HistogramTimeViewSelector')]}
 native_rows=copy.deepcopy(hist_row)
 for k in ('from','to'):native_rows['properties']['values']['properties'][k]={'anyOf':[rational_value,{'const':'-inf' if k=='from' else '+inf'}]}
-native_shape={'required':['histogram','sourceBasis','capturedAt'],'not':{'anyOf':[{'required':[k]} for k in ['dimensions','interval','partition']]},'properties':{'shape':{'const':'histogram'},'histogram':{'properties':{'kind':{'const':'otel-explicit'}}},'scope':{'properties':{'signal':{'const':'metrics'},'selector':ref('measurements.HistogramViewSelector')}},'fields':{'minItems':3,'maxItems':3,'prefixItems':[{'allOf':[ref('scopedview.Field'),{'required':['unit'],'properties':{'key':{'const':key},'type':{'const':'number' if key=='count' else 'histogram-bound'},'unit':{'const':'observations'} if key=='count' else {'enum':['s','ms']}},'not':{'anyOf':[{'required':['aggregation']},{'required':['nullable']}]}}]} for key in ['from','to','count']]},'rows':{'minItems':1,'maxItems':257,'items':native_rows},'completeness':{'properties':{'aspects':{'const':['bins']}}}}}
+native_shape={'required':['histogram','sourceBasis','capturedAt'],'not':{'anyOf':[{'required':[k]} for k in ['dimensions','interval','partition']]},'properties':{'shape':{'const':'histogram'},'histogram':{'properties':{'kind':{'const':'otel-explicit'}}},'scope':{'properties':{'signal':{'const':'metrics'},'selector':native_selector_union}},'fields':{'minItems':3,'maxItems':3,'prefixItems':[{'allOf':[ref('scopedview.Field'),{'required':['unit'],'properties':{'key':{'const':key},'type':{'const':'number' if key=='count' else 'histogram-bound'},'unit':{'const':'observations'} if key=='count' else {'enum':['s','ms']}},'not':{'anyOf':[{'required':['aggregation']},{'required':['nullable']}]}}]} for key in ['from','to','count']]},'rows':{'minItems':1,'maxItems':257,'items':native_rows},'completeness':{'properties':{'aspects':{'const':['bins']}}}}}
+native_shape['allOf']=[{'if':{'properties':{'scope':{'properties':{'selector':{'properties':{'kind':{'const':kind}}}}}}},'then':{'properties':{'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}:'+tag+':(0|[1-9][0-9]*):(0|[1-9][0-9]*)$'}}},'id':{'pattern':'^[a-f0-9]{64}:'+tag+':(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins$'}}}} for kind,tag in [('measurement-interval','native'),('measurement-time-bucket','native-time')]]
 native_shape['properties']['sourceBasis']={'type':'string','pattern':'^[a-f0-9]{64}$'}
 native_shape['properties']['rows']['prefixItems']=[{'properties':{'values':{'properties':{'from':{'const':'-inf'}}}}}]
 native_shape['properties']['rows']['allOf']=[{'contains':{'properties':{'values':{'properties':{key:{'const':value}}}}},'minContains':1,'maxContains':1} for key,value in [('from','-inf'),('to','+inf')]]
@@ -299,7 +308,7 @@ view['oneOf']=[ranked_shape,time_shape,summary_shape,hist_shape,duration_shape,n
 
 view['allOf']=[{'if':{'properties':{'quality':{'properties':{'extent':{'const':'complete'}},'required':['extent']}},'required':['quality']},'then':{'required':['completeness'],'properties':{'completeness':{'type':'object'},'rows':{'items':{'properties':{'state':{'enum':['observed','no_data']}}}}}},'else':{'properties':{'completeness':{'type':'null'}}}}]
 
-view['allOf'].append({'if':{'properties':{'scope':{'properties':{'signal':{'const':'metrics'}}}}},'then':{'properties':{'shape':{'const':'histogram'},'histogram':{'properties':{'kind':{'const':'otel-explicit'}}},'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}:native:(0|[1-9][0-9]*):(0|[1-9][0-9]*)$'}}}}},'else':{'properties':{'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}$'},'selector':ref('exploration.Query')}}}}})
+view['allOf'].append({'if':{'properties':{'scope':{'properties':{'signal':{'const':'metrics'}}}}},'then':{'properties':{'shape':{'const':'histogram'},'histogram':{'properties':{'kind':{'const':'otel-explicit'}}},'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)$'}}}}},'else':{'properties':{'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}$'},'selector':ref('exploration.Query')}}}}})
 
 status_keys=[key for key in measure_specs if key.startswith('status.')]
 status_counts=[key for key in status_keys if key!='status.error_fraction']
