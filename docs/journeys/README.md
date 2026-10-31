@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey277](../../journeys/277-display-reuse-storyboard.md) applies a saved display
+to a current scoped population, preserves its query and original saved revision,
+and verifies configuration-only inspection/application.
+
 [Journey276](../../journeys/276-saved-measures-storyboard.md) follows saved numeric
 and duration measures, signed-table fallback and unavailable support through local
 edits and explicit save/reopen/Run.

@@ -2,6 +2,7 @@ package workbench
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/casselc/goo/exploration"
 )
@@ -67,4 +68,32 @@ func (d ViewDeclaration) Validate(q exploration.Query) error {
 		return errors.New("display Find text and title must be bounded valid text")
 	}
 	return nil
+}
+
+// ReuseViewDeclaration checks whether display intent can be applied to another
+// checked record population. It returns only declaration values: neither query,
+// observed data, runtime guarantees nor execution ownership can travel with it.
+func ReuseViewDeclaration(d ViewDeclaration, source, destination exploration.Query) (ViewDeclaration, error) {
+	if _, err := exploration.Compile(source); err != nil {
+		return ViewDeclaration{}, errors.New("saved display has an invalid source query")
+	}
+	if _, err := exploration.Compile(destination); err != nil {
+		return ViewDeclaration{}, errors.New("current population has an invalid query")
+	}
+	if err := d.Validate(source); err != nil {
+		return ViewDeclaration{}, err
+	}
+	if source.Signal != destination.Signal {
+		return ViewDeclaration{}, errors.New("display requires the same record signal")
+	}
+	if len(destination.GroupBy) != 1 || source.GroupBy[0] != destination.GroupBy[0] {
+		return ViewDeclaration{}, errors.New("display requires the same qualified grouping field")
+	}
+	if strings.HasPrefix(d.Display.Value, "numeric.") && (source.Numeric == nil || destination.Numeric == nil || *source.Numeric != *destination.Numeric) {
+		return ViewDeclaration{}, errors.New("numeric display requires the same field, type, scale, unit and parse policy")
+	}
+	if err := d.Validate(destination); err != nil {
+		return ViewDeclaration{}, err
+	}
+	return d, nil
 }

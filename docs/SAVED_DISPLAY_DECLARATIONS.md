@@ -1,4 +1,4 @@
-# Saved display declarations — 275–276
+# Saved display declarations — 275–277
 
 The existing **Save this exploration view** flow can save a reusable record-measure display
 alongside its checked queries. Reopen it from **Saved exploration views**, then
@@ -28,6 +28,9 @@ flowchart LR
   H --> Q
   E[Property controls or source JSON] --> D
   D --> S[Existing immutable exploration-view catalog]
+  S --> C[Inspect display compatibility]
+  Q --> C
+  C -->|Local Apply only| D
 ```
 
 `ExplorationView.displays` maps `spans` or `logs` to a pinned declaration. Its
@@ -88,6 +91,38 @@ are not averages of service percentiles. Signed numeric bars fall back to an exa
 table with an explanation while keeping the saved bar intent. Find/order and
 complete-only requirements retain their existing semantics across measure changes.
 
+## Apply to the current population — 277
+
+In **Saved exploration views**, **Open original question** restores a saved fixed
+configuration as before. **Inspect display** loads its configuration only and
+checks each authored signal against the current fixed population. **Apply** reuses
+that signal's display declaration; the current question stays authoritative.
+
+| Compatibility | Rule |
+| --- | --- |
+| Every display | Same record signal and exact qualified grouped field; both checked queries and the declaration must be valid. |
+| Count | Environment, time window, predicates and unrelated aggregate bindings may differ. |
+| Numeric measure | Same field namespace/key, numeric type, decimal scale, unit and parser. No implicit conversion or field remapping. |
+| Duration measure | Both queries request the checked span-duration summary. |
+| Runtime availability | Missing/unknown values do not make valid intent incompatible; current data and witnesses decide rendering. |
+
+Applying copies only detached display intent. It does not import the source view's
+query, environment selection, filters, window, rows, clocks, completeness witness,
+record layout, tail or baseline. Other signals retain their own configuration.
+Tables currently include destination-supplied measure columns; this declaration
+does not pin a custom column subset. The existing current dataset can redraw locally; a staged view still requires
+explicit Run before showing telemetry. Save creates a new immutable configuration
+with the destination queries; the original saved revision is unchanged.
+
+Busy reads or pending comparisons, staged selections, unapplied query/source/Find
+drafts and a configured target baseline comparison block Apply. Remove the baseline explicitly first;
+applying a display must not silently discard a comparison. A delayed inspection
+response cannot apply after the owner, query generation or draft revision changes.
+The browser helper checks record-question metadata; it is not a standalone SQL
+compiler. Go query compilation remains authoritative when saving.
+The same catalog is available in the current population's settings, including
+Activity-created grouped drilldowns, rather than a second view library.
+
 ## Deliberate boundary and next step
 
 This authored profile supports count, numeric and duration measures over one
@@ -97,7 +132,7 @@ multi-field tables and authored baseline comparisons remain outside this profile
 Existing specialized screens continue to work; this is not whole-screen composition
 or a WYSIWYG page builder. Source syntax is bounded JSON, without CEL/KCL evaluation.
 
-Next, review the complete saved-authoring path across product, architecture and
-usability before choosing the next compatible profile or reusable template package.
+The 276 product/architecture checkpoint and 277 current-scope reuse advance the
+next task to one OTel service record template with a contextual Customize entry.
 Broader chart kinds and page composition should reuse this workflow rather than
 create a second configuration library.

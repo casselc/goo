@@ -22,3 +22,19 @@ export function presentation(value){return {...value.display,kind:value.kind.nam
 export function update(value,props,q){return validate({...value,kind:{name:props.kind,version:1},display:{...value.display,...Object.fromEntries(['value','scale','query','order','requiresComplete'].map(k=>[k,props[k]]))}},q);}
 
 export function withQuery(value,query,q){return validate({...value,display:{...value.display,query}},q);}
+
+// Reuse presentation only; the destination remains the sole owner of query scope.
+// Browser metadata guards are not a SQL compiler; server query checks remain authoritative.
+export function reuse(value,source,destination){
+ validateRecordQuestion(source);validateRecordQuestion(destination);
+ for(const q of [source,destination])if(q.signal!=='spans'&&(q.summary==='span-duration'||q.spanStatus))throw Error('Span summaries require the spans signal.');
+ const next=validate(value,source);
+ if(source.signal!==destination.signal)throw Error('Display requires the same record signal.');
+ const a=source.groupBy[0],b=destination.groupBy?.[0];
+ if(destination.groupBy?.length!==1||a.kind!==b.kind||a.key!==b.key)throw Error('Display requires the same qualified grouping field.');
+ if(next.display.value.startsWith('numeric.')){
+  const a=source.numeric,b=destination.numeric;
+  if(!a||!b||a.field.kind!==b.field.kind||a.field.key!==b.field.key||a.type!==b.type||(a.scale??0)!==(b.scale??0)||a.unit!==b.unit||a.parse!==b.parse)throw Error('Numeric display requires the same field, type, scale, unit and parse policy.');
+ }
+ return validate(next,destination);
+}

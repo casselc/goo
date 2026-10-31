@@ -1511,3 +1511,12 @@ query-supported canonical measures through the existing `ScopedBreakdown` select
 Go reuses the dataset producer’s field metadata for compatibility. No new reducer,
 source endpoint or component is introduced; units/support and signed-value table
 fallback stay in the common renderer. Non-count population shares are refused.
+
+
+## Current-scope display reuse — 277
+
+The [reuse contract](SAVED_DISPLAY_DECLARATIONS.md#apply-to-the-current-population--277)
+keeps the existing catalog and current query owner. Pure Go/JS compatibility
+helpers return detached display intent; the application guards inspection/apply
+against changed owners and drafts, then redraws only supplied admitted data.
+No display component fetches, and no source query, witness or baseline is copied.

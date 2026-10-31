@@ -1,5 +1,45 @@
 # Validation record
 
+## Apply saved displays in the current population — 277
+
+The existing catalog now distinguishes opening an original fixed question from
+inspecting/applying its display. Reuse checks signal, qualified grouping and
+measure/quantity compatibility; it copies only display intent and preserves the
+destination queries, typed environment selection, predicates, bindings, window,
+layout, columns, tail, title and other signals. The current admitted dataset redraws
+locally. Baseline comparisons and unresolved drafts block Apply. No endpoint,
+schema, evaluator or source query was added. See the
+[contract/diagram](docs/SAVED_DISPLAY_DECLARATIONS.md#apply-to-the-current-population--277)
+and [storyboard](journeys/277-display-reuse-storyboard.md).
+
+Validation:
+
+- Full root `go test ./...` and all 832 frontend tests pass.
+- 100 finite Hegel Go↔JS compatibility cases pass. Inputs use checked query
+  families; the browser metadata validator is not claimed to be a SQL compiler.
+  Seven-step Quint smoke and observed browser replay pass, rejecting five altered
+  traces and an unfinished prefix.
+- Real OTLP Activity → observed-route grouping → fixed/linked population → catalog
+  → Apply → save/reopen journey passes (59.1 s). The original revision is unchanged,
+  and the new saved configuration preserves destination queries/unrelated settings.
+  Three current spans supply two `/a` records (≈66.7%); Find keeps the denominator.
+- Inspection/application/save/reopen add zero telemetry reads. Observed read counts
+  are `[3,4,4,4,4,4,6]`: three initial reads, one explicit prior-window comparison
+  probe, then two explicit reads after reopening. Incompatible grouping, pending
+  and held baselines, stale candidate A after newer B, and a changed draft during
+  inspection are independently checked.
+- Bombadil passes 30 seconds / 539 snapshots / all eight phases. Final state is
+  reopened/staged with two source reads, no overflow and no uncaught errors.
+- Product/design review found and corrected stale-preview publication and a pending
+  baseline-read gap using explicit comparison-owner state. Three real frames are current.
+- Execution access disconnected after the test had completed; recovery confirmed
+  the successful log, model ledger and campaign summary. No rerun is claimed.
+- Local image `72b4caaa086ff9022cf829b8297f057948a8533caa841359869a658cdaad0e68`
+  is built and deployed. Served bytes match all three changed UI modules; existing
+  data volumes remain intact. Raw successful campaign output and disposable capture
+  copies are removed; compact ledgers/summaries and documentation frames remain.
+
+
 ## Saved numeric and duration measures — 276
 
 Saved declarations now select count, query-bound numeric mean/sum/min/max, and

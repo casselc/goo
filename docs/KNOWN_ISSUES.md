@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+277 reuses compatible saved displays in the current fixed population. Exact signal,
+group and measure/quantity compatibility is required; no field remapping, unit
+conversion, rolling/native authoring or baseline replacement is implied. Tables
+include destination-supplied measures and may scroll horizontally; custom aggregate
+column selection is not part of the current declaration profile.
+
 275–276 add [saved record-measure displays](SAVED_DISPLAY_DECLARATIONS.md) to the
 existing exploration-view workflow. The profile is bar/table over one ordinary
 grouping, with count and query-supported numeric/duration measures. Recorded status
