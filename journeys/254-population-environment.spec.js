@@ -8,10 +8,17 @@ test('254 population owner restores selector baselines and refuses changed-polic
   await page.evaluate(async()=>{const {mount}=await import('/population-workspace.mjs'),host=document.createElement('section');host.id='population-owner-254';host.style.marginLeft='260px';host.style.width='1000px';document.body.append(host);window.population254=mount(host,{current:()=>null,table:()=>{},prefix:'p254',active:()=>true})});
   const host=page.locator('#population-owner-254'),toMs=Date.now(),q={signal:'spans',environmentSelector:{version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'unreported'}},fromMs:toMs-60000,toMs,where:{field:{kind:'column',key:'service'},op:'eq',value:'owned-no-match-254'},groupBy:[{kind:'column',key:'service'}],limit:100,offset:0};
   const before=requests.length;await page.evaluate(q=>window.population254.stage([q],{recent:false,breakdowns:{spans:{baseline:{...q,fromMs:q.fromMs-60000,toMs:q.toMs-60000}}}}),q);expect(requests).toHaveLength(before);
-  await expect(host.locator('.population-save button')).toBeDisabled();
+  await expect(host.locator('.population-save > button')).toBeEnabled();
   await host.getByRole('button',{name:'Run population view',exact:true}).click();await expect.poll(()=>requests.filter(r=>r.path==='/api/explore').length).toBe(2);await expect(host.locator('[id$=baselineStatus]')).toContainText('Baseline: 0 records');
   expect(requests.filter(r=>r.path==='/api/explore').every(r=>JSON.stringify(r.body.environmentSelector)===JSON.stringify(q.environmentSelector))).toBe(true);await expect.poll(()=>requests.some(r=>r.path==='/api/compare')).toBe(true);
-  const publications=requests.filter(r=>r.path==='/api/exploration-views').length;await host.locator('.population-save button').evaluate(b=>b.onclick());expect(requests.filter(r=>r.path==='/api/exploration-views')).toHaveLength(publications);
+  // Save configuration, including the typed baseline selector, without another
+  // telemetry read. Fetching the saved definition also remains configuration-only.
+  const readsAtSave=requests.filter(r=>r.path==='/api/explore').length;
+  await host.locator('.population-save summary').click();await host.getByLabel('Exploration view title',{exact:true}).fill('Unreported services and prior window');
+  const publication=page.waitForResponse(r=>r.request().method()==='POST'&&new URL(r.url()).pathname==='/api/exploration-views');await host.getByRole('button',{name:'Save exploration view',exact:true}).click();
+  const response=await publication;expect(response.status()).toBe(201);const stored=await response.json();expect(stored.queries).toEqual([{...q,environment:''}]);expect(stored.breakdowns.spans.baseline.environmentSelector).toEqual(q.environmentSelector);expect(stored.breakdowns.spans.baseline.fromMs).toBe(q.fromMs-60000);
+  const reopened=await page.request.get(runtime.base+'/api/exploration-views/'+stored.id);expect(reopened.ok()).toBe(true);expect(await reopened.json()).toEqual(stored);expect(requests.filter(r=>r.path==='/api/explore')).toHaveLength(readsAtSave);
+
   // A real planner reply is corrupted in transport: no returned question may
   // trigger an automatic source read after policy validation fails.
   await page.route('**/api/population/plan',async route=>{const response=await route.fetch(),data=await response.json();data.queries[0].environmentSelector.scope={mode:'empty'};await route.fulfill({response,json:data})});

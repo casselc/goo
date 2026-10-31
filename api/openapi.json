@@ -40702,6 +40702,26 @@
               }
             ]
           },
+          "displays": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/workbench.ViewDeclaration"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxProperties": 2,
+            "propertyNames": {
+              "enum": [
+                "spans",
+                "logs"
+              ]
+            }
+          },
           "fieldColumns": {
             "anyOf": [
               {
@@ -40759,7 +40779,49 @@
           "columns"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.ExplorationView"
+        "x-go-type": "github.com/casselc/goo/workbench.ExplorationView",
+        "allOf": [
+          {
+            "not": {
+              "required": [
+                "displays",
+                "breakdowns"
+              ],
+              "properties": {
+                "displays": {
+                  "required": [
+                    "spans"
+                  ]
+                },
+                "breakdowns": {
+                  "required": [
+                    "spans"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "not": {
+              "required": [
+                "displays",
+                "breakdowns"
+              ],
+              "properties": {
+                "displays": {
+                  "required": [
+                    "logs"
+                  ]
+                },
+                "breakdowns": {
+                  "required": [
+                    "logs"
+                  ]
+                }
+              }
+            }
+          }
+        ]
       },
       "workbench.ExplorationViewInput": {
         "additionalProperties": false,
@@ -40803,6 +40865,33 @@
                 "type": "null"
               }
             ]
+          },
+          "displays": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/workbench.ViewDeclarationInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxProperties": 2,
+            "propertyNames": {
+              "enum": [
+                "spans",
+                "logs"
+              ]
+            }
           },
           "fieldColumns": {
             "anyOf": [
@@ -40903,7 +40992,49 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.ExplorationView"
+        "x-go-type": "github.com/casselc/goo/workbench.ExplorationView",
+        "allOf": [
+          {
+            "not": {
+              "required": [
+                "displays",
+                "breakdowns"
+              ],
+              "properties": {
+                "displays": {
+                  "required": [
+                    "spans"
+                  ]
+                },
+                "breakdowns": {
+                  "required": [
+                    "spans"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "not": {
+              "required": [
+                "displays",
+                "breakdowns"
+              ],
+              "properties": {
+                "displays": {
+                  "required": [
+                    "logs"
+                  ]
+                },
+                "breakdowns": {
+                  "required": [
+                    "logs"
+                  ]
+                }
+              }
+            }
+          }
+        ]
       },
       "workbench.ExplorationViewList": {
         "properties": {
@@ -41483,6 +41614,335 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.StepScope"
+      },
+      "workbench.ViewDeclaration": {
+        "properties": {
+          "display": {
+            "$ref": "#/components/schemas/workbench.ViewDisplay"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/workbench.ViewKind"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/workbench.ViewDeclarationScope"
+          },
+          "version": {
+            "type": "string",
+            "const": "goo.view/1"
+          }
+        },
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "display"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewDeclaration",
+        "additionalProperties": false,
+        "description": "Pinned ordinary single-field record count display. Scope references a checked parent query; save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported."
+      },
+      "workbench.ViewDeclarationInput": {
+        "additionalProperties": false,
+        "properties": {
+          "display": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ViewDisplayInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ViewKindInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ViewDeclarationScopeInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "goo.view/1"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewDeclaration",
+        "description": "Pinned ordinary single-field record count display. Scope references a checked parent query; save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported."
+      },
+      "workbench.ViewDeclarationScope": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "record-query"
+          },
+          "signal": {
+            "type": "string",
+            "enum": [
+              "spans",
+              "logs"
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "signal"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewDeclarationScope",
+        "additionalProperties": false
+      },
+      "workbench.ViewDeclarationScopeInput": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "record-query"
+          },
+          "signal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "spans",
+              "logs"
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewDeclarationScope"
+      },
+      "workbench.ViewDisplay": {
+        "properties": {
+          "category": {
+            "type": "string",
+            "const": "category"
+          },
+          "order": {
+            "type": "string",
+            "enum": [
+              "",
+              "source",
+              "label",
+              "value-desc",
+              "value-asc"
+            ]
+          },
+          "query": {
+            "type": "string",
+            "maxLength": 256,
+            "description": "At most 256 UTF-8 bytes; runtime enforces the byte limit and rejects control characters."
+          },
+          "requiresComplete": {
+            "type": "boolean"
+          },
+          "scale": {
+            "type": "string",
+            "enum": [
+              "",
+              "max",
+              "population"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120,
+            "description": "At most 120 UTF-8 bytes; runtime enforces the byte limit and rejects control characters."
+          },
+          "value": {
+            "type": "string",
+            "const": "count"
+          }
+        },
+        "required": [
+          "category",
+          "value"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewDisplay",
+        "additionalProperties": false
+      },
+      "workbench.ViewDisplayInput": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "category"
+          },
+          "order": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "",
+              "source",
+              "label",
+              "value-desc",
+              "value-asc"
+            ]
+          },
+          "query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxLength": 256,
+            "description": "At most 256 UTF-8 bytes; runtime enforces the byte limit and rejects control characters."
+          },
+          "requiresComplete": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scale": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "",
+              "max",
+              "population"
+            ]
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxLength": 120,
+            "description": "At most 120 UTF-8 bytes; runtime enforces the byte limit and rejects control characters."
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "count"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewDisplay"
+      },
+      "workbench.ViewKind": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "bar",
+              "table"
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "const": 1
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewKind",
+        "additionalProperties": false
+      },
+      "workbench.ViewKindInput": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "bar",
+              "table"
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": 1
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewKind"
       },
       "KeptResource": {
         "oneOf": [

@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey275](../../journeys/275-view-authoring-storyboard.md) exercises reusable
+count display edits, checked source, immutable save/reopen and explicit Run over
+real OTel spans, including invalid drafts and delayed save acknowledgement.
+
 [Journey274](../../journeys/274-native-histogram-comparison-storyboard.md) uses
 the existing capture-comparison flow for native observation counts/shares, held
 Saved reopening and global comparison refusal.

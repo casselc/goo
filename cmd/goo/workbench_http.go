@@ -152,9 +152,25 @@ func registerWorkbench(mux *http.ServeMux, dir string, connection retentionConne
 			fail(w, 400, e)
 			return
 		}
+		if e := in.Validate(); e != nil {
+			fail(w, 400, e)
+			return
+		}
 		if in.Tail != nil && in.Tail.Baseline != "" {
-			if captured, err := captures.Load(in.Tail.Baseline); err == nil && captured.Question.Explore != nil && captured.Question.Explore.EnvironmentSelector != nil {
-				fail(w, 400, errors.New("saved exploration baselines do not support environmentSelector yet"))
+			captured, err := captures.Load(in.Tail.Baseline)
+			if err != nil || captured.Question.Explore == nil {
+				fail(w, 400, errors.New("tail baseline must reference a saved record exploration"))
+				return
+			}
+			var current *exploration.Query
+			for i := range in.Queries {
+				if in.Queries[i].Signal == in.Tail.Signal {
+					current = &in.Queries[i]
+				}
+			}
+			baseline := captured.Question.Explore
+			if current == nil || baseline.Signal != in.Tail.Signal || !baseline.SameEnvironment(*current) {
+				fail(w, 400, errors.New("tail baseline must match its configured signal and environment selection"))
 				return
 			}
 		}

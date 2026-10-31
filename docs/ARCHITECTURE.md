@@ -1413,3 +1413,12 @@ aligned element derives exact total/valid percentages and display scales.
 range for the existing Go planner, separate from current-role H1 staging. The
 application checks loaded retained content and rechecks the captured guard after
 awaits. No source read belongs to component lifecycle or mode switching.
+
+
+## Reusable saved count displays — 275
+
+[The declaration contract](SAVED_DISPLAY_DECLARATIONS.md) reuses `goo-chart` and
+`ScopedBreakdown` in the existing population workspace. The parent checked query
+owns scope and reads; a per-signal declaration owns bounded local display intent.
+Source/property edits share one AST, while invalid source remains an explicit
+unsaved draft. Immutable saved configurations carry no dataset or runtime witness.

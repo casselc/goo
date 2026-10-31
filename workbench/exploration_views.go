@@ -30,6 +30,7 @@ type ExplorationView struct {
 	FieldColumns []exploration.Field             `json:"fieldColumns,omitempty"`
 	Tail         *ExplorationTail                `json:"tail,omitempty"`
 	Breakdowns   map[string]ExplorationBreakdown `json:"breakdowns,omitempty"`
+	Displays     map[string]ViewDeclaration      `json:"displays,omitempty"`
 }
 
 func (v ExplorationView) Validate() error {
@@ -49,10 +50,7 @@ func (v ExplorationView) Validate() error {
 	signals := map[string]bool{}
 	first := v.Queries[0]
 	for _, q := range v.Queries {
-		if q.EnvironmentSelector != nil {
-			return errors.New("saved exploration views do not support environmentSelector yet")
-		}
-		if signals[q.Signal] || q.Offset != 0 || q.Environment != first.Environment || q.FromMS != first.FromMS || q.ToMS != first.ToMS {
+		if signals[q.Signal] || q.Offset != 0 || !q.SameEnvironment(first) || q.FromMS != first.FromMS || q.ToMS != first.ToMS {
 			return errors.New("view queries require distinct signals, page zero and identical environment/window")
 		}
 		signals[q.Signal] = true
@@ -87,9 +85,6 @@ func (v ExplorationView) Validate() error {
 		}
 	}
 	for signal, config := range v.Breakdowns {
-		if config.Baseline != nil && config.Baseline.EnvironmentSelector != nil {
-			return errors.New("saved exploration views do not support environmentSelector yet")
-		}
 		var current *exploration.Query
 		for i := range v.Queries {
 			if v.Queries[i].Signal == signal {
@@ -115,12 +110,29 @@ func (v ExplorationView) Validate() error {
 			if config.Distribution && b.NumericHistogram == nil {
 				return errors.New("distribution baseline requires histogram evidence")
 			}
-			if b.Signal != signal || b.Environment != current.Environment || b.Offset != 0 || !reflect.DeepEqual(b.GroupBy, current.GroupBy) || !reflect.DeepEqual(b.Numeric, current.Numeric) {
+			if b.Signal != signal || !b.SameEnvironment(*current) || b.Offset != 0 || !reflect.DeepEqual(b.GroupBy, current.GroupBy) || !reflect.DeepEqual(b.Numeric, current.Numeric) {
 				return errors.New("baseline requires the same signal, environment, breakdown and numeric binding")
 			}
 			if _, e := exploration.Compile(*b); e != nil {
 				return e
 			}
+		}
+	}
+	for signal, declaration := range v.Displays {
+		if _, exists := v.Breakdowns[signal]; exists {
+			return errors.New("choose one display configuration per signal; authored displays cannot also have breakdown configuration")
+		}
+		var current *exploration.Query
+		for i := range v.Queries {
+			if v.Queries[i].Signal == signal {
+				current = &v.Queries[i]
+			}
+		}
+		if current == nil || declaration.Scope.Signal != signal {
+			return errors.New("display scope must reference its configured record signal")
+		}
+		if err := declaration.Validate(*current); err != nil {
+			return err
 		}
 	}
 	return nil

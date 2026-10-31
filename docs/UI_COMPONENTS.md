@@ -1493,3 +1493,12 @@ counts and percentage-point changes remain available in one table. Native bars
 are passive: record-range owners refuse them. The application uses existing
 capture comparison metadata and preserves its global withholding gate, coverage
 and percentile-range diagnostics. See [contract](SCOPED_NATIVE_HISTOGRAM_COMPARISONS.md).
+
+
+## Reusable saved count displays — 275
+
+[The declaration contract](SAVED_DISPLAY_DECLARATIONS.md) reuses `goo-chart` and
+`ScopedBreakdown` in the existing population workspace. The parent checked query
+owns scope and reads; a per-signal declaration owns bounded local display intent.
+Source/property edits share one AST, while invalid source remains an explicit
+unsaved draft. Immutable saved configurations carry no dataset or runtime witness.

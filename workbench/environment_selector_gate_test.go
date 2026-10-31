@@ -6,13 +6,13 @@ import (
 	"testing"
 )
 
-func TestSelectorAuthoringRefused250(t *testing.T) {
+func TestSelectorAuthoringBoundaries(t *testing.T) {
 	s, _ := identity.EffectiveEnvironment(identity.EnvironmentScope{Mode: "unreported"})
 	wire, _ := s.Selector()
 	q := exploration.Query{Signal: "logs", EnvironmentSelector: &wire, FromMS: 100000, ToMS: 160000, Limit: 100}
 	v := ExplorationView{Version: 1, Title: "Scope", Queries: []exploration.Query{q}, Layout: "records", Columns: []string{"utc", "summary"}}
-	if v.Validate() == nil {
-		t.Fatal("view accepted selector")
+	if err := v.Validate(); err != nil {
+		t.Fatal("exploration view rejected typed selector", err)
 	}
 	a := ActivityView{Version: 1, Title: "Scope", Selector: exploration.TailSelector{EnvironmentSelector: &wire}, Columns: []string{"utc", "summary"}}
 	if a.Validate() == nil {

@@ -5,7 +5,7 @@ test('population transforms, region/rest and pattern planning retain detached ch
   const rectangle=S.partition(q,{fromMs:130000,toMs:150000,minMS:'1',maxMS:'5'}),parts=P.partitionQueries(queries,intent),transforms=[...P.rangeQueries(queries,{fromMs:130000,toMs:150000}),...P.widenQueries(queries,{fromMs:60000,toMs:180000}),...P.selectionQueries(queries,intent),...parts.selected,...parts.rest,rectangle.selected,rectangle.rest,P.recentQuestion(q,240000,1)];
   for(const out of transforms){assert.ok(E.sameQuestionEnvironment(out,q));assert.notEqual(out.environmentSelector,q.environmentSelector);out.environmentSelector.scope.mode='broken';assert.deepEqual(q,before)}
   const patterns=L.question({...q,signal:'logs'}),previous=C.previousQuestion(patterns);assert.ok(C.isPair({baseline:{question:previous},selection:{question:patterns}}));assert.ok(E.sameQuestionEnvironment(C.plannedPair(patterns,previous).baseline,q));
-  assert.throws(()=>P.definition('Unsupported',queries,'records',['utc']));
+  assert.deepEqual(P.definition('Checked policies',queries,'records',['utc']).queries,queries);
  }
 });
 test('population plans reject changed policy, dropped scope and altered source before execution',()=>{

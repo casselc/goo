@@ -38,9 +38,10 @@ raw count differences are not rates.
    interpolated scalar difference.
 
 The executable journey uses actual collector/ClickHouse data and the existing
-comparison API. Go↔JS properties separately validate actual native evaluator
+comparison API. 100 Go↔JS cases passed on actual native evaluator
 outputs, independent clocks/windows, compatible identities/layouts and malformed
 or withheld inputs. The observed Quint trace constrains local comparison effects;
-mutants and unfinished prefixes must fail. Saved Bombadil explores count/share
+eight altered traces and an unfinished prefix were rejected. The 30-second Saved
+Bombadil campaign passed 425 snapshots across five phases, exploring count/share
 and exact disclosure without source requests. These checks do not establish
 upstream ingestion completeness or authenticate arbitrary imported data.

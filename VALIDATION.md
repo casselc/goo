@@ -1,5 +1,53 @@
 # Validation record
 
+## Reusable saved count-display declarations — 275
+
+The existing exploration-view catalog now saves pinned bar/table declarations
+against checked per-signal record queries. Property controls and checked JSON
+source share display intent. Local Find/order preserve the captured denominator;
+invalid/unapplied source and query drafts block Save. Draft revisions retire late
+save acknowledgements. Reopen stages configuration and requires explicit Run.
+Typed environment policies are retained, and incompatible display/breakdown
+configuration is refused. See [contract/diagram](docs/SAVED_DISPLAY_DECLARATIONS.md)
+and [journey](journeys/275-view-authoring-storyboard.md).
+
+Completed checks:
+
+- Full root `go test ./...` passes, including HTTP and immutable-store tests.
+- All 825 frontend tests pass with local HTTP access enabled. The initial sandboxed
+  invocation could not run the real local HTTP query test; the permitted full rerun passes.
+- API generation/checks pass: 589 reflected schemas, 611 OpenAPI schemas,
+  429 response fixtures, 159 admitted requests and 28 mux refusals.
+- Hegel: 80 finite Go↔JS cases (40 valid/40 refused), plus 20 immutable stored revisions.
+- Quint model smoke passes, rejects six mutants and an unfinished prefix.
+
+Live acceptance:
+
+- Real OTLP journey passes (1.1 min): five captured spans, one inspection row,
+  local Find showing 3/5 (60%), checked source/property edits, invalid-source Save
+  refusal, immutable save/reopen, explicit reread and retired late201 acknowledgement.
+  Observed source reads are `[0,1,1,1,1,1,1,2]`; observed Quint replay passes and
+  rejects six mutants plus an unfinished prefix.
+- Bombadil passes 30 seconds / 613 snapshots / all seven phases. Final reopened
+  configuration is staged, one source read, no overflow or uncaught errors.
+- Three real documentation frames are current. The initial recorder attempt was
+  interrupted after a closed-disclosure role lookup stalled; hidden-safe observation
+  and bounded action waits fix the harness. No product behavior was bypassed.
+- Final local image `fff21410584a18e59b09a6f9be008576065c82f17314254bf98143676bf17d93`
+  is deployed. Served bytes match all four changed/new UI/API files. The initial
+  image predated the Find guard; byte verification caught it and the final rebuild
+  includes that fix. Existing telemetry/XTDB volumes remain intact.
+- Existing linked-population save/reopen journey90 passes (24.9 s), including
+  two-signal scope, explicit reads and mobile layout; its four frames are refreshed.
+  Typed-selector journey254 passes (5.7 s), preserving the effective/unreported
+  selector and baseline through save/fetch without additional telemetry reads.
+  Its initial assertion was corrected for Go’s explicit empty `environment` wire
+  field; selector policy remained unchanged.
+- Disposable package/build caches and raw successful/interrupted browser campaign
+  output were removed; compact run summaries, model ledger and documentation
+  frames remain.
+
+
 ## Shared native histogram comparisons and authoring checkpoint — 274
 
 The existing capture-comparison flow now uses one shared aligned histogram for

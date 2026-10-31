@@ -62,6 +62,25 @@ summary['description']='Bounded discovery metadata, not a receipt. Legacy enviro
 summary['properties']['environmentSelector']['description']='Exact versioned policy/scope, separate from legacy current-only environment. Read with version 250 or newer.'
 
 
+# Saved reusable record display declarations contain configuration, never data.
+for suffix in ('', 'Input'):
+ declaration=schemas['workbench.ViewDeclaration'+suffix]
+ declaration['additionalProperties']=False
+ declaration['properties']['version']['const']='goo.view/1'
+ declaration['description']='Pinned ordinary single-field record count display. Scope references a checked parent query; save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported.'
+ scope=schemas['workbench.ViewDeclarationScope'+suffix];scope['additionalProperties']=False
+ scope['properties']['kind']['const']='record-query';scope['properties']['signal']['enum']=['spans','logs']
+ kind=schemas['workbench.ViewKind'+suffix];kind['additionalProperties']=False
+ kind['properties']['name']['enum']=['bar','table'];kind['properties']['version']['const']=1
+ display=schemas['workbench.ViewDisplay'+suffix];display['additionalProperties']=False
+ display['properties']['category']['const']='category';display['properties']['value']['const']='count'
+ display['properties']['scale']['enum']=['','max','population']
+ display['properties']['order']['enum']=['','source','label','value-desc','value-asc']
+ for field,bound in [('query',256),('title',120)]:
+  display['properties'][field].update(maxLength=bound,description=f'At most {bound} UTF-8 bytes; runtime enforces the byte limit and rejects control characters.')
+ schemas['workbench.ExplorationView'+suffix]['properties']['displays'].update(maxProperties=2,propertyNames={'enum':['spans','logs']})
+ schemas['workbench.ExplorationView'+suffix].setdefault('allOf',[]).extend([{'not':{'required':['displays','breakdowns'],'properties':{'displays':{'required':[signal]},'breakdowns':{'required':[signal]}}}} for signal in ('spans','logs')])
+
 # Immutable selected observations, independent of source and annotation storage.
 keep=schemas['exploration.KeepTailIntentInput']
 keep['required']=['version','requestID','connection','selector','refs']

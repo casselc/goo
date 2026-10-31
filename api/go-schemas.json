@@ -24830,6 +24830,19 @@
           }
         ]
       },
+      "displays": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/workbench.ViewDeclaration"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "fieldColumns": {
         "anyOf": [
           {
@@ -24926,6 +24939,26 @@
               ]
             },
             "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "displays": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/workbench.ViewDeclarationInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object"
           },
           {
             "type": "null"
@@ -25611,5 +25644,270 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.StepScope"
+  },
+  "workbench.ViewDeclaration": {
+    "properties": {
+      "display": {
+        "$ref": "#/components/schemas/workbench.ViewDisplay"
+      },
+      "kind": {
+        "$ref": "#/components/schemas/workbench.ViewKind"
+      },
+      "scope": {
+        "$ref": "#/components/schemas/workbench.ViewDeclarationScope"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "scope",
+      "kind",
+      "display"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewDeclaration"
+  },
+  "workbench.ViewDeclarationInput": {
+    "additionalProperties": false,
+    "properties": {
+      "display": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewDisplayInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "kind": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewKindInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scope": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewDeclarationScopeInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewDeclaration"
+  },
+  "workbench.ViewDeclarationScope": {
+    "properties": {
+      "kind": {
+        "type": "string"
+      },
+      "signal": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind",
+      "signal"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewDeclarationScope"
+  },
+  "workbench.ViewDeclarationScopeInput": {
+    "additionalProperties": false,
+    "properties": {
+      "kind": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "signal": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewDeclarationScope"
+  },
+  "workbench.ViewDisplay": {
+    "properties": {
+      "category": {
+        "type": "string"
+      },
+      "order": {
+        "type": "string"
+      },
+      "query": {
+        "type": "string"
+      },
+      "requiresComplete": {
+        "type": "boolean"
+      },
+      "scale": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "value": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "category",
+      "value"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewDisplay"
+  },
+  "workbench.ViewDisplayInput": {
+    "additionalProperties": false,
+    "properties": {
+      "category": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "order": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "query": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "requiresComplete": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scale": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewDisplay"
+  },
+  "workbench.ViewKind": {
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "version": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "name",
+      "version"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewKind"
+  },
+  "workbench.ViewKindInput": {
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewKind"
   }
 }

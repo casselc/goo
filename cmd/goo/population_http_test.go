@@ -48,4 +48,17 @@ func TestPopulationConfigurationHTTP(t *testing.T) {
 	if w := call("POST", "/exploration-views", bad); w.Code != 400 {
 		t.Fatal(w.Code)
 	}
+	// Authoring persists only the checked declaration; unknown runtime data is refused.
+	authored := strings.Replace(view, `"limit":100`, `"groupBy":[{"kind":"column","key":"service"}],"limit":100`, 1)
+	authored = strings.TrimSuffix(authored, "}") + `,"displays":{"spans":{"version":"goo.view/1","scope":{"kind":"record-query","signal":"spans"},"kind":{"name":"bar","version":1},"display":{"category":"category","value":"count","requiresComplete":true}}}}`
+	if w := call("POST", "/exploration-views", authored); w.Code != 201 {
+		t.Fatal(w.Code, w.Body.String())
+	}
+	for _, replacement := range []string{`"value":"p95"`, `"value":"count","rows":[]`, `"value":"count","complete":true`} {
+		bad := strings.Replace(authored, `"value":"count"`, replacement, 1)
+		if w := call("POST", "/exploration-views", bad); w.Code != 400 {
+			t.Fatal("invalid declaration admitted", w.Code, w.Body.String())
+		}
+	}
+
 }
