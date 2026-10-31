@@ -3342,3 +3342,18 @@ from this module. Six corrupted observations and an unfinished prefix must fail.
 The actual JavaScript identity helper has direct frontend tests; no duplicate Go
 implementation is used as a property oracle. Keep compact ledgers/results and the
 three generated storyboard frames; discard successful raw campaign/store copies.
+
+## Connected responder journey — 294
+
+Run `playwright test journeys/294-responder-flow.spec.js --workers=1` from the
+repository root against the local OTLP/ClickHouse lab. The isolated generic Go
+server starts without seeded saved definitions or captures. The browser authors
+the scope, grouping, optional measures, capture, comparison and saved definition.
+Fixture ingestion/readiness polling is separate from browser request accounting.
+The recorded budget counts HTTP operations, not physical ClickHouse reads inside
+subscriptions or capture evaluation. See the 294 storyboard for completed outcomes.
+
+The existing focused-root Hegel property and 286 observed Quint/Bombadil campaign
+remain the semantic/lifecycle checks for the unchanged root derivation. New measure
+controls are checked against real before/after browser requests and refusal outcomes,
+without introducing a duplicate query planner or model.

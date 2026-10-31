@@ -278,6 +278,7 @@ goo-group-count-comparison{display:block;min-width:0}.group-count-comparison{min
 
 goo-group-count-comparison[hidden]{display:none}
 
+.group-count-table th.group-count-category{text-transform:none}
 .group-count-category details{margin:0}.group-count-category summary{font-size:12px;overflow-wrap:anywhere;cursor:pointer}.group-count-category code{display:block;white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px;margin-top:6px}
 
 .group-count-stage{font:inherit;color:inherit;line-height:inherit;background:none;border:0;padding:0;text-align:inherit;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}.group-count-stage:hover:not(:disabled){text-decoration-style:solid}.group-count-stage:disabled{cursor:default;text-decoration:none}.group-count-stage:focus-visible{outline:2px solid var(--accent,#76d8c4);outline-offset:3px;border-radius:2px}

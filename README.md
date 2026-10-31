@@ -12,7 +12,8 @@ Explore and narrow live telemetry, then [compare captured counts](docs/CAPTURED_
 [Preserve](docs/PRESERVATION.md) a question, reusable view, or independent evidence capture.
 Optional [investigation findings](docs/PRESERVE_ATTACHMENT.md) stay behind Add to investigation.
 
-Build reusable views with [saved displays](docs/SAVED_DISPLAY_DECLARATIONS.md),
+[Customize one signal](docs/FOCUSED_VIEWS.md) from an applied population while keeping
+its fixed scope and paused parent. Build reusable views with [saved displays](docs/SAVED_DISPLAY_DECLARATIONS.md),
 [service templates](docs/HTTP_SERVICE_VIEW_TEMPLATE.md), and
 [record/aggregate compositions](docs/RECORD_AGGREGATE_COMPOSITION.md).
 [Record paging](docs/RECORD_PAGE_PROFILE.md) retains the held aggregate and timeline.

@@ -1,5 +1,49 @@
 # Validation record
 
+## Connected Activity-to-authored-view workflow — 294
+
+[Contract and diagram](docs/FOCUSED_VIEWS.md) ·
+[storyboard](journeys/294-responder-flow-storyboard.md) ·
+[usability](docs/reviews/RESPONDER_FLOW_294.md) and
+[architecture](docs/reviews/FOCUS_ENTRY_ARCHITECTURE_294.md) reviews.
+
+- Full root `go test ./...` and all 910 frontend tests pass. No Go handler, API
+  or durable format changed.
+- The real OTLP journey starts in generic Activity without API-seeded saved views,
+  comparisons or captures. It narrows service, groups by `http.route`, runs the
+  fixed window, opens linked populations and customizes spans without rebasing
+  the clock. The planner enriches measures; the full selected enriched root is
+  preserved through Customize, resetting only page offset.
+- The initial live attempt exposed planner-added span status blocking the strict
+  captured-count profile. Explicit span-measure staging now changes the query
+  without reading; a fresh Run and matching capture precede comparison. Enabling
+  status on the configured comparison refuses while keeping held evidence.
+- Final 294 browser run passes in 42.5 seconds on frozen source. Explicit duration
+  summary removal refuses while a p95 display needs it. Measure staging, stale
+  controls, Back and configured-comparison refusal retain the checked query and
+  held results appropriately. Final trace inspection asserts two actual waterfall
+  rows/bars with exact span IDs, including the worker outside the original service
+  filter. Reopening the saved definition stages without reading; Run is separate.
+- The observed browser budget is two tail subscriptions, 11 Explore POSTs, one
+  capture, one pure comparison and one view save; no document or page POSTs.
+  This is HTTP accounting, not physical SQL read accounting inside subscriptions
+  or captures. Fixture ingestion and readiness polling are excluded.
+- Final five storyboard frames are generated from the running Go app. A scoped
+  row-header style preserves case-sensitive route labels, checked by computed
+  text-transform as well as exact data. Reused checkbox row styling keeps labels
+  inline. Earlier harness label/profile assumptions were corrected, and the
+  genuine status-profile blocker drove the explicit measure controls.
+- Final architecture and visual reviews have no blockers. Compose validation and
+  CA-backed image build pass. The local lab runs image
+  `3e122f2ad0926556129e7db4e169cb2a216da07c23e60647e0e7f24e568cf3c7`;
+  both changed UI assets match the served bytes. Existing volumes and the separate
+  XTDB container remain intact. Changed overview/contract/storyboard links resolve.
+  Successful raw campaign/store copies were cleaned; compact results remain local.
+- Browser regression 293 passes. Existing 286 observed Quint replay and independent
+  30-second Bombadil campaign pass (274 snapshots, eight phases, four explicit
+  Explore requests); the existing Hegel test exercises the actual JS root planner
+  for 100 cases. No duplicate Go implementation or new count-profile relaxation.
+
 ## Optional Preserve attachment and owner safety — 293
 
 [Contract](docs/PRESERVE_ATTACHMENT.md) ·

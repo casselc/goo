@@ -1,9 +1,16 @@
 # Known issues and gaps
 
+294 closes the natural Activity-to-comparison/reopen validation gap, including
+settled trace waterfall rows across services. Customize is available for applied
+fixed populations; optional span measures can be staged in ordinary single-query
+compositions. Count comparison remains strict: status/numeric/specialized captures
+are not silently converted. Setup still requires View settings → Composition;
+contextual capture-baseline discovery is the next product task.
+
 293 collapses optional saved-view findings and binds attachment controls to exact
 saved publication identity. The whole-flow review comparison parent was API-seeded;
-its trace screenshot captured loading, not completed inspection. Full unseeded
-Activity-to-comparison/reopen validation remains the next roadmap task.
+its trace screenshot captured loading, not completed inspection. The unseeded
+validation is completed in 294.
 
 292 adds [explicit group-side staging](GROUP_SIDE_STAGING.md) for positive reported
 counts in a coherent comparison. A baseline action stages its question, not stored

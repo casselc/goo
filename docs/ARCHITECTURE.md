@@ -1577,3 +1577,16 @@ evaluator or dataset schema was added. See [contract](SAVED_COUNT_TIMELINE.md) a
 [Attachment controls](PRESERVE_ATTACHMENT.md) bind saved ID/title/revisions at publication.
 This metadata lease is distinct from telemetry execution leases. The existing document
 staging destination guard remains authoritative; disclosure changes perform no IO.
+
+## Focused customization from fixed populations — 294
+
+The [existing focused-view owner](FOCUSED_VIEWS.md) also admits applied non-recent
+populations. Mode is presentation state, not query authority: exact root derivation,
+private execution/mount leases, pending-state checks and retained Back remain shared.
+The linked planner may enrich requested measures, but preserves the fixed scope;
+Customize then copies the full selected planner root and resets only page offset.
+
+Optional duration/status changes in an ordinary span composition stage through the
+same root-query owner. Validate the changed question and active composition before
+withdrawing comparison state or results. Exact captured-count eligibility remains
+unchanged; users request a compatible query explicitly and acquire new evidence.

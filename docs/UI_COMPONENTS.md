@@ -1630,3 +1630,14 @@ semantic planner. See [contract](GROUP_SIDE_STAGING.md), including identity fram
 The application owns a native details/summary disclosure and stable finding textarea.
 `ViewFinding.sameAttachment` compares saved publication identity without IO; the host
 retires action buttons when identity changes. No reusable display element reads or writes.
+
+## Contextual Customize entry — 294
+
+Customize spans/logs is an application-owned action beside the signal heading in
+applied noncomposition populations. Recent/fixed presentation does not change its
+scope contract. Passive charts still receive supplied data and never open source
+reads; the retained child requires explicit Run. See [focused views](FOCUSED_VIEWS.md).
+
+Native checkboxes under Measures · spans stage query configuration immediately;
+they are not display reducers. Existing query/composition validation owns eligibility,
+and a fresh mount replaces retired controls after retained Back.

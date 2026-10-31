@@ -1,10 +1,10 @@
 # Implementation plan
 
-> Current checkpoint 293: responder-flow reviews led to a compact optional
-> Preserve attachment and exact saved-publication ownership. Next: validate the
-> unseeded Activity-to-comparison/reopen journey and completed trace inspection,
-> then choose the next observed workflow improvement. See the
-> [roadmap](ROADMAP_2026_10_30.md#responder-flow-review--293).
+> Current checkpoint 294: the unseeded Activity-to-comparison, completed trace and
+> reusable-view flow is connected through fixed-population Customize and explicit
+> span-measure staging. Next: contextual captured-baseline selection in the same
+> owner, then a user/team-authored OTel template using existing kinds. See the
+> [roadmap](ROADMAP_2026_10_30.md#connected-responder-authoring--294).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),
@@ -1667,3 +1667,12 @@ Whole-flow architecture, design and live walkthrough reviews selected optional P
 attachment disclosure and saved-publication ownership as the bounded next improvement.
 Save stays visible, drafts survive retained Back, retired controls refuse safely.
 See [contract](PRESERVE_ATTACHMENT.md) and review reports.
+
+## 294 — connected responder authoring
+
+[Focused views](FOCUSED_VIEWS.md) extends Customize to applied fixed populations.
+Native optional span-measure controls stage a new query without reading, preserving
+fixed scope and existing strict count-comparison eligibility. The unseeded journey
+connects Activity, explicit evidence capture, compared groups, completed trace
+inspection and saved-view reopening. Continue with the contextual comparison outcome
+in the roadmap, rather than adding another renderer or testing framework.

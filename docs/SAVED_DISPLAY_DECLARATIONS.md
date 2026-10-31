@@ -136,3 +136,9 @@ The 276 product/architecture checkpoint and 277 current-scope reuse advance the
 next task to one OTel service record template with a contextual Customize entry.
 Broader chart kinds and page composition should reuse this workflow rather than
 create a second configuration library.
+
+## Reach the editor from an applied population
+
+Use [Customize spans/logs](FOCUSED_VIEWS.md) to stage one signal with the exact
+fixed query. This is available after reading linked fixed populations as well as
+recent activity; a fresh recent-window detour is unnecessary.
