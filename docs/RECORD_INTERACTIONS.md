@@ -1,9 +1,10 @@
-# Record interactions across Table and List
+# Shared record interactions
 
 > Implemented in milestone 298. Executed checks are recorded in
 > [VALIDATION.md](../VALIDATION.md#shared-tablelist-record-interactions--298).
 
-Table and List are presentations of one bounded record page. In the application,
+Table, List and the spans-only waterfall are presentations of one bounded record
+page. In the application,
 Select, Inspect, Keep, trace expansion and field actions use one record interaction
 controller. Changing presentation does not change the question, refresh telemetry,
 reconcile independent read clocks or turn supplied rows into population totals.
@@ -62,3 +63,14 @@ measurement gestures stay paused until Run. If a selected/submitted record workf
 is retained, its DOM stays paused instead of silently losing the selection. The
 existing Run explicitly replaces that page. A submitted Keep may still finish;
 returning does not replay or undo its intent.
+
+
+## Supplied timing surface — 301
+
+The waterfall's parent-first visual order does not change occurrence identity.
+The app validates that every original page index has exactly one current mount,
+then binds the timing button to the shared Inspect handler. Selection and context
+actions use adjacent hosts, never nested controls. Handle-array/page/display
+identity and the private app lease retire replacement renderings. The same 20-row
+selection limit, pending-state guards, Keep mapping and explicit source actions
+apply to every presentation. See [timing semantics](SUPPLIED_SPAN_WATERFALL.md).

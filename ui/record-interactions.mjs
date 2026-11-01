@@ -9,6 +9,7 @@ import * as TraceSearch from './trace-search.mjs';
 import * as UI from './components.mjs';
 import * as Visuals from './visualizations.mjs';
 import './record-list.mjs';
+import './record-span-waterfall.mjs';
 const node=UI.node,mounts=new WeakMap();
 
 // Positions identify occurrences in this page, including identical/repeated records.
@@ -26,15 +27,22 @@ export function createSelection(size){
  });
 }
 
+// Display order may differ from delivery order. Only page positions identify the
+// controller's occurrences; DOM order and reported IDs never become Keep indexes.
+export function indexRecordItems(items,size){
+ if(!Array.isArray(items)||!Number.isSafeInteger(size)||size<0||items.length!==size)throw Error('Record hosts must match the admitted page.');
+ const indexed=new Array(size);
+ for(const item of items){const index=item?.index;if(!Number.isInteger(index)||index<0||index>=size||indexed[index]!==undefined)throw Error('Use each original page position exactly once.');indexed[index]=item}
+ return Object.freeze(indexed);
+}
 function surface(target,rows,signal,options){
- if(options.recordKind==='record-list'){
-  const list=node('goo-record-list');list.page=options.recordPage;list.display=options.recordLayout;target.append(list);
-  const items=list.recordItems(),page=list.page,display=list.display;
-  if(items.length!==rows.length)throw Error('List hosts must match the admitted page.');
+ if(['record-list','record-span-waterfall'].includes(options.recordKind)){
+  const list=node(options.recordKind==='record-span-waterfall'?'goo-record-span-waterfall':'goo-record-list');list.page=options.recordPage;list.display=options.recordLayout;target.append(list);
+  const handles=list.recordItems(),items=indexRecordItems(handles,rows.length),page=list.page,display=list.display;
   for(const item of items){item.actionsHost.hidden=false;item.details.hidden=true;item.detailHost.classList.add('record-detail-row');item.detailHost.hidden=true}
-  return {viewport:list,current:()=>list.page===page&&list.display===display&&list.recordItems()===items,
+  return {viewport:list,current:()=>list.page===page&&list.display===display&&list.recordItems()===handles,
    rowElements:items.map(item=>item.element),
-   row(record,index){const item=items[index];return {row:item.element,time:item.element.querySelector('.record-list-meta')||item.element,actions:item.actionsHost,detailRow:item.detailHost,detailCell:item.detailHost}},
+   row(record,index){const item=items[index];return {row:item.element,time:item.timeHost||item.element.querySelector('.record-list-meta')||item.element,actions:item.actionsHost,detailRow:item.detailHost,detailCell:item.detailHost,timingButton:item.timingButton}},
    append(){},finish(){}
   };
  }
@@ -51,7 +59,7 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
  const {active=()=>true,attributeOptions=()=>({}),readOnly=false,savedPage=()=>null,primary=()=>null,openTrace,openSurrounding,layouts=new Map(),initialLayout,surrounding=()=>({})}=context;
  const surround=surrounding(),owner={};mounts.set(target,owner);target.replaceChildren();
  if(!rows.length){const empty=node('goo-result-state','No captured records in this page; absence is not health evidence.');empty.state='empty';target.append(empty);return}
- const records=surface(target,rows,signal,options),{viewport}=records,isList=options.recordKind==='record-list';
+ const records=surface(target,rows,signal,options),{viewport}=records,isPassive=['record-list','record-span-waterfall'].includes(options.recordKind);
  const canUseRecord=()=>mounts.get(target)===owner&&active()&&target.isConnected&&viewport.isConnected&&target.contains(viewport)&&records.current()&&options.canUseRecord?.()!==false;
  const originalOptions=attributeOptions(target,signal,options,origin,basis);
  const actions={...originalOptions,
@@ -70,7 +78,7 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
  const layoutHost=node('div',undefined,'record-fields-toolbar');
  function selectionChanged(){
   const state=selection.state();for(const [index,input]of inputs){input.checked=selection.has(index);input.disabled=state.submitted||state.busy||!input.checked&&state.selected>=20}
-  if(isList){layoutHost.inert=state.selected>0||state.busy;layoutHost.setAttribute('aria-disabled',String(layoutHost.inert))}
+  if(isPassive){layoutHost.inert=state.selected>0||state.busy;layoutHost.setAttribute('aria-disabled',String(layoutHost.inert))}
   options.onSelectionState?.(state);
  }
  function selectionReference(){const indexes=selection.indexes();return readOnly&&target===primary()?{captureID:savedPage().receipt.id,indexes:indexes.map(index=>Number(origin.offset||0)+index)}:{resultToken:options.resultToken,indexes:[...indexes]}}
@@ -110,7 +118,7 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
   if(options.onFacet||options.resultToken||readOnly&&savedPage()&&target===primary()){
    const input=node('input');input.type='checkbox';input.dataset.recordSelection='true';input.setAttribute('aria-label','Select captured record '+(index+1));input.onchange=()=>selectRecord(index,input);inputs.set(index,input);cell.prepend(input);
   }
-  const inspectButton=node('button','Inspect');inspectButton.setAttribute('aria-label','Inspect record');inspectButton.dataset.inspectRecord=String(index);inspectButton.setAttribute('aria-pressed','false');
+  const inspectButton=item.timingButton||node('button','Inspect');if(item.timingButton){const label=inspectButton.getAttribute('aria-label')||RecordPresentation.describe(row,signal).message;if(!label.startsWith('Inspect supplied span'))inspectButton.setAttribute('aria-label','Inspect supplied span · '+label);if(!inspectButton.title.startsWith('Inspect supplied span'))inspectButton.title='Inspect supplied span · '+(inspectButton.title||'')}else inspectButton.setAttribute('aria-label','Inspect record');inspectButton.dataset.inspectRecord=String(index);inspectButton.setAttribute('aria-pressed','false');
   inspectButton.onclick=()=>{
    if(!canUseRecord())return;
    const body=panel.querySelector('.ui-inspector-body'),scroll=body.scrollTop;
@@ -128,11 +136,11 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
    if(signal==='spans'&&actions.onTraceSearch){const find=node('button','Find traces with this operation');find.type='button';find.disabled=actions.canTraceSearch?.()===false;find.onclick=()=>{if(!canUseRecord()||actions.canTraceSearch?.()===false||!Visuals.actionVisible(find))return;try{actions.onTraceSearch(TraceSearch.seedFromRow(row),find)}catch(error){find.title=error.message}};follow.push(find)}
    inspect.show({key,title:signal==='logs'?'Selected log':'Selected span record',description,content,actions:follow,opener:inspectButton});
   };
-  const input=inputs.get(index);if(input)input.after(inspectButton);else cell.prepend(inspectButton);
+  const input=inputs.get(index);if(!item.timingButton){if(input)input.after(inspectButton);else cell.prepend(inspectButton)}
   records.append(tr);records.append(item.detailRow);
  }
  const layoutKey=(target.id||'records')+':'+signal,layout=options.recordLayout||layouts.get(layoutKey)||initialLayout||undefined;
- if(isList){
+ if(isPassive){
   const picker=node('goo-record-columns');picker.model={layout:layout||{columns:['utc','service','summary','context'],fieldColumns:[]},fields:RecordColumns.fields(rows)};
   picker.addEventListener('goo:record-columns',event=>{if(!canUseRecord()||selection.state().selected||selection.state().busy)return;const next=RecordColumns.validate(event.detail);layouts.set(layoutKey,next);options.onColumns?.(next)});layoutHost.append(picker);
  }else{

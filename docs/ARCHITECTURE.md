@@ -1,5 +1,12 @@
 # Architecture
 
+[Supplied-span timing](SUPPLIED_SPAN_WATERFALL.md) is another pinned records kind
+over the same bounded page. Shared geometry uses unambiguous reported parents,
+trace-relative timed origins and a common scale; application ports remain keyed
+by original page positions even when visual order changes. The passive component
+mounts no source/publication controller. Existing shared actions retain exact
+page/render leases, and explicit trace acquisition remains a separate owner.
+
 [Comparison templates](COMPARISON_VIEW_TEMPLATES.md) explicitly bind a destination
 baseline reference. Pure expansion validates the specimen content ID, clones its
 composition and substitutes exactly that reference. The destination retains its

@@ -1,0 +1,20 @@
+/* Passive supplied-page layout. Application action ownership stays outside. */
+goo-record-span-waterfall{display:block;min-width:0}goo-record-span-waterfall[hidden]{display:none}
+goo-record-span-waterfall>.record-span-waterfall-facts,goo-record-span-waterfall>.record-span-waterfall-scale,goo-record-span-waterfall>.record-span-waterfall-warning,goo-record-span-waterfall>.record-span-waterfall-empty,goo-record-span-waterfall>.record-span-waterfall-unavailable{margin:6px 0;color:var(--muted,#98a8bf);font-size:12px;overflow-wrap:anywhere}
+goo-record-span-waterfall .record-span-waterfall-group{margin:8px 0 0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;min-width:0}
+goo-record-span-waterfall .record-span-waterfall-heading{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:12px;color:var(--muted,#98a8bf);padding:6px 0;border-bottom:1px solid var(--border,#334155)}
+goo-record-span-waterfall .record-span-waterfall-heading strong{font-size:12px;color:var(--ink,#e3e9f3)}
+goo-record-span-waterfall .record-span-waterfall-item{min-width:0;padding:6px 0;border-bottom:1px solid var(--border,#334155);overflow-wrap:anywhere}
+goo-record-span-waterfall .record-span-waterfall-item:focus-within{box-shadow:inset 2px 0 var(--accent,#76d8c4)}
+goo-record-span-waterfall .record-span-waterfall-meta{font-size:11px;color:var(--muted,#98a8bf);margin-bottom:2px}
+goo-record-span-waterfall .record-span-waterfall-item .waterfall-row{margin:0;border:0;padding:3px 0;border-radius:0;background:transparent;grid-template-columns:minmax(150px,36%) minmax(0,1fr) 110px;font-size:12px}
+goo-record-span-waterfall .record-span-waterfall-item .waterfall-row:focus-visible{outline-offset:1px}
+goo-record-span-waterfall .record-span-waterfall-fields{display:flex;flex-wrap:wrap;gap:3px 14px;margin:4px 0;font-size:11px}
+goo-record-span-waterfall .record-span-waterfall-fields>div{display:flex;gap:5px;min-width:0;max-width:100%}
+goo-record-span-waterfall .record-span-waterfall-fields dt{color:var(--muted,#98a8bf)}goo-record-span-waterfall .record-span-waterfall-fields dd{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;min-width:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;max-height:2lh;overflow:hidden;max-inline-size:30rem}
+goo-record-span-waterfall .record-span-waterfall-actions{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-top:4px}
+goo-record-span-waterfall .record-span-waterfall-actions button{font-size:12px;padding:3px 7px}goo-record-span-waterfall .record-span-waterfall-actions input{margin:0}
+goo-record-span-waterfall .record-span-waterfall-actions[hidden],goo-record-span-waterfall .record-span-waterfall-inspector[hidden],goo-record-span-waterfall .record-span-waterfall-details[hidden]{display:none}
+goo-record-span-waterfall .record-span-waterfall-details{margin:4px 0 0;border:0;padding:0}goo-record-span-waterfall .record-span-waterfall-details>summary{font-size:12px;cursor:pointer;color:var(--accent,#76d8c4)}
+goo-record-span-waterfall .record-span-waterfall-inspector{margin-top:6px;min-width:0}
+@media(max-width:700px){goo-record-span-waterfall .record-span-waterfall-item .waterfall-row{grid-template-columns:minmax(0,1fr)}goo-record-span-waterfall .record-span-waterfall-item .waterfall-row .span-track{height:20px}}

@@ -205,3 +205,12 @@ bounded page and column contract. The original 297 cut kept actions in Table;
 [298](RECORD_INTERACTIONS.md) shares selection, Keep and source actions through
 one application owner. Standalone List retains local native Details. Kind selection is
 saved and template-portable, while query/paging/source ownership stays in the parent.
+
+
+## Supplied-span waterfall kind — 301
+
+Spans can choose [Span waterfall](SUPPLIED_SPAN_WATERFALL.md) as their records
+presentation, retaining the same page, fields, pager and template/configuration
+owner. Its relative timing groups do not imply complete traces; explicit expansion
+remains independent. Logs/metrics reject the kind, including hidden declarations.
+Visual ordering preserves original page positions for shared record interactions.

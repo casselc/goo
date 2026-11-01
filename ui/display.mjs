@@ -26,3 +26,5 @@ export * as TracePageComparison from './trace-page-comparison.mjs';
 export * as TraceComparisonView from './trace-comparison-view.mjs';
 
 export * as RecordList from './record-list.mjs';
+
+export * as RecordSpanWaterfall from './record-span-waterfall.mjs';

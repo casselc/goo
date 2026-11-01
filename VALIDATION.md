@@ -1,5 +1,59 @@
 # Validation record
 
+## Supplied-span waterfall records — 301
+
+[Contract/diagram](docs/SUPPLIED_SPAN_WATERFALL.md) ·
+[storyboard](journeys/301-supplied-span-waterfall-storyboard.md) ·
+[architecture](docs/reviews/SUPPLIED_SPAN_WATERFALL_ARCHITECTURE_301.md) and
+[design](docs/reviews/SUPPLIED_SPAN_WATERFALL_DESIGN_301.md) reviews.
+
+- Both changed Go packages pass (`workbench`, `cmd/goo`, `-count=1`). Tests cover
+  spans-only/hidden-kind admission, all eight fields, save/reuse/template isolation,
+  existing timeline/comparison metadata and source-free HTTP handling. OpenAPI
+  checks pass: 98 operations, 651 schemas, 429 fixture responses, 159 admitted
+  requests and 28 mux refusals plus new spans-only kind controls. Reflected Go
+  schemas are unchanged; five actual save/expansion exchanges conform.
+- Final frontend suite: 952 passed, zero failed/skipped (23.5 seconds). Fourteen
+  focused component/geometry/public-graph tests and twenty app-focused tests pass.
+  The public display graph remains passive (48 modules), including SSR/detached
+  inputs, unavailable timing, exact render retirement and original-index ports.
+- One hundred actual Go/JS geometry/admission cases pass (28.6 seconds). The
+  observed 15-step Quint replay passes (11.7 seconds), rejects seven corrupted
+  traces plus an unfinished prefix, and standalone smoke passes (16 seconds).
+- Final native main, public-data lane and Bombadil pass in 1.6 minutes. Real OTel
+  spans cover multiple traces, 5 ms/500 ms common-scale geometry, reported-parent
+  ambiguity/missing/cycles, keyboard Inspect/Close focus, and Keep of the visually
+  first parent at original page index one. Explicit trace expansion acquires a
+  worker outside the original service filters. Authored save/apply to another
+  service/group/reopen retains kind and destination query; paging holds aggregate
+  and timeline identities. Main budget: eight Explore HTTPs, one page, one Keep,
+  two saves, three expansions and zero captures/errors. These are HTTP counts,
+  not SQL statements. Fixture ordering was corrected to actual chronological
+  delivery before proving the visual/source-position difference.
+- The separate supplied-data lane starts from a real response and explicitly adds
+  synthetic malformed timing/IDs. Three rows remain in three isolated groups;
+  eight qualified fields, missing/empty/null, SSR, detached/reconnected properties,
+  inert default slots and invalid-replacement withdrawal pass with zero POSTs.
+- Bombadil: 30 seconds, 503 snapshots, nine phases; one Explore, one page, one Keep,
+  zero other writes, ending at offset 100 with three rows and one open Inspect
+  while the timeline stays held. Desktop and 375 px checks reject horizontal
+  overflow and nested interactive controls. Final screenshot review caught global
+  section-card styling leaking into trace groups; scoped resets and computed-style
+  assertions fix it. The bounded Inspect frame shows 5 ms versus 500 ms together;
+  short/full IDs, UTC and tiny-positive versus zero labels remain explicit.
+- Two native regressions (294 responder and 300 comparison templates) pass in
+  1.7 minutes. Three legacy waterfall browser tests pass (15.6 seconds), retaining
+  SSR, properties, controlled selection and eight-fact admission/nine-fact refusal.
+  Deterministic 67a/67b frames intentionally reflect valid OTel IDs and updated
+  parent/tiny-duration semantics. Six random historical frame changes were restored.
+- Successful raw/store copies (41.9 MB) were removed; compact main/public results
+  total about 48 KB. All three new actual frames pass design review.
+- CA-backed Compose config/build passes. Local image
+  `3c5ae250c2a880480936674c4eea213ba0ef3783f344c7a31da03d88a0773c77`
+  is running with existing volumes and separate XTDB retained. All eleven changed
+  UI/OpenAPI assets match served bytes.
+
+
 ## Comparison templates with an explicit baseline — 300
 
 [Contract/diagram](docs/COMPARISON_VIEW_TEMPLATES.md) ·

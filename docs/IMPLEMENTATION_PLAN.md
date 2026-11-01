@@ -1,11 +1,10 @@
 # Implementation plan
 
-> Current checkpoint 300: reusable count-comparison templates require an explicit
-> destination baseline binding/input; configuration expansion never inherits or
-> verifies the specimen capture. Existing Prepare checks destination evidence.
-> Next 301: inspect supplied span timing through a bounded waterfall records kind,
-> sharing the admitted page and record interactions without an implicit trace read.
-> See [comparison templates](COMPARISON_VIEW_TEMPLATES.md).
+> Current checkpoint 301: a spans-only waterfall presents the admitted record page
+> with comparable trace-relative timing and shared Inspect/Keep actions.
+> Next 302: records-only saved compositions, so raw log and exact-trace scopes can
+> use Table/List/Waterfall without inventing grouping or retaining an aggregate.
+> See [supplied-span timing](SUPPLIED_SPAN_WATERFALL.md).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),
@@ -1799,3 +1798,44 @@ ambiguous-parent fixtures should prove source-free kind changes, comparable 5 ms
 versus 500 ms geometry, exact Keep indexes, independent cross-service Expand trace,
 paging and saved/template reuse. Keep global trace acquisition separate from this
 local presentation; do not introduce another query framework or claim completeness.
+
+
+## 301 — inspect supplied span timing
+
+[Span waterfalls](SUPPLIED_SPAN_WATERFALL.md) add one spans-only records kind,
+reusing the current page, geometry, shared interactions, pager and template owner.
+Valid trace fragments use their earliest timed supplied origins with one common
+scale. Invalid timing stays unavailable; invalid IDs, duplicate parents, missing
+parents and cycles never create arbitrary edges. Visual ordering preserves exact
+original page positions for Inspect/Keep. Trace expansion remains independent.
+Actual review fixed global section-card leakage with scoped component styling,
+retained useful short/full IDs and verified the 5 ms versus 500 ms comparison.
+
+## Next 302 — raw scopes without mandatory aggregation
+
+Let users customize and save an ungrouped log search or exact-trace span scope
+through a canonical records-only composition. The current flat `layout: records`
+can save query/columns but not List/Waterfall kind; canonical compositions and
+Customize still force an aggregate/one-group prerequisite. This is the next core
+adoption gap, rather than another kind or template profile.
+
+Bound the first cut to one records child plus the existing aggregate-based forms.
+Use the same page, kind/field controls, Inspect/Keep, pager and saved catalog.
+Ordinary saved-composition Apply must work even with no aggregate declarations;
+move its existing early empty-signals return after composition handling. Preserve
+the destination query exactly, with no implicit grouping, read or source ID import.
+Reuse the current count-plus-rows acquisition profile where admitted and measure
+its real statements before claiming an unused-aggregate optimization.
+
+Keep category-bound authored templates unchanged: add an explicit aggregate
+requirement in Go binding validation and the OpenAPI template branch before
+relaxing composition validation; JS already requires it. Do not accidentally admit
+record-only templates in Go alone. New timeline/comparison combinations and generic
+template parameters are outside this first raw-records cut.
+
+Acceptance: ungrouped Activity logs → List/qualified fields → Inspect/Keep → save,
+reopen and apply to another ungrouped log scope; exact-trace spans → Waterfall →
+paging/Keep/save with grouping absent or unchanged. Presentation changes perform
+no reads; API/Go/JS/schema checks agree. Existing grouped/timeline/comparison and
+category-template journeys remain valid. A later natural Trace inspector → Open as
+view handoff can use this foundation; trace findings already provide custody.

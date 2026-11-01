@@ -145,7 +145,7 @@ for suffix in ('', 'Input'):
  for name,kind_name in [('CompositionKind','stack'),('RecordViewKind','record-table')]:
   kind=schemas['workbench.'+name+suffix];kind['additionalProperties']=False
   kind['required']=['name','version']
-  if name=='RecordViewKind':kind['properties']['name']['enum']=['record-table','record-list']
+  if name=='RecordViewKind':kind['properties']['name']['enum']=['record-table','record-list','record-span-waterfall']
   else:kind['properties']['name']['const']=kind_name
   kind['properties']['version']['const']=1
  child=schemas['workbench.ViewCompositionChild'+suffix];child['additionalProperties']=False
@@ -185,7 +185,8 @@ for suffix in ('', 'Input'):
  for field in ('scope','kind','display'): record['properties'][field]['type']='object'
  record['properties']['scope']['required']=['kind','signal']
  record['properties']['version']['const']='goo.view/1'
- record['description']='Pinned record-table or record-list presentation over the same supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator.'
+ record['description']='Pinned record-table, record-list or spans-only record-span-waterfall presentation over the same supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator or complete-trace witness.'
+ record['allOf']=[{'if':{'properties':{'kind':{'properties':{'name':{'const':'record-span-waterfall'}},'required':['name']}},'required':['kind']},'then':{'properties':{'scope':{'properties':{'signal':{'const':'spans'}}}}}}]
  display=schemas['workbench.RecordViewDisplay'+suffix];display['additionalProperties']=False
  display['required']=['columns']
  display['properties']['columns'].update(type='array',minItems=2,maxItems=4,uniqueItems=True,items={'enum':['utc','service','summary','context']},allOf=[{'contains':{'const':core}} for core in ('utc','summary')])

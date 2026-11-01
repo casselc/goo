@@ -3496,3 +3496,29 @@ page-100 comparison, bounded requests, zero writes and zero specimen-capture rea
 Retain compact summaries and the three actual documentation frames; remove
 successful raw campaign and duplicate store copies. See the
 [storyboard](../journeys/300-comparison-template-storyboard.md).
+
+## Supplied-span timing records — 301
+
+```sh
+go test -C verification -run '^(TestHegelSuppliedWaterfallGeometryAndDeclarations|TestHegelSuppliedWaterfallAdmissionRefusals|TestQuintSuppliedWaterfallModelSmoke)$' -count=1 -v .
+GOO_SUPPLIED_WATERFALL_BOMBADIL=1 playwright test journeys/301-supplied-span-waterfall.spec.js
+GOO_SUPPLIED_WATERFALL_LEDGER="$PWD/artifacts/waterfall-301/model-trace.json" go test -C verification -run '^TestQuintSuppliedWaterfallObservedBrowserLedger$' -count=1 -v .
+```
+
+Use the configured local Go/Node/Quint toolchains and OTel/ClickHouse lab. One
+hundred generated cases exercise actual geometry and Go/JS declaration admission,
+including ambiguous/missing/cyclic parents, exact ns, common-scale translation and
+original indexes. The native journey uses real multi-trace spans, Keeps a visually
+reordered parent at original page index one, inspects with the keyboard, explicitly
+expands to another service, and preserves kind/query through template reuse and
+paging with held measurements. No saved definition is API-seeded in that journey.
+The 15-step observed model rejects seven mutants and an unfinished prefix.
+
+A separate supplied-data lane starts from an actual response, explicitly adds
+synthetic invalid timing/identity values and tests SSR/detached/8-field admission,
+inert slots and replacement withdrawal without source authority. Bombadil must
+finish explicit Run, view changes, Keep, paging and Inspect with held timing, one
+Explore/one page/one Keep and zero other writes. Native desktop/375 px checks
+reject horizontal overflow and nested controls; computed styling rejects leaked
+card chrome. Keep compact results and three actual bounded frames, not successful
+raw campaign/store copies. See the [storyboard](../journeys/301-supplied-span-waterfall-storyboard.md).

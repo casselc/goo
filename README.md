@@ -19,7 +19,8 @@ its fixed scope and paused parent. Build reusable views with [saved displays](do
 [reusable timelines](docs/TIMELINE_VIEW_TEMPLATES.md) and
 [comparisons with a chosen baseline](docs/COMPARISON_VIEW_TEMPLATES.md), and
 [record/aggregate compositions](docs/RECORD_AGGREGATE_COMPOSITION.md), including
-[record lists](docs/RECORD_LIST.md) beside the default table, with
+[record lists](docs/RECORD_LIST.md) and [supplied-span waterfalls](docs/SUPPLIED_SPAN_WATERFALL.md)
+beside the default table, with
 [shared record interactions](docs/RECORD_INTERACTIONS.md).
 [Record paging](docs/RECORD_PAGE_PROFILE.md) retains the held aggregate and timeline.
 

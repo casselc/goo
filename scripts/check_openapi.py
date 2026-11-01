@@ -639,6 +639,26 @@ def check_comparison_template_bindings(spec):
             assert not view_check.is_valid(bad), 'invalid comparison-template binding presence accepted'
 
 
+def check_record_span_waterfall(spec):
+    declaration = {'version':'goo.view/1','scope':{'kind':'record-query','signal':'spans'},
+                   'kind':{'name':'record-span-waterfall','version':1},
+                   'display':{'columns':['utc','service','summary','context'],
+                              'fieldColumns':[{'kind':kind,'key':key} for kind in ('attribute','resource') for key in ('zone','empty','missing','nested')]}}
+    for suffix in ('','Input'):
+        check = validator(spec, {'$ref':'#/components/schemas/workbench.RecordViewDeclaration'+suffix})
+        check.validate(declaration)
+        for signal in ('logs','metrics'):
+            bad=copy.deepcopy(declaration);bad['scope']['signal']=signal
+            assert not check.is_valid(bad), 'non-span waterfall declaration accepted'
+        for kind in ('record-table','record-list'):
+            valid=copy.deepcopy(declaration);valid['kind']['name']=kind;valid['scope']['signal']='logs'
+            check.validate(valid)
+        bad=copy.deepcopy(declaration);bad['kind']['version']=2
+        assert not check.is_valid(bad), 'unknown waterfall version accepted'
+        bad=copy.deepcopy(declaration);bad['display']['fieldColumns'].append({'kind':'attribute','key':'ninth'})
+        assert not check.is_valid(bad), 'waterfall field budget changed'
+
+
 def check_activity_scope_views(spec):
     """Saved rolling configuration retains exact checked policy and scope."""
     wires = [
@@ -683,6 +703,7 @@ def check(spec):
     check_view_dataset(spec)
     check_timeline_composition(spec)
     check_comparison_template_bindings(spec)
+    check_record_span_waterfall(spec)
     check_document_view_card(spec)
     bank = json.loads((ROOT/'testdata/protocol/environment-selectors.json').read_text())
     for path in ('/explore','/tail'):

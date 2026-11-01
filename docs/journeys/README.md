@@ -2766,3 +2766,5 @@ held parent return, fresh focus and refusal of retired controls.
 - [299: author and reuse a view with fixed timing](../../journeys/299-time-aware-template-storyboard.md).
 
 - [300: reuse comparisons with an explicit destination baseline](../../journeys/300-comparison-template-storyboard.md).
+
+- [301: inspect and Keep timing in supplied spans](../../journeys/301-supplied-span-waterfall-storyboard.md).

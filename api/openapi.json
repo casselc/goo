@@ -43383,7 +43383,39 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.RecordViewDeclaration",
         "additionalProperties": false,
-        "description": "Pinned record-table or record-list presentation over the same supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator."
+        "description": "Pinned record-table, record-list or spans-only record-span-waterfall presentation over the same supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator or complete-trace witness.",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "properties": {
+                    "name": {
+                      "const": "record-span-waterfall"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ]
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
       },
       "workbench.RecordViewDeclarationInput": {
         "additionalProperties": false,
@@ -43445,7 +43477,39 @@
           "kind",
           "display"
         ],
-        "description": "Pinned record-table or record-list presentation over the same supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator."
+        "description": "Pinned record-table, record-list or spans-only record-span-waterfall presentation over the same supplied bounded page, independent of aggregate completeness and totals. Scope references the one parent query; page size is never a population denominator or complete-trace witness.",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "properties": {
+                    "name": {
+                      "const": "record-span-waterfall"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ]
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
       },
       "workbench.RecordViewDisplay": {
         "properties": {
@@ -43593,7 +43657,8 @@
             "type": "string",
             "enum": [
               "record-table",
-              "record-list"
+              "record-list",
+              "record-span-waterfall"
             ]
           },
           "version": {
@@ -43623,7 +43688,8 @@
             ],
             "enum": [
               "record-table",
-              "record-list"
+              "record-list",
+              "record-span-waterfall"
             ]
           },
           "version": {

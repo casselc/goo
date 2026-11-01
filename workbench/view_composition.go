@@ -134,8 +134,11 @@ func (d *RecordViewDisplay) UnmarshalJSON(data []byte) error {
 }
 
 func (d RecordViewDeclaration) Validate(q exploration.Query) error {
-	if d.Version != "goo.view/1" || d.Scope.Kind != "record-query" || d.Scope.Signal != q.Signal || (d.Kind.Name != "record-table" && d.Kind.Name != "record-list") || d.Kind.Version != 1 {
-		return errors.New("require a pinned record-table or record-list display for the configured record query")
+	if d.Version != "goo.view/1" || d.Scope.Kind != "record-query" || d.Scope.Signal != q.Signal || !slices.Contains([]string{"record-table", "record-list", "record-span-waterfall"}, d.Kind.Name) || d.Kind.Version != 1 {
+		return errors.New("require a pinned record-table, record-list or record-span-waterfall display for the configured record query")
+	}
+	if d.Kind.Name == "record-span-waterfall" && q.Signal != "spans" {
+		return errors.New("record-span-waterfall requires a spans query")
 	}
 	return validateRecordColumns(d.Display.Columns, d.Display.FieldColumns, []exploration.Query{q})
 }

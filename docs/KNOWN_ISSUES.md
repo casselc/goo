@@ -1,5 +1,13 @@
 # Known issues and gaps
 
+301 adds a spans-only supplied-page waterfall kind to the existing records role.
+It uses trace-relative timed origins and one common duration scale, with original
+page-position Inspect/Keep and explicit separate trace expansion. It is not a
+complete-trace or critical-path view. Invalid timing/identity stays unavailable or
+isolated; duplicate parent IDs are never resolved arbitrarily. The kind currently
+requires a composition, whose mandatory aggregate/grouping is the next adoption
+gap for ungrouped log/exact-trace views.
+
 300 supports reusable captured-count comparisons only with an explicit destination
 baseline binding and expansion input. The specimen capture is never a fallback.
 A chosen reference remains unverified until existing Prepare checks the actual

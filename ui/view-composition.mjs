@@ -8,7 +8,8 @@ const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 function closed(value,keys){if(!object(value)||Object.keys(value).some(key=>!keys.includes(key)))throw Error('Unknown or invalid composition fields.');}
 export function recordDisplay(value,q){
  validateRecordQuestion(q);closed(value,['version','scope','kind','display']);closed(value.scope,['kind','signal']);closed(value.kind,['name','version']);closed(value.display,['columns','fieldColumns']);
- if(value.version!=='goo.view/1'||value.scope.kind!=='record-query'||value.scope.signal!==q.signal||!['record-table','record-list'].includes(value.kind.name)||value.kind.version!==1)throw Error('Choose a pinned record table or list for this query.');
+ if(value.version!=='goo.view/1'||value.scope.kind!=='record-query'||value.scope.signal!==q.signal||!['record-table','record-list','record-span-waterfall'].includes(value.kind.name)||value.kind.version!==1)throw Error('Choose a pinned record table, list or span waterfall for this query.');
+ if(value.kind.name==='record-span-waterfall'&&q.signal!=='spans')throw Error('Span waterfall requires a spans query.');
  const {columns,fieldColumns=[]}=value.display;
  if(!Array.isArray(columns)||columns.length<2||columns.length>4||new Set(columns).size!==columns.length||!columns.includes('utc')||!columns.includes('summary')||columns.some(key=>!['utc','service','summary','context'].includes(key)))throw Error('Keep UTC and summary with two to four unique record columns.');
  if(!Array.isArray(fieldColumns)||fieldColumns.length>8||new Set(fieldColumns.map(f=>JSON.stringify([f?.kind,f?.key]))).size!==fieldColumns.length)throw Error('Choose at most eight unique qualified record fields.');

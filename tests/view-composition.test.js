@@ -10,3 +10,18 @@ test('record options are checked against the parent signal and edited without to
 test('HTTP template handoff admits composition before navigation and keeps flat options absent',()=>{const {q,c}=make(),view={version:1,title:'HTTP server routes',queries:[q],composition:c},response={template:{id:'otel.http-server-routes',version:1,title:'HTTP server routes'},view};const staged=H.response(response,q);assert.deepEqual(staged,view);staged.composition.children[0].aggregate.display.title='Changed';assert.equal(C.aggregate(view.composition).display.title,undefined);assert.throws(()=>H.response({...response,view:{...view,layout:'records'}},q));assert.throws(()=>H.response({...response,view:{...view,rows:[]}},q));});
 
 test('record list is a pinned alternate kind with the same page options and template role',()=>{const {q,c}=make(),before=structuredClone(c),list=C.setRecordKind(c,'record-list',q);assert.equal(C.records(list).kind.name,'record-list');assert.deepEqual(C.records(list).display,C.records(c).display);assert.deepEqual(C.aggregate(list),C.aggregate(c));assert.deepEqual(c,before);assert.equal(C.records(C.setRecords(list,{columns:['utc','summary'],fieldColumns:[]},q)).kind.name,'record-list');assert.equal(C.records(C.reuse(list,q,{...q,environment:'other',fromMs:3000,toMs:4000})).kind.name,'record-list');assert.deepEqual(C.setRecordKind(list,'record-table',q),c);assert.throws(()=>C.setRecordKind(list,'record-detail',q));const source={version:1,title:'Record list',queries:[q],composition:list,template:H.templateFor()};assert.doesNotThrow(()=>H.templateView(source));const dest={...q,groupBy:[{kind:'attribute',key:'other'}]};assert.doesNotThrow(()=>H.authoredRequest(source,dest));assert.equal(C.records(source.composition).kind.name,'record-list');});
+
+
+test('span waterfall is a spans-only record kind with unchanged options and template ownership',()=>{
+ const {q,c}=make(),before=structuredClone({q,c}),fields=Array.from({length:8},(_,i)=>({kind:i%2?'attribute':'resource',key:'field'+i}));
+ const next=C.setRecords(C.setRecordKind(c,'record-span-waterfall',q),{columns:['utc','service','summary','context'],fieldColumns:fields},q);
+ assert.equal(C.records(next).kind.name,'record-span-waterfall');assert.deepEqual(C.records(next).display.fieldColumns,fields);assert.deepEqual(C.aggregate(next),C.aggregate(c));assert.deepEqual({q,c},before);
+ const source={version:1,title:'Supplied span timing',queries:[q],composition:next,template:H.templateFor()};
+ const destination={...q,environment:'other',fromMs:3000,toMs:4000,groupBy:[{kind:'attribute',key:'db.namespace'}]};
+ assert.doesNotThrow(()=>H.templateView(source));assert.deepEqual(H.authoredRequest(source,destination),{source,query:destination});
+ assert.equal(C.records(C.reuse(next,q,{...q,fromMs:3000,toMs:4000})).kind.name,'record-span-waterfall');
+ assert.equal(C.records(C.setHidden(next,'records',true,q)).kind.name,'record-span-waterfall');
+ const logs={...q,signal:'logs'};delete logs.summary;const logComposition=C.create(logs,D.create(logs),{columns:['utc','summary']});
+ assert.throws(()=>C.setRecordKind(logComposition,'record-span-waterfall',logs),/requires a spans query/);
+ const hidden=structuredClone(logComposition);hidden.children[1].records.kind.name='record-span-waterfall';hidden.children[1].hidden=true;assert.throws(()=>C.validate(hidden,logs),/requires a spans query/);
+});

@@ -1701,3 +1701,17 @@ changes local presentation/reference only. Prepared pairs retire on input change
 and exact source-presentation validation permits only the declared reference
 substitution. No new component, catalog or query owner is introduced. See
 [comparison templates](COMPARISON_VIEW_TEMPLATES.md).
+
+
+## goo-record-span-waterfall — 301
+
+A passive `.page`/`.display` consumer and pinned `record-span-waterfall` records
+kind for spans. Shared geometry/rendering also serves the existing trace inspector;
+the new kind chooses per-trace timed origins with one common duration scale. Frozen
+`.recordItems()` handles retain original page indexes and expose adjacent action/
+inspector slots plus the timing button. App adapters bind the same Inspect/Keep
+owner, while standalone timing clicks only reveal supplied Details. UTC, all eight
+qualified fields and unavailable timing retain their semantics. Component-scoped
+group styling prevents application section cards from leaking into fragments.
+SSR, detached properties and narrow layouts are checked. See
+[the contract](SUPPLIED_SPAN_WATERFALL.md).
