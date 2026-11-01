@@ -1697,3 +1697,10 @@ The [paired-window transition](PAIRED_COMPARISON_WINDOWS.md) is a pure operation
 on the existing fixed-query composition. It validates both questions and unchanged
 presentation before the application stages them, retires prior observations and
 waits for Run. It adds no endpoint, source owner or component lifecycle effect.
+
+
+The first [declarative facet role](DECLARATIVE_FACETS.md) stores one qualified
+string field and applied-scope basis beside records/charts. The application uses
+the existing counted-values query/result adapter and selection tray; the passive
+`goo-categorical-facet` emits intents without acquiring data. Saved query predicates
+remain the only applied scope. Counts, selections and read state are runtime-only.

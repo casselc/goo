@@ -28,3 +28,6 @@ export * as TraceComparisonView from './trace-comparison-view.mjs';
 export * as RecordList from './record-list.mjs';
 
 export * as RecordSpanWaterfall from './record-span-waterfall.mjs';
+
+export * as CategoricalFacet from './categorical-facet.mjs';
+export * as FacetDeclaration from './facet-declaration.mjs';

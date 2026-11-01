@@ -1,5 +1,47 @@
 # Validation record
 
+## Declarative categorical facets — 310
+
+[Contract/diagram](docs/DECLARATIVE_FACETS.md) ·
+[checked YAML](config/views/service-log-facet.yaml) ·
+[storyboard/screenshots](docs/journeys/310-declarative-facet.md) ·
+[architecture](docs/reviews/DECLARATIVE_FACET_ARCHITECTURE_310.md) and
+[design](docs/reviews/DECLARATIVE_FACET_DESIGN_310.md) reviews.
+
+- Root Go suite passes. Changed `workbench` (1.45 seconds) and `cmd/goo`
+  (9.38 seconds) pass. Facet-first checked-example and actual HTTP/CLI controls
+  pass after ordering review (0.013/0.030 seconds). Admission refuses unknown or
+  private state, numeric fields/profiles, invalid visibility, mixed/null roles,
+  comparison combinations and hidden template facets; reuse keeps checked intent.
+- OpenAPI passes: 100 operations, 665 schemas, 436 responses, 161 admitted requests
+  and 28 mux refusals, plus facet-specific negative controls. Reflected 643 wire
+  shapes match. Three actual save/codec response pairs pass schema and JS admission;
+  fresh CLI import submits once and verifies the same content identity.
+- Final frontend suite passes: 982 tests, zero failures/skips (30.30 seconds).
+  Passive module graph is explicitly checked at 51; the two new modules contain
+  declaration validation and display, with no acquisition adapter or I/O.
+- Fifty actual Go↔JS/YAML cases pass (4.44 seconds), including projection, reuse,
+  typed policy and qualified fields. Quint smoke passes (30.89 seconds); the
+  observed twenty-step replay passes (29.50 seconds), rejecting seven mutants and
+  an unfinished prefix. These checks do not claim private source authority.
+- Native real-OTel journey passes (1.9 minutes): 107 full-scope counts versus 100
+  inspection rows, UI authoring/export/fresh-store import, origin-safe Clear,
+  missing/empty selection, explicit child Run/counts of four, retained List/fields/
+  facet, stale parent refusal and presentation Apply to a five-record destination.
+  Budgets: six full reads, four pages, three counted lookups, two saves, one encode,
+  one decode and no comparisons. All three actual frames pass design review.
+- Rebuilt packaged Go lab serves all ten changed/new UI/OpenAPI assets byte-for-
+  byte and validates the checked YAML offline. Two maintained component browser
+  tests pass (6.8 seconds): SSR/detached properties, local Find/focus continuity,
+  outside-focus preservation, invalid replacement withdrawal and disabled long/
+  NUL/invalid-pattern selection. Legitimate counts remain visible; no API calls.
+- Separate 35-second Bombadil passes on the final representability guard: 202
+  snapshots across twelve phases, two page reads and two counted lookups, no full
+  reads/saves/overflow, final child total four. Root reviewed the actual trace;
+  local staging/Clear remain at the original one-page/one-lookup budget. Completion
+  is asserted, so a conforming unfinished campaign cannot pass. No new endpoint,
+  executor, registry or private query language is introduced.
+
 ## Paired fixed comparison windows — 309
 
 [Contract/diagram](docs/PAIRED_COMPARISON_WINDOWS.md) ·

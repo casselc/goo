@@ -1,5 +1,11 @@
 # User journeys and storyboards
 
+[Journey310](310-declarative-facet.md) contributes a facet beside records, explicitly
+reads whole-scope values, stages missing/empty choices, preserves a narrowed child
+and reuses presentation against another checked scope. The separate
+[component browser checks](../../journeys/categorical-facet-components.spec.js)
+exercise synthetic SSR/SPA rendering, focus, local Find and representability guards.
+
 [Journey309](309-paired-window.md) stages a new shared UTC window for both fixed
 comparison questions, retires the old answer without reading, then explicitly
 runs and preserves the rebased view. The optional Bombadil lane exercises the

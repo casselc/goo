@@ -141,7 +141,7 @@ for suffix in ('', 'Input'):
  composition['required']=['version','kind','children']
  composition['properties']['kind']['type']='object'
  composition['properties']['version']['const']='goo.composition/1'
- composition['description']='One fixed record query supplies either one visible logs/spans records child, or aggregate and records with optional timeline/count comparison. A records-only declaration does not add grouping or acquire aggregates. Ordering/visibility are local; no queries, rows, subscriptions or runtime guarantees belong in this declaration.'
+ composition['description']='One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison or facet. A facet is an explicit field control, not a visible data child; comparisons and facets cannot coexist. Fixed query comparisons alone can retain a baseline recipe. No rows, subscriptions or runtime guarantees are stored.'
  for name,kind_name in [('CompositionKind','stack'),('RecordViewKind','record-table')]:
   kind=schemas['workbench.'+name+suffix];kind['additionalProperties']=False
   kind['required']=['name','version']
@@ -150,14 +150,26 @@ for suffix in ('', 'Input'):
   kind['properties']['version']['const']=1
  child=schemas['workbench.ViewCompositionChild'+suffix];child['additionalProperties']=False
  child['properties']['hidden']['type']='boolean'
- child['oneOf']=[{'required':[role],'not':{'anyOf':[{'required':[other]} for other in ('aggregate','records','timeline','comparison') if other!=role]}} for role in ('aggregate','records','timeline','comparison')]
- for field in ('aggregate','records','timeline','comparison'):
+ child['oneOf']=[{'required':[role],'not':{'anyOf':[{'required':[other]} for other in ('aggregate','records','timeline','comparison','facet') if other!=role]}} for role in ('aggregate','records','timeline','comparison','facet')]
+ for field in ('aggregate','records','timeline','comparison','facet'):
   child['properties'][field]['type']='object'
  children=composition['properties']['children'];children.update(type='array',minItems=1,maxItems=4,items={'$ref':'#/components/schemas/workbench.ViewCompositionChild'+suffix,'type':'object'})
  children['allOf']=[{'contains':{'required':[role]},'minContains':1,'maxContains':1} for role in ('records',)]
- children['allOf'].extend([{'contains':{'required':[role]},'minContains':0,'maxContains':1} for role in ('aggregate','timeline','comparison')])
- children['allOf'].append({'contains':{'properties':{'hidden':{'const':False}}},'minContains':1})
- children['allOf'].append({'if':{'contains':{'required':['aggregate']}},'else':{'maxItems':1,'items':{'required':['records'],'properties':{'records':{'properties':{'scope':{'properties':{'signal':{'enum':['logs','spans']}}}}}}}}})
+ children['allOf'].extend([{'contains':{'required':[role]},'minContains':0,'maxContains':1} for role in ('aggregate','timeline','comparison','facet')])
+ children['allOf'].append({'contains':{'not':{'required':['facet']},'properties':{'hidden':{'const':False}}},'minContains':1})
+ children['allOf'].append({'if':{'contains':{'required':['aggregate']}},'else':{'maxItems':2,'items':{'anyOf':[{'required':['records'],'properties':{'hidden':{'const':False},'records':{'properties':{'scope':{'properties':{'signal':{'enum':['logs','spans']}}}}}}},{'required':['facet']}]}}})
+ children['allOf'].append({'if':{'contains':{'required':['facet']}},'then':{'not':{'contains':{'required':['comparison']}}}})
+ facet=schemas['workbench.FacetViewDeclaration'+suffix];facet['additionalProperties']=False
+ facet['required']=['version','scope','kind','field','display']
+ facet['properties']['version']['const']='goo.view/1'
+ for field in ('scope','kind','field','display'):facet['properties'][field]['type']='object'
+ facet['properties']['scope']['required']=['kind','signal']
+ facet['properties']['field']={'allOf':[facet['properties']['field'],{'required':['kind','key'],'oneOf':[{'properties':{'kind':{'const':'column'},'key':{'enum':['service','trace_id','span_id','scope','scope_version','name','kind','status','duration_bucket','status_class','body','severity','body_pattern_v1','exception_event','exception_type','exception_type_state']}}},{'properties':{'kind':{'enum':['attribute','resource']},'key':{'type':'string','minLength':1,'maxLength':128}}}]}]}
+ facet['description']='One explicit categorical field over the applied root scope. Existing counted-values projection derives counts on explicit Load; no values, selections, requests or runtime state are stored. Numeric, histogram, reported-edge and grouped-time profiles, comparisons and templates are outside this first cut.'
+ kind=schemas['workbench.FacetViewKind'+suffix];kind['additionalProperties']=False;kind['required']=['name','version']
+ kind['properties']['name']['const']='categorical-facet';kind['properties']['version']['const']=1
+ display=schemas['workbench.FacetViewDisplay'+suffix];display['additionalProperties']=False;display['required']=['basis']
+ display['properties']['basis']['const']='applied';display['properties']['title'].update(type='string',maxLength=120)
  comparison=schemas['workbench.CountComparisonViewDeclaration'+suffix];comparison['additionalProperties']=False
  comparison['required']=['version','scope','kind','display']
  comparison['properties']['baselineQuery']['type']='object'
@@ -201,6 +213,8 @@ for suffix in ('', 'Input'):
  template_comparison={'properties':{'composition':{'properties':{'children':{'contains':{'required':['comparison']}}},'required':['children']}},'required':['composition']}
  view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'if':template_comparison,'then':{'properties':{'template':{'required':['baseline']}}},'else':{'properties':{'template':{'not':{'required':['baseline']}}}}}})
  view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'properties':{'composition':{'properties':{'children':{'not':{'contains':{'required':['comparison'],'properties':{'comparison':{'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}}}}}}}}}}}}})
+ view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'properties':{'composition':{'properties':{'children':{'not':{'contains':{'required':['facet']}}}}}}}})
+ view.setdefault('allOf',[]).append({'if':{'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['facet']}}}}}},'then':{'properties':{'queries':{'items':{'properties':{'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}}}}})
  flat=['layout','columns','fieldColumns','displays','breakdowns','tail']
  view.setdefault('allOf',[]).append({'if':{'required':['composition']},'then':{'required':['version','title','queries'],'properties':{'version':{'const':1},'queries':{'type':'array','minItems':1,'maxItems':1}},'not':{'anyOf':[{'required':[field]} for field in flat]}},'else':{'required':['layout','columns']}})
  raw_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'not':{'contains':{'required':['aggregate']}}}}}}}

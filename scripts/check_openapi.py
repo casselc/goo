@@ -659,6 +659,36 @@ def check_record_only_compositions(spec):
             assert not vc.is_valid(bad),'raw view accepted another presentation owner'
 
 
+def check_declarative_facets(spec):
+    q={'signal':'logs','environment':'prod','fromMs':1000,'toMs':61000,'limit':100,'offset':0}
+    scope={'kind':'record-query','signal':'logs'}
+    records={'version':'goo.view/1','scope':scope,'kind':{'name':'record-list','version':1},'display':{'columns':['utc','summary']}}
+    facet={'version':'goo.view/1','scope':scope,'kind':{'name':'categorical-facet','version':1},'field':{'kind':'resource','key':'service.name'},'display':{'basis':'applied','title':'Service'}}
+    view={'version':1,'title':'Logs with service facet','queries':[q],'composition':{'version':'goo.composition/1','kind':{'name':'stack','version':1},'children':[{'records':records},{'facet':facet}]}}
+    for suffix in ('','Input'):
+        vc=validator(spec,{'$ref':'#/components/schemas/workbench.ExplorationView'+suffix})
+        fc=validator(spec,{'$ref':'#/components/schemas/workbench.FacetViewDeclaration'+suffix})
+        fc.validate(facet);vc.validate(view)
+        hidden=copy.deepcopy(view);hidden['composition']['children'][1]['hidden']=True;vc.validate(hidden)
+        span=copy.deepcopy(view);span['queries'][0].update(signal='spans',summary='span-duration',spanStatus=True,bucketMs=1000)
+        for child in span['composition']['children']:next(v for k,v in child.items() if k!='hidden')['scope']['signal']='spans'
+        vc.validate(span)
+        for mutation in (lambda f:f.update(query=q),lambda f:f.update(values=['api']),lambda f:f['display'].update(title=None),lambda f:f['display'].update(basis='without-own-filter'),lambda f:f.update(field={'kind':'column','key':'duration_ns'})):
+            bad=copy.deepcopy(facet);mutation(bad)
+            assert not fc.is_valid(bad),'invalid/private facet declaration admitted'
+        for mutation in (
+            lambda v:v['composition']['children'][0].update(hidden=True),
+            lambda v:v['composition']['children'].append(copy.deepcopy(v['composition']['children'][1])),
+            lambda v:v['composition']['children'][1].update(records=None),
+            lambda v:v['composition']['children'][1].update(facet=None),
+            lambda v:v['queries'][0].update(numeric={}),
+            lambda v:v['queries'][0].update(groupTimeSeries=True),
+            lambda v:v.update(template={'version':'goo.template/1','group':'destination','profile':'ordinary'}),
+        ):
+            bad=copy.deepcopy(view);mutation(bad)
+            assert not vc.is_valid(bad),'invalid facet composition admitted'
+
+
 def check_fixed_query_count_views(spec):
     scope={'kind':'record-query','signal':'logs'}
     q={'signal':'logs','environment':'prod','fromMs':1000,'toMs':61000,'limit':100,'offset':0,'groupBy':[{'kind':'column','key':'service'}]}
@@ -789,6 +819,7 @@ def check(spec):
     check_view_dataset(spec)
     check_timeline_composition(spec)
     check_record_only_compositions(spec)
+    check_declarative_facets(spec)
     check_fixed_query_count_views(spec)
     check_comparison_template_bindings(spec)
     check_record_span_waterfall(spec)

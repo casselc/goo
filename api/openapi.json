@@ -42823,6 +42823,72 @@
           {
             "if": {
               "required": [
+                "template"
+              ]
+            },
+            "then": {
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "not": {
+                        "contains": {
+                          "required": [
+                            "facet"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "facet"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "numeric": {
+                        "type": "null"
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
                 "composition"
               ]
             },
@@ -43299,6 +43365,72 @@
           {
             "if": {
               "required": [
+                "template"
+              ]
+            },
+            "then": {
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "not": {
+                        "contains": {
+                          "required": [
+                            "facet"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "facet"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "numeric": {
+                        "type": "null"
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
                 "composition"
               ]
             },
@@ -43436,6 +43568,330 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ExplorationViewList"
+      },
+      "workbench.FacetViewDeclaration": {
+        "properties": {
+          "display": {
+            "$ref": "#/components/schemas/workbench.FacetViewDisplay",
+            "type": "object"
+          },
+          "field": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/exploration.Field",
+                "type": "object"
+              },
+              {
+                "required": [
+                  "kind",
+                  "key"
+                ],
+                "oneOf": [
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "column"
+                      },
+                      "key": {
+                        "enum": [
+                          "service",
+                          "trace_id",
+                          "span_id",
+                          "scope",
+                          "scope_version",
+                          "name",
+                          "kind",
+                          "status",
+                          "duration_bucket",
+                          "status_class",
+                          "body",
+                          "severity",
+                          "body_pattern_v1",
+                          "exception_event",
+                          "exception_type",
+                          "exception_type_state"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "enum": [
+                          "attribute",
+                          "resource"
+                        ]
+                      },
+                      "key": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "kind": {
+            "$ref": "#/components/schemas/workbench.FacetViewKind",
+            "type": "object"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/workbench.ViewDeclarationScope",
+            "type": "object",
+            "required": [
+              "kind",
+              "signal"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "const": "goo.view/1"
+          }
+        },
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "field",
+          "display"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.FacetViewDeclaration",
+        "additionalProperties": false,
+        "description": "One explicit categorical field over the applied root scope. Existing counted-values projection derives counts on explicit Load; no values, selections, requests or runtime state are stored. Numeric, histogram, reported-edge and grouped-time profiles, comparisons and templates are outside this first cut."
+      },
+      "workbench.FacetViewDeclarationInput": {
+        "additionalProperties": false,
+        "properties": {
+          "display": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.FacetViewDisplayInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "field": {
+            "allOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.FieldInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "type": "object"
+              },
+              {
+                "required": [
+                  "kind",
+                  "key"
+                ],
+                "oneOf": [
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "column"
+                      },
+                      "key": {
+                        "enum": [
+                          "service",
+                          "trace_id",
+                          "span_id",
+                          "scope",
+                          "scope_version",
+                          "name",
+                          "kind",
+                          "status",
+                          "duration_bucket",
+                          "status_class",
+                          "body",
+                          "severity",
+                          "body_pattern_v1",
+                          "exception_event",
+                          "exception_type",
+                          "exception_type_state"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "enum": [
+                          "attribute",
+                          "resource"
+                        ]
+                      },
+                      "key": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.FacetViewKindInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ViewDeclarationScopeInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object",
+            "required": [
+              "kind",
+              "signal"
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "goo.view/1"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.FacetViewDeclaration",
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "field",
+          "display"
+        ],
+        "description": "One explicit categorical field over the applied root scope. Existing counted-values projection derives counts on explicit Load; no values, selections, requests or runtime state are stored. Numeric, histogram, reported-edge and grouped-time profiles, comparisons and templates are outside this first cut."
+      },
+      "workbench.FacetViewDisplay": {
+        "properties": {
+          "basis": {
+            "type": "string",
+            "const": "applied"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "basis"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.FacetViewDisplay",
+        "additionalProperties": false
+      },
+      "workbench.FacetViewDisplayInput": {
+        "additionalProperties": false,
+        "properties": {
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "applied"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.FacetViewDisplay",
+        "required": [
+          "basis"
+        ]
+      },
+      "workbench.FacetViewKind": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "const": "categorical-facet"
+          },
+          "version": {
+            "type": "integer",
+            "const": 1
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.FacetViewKind",
+        "additionalProperties": false
+      },
+      "workbench.FacetViewKindInput": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "categorical-facet"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": 1
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.FacetViewKind",
+        "required": [
+          "name",
+          "version"
+        ]
       },
       "workbench.MeaningInputInput": {
         "additionalProperties": false,
@@ -45019,6 +45475,20 @@
               },
               {
                 "contains": {
+                  "required": [
+                    "facet"
+                  ]
+                },
+                "minContains": 0,
+                "maxContains": 1
+              },
+              {
+                "contains": {
+                  "not": {
+                    "required": [
+                      "facet"
+                    ]
+                  },
                   "properties": {
                     "hidden": {
                       "const": false
@@ -45036,26 +45506,56 @@
                   }
                 },
                 "else": {
-                  "maxItems": 1,
+                  "maxItems": 2,
                   "items": {
-                    "required": [
-                      "records"
-                    ],
-                    "properties": {
-                      "records": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "records"
+                        ],
                         "properties": {
-                          "scope": {
+                          "hidden": {
+                            "const": false
+                          },
+                          "records": {
                             "properties": {
-                              "signal": {
-                                "enum": [
-                                  "logs",
-                                  "spans"
-                                ]
+                              "scope": {
+                                "properties": {
+                                  "signal": {
+                                    "enum": [
+                                      "logs",
+                                      "spans"
+                                    ]
+                                  }
+                                }
                               }
                             }
                           }
                         }
+                      },
+                      {
+                        "required": [
+                          "facet"
+                        ]
                       }
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "contains": {
+                    "required": [
+                      "facet"
+                    ]
+                  }
+                },
+                "then": {
+                  "not": {
+                    "contains": {
+                      "required": [
+                        "comparison"
+                      ]
                     }
                   }
                 }
@@ -45079,7 +45579,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewComposition",
         "additionalProperties": false,
-        "description": "One fixed record query supplies either one visible logs/spans records child, or aggregate and records with optional timeline/count comparison. A records-only declaration does not add grouping or acquire aggregates. Ordering/visibility are local; no queries, rows, subscriptions or runtime guarantees belong in this declaration."
+        "description": "One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison or facet. A facet is an explicit field control, not a visible data child; comparisons and facets cannot coexist. Fixed query comparisons alone can retain a baseline recipe. No rows, subscriptions or runtime guarantees are stored."
       },
       "workbench.ViewCompositionChild": {
         "properties": {
@@ -45098,6 +45598,17 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/workbench.CountComparisonViewDeclaration"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "facet": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.FacetViewDeclaration"
               },
               {
                 "type": "null"
@@ -45156,6 +45667,11 @@
                   "required": [
                     "comparison"
                   ]
+                },
+                {
+                  "required": [
+                    "facet"
+                  ]
                 }
               ]
             }
@@ -45179,6 +45695,11 @@
                 {
                   "required": [
                     "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "facet"
                   ]
                 }
               ]
@@ -45204,6 +45725,11 @@
                   "required": [
                     "comparison"
                   ]
+                },
+                {
+                  "required": [
+                    "facet"
+                  ]
                 }
               ]
             }
@@ -45227,6 +45753,40 @@
                 {
                   "required": [
                     "timeline"
+                  ]
+                },
+                {
+                  "required": [
+                    "facet"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "facet"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "aggregate"
+                  ]
+                },
+                {
+                  "required": [
+                    "records"
+                  ]
+                },
+                {
+                  "required": [
+                    "timeline"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
                   ]
                 }
               ]
@@ -45261,6 +45821,24 @@
                 "anyOf": [
                   {
                     "$ref": "#/components/schemas/workbench.CountComparisonViewDeclarationInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "facet": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.FacetViewDeclarationInput"
                   },
                   {
                     "type": "null"
@@ -45344,6 +45922,11 @@
                   "required": [
                     "comparison"
                   ]
+                },
+                {
+                  "required": [
+                    "facet"
+                  ]
                 }
               ]
             }
@@ -45367,6 +45950,11 @@
                 {
                   "required": [
                     "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "facet"
                   ]
                 }
               ]
@@ -45392,6 +45980,11 @@
                   "required": [
                     "comparison"
                   ]
+                },
+                {
+                  "required": [
+                    "facet"
+                  ]
                 }
               ]
             }
@@ -45415,6 +46008,40 @@
                 {
                   "required": [
                     "timeline"
+                  ]
+                },
+                {
+                  "required": [
+                    "facet"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "facet"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "aggregate"
+                  ]
+                },
+                {
+                  "required": [
+                    "records"
+                  ]
+                },
+                {
+                  "required": [
+                    "timeline"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
                   ]
                 }
               ]
@@ -45490,6 +46117,20 @@
               },
               {
                 "contains": {
+                  "required": [
+                    "facet"
+                  ]
+                },
+                "minContains": 0,
+                "maxContains": 1
+              },
+              {
+                "contains": {
+                  "not": {
+                    "required": [
+                      "facet"
+                    ]
+                  },
                   "properties": {
                     "hidden": {
                       "const": false
@@ -45507,26 +46148,56 @@
                   }
                 },
                 "else": {
-                  "maxItems": 1,
+                  "maxItems": 2,
                   "items": {
-                    "required": [
-                      "records"
-                    ],
-                    "properties": {
-                      "records": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "records"
+                        ],
                         "properties": {
-                          "scope": {
+                          "hidden": {
+                            "const": false
+                          },
+                          "records": {
                             "properties": {
-                              "signal": {
-                                "enum": [
-                                  "logs",
-                                  "spans"
-                                ]
+                              "scope": {
+                                "properties": {
+                                  "signal": {
+                                    "enum": [
+                                      "logs",
+                                      "spans"
+                                    ]
+                                  }
+                                }
                               }
                             }
                           }
                         }
+                      },
+                      {
+                        "required": [
+                          "facet"
+                        ]
                       }
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "contains": {
+                    "required": [
+                      "facet"
+                    ]
+                  }
+                },
+                "then": {
+                  "not": {
+                    "contains": {
+                      "required": [
+                        "comparison"
+                      ]
                     }
                   }
                 }
@@ -45563,7 +46234,7 @@
           "kind",
           "children"
         ],
-        "description": "One fixed record query supplies either one visible logs/spans records child, or aggregate and records with optional timeline/count comparison. A records-only declaration does not add grouping or acquire aggregates. Ordering/visibility are local; no queries, rows, subscriptions or runtime guarantees belong in this declaration."
+        "description": "One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison or facet. A facet is an explicit field control, not a visible data child; comparisons and facets cannot coexist. Fixed query comparisons alone can retain a baseline recipe. No rows, subscriptions or runtime guarantees are stored."
       },
       "workbench.ViewDeclaration": {
         "properties": {

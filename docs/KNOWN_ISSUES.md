@@ -1,5 +1,13 @@
 # Known issues and gaps
 
+310 adds one [declarative categorical facet](DECLARATIVE_FACETS.md)
+for ordinary single-query views. Counts use the currently applied scope, including
+existing filters; self-excluding counts and persisted clause identity remain
+outside this cut. Clear affects only facet-origin pending choices. Numeric/
+histogram, reported-edge and grouped-time profiles, comparison combinations and
+category templates refuse facets. Team-view authoring, Save and portable transport
+reuse the existing owners.
+
 308 saves fixed query comparisons through the existing count role and portable
 flow. Held-parent observations stay temporary. Fixed pairs require matching
 window/environment/group/profile and refuse template/presentation reuse. Shared

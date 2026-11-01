@@ -1,0 +1,55 @@
+version: goo.view-artifact/1
+namespace: platform
+name: service-log-facet
+revision: v1
+view:
+    version: 1
+    title: Service log exploration
+    queries:
+        - signal: logs
+          environment: prod
+          fromMs: 1767225600000
+          toMs: 1767225900000
+          where:
+            field:
+                kind: attribute
+                key: http.request.method
+            op: eq
+            value: GET
+          limit: 100
+          offset: 0
+    composition:
+        version: goo.composition/1
+        kind:
+            name: stack
+            version: 1
+        children:
+            - facet:
+                version: goo.view/1
+                scope:
+                    kind: record-query
+                    signal: logs
+                kind:
+                    name: categorical-facet
+                    version: 1
+                field:
+                    kind: column
+                    key: service
+                display:
+                    basis: applied
+                    title: Service
+            - records:
+                version: goo.view/1
+                scope:
+                    kind: record-query
+                    signal: logs
+                kind:
+                    name: record-table
+                    version: 1
+                display:
+                    columns:
+                        - utc
+                        - summary
+                    fieldColumns:
+                        - kind: attribute
+                          key: http.route

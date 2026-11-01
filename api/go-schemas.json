@@ -26007,6 +26007,176 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.ExplorationViewList"
   },
+  "workbench.FacetViewDeclaration": {
+    "properties": {
+      "display": {
+        "$ref": "#/components/schemas/workbench.FacetViewDisplay"
+      },
+      "field": {
+        "$ref": "#/components/schemas/exploration.Field"
+      },
+      "kind": {
+        "$ref": "#/components/schemas/workbench.FacetViewKind"
+      },
+      "scope": {
+        "$ref": "#/components/schemas/workbench.ViewDeclarationScope"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "scope",
+      "kind",
+      "field",
+      "display"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.FacetViewDeclaration"
+  },
+  "workbench.FacetViewDeclarationInput": {
+    "additionalProperties": false,
+    "properties": {
+      "display": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.FacetViewDisplayInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "field": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.FieldInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "kind": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.FacetViewKindInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scope": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewDeclarationScopeInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.FacetViewDeclaration"
+  },
+  "workbench.FacetViewDisplay": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "basis"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.FacetViewDisplay"
+  },
+  "workbench.FacetViewDisplayInput": {
+    "additionalProperties": false,
+    "properties": {
+      "basis": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.FacetViewDisplay"
+  },
+  "workbench.FacetViewKind": {
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "version": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "name",
+      "version"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.FacetViewKind"
+  },
+  "workbench.FacetViewKindInput": {
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.FacetViewKind"
+  },
   "workbench.MeaningInputInput": {
     "additionalProperties": false,
     "properties": {
@@ -27140,6 +27310,16 @@
           }
         ]
       },
+      "facet": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.FacetViewDeclaration"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "hidden": {
         "type": "boolean"
       },
@@ -27194,6 +27374,23 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/workbench.CountComparisonViewDeclarationInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "facet": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.FacetViewDeclarationInput"
               },
               {
                 "type": "null"

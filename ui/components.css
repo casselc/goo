@@ -53,7 +53,7 @@ goo-result-state>p:first-child{margin-top:0}goo-result-state>p:last-child{margin
 goo-table>table>thead>tr>th{white-space:nowrap;overflow-wrap:normal;word-break:normal}
 
 /* Passive facets retain supplied rows, values, exact labels and geometry. */
-goo-facet-list,goo-field-value,goo-attribute-list{display:block;min-width:0}
+goo-categorical-facet,goo-facet-list,goo-field-value,goo-attribute-list{display:block;min-width:0}
 goo-facet-list>[data-facet-item][hidden]{display:none}
 goo-facet-list>[data-facet-item]{min-width:0}
 goo-field-value .attribute-type{display:inline-block;margin:4px 0 0;padding:1px 5px;border:1px solid var(--border,#2b3545);border-radius:4px;font:10px/1.5 system-ui,sans-serif;color:var(--muted,#98a8bf)}
@@ -262,12 +262,12 @@ goo-attribute-list .field-hint-label{display:block}
 }
 
 /* Shared keyboard focus also works when components are embedded without product.css. */
-:where(goo-latency,goo-stat-list,goo-table,goo-facet-list,goo-result-state,goo-record-columns,goo-grouping-control,goo-time-range,goo-tag-list,goo-chart-frame,goo-time-bars,goo-value-timeline,goo-bucket-heatmap,goo-trace-waterfall,goo-aligned-histogram,goo-metric-comparison,goo-trace-page-breakdown,goo-trace-comparison,goo-comparison-series,.ui-actions,.ui-inspector,.ui-disclosure,.attribute-viewer) :is(button,a,input,select,textarea,summary):focus-visible{
+:where(goo-latency,goo-stat-list,goo-table,goo-facet-list,goo-categorical-facet,goo-result-state,goo-record-columns,goo-grouping-control,goo-time-range,goo-tag-list,goo-chart-frame,goo-time-bars,goo-value-timeline,goo-bucket-heatmap,goo-trace-waterfall,goo-aligned-histogram,goo-metric-comparison,goo-trace-page-breakdown,goo-trace-comparison,goo-comparison-series,.ui-actions,.ui-inspector,.ui-disclosure,.attribute-viewer) :is(button,a,input,select,textarea,summary):focus-visible{
  outline:2px solid var(--focus-ring,var(--accent,#79ddc6));outline-offset:3px
 }
 @media(prefers-reduced-motion:reduce){
- :where(goo-latency,goo-stat-list,goo-table,goo-facet-list,goo-result-state,goo-record-columns,goo-grouping-control,goo-time-range,goo-tag-list,goo-chart-frame,goo-time-bars,goo-value-timeline,goo-bucket-heatmap,goo-trace-waterfall,goo-aligned-histogram,goo-metric-comparison,goo-trace-page-breakdown,goo-trace-comparison,goo-comparison-series,.ui-actions,.ui-inspector,.ui-disclosure,.attribute-viewer),
- :where(goo-latency,goo-stat-list,goo-table,goo-facet-list,goo-result-state,goo-record-columns,goo-grouping-control,goo-time-range,goo-tag-list,goo-chart-frame,goo-time-bars,goo-value-timeline,goo-bucket-heatmap,goo-trace-waterfall,goo-aligned-histogram,goo-metric-comparison,goo-trace-page-breakdown,goo-trace-comparison,goo-comparison-series,.ui-actions,.ui-inspector,.ui-disclosure,.attribute-viewer) *{
+ :where(goo-latency,goo-stat-list,goo-table,goo-facet-list,goo-categorical-facet,goo-result-state,goo-record-columns,goo-grouping-control,goo-time-range,goo-tag-list,goo-chart-frame,goo-time-bars,goo-value-timeline,goo-bucket-heatmap,goo-trace-waterfall,goo-aligned-histogram,goo-metric-comparison,goo-trace-page-breakdown,goo-trace-comparison,goo-comparison-series,.ui-actions,.ui-inspector,.ui-disclosure,.attribute-viewer),
+ :where(goo-latency,goo-stat-list,goo-table,goo-facet-list,goo-categorical-facet,goo-result-state,goo-record-columns,goo-grouping-control,goo-time-range,goo-tag-list,goo-chart-frame,goo-time-bars,goo-value-timeline,goo-bucket-heatmap,goo-trace-waterfall,goo-aligned-histogram,goo-metric-comparison,goo-trace-page-breakdown,goo-trace-comparison,goo-comparison-series,.ui-actions,.ui-inspector,.ui-disclosure,.attribute-viewer) *{
   transition-duration:0s!important;animation-duration:0s!important;animation-iteration-count:1!important;scroll-behavior:auto!important
  }
 }

@@ -89,3 +89,9 @@ See the [architecture review](reviews/PORTABLE_VIEWS_ARCHITECTURE_305.md),
 [design review](reviews/PORTABLE_VIEWS_DESIGN_305.md),
 [record/aggregate composition](RECORD_AGGREGATE_COMPOSITION.md) and
 [whole-flow checkpoint](ADD_BREAKDOWN.md).
+
+
+[Categorical facet declarations](DECLARATIVE_FACETS.md) travel with the composition
+as qualified field/presentation intent. Loaded values, counts, read receipts and
+pending choices are absent. Opening an imported view stages configuration; Run
+and Read values remain separate explicit actions.

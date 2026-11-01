@@ -7,9 +7,11 @@
 > Delivered 309: [paired comparison-window authoring](PAIRED_COMPARISON_WINDOWS.md)
 > stages both operands for Run without a YAML roundtrip. The existing fresh-window
 > action, UTC editor and timeline gestures share the same checked transition.
-> Proposed next 310: one declarative categorical facet in contributed views, using
-> the existing application-owned predicate/selection and explicit Run workflow;
-> review its role/input contract before adding another comparison profile.
+> Delivered 310: [declarative categorical facets](DECLARATIVE_FACETS.md) add a
+> qualified-field scope control through existing counted-values and selection owners.
+> Proposed next 311: adopt one useful facet in the existing HTTP service template/
+> Customize flow, preserving exact scope and consolidating its binding before
+> introducing another control family.
 
 
 

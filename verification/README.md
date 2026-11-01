@@ -1,5 +1,22 @@
 # Semantic properties and model conformance
 
+## Declarative categorical facets (310)
+
+The [native storyboard](../docs/journeys/310-declarative-facet.md) checks full-scope
+counts beyond bounded rows, origin-safe pending Clear, portable import, child
+continuity and checked presentation reuse. Fifty Go↔JS/YAML cases exercise the
+actual declaration/projection/reuse owners. The twenty-step observed Quint replay
+rejects seven mutants and an unfinished prefix; it checks workflow effects rather
+than private source authority. A bounded optional Bombadil driver exercises scoped
+value reads, local staging/Clear and explicit child Run/value acquisition.
+
+```sh
+go test -C verification -run '^(TestHegelDeclarativeFacet|TestQuintDeclarativeFacetModelSmoke)' -count=1 .
+./node_modules/.bin/playwright test journeys/310-declarative-facet.spec.js
+./node_modules/.bin/playwright test journeys/categorical-facet-components.spec.js
+```
+
+
 ## Paired fixed-query windows (309)
 
 The [native storyboard](../docs/journeys/309-paired-window.md) moves both fixed

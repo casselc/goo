@@ -1748,3 +1748,29 @@ application configuration, not a display element: the host stages both questions
 retires previous result authority and waits for explicit Run. Passive charts,
 comparison and records consume the same admitted results without acquiring data.
 See [paired comparison windows](PAIRED_COMPARISON_WINDOWS.md).
+
+
+310 adds `goo-categorical-facet`, a passive supplied-counts control, and a pure
+facet declaration validator. It reuses `goo-facet-list` for local filtering and
+emits Include/Exclude/load/clear intents; only the application adapter reads
+counted values or changes the pending selection tray. Its data property and JSON
+attribute support detached SPA updates and server-rendered HTML. See
+[declarative facets](DECLARATIVE_FACETS.md).
+
+
+The facet's controlled property/attribute is `data`:
+`{declaration, values, disabled?, hasStaged?}`. Values are `unloaded`, `loading`,
+`error`, or `ready`; ready values carry the matching qualified field, unique
+`{value, count}` items, a canonical decimal total and both count/group read
+receipts. `null` means missing and `""` means present empty. Exact positive counts
+must sum to the supplied total. Invalid replacement data withdraws the old model.
+The element emits `goo:facet-load`, `goo:facet-stage` (`{mode, value}`), and
+`goo:facet-clear`; the host binds these to its current declaration and scope.
+An optional `interaction.current()` lease disables stale actions. Local Find is
+presentation only and survives updates to the same admitted value read.
+
+This is a typed control model in the shared context, not a ranked snapshot or a
+new completeness witness. Valid JSON data does not grant source/action authority.
+The host still checks the actual question, declared field and active generation
+through the existing counted-values and selection owners. Synthetic SSR and
+detached-property examples are in the component reference at `/ui-components`.
