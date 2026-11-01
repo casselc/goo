@@ -112,8 +112,8 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
    nearby.onclick=()=>{if(canUseRecord())openSurrounding(target===surround.target?surround.origin:origin,row,target===surround.target?surround.basis:basis,nearby,origin,basis)};cell.append(nearby);
   }
   if(typeof row.TraceId==='string'&&/^[a-f0-9]{32}$/.test(row.TraceId)&&!/^0+$/.test(row.TraceId)){
-   const expand=node('button','Expand trace');expand.setAttribute('aria-label','Expand trace '+row.TraceId);expand.title='Trace '+row.TraceId;
-   expand.onclick=()=>{if(canUseRecord())openTrace(origin,row.TraceId,row.SpanId,basis,expand)};cell.append(expand);
+   const expand=node('button','Expand trace');expand.dataset.expandTrace=String(index);expand.setAttribute('aria-label','Expand trace '+row.TraceId);expand.title='Trace '+row.TraceId;
+   expand.onclick=()=>{if(canUseRecord())openTrace(origin,row.TraceId,row.SpanId,basis,expand,{...(options.onOpenTraceView?{onOpenView:(view,opener)=>canUseRecord()?options.onOpenTraceView(view,opener):false,canOpenView:()=>canUseRecord()&&options.canOpenTraceView?.()!==false}:{})})};cell.append(expand);
   }else cell.append(node('span','No valid reported trace ID','record-identity-missing'));
   if(options.onFacet||options.resultToken||readOnly&&savedPage()&&target===primary()){
    const input=node('input');input.type='checkbox';input.dataset.recordSelection='true';input.setAttribute('aria-label','Select captured record '+(index+1));input.onchange=()=>selectRecord(index,input);inputs.set(index,input);cell.prepend(input);

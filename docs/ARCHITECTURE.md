@@ -1,5 +1,10 @@
 # Architecture
 
+[Trace-to-view handoff](TRACE_AS_VIEW.md) stages question intent and presentation
+through the existing root or nested population owner. Inspector read/opener leases
+gate the command; the modal closes without its ordinary Activity-return callback.
+No rows or source authority transfer. Explicit Run uses records-only acquisition.
+
 [Records-only views](RECORD_ONLY_VIEWS.md) use one visible records child over
 ordinary raw logs or spans, preserving the checked query without adding grouping.
 Root Run and paging use the existing count-plus-rows profile; the admitted page

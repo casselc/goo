@@ -82,3 +82,6 @@ See [record interactions](RECORD_INTERACTIONS.md),
 [span timing](SUPPLIED_SPAN_WATERFALL.md),
 [architecture review](reviews/RECORD_ONLY_VIEWS_ARCHITECTURE_302.md) and
 [design review](reviews/RECORD_ONLY_VIEWS_DESIGN_302.md).
+
+[Open an inspected trace as a view](TRACE_AS_VIEW.md) stages this records-only
+shape with a Waterfall default and an exact trace question, for explicit Run.

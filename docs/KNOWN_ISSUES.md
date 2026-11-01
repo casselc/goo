@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+303 trace-to-view handoff stages an exact-trace records-only Waterfall. It requires
+a successful current inspector read and an available current destination owner.
+Typed environment policy and fixed bounds are preserved. The handoff starts at
+page zero and requires explicit Run. It carries no inspector
+evidence, completeness or selected-record identity. Trace findings remain separate.
+
 301 adds a spans-only supplied-page waterfall kind to the existing records role.
 It uses trace-relative timed origins and one common duration scale, with original
 page-position Inspect/Keep and explicit separate trace expansion. It is not a

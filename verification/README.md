@@ -3534,3 +3534,16 @@ optional campaign with `GOO_RECORD_ONLY_BOMBADIL=1`. The standalone driver is
 `record_only_property_test.go` checks actual Go/JavaScript admission and reuse
 with Hegel, including grouping preservation and unsupported-role refusals.
 See the [storyboard](../docs/journeys/302-record-only-views.md).
+
+
+### Trace inspector → editable records view — 303
+
+`journeys/303-trace-as-view.spec.js` exercises real cross-service OTLP data and
+native nested, typed-environment root, and Activity handoffs. Its observed ledger
+is passed through `GOO_TRACE_VIEW_LEDGER` to `trace_view_ledger_test.go`, replaying
+`model/trace_view_303.qnt` with corrupted and unfinished negative controls.
+`trace_view_property_test.go` checks actual Go/JavaScript configuration agreement,
+fixed bounds, exact trace identity and environment-policy preservation with Hegel.
+The handoff is app-owned navigation; existing record component/Bombadil campaigns
+retain responsibility for passive display contracts.
+See the [storyboard](../docs/journeys/303-trace-as-view.md).

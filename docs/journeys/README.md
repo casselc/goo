@@ -2770,3 +2770,5 @@ held parent return, fresh focus and refusal of retired controls.
 - [301: inspect and Keep timing in supplied spans](../../journeys/301-supplied-span-waterfall-storyboard.md).
 
 - [302: save and reuse raw records without an aggregate](302-record-only-views.md).
+
+- [303: continue an inspected trace as an editable records view](303-trace-as-view.md).

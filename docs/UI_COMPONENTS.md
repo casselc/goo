@@ -1719,3 +1719,6 @@ qualified fields and unavailable timing retain their semantics. Component-scoped
 group styling prevents application section cards from leaking into fragments.
 SSR, detached properties and narrow layouts are checked. See
 [the contract](SUPPLIED_SPAN_WATERFALL.md).
+
+[Trace inspector → editable view](TRACE_AS_VIEW.md) is application navigation;
+shared Table/List/Waterfall elements gain no query or modal ownership.

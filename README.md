@@ -23,6 +23,7 @@ its fixed scope and paused parent. Build reusable views with [saved displays](do
 beside the default table, with
 [shared record interactions](docs/RECORD_INTERACTIONS.md).
 [Records-only views](docs/RECORD_ONLY_VIEWS.md) also work with ungrouped raw logs or spans.
+[Open an inspected trace as a view](docs/TRACE_AS_VIEW.md) to edit and save its presentation.
 [Record paging](docs/RECORD_PAGE_PROFILE.md) retains any held aggregate and timeline.
 
 [Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Reviewed roadmap](docs/ROADMAP_2026_10_30.md) · [Execution backlog](docs/BACKLOG_2026_10_29.md) ·

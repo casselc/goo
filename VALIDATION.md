@@ -1,5 +1,45 @@
 # Validation record
 
+## Trace inspector to editable records view — 303
+
+[Contract/diagram](docs/TRACE_AS_VIEW.md) ·
+[storyboard/screenshots](docs/journeys/303-trace-as-view.md) ·
+[architecture](docs/reviews/TRACE_VIEW_ARCHITECTURE_303.md) and
+[design](docs/reviews/TRACE_VIEW_DESIGN_303.md) reviews.
+
+- Final frontend suite passes: 958 tests, zero failures/skips (29.24 seconds).
+  New pure checks cover exact trace scope, dropped service/search/grouping/page
+  options, page-zero waterfall declaration, typed environment representations,
+  invalid identities/bounds and alias isolation. Existing modal keyboard tests pass.
+- Architecture source review passes: root and nested handoffs use their existing
+  population owners; each successful trace read creates a fresh command bound to
+  its read/context/node identity. Replaced controls retire; rejected dispatch
+  restores the current inspector and ordinary close callback. No API, source
+  snapshot transfer, capture store or public display controller was introduced.
+- Fifty Hegel cases and pure-model checks pass (26.37 seconds). The real nested
+  journey and its observed 13-step model replay pass (21.82 seconds), including
+  corrupted read/page/write counts and an unfinished prefix. Nested budget:
+  seven full reads, three narrow pages, one saved definition and one Keep.
+  These are whole-journey HTTP counts, including independent inspector reads;
+  opening the view itself performs no request.
+- Three actual frames pass design review: inspector at offset 100, staged view,
+  and final supplied page. Native validation caught a Back-focus bug; the fix
+  restores the refreshed Expand action by original occurrence/signal/action.
+- The final real OTLP/ClickHouse journey passes all three entry lanes (1.2 minutes):
+  retained nested population, effective typed-environment root, and direct Activity.
+  It seeds no saved definitions. Exact all-POST guards show source-free staging;
+  Run uses the narrow page endpoint. Save/reopen, qualified fields, List/Table/
+  Waterfall, Inspect/Keep, paging and renewed original Expand focus pass.
+  Activity return restores its original row/focus without a new tail read; a
+  reattached retired inspector action is refused. No page errors, captures,
+  comparison or investigation-document writes occur.
+- The targeted existing native-waterfall journey (301), including its observed
+  model replay, passes (1.1 minutes). Historical screenshot timestamp/ID churn
+  was restored; disposable capture stores were cleaned after compact summaries.
+- The local single-Go lab was rebuilt/recreated with image
+  `8fdeb103eea6645b618c993bf66002c6c1be489a9ba387770060dbb0d14df90c`;
+  all four changed UI assets match the served bytes. No stored volume was removed.
+
 ## Records-only saved views — 302
 
 [Contract/diagram](docs/RECORD_ONLY_VIEWS.md) ·
