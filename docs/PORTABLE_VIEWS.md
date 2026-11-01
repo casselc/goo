@@ -54,7 +54,9 @@ keys, anchors/aliases, merge keys, explicit tags, unsupported scalar types, unkn
 fields, lossy integer conversions and invalid view definitions are refused. YAML
 keys use the existing JSON field names. Invalid files are not partially imported.
 
-Store-local IDs are not portable. A captured-count comparison child or a tail
+[Fixed-query comparisons](SAVED_COHORT_QUERIES.md) are portable with both checked
+questions; Open stages them for explicit independent reads, and destination Apply
+is refused. Store-local IDs are not portable. A captured-count comparison child or a tail
 baseline capture reference causes export/import to fail; remove that configuration
 explicitly before exporting. The codec never silently strips it or treats a
 foreign capture ID as evidence. Fixed baseline *questions* remain configuration;

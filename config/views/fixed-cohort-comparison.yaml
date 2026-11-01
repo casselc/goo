@@ -1,0 +1,84 @@
+version: goo.view-artifact/1
+namespace: platform
+name: deployment-ring-cohorts
+revision: v1
+view:
+    version: 1
+    title: Canary and stable service spans
+    queries:
+        - signal: spans
+          environment: prod
+          fromMs: 1767225600000
+          toMs: 1767225900000
+          where:
+            field:
+                kind: attribute
+                key: deployment.ring
+            op: eq
+            value: canary
+          groupBy:
+            - kind: column
+              key: service
+          limit: 100
+          offset: 0
+    composition:
+        version: goo.composition/1
+        kind:
+            name: stack
+            version: 1
+        children:
+            - aggregate:
+                version: goo.view/1
+                scope:
+                    kind: record-query
+                    signal: spans
+                kind:
+                    name: bar
+                    version: 1
+                display:
+                    category: category
+                    value: count
+                    scale: population
+            - records:
+                version: goo.view/1
+                scope:
+                    kind: record-query
+                    signal: spans
+                kind:
+                    name: record-table
+                    version: 1
+                display:
+                    columns:
+                        - utc
+                        - summary
+                    fieldColumns:
+                        - kind: attribute
+                          key: http.route
+            - comparison:
+                version: goo.view/1
+                scope:
+                    kind: record-query
+                    signal: spans
+                kind:
+                    name: query-count-comparison
+                    version: 1
+                baselineQuery:
+                    signal: spans
+                    environment: prod
+                    fromMs: 1767225600000
+                    toMs: 1767225900000
+                    where:
+                        field:
+                            kind: attribute
+                            key: deployment.ring
+                        op: eq
+                        value: stable
+                    groupBy:
+                        - kind: column
+                          key: service
+                    limit: 100
+                    offset: 0
+                display:
+                    value: count
+                    view: groups
+                    title: Canary vs stable

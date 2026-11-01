@@ -1,20 +1,24 @@
 /* Pure declaration, compatibility and supplied-cohort helpers. No source IO. */
 import {validateRecordQuestion} from './question-protocol.mjs';
-import {eligible as aggregateEligible} from './view-declaration.mjs';
+import {eligible as cohortEligible,compatibleCohorts} from './count-cohort-context.mjs';
 import {sameQuestionEnvironment} from './record-environment.mjs';
 import {identity} from './question-session.mjs';
 const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 function closed(x,keys){if(!object(x)||Object.keys(x).some(k=>!keys.includes(k)))throw Error('Unknown captured-count comparison fields.');}
-export function eligible(q){return aggregateEligible(q)&&!q.numeric&&!q.numericHistogram&&!q.reportedEdge&&!q.spanStatus&&!q.groupTimeSeries;}
+export const eligible=cohortEligible;
+export const queryVariant=value=>value?.kind?.name==='query-count-comparison';
+export function queryCompatible(a,b){compatibleCohorts(a,b);for(const q of [a,b])if((q.offset??0)!==0||(q.limit??100)>100)throw Error('Fixed comparison queries require page zero and limits up to 100.');if(a.fromMs!==b.fromMs||a.toMs!==b.toMs)throw Error('Fixed comparison queries require the same fixed window.');return true;}
 export function validate(value,q){
- validateRecordQuestion(q);closed(value,['version','scope','kind','baselineCapture','display']);closed(value.scope,['kind','signal']);closed(value.kind,['name','version']);closed(value.display,['value','title','view','order']);
+ validateRecordQuestion(q);closed(value,['version','scope','kind','baselineCapture','baselineQuery','display']);closed(value.scope,['kind','signal']);closed(value.kind,['name','version']);closed(value.display,['value','title','view','order']);
  if(!eligible(q))throw Error('Captured count comparison requires one ordinary grouping without status, numeric or reported-edge measures.');
- if(value.version!=='goo.view/1'||value.scope.kind!=='record-query'||value.scope.signal!==q.signal||value.kind.name!=='captured-count-comparison'||value.kind.version!==1||value.display.value!=='count'||typeof value.baselineCapture!=='string'||!/^[a-f0-9]{64}$/.test(value.baselineCapture))throw Error('Choose an exact capture and a pinned captured-count comparison.');
+ if(value.version!=='goo.view/1'||value.scope.kind!=='record-query'||value.scope.signal!==q.signal||!['captured-count-comparison','query-count-comparison'].includes(value.kind.name)||value.kind.version!==1||value.display.value!=='count')throw Error('Choose an exact capture and a pinned captured-count comparison.');
+ if(queryVariant(value)){if(Object.hasOwn(value,'baselineCapture')||!Object.hasOwn(value,'baselineQuery'))throw Error('Fixed query comparison requires only a baselineQuery.');queryCompatible(q,value.baselineQuery);}else if(Object.hasOwn(value,'baselineQuery')||typeof value.baselineCapture!=='string'||!/^[a-f0-9]{64}$/.test(value.baselineCapture))throw Error('Captured comparison requires only an exact baseline capture.');
  if(value.display.view!==undefined&&!['','summary','groups'].includes(value.display.view)||value.display.order!==undefined&&!['','change','label'].includes(value.display.order))throw Error('Choose summary/groups and change/label order.');
  const title=value.display.title;if(title!==undefined&&(typeof title!=='string'||!title.isWellFormed()||new TextEncoder().encode(title).length>120||/\p{Cc}/u.test(title)||title!==''&&!title.trim()))throw Error('Comparison title must be bounded valid text.');
  return structuredClone(value);
 }
 export function create(q,id){return validate({version:'goo.view/1',scope:{kind:'record-query',signal:q.signal},kind:{name:'captured-count-comparison',version:1},baselineCapture:id,display:{value:'count'}},q)}
+export function createQuery(q,baselineQuery){return validate({version:'goo.view/1',scope:{kind:'record-query',signal:q.signal},kind:{name:'query-count-comparison',version:1},baselineQuery:structuredClone(baselineQuery),display:{value:'count'}},q)}
 export function compatible(a,b){
  for(const q of [a,b]){validateRecordQuestion(q);if(!eligible(q))throw Error('Baseline requires an ordinary single-group count query.');}
  if(!sameQuestionEnvironment(a,b))throw Error('Baseline environment policy differs from the current population.');

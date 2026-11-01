@@ -1,5 +1,12 @@
 # Architecture
 
+[Saved fixed cohort questions](SAVED_COHORT_QUERIES.md) extend the existing count
+comparison role with a disjoint fixed-query operand. Shared Go/JS validation
+requires an exact ordinary-count context and forbids mixed operand fields.
+Catalog/artifact/CLI owners persist questions only; the existing Run/controller
+reads both independently. Fixed-pair reuse/template guards prevent foreign
+baseline copy or silent loss, including hidden comparisons.
+
 [Authored cohort continuation](AUTHORED_COHORTS.md) retains the composition in an
 existing population child. Private full-group snapshots gate held-parent or
 independent remainder operands; the existing Run/controller and comparison API

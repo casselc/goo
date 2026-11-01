@@ -26,6 +26,8 @@ beside the default table, with
 [Open an inspected trace as a view](docs/TRACE_AS_VIEW.md) to edit and save its presentation.
 [Add a breakdown](docs/ADD_BREAKDOWN.md) to grow a records view into a chart, then
 [compare a selected cohort](docs/AUTHORED_COHORTS.md) with its held parent or rest.
+[Include a fixed comparison in the view](docs/SAVED_COHORT_QUERIES.md) to save,
+export and rerun both questions.
 [Portable YAML definitions](docs/PORTABLE_VIEWS.md) let teams export and import
 these views through the same saved-view catalog.
 [CLI validation and import](docs/VIEW_ARTIFACT_CLI.md) connect repository checks

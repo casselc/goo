@@ -158,16 +158,18 @@ for suffix in ('', 'Input'):
  children['allOf'].extend([{'contains':{'required':[role]},'minContains':0,'maxContains':1} for role in ('aggregate','timeline','comparison')])
  children['allOf'].append({'contains':{'properties':{'hidden':{'const':False}}},'minContains':1})
  children['allOf'].append({'if':{'contains':{'required':['aggregate']}},'else':{'maxItems':1,'items':{'required':['records'],'properties':{'records':{'properties':{'scope':{'properties':{'signal':{'enum':['logs','spans']}}}}}}}}})
- comparison=schemas['workbench.CapturedCountViewDeclaration'+suffix];comparison['additionalProperties']=False
- comparison['required']=['version','scope','kind','baselineCapture','display']
+ comparison=schemas['workbench.CountComparisonViewDeclaration'+suffix];comparison['additionalProperties']=False
+ comparison['required']=['version','scope','kind','display']
+ comparison['properties']['baselineQuery']['type']='object'
+ comparison['oneOf']=[{'required':['baselineCapture'],'properties':{'kind':{'properties':{'name':{'const':'captured-count-comparison'}}}},'not':{'required':['baselineQuery']}},{'required':['baselineQuery'],'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}}},'not':{'required':['baselineCapture']}}]
  comparison['properties']['version']['const']='goo.view/1'
  comparison['properties']['baselineCapture'].update(type='string',pattern='^[a-f0-9]{64}$')
  for field in ('scope','kind','display'):comparison['properties'][field]['type']='object'
  comparison['properties']['scope']['required']=['kind','signal']
- comparison['description']='Count-only comparison against one exact immutable explore capture. Parent eligibility and baseline compatibility are validated at runtime; declaration contains no evidence or executable child query. Opening stages configuration; explicit preparation reads stored evidence, not telemetry.'
- kind=schemas['workbench.CapturedCountViewKind'+suffix];kind['additionalProperties']=False;kind['required']=['name','version']
- kind['properties']['name']['const']='captured-count-comparison';kind['properties']['version']['const']=1
- display=schemas['workbench.CapturedCountViewDisplay'+suffix];display['additionalProperties']=False;display['required']=['value']
+ comparison['description']='Count-only comparison with either one exact immutable capture or a fixed baseline query. Query operands require identical checked environment, fixed window, grouping and measure profile with page zero; predicates may differ. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority.'
+ kind=schemas['workbench.CountComparisonViewKind'+suffix];kind['additionalProperties']=False;kind['required']=['name','version']
+ kind['properties']['name']['enum']=['captured-count-comparison','query-count-comparison'];kind['properties']['version']['const']=1
+ display=schemas['workbench.CountComparisonViewDisplay'+suffix];display['additionalProperties']=False;display['required']=['value']
  display['properties']['value']['const']='count';display['properties']['title']['maxLength']=120
  display['properties']['view']['enum']=['','summary','groups'];display['properties']['order']['enum']=['','change','label']
  timeline=schemas['workbench.TimelineViewDeclaration'+suffix];timeline['additionalProperties']=False
@@ -198,6 +200,7 @@ for suffix in ('', 'Input'):
  view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['aggregate']},'minContains':1}}}}}})
  template_comparison={'properties':{'composition':{'properties':{'children':{'contains':{'required':['comparison']}}},'required':['children']}},'required':['composition']}
  view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'if':template_comparison,'then':{'properties':{'template':{'required':['baseline']}}},'else':{'properties':{'template':{'not':{'required':['baseline']}}}}}})
+ view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'properties':{'composition':{'properties':{'children':{'not':{'contains':{'required':['comparison'],'properties':{'comparison':{'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}}}}}}}}}}}}})
  flat=['layout','columns','fieldColumns','displays','breakdowns','tail']
  view.setdefault('allOf',[]).append({'if':{'required':['composition']},'then':{'required':['version','title','queries'],'properties':{'version':{'const':1},'queries':{'type':'array','minItems':1,'maxItems':1}},'not':{'anyOf':[{'required':[field]} for field in flat]}},'else':{'required':['layout','columns']}})
  raw_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'not':{'contains':{'required':['aggregate']}}}}}}}
@@ -904,7 +907,7 @@ for suffix in ('', 'Input'):
   artifact['properties'][key]={'type':'string','minLength':1,'maxLength':63,'pattern':'^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$'}
  artifact['properties']['revision']={'type':'string','minLength':1,'maxLength':64,'pattern':'^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$'}
  portable={'type':'object','properties':{'id':{'const':''},'tail':{'properties':{'baseline':{'const':''}}}}}
- portable['properties']['composition']={'properties':{'children':{'items':{'not':{'required':['comparison']}}}}}
+ portable['properties']['composition']={'properties':{'children':{'items':{'properties':{'comparison':{'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}}}}}}}}}
  artifact['properties']['view']={'allOf':[artifact['properties']['view'],portable]}
 for name,key in [('ViewArtifactEncodeRequest','artifact'),('ViewArtifactDecodeRequest','yaml')]:
  request=schemas['workbench.'+name+'Input']

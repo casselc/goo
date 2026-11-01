@@ -59,7 +59,7 @@ func timeTemplateCase(t interface{ Fatal(...any) }, seed, mutation int) {
 	case 5:
 		targetQ.GroupTimeSeries = true
 	case 6:
-		source.Composition.Children = append(source.Composition.Children, workbench.ViewCompositionChild{Comparison: &workbench.CapturedCountViewDeclaration{}})
+		source.Composition.Children = append(source.Composition.Children, workbench.ViewCompositionChild{Comparison: &workbench.CountComparisonViewDeclaration{}})
 	case 7:
 		timeline.Timeline.Kind.Version = 2
 	}

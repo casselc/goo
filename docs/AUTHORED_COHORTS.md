@@ -52,9 +52,10 @@ The child explicitly says **Save stores the selected view; this comparison is no
 saved.** Ordinary Save/export retain the selected query and authored presentation.
 They omit the held parent, remainder query, comparison result and source clocks.
 Reopening stages the selected view for Run and does not restore a paired analysis.
-No capture is created automatically. Durable remainder recipes are a separate
-next roadmap outcome; a held observation must never be silently replaced by a
-fresh baseline question on reopen.
+No capture is created automatically. A rest comparison can now be explicitly
+[included as fixed questions](SAVED_COHORT_QUERIES.md) before Save/export. A held
+observation remains temporary and is never silently replaced by a fresh baseline
+question on reopen.
 
 ## Shared comparison model
 

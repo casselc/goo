@@ -54,7 +54,7 @@ func (a ViewArtifact) Validate() error {
 	}
 	if a.View.Composition != nil {
 		for _, child := range a.View.Composition.Children {
-			if child.Comparison != nil {
+			if child.Comparison != nil && child.Comparison.BaselineCapture != "" {
 				return errors.New("portable view cannot reference a store-local comparison capture; remove that child explicitly")
 			}
 		}

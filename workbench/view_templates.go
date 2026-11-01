@@ -210,6 +210,9 @@ func (b ViewTemplateBinding) Validate(q exploration.Query, c ViewComposition) er
 	comparison := false
 	for _, child := range c.Children {
 		if child.Comparison != nil {
+			if child.Comparison.BaselineQuery != nil {
+				return errors.New("fixed query comparisons cannot become reusable templates")
+			}
 			comparison = true
 		}
 		if child.Aggregate != nil && child.Aggregate.Display.Query != "" {

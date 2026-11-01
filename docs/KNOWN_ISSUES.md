@@ -1,11 +1,18 @@
 # Known issues and gaps
 
+308 saves fixed query comparisons through the existing count role and portable
+flow. Held-parent observations stay temporary. Fixed pairs require matching
+window/environment/group/profile and refuse template/presentation reuse; root-only
+context edits are disabled, so edit both questions in YAML or remove the pair.
+Shared window rebasing is next. See [saved cohort questions](SAVED_COHORT_QUERIES.md).
+
 307 enables ordinary authored count cohorts versus held parent or independently
 read rest. A genuine full-group witness is required; raw pages and changed reads
 cannot become exact operands. Numeric/status/specialized families and captured
 comparison compositions remain outside this profile. Save/export preserve the
-selected view only; the temporary pair is not restored on reopen. Durable fixed
-remainder recipes are next. See [authored cohorts](AUTHORED_COHORTS.md).
+selected view only until a rest comparison is explicitly included using the
+[fixed query variant](SAVED_COHORT_QUERIES.md). Held-parent pairs remain temporary.
+See [authored cohorts](AUTHORED_COHORTS.md).
 
 305 portable view YAML carries validated configuration through the existing
 catalog. Descriptive namespace/name/revision are not persisted registry metadata

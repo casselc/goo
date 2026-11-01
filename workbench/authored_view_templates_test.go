@@ -87,7 +87,7 @@ func TestAuthoredTemplateRefusesAmbiguousOrNonportableInputs(t *testing.T) {
 			v.Queries[0].Numeric = &exploration.NumericBinding{Field: exploration.Field{Kind: "attribute", Key: "bytes"}, Type: "uint64", Parse: "canonical-decimal", Unit: "By"}
 		},
 		"comparison": func(v *ExplorationView) {
-			v.Composition.Children = append(v.Composition.Children, ViewCompositionChild{Comparison: &CapturedCountViewDeclaration{}})
+			v.Composition.Children = append(v.Composition.Children, ViewCompositionChild{Comparison: &CountComparisonViewDeclaration{}})
 		},
 		"tail":     func(v *ExplorationView) { v.Tail = &ExplorationTail{Signal: "spans"} },
 		"wrong ID": func(v *ExplorationView) { v.ID = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },

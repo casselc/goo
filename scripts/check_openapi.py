@@ -659,6 +659,32 @@ def check_record_only_compositions(spec):
             assert not vc.is_valid(bad),'raw view accepted another presentation owner'
 
 
+def check_fixed_query_count_views(spec):
+    scope={'kind':'record-query','signal':'logs'}
+    q={'signal':'logs','environment':'prod','fromMs':1000,'toMs':61000,'limit':100,'offset':0,'groupBy':[{'kind':'column','key':'service'}]}
+    comparison={'version':'goo.view/1','scope':scope,'kind':{'name':'query-count-comparison','version':1},'baselineQuery':{**q,'where':{'field':{'kind':'attribute','key':'cohort'},'op':'eq','value':'baseline'}},'display':{'value':'count'}}
+    view={'version':1,'title':'Fixed query cohorts','queries':[q],'composition':{'version':'goo.composition/1','kind':{'name':'stack','version':1},'children':[
+        {'aggregate':{'version':'goo.view/1','scope':scope,'kind':{'name':'bar','version':1},'display':{'category':'category','value':'count'}}},
+        {'records':{'version':'goo.view/1','scope':scope,'kind':{'name':'record-table','version':1},'display':{'columns':['utc','summary']}}},
+        {'comparison':comparison,'hidden':True}]}}
+    for suffix in ('','Input'):
+        cc=validator(spec,{'$ref':'#/components/schemas/workbench.CountComparisonViewDeclaration'+suffix})
+        vc=validator(spec,{'$ref':'#/components/schemas/workbench.ExplorationView'+suffix})
+        ac=validator(spec,{'$ref':'#/components/schemas/workbench.ViewArtifact'+suffix})
+        cc.validate(comparison);vc.validate(view)
+        ac.validate({'version':'goo.view-artifact/1','namespace':'platform','name':'fixed-cohorts','revision':'v1','view':view})
+        for mutation in (
+            lambda x:x.update(baselineCapture=''), lambda x:x.update(baselineCapture=None),
+            lambda x:x.update(baselineQuery=None), lambda x:x.pop('baselineQuery'),
+            lambda x:x.update(kind={'name':'captured-count-comparison','version':1}),
+            lambda x:x.update(rows=[]),
+        ):
+            bad=copy.deepcopy(comparison);mutation(bad)
+            assert not cc.is_valid(bad),'mixed/invalid fixed-query operand admitted'
+        template=copy.deepcopy(view);template['template']={'version':'goo.template/1','group':'destination','profile':'ordinary','baseline':'destination'}
+        assert not vc.is_valid(template),'fixed query pair admitted as reusable template'
+
+
 def check_comparison_template_bindings(spec):
     """Binding and request presence never silently inherit a specimen capture."""
     scope = {'kind':'record-query','signal':'spans'}
@@ -763,6 +789,7 @@ def check(spec):
     check_view_dataset(spec)
     check_timeline_composition(spec)
     check_record_only_compositions(spec)
+    check_fixed_query_count_views(spec)
     check_comparison_template_bindings(spec)
     check_record_span_waterfall(spec)
     check_document_view_card(spec)

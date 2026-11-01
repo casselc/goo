@@ -32,9 +32,10 @@ test('display entry imports a closed passive graph without publishing namespaces
   // Count bars and canonical temporal charts share the passive key-range gesture helper.
   assert.ok(visited.has(new URL('../ui/interval-range.mjs', import.meta.url).href));
   // Record lists add bounded page and pure declaration validation, never an app owner.
-  for (const name of ['record-list', 'record-span-waterfall', 'record-page', 'view-composition', 'view-declaration', 'timeline-declaration', 'captured-count-comparison'])
+  for (const name of ['record-list', 'record-span-waterfall', 'record-page', 'view-composition', 'view-declaration', 'timeline-declaration', 'captured-count-comparison', 'count-cohort-context'])
     assert.ok(visited.has(new URL('../ui/' + name + '.mjs', import.meta.url).href));
-  assert.equal(visited.size, 48);
+  // Captured and fixed-query comparisons share one additional pure context validator.
+  assert.equal(visited.size, 49);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

@@ -74,7 +74,7 @@ func TestRecordsOnlyAdmissionAndCategoryTemplateBoundary302(t *testing.T) {
 		},
 		"comparison without aggregate": func(v *ExplorationView) {
 			v.Queries[0].GroupBy = []exploration.Field{{Kind: "column", Key: "service"}}
-			v.Composition.Children = append(v.Composition.Children, ViewCompositionChild{Comparison: &CapturedCountViewDeclaration{Version: "goo.view/1", Scope: ViewDeclarationScope{Kind: "record-query", Signal: "spans"}, Kind: CapturedCountViewKind{Name: "captured-count-comparison", Version: 1}, BaselineCapture: strings.Repeat("a", 64), Display: CapturedCountViewDisplay{Value: "count"}}})
+			v.Composition.Children = append(v.Composition.Children, ViewCompositionChild{Comparison: &CountComparisonViewDeclaration{Version: "goo.view/1", Scope: ViewDeclarationScope{Kind: "record-query", Signal: "spans"}, Kind: CountComparisonViewKind{Name: "captured-count-comparison", Version: 1}, BaselineCapture: strings.Repeat("a", 64), Display: CountComparisonViewDisplay{Value: "count"}}})
 		},
 		"duplicate records": func(v *ExplorationView) {
 			v.Composition.Children = append(v.Composition.Children, v.Composition.Children[0])

@@ -112,3 +112,7 @@ See the [proposal history](GROUP_COUNT_COMPARISON_PROPOSAL.md),
 In an application-hosted view,292 can opt into native count buttons through an
 explicit property-only interaction binding. Standalone canonical data remains
 static; supplied contexts alone do not grant action authority.
+
+[Fixed query comparisons](SAVED_COHORT_QUERIES.md) can now retain both operands
+as question configuration. They reuse this supplied-data envelope and independent
+read clocks; saving configuration creates no observation or completeness witness.

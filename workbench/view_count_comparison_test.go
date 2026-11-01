@@ -9,8 +9,8 @@ import (
 	"github.com/casselc/goo/exploration"
 )
 
-func countComparison(q exploration.Query) *CapturedCountViewDeclaration {
-	return &CapturedCountViewDeclaration{Version: "goo.view/1", Scope: ViewDeclarationScope{Kind: "record-query", Signal: q.Signal}, Kind: CapturedCountViewKind{Name: "captured-count-comparison", Version: 1}, BaselineCapture: strings.Repeat("a", 64), Display: CapturedCountViewDisplay{Value: "count"}}
+func countComparison(q exploration.Query) *CountComparisonViewDeclaration {
+	return &CountComparisonViewDeclaration{Version: "goo.view/1", Scope: ViewDeclarationScope{Kind: "record-query", Signal: q.Signal}, Kind: CountComparisonViewKind{Name: "captured-count-comparison", Version: 1}, BaselineCapture: strings.Repeat("a", 64), Display: CountComparisonViewDisplay{Value: "count"}}
 }
 func TestCapturedCountCompositionStoresOnlyReferenceAndReusesExactRoot(t *testing.T) {
 	v := compositionView()
@@ -107,19 +107,19 @@ func TestCapturedCountGroupsPresentationIsBoundedAndReusable(t *testing.T) {
 	if err != nil || reused.Children[2].Comparison.Display.View != "groups" || reused.Children[2].Comparison.Display.Order != "label" {
 		t.Fatal("presentation lost on reuse", err)
 	}
-	for _, bad := range []CapturedCountViewDisplay{{Value: "count", View: "histogram"}, {Value: "count", Order: "rate"}} {
+	for _, bad := range []CountComparisonViewDisplay{{Value: "count", View: "histogram"}, {Value: "count", Order: "rate"}} {
 		declaration.Display = bad
 		if declaration.Validate(v.Queries[0]) == nil {
 			t.Fatal("unknown group display accepted")
 		}
 	}
 	for _, raw := range []string{`{"value":"count","view":null}`, `{"value":"count","order":null}`, `{"value":"count","find":"hidden-query"}`} {
-		var d CapturedCountViewDisplay
+		var d CountComparisonViewDisplay
 		if json.Unmarshal([]byte(raw), &d) == nil {
 			t.Fatal("unknown or null display option accepted", raw)
 		}
 	}
-	declaration.Display = CapturedCountViewDisplay{Value: "count", View: "", Order: ""}
+	declaration.Display = CountComparisonViewDisplay{Value: "count", View: "", Order: ""}
 	if err := declaration.Validate(v.Queries[0]); err != nil {
 		t.Fatal("optional default convention changed", err)
 	}

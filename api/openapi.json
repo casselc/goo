@@ -41297,268 +41297,6 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ActivityViewList"
       },
-      "workbench.CapturedCountViewDeclaration": {
-        "properties": {
-          "baselineCapture": {
-            "type": "string",
-            "pattern": "^[a-f0-9]{64}$"
-          },
-          "display": {
-            "$ref": "#/components/schemas/workbench.CapturedCountViewDisplay",
-            "type": "object"
-          },
-          "kind": {
-            "$ref": "#/components/schemas/workbench.CapturedCountViewKind",
-            "type": "object"
-          },
-          "scope": {
-            "$ref": "#/components/schemas/workbench.ViewDeclarationScope",
-            "type": "object",
-            "required": [
-              "kind",
-              "signal"
-            ]
-          },
-          "version": {
-            "type": "string",
-            "const": "goo.view/1"
-          }
-        },
-        "required": [
-          "version",
-          "scope",
-          "kind",
-          "baselineCapture",
-          "display"
-        ],
-        "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewDeclaration",
-        "additionalProperties": false,
-        "description": "Count-only comparison against one exact immutable explore capture. Parent eligibility and baseline compatibility are validated at runtime; declaration contains no evidence or executable child query. Opening stages configuration; explicit preparation reads stored evidence, not telemetry."
-      },
-      "workbench.CapturedCountViewDeclarationInput": {
-        "additionalProperties": false,
-        "properties": {
-          "baselineCapture": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "type": "string",
-            "pattern": "^[a-f0-9]{64}$"
-          },
-          "display": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/workbench.CapturedCountViewDisplayInput"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "type": "object"
-          },
-          "kind": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/workbench.CapturedCountViewKindInput"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "type": "object"
-          },
-          "scope": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/workbench.ViewDeclarationScopeInput"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "type": "object",
-            "required": [
-              "kind",
-              "signal"
-            ]
-          },
-          "version": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "const": "goo.view/1"
-          }
-        },
-        "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewDeclaration",
-        "required": [
-          "version",
-          "scope",
-          "kind",
-          "baselineCapture",
-          "display"
-        ],
-        "description": "Count-only comparison against one exact immutable explore capture. Parent eligibility and baseline compatibility are validated at runtime; declaration contains no evidence or executable child query. Opening stages configuration; explicit preparation reads stored evidence, not telemetry."
-      },
-      "workbench.CapturedCountViewDisplay": {
-        "properties": {
-          "order": {
-            "type": "string",
-            "enum": [
-              "",
-              "change",
-              "label"
-            ]
-          },
-          "title": {
-            "type": "string",
-            "maxLength": 120
-          },
-          "value": {
-            "type": "string",
-            "const": "count"
-          },
-          "view": {
-            "type": "string",
-            "enum": [
-              "",
-              "summary",
-              "groups"
-            ]
-          }
-        },
-        "required": [
-          "value"
-        ],
-        "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewDisplay",
-        "additionalProperties": false
-      },
-      "workbench.CapturedCountViewDisplayInput": {
-        "additionalProperties": false,
-        "properties": {
-          "order": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "enum": [
-              "",
-              "change",
-              "label"
-            ]
-          },
-          "title": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "maxLength": 120
-          },
-          "value": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "const": "count"
-          },
-          "view": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "enum": [
-              "",
-              "summary",
-              "groups"
-            ]
-          }
-        },
-        "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewDisplay",
-        "required": [
-          "value"
-        ]
-      },
-      "workbench.CapturedCountViewKind": {
-        "properties": {
-          "name": {
-            "type": "string",
-            "const": "captured-count-comparison"
-          },
-          "version": {
-            "type": "integer",
-            "const": 1
-          }
-        },
-        "required": [
-          "name",
-          "version"
-        ],
-        "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewKind",
-        "additionalProperties": false
-      },
-      "workbench.CapturedCountViewKindInput": {
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "const": "captured-count-comparison"
-          },
-          "version": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "const": 1
-          }
-        },
-        "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.CapturedCountViewKind",
-        "required": [
-          "name",
-          "version"
-        ]
-      },
       "workbench.Card": {
         "properties": {
           "caption": {
@@ -41993,6 +41731,381 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.CompositionKind",
+        "required": [
+          "name",
+          "version"
+        ]
+      },
+      "workbench.CountComparisonViewDeclaration": {
+        "properties": {
+          "baselineCapture": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "baselineQuery": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.Query"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "display": {
+            "$ref": "#/components/schemas/workbench.CountComparisonViewDisplay",
+            "type": "object"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/workbench.CountComparisonViewKind",
+            "type": "object"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/workbench.ViewDeclarationScope",
+            "type": "object",
+            "required": [
+              "kind",
+              "signal"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "const": "goo.view/1"
+          }
+        },
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "display"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CountComparisonViewDeclaration",
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "required": [
+              "baselineCapture"
+            ],
+            "properties": {
+              "kind": {
+                "properties": {
+                  "name": {
+                    "const": "captured-count-comparison"
+                  }
+                }
+              }
+            },
+            "not": {
+              "required": [
+                "baselineQuery"
+              ]
+            }
+          },
+          {
+            "required": [
+              "baselineQuery"
+            ],
+            "properties": {
+              "kind": {
+                "properties": {
+                  "name": {
+                    "const": "query-count-comparison"
+                  }
+                }
+              }
+            },
+            "not": {
+              "required": [
+                "baselineCapture"
+              ]
+            }
+          }
+        ],
+        "description": "Count-only comparison with either one exact immutable capture or a fixed baseline query. Query operands require identical checked environment, fixed window, grouping and measure profile with page zero; predicates may differ. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority."
+      },
+      "workbench.CountComparisonViewDeclarationInput": {
+        "additionalProperties": false,
+        "properties": {
+          "baselineCapture": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "baselineQuery": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.QueryInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "display": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.CountComparisonViewDisplayInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.CountComparisonViewKindInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ViewDeclarationScopeInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object",
+            "required": [
+              "kind",
+              "signal"
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "goo.view/1"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CountComparisonViewDeclaration",
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "display"
+        ],
+        "oneOf": [
+          {
+            "required": [
+              "baselineCapture"
+            ],
+            "properties": {
+              "kind": {
+                "properties": {
+                  "name": {
+                    "const": "captured-count-comparison"
+                  }
+                }
+              }
+            },
+            "not": {
+              "required": [
+                "baselineQuery"
+              ]
+            }
+          },
+          {
+            "required": [
+              "baselineQuery"
+            ],
+            "properties": {
+              "kind": {
+                "properties": {
+                  "name": {
+                    "const": "query-count-comparison"
+                  }
+                }
+              }
+            },
+            "not": {
+              "required": [
+                "baselineCapture"
+              ]
+            }
+          }
+        ],
+        "description": "Count-only comparison with either one exact immutable capture or a fixed baseline query. Query operands require identical checked environment, fixed window, grouping and measure profile with page zero; predicates may differ. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority."
+      },
+      "workbench.CountComparisonViewDisplay": {
+        "properties": {
+          "order": {
+            "type": "string",
+            "enum": [
+              "",
+              "change",
+              "label"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "value": {
+            "type": "string",
+            "const": "count"
+          },
+          "view": {
+            "type": "string",
+            "enum": [
+              "",
+              "summary",
+              "groups"
+            ]
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CountComparisonViewDisplay",
+        "additionalProperties": false
+      },
+      "workbench.CountComparisonViewDisplayInput": {
+        "additionalProperties": false,
+        "properties": {
+          "order": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "",
+              "change",
+              "label"
+            ]
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxLength": 120
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "count"
+          },
+          "view": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "",
+              "summary",
+              "groups"
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CountComparisonViewDisplay",
+        "required": [
+          "value"
+        ]
+      },
+      "workbench.CountComparisonViewKind": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "captured-count-comparison",
+              "query-count-comparison"
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "const": 1
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CountComparisonViewKind",
+        "additionalProperties": false
+      },
+      "workbench.CountComparisonViewKindInput": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "captured-count-comparison",
+              "query-count-comparison"
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": 1
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CountComparisonViewKind",
         "required": [
           "name",
           "version"
@@ -42673,6 +42786,43 @@
           {
             "if": {
               "required": [
+                "template"
+              ]
+            },
+            "then": {
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "not": {
+                        "contains": {
+                          "required": [
+                            "comparison"
+                          ],
+                          "properties": {
+                            "comparison": {
+                              "properties": {
+                                "kind": {
+                                  "properties": {
+                                    "name": {
+                                      "const": "query-count-comparison"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
                 "composition"
               ]
             },
@@ -43103,6 +43253,43 @@
                       "required": [
                         "baseline"
                       ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "template"
+              ]
+            },
+            "then": {
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "not": {
+                        "contains": {
+                          "required": [
+                            "comparison"
+                          ],
+                          "properties": {
+                            "comparison": {
+                              "properties": {
+                                "kind": {
+                                  "properties": {
+                                    "name": {
+                                      "const": "query-count-comparison"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -44587,10 +44774,18 @@
                     "properties": {
                       "children": {
                         "items": {
-                          "not": {
-                            "required": [
-                              "comparison"
-                            ]
+                          "properties": {
+                            "comparison": {
+                              "properties": {
+                                "kind": {
+                                  "properties": {
+                                    "name": {
+                                      "const": "query-count-comparison"
+                                    }
+                                  }
+                                }
+                              }
+                            }
                           }
                         }
                       }
@@ -44716,10 +44911,18 @@
                     "properties": {
                       "children": {
                         "items": {
-                          "not": {
-                            "required": [
-                              "comparison"
-                            ]
+                          "properties": {
+                            "comparison": {
+                              "properties": {
+                                "kind": {
+                                  "properties": {
+                                    "name": {
+                                      "const": "query-count-comparison"
+                                    }
+                                  }
+                                }
+                              }
+                            }
                           }
                         }
                       }
@@ -44894,7 +45097,7 @@
           "comparison": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/workbench.CapturedCountViewDeclaration"
+                "$ref": "#/components/schemas/workbench.CountComparisonViewDeclaration"
               },
               {
                 "type": "null"
@@ -45057,7 +45260,7 @@
               {
                 "anyOf": [
                   {
-                    "$ref": "#/components/schemas/workbench.CapturedCountViewDeclarationInput"
+                    "$ref": "#/components/schemas/workbench.CountComparisonViewDeclarationInput"
                   },
                   {
                     "type": "null"

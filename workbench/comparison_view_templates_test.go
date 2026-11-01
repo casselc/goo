@@ -15,7 +15,7 @@ func authoredComparisonTemplate(t *testing.T, timeline bool) ExplorationView {
 	source.Queries[0].SpanStatus = false
 	source.Template.Baseline = "destination"
 	source.Composition.Children = append(source.Composition.Children, ViewCompositionChild{Comparison: countComparison(source.Queries[0])})
-	source.Composition.Children[2].Comparison.Display = CapturedCountViewDisplay{Value: "count", View: "groups", Order: "label", Title: "Change in activity"}
+	source.Composition.Children[2].Comparison.Display = CountComparisonViewDisplay{Value: "count", View: "groups", Order: "label", Title: "Change in activity"}
 	if timeline {
 		source.Queries[0].BucketMS = 10000
 		source.Composition.Children = append(source.Composition.Children, ViewCompositionChild{Timeline: &TimelineViewDeclaration{Version: "goo.view/1", Scope: ViewDeclarationScope{Kind: "record-query", Signal: "spans"}, Kind: TimelineViewKind{Name: "time-bar", Version: 1}, Display: TimelineViewDisplay{Value: "duration.p95", Title: "Timing", RequiresComplete: true}}})

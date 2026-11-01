@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey308](308-saved-fixed-cohorts.md) includes a selected/rest comparison in a
+saved view, reopens both fixed queries with fresh telemetry, and exports/imports
+the portable definition through the CLI. Screenshots show distinct UTC read clocks.
+
 [Journey287](../../journeys/287-duration-timeline-storyboard.md) switches a saved
 span timeline between count, mean and p95, checks exact support and zero/no-data
 semantics, then selects a shared window and saves/reopens for explicit Run.

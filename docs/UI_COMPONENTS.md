@@ -1736,3 +1736,8 @@ comparison elements. App adapters own selection/complement queries, full-snapsho
 eligibility, child lifecycle and temporary state. The group-count validator admits
 matching ordinary count profiles with distinct predicates; no source guarantee or
 component-owned query is introduced.
+
+[Saved fixed cohort questions](SAVED_COHORT_QUERIES.md) configure the existing
+comparison display with an independently read baseline query. Shared components
+still receive supplied data only. Captured and fixed-query declarations share a
+pure context validator; the reviewed passive graph now contains 49 modules.

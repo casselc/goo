@@ -40,8 +40,9 @@ func (v *ExplorationView) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// ViewComposition orders supplied aspects of one checked record query. Children
-// cannot own queries, subscriptions, captured data or completeness claims.
+// ViewComposition orders supplied aspects of one checked record query. Its
+// comparison role may retain one checked fixed baseline query recipe; children
+// cannot own subscriptions, captured data or completeness claims.
 type ViewComposition struct {
 	Version  string                 `json:"version"`
 	Kind     CompositionKind        `json:"kind"`
@@ -56,11 +57,11 @@ type CompositionKind struct {
 // A child chooses exactly one typed role. Its role is its stable identity;
 // duplicate roles, arbitrary IDs and recursive layout are deliberately absent.
 type ViewCompositionChild struct {
-	Aggregate  *ViewDeclaration              `json:"aggregate,omitempty"`
-	Records    *RecordViewDeclaration        `json:"records,omitempty"`
-	Timeline   *TimelineViewDeclaration      `json:"timeline,omitempty"`
-	Comparison *CapturedCountViewDeclaration `json:"comparison,omitempty"`
-	Hidden     bool                          `json:"hidden,omitempty"`
+	Aggregate  *ViewDeclaration                `json:"aggregate,omitempty"`
+	Records    *RecordViewDeclaration          `json:"records,omitempty"`
+	Timeline   *TimelineViewDeclaration        `json:"timeline,omitempty"`
+	Comparison *CountComparisonViewDeclaration `json:"comparison,omitempty"`
+	Hidden     bool                            `json:"hidden,omitempty"`
 }
 
 func (c *ViewCompositionChild) UnmarshalJSON(data []byte) error {
@@ -269,6 +270,9 @@ func ReuseViewComposition(c ViewComposition, source, destination exploration.Que
 			display.Display.FieldColumns = slices.Clone(child.Records.Display.FieldColumns)
 			out.Children[i].Records = &display
 		} else if child.Comparison != nil {
+			if child.Comparison.BaselineQuery != nil {
+				return ViewComposition{}, errors.New("fixed query comparisons cannot be reused as presentation; open their fixed question instead")
+			}
 			if err := exploration.CompatibleCapturedCountQueries(source, destination); err != nil {
 				return ViewComposition{}, err
 			}

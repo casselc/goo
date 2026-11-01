@@ -43,7 +43,7 @@ export function reverse(value,q){return validate({...value,children:[...value.ch
 // Compatibility concerns configuration only; current inputs and paging stay with
 // the host. Browser metadata checks do not replace authoritative Go compilation.
 export function reuse(value,source,destination){
- const next=validate(value,source);if(comparison(next))CapturedCount.compatible(source,destination);
+ const next=validate(value,source);if(CapturedCount.queryVariant(comparison(next)))throw Error('Fixed comparison views must open their original questions; presentation Apply is unavailable.');if(comparison(next))CapturedCount.compatible(source,destination);
  next.children=next.children.map(child=>child.aggregate?{...child,aggregate:Aggregate.reuse(child.aggregate,source,destination)}:child.timeline?{...child,timeline:Timeline.reuse(child.timeline,source,destination)}:child.comparison?{...child,comparison:CapturedCount.validate({...child.comparison,scope:{kind:'record-query',signal:destination.signal}},destination)}:{...child,records:recordDisplay(child.records,destination)});
  return validate(next,destination);
 }

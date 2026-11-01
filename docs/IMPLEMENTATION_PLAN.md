@@ -1,13 +1,12 @@
 # Implementation plan
 
-> Current checkpoint 307: [authored cohort comparison](AUTHORED_COHORTS.md) connects
-> count views to selected-versus-held-parent/rest analysis through the existing
-> retained child, Run and comparison owners. The original composition remains
-> intact; Save/export keep only the selected view, not the temporary pair.
-> Next 308: preserve a fixed selected-versus-rest question recipe through the
-> existing count-comparison role and portable flow, with explicit fresh reads.
-> Held-parent observations stay temporary; presentation Apply must not copy a
-> foreign remainder query into another scope.
+> Delivered 308: [saved fixed cohort questions](SAVED_COHORT_QUERIES.md) retain
+> selected and baseline intent through the existing comparison role, Save and
+> portable/CLI flow. Held-parent data stays temporary. Fixed-pair presentation
+> Apply and category templates refuse scope copying; shared context stays checked.
+> Next 309: explicitly rebase both operands to one fresh comparison window,
+> staging the changed pair for Run without a YAML roundtrip.
+
 
 
 

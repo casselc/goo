@@ -101,7 +101,7 @@ func TestAuthoredTimelineTemplateRejectsIncompatibleAcquisitionEvenWhenHidden(t 
 		"unsupported measure":      func(v *ExplorationView) { v.Composition.Children[2].Timeline.Display.Value = "rate" },
 		"wrong timeline scope":     func(v *ExplorationView) { v.Composition.Children[2].Timeline.Scope.Signal = "logs" },
 		"captured comparison": func(v *ExplorationView) {
-			v.Composition.Children = append(v.Composition.Children, ViewCompositionChild{Comparison: &CapturedCountViewDeclaration{}})
+			v.Composition.Children = append(v.Composition.Children, ViewCompositionChild{Comparison: &CountComparisonViewDeclaration{}})
 		},
 	} {
 		t.Run(name, func(t *testing.T) {

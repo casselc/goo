@@ -26,3 +26,14 @@ test('fixed query baselines remain portable configuration without importing thei
 test('transport leases reject input ABA, owner changes and late hidden replies',()=>{
  const expected={active:true,generation:2,revision:3,serial:4,inputRevision:5};assert(A.current(expected,{...expected}));for(const change of [{active:false},{generation:3},{revision:4},{serial:5},{inputRevision:7}])assert.equal(A.current(expected,{...expected,...change}),false);assert.equal(A.current({...expected,active:false},expected),false);
 });
+test('fixed query comparisons travel as configuration while capture references remain local',()=>{
+ const v=view(),q=v.queries[0],baseline={...q,where:{field:{kind:'column',key:'service'},op:'ne',value:'api'}};v.composition=C.setComparison(v.composition,require('../ui/captured-count-comparison.mjs').createQuery(q,baseline),q);const expected=A.artifact(v,labels),wire=structuredClone(expected);wire.view.composition.children.find(x=>x.comparison).comparison.display.order='';assert.doesNotThrow(()=>A.response(result(wire),expected));const changed=structuredClone(wire);changed.view.composition.children.find(x=>x.comparison).comparison.baselineQuery.where.value='other';assert.throws(()=>A.response(result(changed),expected));assert.deepEqual(A.artifact(v,labels).view,v);
+});
+test('fixed comparison transport accepts only known display and baseline-query wire omissions',()=>{
+ const P=require('../ui/captured-count-comparison.mjs'),q={...view().queries[0],environmentSelector:{version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'named',value:'prod'}}};delete q.environment;
+ const baseline={...structuredClone(q),environment:'',bucketMs:0,summary:'',spanStatus:false,groupTimeSeries:false,numeric:null,numericHistogram:null,reportedEdge:null,where:{field:{kind:'column',key:'service'},op:'ne',value:'api'}};
+ const comparison={...P.createQuery(q,baseline),display:{value:'count',title:'',view:'',order:''}},v={version:1,title:'Two fixed queries',queries:[q],composition:C.setComparison(C.create(q,D.create(q)),comparison,q)},expected=A.artifact(v,labels),wire=structuredClone(expected),child=wire.view.composition.children.find(x=>x.comparison).comparison;
+ for(const key of ['title','view','order'])delete child.display[key];for(const key of ['bucketMs','summary','spanStatus','groupTimeSeries','numeric','numericHistogram','reportedEdge'])delete child.baselineQuery[key];wire.view.queries[0].environment='';
+ assert.doesNotThrow(()=>A.response(result(wire),expected));
+ for(const mutate of [x=>x.baselineQuery.where.value='changed',x=>x.baselineQuery.fromMs=2000,x=>x.baselineQuery.groupBy=[{kind:'column',key:'name'}],x=>x.display.view='groups',x=>x.display.title='Changed']){const changed=structuredClone(wire);mutate(changed.view.composition.children.find(x=>x.comparison).comparison);assert.throws(()=>A.response(result(changed),expected));}
+});

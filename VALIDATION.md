@@ -1,5 +1,39 @@
 # Validation record
 
+## Saved fixed-query cohort comparisons — 308
+
+[Contract/diagram](docs/SAVED_COHORT_QUERIES.md) ·
+[checked YAML](config/views/fixed-cohort-comparison.yaml) ·
+[storyboard/screenshots](docs/journeys/308-saved-fixed-cohorts.md) ·
+[architecture](docs/reviews/SAVED_COHORT_ARCHITECTURE_308.md) and
+[design](docs/reviews/SAVED_COHORT_DESIGN_308.md) reviews.
+
+- Root Go suite passes. Changed packages pass: `workbench` (3.15 seconds),
+  `cmd/goo` (30.25 seconds), `exploration` (19.82 seconds). Union tests refuse
+  mixed/null operands, mismatched fixed context, nonzero pages, hidden reuse and
+  query-pair templates. Existing captured serialization and ID behavior stay valid.
+  Public comparison types now use generic `CountComparison*` names without aliases.
+- OpenAPI passes: 100 operations, 659 schemas, 436 responses, 161 admitted
+  requests and 28 mux refusals, plus new fixed-query rejecting controls. Reflected
+  wire shapes match. Three actual save/codec response pairs admit through Go,
+  OpenAPI and JS; CLI import into a fresh store makes one existing save POST.
+- Final frontend suite passes: 973 tests, zero failures/skips (15.80 seconds).
+  Shared context extraction adds one reviewed pure module; the passive display
+  graph is explicitly checked at 49 with unchanged no-I/O/no-global conditions.
+- Fifty actual Go-to-JavaScript fixed-query artifact properties pass (5.02 seconds).
+  Model smoke passes (12.34 seconds); the observed 12-step replay with seven
+  mutants and prefix refusal passes (10.42 seconds). Native journey passes
+  (1.3 minutes) through source-free Include, Save, fresh selected 5/baseline 105
+  after late OTel ingestion in the original bounds, YAML export and actual CLI
+  import/Run into an empty second store. Held-parent has no Include action; stale
+  Include and both catalog Apply paths refuse; imported scope/presentation survive.
+- The new checked example is decoded from its actual YAML, validated and compared
+  with canonical output; omitted baseline limits refuse. Actual CLI validation of
+  this file passes. Refreshed read-clock frames pass final design review. The
+  rebuilt Go lab validates the checked example, and all eight changed/new UI and
+  OpenAPI assets match source bytes. No endpoint, registry or second acquisition
+  owner added.
+
 ## Authored selected/parent/remainder counts — 307
 
 [Contract/diagram](docs/AUTHORED_COHORTS.md) ·

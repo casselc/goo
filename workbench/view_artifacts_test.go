@@ -72,7 +72,7 @@ func TestViewArtifactPortableReferences(t *testing.T) {
 		t.Fatal("invalid namespace accepted")
 	}
 	a = portableArtifact()
-	a.View.Composition.Children = append(a.View.Composition.Children, ViewCompositionChild{Comparison: &CapturedCountViewDeclaration{Version: "goo.view/1", Scope: ViewDeclarationScope{Kind: "record-query", Signal: "spans"}, Kind: CapturedCountViewKind{Name: "captured-count-comparison", Version: 1}, BaselineCapture: strings.Repeat("a", 64), Display: CapturedCountViewDisplay{Value: "count"}}})
+	a.View.Composition.Children = append(a.View.Composition.Children, ViewCompositionChild{Comparison: &CountComparisonViewDeclaration{Version: "goo.view/1", Scope: ViewDeclarationScope{Kind: "record-query", Signal: "spans"}, Kind: CountComparisonViewKind{Name: "captured-count-comparison", Version: 1}, BaselineCapture: strings.Repeat("a", 64), Display: CountComparisonViewDisplay{Value: "count"}}})
 	if _, err := EncodeViewArtifact(a); err == nil {
 		t.Fatal("local comparison accepted")
 	}
