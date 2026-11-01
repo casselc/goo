@@ -1,5 +1,11 @@
 # Architecture
 
+[Add breakdown](ADD_BREAKDOWN.md) promotes records-only configuration through
+the existing population draft/Run owner. Explicit grouping replacement preserves
+the record child and scope; staging withdraws held source aspects. Full Run
+acquires the existing aggregate/records profile rather than deriving measurements
+from the supplied row page.
+
 [Trace-to-view handoff](TRACE_AS_VIEW.md) stages question intent and presentation
 through the existing root or nested population owner. Inspector read/opener leases
 gate the command; the modal closes without its ordinary Activity-return callback.

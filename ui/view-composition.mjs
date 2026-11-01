@@ -58,3 +58,15 @@ export function view(value){
 export function setTimeline(value,next,q){return validate({...value,children:timeline(value)?value.children.map(child=>child.timeline?{...child,timeline:next}:child):[{timeline:next},...value.children]},q)}
 
 export function setComparison(value,next,q){return validate({...value,children:next?(comparison(value)?value.children.map(child=>child.comparison?{...child,comparison:next}:child):[{comparison:next},...value.children]):value.children.filter(child=>!child.comparison)},q)}
+
+// Explicitly promote a raw records view; query acquisition remains with the host.
+export function addBreakdown(value,q,{field,kind='bar',replaceGrouping=false}={}){
+ const current=validate(value,q);if(!recordOnly(current))throw Error('Add a breakdown to a records-only view.');
+ validatePredicate({field,op:'exists'},q.signal);
+ if(!['bar','table'].includes(kind))throw Error('Choose Bars or Table.');if(typeof replaceGrouping!=='boolean')throw Error('Confirm grouping replacement explicitly.');
+ const same=q.groupBy?.length===1&&q.groupBy[0].kind===field.kind&&q.groupBy[0].key===field.key;
+ if(q.groupBy?.length&&!same&&!replaceGrouping)throw Error('Confirm replacement of the existing grouping.');
+ const query={...structuredClone(q),groupBy:[structuredClone(field)],offset:0};
+ const declaration=Aggregate.create(query);declaration.kind.name=kind;
+ return {query,composition:validate({...current,children:[{aggregate:Aggregate.validate(declaration,query)},...current.children]},query)};
+}

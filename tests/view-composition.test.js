@@ -52,3 +52,19 @@ test('records-only preserves unused ordinary directives without permitting speci
  const timeline=require('../ui/timeline-declaration.mjs').create({...q,groupBy:[{kind:'column',key:'service'}]});
  assert.throws(()=>C.validate({...c,children:[...c.children,{timeline}]},{...q,groupBy:[{kind:'column',key:'service'}]}),/Records-only/);
 });
+test('adding a breakdown is an explicit query transition retaining raw record intent and scope',()=>{
+ const typed={version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'named',value:'prod'}};
+ for(const kind of ['bar','table'])for(const groupBy of [undefined,[],[{kind:'column',key:'service'}]]){
+  const q={signal:'spans',environmentSelector:typed,fromMs:1000,toMs:61000,limit:20,offset:100,...(groupBy===undefined?{}:{groupBy}),where:{field:{kind:'column',key:'trace_id'},op:'eq',value:'0123456789abcdef0123456789abcdef'},summary:'span-duration',spanStatus:true,bucketMs:1000};
+  const raw=C.setRecordKind(C.createRecords(q,{columns:['utc','summary'],fieldColumns:[{kind:'attribute',key:'http.route'}]}),'record-span-waterfall',q),before=structuredClone({q,raw});
+  const next=C.addBreakdown(raw,q,{field:{kind:'column',key:'service'},kind});
+  assert.deepEqual(next.query,{...q,groupBy:[{kind:'column',key:'service'}],offset:0});assert.deepEqual(C.records(next.composition),C.records(raw));assert.equal(C.aggregate(next.composition).kind.name,kind);assert.equal(C.aggregate(next.composition).display.value,'count');assert.deepEqual({q,raw},before);assert.doesNotThrow(()=>C.view({version:1,title:'Trace breakdown',queries:[next.query],composition:next.composition}));
+ }
+});
+test('adding a breakdown refuses implicit grouping replacement and specialized or unqualified categories',()=>{
+ const field={kind:'column',key:'service'};
+ for(const groupBy of [[{kind:'attribute',key:'team'}],[field,{kind:'attribute',key:'team'}]]){
+  const q={...query(),groupBy},raw=C.createRecords(q);assert.throws(()=>C.addBreakdown(raw,q,{field}),/Confirm replacement/);assert.deepEqual(C.addBreakdown(raw,q,{field,replaceGrouping:true}).query.groupBy,[field]);
+ }
+ const q=query(),raw=C.createRecords(q);assert.throws(()=>C.addBreakdown(raw,q));assert.throws(()=>C.addBreakdown(raw,q,{field:{kind:'column',key:'not_a_column'}}));assert.throws(()=>C.addBreakdown(raw,q,{field:{kind:'column',key:'duration_bucket'}}));assert.throws(()=>C.addBreakdown(raw,q,{field,kind:'scatter'}));assert.throws(()=>C.addBreakdown(raw,q,{field,replaceGrouping:'yes'}));assert.throws(()=>C.addBreakdown(make().c,q,{field}));
+});

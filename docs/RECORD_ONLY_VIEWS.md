@@ -85,3 +85,7 @@ See [record interactions](RECORD_INTERACTIONS.md),
 
 [Open an inspected trace as a view](TRACE_AS_VIEW.md) stages this records-only
 shape with a Waterfall default and an exact trace question, for explicit Run.
+
+[Add breakdown](ADD_BREAKDOWN.md) grows a records-only view into the existing
+aggregate-and-records composition through explicit grouping and Run. No public
+display component gains source or authoring ownership.

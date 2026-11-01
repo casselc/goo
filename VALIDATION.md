@@ -1,5 +1,45 @@
 # Validation record
 
+## Whole-flow authoring and Add breakdown — 304
+
+[Contract/diagram](docs/ADD_BREAKDOWN.md) ·
+[storyboard/screenshots](docs/journeys/304-add-breakdown.md) ·
+[architecture](docs/reviews/AUTHORING_ARCHITECTURE_304.md) and
+[design](docs/reviews/AUTHORING_DESIGN_304.md) whole-flow reviews.
+
+- Local CI Go/API lanes pass: root suite (31 package results), instrumentation,
+  operation-app and report-app; actual wire fixtures, documentation routes,
+  saved workflows and 13 observed responses. Eight verification-runner refusal
+  tests pass. Generated Go wire shapes (629) and OpenAPI (98 operations/651
+  schemas) match checked-in bytes; API response/request/refusal checks pass.
+  These are local checks; remote GitHub CI is not yet accessible or verified.
+- Final frontend suite passes: 960 tests, no failures/skips (23.66 seconds).
+  Fifty actual JavaScript/Go transition properties plus model smoke pass
+  (16.47 seconds). The native flow and single/multiple-group span cases pass
+  (1.6 minutes). The observed 15-step model and negative controls pass (10.64
+  seconds). Main HTTP budget: ten full reads, two narrow pages, two ordinary
+  saves, one capture and one comparison. Environment discovery/tail and source
+  statements are separate; staging itself acquires nothing.
+- Architecture/design source reviews pass: explicit qualified grouping and
+  replacement, exact record-child/scope preservation, Add/Discard draft ownership,
+  Save protection, stale controls and existing stage/Run ownership.
+- The obsolete typed-environment primary population-entry gate was removed;
+  planner tests already cover current/effective named, empty and unreported scopes.
+  Unrelated feature-specific eligibility rules remain unchanged.
+- Real OTLP fixtures distinguish 103 matching logs from a 100-row page, then
+  independently capture 103 and compare 104 after late ingestion within the fixed
+  window. Ordinary save/reopen and destination reuse preserve the checked scope.
+  Six real spans retain Waterfall and both qualified fields through same-group
+  retention and explicit multi-group replacement. No page errors occurred.
+- Native checks found and fixed initial disconnected-editor readiness and
+  unfinished-draft Save eligibility. Three bounded frames pass final design review;
+  the targeted trace-to-view regression passes (47.4 seconds). The final combined
+  two-test native run passes in 2.4 minutes. Historical screenshot timestamp/ID
+  churn was restored and disposable capture stores cleaned.
+- The rebuilt single-Go lab serves all four changed UI modules byte-for-byte.
+  Image: `a35aab5a40f6c761d96555837ece3e4f79eb1591bdac981a9188a78d8f104a1c`.
+  Existing volumes and unrelated services were retained.
+
 ## Trace inspector to editable records view — 303
 
 [Contract/diagram](docs/TRACE_AS_VIEW.md) ·

@@ -1722,3 +1722,7 @@ SSR, detached properties and narrow layouts are checked. See
 
 [Trace inspector → editable view](TRACE_AS_VIEW.md) is application navigation;
 shared Table/List/Waterfall elements gain no query or modal ownership.
+
+[Add breakdown](ADD_BREAKDOWN.md) grows a records-only view into the existing
+aggregate-and-records composition through explicit grouping and Run. No public
+display component gains source or authoring ownership.

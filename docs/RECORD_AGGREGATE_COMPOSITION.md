@@ -218,3 +218,7 @@ presentation, retaining the same page, fields, pager and template/configuration
 owner. Its relative timing groups do not imply complete traces; explicit expansion
 remains independent. Logs/metrics reject the kind, including hidden declarations.
 Visual ordering preserves original page positions for shared record interactions.
+
+[Add breakdown](ADD_BREAKDOWN.md) grows a records-only view into the existing
+aggregate-and-records composition through explicit grouping and Run. No public
+display component gains source or authoring ownership.

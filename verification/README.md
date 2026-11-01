@@ -3547,3 +3547,14 @@ fixed bounds, exact trace identity and environment-policy preservation with Hege
 The handoff is app-owned navigation; existing record component/Bombadil campaigns
 retain responsibility for passive display contracts.
 See the [storyboard](../docs/journeys/303-trace-as-view.md).
+
+
+### Grow raw records into a breakdown — 304
+
+`journeys/304-add-breakdown.spec.js` exercises the actual Activity/typed-environment
+entry, raw records, explicit Add breakdown staging, full Run, count comparison,
+ordinary Save/reopen/reuse, and preserved span-waterfall grouping. Its observed
+ledger replays the bounded 304 model with corrupted and unfinished controls;
+transition properties compare actual JavaScript configuration to Go admission.
+Existing record display campaigns retain their passive component contracts.
+See the [storyboard](../docs/journeys/304-add-breakdown.md) for exact commands.

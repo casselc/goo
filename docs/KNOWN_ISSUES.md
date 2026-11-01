@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+304 adds an explicit single-field count breakdown (Bars/Table) to ordinary
+records-only views. Different or multiple grouping requires explicit replacement;
+record presentation and scope remain unchanged. Staging clears held data and
+requires full Run. Arbitrary aggregate expressions, joined signals and automatic
+source discovery are outside this transition.
+
 303 trace-to-view handoff stages an exact-trace records-only Waterfall. It requires
 a successful current inspector read and an available current destination owner.
 Typed environment policy and fixed bounds are preserved. The handoff starts at

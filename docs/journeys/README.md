@@ -2772,3 +2772,5 @@ held parent return, fresh focus and refusal of retired controls.
 - [302: save and reuse raw records without an aggregate](302-record-only-views.md).
 
 - [303: continue an inspected trace as an editable records view](303-trace-as-view.md).
+
+- [304: grow raw records into a breakdown, comparison and reusable view](304-add-breakdown.md).

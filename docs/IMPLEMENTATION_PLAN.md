@@ -1,12 +1,13 @@
 # Implementation plan
 
-> Current checkpoint 303: [Trace inspector → Open trace as view](TRACE_AS_VIEW.md)
-> stages an editable records-only waterfall through the current root or nested
-> population owner, preserving fixed bounds/environment and requiring explicit Run.
-> It builds on [302 records-only saved views](RECORD_ONLY_VIEWS.md).
-> Next 304: whole-flow grammar authoring/usability checkpoint before selecting
-> another specialized profile. Evaluate a real cross-service investigation and
-> service/team reusable view; reconcile duplicated entry points and authoring controls.
+> Current checkpoint 304: whole-flow architecture/design review delivered
+> [Add breakdown](ADD_BREAKDOWN.md), connecting natural raw/trace records entry
+> to the existing chart, comparison and reusable-view authoring flow. Explicit
+> grouping changes stage configuration without reading or promoting page data.
+> Typed environment entry now uses the already-supported planner contract.
+> Next 305: portable service/team view definitions through the existing admission
+> and catalog, with explicit scope reuse and no transferable capture authority.
+
 
 
 
