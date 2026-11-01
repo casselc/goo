@@ -1690,3 +1690,14 @@ recovery reveals the current composition's width controls or its existing Compos
 action. That gesture changes focus/disclosure only. Staging, Run and compatible
 Apply retain their existing application owners and data-quality contracts. See
 [time-aware templates](TIMELINE_VIEW_TEMPLATES.md).
+
+
+## Explicit comparison-template baseline — 300
+
+The existing count-comparison renderer and baseline picker remain the only owners
+for their roles. Template preview names an explicit unverified destination input;
+missing input reveals/focuses the current picker without loading evidence. Apply
+changes local presentation/reference only. Prepared pairs retire on input changes,
+and exact source-presentation validation permits only the declared reference
+substitution. No new component, catalog or query owner is introduced. See
+[comparison templates](COMPARISON_VIEW_TEMPLATES.md).

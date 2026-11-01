@@ -42492,6 +42492,56 @@
           {
             "if": {
               "required": [
+                "template"
+              ]
+            },
+            "then": {
+              "if": {
+                "properties": {
+                  "composition": {
+                    "properties": {
+                      "children": {
+                        "contains": {
+                          "required": [
+                            "comparison"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "children"
+                    ]
+                  }
+                },
+                "required": [
+                  "composition"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "template": {
+                    "required": [
+                      "baseline"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "template": {
+                    "not": {
+                      "required": [
+                        "baseline"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
                 "composition"
               ]
             },
@@ -42812,6 +42862,56 @@
               "required": [
                 "composition"
               ]
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "template"
+              ]
+            },
+            "then": {
+              "if": {
+                "properties": {
+                  "composition": {
+                    "properties": {
+                      "children": {
+                        "contains": {
+                          "required": [
+                            "comparison"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "children"
+                    ]
+                  }
+                },
+                "required": [
+                  "composition"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "template": {
+                    "required": [
+                      "baseline"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "template": {
+                    "not": {
+                      "required": [
+                        "baseline"
+                      ]
+                    }
+                  }
+                }
+              }
             }
           },
           {
@@ -45078,6 +45178,10 @@
       },
       "workbench.ViewTemplateBinding": {
         "properties": {
+          "baseline": {
+            "type": "string",
+            "const": "destination"
+          },
           "group": {
             "type": "string",
             "const": "destination"
@@ -45107,6 +45211,17 @@
       "workbench.ViewTemplateBindingInput": {
         "additionalProperties": false,
         "properties": {
+          "baseline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "const": "destination"
+          },
           "group": {
             "anyOf": [
               {
@@ -45172,6 +45287,26 @@
       "workbench.ViewTemplateExpansionRequestInput": {
         "additionalProperties": false,
         "properties": {
+          "baselineCapture": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Explicit destination baseline for comparison templates only. Never defaults to the source specimen; pure expansion does not fetch or verify evidence. Existing Prepare checks the chosen stored capture against the destination."
+          },
           "query": {
             "anyOf": [
               {
@@ -45265,6 +45400,11 @@
                   "required": [
                     "query"
                   ]
+                },
+                {
+                  "required": [
+                    "baselineCapture"
+                  ]
                 }
               ]
             }
@@ -45292,6 +45432,50 @@
                   ]
                 }
               ]
+            }
+          }
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "source": {
+                  "properties": {
+                    "composition": {
+                      "properties": {
+                        "children": {
+                          "contains": {
+                            "required": [
+                              "comparison"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "children"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "composition"
+                  ]
+                }
+              },
+              "required": [
+                "source"
+              ]
+            },
+            "then": {
+              "required": [
+                "baselineCapture"
+              ]
+            },
+            "else": {
+              "not": {
+                "required": [
+                  "baselineCapture"
+                ]
+              }
             }
           }
         ]

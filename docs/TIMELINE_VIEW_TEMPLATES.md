@@ -45,8 +45,10 @@ requirements are preserved, never synthesized from serialized configuration or a
 bounded record page. Complete supplied query accounting is not proof of complete
 upstream telemetry.
 
-Capture comparisons, grouped time-series, numeric/histogram and reported-edge
-profiles remain outside this authored-template cut. Refusals preserve the current
+Grouped time-series, numeric/histogram and reported-edge profiles remain outside
+this authored-template cut. The original 299 cut excluded capture comparisons;
+[300](COMPARISON_VIEW_TEMPLATES.md) permits the existing count comparison with an
+explicit destination-baseline input and separate evidence verification. Refusals preserve the current
 question and configuration; nothing is silently stripped. Saved canonical
 presentation remains the supported UI preview input; general unsaved-source
 canonicalization is separate work.

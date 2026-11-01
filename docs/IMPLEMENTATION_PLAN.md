@@ -1,11 +1,11 @@
 # Implementation plan
 
-> Current checkpoint 299: the whole-flow review selected reusable fixed timelines.
-> Authored templates retain aggregate, records and an optional count/duration
-> timeline, requiring an explicit compatible destination interval width.
-> Next 300: reusable captured-count comparison presentation with a required explicit
-> destination baseline parameter; never inherit the specimen's capture reference.
-> See [time-aware templates](TIMELINE_VIEW_TEMPLATES.md).
+> Current checkpoint 300: reusable count-comparison templates require an explicit
+> destination baseline binding/input; configuration expansion never inherits or
+> verifies the specimen capture. Existing Prepare checks destination evidence.
+> Next 301: inspect supplied span timing through a bounded waterfall records kind,
+> sharing the admitted page and record interactions without an implicit trace read.
+> See [comparison templates](COMPARISON_VIEW_TEMPLATES.md).
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),
@@ -1759,3 +1759,43 @@ with a target baseline, no source capture fetch, wrong-root refusal on Prepare,
 source-free Apply and late-preview retirement. Do not merely relax the comparison
 child prohibition or silently copy its source capture. General template parameters
 and captured numeric/duration/native comparisons remain separate.
+
+
+## 300 — comparison templates with an explicit destination baseline
+
+[Comparison templates](COMPARISON_VIEW_TEMPLATES.md) declare a required destination
+reference instead of copying the source capture. Pure typed expansion replaces
+that reference only and preserves the destination query plus all other template
+presentation. Missing/malformed/unused inputs and bindings are refused consistently
+in Go, JS and OpenAPI. The existing picker supplies the parameter; Apply reads no
+evidence, and existing Prepare checks actual target compatibility. Baseline changes
+retire old previews/prepared results.
+
+The native Capture → return → baseline journey exposed retired controls that still
+appeared enabled. Held-return renewal now creates fresh metadata/record owners
+after visit DOM restoration without a read. Cancelled requests stay retired; cached
+measurement gestures remain paused. Selected/submitted record workflows stay
+explicitly paused until a deliberate replacement Run; no Keep intent is replayed.
+
+## Next 301 — inspect timing in the supplied spans
+
+Add one spans-only waterfall kind to the existing records role and admitted
+`goo.record-page/1`, reusing the current renderer and shared Inspect/selection/Keep
+owner. The user task is to see where time went in supplied spans, inspect/retain a
+relevant observation and explicitly expand its trace when more context is needed.
+Save/template/paging stay with the same owners; logs refuse this kind.
+
+Use each valid trace group's earliest supplied span as a relative origin, with ONE
+common duration scale across groups. Keep UTC origins/tooltips and exact values
+visible; neither a group origin nor its extent is a complete trace latency. Missing
+or invalid trace IDs must not imply shared parentage. Parent matching requires
+unambiguous reported IDs; duplicate parents, missing parents and cycles remain
+explicit rather than choosing an arbitrary row.
+
+Preserve original page indexes despite parent-first visual ordering. Mount shared
+actions beside native row buttons (never nested buttons), keep all supported
+qualified fields, and retire old render handles. Real multi-trace/out-of-order and
+ambiguous-parent fixtures should prove source-free kind changes, comparable 5 ms
+versus 500 ms geometry, exact Keep indexes, independent cross-service Expand trace,
+paging and saved/template reuse. Keep global trace acquisition separate from this
+local presentation; do not introduce another query framework or claim completeness.

@@ -27383,6 +27383,9 @@
   },
   "workbench.ViewTemplateBinding": {
     "properties": {
+      "baseline": {
+        "type": "string"
+      },
       "group": {
         "type": "string"
       },
@@ -27404,6 +27407,16 @@
   "workbench.ViewTemplateBindingInput": {
     "additionalProperties": false,
     "properties": {
+      "baseline": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "group": {
         "anyOf": [
           {
@@ -27457,6 +27470,23 @@
   "workbench.ViewTemplateExpansionRequestInput": {
     "additionalProperties": false,
     "properties": {
+      "baselineCapture": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "query": {
         "anyOf": [
           {

@@ -51,3 +51,14 @@ flowchart TD
 See [record display semantics](RECORD_LIST.md),
 [architecture review](reviews/RECORD_INTERACTIONS_ARCHITECTURE_298.md) and
 [design review](reviews/RECORD_INTERACTIONS_DESIGN_298.md).
+
+
+## Returning to a held visit — 300
+
+After a capture or workspace visit, empty-selection populations receive fresh
+metadata/record controls over the same held data. Restoring the visit performs no
+read and does not revive old handlers; interrupted requests remain retired and
+measurement gestures stay paused until Run. If a selected/submitted record workflow
+is retained, its DOM stays paused instead of silently losing the selection. The
+existing Run explicitly replaces that page. A submitted Keep may still finish;
+returning does not replay or undo its intent.

@@ -94,8 +94,12 @@ for suffix in ('', 'Input'):
   request['properties']['version']['const']=1
   for field in ('source','query','widget'):request['properties'][field]['type']='object'
   request.pop('required',None)
-  request['oneOf']=[{'required':['template','version','widget'],'not':{'anyOf':[{'required':['source']},{'required':['query']}]}},
+  request['properties']['baselineCapture'].update(type='string',pattern='^[a-f0-9]{64}$')
+  request['properties']['baselineCapture']['description']='Explicit destination baseline for comparison templates only. Never defaults to the source specimen; pure expansion does not fetch or verify evidence. Existing Prepare checks the chosen stored capture against the destination.'
+  request['oneOf']=[{'required':['template','version','widget'],'not':{'anyOf':[{'required':['source']},{'required':['query']},{'required':['baselineCapture']}]}},
                     {'required':['source','query'],'not':{'anyOf':[{'required':['template']},{'required':['version']},{'required':['widget']}]}}]
+  comparison_source={'properties':{'source':{'properties':{'composition':{'properties':{'children':{'contains':{'required':['comparison']}}},'required':['children']}},'required':['composition']}},'required':['source']}
+  request['allOf']=[{'if':comparison_source,'then':{'required':['baselineCapture']},'else':{'not':{'required':['baselineCapture']}}}]
  reference=schemas.get('workbench.ViewTemplateReference'+suffix)
  if reference:
   reference['properties']['version']['const']=1
@@ -107,6 +111,7 @@ for suffix in ('', 'Input'):
   binding['properties']['version']['const']='goo.template/1'
   binding['properties']['group']['const']='destination'
   binding['properties']['profile']['enum']=['ordinary','otel.db-client','otel.http-server']
+  binding['properties']['baseline']['const']='destination'
   binding['required']=['version','group','profile']
 
 # Saved reusable record display declarations contain configuration, never data.
@@ -189,6 +194,8 @@ for suffix in ('', 'Input'):
  view['properties']['composition']['type']='object'
  view['properties']['template']['type']='object'
  view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'required':['composition']}})
+ template_comparison={'properties':{'composition':{'properties':{'children':{'contains':{'required':['comparison']}}},'required':['children']}},'required':['composition']}
+ view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'if':template_comparison,'then':{'properties':{'template':{'required':['baseline']}}},'else':{'properties':{'template':{'not':{'required':['baseline']}}}}}})
  flat=['layout','columns','fieldColumns','displays','breakdowns','tail']
  view.setdefault('allOf',[]).append({'if':{'required':['composition']},'then':{'required':['version','title','queries'],'properties':{'version':{'const':1},'queries':{'type':'array','minItems':1,'maxItems':1}},'not':{'anyOf':[{'required':[field]} for field in flat]}},'else':{'required':['layout','columns']}})
 

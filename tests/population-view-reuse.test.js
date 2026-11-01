@@ -23,3 +23,9 @@ test('whole-composition application waits for one fixed owner, explicit tail rem
  assert.match(compositionReuseReason({queryCount:1,pagePending:true}),/record page to finish/);
  const state={queryCount:1,tailConfigured:true,pagePending:true};compositionReuseReason(state);assert.deepEqual(state,{queryCount:1,tailConfigured:true,pagePending:true});
 });
+
+
+test('chosen destination baseline is part of the private preview lease',()=>{
+ const expected={active:true,visible:true,generation:1,draftRevision:2,libraryGeneration:3,serial:4,questionKey:'same target',baselineCapture:'a'.repeat(64)};
+ assert.equal(reuseRequestCurrent(expected,{...expected}),true);assert.equal(reuseRequestCurrent(expected,{...expected,baselineCapture:'b'.repeat(64)}),false);assert.equal(reuseRequestCurrent(expected,{...expected,baselineCapture:''}),false);
+});

@@ -16,7 +16,8 @@ Optional [investigation findings](docs/PRESERVE_ATTACHMENT.md) stay behind Add t
 its fixed scope and paused parent. Build reusable views with [saved displays](docs/SAVED_DISPLAY_DECLARATIONS.md),
 [service defaults](docs/HTTP_SERVICE_VIEW_TEMPLATE.md),
 [authorable templates](docs/AUTHORABLE_VIEW_TEMPLATES.md), including
-[reusable timelines](docs/TIMELINE_VIEW_TEMPLATES.md), and
+[reusable timelines](docs/TIMELINE_VIEW_TEMPLATES.md) and
+[comparisons with a chosen baseline](docs/COMPARISON_VIEW_TEMPLATES.md), and
 [record/aggregate compositions](docs/RECORD_AGGREGATE_COMPOSITION.md), including
 [record lists](docs/RECORD_LIST.md) beside the default table, with
 [shared record interactions](docs/RECORD_INTERACTIONS.md).

@@ -1,5 +1,56 @@
 # Validation record
 
+## Comparison templates with an explicit baseline — 300
+
+[Contract/diagram](docs/COMPARISON_VIEW_TEMPLATES.md) ·
+[storyboard](journeys/300-comparison-template-storyboard.md) ·
+[architecture](docs/reviews/COMPARISON_TEMPLATE_ARCHITECTURE_300.md) and
+[design](docs/reviews/COMPARISON_TEMPLATE_DESIGN_300.md) reviews.
+
+- Changed Go packages pass (`workbench`, `cmd/goo`, `-count=1`). Strict binding/input
+  presence, null/empty/case/mixed-arm refusal, digest/presentation preservation,
+  hidden comparison and timeline compatibility are covered. OpenAPI checks pass:
+  98 operations, 651 schemas, 429 fixture responses, 159 admitted requests and 28
+  mux refusals, plus new conditional presence controls. Seven actual API exchanges
+  conform to the regenerated schemas.
+- Final frontend suite: 942 passed, zero failed/skipped (17.1 seconds). Focused
+  declaration, binding synchronization and private baseline-preview lease tests
+  pass. Fifty valid and fifty refused generated cases execute actual Go AND JS
+  handoffs (12.9 seconds); the observed 21-step Quint lifecycle rejects eight
+  corrupted ledgers and an unfinished prefix. Standalone model smoke passes.
+- Final native journey, observed replay, paused-Keep lane and independent actor
+  pass in 1.5 minutes. Both captures and saved definitions are created through the
+  UI. A different destination service/grouping retains its query, refuses missing
+  input, explicitly rejects the wrong-root capture on Prepare, retires a late
+  old-baseline response, then applies/verifies the chosen 102→103 baseline. Paging
+  holds the pair; save/reopen pins the destination reference. Main budget: six
+  Explore HTTPs, one page, two saves, two native captures, three compares, five
+  expansions and four capture-content GETs, with zero browser errors. Source A is
+  read only for original preparation and the deliberate wrong-root negative case;
+  target B is read for its explicit preparation and existing reopen/Run preparation.
+  These are HTTP counts, not physical SQL statements.
+- The native Capture → Explore flow exposed retired handlers on apparently enabled
+  controls. The fix mounts fresh owners over held data after DOM restoration with
+  no read; old metadata/record handles refuse after reattachment. Cancelled reads
+  are retired, not restarted. A separately gated real committed Keep retains its
+  selected paused DOM across Saved → Explore with zero IO; explicit Run replaces
+  the page, without retrying the Keep or painting its old response into new rows.
+- Bombadil: 30 seconds, 551 snapshots, eight phases; one Explore, one expansion,
+  one page, two comparison preparations, zero writes and zero specimen-capture
+  reads. It finishes with exact chosen B evidence, 102→103 counts, three rows at
+  offset 100, unchanged held pair and no horizontal overflow.
+- All three compact real frames pass design review: native authoring, unverified
+  destination input and prepared groups with a shared scale. Successful raw copies
+  (24 MB) were removed; compact results total about 52 KB. All four targeted
+  regressions pass (2.2 minutes): 295 baseline discovery, both 298 record/log paths,
+  and 299 timeline-template reuse. Eight historical timestamp/ID-only frames were
+  restored. New/changed documentation links and diff checks pass.
+- CA-backed Compose config/build passes. Local image
+  `810be77cf2a3c9983113b143582fe0c705a68fb4c429d4021cd63411fce3f186`
+  is running with existing volumes and separate XTDB retained. All five changed
+  UI/OpenAPI assets match served bytes.
+
+
 ## Time-aware reusable templates and whole-flow checkpoint — 299
 
 [Contract/diagram](docs/TIMELINE_VIEW_TEMPLATES.md) ·

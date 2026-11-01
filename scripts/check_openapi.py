@@ -600,6 +600,45 @@ def check_timeline_composition(spec):
             assert list(check.iter_errors(bad)), 'invalid timeline composition accepted'
 
 
+def check_comparison_template_bindings(spec):
+    """Binding and request presence never silently inherit a specimen capture."""
+    scope = {'kind':'record-query','signal':'spans'}
+    aggregate = {'version':'goo.view/1','scope':scope,'kind':{'name':'bar','version':1},
+                 'display':{'category':'category','value':'count'}}
+    records = {'version':'goo.view/1','scope':scope,'kind':{'name':'record-table','version':1},
+               'display':{'columns':['utc','summary']}}
+    comparison = {'version':'goo.view/1','scope':scope,'kind':{'name':'captured-count-comparison','version':1},
+                  'baselineCapture':'a'*64,'display':{'value':'count','view':'groups'}}
+    source = {'version':1,'title':'Portable comparison','queries':[{'signal':'spans','environment':'prod',
+              'fromMs':1000,'toMs':61000,'limit':100,'offset':0,'groupBy':[{'kind':'column','key':'service'}]}],
+              'composition':{'version':'goo.composition/1','kind':{'name':'stack','version':1},
+                             'children':[{'aggregate':aggregate},{'records':records},{'comparison':comparison,'hidden':True}]},
+              'template':{'version':'goo.template/1','group':'destination','profile':'ordinary','baseline':'destination'}}
+    plain = copy.deepcopy(source);plain['composition']['children'].pop();plain['template'].pop('baseline')
+    request = {'source':source,'query':copy.deepcopy(source['queries'][0]),'baselineCapture':'b'*64}
+    for suffix in ('','Input'):
+        view_check = validator(spec, {'$ref':'#/components/schemas/workbench.ExplorationView'+suffix})
+        req_check = validator(spec, {'$ref':'#/components/schemas/workbench.ViewTemplateExpansionRequestInput'})
+        view_check.validate(source);view_check.validate(plain);req_check.validate(request)
+        plain_request = {'source':plain,'query':request['query']};req_check.validate(plain_request)
+        bad_requests = []
+        for value in (None,'','latest','B'*64):
+            bad=copy.deepcopy(request);bad['baselineCapture']=value;bad_requests.append(bad)
+        bad=copy.deepcopy(request);bad.pop('baselineCapture');bad_requests.append(bad)
+        bad=copy.deepcopy(plain_request);bad['baselineCapture']='b'*64;bad_requests.append(bad)
+        bad=copy.deepcopy(request);bad['template']='otel.http-server-routes';bad_requests.append(bad)
+        for bad in bad_requests:
+            assert not req_check.is_valid(bad), 'invalid comparison-template request presence accepted'
+        bad_views = []
+        for value in (None,'','source'):
+            bad=copy.deepcopy(source);bad['template']['baseline']=value;bad_views.append(bad)
+        bad=copy.deepcopy(source);bad['template'].pop('baseline');bad_views.append(bad)
+        bad=copy.deepcopy(source);bad['template']['Baseline']=bad['template'].pop('baseline');bad_views.append(bad)
+        bad=copy.deepcopy(plain);bad['template']['baseline']='destination';bad_views.append(bad)
+        for bad in bad_views:
+            assert not view_check.is_valid(bad), 'invalid comparison-template binding presence accepted'
+
+
 def check_activity_scope_views(spec):
     """Saved rolling configuration retains exact checked policy and scope."""
     wires = [
@@ -643,6 +682,7 @@ def check(spec):
     check_activity_scope_views(spec)
     check_view_dataset(spec)
     check_timeline_composition(spec)
+    check_comparison_template_bindings(spec)
     check_document_view_card(spec)
     bank = json.loads((ROOT/'testdata/protocol/environment-selectors.json').read_text())
     for path in ('/explore','/tail'):

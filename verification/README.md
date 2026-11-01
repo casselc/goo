@@ -3470,3 +3470,29 @@ prefix. The external actor independently applies the saved template and pages wh
 holding the timeline basis, with one Explore, one expansion, one page and no writes.
 Keep compact ledgers and actual documentation frames, not successful raw campaign
 or duplicate store copies. See the [storyboard](../journeys/299-time-aware-template-storyboard.md).
+
+## Comparison templates with a destination baseline — 300
+
+```sh
+go test -C verification -run '^(TestHegelComparisonTemplateDestinationBinding|TestHegelComparisonTemplateRefusals|TestQuintComparisonTemplateModelSmoke)$' -count=1 -v .
+GOO_COMPARISON_TEMPLATE_BOMBADIL=1 playwright test journeys/300-comparison-template.spec.js
+GOO_COMPARISON_TEMPLATE_LEDGER="$PWD/artifacts/template-300/model-trace.json" go test -C verification -run '^TestQuintComparisonTemplateObservedBrowserLedger$' -count=1 -v .
+```
+
+Use the pinned local Go/Node/Quint toolchains and OTel/ClickHouse lab. Fifty valid
+and fifty refused generated cases execute both actual Go expansion and JS handoff.
+The native journey creates both captures through the UI, authors a comparison,
+changes service/grouping, refuses missing input, explicitly rejects a wrong-root
+capture on Prepare, retires an old metadata reply and applies/verifies the chosen
+destination baseline. Apply performs no capture-content or telemetry read. The
+21-step observed model rejects eight corrupted traces and an unfinished prefix.
+
+The Capture → Explore path checks fresh controls over the exact held aggregate
+with no read, including refusal of reattached old controls. A separate gated real
+Keep checks paused selected/submitted state across Saved → Explore and deliberate
+page replacement, with no intent retry or old-response paint. The independent
+external actor finishes with the chosen baseline, exact 102→103 counts and held
+page-100 comparison, bounded requests, zero writes and zero specimen-capture reads.
+Retain compact summaries and the three actual documentation frames; remove
+successful raw campaign and duplicate store copies. See the
+[storyboard](../journeys/300-comparison-template-storyboard.md).

@@ -1,5 +1,15 @@
 # Known issues and gaps
 
+300 supports reusable captured-count comparisons only with an explicit destination
+baseline binding and expansion input. The specimen capture is never a fallback.
+A chosen reference remains unverified until existing Prepare checks the actual
+stored question and counts against the destination. Apply performs no evidence
+or telemetry read; Run retains its existing acquisition/preparation behavior.
+Numeric/native/status comparison profiles remain outside this cut. Native capture
+return now renews empty-selection controls over held data without reading. A paused
+selected/submitted record workflow retains its DOM and requires explicit replacement
+Run; returning does not replay or undo a Keep intent.
+
 298 shares record selection, Keep, structured Inspect, field actions and explicit
 trace/log context across Table and List. The public List remains passive without
 an application adapter. Selections identify occurrences within one page, not durable
@@ -12,8 +22,8 @@ Both retain the same fields, page limits, query and saved/template owner.
 timeline, with an explicit matching destination interval width. Preview identifies
 required/current intervals and reveals the existing configuration controls; staging
 and Run remain explicit. Hidden timelines obey the same width/measure/budget rules.
-Numeric/native, grouped time-series and captured-comparison template children remain
-outside this profile. No arbitrary kinds, expressions, ACLs or WYSIWYG layout are
+Numeric/native and grouped time-series template children remain outside this
+profile; count comparisons use the explicit 300 baseline contract above. No arbitrary kinds, expressions, ACLs or WYSIWYG layout are
 added. The 296 HTTP/Database client defaults and catalog remain the same owners.
 Ordinary record paging keeps a page-zero configured root; Apply refuses nonzero
 configured roots before they can produce an unsaveable template view.

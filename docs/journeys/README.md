@@ -2764,3 +2764,5 @@ held parent return, fresh focus and refusal of retired controls.
 - [298: shared Table/List record interactions and exact Keep mapping](../../journeys/298-record-interactions-storyboard.md).
 
 - [299: author and reuse a view with fixed timing](../../journeys/299-time-aware-template-storyboard.md).
+
+- [300: reuse comparisons with an explicit destination baseline](../../journeys/300-comparison-template-storyboard.md).

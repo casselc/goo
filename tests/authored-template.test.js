@@ -50,3 +50,47 @@ test('ordinary log templates retain count timelines without acquiring span durat
  s.composition=C.setTimeline(s.composition,Timeline.create(q),q);const target={...q,environment:'other',groupBy:[{kind:'attribute',key:'queue'}],fromMs:2000,toMs:62001};assert.deepEqual(T.authoredRequest(s,target),{source:s,query:target});assert.deepEqual(T.authoredResponse(envelope(s,target),s,target).composition,s.composition);
  C.timeline(s.composition).display.value='duration.mean';assert.throws(()=>T.templateView(s),/query-supported timeline/);
 });
+
+function comparisonSource(){const s=source();delete s.queries[0].spanStatus;s.composition=C.setComparison(s.composition,require('../ui/captured-count-comparison.mjs').create(s.queries[0],'b'.repeat(64)),s.queries[0]);s.template=T.templateFor('otel.db-client',{baseline:true});return s;}
+function comparisonTarget(){const q=query('destination',other);delete q.spanStatus;return {...q,environment:'target-environment',fromMs:65000,toMs:125001};}
+function comparisonEnvelope(s,q,id){const value=envelope(s,q);C.comparison(value.view.composition).baselineCapture=id;return value;}
+test('comparison templates bind only an explicit destination baseline and preserve every other declaration',()=>{
+ const Timeline=require('../ui/timeline-declaration.mjs'),id='d'.repeat(64);
+ for(const view of ['summary','groups'])for(const order of ['change','label'])for(const hidden of [false,true]){
+  const s=comparisonSource(),q=comparisonTarget();s.queries[0].bucketMs=q.bucketMs=10000;
+  const comparison=s.composition.children.find(child=>child.comparison);comparison.hidden=hidden;comparison.comparison.display={value:'count',title:'Population change',view,order};
+  s.composition=C.setTimeline(s.composition,{...Timeline.create(s.queries[0]),display:{value:'duration.p95',title:'Timing',requiresComplete:true}},s.queries[0]);s.composition.children.reverse();
+  const before=structuredClone({s,q}),input=T.authoredRequest(s,q,id),result=T.authoredResponse(comparisonEnvelope(s,q,id),s,q,id),expected=structuredClone(s.composition);C.comparison(expected).baselineCapture=id;
+  assert.deepEqual(input,{source:s,query:q,baselineCapture:id});assert.deepEqual(result.composition,expected);assert.deepEqual(result.queries,[q]);assert.deepEqual(result.template,s.template);assert.deepEqual({s,q},before);
+  C.comparison(result.composition).display.title='Mutation';assert.deepEqual({s,q},before);
+ }
+ // An identical reference is permitted only when chosen explicitly again.
+ const s=comparisonSource(),q=comparisonTarget(),explicit=C.comparison(s.composition).baselineCapture;
+ assert.equal(T.authoredRequest(s,q,explicit).baselineCapture,explicit);assert.throws(()=>T.authoredRequest(s,q),/explicit destination baseline/);
+});
+test('baseline parameters and bindings are conditional, closed and never fall back to the specimen',async()=>{
+ const s=comparisonSource(),q=comparisonTarget(),before=structuredClone({s,q});
+ for(const id of [undefined,null,'','z'.repeat(64),'A'.repeat(64),'b'.repeat(63),{}]){
+  let calls=0;assert.throws(()=>T.authoredRequest(s,q,id),/explicit destination baseline/);
+  await assert.rejects(T.expandAuthored(s,q,{baselineCapture:id,post:async()=>{calls++;throw Error('must not call')}}),/explicit destination baseline/);assert.equal(calls,0);
+ }
+ assert.deepEqual({s,q},before);
+ for(const bad of [{...s.template,baseline:'source'},{...s.template,baseline:null},{...s.template,extra:true}])assert.throws(()=>T.binding(bad));
+ const missing=structuredClone(s);delete missing.template.baseline;assert.throws(()=>T.templateView(missing),/baseline binding/);
+ const ordinary=source();assert.throws(()=>T.authoredRequest(ordinary,query('destination',other),'d'.repeat(64)),/only allowed for comparison/);ordinary.template.baseline='destination';assert.throws(()=>T.templateView(ordinary),/only when a comparison/);
+ const unsupported={...q,spanStatus:true};assert.throws(()=>T.authoredRequest(s,unsupported,'d'.repeat(64)),/Captured count comparison/);
+});
+test('comparison replies permit exactly the chosen reference substitution and fence late baseline requests',async()=>{
+ const s=comparisonSource(),q=comparisonTarget(),id='d'.repeat(64);
+ for(const change of [r=>C.comparison(r.view.composition).baselineCapture='b'.repeat(64),r=>C.comparison(r.view.composition).display.view='groups',r=>C.comparison(r.view.composition).display.title='Changed',r=>r.view.composition.children.at(-1).hidden=true,r=>r.view.composition.children.reverse(),r=>r.view.template.baseline='source',r=>r.view.queries[0].environment='source']){
+  const response=comparisonEnvelope(s,q,id);change(response);assert.throws(()=>T.authoredResponse(response,s,q,id));
+ }
+ let baseline=id,release;const wait=new Promise(resolve=>release=resolve),pending=T.expandAuthored(s,q,{baselineCapture:id,current:()=>baseline===id,post:async input=>{assert.equal(input.baselineCapture,id);await wait;return comparisonEnvelope(s,q,id)}});baseline='e'.repeat(64);release();assert.equal(await pending,null);
+ assert.throws(()=>T.authoredResponse(comparisonEnvelope(s,q,id),s,q,'e'.repeat(64)),/changed the selected presentation/);
+});
+test('explicit comparison edits derive only the destination binding and preserve an enabled timeline profile',()=>{
+ const Timeline=require('../ui/timeline-declaration.mjs'),s=source();delete s.queries[0].spanStatus;s.queries[0].bucketMs=10000;s.composition=C.setTimeline(s.composition,Timeline.create(s.queries[0]),s.queries[0]);
+ const original=structuredClone(s),comparison=require('../ui/captured-count-comparison.mjs').create(s.queries[0],'b'.repeat(64));
+ const withComparison=C.setComparison(s.composition,comparison,s.queries[0]),bound=T.bindingForComposition(s.template,withComparison);assert.deepEqual(bound,{...s.template,baseline:'destination'});assert.doesNotThrow(()=>T.templateView({...s,composition:withComparison,template:bound}));
+ const removed=C.setComparison(withComparison,null,s.queries[0]),ordinary=T.bindingForComposition(bound,removed);assert.deepEqual(ordinary,s.template);assert.doesNotThrow(()=>T.templateView({...s,composition:removed,template:ordinary}));assert.deepEqual(s,original);
+});

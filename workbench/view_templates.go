@@ -27,17 +27,46 @@ type ViewTemplateReference struct {
 // ViewTemplateBinding opts a saved composition into the destination's existing
 // category field. It never supplies a destination query or execution authority.
 type ViewTemplateBinding struct {
-	Version string `json:"version"`
-	Group   string `json:"group"`
-	Profile string `json:"profile"`
+	Version  string `json:"version"`
+	Group    string `json:"group"`
+	Profile  string `json:"profile"`
+	Baseline string `json:"baseline,omitempty"`
+}
+
+func (b *ViewTemplateBinding) UnmarshalJSON(data []byte) error {
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return err
+	}
+	for key := range fields {
+		if key != "version" && key != "group" && key != "profile" && key != "baseline" {
+			return errors.New("unknown template binding field")
+		}
+	}
+	if raw, present := fields["baseline"]; present {
+		var value string
+		if err := json.Unmarshal(raw, &value); err != nil || value != "destination" {
+			return errors.New("declare baseline destination explicitly, or omit the unused binding")
+		}
+	}
+	type wire ViewTemplateBinding
+	var value wire
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&value); err != nil {
+		return err
+	}
+	*b = ViewTemplateBinding(value)
+	return nil
 }
 
 type ViewTemplateExpansionRequest struct {
-	Template string                      `json:"template,omitempty"`
-	Version  int                         `json:"version,omitempty"`
-	Widget   exploration.DashboardWidget `json:"widget,omitzero"`
-	Source   *ExplorationView            `json:"source,omitempty"`
-	Query    *exploration.Query          `json:"query,omitempty"`
+	Template        string                      `json:"template,omitempty"`
+	Version         int                         `json:"version,omitempty"`
+	Widget          exploration.DashboardWidget `json:"widget,omitzero"`
+	Source          *ExplorationView            `json:"source,omitempty"`
+	Query           *exploration.Query          `json:"query,omitempty"`
+	BaselineCapture *string                     `json:"baselineCapture,omitempty"`
 }
 
 // Keep the two request arms exclusive even for explicit empty/null wire fields.
@@ -48,9 +77,16 @@ func (r *ViewTemplateExpansionRequest) UnmarshalJSON(data []byte) error {
 	}
 	_, source := fields["source"]
 	_, query := fields["query"]
+	baseline, hasBaseline := fields["baselineCapture"]
 	if source || query {
-		if !source || !query || len(fields) != 2 || bytes.Equal(bytes.TrimSpace(fields["source"]), []byte("null")) || bytes.Equal(bytes.TrimSpace(fields["query"]), []byte("null")) {
-			return errors.New("choose exactly source and query for authored template expansion")
+		if !source || !query || len(fields) != 2 && !(len(fields) == 3 && hasBaseline) || bytes.Equal(bytes.TrimSpace(fields["source"]), []byte("null")) || bytes.Equal(bytes.TrimSpace(fields["query"]), []byte("null")) {
+			return errors.New("choose source and query with only an optional explicit destination baseline for authored expansion")
+		}
+		if hasBaseline {
+			var id string
+			if err := json.Unmarshal(baseline, &id); err != nil || !ID.MatchString(id) {
+				return errors.New("destination baseline requires an explicit immutable capture ID")
+			}
 		}
 	} else {
 		if len(fields) != 3 {
@@ -167,16 +203,20 @@ func (b ViewTemplateBinding) Validate(q exploration.Query, c ViewComposition) er
 	if err := c.Validate(q); err != nil {
 		return err
 	}
-	if len(c.Children) != 2 && len(c.Children) != 3 {
-		return errors.New("reusable templates require aggregate and records with an optional timeline")
-	}
+	comparison := false
 	for _, child := range c.Children {
 		if child.Comparison != nil {
-			return errors.New("templates cannot retain captured baseline references")
+			comparison = true
 		}
 		if child.Aggregate != nil && child.Aggregate.Display.Query != "" {
 			return errors.New("clear local group Find before enabling a reusable template")
 		}
+	}
+	if comparison && b.Baseline != "destination" {
+		return errors.New("comparison templates require an explicit destination baseline binding")
+	}
+	if !comparison && b.Baseline != "" {
+		return errors.New("omit the baseline binding when the template has no comparison")
 	}
 	return b.validateProfile(q)
 }
@@ -188,7 +228,10 @@ func ExpandViewTemplate(in ViewTemplateExpansionRequest) (ViewTemplateExpansion,
 		if in.Source == nil || in.Query == nil || in.Template != "" || in.Version != 0 || !reflect.DeepEqual(in.Widget, exploration.DashboardWidget{}) {
 			return ViewTemplateExpansion{}, errors.New("choose one complete template expansion arm")
 		}
-		return expandAuthoredTemplate(*in.Source, *in.Query)
+		return expandAuthoredTemplate(*in.Source, *in.Query, in.BaselineCapture)
+	}
+	if in.BaselineCapture != nil {
+		return ViewTemplateExpansion{}, errors.New("shipped templates do not accept a destination baseline")
 	}
 	descriptor, err := shippedTemplate(in.Template)
 	if err != nil {
@@ -231,7 +274,7 @@ func ExpandViewTemplate(in ViewTemplateExpansionRequest) (ViewTemplateExpansion,
 	}
 	return ViewTemplateExpansion{Template: descriptor.ViewTemplateReference, View: detached}, nil
 }
-func expandAuthoredTemplate(source ExplorationView, q exploration.Query) (ViewTemplateExpansion, error) {
+func expandAuthoredTemplate(source ExplorationView, q exploration.Query, baseline *string) (ViewTemplateExpansion, error) {
 	if err := source.Validate(); err != nil {
 		return ViewTemplateExpansion{}, err
 	}
@@ -246,6 +289,28 @@ func expandAuthoredTemplate(source ExplorationView, q exploration.Query) (ViewTe
 	}
 	if originalID != "" && originalID != id {
 		return ViewTemplateExpansion{}, errors.New("template source content ID differs from its configuration")
+	}
+	comparison := false
+	for _, child := range source.Composition.Children {
+		comparison = comparison || child.Comparison != nil
+	}
+	if comparison && (baseline == nil || !ID.MatchString(*baseline)) {
+		return ViewTemplateExpansion{}, errors.New("choose an explicit destination baseline capture for this comparison template")
+	}
+	if !comparison && baseline != nil {
+		return ViewTemplateExpansion{}, errors.New("omit the destination baseline for a template without comparison")
+	}
+	// The source reference is only a specimen. Clone before replacing it; its
+	// capture is never fetched or carried implicitly into the destination.
+	detachedSource, err := cloneTemplateView(source)
+	if err != nil {
+		return ViewTemplateExpansion{}, err
+	}
+	source = detachedSource
+	for _, child := range source.Composition.Children {
+		if child.Comparison != nil {
+			child.Comparison.BaselineCapture = *baseline
+		}
 	}
 	if _, err := exploration.Compile(q); err != nil {
 		return ViewTemplateExpansion{}, err

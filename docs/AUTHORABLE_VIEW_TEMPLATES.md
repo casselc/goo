@@ -12,7 +12,8 @@ saved-view catalog; they do not create another dashboard or package store.
 ```
 
 This optional declaration belongs to an ordinary single-query aggregate-and-records
-view, optionally retaining its fixed timeline. The title names the template, and its composition owns presentation. The
+view, optionally retaining its fixed timeline and
+[comparison with an explicit destination baseline](COMPARISON_VIEW_TEMPLATES.md). The title names the template, and its composition owns presentation. The
 saved query is a validation specimen, never a default service, environment, time
 window or predicate for another investigation.
 
@@ -50,8 +51,10 @@ The original 296 template supports aggregate and records; 299 adds the existing
 fixed timeline with an explicitly matching destination interval width and supported
 count/duration measure. Preview names both required and current widths; correction
 uses the existing interval controls and explicit Run. Hidden timelines retain the
-same compatibility requirements. Numeric/histogram, reported-edge and grouped-time
-profiles, capture comparisons, tails and nonempty local group Find are refused. Nothing is silently removed. A duration
+same compatibility requirements. 300 adds the existing count-comparison child
+with an explicit destination-baseline binding/input; its stored evidence stays
+unverified until existing preparation checks it. Numeric/histogram, reported-edge
+and grouped-time profiles, tails and nonempty local group Find are refused. Nothing is silently removed. A duration
 display also requires that measure in the destination question. Shared kinds retain
 their own units, support and unknown-data semantics.
 
@@ -69,6 +72,11 @@ The existing endpoint accepts one exclusive request arm:
 POST /api/view-templates/expand
 { "source": <authored ExplorationView>, "query": <explicit target Query> }
 ```
+
+Comparison templates additionally require an explicit `baselineCapture` request
+input and `template.baseline: "destination"`; noncomparison and shipped arms forbid
+that input. Only the chosen baseline reference is substituted, with no capture
+fetch or source fallback. See [the binding contract](COMPARISON_VIEW_TEMPLATES.md).
 
 The shipped arm remains `{template, version, widget}`. Expansion compiles the
 question, checks source/template and destination compatibility, and returns detached

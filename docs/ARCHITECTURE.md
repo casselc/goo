@@ -1,5 +1,12 @@
 # Architecture
 
+[Comparison templates](COMPARISON_VIEW_TEMPLATES.md) explicitly bind a destination
+baseline reference. Pure expansion validates the specimen content ID, clones its
+composition and substitutes exactly that reference. The destination retains its
+query and all other presentation. A reference gains no evidence authority: the
+existing preparation owner checks stored-capture compatibility, and preview
+ownership includes the chosen ID so late responses cannot restore an old input.
+
 [Time-aware reusable templates](TIMELINE_VIEW_TEMPLATES.md) preserve the existing
 fixed timeline declaration with aggregate and records. Go and browser validation
 compare the source/destination interval widths before substituting the validation
