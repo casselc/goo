@@ -4,8 +4,12 @@
 > selected and baseline intent through the existing comparison role, Save and
 > portable/CLI flow. Held-parent data stays temporary. Fixed-pair presentation
 > Apply and category templates refuse scope copying; shared context stays checked.
-> Next 309: explicitly rebase both operands to one fresh comparison window,
-> staging the changed pair for Run without a YAML roundtrip.
+> Delivered 309: [paired comparison-window authoring](PAIRED_COMPARISON_WINDOWS.md)
+> stages both operands for Run without a YAML roundtrip. The existing fresh-window
+> action, UTC editor and timeline gestures share the same checked transition.
+> Proposed next 310: one declarative categorical facet in contributed views, using
+> the existing application-owned predicate/selection and explicit Run workflow;
+> review its role/input contract before adding another comparison profile.
 
 
 

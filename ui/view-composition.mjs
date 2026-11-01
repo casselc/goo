@@ -70,3 +70,11 @@ export function addBreakdown(value,q,{field,kind='bar',replaceGrouping=false}={}
  const declaration=Aggregate.create(query);declaration.kind.name=kind;
  return {query,composition:validate({...current,children:[{aggregate:Aggregate.validate(declaration,query)},...current.children]},query)};
 }
+
+// Move both fixed count operands together; the host stages acquisition explicitly.
+export function rebaseFixedComparison(value,q,range){
+ const current=validate(value,q),pair=comparison(current);if(!CapturedCount.queryVariant(pair))throw Error('Choose a fixed-query count comparison.');
+ const {fromMs,toMs}=range||{};if(![fromMs,toMs].every(Number.isSafeInteger)||fromMs<0||toMs<=fromMs||toMs>4102444800000||toMs-fromMs>7200000)throw Error('Choose a valid UTC comparison window of at most 120 minutes, before 2100.');
+ const rebase=query=>{const next={...structuredClone(query),fromMs,toMs,offset:0};if(next.bucketMs&&Math.ceil((toMs-fromMs)/next.bucketMs)>240)throw Error('Choose a comparison window with at most 240 existing time buckets.');return next},query=rebase(q),next={...pair,baselineQuery:rebase(pair.baselineQuery)};
+ return {query,composition:validate({...current,children:current.children.map(child=>child.comparison?{...child,comparison:next}:child)},query)};
+}

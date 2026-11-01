@@ -1,6 +1,6 @@
 # Save a fixed cohort comparison — 308
 
-> Implementation in progress. Executed checks will be recorded in
+> Delivered in 308. Executed checks are recorded in
 > [VALIDATION.md](../VALIDATION.md).
 
 A useful selected-versus-rest investigation can become a view that you reopen,
@@ -57,12 +57,12 @@ are not a proof of a complement, causal relationship or atomic partition. Count
 quality, empty operands, changed reads and unknown upstream coverage retain the
 existing comparison model semantics.
 
-Root-only window, grouping, profile and interval changes are disabled for fixed
-pairs because they would leave the other operand inconsistent. Edit both questions
-explicitly in the exported YAML and validate/import the new definition, or remove
-the comparison before changing that shared context. Value predicates remain
-independently editable under the checked fixed context. A shared comparison-window
-control is the next usability step; the app does not silently rebase one operand.
+[Shared comparison-window controls](PAIRED_COMPARISON_WINDOWS.md) stage both
+questions together for a new explicit or fresh UTC window, preserving independent
+predicates and presentation. Run remains explicit. Root-only grouping, profile and
+interval changes stay disabled for fixed pairs; edit both questions in YAML and
+validate/import, or remove the comparison before changing that shared context.
+Value predicates remain independently editable under the checked fixed context.
 
 ## Portable configuration and safe reuse
 

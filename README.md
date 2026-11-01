@@ -27,7 +27,9 @@ beside the default table, with
 [Add a breakdown](docs/ADD_BREAKDOWN.md) to grow a records view into a chart, then
 [compare a selected cohort](docs/AUTHORED_COHORTS.md) with its held parent or rest.
 [Include a fixed comparison in the view](docs/SAVED_COHORT_QUERIES.md) to save,
-export and rerun both questions.
+export and rerun both questions. Shared
+[comparison-window controls](docs/PAIRED_COMPARISON_WINDOWS.md) stage both fixed
+questions together before explicit Run.
 [Portable YAML definitions](docs/PORTABLE_VIEWS.md) let teams export and import
 these views through the same saved-view catalog.
 [CLI validation and import](docs/VIEW_ARTIFACT_CLI.md) connect repository checks

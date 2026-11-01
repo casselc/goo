@@ -2,9 +2,9 @@
 
 308 saves fixed query comparisons through the existing count role and portable
 flow. Held-parent observations stay temporary. Fixed pairs require matching
-window/environment/group/profile and refuse template/presentation reuse; root-only
-context edits are disabled, so edit both questions in YAML or remove the pair.
-Shared window rebasing is next. See [saved cohort questions](SAVED_COHORT_QUERIES.md).
+window/environment/group/profile and refuse template/presentation reuse. Shared
+window rebasing in 309 stages both operands for explicit Run. Grouping/profile
+changes still require editing both questions in YAML or removing the pair. See [saved cohort questions](SAVED_COHORT_QUERIES.md).
 
 307 enables ordinary authored count cohorts versus held parent or independently
 read rest. A genuine full-group witness is required; raw pages and changed reads

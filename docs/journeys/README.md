@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Journey309](309-paired-window.md) stages a new shared UTC window for both fixed
+comparison questions, retires the old answer without reading, then explicitly
+runs and preserves the rebased view. The optional Bombadil lane exercises the
+same edit/discard/stage/fresh/Run controls.
+
 [Journey308](308-saved-fixed-cohorts.md) includes a selected/rest comparison in a
 saved view, reopens both fixed queries with fresh telemetry, and exports/imports
 the portable definition through the CLI. Screenshots show distinct UTC read clocks.

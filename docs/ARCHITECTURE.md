@@ -1691,3 +1691,9 @@ Details remain passive. The original 297 cut kept record actions in Table;
 Current record owners fence replaced nodes even if reattached after a kind change. Context
 rendering passes bounded reported-ID projections, avoiding repeated rich-page
 copies. See [the contract](RECORD_LIST.md).
+
+
+The [paired-window transition](PAIRED_COMPARISON_WINDOWS.md) is a pure operation
+on the existing fixed-query composition. It validates both questions and unchanged
+presentation before the application stages them, retires prior observations and
+waits for Run. It adds no endpoint, source owner or component lifecycle effect.

@@ -1741,3 +1741,10 @@ component-owned query is introduced.
 comparison display with an independently read baseline query. Shared components
 still receive supplied data only. Captured and fixed-query declarations share a
 pure context validator; the reviewed passive graph now contains 49 modules.
+
+
+309 adds a pure composition transition for paired fixed-window authoring. It is
+application configuration, not a display element: the host stages both questions,
+retires previous result authority and waits for explicit Run. Passive charts,
+comparison and records consume the same admitted results without acquiring data.
+See [paired comparison windows](PAIRED_COMPARISON_WINDOWS.md).

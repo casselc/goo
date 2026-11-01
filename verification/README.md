@@ -1,5 +1,21 @@
 # Semantic properties and model conformance
 
+## Paired fixed-query windows (309)
+
+The [native storyboard](../docs/journeys/309-paired-window.md) moves both fixed
+questions while retaining independent selectors and presentation. Fifty actual
+JavaScript transitions pass through Go validation/YAML and back to strict browser
+admission. The fourteen-step observed model checks staging/read/write conservation,
+rejects seven mutants and an unfinished prefix, and does not prove private source
+authority. The optional bounded Bombadil driver covers local edit/discard/stage,
+fresh-window staging and explicit Run through the same controls.
+
+```sh
+go test -C verification -run '^(TestHegelPairedWindowJSOutputAdmittedByGo|TestQuintPairedWindowModelSmoke)$' -count=1 .
+GOO_PAIRED_WINDOW_BOMBADIL=1 ./node_modules/.bin/playwright test journeys/309-paired-window.spec.js
+```
+
+
 ## Saved fixed-query cohorts (308)
 
 The [journey and storyboard](../docs/journeys/308-saved-fixed-cohorts.md) check

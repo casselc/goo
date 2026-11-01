@@ -1,5 +1,37 @@
 # Validation record
 
+## Paired fixed comparison windows — 309
+
+[Contract/diagram](docs/PAIRED_COMPARISON_WINDOWS.md) ·
+[storyboard/screenshots](docs/journeys/309-paired-window.md) ·
+[architecture](docs/reviews/PAIRED_WINDOW_ARCHITECTURE_309.md) and
+[design](docs/reviews/PAIRED_WINDOW_DESIGN_309.md) reviews.
+
+- Frontend suite passes: 975 tests, zero failures/skips (31.69 seconds).
+  Pure transition tests preserve both independent selectors, typed environment,
+  limits and presentation, and refuse malformed bounds, captured-only modes and
+  bucket overflow without changing input. Passive display graph remains 49.
+- Fifty actual JavaScript rebases pass through Go validation and canonical YAML
+  back to strict browser admission/isolation (9.03 seconds). Quint model smoke
+  passes (12.96 seconds). Existing Go admission/save/codec and one-sided, hidden
+  invalid and timeline-overflow controls pass; no backend/API/schema changes.
+- Rebuilt packaged Go lab runs; both changed UI module assets match source bytes.
+  No new endpoint, source executor, composition role or persistence format.
+- Final native journey passes (1.2 minutes): invalid edits block Run/Save, Discard retains the held
+  pair, Stage clears observations with zero I/O, and genuinely reattached retired
+  forms refuse. Save/reopen/export preserve both new bounds and distinct scope;
+  actual OTel records outside the old interval change selected 3/baseline 104 to
+  selected 5/baseline 105. All three actual frames pass design review.
+- The fourteen-step observed Quint replay passes (13.94 seconds), rejecting seven
+  mutants and an unfinished prefix. Browser budgets: ten full reads, one narrow
+  page, three comparisons and three saves. This checks lifecycle effects, not
+  private authority. The 35-second Bombadil campaign passes: 442 snapshots across
+  eight phases, four reads and two comparisons, no viewport overflow. It covers
+  draft/discard/stage/fresh with no reads and explicit paired Run, using a restored
+  actual UI-authored store. Its result probe recognizes Summary and Groups.
+  Final journey timestamp formatting is checked against Chromium at fractional
+  trailing-zero, whole-second and zero-second boundaries.
+
 ## Saved fixed-query cohort comparisons — 308
 
 [Contract/diagram](docs/SAVED_COHORT_QUERIES.md) ·
