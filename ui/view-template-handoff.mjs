@@ -20,7 +20,6 @@ export function binding(value){closed(value,['version','group','profile','baseli
 export function intervalLabel(width){if(!Number.isInteger(width)||width<=0)return 'Not configured';const unit=width<60000?'second':'minute',value=width<60000?width/1000:width/60000;return value+' '+unit+(value===1?'':'s');}
 export function requirements(profile){if(profile==='otel.db-client')return 'Exact service, Client kind and nonempty current db.system.name.';if(profile==='otel.http-server')return 'Exact service, Server kind and nonempty current http.request.method.';return 'Same signal, one ordinary grouping and requested measure support.';}
 export function templateView(value){
- if(Composition.facet(value.composition))throw Error('Facets cannot bind authored templates yet. Use an ordinary saved view.');
  closed(value,['version','id','title','queries','composition','template']);if(value.version!==1||value.id!==undefined&&(typeof value.id!=='string'||!/^[a-f0-9]{64}$/.test(value.id)))throw Error('Choose a checked view/template revision.');
  if(!object(value)||!value.template||!value.composition||value.queries?.length!==1||['layout','columns','fieldColumns','displays','breakdowns','tail'].some(key=>Object.hasOwn(value,key)))throw Error('Reusable templates require one aggregate-and-records composition.');
  binding(value.template);title(value.title);const q=value.queries[0];validateRecordQuestion(q);Composition.validate(value.composition,q);

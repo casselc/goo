@@ -41,10 +41,15 @@ profiles remain outside the facet contract. Existing summary/status/time-bucket
 projections do not change the counted-record population: the existing counted-
 values recipe derives its query from the applied scope and declared field.
 
-Facet plus comparison and category-template definitions are refused, even when
-hidden. At least one data child must remain visible; a facet alone is a control,
-not a data result. Ordinary presentation reuse retains the declared field and
-checks it against the destination; it copies no source question or observations.
+Facet plus comparison remains refused, even when hidden. At least one data child
+must remain visible; a facet alone is a control, not a data result. Ordinary
+presentation reuse retains the declared field and checks it against the destination;
+it copies no source question or observations. Since 311, an aggregate-and-records
+category template may retain the same literal facet field while rebinding its
+category. The facet is not a category parameter and is not rewritten. A raw
+records-plus-facet view without an aggregate still cannot become a category
+template. The [HTTP service view](HTTP_SERVICE_VIEW_TEMPLATE.md) is the first
+shipped default using this combination.
 
 ## Read, stage, then apply
 

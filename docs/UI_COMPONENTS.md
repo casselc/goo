@@ -1774,3 +1774,10 @@ new completeness witness. Valid JSON data does not grant source/action authority
 The host still checks the actual question, declared field and active generation
 through the existing counted-values and selection owners. Synthetic SSR and
 detached-property examples are in the component reference at `/ui-components`.
+
+
+311 reuses the same categorical facet in HTTP service customization and ordinary
+category templates. The category can bind to the destination grouping; the facet
+field remains literal, with its supplied data and scope lease owned by the existing
+application adapter. No new element, module or acquisition owner is added; the
+passive graph remains 51. See [HTTP service views](HTTP_SERVICE_VIEW_TEMPLATE.md).

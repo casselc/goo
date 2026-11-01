@@ -38,6 +38,27 @@
     },
     "children": [
       {
+        "facet": {
+          "version": "goo.view/1",
+          "scope": {
+            "kind": "record-query",
+            "signal": "spans"
+          },
+          "kind": {
+            "name": "categorical-facet",
+            "version": 1
+          },
+          "field": {
+            "kind": "attribute",
+            "key": "http.request.method"
+          },
+          "display": {
+            "basis": "applied",
+            "title": "HTTP methods"
+          }
+        }
+      },
+      {
         "aggregate": {
           "version": "goo.view/1",
           "scope": {

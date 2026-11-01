@@ -4,9 +4,16 @@
 for ordinary single-query views. Counts use the currently applied scope, including
 existing filters; self-excluding counts and persisted clause identity remain
 outside this cut. Clear affects only facet-origin pending choices. Numeric/
-histogram, reported-edge and grouped-time profiles, comparison combinations and
-category templates refuse facets. Team-view authoring, Save and portable transport
-reuse the existing owners.
+histogram, reported-edge and grouped-time profiles and comparison combinations
+refuse facets. 311 enables validated category templates with literal facet fields;
+raw records-plus-facet views still lack the aggregate needed for a template.
+The [HTTP service view](HTTP_SERVICE_VIEW_TEMPLATE.md) adds a method facet to
+ordinary route views. Specialized numeric Customize retains its existing question
+and composition without adding an incompatible default control. Team-view
+Save/portable transport and explicit source reads reuse the existing owners.
+Template titles remain literal when the destination category changes; read the
+actual qualified grouping. Context-aware default titles are an input to the
+proposed 312 whole-product checkpoint.
 
 308 saves fixed query comparisons through the existing count role and portable
 flow. Held-parent observations stay temporary. Fixed pairs require matching

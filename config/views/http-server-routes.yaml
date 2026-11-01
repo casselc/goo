@@ -1,0 +1,87 @@
+version: goo.view-artifact/1
+namespace: platform
+name: http-server-routes
+revision: v1
+view:
+    version: 1
+    title: HTTP server routes
+    queries:
+        - spanStatus: true
+          summary: span-duration
+          signal: spans
+          environment: prod
+          fromMs: 1767225600000
+          toMs: 1767225900000
+          where:
+            all:
+                - field:
+                    kind: column
+                    key: service
+                  op: eq
+                  value: api
+                - field:
+                    kind: column
+                    key: kind
+                  op: eq
+                  value: Server
+                - field:
+                    kind: attribute
+                    key: http.request.method
+                  op: ne
+          groupBy:
+            - kind: attribute
+              key: http.route
+          limit: 100
+          offset: 0
+    composition:
+        version: goo.composition/1
+        kind:
+            name: stack
+            version: 1
+        children:
+            - facet:
+                version: goo.view/1
+                scope:
+                    kind: record-query
+                    signal: spans
+                kind:
+                    name: categorical-facet
+                    version: 1
+                field:
+                    kind: attribute
+                    key: http.request.method
+                display:
+                    basis: applied
+                    title: HTTP methods
+            - aggregate:
+                version: goo.view/1
+                scope:
+                    kind: record-query
+                    signal: spans
+                kind:
+                    name: bar
+                    version: 1
+                display:
+                    category: category
+                    value: count
+                    title: HTTP server routes
+                    scale: population
+                    order: value-desc
+            - records:
+                version: goo.view/1
+                scope:
+                    kind: record-query
+                    signal: spans
+                kind:
+                    name: record-table
+                    version: 1
+                display:
+                    columns:
+                        - utc
+                        - service
+                        - summary
+                        - context
+    template:
+        version: goo.template/1
+        group: destination
+        profile: otel.http-server

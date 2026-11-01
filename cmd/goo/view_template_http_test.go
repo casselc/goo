@@ -53,6 +53,16 @@ func TestViewTemplateExpansionHTTPIsConfigurationOnly(t *testing.T) {
 	if e := json.Unmarshal(w.Body.Bytes(), &out); e != nil || out.View.ID != "" || out.View.Validate() != nil {
 		t.Fatal("invalid staged view", e, w.Body.String())
 	}
+	if out.View.Template == nil || len(out.View.Composition.Children) != 3 || out.View.Composition.Children[0].Facet == nil || out.View.Composition.Children[0].Facet.Field != (exploration.Field{Kind: "attribute", Key: "http.request.method"}) {
+		t.Fatal("HTTP template omitted complementary method facet")
+	}
+	if file := os.Getenv("GOO_HTTP_FACET_TEMPLATE_OBSERVATIONS"); file != "" {
+		values := []apiObservation{{Method: "POST", Path: "/view-templates/expand", Status: 200, Request: raw, Response: append(json.RawMessage(nil), w.Body.Bytes()...)}}
+		observed, _ := json.MarshalIndent(values, "", "  ")
+		if err := os.WriteFile(file, append(observed, '\n'), 0600); err != nil {
+			t.Fatal(err)
+		}
+	}
 	if reads != 0 {
 		t.Fatal("template expansion read telemetry", reads)
 	}
@@ -111,6 +121,9 @@ func TestAuthoredTemplateExpansionHTTPRejectsMixedArmsAndNeverReads(t *testing.T
 	if json.Unmarshal(w.Body.Bytes(), &out) != nil || out.View.Template == nil || out.View.Queries[0].GroupBy[0] != target.GroupBy[0] {
 		t.Fatal(w.Body.String())
 	}
+	if out.View.Composition.Children[0].Facet == nil || out.View.Composition.Children[0].Facet.Field != (exploration.Field{Kind: "attribute", Key: "http.request.method"}) || out.View.Composition.Children[0].Facet.Display.Basis != "applied" {
+		t.Fatal("destination expansion rebound its fixed method facet")
+	}
 	// A time-aware definition expands through the same source-free HTTP arm.
 	source.Queries[0].BucketMS = 10000
 	source.Composition.Children = append(source.Composition.Children, workbench.ViewCompositionChild{Timeline: &workbench.TimelineViewDeclaration{
@@ -135,7 +148,7 @@ func TestAuthoredTemplateExpansionHTTPRejectsMixedArmsAndNeverReads(t *testing.T
 		if got.Code != 200 || json.Unmarshal(got.Body.Bytes(), &out) != nil {
 			t.Fatal(got.Code, got.Body.String())
 		}
-		timeline := out.View.Composition.Children[2]
+		timeline := out.View.Composition.Children[len(out.View.Composition.Children)-1]
 		if !timeline.Hidden || timeline.Timeline.Display.Value != "duration.p95" || !timeline.Timeline.Display.RequiresComplete || out.View.Queries[0].BucketMS != target.BucketMS || out.View.Queries[0].Environment != target.Environment {
 			t.Fatal("temporal configuration changed", got.Body.String())
 		}

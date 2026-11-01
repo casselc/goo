@@ -95,3 +95,9 @@ See the [architecture review](reviews/PORTABLE_VIEWS_ARCHITECTURE_305.md),
 as qualified field/presentation intent. Loaded values, counts, read receipts and
 pending choices are absent. Opening an imported view stages configuration; Run
 and Read values remain separate explicit actions.
+
+
+Reusable category templates may include a literal facet field beside their chart
+and records. Export/import retain the template profile and exact facet declaration;
+only the explicit category binding varies on destination expansion. The checked
+[HTTP service view](../config/views/http-server-routes.yaml) demonstrates this path.

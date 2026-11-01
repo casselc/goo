@@ -42823,30 +42823,6 @@
           {
             "if": {
               "required": [
-                "template"
-              ]
-            },
-            "then": {
-              "properties": {
-                "composition": {
-                  "properties": {
-                    "children": {
-                      "not": {
-                        "contains": {
-                          "required": [
-                            "facet"
-                          ]
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "required": [
                 "composition"
               ],
               "properties": {
@@ -43365,30 +43341,6 @@
           {
             "if": {
               "required": [
-                "template"
-              ]
-            },
-            "then": {
-              "properties": {
-                "composition": {
-                  "properties": {
-                    "children": {
-                      "not": {
-                        "contains": {
-                          "required": [
-                            "facet"
-                          ]
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "required": [
                 "composition"
               ],
               "properties": {
@@ -43660,7 +43612,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.FacetViewDeclaration",
         "additionalProperties": false,
-        "description": "One explicit categorical field over the applied root scope. Existing counted-values projection derives counts on explicit Load; no values, selections, requests or runtime state are stored. Numeric, histogram, reported-edge and grouped-time profiles, comparisons and templates are outside this first cut."
+        "description": "One explicit categorical field over the applied root scope. Existing counted-values projection derives counts on explicit Load; no values, selections, requests or runtime state are stored. Numeric, histogram, reported-edge and grouped-time profiles and comparison compositions are outside this first cut. Ordinary category templates retain the explicit facet field rather than rebinding it."
       },
       "workbench.FacetViewDeclarationInput": {
         "additionalProperties": false,
@@ -43788,7 +43740,7 @@
           "field",
           "display"
         ],
-        "description": "One explicit categorical field over the applied root scope. Existing counted-values projection derives counts on explicit Load; no values, selections, requests or runtime state are stored. Numeric, histogram, reported-edge and grouped-time profiles, comparisons and templates are outside this first cut."
+        "description": "One explicit categorical field over the applied root scope. Existing counted-values projection derives counts on explicit Load; no values, selections, requests or runtime state are stored. Numeric, histogram, reported-edge and grouped-time profiles and comparison compositions are outside this first cut. Ordinary category templates retain the explicit facet field rather than rebinding it."
       },
       "workbench.FacetViewDisplay": {
         "properties": {

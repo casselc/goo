@@ -1704,3 +1704,11 @@ string field and applied-scope basis beside records/charts. The application uses
 the existing counted-values query/result adapter and selection tray; the passive
 `goo-categorical-facet` emits intents without acquiring data. Saved query predicates
 remain the only applied scope. Counts, selections and read state are runtime-only.
+
+
+311 adopts that control in the existing HTTP service template. Ordinary category
+expansion retains a literal facet while rebinding only the existing category input.
+The exact destination question and existing count-value owner remain authoritative;
+no new field remapping, query executor or source guarantee is introduced. Specialized
+shipped HTTP numeric questions retain their original composition without an
+incompatible optional facet. See [HTTP service views](HTTP_SERVICE_VIEW_TEMPLATE.md).

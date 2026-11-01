@@ -1,7 +1,8 @@
 # Author reusable views
 
 Use the existing view composition as the canvas: choose bars or a table, its
-measure, record columns and an optional [fixed timeline](TIMELINE_VIEW_TEMPLATES.md).
+measure, record columns, an optional [fixed timeline](TIMELINE_VIEW_TEMPLATES.md),
+and a [declared facet](DECLARATIVE_FACETS.md).
 The records child can use Table or
 [List](RECORD_LIST.md) over the same supplied page. Under Preserve, name the view, enable **Reusable template**, choose
 its **Data profile**, and Save. Templates use the same immutable
@@ -12,7 +13,7 @@ saved-view catalog; they do not create another dashboard or package store.
 ```
 
 This optional declaration belongs to an ordinary single-query aggregate-and-records
-view, optionally retaining its fixed timeline and
+view, optionally retaining its fixed timeline and either a literal facet or a
 [comparison with an explicit destination baseline](COMPARISON_VIEW_TEMPLATES.md). The title names the template, and its composition owns presentation. The
 saved query is a validation specimen, never a default service, environment, time
 window or predicate for another investigation.
@@ -28,6 +29,10 @@ explicit independent read, and Save creates a new immutable configuration.
 The category binding is explicit: it uses the destination's existing qualified
 single grouping, even when that field differs from the specimen's field. It never
 adds a grouping, weakens a predicate, computes a new clock or borrows source rows.
+A facet has a different binding: its qualified field, title, applied-scope basis
+and visibility stay literal. Destination validation checks that field but never
+rewrites it to the category. Loaded values and selections are not copied.
+
 Delivery offset starts at zero on expansion. Applying in the UI requires a page-zero
 configured root; ordinary record-page inspection keeps that root and remains
 supported. Ordinary saved-composition reuse
@@ -53,7 +58,10 @@ count/duration measure. Preview names both required and current widths; correcti
 uses the existing interval controls and explicit Run. Hidden timelines retain the
 same compatibility requirements. 300 adds the existing count-comparison child
 with an explicit destination-baseline binding/input; its stored evidence stays
-unverified until existing preparation checks it. Numeric/histogram, reported-edge
+unverified until existing preparation checks it. 311 adds literal facets beside
+aggregate and records, including in the shipped HTTP methods/route view. Facet and
+comparison children remain mutually exclusive; hidden controls retain all
+validation requirements. Numeric/histogram, reported-edge
 and grouped-time profiles, tails and nonempty local group Find are refused. Nothing is silently removed. A duration
 display also requires that measure in the destination question. Shared kinds retain
 their own units, support and unknown-data semantics.

@@ -209,9 +209,6 @@ func (b ViewTemplateBinding) Validate(q exploration.Query, c ViewComposition) er
 	}
 	comparison := false
 	for _, child := range c.Children {
-		if child.Facet != nil {
-			return errors.New("facets cannot become reusable templates")
-		}
 		if child.Comparison != nil {
 			if child.Comparison.BaselineQuery != nil {
 				return errors.New("fixed query comparisons cannot become reusable templates")
@@ -263,6 +260,18 @@ func ExpandViewTemplate(in ViewTemplateExpansionRequest) (ViewTemplateExpansion,
 	}
 	if err = descriptor.validateProfile(q); err != nil {
 		return ViewTemplateExpansion{}, err
+	}
+	// Optional shipped controls must not remove useful existing measure
+	// projections. Specialized widget questions retain their complete query and
+	// previous data-only composition; authored facet templates remain strict.
+	if q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.GroupTimeSeries {
+		children := make([]ViewCompositionChild, 0, len(descriptor.Composition.Children))
+		for _, child := range descriptor.Composition.Children {
+			if child.Facet == nil {
+				children = append(children, child)
+			}
+		}
+		descriptor.Composition.Children = children
 	}
 	profile := "otel.http-server"
 	if descriptor.Family == "db-client" {

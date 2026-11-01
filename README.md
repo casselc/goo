@@ -14,7 +14,7 @@ Optional [investigation findings](docs/PRESERVE_ATTACHMENT.md) stay behind Add t
 
 [Customize one signal](docs/FOCUSED_VIEWS.md) from an applied population while keeping
 its fixed scope and paused parent. Build reusable views with [saved displays](docs/SAVED_DISPLAY_DECLARATIONS.md),
-[service defaults](docs/HTTP_SERVICE_VIEW_TEMPLATE.md),
+[HTTP service views](docs/HTTP_SERVICE_VIEW_TEMPLATE.md),
 [authorable templates](docs/AUTHORABLE_VIEW_TEMPLATES.md), including
 [reusable timelines](docs/TIMELINE_VIEW_TEMPLATES.md) and
 [comparisons with a chosen baseline](docs/COMPARISON_VIEW_TEMPLATES.md), and

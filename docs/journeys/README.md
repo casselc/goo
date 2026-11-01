@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Journey311](311-http-method-facet.md) follows actual Discovery → HTTP Customize →
+method filtering → Save/reopen → typed destination reuse, with a literal method
+facet beside the route chart and records. It checks owner retirement and separates
+configuration changes from explicit population/value reads.
+
 [Journey310](310-declarative-facet.md) contributes a facet beside records, explicitly
 reads whole-scope values, stages missing/empty choices, preserves a narrowed child
 and reuses presentation against another checked scope. The separate

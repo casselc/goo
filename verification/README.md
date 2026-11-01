@@ -1,5 +1,22 @@
 # Semantic properties and model conformance
 
+## HTTP method facets and category templates (311)
+
+The [native storyboard](../docs/journeys/311-http-method-facet.md) follows actual
+OTel discovery/customization, preserves exact questions and tests typed destination
+reuse with a different category. Fifty Go↔JS/YAML cases check literal field binding,
+profile/refusal boundaries and numeric query preservation. The eighteen-step
+observed Quint replay rejects seven mutants and an unfinished prefix. It checks
+workflow effects, not private source authority. A separate bounded Bombadil lane
+preserves the HTTP marker, literal method field and duration measure through local
+choices and explicit child reads.
+
+```sh
+go test -C verification -run '^(TestHegelHTTPMethodFacetTemplateScopeAndLiteralBinding|TestQuintHTTPMethodFacetModelSmoke)$' -count=1 .
+./node_modules/.bin/playwright test journeys/311-http-method-facet.spec.js
+```
+
+
 ## Declarative categorical facets (310)
 
 The [native storyboard](../docs/journeys/310-declarative-facet.md) checks full-scope

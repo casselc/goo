@@ -94,3 +94,28 @@ test('explicit comparison edits derive only the destination binding and preserve
  const withComparison=C.setComparison(s.composition,comparison,s.queries[0]),bound=T.bindingForComposition(s.template,withComparison);assert.deepEqual(bound,{...s.template,baseline:'destination'});assert.doesNotThrow(()=>T.templateView({...s,composition:withComparison,template:bound}));
  const removed=C.setComparison(withComparison,null,s.queries[0]),ordinary=T.bindingForComposition(bound,removed);assert.deepEqual(ordinary,s.template);assert.doesNotThrow(()=>T.templateView({...s,composition:removed,template:ordinary}));assert.deepEqual(s,original);
 });
+
+test('category templates retain literal facet identity across existing ordinary and OTel bindings',()=>{
+ const Facet=require('../ui/facet-declaration.mjs');
+ for(const profile of ['ordinary','otel.db-client','otel.http-server'])for(const hidden of [false,true]){
+  const s=source();s.template=T.templateFor(profile);if(profile==='otel.http-server'){s.queries[0].groupBy=[{kind:'attribute',key:'http.route'}];s.queries[0].where.all[1].value='Server';s.queries[0].where.all[2].field.key='http.request.method';}
+  const literal={kind:'attribute',key:profile==='otel.http-server'?'http.request.method':'team.routing-policy'},facet=Facet.create(s.queries[0],literal,'Team facet');s.composition=C.setFacet(s.composition,facet,s.queries[0]);s.composition=C.setHidden(s.composition,'facet',hidden,s.queries[0]);
+  const q={...structuredClone(s.queries[0]),environment:'',environmentSelector:{version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'named',value:'other'}},fromMs:61000,toMs:121000,groupBy:[{kind:'resource',key:'service.namespace'}]};q.where.all[0].value='target';const before=structuredClone({s,q});
+  assert.deepEqual(T.templateView(s),s);assert.deepEqual(T.authoredRequest(s,q),{source:s,query:q});const result=T.authoredResponse(envelope(s,q),s,q);assert.deepEqual(C.facet(result.composition),facet);assert.equal(result.composition.children.find(c=>c.facet).hidden,hidden);assert.deepEqual(result.template,s.template);assert.deepEqual(result.queries,[q]);assert.deepEqual({s,q},before);
+  const binding=T.bindingForComposition(s.template,s.composition);assert.deepEqual(binding,s.template);
+ }
+});
+test('facet template expansion refuses literal presentation substitution and unsupported destination profiles',()=>{
+ const Facet=require('../ui/facet-declaration.mjs'),s=source();s.composition=C.setFacet(s.composition,Facet.create(s.queries[0],{kind:'attribute',key:'http.request.method'},'Literal method'),s.queries[0]);const q=query('target',other);
+ for(const change of [f=>f.field.key='http.method',f=>f.field.kind='resource',f=>f.display.title='Other title',f=>f.display.basis='page']){const response=envelope(s,q);change(C.facet(response.view.composition));assert.throws(()=>T.authoredResponse(response,s,q));}
+ const numeric={field:{kind:'attribute',key:'weight'},type:'int64',unit:'1',parse:'canonical-decimal'};assert.throws(()=>T.authoredRequest(s,{...q,numeric}));assert.throws(()=>T.authoredRequest(s,{...q,reportedEdge:{}}));assert.throws(()=>T.authoredRequest(s,{...q,groupTimeSeries:true}));assert.throws(()=>T.authoredRequest(s,{...q,limit:101}));
+ const captured=require('../ui/captured-count-comparison.mjs');const noStatus={...s.queries[0]};delete noStatus.spanStatus;assert.throws(()=>C.setComparison(s.composition,captured.create(noStatus,'b'.repeat(64)),noStatus));
+ const bad=structuredClone(s);bad.queries[0].where={any:bad.queries[0].where.all};assert.throws(()=>T.templateView(bad));
+});
+test('HTTP service handoff admits the shipped literal method facet without changing the widget question',()=>{
+ const Facet=require('../ui/facet-declaration.mjs'),q=query('http-service',{kind:'attribute',key:'http.route'});q.where.all[1].value='Server';q.where.all[2].field.key='http.request.method';
+ const view={version:1,title:'HTTP server routes',queries:[q],composition:C.setFacet(C.create(q,V.create(q)),Facet.create(q,{kind:'attribute',key:'http.request.method'},'HTTP methods'),q),template:T.templateFor('otel.http-server')},widget={family:'http-server',key:'dimension',state:'supported',query:q},response={template:{id:'otel.http-server-routes',version:1,title:view.title},view},before=structuredClone({q,widget,response});
+ assert.deepEqual(T.response(response,q),view);assert.deepEqual(T.request(widget).widget.query,q);assert.deepEqual({q,widget,response},before);
+ const selected=require('../ui/population-workspace.mjs').selectionQueries([q],[{signal:'spans',field:{kind:'attribute',key:'http.request.method'},value:'GET',mode:'include'}])[0];assert.doesNotThrow(()=>T.templateView({...view,queries:[selected]}));assert.deepEqual(C.facet(T.templateView({...view,queries:[selected]}).composition),C.facet(view.composition));
+ const numeric={...q,numeric:{field:{kind:'attribute',key:'payload'},type:'int64',unit:'1',parse:'canonical-decimal'}},numericView={version:1,title:view.title,queries:[numeric],composition:C.create(numeric,V.create(numeric))};assert.deepEqual(T.response({template:response.template,view:numericView},numeric).queries,[numeric]);assert.equal(C.facet(numericView.composition),undefined);
+});

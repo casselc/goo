@@ -673,6 +673,10 @@ def check_declarative_facets(spec):
         span=copy.deepcopy(view);span['queries'][0].update(signal='spans',summary='span-duration',spanStatus=True,bucketMs=1000)
         for child in span['composition']['children']:next(v for k,v in child.items() if k!='hidden')['scope']['signal']='spans'
         vc.validate(span)
+        templated=copy.deepcopy(view);templated['queries'][0]['groupBy']=[{'kind':'column','key':'service'}]
+        templated['composition']['children'].append({'aggregate':{'version':'goo.view/1','scope':scope,'kind':{'name':'bar','version':1},'display':{'category':'category','value':'count'}}})
+        templated['template']={'version':'goo.template/1','group':'destination','profile':'ordinary'}
+        vc.validate(templated)
         for mutation in (lambda f:f.update(query=q),lambda f:f.update(values=['api']),lambda f:f['display'].update(title=None),lambda f:f['display'].update(basis='without-own-filter'),lambda f:f.update(field={'kind':'column','key':'duration_ns'})):
             bad=copy.deepcopy(facet);mutation(bad)
             assert not fc.is_valid(bad),'invalid/private facet declaration admitted'

@@ -6,6 +6,8 @@ editor. This is the same query/display/save workflow as manually authored views;
 there is no separate dashboard designer or second view catalog.
 
 279 expands this template as an explicit records-plus-aggregate composition.
+311 adds an HTTP-method facet to eligible ordinary route views through that same
+Customize path; numeric views retain their existing measure and composition.
 The first default is a compact count bar with population share. Its checked query
 retains duration summaries, so **Measure** can select duration statistics locally
 after Run. Counts describe captured server-span records, not unique requests,
@@ -19,9 +21,12 @@ flowchart LR
   D[Shipped versioned template descriptor] --> E[Pure checked expansion]
   C --> E
   E --> S[Existing fixed population: configuration staged]
-  S -->|Explicit Run| Q[Exact preserved query]
+  S -->|Explicit Run| Q[Configured fixed question]
   Q --> A[Source admission: current data and guarantees]
   A --> V[Shared bar/table and Measure controls]
+  A -->|Explicit Read values| F[Method counts in the applied scope]
+  F -->|Include or Exclude: no read| T[Existing selection tray]
+  T -->|Apply or Open then Run| Q
   V --> Save[Existing immutable exploration-view catalog]
   Save --> Reopen[Reopen configuration; Run explicitly]
 ```
@@ -85,3 +90,54 @@ binding; numeric HTTP expansions preserve their query without that binding.
 279 delivers [records-plus-aggregate composition](RECORD_AGGREGATE_COMPOSITION.md)
 under one query/read owner. Extend templates only when the profile's scope, units,
 quality and action rules are explicit; another renderer migration is not a gate.
+
+
+## Method facet and reusable binding — 311
+
+> Delivered in 311. See [validation](../VALIDATION.md) and the
+> [current executable storyboard](journeys/311-http-method-facet.md).
+
+For an eligible ordinary HTTP-server route widget, **Customize HTTP route view**
+stages a composition with an **HTTP methods** facet before the route chart and
+records. The field is exactly `attribute:http.request.method`; it complements the
+route grouping rather than repeating it. Customize is configuration-only. Run
+reads the configured population; **Read values** separately reads method counts
+in that applied scope. Neither opening the view nor Run silently loads values.
+Include/Exclude uses the existing pending tray and explicit Apply/Open/Run flow.
+
+The original supported widget question remains intact: exact service, environment
+policy, fixed bounds, required Server kind, nonempty current method and all extra
+conditions/grouping/measures survive expansion. Missing/empty current methods,
+client spans and legacy-only method attributes do not become server requests.
+Counts still describe captured span records, with independent reads and unknown
+upstream coverage. This is not a unique-request or HTTP-success inference.
+
+The facet uses the existing ordinary-record profile. If the checked HTTP widget
+has an authored numeric projection incompatible with facets, Customize retains
+that question and its existing data-only composition without the new default
+facet. It never strips the measurement to manufacture an ordinary count view.
+Authored facet definitions remain strict: they cannot use that default omission
+rule to hide an invalid declared control.
+
+Ordinary category templates can now retain a validated facet beside aggregate and
+records, including an otherwise valid hidden facet. The category remains the
+explicit `group: destination` input. The facet field, title, applied-scope basis
+and visibility remain literal presentation/control intent; they are checked
+against the destination and never rewritten to its grouping field. No source
+question, loaded counts or pending selections are copied. Same-signal/profile
+requirements still apply, and facet-plus-comparison remains refused.
+
+Presentation edits preserve the valid template binding. Save/export/reopen use the
+existing immutable catalog and portable definition path; reopening stages intent
+for Run, and destination reuse starts with unloaded facet values. A records-plus-
+facet view without an aggregate is still an ordinary saved view, not a category
+template. This extends the 310 control contract without adding a new acquisition
+owner, template registry or query language.
+
+The checked [HTTP service YAML](../config/views/http-server-routes.yaml) carries
+the reusable HTTP profile, route chart, literal method facet and records through
+the existing portable/CLI validator.
+
+See [declarative facets](DECLARATIVE_FACETS.md),
+[architecture review](reviews/HTTP_FACET_ARCHITECTURE_311.md), and
+[design review](reviews/HTTP_FACET_DESIGN_311.md).

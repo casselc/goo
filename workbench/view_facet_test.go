@@ -90,9 +90,6 @@ func TestFacetCompositionProfilesVisibilityAndTemplate310(t *testing.T) {
 			v.Composition.Children[0].Hidden = true
 			v.Composition.Children[1].Hidden = true
 		},
-		"template": func(v *ExplorationView) {
-			v.Template = &ViewTemplateBinding{Version: "goo.template/1", Group: "destination", Profile: "ordinary"}
-		},
 	} {
 		t.Run(name, func(t *testing.T) {
 			for _, hidden := range []bool{false, true} {

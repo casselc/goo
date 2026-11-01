@@ -9,9 +9,11 @@
 > action, UTC editor and timeline gestures share the same checked transition.
 > Delivered 310: [declarative categorical facets](DECLARATIVE_FACETS.md) add a
 > qualified-field scope control through existing counted-values and selection owners.
-> Proposed next 311: adopt one useful facet in the existing HTTP service template/
-> Customize flow, preserving exact scope and consolidating its binding before
-> introducing another control family.
+> Delivered 311: [HTTP service templates](HTTP_SERVICE_VIEW_TEMPLATE.md) combine
+> a literal method facet, route chart and records through existing Customize.
+> Proposed next 312: a whole-product incident-flow checkpoint on the running app,
+> reconciling usability, architecture, reliability and performance into a finite
+> revised backlog before adding more service-family controls.
 
 
 

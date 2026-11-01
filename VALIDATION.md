@@ -1,5 +1,59 @@
 # Validation record
 
+## HTTP methods in service templates — 311
+
+[Flow/contract](docs/HTTP_SERVICE_VIEW_TEMPLATE.md) ·
+[checked YAML](config/views/http-server-routes.yaml) ·
+[storyboard/screenshots](docs/journeys/311-http-method-facet.md) ·
+[architecture](docs/reviews/HTTP_FACET_ARCHITECTURE_311.md) and
+[design](docs/reviews/HTTP_FACET_DESIGN_311.md) reviews.
+
+- Final root Go suite passes, including `cmd/goo` (15.37 seconds) and `workbench`
+  (1.13 seconds). Existing captured-template fixtures explicitly remove the new
+  optional facet before constructing the mutually exclusive comparison definition;
+  production facet-plus-comparison refusal remains unchanged.
+- HTTP defaults add a method facet only for supported ordinary questions.
+  Numeric→ordinary→numeric cycles retain exact queries and detached declarations;
+  numeric views keep the existing data-only composition without measurement repair.
+  General category-template tests retain literal facet fields/title/basis/visibility
+  across checked destination groups/scopes and refuse unsupported profiles.
+- OpenAPI passes: 100 operations, 665 schemas, 436 responses, 161 admitted requests
+  and 28 mux refusals, plus eligible facet-template acceptance/raw-facet-template
+  refusal. Wire shapes remain unchanged. An actual shipped HTTP response passes
+  schema and shared JS handoff/template validation. No endpoint or wire type added.
+- Frontend suite passes: 985 tests, zero failures/skips (31.64 seconds). Literal
+  facets survive ordinary/DB/HTTP template profiles and authored response checks;
+  source/presentation substitution and ineligible destinations refuse. Marker
+  retention covers local edits and checked facet child continuations. Passive
+  module graph remains 51; no extra component/acquisition owner.
+- Fifty new HTTP Go↔JS template/YAML property cases pass (4.68 seconds), including
+  typed destination policies, different category groups, hidden/literal team fields,
+  numeric fallback, invalid HTTP prerequisites and mutation isolation. Fifty updated
+  general facet cases pass (5.23 seconds), admitting eligible aggregate templates
+  while still refusing raw records-plus-facet templates.
+- Packaged Go lab runs with all three changed UI/OpenAPI assets matching source
+  bytes. Its offline CLI validates the checked reusable HTTP YAML with method
+  facet, route chart, records and unchanged duration/status query projections.
+- Actual OTel native journey passes (1.7 minutes): Discovery refuses default
+  client/methodless Customize contexts; a retired pure expansion cannot stage a
+  view. Eligible HTTP scope stays exact through Customize/Run, method counts
+  107→GET/POST 103, Save/YAML/reopen and typed different-category destination seven
+  (PUT five/POST two). All three actual frames pass design review.
+- The eighteen-step observed Quint replay passes (16.32 seconds), rejecting seven
+  mutants and an unfinished prefix. Model smoke passes (17.08 seconds). Measured
+  post-owner browser budget: six full read requests, three counted lookups, two
+  pure expansions, three saves, one encode and no pages. The settled discovery
+  baseline is recorded separately (25 source calls/four explores/one retired
+  expansion); it is not omitted from the evidence or misattributed to Customize.
+- Separate 35-second Bombadil passes: 514 snapshots across eleven phases, two
+  explores/two counted lookups, no pages/saves/overflow, POST child three. Literal
+  field, HTTP marker/profile and duration.p95 survive controlled edits and child
+  staging. Root reviewed the actual trace; local controls stay at one explore/one
+  lookup. Temporary stores/raw campaigns are cleaned; compact ledgers remain.
+- Packaged configuration-only HTTP expansion also verifies the ordinary method
+  facet and unchanged numeric query/data-only composition without reading source
+  telemetry. No new endpoint, source executor, wire type or passive module.
+
 ## Declarative categorical facets — 310
 
 [Contract/diagram](docs/DECLARATIVE_FACETS.md) ·

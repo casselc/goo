@@ -37,6 +37,15 @@ func TestComparisonTemplateHTTPBindsOnlyExplicitReferenceWithoutEvidenceReads(t 
 		}
 	}
 	plainRaw, _ := json.Marshal(source)
+	// Comparison and facet controls are deliberately exclusive. This test
+	// authors the comparison alternative after explicitly removing the default.
+	children := make([]workbench.ViewCompositionChild, 0, len(source.Composition.Children))
+	for _, child := range source.Composition.Children {
+		if child.Facet == nil {
+			children = append(children, child)
+		}
+	}
+	source.Composition.Children = children
 	source.Queries[0].SpanStatus = false
 	source.Queries[0].BucketMS = 10000
 	source.Template.Baseline = "destination"
