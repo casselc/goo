@@ -1,5 +1,40 @@
 # Validation record
 
+## Offline view validation and explicit CLI import — 306
+
+[Commands/diagram](docs/VIEW_ARTIFACT_CLI.md) ·
+[storyboard/screenshots](docs/journeys/306-view-cli.md) ·
+[architecture](docs/reviews/VIEW_ARTIFACT_CLI_ARCHITECTURE_306.md) and
+[usability](docs/reviews/VIEW_ARTIFACT_CLI_DESIGN_306.md) reviews.
+
+- Changed packages pass: `cmd/goo` (7.94 seconds) and `workbench` (0.92 seconds).
+  Checks cover required flags, actual checked-file validation, 64 KiB/+1 bounds,
+  invalid input before network, destination URL rules/escaped prefixes,
+  one existing save POST, strict receipt/view/ID equality, wrong status/media,
+  malformed/oversized response, redirects, replay refusal and deadline handling.
+- Small `ViewContentID` extraction is shared by catalog Create/Load and CLI receipt
+  verification; existing IDs and actual-store publication remain unchanged.
+  Architecture source review accepts the final boundary and URL handling.
+- Root Go regression suite passes. The actual CLI/browser journey passes on its
+  first run (51.0 seconds): checked file validates before a product HTTP server
+  exists, invalid duplicate YAML exits nonzero with zero tripwire requests, and
+  CLI import creates the sole entry in an empty catalog. Open stages without a
+  source read; explicit Run reads seven spans, and template reuse over three
+  destination spans preserves its question and held snapshot.
+- The observed ten-step model and seven mutants plus unfinished-prefix controls
+  pass (11.13 seconds); model smoke passes (18.41 seconds). Budget: two CLI
+  validations, one local refusal, one CLI import, five browser full reads, one UI
+  Save and one pure template expansion. Fixture readiness is separate setup.
+- Three compact actual frames pass design review; both source YAML files stay
+  unchanged and the disposable capture store was cleaned. Verification targets
+  the CLI/transport boundary while exercising the existing codec and UI paths.
+- Rebuilt single-Go lab image
+  `e9fd24470c53b3eed1599db312f56a4806c5fd9914485f8c9c9c501ef4d7f66c`
+  runs the packaged `goo validate-view` on its included checked YAML and returns
+  the expected versioned validation receipt and ordinary template. Stored volumes
+  and unrelated services were retained. No HTTP operation/schema, frontend
+  component or YAML language was added.
+
 ## Portable service/team view artifacts — 305
 
 [Contract/diagram](docs/PORTABLE_VIEWS.md) ·

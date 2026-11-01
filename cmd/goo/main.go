@@ -17,9 +17,12 @@ import (
 
 func run(args []string, out io.Writer) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: goo validate|compile|evaluate|rebuild-capture-catalog|prepare|evaluate-prepared|discover|catalog|expand|prepare-http|manifest|weave|observe-operations|plan-operations|evaluate-counters|evaluate-histograms|merge-histograms [options]")
+		return fmt.Errorf("usage: goo validate-view|import-view|validate|compile|evaluate|rebuild-capture-catalog|prepare|evaluate-prepared|discover|catalog|expand|prepare-http|manifest|weave|observe-operations|plan-operations|evaluate-counters|evaluate-histograms|merge-histograms [options]")
 	}
 	command := args[0]
+	if command == "validate-view" || command == "import-view" {
+		return viewArtifactCLI(command, args[1:], out)
+	}
 	if command == "rebuild-capture-catalog" {
 		fs := flag.NewFlagSet(command, flag.ContinueOnError)
 		dir := fs.String("dir", "", "immutable exploration capture directory")

@@ -5,8 +5,10 @@ catalog. Descriptive namespace/name/revision are not persisted registry metadata
 or automatic updates. Store-local captured-comparison/tail-baseline references
 are refused, not stripped. Query baselines remain fixed configuration. Import
 requires explicit Save, then existing Open/Run or compatible presentation Apply.
-Automatic deployment/file loading and dedicated artifact CLI commands remain
-outside this cut. See [portable definitions](PORTABLE_VIEWS.md).
+Automatic deployment/file loading remain outside this cut.
+[CLI validation and explicit import](VIEW_ARTIFACT_CLI.md) now use the same decoder
+and catalog; import requires a destination and never opens/runs a question.
+See [portable definitions](PORTABLE_VIEWS.md).
 
 304 adds an explicit single-field count breakdown (Bars/Table) to ordinary
 records-only views. Different or multiple grouping requires explicit replacement;

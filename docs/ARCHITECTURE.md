@@ -1,5 +1,11 @@
 # Architecture
 
+[View artifact CLI](VIEW_ARTIFACT_CLI.md) validates files offline and explicitly
+posts admitted definitions through the existing saved-view API. Shared
+`workbench.ViewContentID` keeps catalog Create/Load and receipt verification on
+one identity recipe. The CLI adds no source acquisition, direct store mutation
+or deployment owner.
+
 [Portable view artifacts](PORTABLE_VIEWS.md) wrap the existing view AST in a
 strict versioned YAML transport. Pure Go encode/decode endpoints acquire no source
 data and persist nothing. Explicit import uses the current saved-view store;

@@ -3572,3 +3572,15 @@ actual Go canonical YAML roundtrip, independent mutable output, supported flat/
 composed forms, typed scope and malformed transport. Backend Go/API fixtures own
 strict parser/refusal and code-managed-example checks. See the
 [storyboard](../docs/journeys/305-portable-view.md) for exact commands.
+
+
+### Repository → CLI → catalog — 306
+
+`journeys/306-view-cli.spec.js` executes the actual compiled CLI on the checked
+repository file before starting a product server, rejects duplicate YAML against
+an HTTP tripwire, then imports a reviewed scoped copy into an empty catalog.
+The browser verifies explicit Open/Run and destination template reuse. The observed
+CLI/browser ledger in `view_cli_ledger_test.go` checks `model/view_cli_306.qnt`
+with altered-count/scope and unfinished-prefix controls. Existing codec properties
+remain the AST authority; Go CLI tests cover transport/receipt bounds and actual
+store identity. See the [storyboard](../docs/journeys/306-view-cli.md).

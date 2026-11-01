@@ -27,6 +27,8 @@ beside the default table, with
 [Add a breakdown](docs/ADD_BREAKDOWN.md) to grow a records view into a chart.
 [Portable YAML definitions](docs/PORTABLE_VIEWS.md) let teams export and import
 these views through the same saved-view catalog.
+[CLI validation and import](docs/VIEW_ARTIFACT_CLI.md) connect repository checks
+to an explicitly chosen Goo server.
 [Record paging](docs/RECORD_PAGE_PROFILE.md) retains any held aggregate and timeline.
 
 [Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Reviewed roadmap](docs/ROADMAP_2026_10_30.md) · [Execution backlog](docs/BACKLOG_2026_10_29.md) ·

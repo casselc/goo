@@ -133,6 +133,17 @@ func (v ExplorationView) Validate() error {
 	}
 	return nil
 }
+
+// ViewContentID identifies ID-free view JSON using the catalog's canonical hash.
+// It does not admit a view: callers must use ExplorationView.Validate before
+// publication or accepting a receipt. Portable file labels are not hashed here.
+func ViewContentID(v ExplorationView) (string, error) {
+	if v.ID != "" {
+		return "", errors.New("view content identity requires ID-free input")
+	}
+	return digest(v)
+}
+
 func (s Store) CreateExplorationView(v ExplorationView) (*ExplorationView, error) {
 	if v.ID != "" {
 		return nil, errors.New("new view must omit ID")
@@ -144,7 +155,7 @@ func (s Store) CreateExplorationView(v ExplorationView) (*ExplorationView, error
 	var detached ExplorationView
 	json.Unmarshal(raw, &detached)
 	v = detached
-	id, e := digest(v)
+	id, e := ViewContentID(v)
 	if e != nil {
 		return nil, e
 	}
@@ -161,7 +172,7 @@ func (s Store) LoadExplorationView(id string) (*ExplorationView, error) {
 	}
 	actual := v.ID
 	v.ID = ""
-	hash, e := digest(v)
+	hash, e := ViewContentID(v)
 	v.ID = actual
 	if e != nil || hash != id || actual != id || v.Validate() != nil {
 		return nil, errors.New("exploration view integrity check failed")

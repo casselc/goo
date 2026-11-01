@@ -69,8 +69,9 @@ The pure HTTP counterparts are `POST /api/view-artifacts/decode` (`{"yaml":"…"
 and `POST /api/view-artifacts/encode` (`{"artifact":…}`). Neither endpoint saves or
 queries telemetry. Explicit persistence remains `POST /api/exploration-views` with
 the decoded `artifact.view`. The existing OpenAPI contract documents both codecs.
-There is no package registry, automatic file watcher, deployment hook or new CLI
-command in this cut.
+There is no package registry, automatic file watcher or deployment hook.
+[CLI validation and explicit import](VIEW_ARTIFACT_CLI.md) now reuse this codec
+without adding another format or persistence path.
 
 ```mermaid
 flowchart LR

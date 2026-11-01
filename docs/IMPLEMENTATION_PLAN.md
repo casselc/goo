@@ -1,12 +1,12 @@
 # Implementation plan
 
-> Current checkpoint 305: [portable service/team view definitions](PORTABLE_VIEWS.md).
-> Strict YAML wraps the current view AST. Pure preview/encode use existing
-> admission; explicit import saves through the ordinary catalog. Fixed-question
-> Open and presentation Apply remain separate, and store-local capture IDs are
-> refused. Namespace/name/revision are file labels, not a new registry.
-> Next 306: offline CLI validation and explicit import to a required destination,
-> completing repository → CI → catalog through the same decoder/store endpoint.
+> Current checkpoint 306: [offline view validation and explicit CLI import](VIEW_ARTIFACT_CLI.md)
+> complete repository → CI → catalog through the existing decoder and save route.
+> The destination is required; import does not Open/Apply/Run. Shared catalog
+> identity checking avoids a second hash recipe.
+> Next 307: investigate cohort-versus-parent/rest comparison continuity for authored
+> count views, which currently lose the native breakdown selection workflow.
+
 
 
 

@@ -2776,3 +2776,5 @@ held parent return, fresh focus and refusal of retired controls.
 - [304: grow raw records into a breakdown, comparison and reusable view](304-add-breakdown.md).
 
 - [305: exchange portable YAML views between isolated stores](305-portable-view.md).
+
+- [306: validate repository YAML offline and explicitly import through the CLI](306-view-cli.md).
