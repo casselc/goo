@@ -134,14 +134,14 @@ for suffix in ('', 'Input'):
  schemas['workbench.ExplorationView'+suffix]['properties']['displays'].update(maxProperties=2,propertyNames={'enum':['spans','logs']})
  schemas['workbench.ExplorationView'+suffix].setdefault('allOf',[]).extend([{'not':{'required':['displays','breakdowns'],'properties':{'displays':{'required':[signal]},'breakdowns':{'required':[signal]}}}} for signal in ('spans','logs')])
 
-# Bounded composition: required aggregate/records plus optional timeline and captured-count comparison.
+# Bounded composition: one raw records child, or aggregate/records with optional aspects.
 for suffix in ('', 'Input'):
  composition=schemas['workbench.ViewComposition'+suffix]
  composition['additionalProperties']=False
  composition['required']=['version','kind','children']
  composition['properties']['kind']['type']='object'
  composition['properties']['version']['const']='goo.composition/1'
- composition['description']='One fixed record query supplies one aggregate, one bounded record-page child, optional count/mean/p95 duration timeline and optional immutable capture baseline reference for count comparison. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees.'
+ composition['description']='One fixed record query supplies either one visible logs/spans records child, or aggregate and records with optional timeline/count comparison. A records-only declaration does not add grouping or acquire aggregates. Ordering/visibility are local; no queries, rows, subscriptions or runtime guarantees belong in this declaration.'
  for name,kind_name in [('CompositionKind','stack'),('RecordViewKind','record-table')]:
   kind=schemas['workbench.'+name+suffix];kind['additionalProperties']=False
   kind['required']=['name','version']
@@ -153,10 +153,11 @@ for suffix in ('', 'Input'):
  child['oneOf']=[{'required':[role],'not':{'anyOf':[{'required':[other]} for other in ('aggregate','records','timeline','comparison') if other!=role]}} for role in ('aggregate','records','timeline','comparison')]
  for field in ('aggregate','records','timeline','comparison'):
   child['properties'][field]['type']='object'
- children=composition['properties']['children'];children.update(type='array',minItems=2,maxItems=4,items={'$ref':'#/components/schemas/workbench.ViewCompositionChild'+suffix,'type':'object'})
- children['allOf']=[{'contains':{'required':[role]},'minContains':1,'maxContains':1} for role in ('aggregate','records')]
- children['allOf'].extend([{'contains':{'required':[role]},'minContains':0,'maxContains':1} for role in ('timeline','comparison')])
+ children=composition['properties']['children'];children.update(type='array',minItems=1,maxItems=4,items={'$ref':'#/components/schemas/workbench.ViewCompositionChild'+suffix,'type':'object'})
+ children['allOf']=[{'contains':{'required':[role]},'minContains':1,'maxContains':1} for role in ('records',)]
+ children['allOf'].extend([{'contains':{'required':[role]},'minContains':0,'maxContains':1} for role in ('aggregate','timeline','comparison')])
  children['allOf'].append({'contains':{'properties':{'hidden':{'const':False}}},'minContains':1})
+ children['allOf'].append({'if':{'contains':{'required':['aggregate']}},'else':{'maxItems':1,'items':{'required':['records'],'properties':{'records':{'properties':{'scope':{'properties':{'signal':{'enum':['logs','spans']}}}}}}}}})
  comparison=schemas['workbench.CapturedCountViewDeclaration'+suffix];comparison['additionalProperties']=False
  comparison['required']=['version','scope','kind','baselineCapture','display']
  comparison['properties']['version']['const']='goo.view/1'
@@ -194,11 +195,13 @@ for suffix in ('', 'Input'):
  view=schemas['workbench.ExplorationView'+suffix]
  view['properties']['composition']['type']='object'
  view['properties']['template']['type']='object'
- view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'required':['composition']}})
+ view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['aggregate']},'minContains':1}}}}}})
  template_comparison={'properties':{'composition':{'properties':{'children':{'contains':{'required':['comparison']}}},'required':['children']}},'required':['composition']}
  view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'if':template_comparison,'then':{'properties':{'template':{'required':['baseline']}}},'else':{'properties':{'template':{'not':{'required':['baseline']}}}}}})
  flat=['layout','columns','fieldColumns','displays','breakdowns','tail']
  view.setdefault('allOf',[]).append({'if':{'required':['composition']},'then':{'required':['version','title','queries'],'properties':{'version':{'const':1},'queries':{'type':'array','minItems':1,'maxItems':1}},'not':{'anyOf':[{'required':[field]} for field in flat]}},'else':{'required':['layout','columns']}})
+ raw_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'not':{'contains':{'required':['aggregate']}}}}}}}
+ view.setdefault('allOf',[]).append({'if':raw_composition,'then':{'properties':{'queries':{'items':{'properties':{'signal':{'enum':['logs','spans']},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}}}}})
 
 # Immutable selected observations, independent of source and annotation storage.
 keep=schemas['exploration.KeepTailIntentInput']

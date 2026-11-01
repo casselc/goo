@@ -18,13 +18,15 @@ export function recordDisplay(value,q){
 }
 export function validate(value,q){
  validateRecordQuestion(q);closed(value,['version','kind','children']);closed(value.kind,['name','version']);
- if(value.version!=='goo.composition/1'||value.kind.name!=='stack'||value.kind.version!==1||!Array.isArray(value.children)||![2,3,4].includes(value.children.length))throw Error('Use a pinned stack with aggregate, records and an optional timeline/comparison.');
+ if(value.version!=='goo.composition/1'||value.kind.name!=='stack'||value.kind.version!==1||!Array.isArray(value.children)||![1,2,3,4].includes(value.children.length))throw Error('Use a pinned records-only stack or aggregate and records with optional timeline/comparison.');
  const roles=new Set();let visible=false;
  for(const child of value.children){closed(child,['aggregate','records','timeline','comparison','hidden']);const names=['aggregate','records','timeline','comparison'].filter(name=>Object.hasOwn(child,name));if(names.length!==1||child.hidden!==undefined&&typeof child.hidden!=='boolean')throw Error('Choose exactly one typed role per composition child.');const name=names[0];if(roles.has(name))throw Error('Use each composition role once.');roles.add(name);visible ||= child.hidden!==true;if(name==='aggregate')Aggregate.validate(child.aggregate,q);else if(name==='timeline')Timeline.validate(child.timeline,q);else if(name==='comparison')CapturedCount.validate(child.comparison,q);else recordDisplay(child.records,q)}
- if(!roles.has('aggregate')||!roles.has('records'))throw Error('Keep aggregate and records children.');
+ if(!roles.has('records'))throw Error('Keep a records child.');
+ if(!roles.has('aggregate')){if(roles.size!==1||!['logs','spans'].includes(q.signal)||q.numeric||q.numericHistogram||q.reportedEdge||q.groupTimeSeries)throw Error('Records-only compositions require one ordinary logs or spans records child without specialized query directives.');if(q.where)validatePredicate(q.where,q.signal);}
  if(!visible)throw Error('Keep at least one composition child visible.');
  return structuredClone(value);
 }
+export const recordOnly=value=>Array.isArray(value?.children)&&value.children.length===1&&!!value.children[0]?.records;
 export const aggregate=value=>value?.children?.find(child=>child.aggregate)?.aggregate;
 export const records=value=>value?.children?.find(child=>child.records)?.records;
 export const timeline=value=>value?.children?.find(child=>child.timeline)?.timeline;
@@ -32,6 +34,7 @@ export const comparison=value=>value?.children?.find(child=>child.comparison)?.c
 export const role=child=>child.aggregate?'aggregate':child.timeline?'timeline':child.comparison?'comparison':'records';
 export const visible=(value,name)=>!!value.children.find(child=>role(child)===name&&!child.hidden);
 export function create(q,declaration,options={columns:['utc','service','summary','context']}){return validate({version:'goo.composition/1',kind:{name:'stack',version:1},children:[{aggregate:declaration},{records:{version:'goo.view/1',scope:{kind:'record-query',signal:q.signal},kind:{name:'record-table',version:1},display:structuredClone(options)}}]},q)}
+export function createRecords(q,options={columns:['utc','service','summary','context']}){return validate({version:'goo.composition/1',kind:{name:'stack',version:1},children:[{records:{version:'goo.view/1',scope:{kind:'record-query',signal:q.signal},kind:{name:'record-table',version:1},display:structuredClone(options)}}]},q)}
 export function setAggregate(value,next,q){return validate({...value,children:value.children.map(child=>child.aggregate?{...child,aggregate:next}:child)},q)}
 export function setRecords(value,next,q){return validate({...value,children:value.children.map(child=>child.records?{...child,records:{...child.records,display:next}}:child)},q)}
 export function setRecordKind(value,name,q){return validate({...value,children:value.children.map(child=>child.records?{...child,records:{...child.records,kind:{name,version:1}}}:child)},q)}

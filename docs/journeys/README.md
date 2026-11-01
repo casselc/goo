@@ -2768,3 +2768,5 @@ held parent return, fresh focus and refusal of retired controls.
 - [300: reuse comparisons with an explicit destination baseline](../../journeys/300-comparison-template-storyboard.md).
 
 - [301: inspect and Keep timing in supplied spans](../../journeys/301-supplied-span-waterfall-storyboard.md).
+
+- [302: save and reuse raw records without an aggregate](302-record-only-views.md).

@@ -3522,3 +3522,15 @@ Explore/one page/one Keep and zero other writes. Native desktop/375 px checks
 reject horizontal overflow and nested controls; computed styling rejects leaked
 card chrome. Keep compact results and three actual bounded frames, not successful
 raw campaign/store copies. See the [storyboard](../journeys/301-supplied-span-waterfall-storyboard.md).
+
+
+### Records-only saved views — 302
+
+`journeys/302-record-only.spec.js` records the real native workflow; enable its
+optional campaign with `GOO_RECORD_ONLY_BOMBADIL=1`. The standalone driver is
+`bombadil/record-only.ts`. The observed step ledger is supplied with
+`GOO_RECORD_ONLY_LEDGER` to `record_only_ledger_test.go`, which validates
+`model/record_only_302.qnt` and rejects altered reads and unfinished prefixes.
+`record_only_property_test.go` checks actual Go/JavaScript admission and reuse
+with Hegel, including grouping preservation and unsupported-role refusals.
+See the [storyboard](../docs/journeys/302-record-only-views.md).

@@ -1,5 +1,9 @@
 # Records and aggregates in one saved composition — 279
 
+[Records-only compositions](RECORD_ONLY_VIEWS.md) reuse these displays and shared
+record actions without an aggregate or grouping. No additional public component
+is introduced; the application retains query, execution and paging ownership.
+
 A saved fixed view can declare an ordered records display and aggregate display over
 one checked query. **Compose aggregate and records** converts an eligible single-query authored
 view locally. The HTTP service template emits this composition directly. Use the

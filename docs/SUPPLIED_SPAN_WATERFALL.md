@@ -1,5 +1,9 @@
 # Inspect timing in supplied spans
 
+[Records-only compositions](RECORD_ONLY_VIEWS.md) reuse these displays and shared
+record actions without an aggregate or grouping. No additional public component
+is introduced; the application retains query, execution and paging ownership.
+
 > Implemented in milestone 301. Executed checks are recorded in
 > [VALIDATION.md](../VALIDATION.md#supplied-span-waterfall-records--301).
 

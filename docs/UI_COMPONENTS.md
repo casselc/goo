@@ -1,5 +1,9 @@
 # Display component library
 
+[Records-only compositions](RECORD_ONLY_VIEWS.md) reuse these displays and shared
+record actions without an aggregate or grouping. No additional public component
+is introduced; the application retains query, execution and paging ownership.
+
 Goo's framework-neutral Web Components render supplied telemetry/evidence data in
 server-rendered HTML or an SPA. Application adapters own source reads, query scope,
 navigation, subscriptions, retention and publication. Ordinary OTel data does not

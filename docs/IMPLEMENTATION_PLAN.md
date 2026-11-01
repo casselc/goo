@@ -1,10 +1,12 @@
 # Implementation plan
 
-> Current checkpoint 301: a spans-only waterfall presents the admitted record page
-> with comparable trace-relative timing and shared Inspect/Keep actions.
-> Next 302: records-only saved compositions, so raw log and exact-trace scopes can
-> use Table/List/Waterfall without inventing grouping or retaining an aggregate.
-> See [supplied-span timing](SUPPLIED_SPAN_WATERFALL.md).
+> Current checkpoint 302: [records-only saved views](RECORD_ONLY_VIEWS.md) support
+> ordinary raw logs and spans without forcing grouping or an aggregate. Root reads
+> use the existing narrow page profile; full-view comparison authority stays separate.
+> Next 303: open an exact trace from Inspect as a staged records-only waterfall.
+> Preserve environment and fixed bounds, reset paging and require explicit Run;
+> reuse the existing population owner rather than duplicating trace findings.
+
 
 
 > 265 delivers [H0 immutable snapshot construction](SNAPSHOT_CONSTRUCTION.md),

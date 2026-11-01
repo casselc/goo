@@ -1,5 +1,43 @@
 # Validation record
 
+## Records-only saved views — 302
+
+[Contract/diagram](docs/RECORD_ONLY_VIEWS.md) ·
+[storyboard/screenshots](docs/journeys/302-record-only-views.md) ·
+[architecture](docs/reviews/RECORD_ONLY_VIEWS_ARCHITECTURE_302.md) and
+[design](docs/reviews/RECORD_ONLY_VIEWS_DESIGN_302.md) reviews.
+
+- Changed Go packages (`workbench`, `exploration`, `cmd/goo`) pass. Actual SQL-spy
+  checks establish exactly two statements, count plus rows, for root raw-page
+  reads including absent/multiple grouping and retained latent query options.
+  No aggregate, field inventory, time or summary read is acquired.
+- OpenAPI checks pass: 98 operations, 651 schemas, 429 fixture responses,
+  159 admitted requests and 28 mux refusals, plus new records-only admission,
+  specialized-profile refusal and category-template aggregate requirements.
+- Final frontend suite: 955 passed, zero failures/skips (25.0 seconds).
+- Native main journey passes with real OTLP/ClickHouse data: 103 source logs,
+  three destination logs and 103 spans of one exact trace. Native Customize,
+  eight qualified fields, List/Waterfall Inspect/Keep, paging, save/reopen and
+  source-free ordinary reuse are exercised without seeded saved definitions.
+  Whole-journey HTTP totals are nine full reads, seven narrow pages, three saves
+  and two Keeps; the two-SQL statement claim applies to narrow reads only.
+- One hundred Hegel cases exercise actual Go/JavaScript admission and reuse.
+  The observed 19-step Quint replay, smoke and corrupted/unfinished negative
+  controls pass. Bombadil runs 30 seconds/354 snapshots: zero full reads,
+  two narrow reads, one Keep and zero other writes, with protected selection,
+  paging and Inspect. Three actual compact screenshots were reviewed.
+- Targeted responder (294), comparison-template (300), and native/public waterfall
+  (301) regressions pass: four tests in 4.0 minutes.
+- Architecture/design source and screenshot reviews pass. The inverse boundary
+  has a separate seeded configuration lane: applying an aggregate/comparison
+  display over a narrow page cannot acquire or prepare evidence until full Run.
+  This browser check passes in 10.0 seconds: Apply and a synthetic Prepare do no
+  I/O; explicit full Run then permits the capture GET and comparison POST.
+- The local single-Go lab was rebuilt and recreated with image
+  `52745df2176973d01bc14425991e38f134a4af28210609c1b61d173d50c41655`.
+  All three changed UI/API assets match the bytes served by the lab. No orphan
+  service or stored volume was removed.
+
 ## Supplied-span waterfall records — 301
 
 [Contract/diagram](docs/SUPPLIED_SPAN_WATERFALL.md) ·

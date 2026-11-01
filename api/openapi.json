@@ -42486,7 +42486,21 @@
             "then": {
               "required": [
                 "composition"
-              ]
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "aggregate"
+                        ]
+                      },
+                      "minContains": 1
+                    }
+                  }
+                }
+              }
             }
           },
           {
@@ -42601,6 +42615,56 @@
                 "layout",
                 "columns"
               ]
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "not": {
+                        "contains": {
+                          "required": [
+                            "aggregate"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "signal": {
+                        "enum": [
+                          "logs",
+                          "spans"
+                        ]
+                      },
+                      "numeric": {
+                        "type": "null"
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         ]
@@ -42861,7 +42925,21 @@
             "then": {
               "required": [
                 "composition"
-              ]
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "aggregate"
+                        ]
+                      },
+                      "minContains": 1
+                    }
+                  }
+                }
+              }
             }
           },
           {
@@ -42976,6 +43054,56 @@
                 "layout",
                 "columns"
               ]
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "not": {
+                        "contains": {
+                          "required": [
+                            "aggregate"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "signal": {
+                        "enum": [
+                          "logs",
+                          "spans"
+                        ]
+                      },
+                      "numeric": {
+                        "type": "null"
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         ]
@@ -44312,7 +44440,7 @@
               }
             ],
             "type": "array",
-            "minItems": 2,
+            "minItems": 1,
             "maxItems": 4,
             "items": {
               "$ref": "#/components/schemas/workbench.ViewCompositionChild",
@@ -44322,7 +44450,7 @@
               {
                 "contains": {
                   "required": [
-                    "aggregate"
+                    "records"
                   ]
                 },
                 "minContains": 1,
@@ -44331,10 +44459,10 @@
               {
                 "contains": {
                   "required": [
-                    "records"
+                    "aggregate"
                   ]
                 },
-                "minContains": 1,
+                "minContains": 0,
                 "maxContains": 1
               },
               {
@@ -44364,6 +44492,39 @@
                   }
                 },
                 "minContains": 1
+              },
+              {
+                "if": {
+                  "contains": {
+                    "required": [
+                      "aggregate"
+                    ]
+                  }
+                },
+                "else": {
+                  "maxItems": 1,
+                  "items": {
+                    "required": [
+                      "records"
+                    ],
+                    "properties": {
+                      "records": {
+                        "properties": {
+                          "scope": {
+                            "properties": {
+                              "signal": {
+                                "enum": [
+                                  "logs",
+                                  "spans"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
             ]
           },
@@ -44384,7 +44545,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewComposition",
         "additionalProperties": false,
-        "description": "One fixed record query supplies one aggregate, one bounded record-page child, optional count/mean/p95 duration timeline and optional immutable capture baseline reference for count comparison. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
+        "description": "One fixed record query supplies either one visible logs/spans records child, or aggregate and records with optional timeline/count comparison. A records-only declaration does not add grouping or acquire aggregates. Ordering/visibility are local; no queries, rows, subscriptions or runtime guarantees belong in this declaration."
       },
       "workbench.ViewCompositionChild": {
         "properties": {
@@ -44750,7 +44911,7 @@
               }
             ],
             "type": "array",
-            "minItems": 2,
+            "minItems": 1,
             "maxItems": 4,
             "items": {
               "$ref": "#/components/schemas/workbench.ViewCompositionChildInput",
@@ -44760,7 +44921,7 @@
               {
                 "contains": {
                   "required": [
-                    "aggregate"
+                    "records"
                   ]
                 },
                 "minContains": 1,
@@ -44769,10 +44930,10 @@
               {
                 "contains": {
                   "required": [
-                    "records"
+                    "aggregate"
                   ]
                 },
-                "minContains": 1,
+                "minContains": 0,
                 "maxContains": 1
               },
               {
@@ -44802,6 +44963,39 @@
                   }
                 },
                 "minContains": 1
+              },
+              {
+                "if": {
+                  "contains": {
+                    "required": [
+                      "aggregate"
+                    ]
+                  }
+                },
+                "else": {
+                  "maxItems": 1,
+                  "items": {
+                    "required": [
+                      "records"
+                    ],
+                    "properties": {
+                      "records": {
+                        "properties": {
+                          "scope": {
+                            "properties": {
+                              "signal": {
+                                "enum": [
+                                  "logs",
+                                  "spans"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
             ]
           },
@@ -44835,7 +45029,7 @@
           "kind",
           "children"
         ],
-        "description": "One fixed record query supplies one aggregate, one bounded record-page child, optional count/mean/p95 duration timeline and optional immutable capture baseline reference for count comparison. Ordering/visibility are local; this declaration cannot contain queries, rows, subscriptions or runtime guarantees."
+        "description": "One fixed record query supplies either one visible logs/spans records child, or aggregate and records with optional timeline/count comparison. A records-only declaration does not add grouping or acquire aggregates. Ordering/visibility are local; no queries, rows, subscriptions or runtime guarantees belong in this declaration."
       },
       "workbench.ViewDeclaration": {
         "properties": {

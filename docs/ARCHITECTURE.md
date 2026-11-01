@@ -1,5 +1,12 @@
 # Architecture
 
+[Records-only views](RECORD_ONLY_VIEWS.md) use one visible records child over
+ordinary raw logs or spans, preserving the checked query without adding grouping.
+Root Run and paging use the existing count-plus-rows profile; the admitted page
+cannot supply aggregate, timeline, field-inventory or completeness authority.
+Applying a full composition to a held narrow page requires explicit full Run
+before comparison preparation can use aggregate data.
+
 [Supplied-span timing](SUPPLIED_SPAN_WATERFALL.md) is another pinned records kind
 over the same bounded page. Shared geometry uses unambiguous reported parents,
 trace-relative timed origins and a common scale; application ports remain keyed

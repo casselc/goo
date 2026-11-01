@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"reflect"
+	"slices"
 
 	"github.com/casselc/goo/exploration"
 )
@@ -202,6 +203,9 @@ func (b ViewTemplateBinding) Validate(q exploration.Query, c ViewComposition) er
 	}
 	if err := c.Validate(q); err != nil {
 		return err
+	}
+	if !slices.ContainsFunc(c.Children, func(child ViewCompositionChild) bool { return child.Aggregate != nil }) {
+		return errors.New("reusable category-bound templates require an aggregate and records")
 	}
 	comparison := false
 	for _, child := range c.Children {

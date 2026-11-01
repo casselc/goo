@@ -22,7 +22,8 @@ its fixed scope and paused parent. Build reusable views with [saved displays](do
 [record lists](docs/RECORD_LIST.md) and [supplied-span waterfalls](docs/SUPPLIED_SPAN_WATERFALL.md)
 beside the default table, with
 [shared record interactions](docs/RECORD_INTERACTIONS.md).
-[Record paging](docs/RECORD_PAGE_PROFILE.md) retains the held aggregate and timeline.
+[Records-only views](docs/RECORD_ONLY_VIEWS.md) also work with ungrouped raw logs or spans.
+[Record paging](docs/RECORD_PAGE_PROFILE.md) retains any held aggregate and timeline.
 
 [Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Reviewed roadmap](docs/ROADMAP_2026_10_30.md) · [Execution backlog](docs/BACKLOG_2026_10_29.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·

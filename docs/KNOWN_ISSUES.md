@@ -4,9 +4,10 @@
 It uses trace-relative timed origins and one common duration scale, with original
 page-position Inspect/Keep and explicit separate trace expansion. It is not a
 complete-trace or critical-path view. Invalid timing/identity stays unavailable or
-isolated; duplicate parent IDs are never resolved arbitrarily. The kind currently
-requires a composition, whose mandatory aggregate/grouping is the next adoption
-gap for ungrouped log/exact-trace views.
+isolated; duplicate parent IDs are never resolved arbitrarily. [Records-only compositions](RECORD_ONLY_VIEWS.md) now remove the aggregate/grouping
+requirement for ordinary raw logs and spans. This shape has exactly one visible
+records child; numeric, numeric-histogram, reported-edge and grouped-time-series
+profiles remain unsupported. Category-bound templates still require an aggregate.
 
 300 supports reusable captured-count comparisons only with an explicit destination
 baseline binding and expansion input. The specimen capture is never a fallback.

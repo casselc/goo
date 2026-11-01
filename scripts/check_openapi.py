@@ -600,6 +600,39 @@ def check_timeline_composition(spec):
             assert list(check.iter_errors(bad)), 'invalid timeline composition accepted'
 
 
+
+def check_record_only_compositions(spec):
+    """Raw records are visible without manufacturing an aggregate or template."""
+    q={'signal':'logs','environment':'prod','fromMs':1000,'toMs':61000,'limit':100,'offset':0}
+    record={'version':'goo.view/1','scope':{'kind':'record-query','signal':'logs'},
+            'kind':{'name':'record-list','version':1},'display':{'columns':['utc','summary']}}
+    composition={'version':'goo.composition/1','kind':{'name':'stack','version':1},'children':[{'records':record}]}
+    view={'version':1,'title':'Raw records','queries':[q],'composition':composition}
+    for suffix in ('','Input'):
+        cc=validator(spec,{'$ref':'#/components/schemas/workbench.ViewComposition'+suffix})
+        vc=validator(spec,{'$ref':'#/components/schemas/workbench.ExplorationView'+suffix})
+        cc.validate(composition);vc.validate(view)
+        spans=copy.deepcopy(view);spans['queries'][0]['signal']='spans';spans['composition']['children'][0]['records']['scope']['signal']='spans';spans['composition']['children'][0]['records']['kind']['name']='record-span-waterfall';vc.validate(spans)
+        invalid=[]
+        bad=copy.deepcopy(composition);bad['children'][0]['hidden']=True;invalid.append(bad)
+        bad=copy.deepcopy(composition);bad['children'].append(copy.deepcopy(bad['children'][0]));invalid.append(bad)
+        bad=copy.deepcopy(composition);bad['children'][0]['records']['scope']['signal']='metrics';invalid.append(bad)
+        bad=copy.deepcopy(composition);bad['children'].append({'timeline':{'version':'goo.view/1','scope':record['scope'],'kind':{'name':'time-bar','version':1},'display':{'value':'count'}}});invalid.append(bad)
+        bad=copy.deepcopy(composition);bad['children'].append({'comparison':{'version':'goo.view/1','scope':record['scope'],'kind':{'name':'captured-count-comparison','version':1},'baselineCapture':'a'*64,'display':{'value':'count'}}});invalid.append(bad)
+        for bad in invalid:
+            assert not cc.is_valid(bad),'invalid record-only shape admitted'
+        unused=copy.deepcopy(view);unused['queries'][0].update(numeric=None,numericHistogram=None,reportedEdge=None,groupTimeSeries=False);vc.validate(unused)
+        for field,value in [('numeric',{'field':{'kind':'attribute','key':'work'},'type':'int64','unit':'items','parse':'canonical-decimal'}),('numericHistogram',{'binning':'powers-of-two'}),('reportedEdge',{'parent':{'service':'api'},'child':{'service':'worker'}}),('groupTimeSeries',True)]:
+            bad=copy.deepcopy(view);bad['queries'][0][field]=value
+            assert not vc.is_valid(bad),'specialized record-only profile admitted'
+        grouped=copy.deepcopy(view);grouped['queries'][0]['groupBy']=[{'kind':'column','key':'service'}]
+        grouped['template']={'version':'goo.template/1','group':'destination','profile':'ordinary'}
+        assert not vc.is_valid(grouped),'record-only category template admitted'
+        for key,value in [('layout','records'),('columns',[]),('tail',None),('composition',None)]:
+            bad=copy.deepcopy(view);bad[key]=value
+            assert not vc.is_valid(bad),'raw view accepted another presentation owner'
+
+
 def check_comparison_template_bindings(spec):
     """Binding and request presence never silently inherit a specimen capture."""
     scope = {'kind':'record-query','signal':'spans'}
@@ -702,6 +735,7 @@ def check(spec):
     check_activity_scope_views(spec)
     check_view_dataset(spec)
     check_timeline_composition(spec)
+    check_record_only_compositions(spec)
     check_comparison_template_bindings(spec)
     check_record_span_waterfall(spec)
     check_document_view_card(spec)

@@ -180,7 +180,10 @@ func validateRecordColumns(columns []string, fields []exploration.Field, queries
 }
 
 func (c ViewComposition) Validate(q exploration.Query) error {
-	if c.Version != "goo.composition/1" || c.Kind.Name != "stack" || c.Kind.Version != 1 || (len(c.Children) < 2 || len(c.Children) > 4) {
+	if _, err := exploration.Compile(q); err != nil {
+		return err
+	}
+	if c.Version != "goo.composition/1" || c.Kind.Name != "stack" || c.Kind.Version != 1 || (len(c.Children) < 1 || len(c.Children) > 4) {
 		return errors.New("require a pinned record composition with optional timeline and captured-count comparison")
 	}
 	aggregate, records, timeline, comparison, visible := false, false, false, false, false
@@ -229,8 +232,14 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 			}
 		}
 	}
-	if !aggregate || !records || !visible {
-		return errors.New("composition requires both roles and at least one visible child")
+	if !records || !visible {
+		return errors.New("composition requires records and at least one visible child")
+	}
+	if !aggregate && (len(c.Children) != 1 || q.Signal != "logs" && q.Signal != "spans") {
+		return errors.New("records-only composition requires one visible logs or spans records child")
+	}
+	if !aggregate && (q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.GroupTimeSeries) {
+		return errors.New("records-only composition requires an ordinary raw query without numeric, histogram, reported-edge or grouped-time profiles")
 	}
 	return nil
 }
