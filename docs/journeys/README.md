@@ -2778,3 +2778,5 @@ held parent return, fresh focus and refusal of retired controls.
 - [305: exchange portable YAML views between isolated stores](305-portable-view.md).
 
 - [306: validate repository YAML offline and explicitly import through the CLI](306-view-cli.md).
+
+- [307: compare authored cohorts with held parent or rest](307-authored-cohorts.md).

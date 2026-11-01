@@ -148,8 +148,16 @@ func TestGroupCountComparisonRemainsOptionalWithoutNarrowingBroadCompare(t *test
 	b := detached(a)
 	b.Question.Where.Value = "different"
 	result, err := CompareCohorts(ComparisonRequest{Baseline: a, Selection: b})
+	if err != nil || result.ViewComparison == nil || result.GroupComparison == nil {
+		t.Fatal("independent-predicate count cohorts lost optional alignment", err)
+	}
+	if CompatibleCapturedCountQueries(a.Question, b.Question) == nil {
+		t.Fatal("cohort display broadened strict capture compatibility")
+	}
+	b.Question.BucketMS = 10000
+	result, err = CompareCohorts(ComparisonRequest{Baseline: a, Selection: b})
 	if err != nil || result.ViewComparison == nil || result.GroupComparison != nil {
-		t.Fatal("optional profile changed broad comparison", err)
+		t.Fatal("profile mismatch narrowed broad compare or gained aligned frame", err)
 	}
 	malformed := detached(a)
 	malformed.Groups = append(malformed.Groups, malformed.Groups[0])

@@ -21,6 +21,18 @@ func ValidateCapturedCountQuery(q Query) error {
 // delivery paging. Environment equality is typed and checked before removing its
 // representation; predicates, grouping and every measure directive remain exact.
 func CompatibleCapturedCountQueries(a, b Query) error {
+	return compatibleCountQueries(a, b, false)
+}
+
+// CompatibleCountCohortQueries aligns ordinary supplied count cohorts with
+// independently checked predicates. It never authorizes capture/template reuse.
+// Only predicates, windows, delivery paging and equivalent environment wire
+// representations may differ; grouping and measure directives remain exact.
+func CompatibleCountCohortQueries(a, b Query) error {
+	return compatibleCountQueries(a, b, true)
+}
+
+func compatibleCountQueries(a, b Query, independentPredicates bool) error {
 	if err := ValidateCapturedCountQuery(a); err != nil {
 		return err
 	}
@@ -40,7 +52,14 @@ func CompatibleCapturedCountQueries(a, b Query) error {
 	x.ToMS = 0
 	y.FromMS = 0
 	y.ToMS = 0
+	if independentPredicates {
+		x.Where = nil
+		y.Where = nil
+	}
 	if !reflect.DeepEqual(x, y) {
+		if independentPredicates {
+			return errors.New("count cohorts require the same query profile apart from predicates, windows and inspection paging")
+		}
 		return errors.New("captured-count comparison requires the same root query definition apart from windows and inspection paging")
 	}
 	return nil

@@ -74,3 +74,8 @@ test('long Unicode group labels use a bounded preview with the exact quoted valu
 test('source admission follows Go nullable group defaults for an omitted request g0',()=>{
  const {request,data}=transport();delete request.baseline.groups.find(row=>row.g0===null).g0;delete request.selection.groups.find(row=>row.g0===null).g0;const admitted=S.importComparisonResult(data,request);assert.equal(admitted.groupComparison.rows.find(row=>row.key==='0').value,null);assert.equal(admitted.groupComparison.rows.find(row=>row.key==='0').baseline.value,'2');
 });
+test('ordinary count cohort alignment admits differing selectors without loosening captured baseline reuse',()=>{
+ const a=query(),b={...query(),where:{field:{kind:'attribute',key:'cohort'},op:'eq',value:'api'}};assert.equal(G.compatibleCohorts(a,b),true);assert.throws(()=>C.compatible(a,b));
+ const raw=fixture();raw.selection.scope.selector.where=b.where;assert.equal(G.validateGroupComparison(raw).ok,true);assert.doesNotThrow(()=>S.importComparisonResult(transport(raw).data,transport(raw).request));
+ for(const changed of [{environment:'other'},{signal:'logs'},{groupBy:[{kind:'attribute',key:'other'}]},{summary:'span-duration'},{spanStatus:true},{groupTimeSeries:true},{numeric:{field:{kind:'attribute',key:'n'},type:'int64',unit:'1',parse:'canonical-decimal'}}])assert.throws(()=>G.compatibleCohorts(a,{...b,...changed}));
+});

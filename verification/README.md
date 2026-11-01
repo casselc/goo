@@ -3584,3 +3584,18 @@ CLI/browser ledger in `view_cli_ledger_test.go` checks `model/view_cli_306.qnt`
 with altered-count/scope and unfinished-prefix controls. Existing codec properties
 remain the AST authority; Go CLI tests cover transport/receipt bounds and actual
 store identity. See the [storyboard](../docs/journeys/306-view-cli.md).
+
+
+### Authored cohort continuity — 307
+
+`journeys/307-authored-cohorts.spec.js` uses real log groups, record paging and
+structured-field staging to compare authored count selections with held parent
+and independently read remainder. The observed ledger in
+`authored_cohort_ledger_test.go` checks `model/authored_cohort_307.qnt` with altered
+read/write/scope and unfinished-prefix controls. Existing facet/partition Hegel
+properties exercise actual JavaScript planners against Go predicate membership.
+A separate injected rest-read failure proves no false pair/automatic retry, then
+explicit actual-read recovery. Go HTTP fixtures separately validate the expanded
+count-cohort response through OpenAPI and shared JS admission, including empty,
+diagnostic and duration-summary cases. See the
+[storyboard](../docs/journeys/307-authored-cohorts.md).

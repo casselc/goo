@@ -1,5 +1,45 @@
 # Validation record
 
+## Authored selected/parent/remainder counts — 307
+
+[Contract/diagram](docs/AUTHORED_COHORTS.md) ·
+[storyboard/screenshots](docs/journeys/307-authored-cohorts.md) ·
+[architecture](docs/reviews/AUTHORED_COHORT_ARCHITECTURE_307.md) and
+[design](docs/reviews/AUTHORED_COHORT_DESIGN_307.md) reviews.
+
+- Root Go suite passes. Changed packages pass: `exploration` (5.55 seconds),
+  `workbench` (0.87 seconds), `cmd/goo` (12.45 seconds). Existing 100-operation
+  OpenAPI fixture/request/refusal checks pass. Three actual differing-predicate
+  responses (observed, no-data and diagnostic) validate against OpenAPI and the
+  shared JavaScript group-count admission/projection. A fourth actual duration-
+  summary response also validates; missing population/group duration payloads
+  refuse. Captured/template exact-predicate compatibility stays tested and strict.
+- Final frontend suite passes: 970 tests, zero failures/skips (32.53 seconds).
+  Focused source/record-count tests cover private full-group authority, query/
+  basis/clock matching, diagnostic refusal, context retirement, duration projection
+  and nonmutating plans. Existing passive display contracts remain in place.
+- Final real-telemetry native journey passes (59.7 seconds): 107 parent logs with
+  100 inspection rows, distinct missing/empty categories, held-parent 4 vs 107,
+  rest 3 vs selected 104, retained Bars/Table/List and qualified fields, exact
+  Back controls/focus and retired-action refusal. Pending captured-record selection
+  now refreshes/disables the facet tray without replacing its record DOM.
+- Native Save/reopen checks confirm only the selected configuration persists; the
+  temporary pair is absent. Operand mapping and UTC clocks use separate compact
+  lines after actual screenshot review caught adjacent-label concatenation.
+- The bounded secondary lets an actual selected read succeed and injects a rest
+  HTTP 500. No pair or automatic retry occurs; explicit Run then reads both actual
+  operands successfully. Main and secondary produce no page errors. Three compact
+  refreshed frames pass final design review, and the disposable store was cleaned.
+- Existing 120 facet/partition Hegel cases plus model smoke pass (49.87 seconds).
+  The observed 14-step model, seven mutants and unfinished-prefix checks pass
+  (9.25 seconds). Main endpoint budget: eight full reads, two narrow pages, two
+  pure comparisons and two saves. The failure secondary is separate from this
+  budget; source statements are not inferred from HTTP counts.
+- Rebuilt single-Go lab serves all three changed UI modules byte-for-byte, image
+  `e5125f6eae644ce52b81fa257cdd35b69356abe4189c6369e32e11550acd3c4d`.
+  Stored volumes and unrelated services were retained. No endpoint, persisted
+  comparison AST or capture owner was added.
+
 ## Offline view validation and explicit CLI import — 306
 
 [Commands/diagram](docs/VIEW_ARTIFACT_CLI.md) ·

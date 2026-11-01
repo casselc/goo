@@ -1,6 +1,16 @@
 /* Closed supplied group-count comparison profile. No reads, actions or source guarantees. */
 import {validateSnapshot} from './view-schema.mjs';
-import {compatible} from './captured-count-comparison.mjs';
+import {eligible} from './captured-count-comparison.mjs';
+import {validateRecordQuestion} from './question-protocol.mjs';
+import {sameQuestionEnvironment} from './record-environment.mjs';
+import {identity} from './question-session.mjs';
+// Count cohorts may have independent selectors; captured-baseline reuse remains exact.
+export function compatibleCohorts(a,b){
+ for(const q of [a,b]){validateRecordQuestion(q);if(!eligible(q))throw Error('Group comparison requires ordinary single-group count cohorts.');}
+ if(!sameQuestionEnvironment(a,b))throw Error('Group comparison environment policy differs.');
+ const context=q=>{const copy=structuredClone(q);for(const key of ['where','fromMs','toMs','environment','environmentSelector'])delete copy[key];copy.offset=0;copy.limit=100;return identity(copy)};
+ if(context(a)!==context(b))throw Error('Group comparison signal, grouping or measure profile differs.');return true;
+}
 const record=x=>x!==null&&typeof x==='object'&&!Array.isArray(x),encoder=new TextEncoder(),MAX=18446744073709551615n;
 const own=(x,k)=>Object.hasOwn(x,k),admitted=new WeakSet();
 function closed(value,keys,required=keys){
@@ -51,7 +61,7 @@ function check(value){
   if(!['coherent','diagnostic'].includes(value[side+'Accounting']))throw Error('Specify supplied partition accounting.');
   const group=snapshot.scope.selector.groupBy;if(group?.length!==1||group[0].kind!==value.field.kind||group[0].key!==value.field.key)throw Error('Comparison grouping differs from an operand.');
  }
- compatible(snapshots.baseline.scope.selector,snapshots.selection.scope.selector);
+ compatibleCohorts(snapshots.baseline.scope.selector,snapshots.selection.scope.selector);
  const diagnostic=value.baselineAccounting==='diagnostic'||value.selectionAccounting==='diagnostic',a=uint(snapshots.baseline.rows[0].values.count),b=uint(snapshots.selection.rows[0].values.count);
  if(value.state!==(diagnostic?'diagnostic':a===0n||b===0n?'no_data':'observed'))throw Error('Comparison state disagrees with operand accounting.');
  if(!Array.isArray(value.rows)||Object.getPrototypeOf(value.rows)!==Array.prototype||value.rows.length>2000||Reflect.ownKeys(value.rows).length!==value.rows.length+1)throw Error('Use at most 2000 dense aligned rows.');

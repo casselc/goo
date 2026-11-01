@@ -24,7 +24,8 @@ beside the default table, with
 [shared record interactions](docs/RECORD_INTERACTIONS.md).
 [Records-only views](docs/RECORD_ONLY_VIEWS.md) also work with ungrouped raw logs or spans.
 [Open an inspected trace as a view](docs/TRACE_AS_VIEW.md) to edit and save its presentation.
-[Add a breakdown](docs/ADD_BREAKDOWN.md) to grow a records view into a chart.
+[Add a breakdown](docs/ADD_BREAKDOWN.md) to grow a records view into a chart, then
+[compare a selected cohort](docs/AUTHORED_COHORTS.md) with its held parent or rest.
 [Portable YAML definitions](docs/PORTABLE_VIEWS.md) let teams export and import
 these views through the same saved-view catalog.
 [CLI validation and import](docs/VIEW_ARTIFACT_CLI.md) connect repository checks

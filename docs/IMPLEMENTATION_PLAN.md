@@ -1,11 +1,14 @@
 # Implementation plan
 
-> Current checkpoint 306: [offline view validation and explicit CLI import](VIEW_ARTIFACT_CLI.md)
-> complete repository → CI → catalog through the existing decoder and save route.
-> The destination is required; import does not Open/Apply/Run. Shared catalog
-> identity checking avoids a second hash recipe.
-> Next 307: investigate cohort-versus-parent/rest comparison continuity for authored
-> count views, which currently lose the native breakdown selection workflow.
+> Current checkpoint 307: [authored cohort comparison](AUTHORED_COHORTS.md) connects
+> count views to selected-versus-held-parent/rest analysis through the existing
+> retained child, Run and comparison owners. The original composition remains
+> intact; Save/export keep only the selected view, not the temporary pair.
+> Next 308: preserve a fixed selected-versus-rest question recipe through the
+> existing count-comparison role and portable flow, with explicit fresh reads.
+> Held-parent observations stay temporary; presentation Apply must not copy a
+> foreign remainder query into another scope.
+
 
 
 

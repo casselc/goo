@@ -14,6 +14,12 @@ strings and literal strings are distinct categories, not interchangeable labels.
 
 ## Data semantics
 
+[Authored cohort comparisons](AUTHORED_COHORTS.md) also reuse this envelope and
+shared display. Ordinary count cohorts may have different predicates with matching
+signal, checked environment, grouping and measure profile. This broader supplied-
+cohort compatibility does not change strict root matching for captured baselines
+or templates. Each operand retains its own selector and conservative quality.
+
 The existing pure comparison response can include a closed
 `goo.group-count-comparison/1` envelope. It reuses the exact independent summary
 operands from `viewComparison`, including selectors, revisions, source bases and

@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+307 enables ordinary authored count cohorts versus held parent or independently
+read rest. A genuine full-group witness is required; raw pages and changed reads
+cannot become exact operands. Numeric/status/specialized families and captured
+comparison compositions remain outside this profile. Save/export preserve the
+selected view only; the temporary pair is not restored on reopen. Durable fixed
+remainder recipes are next. See [authored cohorts](AUTHORED_COHORTS.md).
+
 305 portable view YAML carries validated configuration through the existing
 catalog. Descriptive namespace/name/revision are not persisted registry metadata
 or automatic updates. Store-local captured-comparison/tail-baseline references

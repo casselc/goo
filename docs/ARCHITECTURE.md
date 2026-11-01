@@ -1,5 +1,12 @@
 # Architecture
 
+[Authored cohort continuation](AUTHORED_COHORTS.md) retains the composition in an
+existing population child. Private full-group snapshots gate held-parent or
+independent remainder operands; the existing Run/controller and comparison API
+own acquisition and calculation. Temporary pair state is absent from saved and
+portable definitions. A dedicated count-cohort compatibility rule permits distinct
+predicates without weakening captured-baseline/template root matching.
+
 [View artifact CLI](VIEW_ARTIFACT_CLI.md) validates files offline and explicitly
 posts admitted definitions through the existing saved-view API. Shared
 `workbench.ViewContentID` keeps catalog Create/Load and receipt verification on

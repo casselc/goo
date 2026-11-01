@@ -37,7 +37,7 @@ type GroupCountCell struct {
 // Called after the existing broad comparison has validated both cohorts. This
 // optional narrow profile never changes that operation's existing admission.
 func cohortGroupCountComparison(request ComparisonRequest, summary *ViewComparison) *GroupCountComparison {
-	if summary == nil || summary.State == "incompatible" || request.Numeric || request.Distribution || CompatibleCapturedCountQueries(request.Baseline.Question, request.Selection.Question) != nil {
+	if summary == nil || summary.State == "incompatible" || request.Numeric || request.Distribution || CompatibleCountCohortQueries(request.Baseline.Question, request.Selection.Question) != nil {
 		return nil
 	}
 	a, _, err := request.Baseline.validate()

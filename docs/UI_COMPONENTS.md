@@ -1730,3 +1730,9 @@ display component gains source or authoring ownership.
 [Portable YAML views](PORTABLE_VIEWS.md) transport existing declarations.
 Export/import are app-owned configuration controls, not public display elements;
 passive renderers gain no parsing, source or persistence responsibilities.
+
+[Authored cohorts](AUTHORED_COHORTS.md) reuse the supplied measure/group-count
+comparison elements. App adapters own selection/complement queries, full-snapshot
+eligibility, child lifecycle and temporary state. The group-count validator admits
+matching ordinary count profiles with distinct predicates; no source guarantee or
+component-owned query is introduced.
