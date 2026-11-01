@@ -1726,3 +1726,7 @@ shared Table/List/Waterfall elements gain no query or modal ownership.
 [Add breakdown](ADD_BREAKDOWN.md) grows a records-only view into the existing
 aggregate-and-records composition through explicit grouping and Run. No public
 display component gains source or authoring ownership.
+
+[Portable YAML views](PORTABLE_VIEWS.md) transport existing declarations.
+Export/import are app-owned configuration controls, not public display elements;
+passive renderers gain no parsing, source or persistence responsibilities.

@@ -6347,6 +6347,100 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/view-artifacts/decode": {
+      "post": {
+        "operationId": "post_view_artifacts_decode",
+        "summary": "POST /view-artifacts/decode",
+        "tags": [
+          "view-artifacts"
+        ],
+        "description": "Current owner: cmd/goo/workbench_http.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/workbench_http.go",
+        "x-effects": "pure-plan-or-supplied-summary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewArtifactResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ViewArtifactDecodeRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 131072,
+        "x-schema-coverage": "typed"
+      }
+    },
+    "/view-artifacts/encode": {
+      "post": {
+        "operationId": "post_view_artifacts_encode",
+        "summary": "POST /view-artifacts/encode",
+        "tags": [
+          "view-artifacts"
+        ],
+        "description": "Current owner: cmd/goo/workbench_http.go. Effect: pure-plan-or-supplied-summary. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "cmd/goo/workbench_http.go",
+        "x-effects": "pure-plan-or-supplied-summary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewArtifactResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ViewArtifactEncodeRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 131072,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/view-templates/expand": {
       "post": {
         "operationId": "post_view_templates_expand",
@@ -7962,6 +8056,29 @@
       },
       "TraceSearchResult": {
         "$ref": "#/components/schemas/exploration.TraceSearchResult"
+      },
+      "ViewArtifactDecodeRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewArtifactDecodeRequestInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "ViewArtifactEncodeRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewArtifactEncodeRequestInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "ViewArtifactResult": {
+        "$ref": "#/components/schemas/workbench.ViewArtifactResult"
       },
       "ViewTemplateExpansion": {
         "$ref": "#/components/schemas/workbench.ViewTemplateExpansion"
@@ -44424,6 +44541,220 @@
           "name",
           "version"
         ]
+      },
+      "workbench.ViewArtifact": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 63,
+            "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
+          },
+          "namespace": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 63,
+            "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
+          },
+          "revision": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+          },
+          "version": {
+            "const": "goo.view-artifact/1"
+          },
+          "view": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ExplorationView"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "const": ""
+                  },
+                  "tail": {
+                    "properties": {
+                      "baseline": {
+                        "const": ""
+                      }
+                    }
+                  },
+                  "composition": {
+                    "properties": {
+                      "children": {
+                        "items": {
+                          "not": {
+                            "required": [
+                              "comparison"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "required": [
+          "version",
+          "namespace",
+          "name",
+          "revision",
+          "view"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewArtifact"
+      },
+      "workbench.ViewArtifactDecodeRequestInput": {
+        "additionalProperties": false,
+        "properties": {
+          "yaml": {
+            "allOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            ],
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 65536
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewArtifactDecodeRequest",
+        "required": [
+          "yaml"
+        ]
+      },
+      "workbench.ViewArtifactEncodeRequestInput": {
+        "additionalProperties": false,
+        "properties": {
+          "artifact": {
+            "allOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.ViewArtifactInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            ],
+            "type": "object"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewArtifactEncodeRequest",
+        "required": [
+          "artifact"
+        ]
+      },
+      "workbench.ViewArtifactInput": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 63,
+            "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
+          },
+          "namespace": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 63,
+            "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
+          },
+          "revision": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+          },
+          "version": {
+            "const": "goo.view-artifact/1"
+          },
+          "view": {
+            "allOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.ExplorationViewInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "const": ""
+                  },
+                  "tail": {
+                    "properties": {
+                      "baseline": {
+                        "const": ""
+                      }
+                    }
+                  },
+                  "composition": {
+                    "properties": {
+                      "children": {
+                        "items": {
+                          "not": {
+                            "required": [
+                              "comparison"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewArtifact",
+        "required": [
+          "version",
+          "namespace",
+          "name",
+          "revision",
+          "view"
+        ]
+      },
+      "workbench.ViewArtifactResult": {
+        "properties": {
+          "artifact": {
+            "$ref": "#/components/schemas/workbench.ViewArtifact"
+          },
+          "yaml": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "artifact",
+          "yaml"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ViewArtifactResult"
       },
       "workbench.ViewComposition": {
         "properties": {

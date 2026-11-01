@@ -3558,3 +3558,17 @@ ledger replays the bounded 304 model with corrupted and unfinished controls;
 transition properties compare actual JavaScript configuration to Go admission.
 Existing record display campaigns retain their passive component contracts.
 See the [storyboard](../docs/journeys/304-add-breakdown.md) for exact commands.
+
+
+### Portable YAML view definitions — 305
+
+`journeys/305-portable-view.spec.js` authors/export-downloads a real view in one
+store, imports it into a fresh empty store through preview and existing Save, then
+checks explicit original-question Run and destination presentation reuse. Its
+observed transport ledger validates source-free encode/decode/import steps with
+negative controls; an extra held real-decode response checks close/reopen retry
+and stale-preview retirement outside the main budget. Fifty Hegel cases cover
+actual Go canonical YAML roundtrip, independent mutable output, supported flat/
+composed forms, typed scope and malformed transport. Backend Go/API fixtures own
+strict parser/refusal and code-managed-example checks. See the
+[storyboard](../docs/journeys/305-portable-view.md) for exact commands.

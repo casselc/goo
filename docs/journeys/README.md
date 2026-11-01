@@ -2774,3 +2774,5 @@ held parent return, fresh focus and refusal of retired controls.
 - [303: continue an inspected trace as an editable records view](303-trace-as-view.md).
 
 - [304: grow raw records into a breakdown, comparison and reusable view](304-add-breakdown.md).
+
+- [305: exchange portable YAML views between isolated stores](305-portable-view.md).

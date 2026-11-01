@@ -1,5 +1,13 @@
 # Known issues and gaps
 
+305 portable view YAML carries validated configuration through the existing
+catalog. Descriptive namespace/name/revision are not persisted registry metadata
+or automatic updates. Store-local captured-comparison/tail-baseline references
+are refused, not stripped. Query baselines remain fixed configuration. Import
+requires explicit Save, then existing Open/Run or compatible presentation Apply.
+Automatic deployment/file loading and dedicated artifact CLI commands remain
+outside this cut. See [portable definitions](PORTABLE_VIEWS.md).
+
 304 adds an explicit single-field count breakdown (Bars/Table) to ordinary
 records-only views. Different or multiple grouping requires explicit replacement;
 record presentation and scope remain unchanged. Staging clears held data and

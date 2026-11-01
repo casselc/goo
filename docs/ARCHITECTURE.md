@@ -1,5 +1,11 @@
 # Architecture
 
+[Portable view artifacts](PORTABLE_VIEWS.md) wrap the existing view AST in a
+strict versioned YAML transport. Pure Go encode/decode endpoints acquire no source
+data and persist nothing. Explicit import uses the current saved-view store;
+labels add no registry or capture authority. Open original question and Apply
+presentation retain their separate existing scope owners.
+
 [Add breakdown](ADD_BREAKDOWN.md) promotes records-only configuration through
 the existing population draft/Run owner. Explicit grouping replacement preserves
 the record child and scope; staging withdraws held source aspects. Full Run

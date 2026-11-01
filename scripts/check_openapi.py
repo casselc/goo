@@ -20,6 +20,32 @@ def validator(spec, schema):
     return Draft202012Validator({'allOf': [schema], 'components': spec['components']})
 
 
+def check_view_artifacts(spec):
+    fixtures=json.loads((ROOT/'testdata/http/view-artifacts.json').read_text())['cases']
+    request=json.loads(next(c['body'] for c in fixtures if c['name']=='encode'))
+    schema=spec['paths']['/view-artifacts/encode']['post']['requestBody']['content']['application/json']['schema']
+    check=validator(spec,schema)
+    check.validate(request)
+    for change in (
+        lambda a:a.update(version='goo.view-artifact/2'),
+        lambda a:a.update(namespace='Team/Service'),
+        lambda a:a.update(name=''),
+        lambda a:a.update(revision='a'*65),
+        lambda a:a.update(unknown=True),
+        lambda a:a['view'].update(id='a'*64),
+        lambda a:a['view'].update(tail={'signal':'logs','baseline':'a'*64}),
+    ):
+        bad=copy.deepcopy(request);change(bad['artifact'])
+        assert not check.is_valid(bad),'invalid portable artifact admitted'
+    for bad in ({}, {'artifact':None}, {'artifact':{}}):
+        assert not check.is_valid(bad),'missing portable artifact admitted'
+    # Both endpoints remain pure and use the existing bounded HTTP decoder.
+    for path in ('/view-artifacts/encode','/view-artifacts/decode'):
+        op=spec['paths'][path]['post']
+        assert op['x-go-body-limit-bytes']==131072
+        assert op['x-effects']=='pure-plan-or-supplied-summary'
+
+
 def check_view_dataset(spec):
     """The current server adapter, including refusals the generic Go reflection cannot express."""
     check_view = validator(spec, {'$ref': '#/components/schemas/scopedview.Dataset'})
@@ -733,6 +759,7 @@ def check(spec):
     check_record_step_selector(spec)
     validate_spec(spec)
     check_activity_scope_views(spec)
+    check_view_artifacts(spec)
     check_view_dataset(spec)
     check_timeline_composition(spec)
     check_record_only_compositions(spec)
@@ -818,7 +845,7 @@ def check(spec):
                     accepted.append((shape, request))
     # The 13-case history envelope adds 12 JSON responses, 5 accepted
     # requests and one method-mux refusal to previous417/154/27.
-    assert responses == 429 and requests == 159 and mux_refusals == 28, (responses, requests, mux_refusals)
+    assert responses == 436 and requests == 161 and mux_refusals == 28, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)

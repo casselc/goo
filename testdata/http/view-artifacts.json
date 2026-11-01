@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "encode",
+      "method": "POST",
+      "path": "/view-artifacts/encode",
+      "body": "{\"artifact\":{\"version\":\"goo.view-artifact/1\",\"namespace\":\"payments\",\"name\":\"http-logs\",\"revision\":\"v1\",\"view\":{\"version\":1,\"title\":\"HTTP logs\",\"queries\":[{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}],\"layout\":\"records\",\"columns\":[\"utc\",\"summary\"]}}}",
+      "status": 200,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"artifact\":{\"version\":\"goo.view-artifact/1\",\"namespace\":\"payments\",\"name\":\"http-logs\",\"revision\":\"v1\",\"view\":{\"version\":1,\"title\":\"HTTP logs\",\"queries\":[{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}],\"layout\":\"records\",\"columns\":[\"utc\",\"summary\"]}},\"yaml\":\"version: goo.view-artifact/1\\nnamespace: payments\\nname: http-logs\\nrevision: v1\\nview:\\n    version: 1\\n    title: HTTP logs\\n    queries:\\n        - signal: logs\\n          environment: prod\\n          fromMs: 1000\\n          toMs: 61000\\n          limit: 100\\n          offset: 0\\n    layout: records\\n    columns:\\n        - utc\\n        - summary\\n\"}\n"
+    },
+    {
+      "name": "decode",
+      "method": "POST",
+      "path": "/view-artifacts/decode",
+      "body": "{\"yaml\":\"version: goo.view-artifact/1\\nnamespace: payments\\nname: http-logs\\nrevision: v1\\nview:\\n    version: 1\\n    title: HTTP logs\\n    queries:\\n        - signal: logs\\n          environment: prod\\n          fromMs: 1000\\n          toMs: 61000\\n          limit: 100\\n          offset: 0\\n    layout: records\\n    columns:\\n        - utc\\n        - summary\\n\"}",
+      "status": 200,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"artifact\":{\"version\":\"goo.view-artifact/1\",\"namespace\":\"payments\",\"name\":\"http-logs\",\"revision\":\"v1\",\"view\":{\"version\":1,\"title\":\"HTTP logs\",\"queries\":[{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}],\"layout\":\"records\",\"columns\":[\"utc\",\"summary\"]}},\"yaml\":\"version: goo.view-artifact/1\\nnamespace: payments\\nname: http-logs\\nrevision: v1\\nview:\\n    version: 1\\n    title: HTTP logs\\n    queries:\\n        - signal: logs\\n          environment: prod\\n          fromMs: 1000\\n          toMs: 61000\\n          limit: 100\\n          offset: 0\\n    layout: records\\n    columns:\\n        - utc\\n        - summary\\n\"}\n"
+    },
+    {
+      "name": "unknown",
+      "method": "POST",
+      "path": "/view-artifacts/encode",
+      "body": "{\"artifact\":{},\"unknown\":1}",
+      "status": 400,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"error\":\"json: unknown field \\\"unknown\\\"\"}\n"
+    },
+    {
+      "name": "null",
+      "method": "POST",
+      "path": "/view-artifacts/encode",
+      "body": "{\"artifact\":null}",
+      "status": 400,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"error\":\"artifact requires goo.view-artifact/1, namespace/name slugs (1..63), and revision label (1..64)\"}\n"
+    },
+    {
+      "name": "aliases",
+      "method": "POST",
+      "path": "/view-artifacts/decode",
+      "body": "{\"yaml\":\"a: \\u0026a hello\\nb: *a\\n\"}",
+      "status": 400,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"error\":\"YAML anchors, aliases and explicit tags unsupported\"}\n"
+    },
+    {
+      "name": "duplicate",
+      "method": "POST",
+      "path": "/view-artifacts/decode",
+      "body": "{\"yaml\":\"version: goo.view-artifact/1\\nnamespace: payments\\nname: http-logs\\nrevision: v1\\nview:\\n    version: 1\\n    title: HTTP logs\\n    queries:\\n        - signal: logs\\n          environment: prod\\n          fromMs: 1000\\n          toMs: 61000\\n          limit: 100\\n          offset: 0\\n    layout: records\\n    columns:\\n        - utc\\n        - summary\\nname: duplicate\\n\"}",
+      "status": 400,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"error\":\"duplicate YAML key \\\"name\\\"\"}\n"
+    },
+    {
+      "name": "trailing",
+      "method": "POST",
+      "path": "/view-artifacts/decode",
+      "body": "{\"yaml\":\"version: goo.view-artifact/1\\nnamespace: payments\\nname: http-logs\\nrevision: v1\\nview:\\n    version: 1\\n    title: HTTP logs\\n    queries:\\n        - signal: logs\\n          environment: prod\\n          fromMs: 1000\\n          toMs: 61000\\n          limit: 100\\n          offset: 0\\n    layout: records\\n    columns:\\n        - utc\\n        - summary\\n\"} {}",
+      "status": 400,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    }
+  ]
+}

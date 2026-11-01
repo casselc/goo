@@ -33,6 +33,32 @@ func registerWorkbench(mux *http.ServeMux, dir string, connection retentionConne
 	decode := func(w http.ResponseWriter, r *http.Request, v any) error {
 		return httpjson.Decode(w, r, v, workbench.MaxBytes, "expected one JSON object")
 	}
+	mux.HandleFunc("POST /view-artifacts/encode", func(w http.ResponseWriter, r *http.Request) {
+		var in workbench.ViewArtifactEncodeRequest
+		if e := decode(w, r, &in); e != nil {
+			fail(w, 400, e)
+			return
+		}
+		out, e := workbench.EncodeViewArtifact(in.Artifact)
+		if e != nil {
+			fail(w, 400, e)
+			return
+		}
+		reply(w, 200, out)
+	})
+	mux.HandleFunc("POST /view-artifacts/decode", func(w http.ResponseWriter, r *http.Request) {
+		var in workbench.ViewArtifactDecodeRequest
+		if e := decode(w, r, &in); e != nil {
+			fail(w, 400, e)
+			return
+		}
+		out, e := workbench.DecodeViewArtifact(in.YAML)
+		if e != nil {
+			fail(w, 400, e)
+			return
+		}
+		reply(w, 200, out)
+	})
 	mux.HandleFunc("POST /view-templates/expand", func(w http.ResponseWriter, r *http.Request) {
 		var in workbench.ViewTemplateExpansionRequest
 		if e := decode(w, r, &in); e != nil {

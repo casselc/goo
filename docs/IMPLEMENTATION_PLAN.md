@@ -1,12 +1,13 @@
 # Implementation plan
 
-> Current checkpoint 304: whole-flow architecture/design review delivered
-> [Add breakdown](ADD_BREAKDOWN.md), connecting natural raw/trace records entry
-> to the existing chart, comparison and reusable-view authoring flow. Explicit
-> grouping changes stage configuration without reading or promoting page data.
-> Typed environment entry now uses the already-supported planner contract.
-> Next 305: portable service/team view definitions through the existing admission
-> and catalog, with explicit scope reuse and no transferable capture authority.
+> Current checkpoint 305: [portable service/team view definitions](PORTABLE_VIEWS.md).
+> Strict YAML wraps the current view AST. Pure preview/encode use existing
+> admission; explicit import saves through the ordinary catalog. Fixed-question
+> Open and presentation Apply remain separate, and store-local capture IDs are
+> refused. Namespace/name/revision are file labels, not a new registry.
+> Next 306: offline CLI validation and explicit import to a required destination,
+> completing repository → CI → catalog through the same decoder/store endpoint.
+
 
 
 

@@ -1,5 +1,51 @@
 # Validation record
 
+## Portable service/team view artifacts — 305
+
+[Contract/diagram](docs/PORTABLE_VIEWS.md) ·
+[checked YAML example](config/views/service-requests.yaml) ·
+[storyboard/screenshots](docs/journeys/305-portable-view.md) ·
+[architecture](docs/reviews/PORTABLE_VIEWS_ARCHITECTURE_305.md) and
+[design](docs/reviews/PORTABLE_VIEWS_DESIGN_305.md) reviews.
+
+- Root Go suite passes. Changed packages (`workbench`, `cmd/goo`) pass with
+  roundtrip/isolation, unsafe YAML, exact integer, depth/node/size limits, unknown
+  fields and store-local reference refusals. The checked code-managed example is
+  decoded from its actual file and compared to the expected AST/canonical YAML.
+  Existing required page limits remain explicit; omitted/zero/negative refuse.
+- OpenAPI passes: 100 operations, 659 schemas, 436 fixture responses,
+  161 admitted requests and 28 mux refusals plus negative controls. The two new
+  codec endpoints have actual HTTP fixtures and acquire/persist no data.
+- Full frontend suite passes: 965 tests, zero failures/skips (26.28 seconds).
+  Focused checks cover full normalized definition correspondence, label/refusal
+  rules, bounded YAML and stale owner/input revisions. Architecture source review
+  accepted complete response matching, closed-preview retry and old-download
+  invalidation; no client YAML parser or alternate catalog was introduced.
+- Fifty Hegel cases and model smoke pass (8.12 seconds), covering flat and
+  composed definitions, wire omissions, typed environments, scalar-looking strings,
+  canonical output and alias isolation. Main cross-installation native journey
+  passes (27.1 seconds); the observed 14-step replay with negative controls passes
+  (8.69 seconds). Main endpoint budget: nine full reads, one narrow page, three
+  saves, one encode and one decode. These include setup/exploration stages;
+  export/preview/import themselves acquire no telemetry.
+- The actual downloaded YAML is imported into a second fresh empty catalog.
+  Original question Open stages without reading; Run acquires seven source rows.
+  Applying its presentation to three destination rows preserves the held question
+  and destination result. Three bounded actual frames pass design review.
+- A held actual HTTP 200 decode response is safely retired on disclosure close;
+  reopening can retry, stale success cannot enable Import, and fresh Preview
+  changes no telemetry or saved configuration. These two extra decode calls are
+  outside the main ledger budget. The targeted 304 authoring regression passes
+  (1.4 minutes); the final two-test native run passes in 1.9 minutes. Historical
+  screenshot churn was restored and disposable capture stores were cleaned.
+- The rebuilt single-Go lab serves all three changed
+  UI/API assets byte-for-byte, image
+  `8940905e1ad93738b031577fba0484390247040fc0b10a8c1e45d0e11cec525f`.
+  Existing stored volumes and unrelated services were retained.
+- Remote GitHub CI and merge remain unverified because the running
+  environment still blocks `api.github.com`; the saved network draft is separate
+  from the active policy.
+
 ## Whole-flow authoring and Add breakdown — 304
 
 [Contract/diagram](docs/ADD_BREAKDOWN.md) ·

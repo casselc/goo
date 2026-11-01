@@ -1565,6 +1565,29 @@
   "TraceSearchResult": {
     "$ref": "#/components/schemas/exploration.TraceSearchResult"
   },
+  "ViewArtifactDecodeRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/workbench.ViewArtifactDecodeRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "ViewArtifactEncodeRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/workbench.ViewArtifactEncodeRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "ViewArtifactResult": {
+    "$ref": "#/components/schemas/workbench.ViewArtifactResult"
+  },
   "ViewTemplateExpansion": {
     "$ref": "#/components/schemas/workbench.ViewTemplateExpansion"
   },
@@ -26903,6 +26926,141 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.TimelineViewKind"
+  },
+  "workbench.ViewArtifact": {
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "namespace": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      },
+      "view": {
+        "$ref": "#/components/schemas/workbench.ExplorationView"
+      }
+    },
+    "required": [
+      "version",
+      "namespace",
+      "name",
+      "revision",
+      "view"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewArtifact"
+  },
+  "workbench.ViewArtifactDecodeRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "yaml": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewArtifactDecodeRequest"
+  },
+  "workbench.ViewArtifactEncodeRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "artifact": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewArtifactInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewArtifactEncodeRequest"
+  },
+  "workbench.ViewArtifactInput": {
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "namespace": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "revision": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "view": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ExplorationViewInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewArtifact"
+  },
+  "workbench.ViewArtifactResult": {
+    "properties": {
+      "artifact": {
+        "$ref": "#/components/schemas/workbench.ViewArtifact"
+      },
+      "yaml": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "artifact",
+      "yaml"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ViewArtifactResult"
   },
   "workbench.ViewComposition": {
     "properties": {
