@@ -1,5 +1,19 @@
 # Semantic properties and model conformance
 
+## Saved fixed-query cohorts (308)
+
+The [journey and storyboard](../docs/journeys/308-saved-fixed-cohorts.md) check
+source-free promotion, explicit fresh reads, Save, YAML and real CLI import into
+an empty store. Fifty generated Go-to-JavaScript cases cover artifact round trips
+and operand isolation. The observed twelve-step Quint trace rejects seven mutants
+and an unfinished prefix; the model checks workflow effects rather than private
+source authority.
+
+```sh
+go test -C verification -run '^(TestHegelFixedQueryViewArtifactRoundTripAndIsolation|TestQuintSavedFixedCohortModelSmoke)$' -count=1 .
+./node_modules/.bin/playwright test journeys/308-saved-fixed-cohorts.spec.js
+```
+
 ## Shared raw-span duration histograms (271)
 
 The [real journey and storyboard](../journeys/271-duration-histogram-storyboard.md) cover exact eight-bin duration geometry, one-record inspection pages versus full group totals, source-bound gestures, manual bounds, explicit selected/rest reads, retired callbacks and Saved display. The 100 generated actual Go DTO → JavaScript cases include duration boundaries/zeroes/extreme counts, malformed tagged families and numeric histogram nonregression. Four producer controls reject unknown/null/duplicate/overflow groups.
