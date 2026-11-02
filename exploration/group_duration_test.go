@@ -43,6 +43,7 @@ func TestGroupedDurationReadAndDisagreement(t *testing.T) {
 			fmt.Fprintln(w, `{"count":"2","sum_ns":"300","min_ns":"100","max_ns":"200","quantiles_ns":["200","200","200"]}`)
 		case strings.Contains(sql, " AS timestamp_ns"):
 			fmt.Fprintln(w, `{"timestamp_ns":"1000","duration_ns":"100"}`)
+			fmt.Fprintln(w, `{"timestamp_ns":"1001","duration_ns":"200"}`)
 		}
 	}))
 	defer srv.Close()

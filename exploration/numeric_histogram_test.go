@@ -298,7 +298,7 @@ func TestNumericHistogramSourceCaptureSameRead(t *testing.T) {
 		sql := string(body)
 		switch {
 		case strings.Contains(sql, " AS timestamp_ns"):
-			fmt.Fprintln(w, `{"timestamp_ns":"1","duration_ns":"1"}`)
+			writeRecordFixtureRows312(t, w, sql, len(values), `{"timestamp_ns":"1","duration_ns":"1"}`)
 		case strings.Contains(sql, "SELECT DISTINCT"):
 			return
 		default:

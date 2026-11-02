@@ -174,6 +174,8 @@ func TestSourceSuppliesStatusViewsWithoutAdditionalReads(t *testing.T) {
 		case strings.Contains(sql, "SELECT DISTINCT"):
 		case strings.Contains(sql, "count()"):
 			text = `{"count":"4","status_error":"1","status_ok":"1","status_unset":"1","status_unknown":"1"}`
+		case strings.Contains(sql, " AS timestamp_ns"):
+			text = strings.Repeat(`{"timestamp_ns":"1","duration_ns":"0"}`+"\n", 3)
 		}
 		return &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(text))}, nil
 	})}}

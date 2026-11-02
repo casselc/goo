@@ -1712,3 +1712,12 @@ The exact destination question and existing count-value owner remain authoritati
 no new field remapping, query executor or source guarantee is introduced. Specialized
 shipped HTTP numeric questions retain their original composition without an
 incompatible optional facet. See [HTTP service views](HTTP_SERVICE_VIEW_TEMPLATE.md).
+
+
+The [312 review](reviews/WHOLE_PRODUCT_PLAN_312.md) preserves these layers while
+correcting owner boundaries: the application binds every selection-tray command
+to one current draft/selection/query lease, disposes replaced facet lookups, and
+performs explicit control removal before fixed-pair inclusion. Source acquisition
+freezes returned question metadata and diagnoses terminal count/page contradictions.
+No new executor, data model coercion or public wire type is needed. The finite
+[November roadmap](ROADMAP_2026_11_02.md) is the active execution queue.

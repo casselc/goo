@@ -36,6 +36,8 @@ func TestSpanStatusAccountingAndSourceDrift(t *testing.T) {
 			fmt.Fprintf(w, `{"g0":"a","count":"4","status_error":"%s","status_ok":"1","status_unset":"1","status_unknown":"%s"}`, value, map[bool]string{true: "2", false: "1"}[mode == "changed"])
 		case strings.Contains(sql, "SELECT toString(count())"):
 			fmt.Fprintln(w, `{"count":"4","status_error":"1","status_ok":"1","status_unset":"1","status_unknown":"1"}`)
+		case strings.Contains(sql, " AS timestamp_ns"):
+			writeRecordFixtureRows312(t, w, sql, 4, `{"timestamp_ns":"1","duration_ns":"1"}`)
 		}
 	}))
 	defer srv.Close()
@@ -120,6 +122,8 @@ func TestSavedComparisonRetainsServerEvidenceAndReopensOffline(t *testing.T) {
 			fmt.Fprintln(w, `{"g0":"a",`+row+`}`)
 		case strings.Contains(sql, "SELECT toString(count())"):
 			fmt.Fprintln(w, `{`+row+`}`)
+		case strings.Contains(sql, " AS timestamp_ns"):
+			writeRecordFixtureRows312(t, w, sql, 2, `{"timestamp_ns":"1","duration_ns":"1"}`)
 		}
 	}))
 	source := Source{Endpoint: srv.URL}

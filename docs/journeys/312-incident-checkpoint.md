@@ -1,0 +1,38 @@
+# Follow one incident through the current product — 312
+
+This checkpoint starts with a real timeout log in Activity and follows the actual
+navigation available today. It intentionally records detours instead of hiding
+missing handoffs behind direct deep links or seeded saved views.
+
+1. Start the log stream in the fixture environment, notice the POST timeout and
+   pause. Inspecting the held row is local. The service cell provides filtering;
+   move through the global Services entry and enter the environment again.
+2. Discover/open the HTTP service and Customize its existing route view. Run
+   reads 107 incoming spans with a 100-row inspection limit; Read values separately
+   shows GET 100 and POST seven. Narrow by POST through existing staged controls.
+3. Exercise one retained-parent lookup/Back and stale-command ABA case. A draft
+   filter blocks current commands; discard it and apply the valid POST selection.
+   The current scope has seven records; save that reusable fixed question.
+4. Inspect the timeout record and open its trace. The inspector reads the Server
+   span, two storage children and its correlated error log. Open trace as view
+   stages only; Run reads three trace rows across services.
+5. Save/reopen the trace view without automatic acquisition, then Run the same
+   exact trace question and window explicitly.
+6. In a separate ordinary-profile lane, verify explicit comparison promotion
+   without the facet control preserves applied filters and record presentation.
+
+![Activity incident entry](screenshots/312-activity-incident.png)
+
+![Cross-service trace context](screenshots/312-correlated-trace.png)
+
+![Reopened exact trace view](screenshots/312-reopened-trace.png)
+
+![Explicit control removal before comparison](screenshots/312-comparison-without-facet.png)
+
+[Maintained browser test](../../journeys/312-incident-checkpoint.spec.js) ·
+[whole-product verification review](../reviews/WHOLE_PRODUCT_VERIFICATION_312.md).
+Validation: final finite browser run passed in 38.9s (43.4s runner), including
+all selected lifecycle/promotion checks, with no page errors. Fifty actual
+JavaScript/Go transition and lease cases passed in 16.36s. The review records
+measured request counts, response sizes/timings and honest navigation friction;
+no production code is owned by this storyboard.

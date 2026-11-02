@@ -1,19 +1,12 @@
 # Implementation plan
 
-> Delivered 308: [saved fixed cohort questions](SAVED_COHORT_QUERIES.md) retain
-> selected and baseline intent through the existing comparison role, Save and
-> portable/CLI flow. Held-parent data stays temporary. Fixed-pair presentation
-> Apply and category templates refuse scope copying; shared context stays checked.
-> Delivered 309: [paired comparison-window authoring](PAIRED_COMPARISON_WINDOWS.md)
-> stages both operands for Run without a YAML roundtrip. The existing fresh-window
-> action, UTC editor and timeline gestures share the same checked transition.
-> Delivered 310: [declarative categorical facets](DECLARATIVE_FACETS.md) add a
-> qualified-field scope control through existing counted-values and selection owners.
-> Delivered 311: [HTTP service templates](HTTP_SERVICE_VIEW_TEMPLATE.md) combine
-> a literal method facet, route chart and records through existing Customize.
-> Proposed next 312: a whole-product incident-flow checkpoint on the running app,
-> reconciling usability, architecture, reliability and performance into a finite
-> revised backlog before adding more service-family controls.
+> Active execution order: [November product roadmap and backlog](ROADMAP_2026_11_02.md).
+> Delivered 312: whole-product incident-flow review and bounded correctness fixes
+> for selection commands, facet lifetime/promotion and source certainty/ownership.
+> Next 313 consolidates the active investigation canvas; 314 measures actual source
+> demand before optimizing reads. Delivery notes below are retained history, not
+> parallel active queues.
+
 
 
 

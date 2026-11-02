@@ -3,7 +3,6 @@ package exploration
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -95,7 +94,7 @@ func TestNumericSourceCaptureAndSameCountDisagreement(t *testing.T) {
 		sql := string(data)
 		switch {
 		case strings.Contains(sql, " AS timestamp_ns"):
-			fmt.Fprintln(w, `{"timestamp_ns":"1","duration_ns":"1"}`)
+			writeRecordFixtureRows312(t, w, sql, 2, `{"timestamp_ns":"1","duration_ns":"1"}`)
 		case strings.Contains(sql, "SELECT DISTINCT"):
 			return
 		default:

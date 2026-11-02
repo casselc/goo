@@ -77,6 +77,7 @@ func CompileServiceDiscovery(q InventoryQuestion) (Plan, error) {
 	return Plan{Count: signals, Groups: edges, Parameters: c.params}, nil
 }
 func (s Source) DiscoverServices(ctx context.Context, q InventoryQuestion) (*ServiceDiscovery, error) {
+	q.Namespace = q.Namespace.Clone()
 	p, e := CompileServiceDiscovery(q)
 	if e != nil {
 		return nil, e

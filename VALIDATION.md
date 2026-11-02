@@ -1,5 +1,58 @@
 # Validation record
 
+## Whole-product incident checkpoint and correctness — 312
+
+[Active roadmap/backlog](docs/ROADMAP_2026_11_02.md) ·
+[reconciled plan](docs/reviews/WHOLE_PRODUCT_PLAN_312.md) ·
+[storyboard/screenshots](docs/journeys/312-incident-checkpoint.md).
+Independent [design](docs/reviews/WHOLE_PRODUCT_DESIGN_312.md),
+[architecture](docs/reviews/WHOLE_PRODUCT_ARCHITECTURE_312.md),
+[frontend](docs/reviews/WHOLE_PRODUCT_FRONTEND_312.md),
+[Go/source](docs/reviews/WHOLE_PRODUCT_GO_312.md), and
+[actual-flow verification](docs/reviews/WHOLE_PRODUCT_VERIFICATION_312.md) reviews
+separate pre-fix reproductions, executed corrections and deferred opportunities.
+
+- Root Go suite passes (`cmd/goo` 15.99 seconds, `exploration` 8.13 seconds,
+  `workbench` 1.15 seconds). Changed exploration suite passes separately in
+  6.55 seconds. Its 972 actual-transport page states cover count/offset/limit/
+  lookahead, short and full terminal contradictions, valid beyond-end and zero
+  population pages. Rows remain diagnostic; inconsistent full reads withhold
+  summary witnesses. Positive synthetic fixtures now return the rows/lookahead
+  their declared counts require; the rule was not relaxed to retain false positives.
+- Query ownership regressions freeze nested predicates, grouping/bindings and typed
+  selectors before SQL and after return. Inventory/discovery use the existing
+  nil-safe namespace clone; actual fixtures exercise one/two SQL calls. Invalid
+  query controls issue no SQL. No endpoint, wire type or generic cloning layer added.
+- Frontend suite passes: 987 tests, zero failures/skips (20.01 seconds). All six
+  selection commands share owner/generation/draft/query/selection readiness;
+  invalid plans cannot execute. Atomic comparison inclusion removes only the
+  explicitly named facet/control and template marker, preserving both questions,
+  applied predicates and presentation. Facet replacement deletes/disposes the old
+  lookup. The passive module graph stays 51; no new acquisition owner.
+- Fifty generated lease/transition cases pass (16.36 seconds): independent guard
+  mutations/ABA retirement and actual partition→without-facet promotion roundtrip
+  through Go admission/YAML, including invalid-context/nonmutation controls.
+- Final real-OTel incident journey passes in 38.9 seconds (43.4 with runner):
+  Activity three logs → service 107 spans/100 rows → POST seven → correlated trace
+  three spans/one log → exact trace view Save/reopen/Run three. Old Apply/Open/
+  Undo/Clear are reattached inside the current tray after Clear→Undo ABA, so the
+  renewed owner—not merely disconnected DOM—rejects them. Real query drafts block
+  current commands, valid Apply still reads once, and late lookup/Back remains safe.
+- The same finite journey deliberately turns off the unsupported span-status
+  projection before ordinary rest comparison, then executes **Include comparison
+  without facet** with zero I/O. The admitted saved pair keeps applied WHERE/List
+  presentation. All four current frames pass design review. No source scope or
+  saved definition was seeded/replaced by test APIs.
+- The review records actual friction: Services requires manual environment entry
+  and resolves a new 120-second window rather than retaining Activity's 60 seconds;
+  dormant root controls, literal rebound titles and duplicate discovery calls stay
+  in 313/314. Local explore median/max were 361/636 ms (max body 92,425 bytes),
+  counted lookup 83/111 ms (1,102 bytes). This tiny controlled fixture is not a
+  production benchmark, SQL-cost estimate or engine/index recommendation.
+- Packaged Go lab runs; both changed UI modules match source bytes. Reviews and
+  roadmap now give one active execution order; temporary review stores/campaigns
+  are removed after extracting compact task evidence.
+
 ## HTTP methods in service templates — 311
 
 [Flow/contract](docs/HTTP_SERVICE_VIEW_TEMPLATE.md) ·

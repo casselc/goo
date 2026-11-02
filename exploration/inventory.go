@@ -96,6 +96,7 @@ func inventoryNumber(s string) (*big.Int, error) {
 	return new(big.Int).SetUint64(n), nil
 }
 func (s Source) Inventory(ctx context.Context, q InventoryQuestion) (*InventoryResult, error) {
+	q.Namespace = q.Namespace.Clone()
 	plan, e := CompileInventory(q)
 	if e != nil {
 		return nil, e

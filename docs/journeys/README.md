@@ -1,5 +1,11 @@
 # User journeys and storyboards
 
+[Journey312](312-incident-checkpoint.md) executes the whole incident path from
+Activity through service/method filtering and a correlated trace to Save/reopen.
+It also checks stale selection commands, pending lookup/Back and explicit
+comparison inclusion without the facet. The [review and active roadmap](../ROADMAP_2026_11_02.md)
+record the remaining navigation/context friction separately from delivered fixes.
+
 [Journey311](311-http-method-facet.md) follows actual Discovery → HTTP Customize →
 method filtering → Save/reopen → typed destination reuse, with a literal method
 facet beside the route chart and records. It checks owner retirement and separates

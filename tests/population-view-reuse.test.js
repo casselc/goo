@@ -29,3 +29,11 @@ test('chosen destination baseline is part of the private preview lease',()=>{
  const expected={active:true,visible:true,generation:1,draftRevision:2,libraryGeneration:3,serial:4,questionKey:'same target',baselineCapture:'a'.repeat(64)};
  assert.equal(reuseRequestCurrent(expected,{...expected}),true);assert.equal(reuseRequestCurrent(expected,{...expected,baselineCapture:'b'.repeat(64)}),false);assert.equal(reuseRequestCurrent(expected,{...expected,baselineCapture:''}),false);
 });
+
+const {selectionCommandCurrent}=require('../ui/population-workspace.mjs');
+test('every selection command belongs to one tray owner, draft and configured question snapshot',()=>{
+ const owner={},expected={owner,generation:7,draftRevision:9,selectionKey:'selected-values',questionKey:'fixed-query'},actual={...expected,active:true,visible:true,connected:true,child:false,busy:false,countPending:false,sourceDraft:false,queryDraft:false,recordPending:false,pagePending:false};assert.equal(selectionCommandCurrent(expected,actual),true);
+ for(const change of [{owner:{}},{generation:8},{draftRevision:10},{selectionKey:'other'},{questionKey:'new-window'},{active:false},{visible:false},{connected:false},{child:true},{busy:true},{countPending:true},{sourceDraft:true},{queryDraft:true},{recordPending:true},{pagePending:true}])assert.equal(selectionCommandCurrent(expected,{...actual,...change}),false,JSON.stringify(change));
+ // Toggling away and back to identical values still issues a different owner.
+ assert.equal(selectionCommandCurrent(expected,{...actual,owner:{}}),false);assert.equal(selectionCommandCurrent(expected,actual),true);
+});

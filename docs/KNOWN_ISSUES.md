@@ -1,5 +1,13 @@
 # Known issues and gaps
 
+The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
+[active roadmap](ROADMAP_2026_11_02.md) replace the older parallel feature queues.
+312 delivers the selected corrections: shared selection-command readiness/leases,
+explicit facet-to-comparison promotion, bounded facet lookup lifetime, terminal
+record-page diagnostics and detached returned query metadata. The dormant root
+editor/competing return actions and inherited title context remain scoped 313 work;
+source cost is a measured 314 task, not evidence for a replacement query engine.
+
 310 adds one [declarative categorical facet](DECLARATIVE_FACETS.md)
 for ordinary single-query views. Counts use the currently applied scope, including
 existing filters; self-excluding counts and persisted clause identity remain
@@ -13,7 +21,7 @@ and composition without adding an incompatible default control. Team-view
 Save/portable transport and explicit source reads reuse the existing owners.
 Template titles remain literal when the destination category changes; read the
 actual qualified grouping. Context-aware default titles are an input to the
-proposed 312 whole-product checkpoint.
+313 active-canvas work identified by the 312 checkpoint.
 
 308 saves fixed query comparisons through the existing count role and portable
 flow. Held-parent observations stay temporary. Fixed pairs require matching

@@ -55,3 +55,19 @@ The [measurement review](reviews/PAGING_MEASUREMENT_289.md) records source work
 under deterministic test transport. Statement counts are not a production latency
 benchmark. The [product review](reviews/FLOW_PRODUCT_289.md) and
 [architecture review](reviews/FLOW_ARCHITECTURE_289.md) explain the bounded scope.
+
+
+## Terminal-page certainty and query ownership — 312
+
+Count and rows remain independent observations. A terminal page must account for
+the matching count after its offset: a short page (or full page without expected
+lookahead) contradicting that count is `changed_between_reads`, not a coherent
+end of the population. Rows remain available as diagnostic observations; they do
+not receive a completeness witness. Empty pages beyond the counted end remain
+valid, and a zero matching population keeps its separate no-data state.
+
+Full/page source results freeze the complete validated question before compiling
+and reading. Later mutation of the Go caller's predicates, grouping, bindings or
+environment selector cannot rewrite the returned question while its SQL and basis
+stay fixed. Inventory/discovery likewise detach their namespace selector. This
+ownership guarantee does not turn independent reads into a transactional snapshot.

@@ -94,3 +94,18 @@ See [temporary authored cohorts](AUTHORED_COHORTS.md),
 [CLI workflow](VIEW_ARTIFACT_CLI.md),
 [architecture review](reviews/SAVED_COHORT_ARCHITECTURE_308.md) and
 [design review](reviews/SAVED_COHORT_DESIGN_308.md).
+
+
+## Include a comparison from a facet view — 312
+
+For an eligible ordinary count view with a declared facet, the temporary remainder
+analysis offers **Include comparison without facet**. The action explicitly removes
+the control and category-template marker; applied filters, both fixed questions,
+chart and record presentation remain intact. It validates the whole transition
+before changing configuration, performs no source read and focuses Run. Nothing
+is silently dropped, and facet-plus-comparison definitions remain prohibited.
+
+The ordinary count profile still applies. A default HTTP view requesting span
+status may need an explicit profile edit before this comparison is eligible; 312
+does not quietly strip projections or broaden comparison support. Held-parent
+observations remain temporary and do not offer this durable query conversion.

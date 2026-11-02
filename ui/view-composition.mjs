@@ -83,3 +83,6 @@ export function rebaseFixedComparison(value,q,range){
 }
 
 export function setFacet(value,next,q){return validate({...value,children:next?(facet(value)?value.children.map(child=>child.facet?{...child,facet:next}:child):[{facet:next},...value.children]):value.children.filter(child=>!child.facet)},q)}
+
+// Explicit promotion drops only the unsupported control, never its applied predicate.
+export function includeComparisonWithoutFacet(value,q,baseline){const current=validate(value,q);if(!facet(current)||!CapturedCount.eligible(q)||aggregate(current)?.display.value!=='count'||comparison(current))throw Error('Choose an ordinary count view with a facet and no existing comparison.');const next=CapturedCount.createQuery(q,baseline);return setComparison(setFacet(current,null,q),next,q)}

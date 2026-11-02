@@ -1,5 +1,26 @@
 # Semantic properties and model conformance
 
+## Incident-flow correctness checkpoint (312)
+
+The [real incident storyboard](../docs/journeys/312-incident-checkpoint.md) covers
+Activity, discovered HTTP scope, POST selection, correlated trace and exact
+Save/reopen. It rejects ABA/reattached old tray controls inside the current container,
+blocks commands under a real filter draft, retires pending facet lookups and
+explicitly removes only a control when promoting an eligible remainder question.
+Fifty generated cases run actual JavaScript partition/lease/promotion through Go
+view admission and YAML; the source adapter separately checks 972 bounded count/
+offset/limit/lookahead states through its real transport interface.
+
+```sh
+go test -C verification -run '^TestHegelIncident' -count=1 .
+./node_modules/.bin/playwright test journeys/312-incident-checkpoint.spec.js
+go test ./exploration -run '312$' -count=1
+```
+
+These are targeted correctness checks and one controlled task, not a production
+benchmark or a new proof of source completeness. The [active roadmap](../docs/ROADMAP_2026_11_02.md)
+separates UI consolidation from measured HTTP/SQL acquisition work.
+
 ## HTTP method facets and category templates (311)
 
 The [native storyboard](../docs/journeys/311-http-method-facet.md) follows actual

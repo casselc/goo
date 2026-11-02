@@ -134,11 +134,20 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 }
 
 func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnly bool) (*Result, error) {
-	q = q.WithEnvironmentFrom(q)
 	if err := q.Validate(); err != nil {
 		return nil, err
 	}
-	question := q
+	// Freeze the complete query before compiling or reading. A value copy only
+	// detaches scalars: predicates, bindings and grouping slices are caller-owned.
+	encoded, e := json.Marshal(q)
+	if e != nil {
+		return nil, e
+	}
+	var question Query
+	if e = json.Unmarshal(encoded, &question); e != nil {
+		return nil, e
+	}
+	q = question
 	if pageOnly {
 		// The original question remains the page's scope. Presentation/aggregate
 		// requirements are not independent source work for record inspection.
@@ -230,7 +239,10 @@ func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnl
 	r.Rows = rows
 	totalValue, _ := new(big.Int).SetString(r.Count, 10)
 	observedMinimum := new(big.Int).SetInt64(int64(q.Offset + len(rows)))
-	if len(rows) > 0 && totalValue.Cmp(observedMinimum) < 0 || r.HasMore && totalValue.Cmp(new(big.Int).SetInt64(int64(q.Offset+rowLimit))) <= 0 {
+	// A terminal page establishes the end of this read, not just a minimum.
+	// An empty page beyond the previously counted end is valid; it does not
+	// imply that the count must equal an out-of-range delivery offset.
+	if len(rows) > 0 && totalValue.Cmp(observedMinimum) < 0 || r.HasMore && totalValue.Cmp(new(big.Int).SetInt64(int64(q.Offset+rowLimit))) <= 0 || !r.HasMore && totalValue.Cmp(observedMinimum) > 0 {
 		r.State = "changed_between_reads"
 	}
 	for _, raw := range rows {

@@ -312,3 +312,19 @@ and invalid return depth. Bombadil exercises source-free expansion/return.
 [Bounded D2 acceptance](D2_ACCEPTANCE.md) now covers columns, selection, widening,
 whole-filter broadening and categorical/time-duration partitions, with their
 independent source and retained-parent ownership.
+
+
+## Selection command ownership — 312
+
+Apply, Open, Undo, Clear and both comparison commands use one application-owned
+readiness/currentness policy. Each rendered tray is bound to its query, draft,
+selection and generation; replacing it retires its commands even if the values
+later look identical. Detached/reinserted controls cannot read an obsolete scope
+or clear a replacement selection. Pending reads, record choices and query/display
+drafts block conflicting commands. Invalid selection plans cannot execute; Undo
+and Clear remain recovery actions when the plan itself is invalid.
+
+Apply still reads explicitly; Open stages a retained child for Run. No new command
+executor or passive-element data acquisition is introduced. Replacing a facet also
+disposes and removes its previous counted-values lookup, keeping repeated child/
+Back visits bounded while retaining the parent's held values and read clock.

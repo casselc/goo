@@ -36,7 +36,9 @@ func aggregateFixture(t *testing.T, q Query, seriesChanged bool) (Source, *[]str
 			if seriesChanged {
 				text = strings.ReplaceAll(text, `"sum_ns":"30","min_ns":"10"`, `"sum_ns":"40","min_ns":"20"`)
 			}
-		case p.Rows, p.Fields:
+		case p.Rows:
+			text = `{"timestamp_ns":"1000000001","duration_ns":"10"}` + "\n" + `{"timestamp_ns":"1000000002","duration_ns":"20"}`
+		case p.Fields:
 		default:
 			t.Fatalf("unexpected SQL %s", sql)
 		}

@@ -38,7 +38,7 @@ these views through the same saved-view catalog.
 to an explicitly chosen Goo server.
 [Record paging](docs/RECORD_PAGE_PROFILE.md) retains any held aggregate and timeline.
 
-[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Reviewed roadmap](docs/ROADMAP_2026_10_30.md) · [Execution backlog](docs/BACKLOG_2026_10_29.md) ·
+[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_02.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
 [Go/frontend library review and proposal](docs/LIBRARY_REFACTOR_PLAN_2026_10_28.md)
 

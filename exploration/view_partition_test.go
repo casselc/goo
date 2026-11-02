@@ -109,7 +109,7 @@ func TestSourcePartitionCoherenceWithoutExtraReads(t *testing.T) {
 				case strings.Contains(sql, "count()"):
 					text = `{"count":"` + total + `"}`
 				default:
-					text = `{"timestamp_ns":"1","duration_ns":"0"}`
+					text = strings.Repeat(`{"timestamp_ns":"1","duration_ns":"0"}`+"\n", 3)
 				}
 				return &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(text))}, nil
 			})}}
@@ -120,7 +120,7 @@ func TestSourcePartitionCoherenceWithoutExtraReads(t *testing.T) {
 				t.Fatal("source read count changed", r, err, reads)
 			}
 			if total == "3" {
-				if r.State != "observed" || r.ViewDataset.Partition == nil || r.ViewDataset.Partition.Total != "3" || len(r.Rows) != 1 {
+				if r.State != "observed" || r.ViewDataset.Partition == nil || r.ViewDataset.Partition.Total != "3" || len(r.Rows) != 2 {
 					t.Fatal("partition was not emitted from its exhaustive groups independently of the bounded row page", r)
 				}
 			} else if r.State != "changed_between_reads" || r.ViewDataset.Partition != nil || r.ViewDataset.Completeness != nil {
