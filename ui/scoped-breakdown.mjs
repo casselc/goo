@@ -2,15 +2,28 @@
 import './scope-view.mjs';
 import {eligibleKinds,validateSnapshot,groupIntent,intervalIntent,displayRows,fractionFacts} from './view-model.mjs';
 import {node} from './components.mjs';
+import {hint,label as fieldLabel,qualified} from './field-presentation.mjs';
 import {formatCell,supportText,exactText,categoryText,isFraction,fractionContextText} from './view-values.mjs';
 const preferences=new WeakMap();
 const utc=value=>new Date(Number(value)).toISOString();
+
+// Presentation only: explicit titles remain literal; context names the bound data.
+export function boundContext(snapshot,value='count',explicitTitle=''){
+ const temporal=snapshot.shape==='time-series',declared=snapshot.scope?.selector?.groupBy;
+ const groups=Array.isArray(declared)&&declared.length>0&&declared.every(field=>field&&['column','attribute','resource'].includes(field.kind)&&typeof field.key==='string')?declared:[];
+ const dimensions=snapshot.dimensions?.length?snapshot.dimensions:['category'];
+ const human=temporal?'Captured record intervals':groups.length?groups.map(field=>hint(field)?.label||fieldLabel(field)).join(' + '):dimensions.map(key=>snapshot.fields.find(field=>field.key===key)?.label||key).join(' + ');
+ const binding=temporal?'UTC intervals':groups.length?groups.map(qualified).join(' + '):dimensions.map(key=>snapshot.fields.find(field=>field.key===key)?.label||key).join(' + ');
+ const measure=snapshot.fields.find(field=>field.key===value),label=measure?.label||value;
+ const measured=label+(measure&&isFraction(measure)?' · %':value!=='count'&&measure?.unit&&measure.unit!=='1'&&measure.aggregation?.family!=='duration'?' · '+measure.unit:'');
+ return {title:explicitTitle||(temporal?measured+' over time':measured+' by '+human),text:binding+' · '+measured};
+}
 
 export function mount(target,snapshot,{onScope,onWindow,onSelect,onInspectTrace,distribution=false,facets:showFacets=true,initialPresentation,onPresentation,allowedMeasures}={}){
  const check=validateSnapshot(snapshot);
  if(!check.ok){target.replaceChildren(node('p','Display unavailable: '+check.reasons.join('; ')));return}
  const temporal=snapshot.shape==='time-series',dimensions=snapshot.dimensions||[],multi=dimensions.length>1;
- const section=node('section'),toolbar=node('div'),label=node('label','View as '),pick=node('select'),chart=node('goo-chart'),status=node('p');
+ const section=node('section'),context=node('p',undefined,'evidence-note scoped-breakdown-context'),toolbar=node('div'),label=node('label','View as '),pick=node('select'),chart=node('goo-chart'),status=node('p');
  const stage=node('button',temporal?'Stage selected interval':'Stage selected group'),completeLabel=node('label'),complete=node('input'),measureLabel=node('label','Measure '),measure=node('select');
  const scaleLabel=node('label','Scale '),scale=node('select'),orderLabel=node('label','Sort '),order=node('select'),more=node('details'),inspect=node('button','Open selected trace');
  section.className='scoped-breakdown';section.setAttribute('aria-label',temporal?'Scoped timeline':'Scoped breakdown');
@@ -36,7 +49,8 @@ export function mount(target,snapshot,{onScope,onWindow,onSelect,onInspectTrace,
  const presentation=()=>({kind:pick.value,value:measure.value,scale:measure.value==='count'?scale.value:'max',query,order:order.value,requiresComplete:complete.checked});
  const display=()=>{
   preferences.set(target,{...presentation(),scale:scale.value});scaleLabel.hidden=measure.value!=='count';
-  chart.display={kind:pick.value,title:preference.title||(temporal?'Captured record intervals':multi?'Captured groups':'Scoped breakdown'),requiresComplete:complete.checked,...(!multi?{...(!temporal?{category:'category'}:{}),value:measure.value}:{}),...(distribution?{scale:measure.value==='count'?scale.value:'max',query,order:order.value}:{})};
+  const bound=boundContext(snapshot,measure.value,preference.title);context.textContent=bound.text;
+  chart.display={kind:pick.value,title:bound.title,requiresComplete:complete.checked,...(!multi?{...(!temporal?{category:'category'}:{}),value:measure.value}:{}),...(distribution?{scale:measure.value==='count'?scale.value:'max',query,order:order.value}:{})};
   onPresentation?.(presentation());
  };
  const selectionSummary=()=>{
@@ -56,7 +70,7 @@ export function mount(target,snapshot,{onScope,onWindow,onSelect,onInspectTrace,
   selectionSummary();
   if(selected&&selected.state!=='unknown'&&!actionsPaused)onSelect?.(selected,snapshot);
  });
- toolbar.append(label,measureLabel);if(distribution)toolbar.append(scaleLabel,stage,inspect,more);else toolbar.append(completeLabel,stage,inspect);section.append(toolbar,chart);
+ toolbar.append(label,measureLabel);if(distribution)toolbar.append(scaleLabel,stage,inspect,more);else toolbar.append(completeLabel,stage,inspect);section.append(context,toolbar,chart);
  if(showFacets&&!temporal&&onScope)for(const field of dimensions){const facet=node('goo-scope-facet');facet.snapshot=snapshot;facet.field=field;facet.addEventListener('goo-scope',event=>{if(!actionsPaused)onScope(event.detail,snapshot)});facets.push(facet);section.append(facet)}
  stage.addEventListener('click',()=>{
   if(actionsPaused||!selected||selected.state==='unknown')return;

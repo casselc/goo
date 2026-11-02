@@ -73,8 +73,7 @@
             "category": "category",
             "value": "count",
             "scale": "population",
-            "order": "value-desc",
-            "title": "HTTP server routes"
+            "order": "value-desc"
           }
         }
       },

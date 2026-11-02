@@ -121,3 +121,41 @@ func TestHTTPFacetCodeManagedTemplateExample311(t *testing.T) {
 		t.Fatal("HTTP method facet example drift", err)
 	}
 }
+
+// Explicit titles are user content, even when they match a former shipped default.
+func TestHTTPBreakdownTitleIsOptionalAndAuthoredTitlesRemainLiteral313(t *testing.T) {
+	aggregate := func(v ExplorationView) *ViewDeclaration {
+		t.Helper()
+		for _, child := range v.Composition.Children {
+			if child.Aggregate != nil {
+				return child.Aggregate
+			}
+		}
+		t.Fatal("missing aggregate")
+		return nil
+	}
+	expanded, err := ExpandViewTemplate(httpRouteTemplateInput(t))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if expanded.View.Title != "HTTP server routes" || aggregate(expanded.View).Display.Title != "" {
+		t.Fatal("shipped view identity or computed-title default changed", expanded.View)
+	}
+	for _, title := range []string{"HTTP server routes", "Our Ω incident"} {
+		source := expanded.View
+		aggregate(source).Display.Title = title
+		target := source.Queries[0]
+		target.GroupBy = []exploration.Field{{Kind: "column", Key: "service"}}
+		out, err := ExpandViewTemplate(ViewTemplateExpansionRequest{Source: &source, Query: &target})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if aggregate(out.View).Display.Title != title || !reflect.DeepEqual(out.View.Queries[0].GroupBy, target.GroupBy) {
+			t.Fatal("authored title or effective destination was rewritten", out.View)
+		}
+		aggregate(out.View).Display.Title = "changed"
+		if aggregate(source).Display.Title != title {
+			t.Fatal("authored title aliases expansion")
+		}
+	}
+}

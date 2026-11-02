@@ -12,6 +12,10 @@ Explore and narrow live telemetry, then [compare captured counts](docs/CAPTURED_
 [Preserve](docs/PRESERVATION.md) a question, reusable view, or independent evidence capture.
 Optional [investigation findings](docs/PRESERVE_ATTACHMENT.md) stay behind Add to investigation.
 
+[The active population canvas](docs/POPULATION_WORKSPACE.md) puts its scope and data
+first, retaining the original editor for explicit return. Trace/context reads
+cancel when their inspector is retired.
+
 [Customize one signal](docs/FOCUSED_VIEWS.md) from an applied population while keeping
 its fixed scope and paused parent. Build reusable views with [saved displays](docs/SAVED_DISPLAY_DECLARATIONS.md),
 [HTTP service views](docs/HTTP_SERVICE_VIEW_TEMPLATE.md),

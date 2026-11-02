@@ -16,6 +16,13 @@ full-population totals. Layout and column choices are local presentation changes
 The existing record inspector, trace expansion and surrounding-log actions are
 reused; there is no new JavaScript measurement evaluator.
 
+While the population is active, its canvas owns the visible question controls.
+The dormant original editor is hidden and inert, retaining its draft and history.
+**Edit original question** deliberately returns to that editor without reading or
+resuming Activity. A nested drilldown returns with **Back to parent population**;
+its held parent remains paused. Closing or replacing trace/log context aborts its
+pending request, while generation checks still reject late responses.
+
 The default companion retains the complete predicate tree, including AND/OR,
 missing-key and present-empty-string distinctions, where that tree is valid for
 the other signal. Signal-specific measures are planned independently. A span-only

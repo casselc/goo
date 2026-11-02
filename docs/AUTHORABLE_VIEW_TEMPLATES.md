@@ -29,6 +29,10 @@ explicit independent read, and Save creates a new immutable configuration.
 The category binding is explicit: it uses the destination's existing qualified
 single grouping, even when that field differs from the specimen's field. It never
 adds a grouping, weakens a predicate, computes a new clock or borrows source rows.
+An omitted aggregate display title follows the current grouping and measure;
+an explicit title remains literal, including text that matches a shipped preset.
+The renderer always shows the actual qualified grouping and measure separately.
+The template/catalog title names the reusable definition, not its destination field.
 A facet has a different binding: its qualified field, title, applied-scope basis
 and visibility stay literal. Destination validation checks that field but never
 rewrites it to the category. Loaded values and selections are not copied.

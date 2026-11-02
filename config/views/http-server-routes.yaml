@@ -64,7 +64,6 @@ view:
                 display:
                     category: category
                     value: count
-                    title: HTTP server routes
                     scale: population
                     order: value-desc
             - records:

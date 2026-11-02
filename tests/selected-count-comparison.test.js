@@ -26,3 +26,12 @@ test('count comparisons retain the complete supplied duration measure payload wh
  const duration={count:'103',sumNs:'103000',minNs:'1000',maxNs:'1000',p50Ns:'1000',p95Ns:'1000',p99Ns:'1000'},baseline=full(q),selection=full(selected,'100','b');baseline.duration=structuredClone(duration);baseline.groups[0].duration=structuredClone(duration);selection.duration={...duration,count:'100',sumNs:'100000'};selection.groups[0].duration=structuredClone(selection.duration);
  const intent=P.plan(composition,q,selected,'parent',null,baseline),request=P.request(intent,composition,selection,baseline);assert.deepEqual(request.baseline.duration,baseline.duration);assert.deepEqual(request.baseline.groups[0].duration,baseline.groups[0].duration);assert.deepEqual(request.selection.duration,selection.duration);assert.deepEqual(request.selection.groups[0].duration,selection.groups[0].duration);request.selection.duration.count='forged';assert.equal(selection.duration.count,'100');
 });
+test('unsupported count projections explain the actual repair without changing eligibility or the query',()=>{
+ const {eligibilityReason,eligible}=require('../ui/count-cohort-context.mjs'),{q,composition}=setup();
+ for(const [change,expected] of [[{spanStatus:true},/Turn off Span status and errors in Measures, then Run/],[{numeric:{field:{kind:'attribute',key:'n'},type:'int64',unit:'1',parse:'canonical-decimal'}},/numeric/],[{groupTimeSeries:{intervalMs:1000}},/grouped time/],[{reportedEdge:{}},/reported-edge/]]){
+  const next={...q,...change},before=structuredClone(next);assert.equal(eligible(next),false);assert.match(eligibilityReason(next),expected);assert.deepEqual(next,before);
+ }
+ const status={...q,signal:'spans',spanStatus:true},statusView=C.create(status,D.create(status));assert.match(P.reason(statusView,status,null),/Turn off Span status and errors/);
+ assert.equal(eligibilityReason(q),'');assert.equal(eligible(q),true);assert.match(P.reason(composition,q,null),/Run the count breakdown/);
+ const duration={...q,signal:'spans',summary:'span-duration'},durationView=C.create(duration,{...D.create(duration),display:{category:'category',value:'duration.p95'}});assert.match(P.reason(durationView,duration,null),/Select Count/);
+});

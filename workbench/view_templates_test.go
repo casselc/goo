@@ -64,7 +64,7 @@ func TestViewTemplatePreservesCheckedHTTPQueryAndDetaches(t *testing.T) {
 		t.Fatal("expansion aliases widget query")
 	}
 	next, err := ExpandViewTemplate(in)
-	if err != nil || next.View.Composition.Children[1].Records.Display.Columns[0] != "utc" || next.View.Composition.Children[0].Aggregate.Display.Title != "HTTP server routes" {
+	if err != nil || next.View.Composition.Children[1].Records.Display.Columns[0] != "utc" || next.View.Composition.Children[0].Aggregate.Display.Title != "" {
 		t.Fatal("expansion aliases shipped defaults", err)
 	}
 	store := Store{Dir: t.TempDir()}

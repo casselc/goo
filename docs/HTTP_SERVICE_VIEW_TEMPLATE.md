@@ -141,3 +141,9 @@ the existing portable/CLI validator.
 See [declarative facets](DECLARATIVE_FACETS.md),
 [architecture review](reviews/HTTP_FACET_ARCHITECTURE_311.md), and
 [design review](reviews/HTTP_FACET_DESIGN_311.md).
+
+The shipped aggregate omits its display title so its default follows the current
+category and measure after rebinding. The catalog still names the definition
+**HTTP server routes**, and **HTTP methods** remains the literal facet title.
+Explicit authored aggregate titles remain unchanged. A compact qualified grouping
+and measure context accompanies the chart even when its title is literal.

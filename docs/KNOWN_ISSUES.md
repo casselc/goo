@@ -4,9 +4,17 @@ The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
 [active roadmap](ROADMAP_2026_11_02.md) replace the older parallel feature queues.
 312 delivers the selected corrections: shared selection-command readiness/leases,
 explicit facet-to-comparison promotion, bounded facet lookup lifetime, terminal
-record-page diagnostics and detached returned query metadata. The dormant root
-editor/competing return actions and inherited title context remain scoped 313 work;
-source cost is a measured 314 task, not evidence for a replacement query engine.
+record-page diagnostics and detached returned query metadata. 313 hides the dormant root editor while retaining its state, removes redundant
+nested exits, explains actual comparison restrictions, and cancels retired
+trace/context requests. Omitted aggregate titles follow current grouping/measure;
+explicit titles remain literal with qualified context. Source cost is the measured
+314 task, not evidence for a replacement query engine.
+
+The 313 desktop/narrow frames still expose presentation density: the two-value
+facet and nested cards consume substantial height before charts/records, and a
+mixed Activity → service visit retains multiple outer context/trail returns.
+The local nested Back is unambiguous, but broader ancestry consolidation and
+shared facet/context compaction remain post-314 review inputs, not completed work.
 
 310 adds one [declarative categorical facet](DECLARATIVE_FACETS.md)
 for ordinary single-query views. Counts use the currently applied scope, including
@@ -19,9 +27,9 @@ The [HTTP service view](HTTP_SERVICE_VIEW_TEMPLATE.md) adds a method facet to
 ordinary route views. Specialized numeric Customize retains its existing question
 and composition without adding an incompatible default control. Team-view
 Save/portable transport and explicit source reads reuse the existing owners.
-Template titles remain literal when the destination category changes; read the
-actual qualified grouping. Context-aware default titles are an input to the
-313 active-canvas work identified by the 312 checkpoint.
+Template/catalog and explicit authored display titles remain literal when the
+destination category changes. The new shipped HTTP aggregate omits its display
+title to follow current category/measure; every breakdown shows qualified context.
 
 308 saves fixed query comparisons through the existing count role and portable
 flow. Held-parent observations stay temporary. Fixed pairs require matching

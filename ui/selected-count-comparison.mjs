@@ -1,11 +1,12 @@
 /* App-level continuation over supplied full counts. No IO or persisted view grammar. */
 import * as Composition from './view-composition.mjs';
-import {eligible,cohort} from './captured-count-comparison.mjs';
+import {cohort} from './captured-count-comparison.mjs';
+import {eligibilityReason} from './count-cohort-context.mjs';
 import {identity} from './question-session.mjs';
 import {hasGuarantee,isSnapshot} from './snapshots.mjs';
 const frozen=x=>{if(x&&typeof x==='object'){for(const child of Object.values(x))frozen(child);Object.freeze(x)}return x};
 const key=q=>identity({...q,offset:0,limit:100});
-function definition(composition,q){Composition.validate(composition,q);if(!eligible(q)||Composition.aggregate(composition)?.display.value!=='count'||Composition.comparison(composition))throw Error('Use an ordinary count breakdown without a captured comparison.');}
+function definition(composition,q){Composition.validate(composition,q);const unsupported=eligibilityReason(q);if(unsupported)throw Error(unsupported);if(Composition.aggregate(composition)?.display.value!=='count')throw Error('Select Count in the breakdown before comparing a selection.');if(Composition.comparison(composition))throw Error('Remove the existing count comparison before comparing a selection.');}
 export function full(composition,q,data){definition(composition,q);const snapshot=data?.viewDataset;if(!isSnapshot(snapshot)||!hasGuarantee(snapshot,'groups')||snapshot.shape!=='ranked'||key(data.question)!==key(q)||key(snapshot.scope.selector)!==key(q)||snapshot.revision!==data.basis||snapshot.capturedAt!==data.capturedAt||!Array.isArray(data.groups))throw Error('Run the count breakdown to acquire full groups before comparing a selection.');return data;}
 export function reason(composition,q,data){try{full(composition,q,data);return ''}catch(error){return error.message}}
 export function plan(composition,parent,selected,mode,rest,data){

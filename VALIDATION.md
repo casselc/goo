@@ -1,5 +1,62 @@
 # Validation record
 
+## One active investigation canvas — 313
+
+[Delivery plan](docs/reviews/ACTIVE_CANVAS_PLAN_313.md) ·
+[architecture review](docs/reviews/ACTIVE_CANVAS_ARCHITECTURE_313.md) ·
+[design review](docs/reviews/ACTIVE_CANVAS_DESIGN_313.md) ·
+[executable storyboard and three frames](docs/journeys/313-active-canvas.md).
+
+- Full Go suite passes after the intentional shipped-title change (`cmd/goo`
+  23.609 seconds, `workbench` 3.401 seconds; unchanged packages cached). The first
+  pass exposed two stale preset-title expectations; canonical YAML and detached
+  default assertions now check the omitted aggregate title. Literal authored-title
+  rebinding and input/output ownership remain tested.
+- Final frontend suite passes: 1,001 tests, zero failures/skips (56.18 seconds,
+  concurrency two), including four title/context cases: route/service,
+  explicit literal including the former preset title, measure changes and
+  temporal/tuple contexts. The renderer retains authored text and always shows
+  qualified grouping/measure; defaults remain presentation, not saved observations.
+- Seven focused trace-owner tests cover per-slot cancellation, replacement,
+  close/hide/disposal, parent independence and refusal of late responses or
+  downstream linked reads. Existing trace/context tests pass. Active-canvas
+  transition tests cover revision-fenced queued focus and repeated visibility.
+- The maintained population Bombadil driver passed a bounded 30-second native
+  campaign: 119 trace records, zero violations, one explicit Run and layout change,
+  final applied canvas, hidden/inert root editors and no visible root Run or page
+  overflow. The completion property requires a visible active canvas, preventing
+  vacuous success. Temporary campaign screenshots/logs were removed after review.
+  This campaign preceded the final default-title wording and ancestor-Back guard;
+  the final native journey exercises those changes.
+- Compose configuration, final Go image build and service recreation succeed.
+  The checked portable HTTP YAML passes the product CLI validator. All eight
+  changed embedded UI files match local source bytes from the running server. No orphan container or retained volume was removed.
+
+- Final real-OTel journey passes in 46.7 seconds (50.1 runner) using the standard
+  traffic-pausing wrapper, with traffic restored afterward. It covers Activity →
+  trace view → paused Activity → service Customize → current service grouping →
+  method cohort → trace grandchild → original editor and same-document browser Back.
+  Exact question state, URL/history and focus survive return with zero reads;
+  same-viewport scroll stays within one 16px text line (9px observed anchoring
+  difference). Narrow 390px layout has no horizontal overflow and one deepest Back.
+- Close and browser Back each abort an actual held trace response (`ERR_ABORTED`)
+  and issue the existing cancellation request (202); late responses cannot publish.
+  The test holds the response after a real upstream read, so it does not establish
+  ClickHouse interruption timing. The 22-source-request budget includes two aborted
+  reads, and local presentation/return/hidden-root handlers introduce none.
+- Initial direct runs timed out during measured scheduling pressure: tiny static
+  files took over ten seconds, while completed dashboard source reads stayed fast.
+  The standard wrapper removed the dashboard stall in subsequent runs. A harness
+  scroll assertion was corrected to compare the same viewport with a bounded line
+  tolerance. No production retry or larger source timeout was added.
+- Frames confirm ownership, not complete density consolidation: the two-value facet
+  and outer Activity/service/trail context still occupy substantial vertical space.
+  Those explicit review findings remain in the roadmap/known issues. Owned raw
+  test stores and redundant temporary campaign frames were removed.
+
+No new model or query executor was introduced for this visibility/request-lifetime
+change.
+
 ## Whole-product incident checkpoint and correctness — 312
 
 [Active roadmap/backlog](docs/ROADMAP_2026_11_02.md) ·
