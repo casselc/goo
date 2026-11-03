@@ -23,6 +23,12 @@ narrow parent chart stays 23px below the viewport and the cohort's visible chart
 portion contains metadata rather than plotted bars. Shared chart-header/read-facts
 density remains an explicit follow-on, not a completed data-first claim.
 
+316 adds [Activity-to-service context](ACTIVITY_SERVICE_CONTEXT.md) for current-only
+named environments, with exact resource namespace and occurrence window. Opening
+stages without reads; explicit Read acquires, and Back restores paused Activity.
+Effective fallback and empty/unreported environments remain refused; this does not
+generalize the Services APIs to every typed environment policy.
+
 310 adds one [declarative categorical facet](DECLARATIVE_FACETS.md)
 for ordinary single-query views. Counts use the currently applied scope, including
 existing filters; self-excluding counts and persisted clause identity remain

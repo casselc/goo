@@ -1,5 +1,17 @@
 # Validation record
 
+## Activity-to-service context — 316
+
+[Contract](docs/ACTIVITY_SERVICE_CONTEXT.md) · [journey and frames](docs/journeys/316-service-handoff.md).
+
+- Full Go suite and all 1,031 frontend tests pass, with no frontend failures or skips. Thirty generated Hegel cases cover JS intent → Go admission/compiled-plan parity; focused negative tests reject unsupported environment policies, unknown resource maps, malformed identity and invalid windows.
+- Combined real-OTel browser journey and Bombadil campaign pass (1.7 minutes for the journey). The clicked occurrence retains its original window, 2,000ms older than the latest poll; resource namespace wins over conflicting log attributes. Staging reads nothing. Explicit Read makes seven source requests and observes 107 spans; Activity body predicates are omitted with disclosure.
+- Back preserves all 13 paused rows, window, scroll and row focus at desktop and narrow widths, without restarting the tail. Leaving a held discovery request aborts it and prevents a late second plan. No page errors.
+- The maintained 25-second Bombadil campaign records 178 snapshots, exercises all four actions, and returns the exact paused state with one API/source/tail request total and zero violations. Native checks cover explicit acquisition and cancellation; the actor covers passive staging/return.
+- Native testing exposed a shared visibility bug: a closed details element incorrectly hid its own visible summary from focus restoration. The helper now admits that summary while rejecting hidden descendants and closed outer ancestors; four focused tests cover the boundary.
+- CA-enabled Docker build and package-only recreation pass. All seven changed UI modules are served byte-for-byte by the Go container; OpenAPI responds. Changed-document local links resolve.
+- Missing compiler/dependencies and stopped lab prerequisites were repaired before the successful runs; these setup failures are not product verdicts. See [runtime recovery](docs/CLOUD_RUNTIME_RECOVERY.md). Broader effective/empty/unreported environment handoff remains unsupported.
+
 ## Compact supplied facets and active context — 315
 
 [Contract](docs/COMPACT_CANVAS.md) ·

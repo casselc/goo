@@ -5,6 +5,9 @@ compare evidence, and preserve an explanation you can revisit or reuse. Goo work
 with ordinary OpenTelemetry data; application manifests and Go annotations add
 shared definitions when available. Logs/Spans switching preserves shared filters;
 incompatible fields stay as explicit drafts ([scope continuity](journeys/239-activity-signal-scope-storyboard.md)).
+[Open an observed service](docs/ACTIVITY_SERVICE_CONTEXT.md) from Activity with its
+original window and supported environment policy; read the overview explicitly
+and return to the same paused rows.
 
 Explore and narrow live telemetry, then [compare captured counts](docs/CAPTURED_COUNT_COMPARISON.md),
 [inspect group changes](docs/GROUP_COUNT_COMPARISON.md), and

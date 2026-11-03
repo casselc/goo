@@ -6,9 +6,12 @@ import * as EvidenceScope from './evidence-scope.mjs';
 import * as Inventory from './inventory.mjs';
 import * as Meaning from './meaning.mjs';
 import * as Queries from './queries.mjs';
+import * as RecordEnvironment from './record-environment.mjs';
+import * as FieldPresentation from './field-presentation.mjs';
 import * as RecordPresentation from './record-presentation.mjs';
 import * as ServiceDashboard from './service-dashboard.mjs';
 import * as ServiceIdentity from './service-identity.mjs';
+import * as ServiceHandoff from './service-handoff.mjs';
 import * as UI from './components.mjs';
 import * as Visuals from './visualizations.mjs';
 import * as Workspace from './workspace.mjs';
@@ -36,11 +39,11 @@ function state(kind,text,cls){const e=node('goo-result-state',text,cls);e.setAtt
 function observations(result,scope,service){const section=node('details',undefined,'service-observations service-support');section.append(node('summary','Span observations · '+result.rows.length+' held'));let built=false;section.addEventListener('toggle',()=>{if(!section.open||built)return;built=true;section.append(node('p','Held page from the supporting service read, not a complete trace or the overview timeline selection. Inspecting does not reread.','evidence-note'));section.append(EvidenceScope.element(EvidenceScope.serviceWidget({query:result.question},result,{scope,service})));const records=RecordPresentation.table({signal:'spans',mobileCompact:true,caption:'Held service span page · '+result.rows.length+' displayed; full count '+result.count}),panel=node('section'),inspect=UI.inspector(panel);records.element.className='telemetry-table';records.header.className='record-columns';records.viewport.setAttribute('sticky-header','');for(const [i,record]of result.rows.entries()){const {row,cells}=records.row(record),button=node('button','Inspect');button.setAttribute('aria-label','Inspect record');row.className='record-row';button.setAttribute('aria-pressed','false');button.onclick=()=>{for(const b of records.body.querySelectorAll('button'))b.setAttribute('aria-pressed',String(b===button));const key=String(i),link=node('a','Open fixed question');link.href=Workspace.questionLink(result.question);link.title='Stage the same fixed question; Run explicitly to read again.';inspect.show({key,title:'Selected span record',description:RecordPresentation.description(record),content:inspect.has(key)?undefined:RecordPresentation.detail(record,'spans',{},result.rows),actions:[link],opener:button})};cells[3].append(button);records.body.append(row)}if(result.rows.length)section.append(records.viewport,panel);else section.append(state('empty','No captured spans in this page; source coverage remains unknown.'))});return section}
 function suspendPending(pending,invalidate){if(!pending.open&&!pending.dashboard)return false;invalidate();return true}
 function mount(host,{catalog}={}){
-  let scope=null,inventory=null,selected=null,generation=0,controller=null,opener=null,selectedScope=null,activityLibrary=null;const pending={open:false,dashboard:false};
+  let scope=null,inventory=null,selected=null,generation=0,controller=null,opener=null,selectedScope=null,activityLibrary=null;const pending={open:false,dashboard:false};let handoff=null;
   const detail=node('section',undefined,'service-browser-detail');detail.id='serviceDetail';detail.hidden=true;detail.setAttribute('aria-label','Service detail');host.append(detail);
   const inventoryParts=[catalog];
   const returnPath=ResourceReturn.mount(document.querySelector('[data-workspace-panel="explore"]'),{className:'service-return',id:'serviceReturn'});
-  function invalidate(){pending.open=pending.dashboard=false;activityLibrary?.dispose();activityLibrary=null;inventoryParts.forEach(n=>n.hidden=false);generation++;controller?.abort();controller=null;selected=null;detail.hidden=true;detail.replaceChildren();returnPath.clear()}
+  function invalidate({retainHandoff=false}={}){if(!retainHandoff)handoff=null;pending.open=pending.dashboard=false;activityLibrary?.dispose();activityLibrary=null;inventoryParts.forEach(n=>n.hidden=false);generation++;controller?.abort();controller=null;selected=null;detail.hidden=true;detail.replaceChildren();returnPath.clear()}
   function notify(action,extra={}){global.dispatchEvent(new CustomEvent('goo:service-browser-state',{detail:{action,generation,service:selected,scope:clone(selectedScope||scope),...extra}}))}
   function returnToService(origin){
    document.querySelector('[data-workspace="services"]').click();document.getElementById('entitiesServices')?.click();
@@ -48,12 +51,13 @@ function mount(host,{catalog}={}){
   }
   function follow(question,origin){returnPath.show({title:identity.name(selected,selectedScope.namespace),question,backLabel:'Back to service',onBack:()=>returnToService(origin)});notify('question',{question:clone(question)});global.dispatchEvent(new CustomEvent('goo:open-question',{detail:question}))}
   function button(title,action){const b=node('button',title);b.onclick=()=>action(b);return b}
-  async function open(service,origin,namespace){
+  async function open(service,origin,namespace,staged=null){
    const activeScope={...clone(scope),...(namespace?{namespace:clone(namespace)}:{})};
-   invalidate();selected=service;selectedScope=activeScope;opener=origin;inventoryParts.forEach(n=>n.hidden=true);detail.hidden=false;const g=generation;pending.open=true;try{controller=new AbortController();const active=controller;
-   const title=node('h3',service||'(empty service name)');title.tabIndex=-1;detail.append(button(origin?.closest('.distributed-view')?'Back to distributed view':'Back to service list',()=>{invalidate();if(opener?.isConnected)opener.focus();else (catalog.querySelector('.inventory-table tbody button')||document.getElementById('inventorySearch')).focus()}),title,node('p',activeScope.environment+' · '+identity.label(activeScope.namespace)+' · ['+new Date(activeScope.fromMs).toISOString()+', '+new Date(activeScope.toMs).toISOString()+')','evidence-note'));
+   invalidate({retainHandoff:!!staged&&staged===handoff});selected=service;selectedScope=activeScope;opener=origin;inventoryParts.forEach(n=>n.hidden=true);detail.hidden=false;const g=generation;pending.open=true;try{controller=new AbortController();const active=controller;
+   const title=node('h3',service||'(empty service name)');title.tabIndex=-1;const back=button(staged?'Back to paused Activity':origin?.closest('.distributed-view')?'Back to distributed view':'Back to service list',()=>{if(staged){if(!handoffAction(staged,back,g))return;invalidate();staged.onBack();return}invalidate();if(opener?.isConnected)opener.focus();else (catalog.querySelector('.inventory-table tbody button')||document.getElementById('inventorySearch')).focus()});detail.append(back,title,node('p',(staged?RecordEnvironment.label(staged.intent.environmentSelector):activeScope.environment)+' · '+identity.label(activeScope.namespace)+' · ['+new Date(activeScope.fromMs).toISOString()+', '+new Date(activeScope.toMs).toISOString()+')','evidence-note'));
+   if(staged)detail.append(handoffFilters(staged.intent));
    if(activeScope.namespace){const annotations=node('div');detail.append(annotations);Meaning.mount(annotations,{kind:'service',source:'clickstack',environment:activeScope.environment,service,namespace:activeScope.namespace},{applies:{fromMs:activeScope.fromMs,toMs:activeScope.toMs}})}else detail.append(node('p','Choose an exact namespace to annotate this service; all namespaces is a selector, not one entity.','evidence-note'));
-   const cancel=button('Cancel service reads',()=>{invalidate();notify('cancel')});detail.append(cancel);const contextHost=node('div');detail.append(contextHost);const context=Deployments.mount(contextHost,{prefix:'service-'});context.setQuestion(activeScope);
+   const cancel=button('Cancel service reads',()=>{if(staged){if(!handoffAction(staged,cancel,g))return;stageService(staged.intent,{onBack:staged.onBack,current:staged.current})}else invalidate();notify('cancel')});detail.append(cancel);const contextHost=node('div');detail.append(contextHost);const context=Deployments.mount(contextHost,{prefix:'service-'});context.setQuestion(activeScope);
    const activityViews=node('section');detail.append(activityViews);activityLibrary=ActivityViews.library(activityViews,{environment:activeScope.environment});
    const dashboard=node('section',undefined,'service-dashboard');dashboard.append(state('loading','Planning service overview…','service-loading'));detail.append(dashboard);
    const sections=['Signals and operations','Suggested questions','Native instruments'].map(text=>{const section=node('details',undefined,'service-support');section.append(node('summary',text),state('loading','Reading…','service-loading'));detail.append(section);return section});
@@ -100,7 +104,16 @@ function mount(host,{catalog}={}){
    const evidence=node('details');evidence.className='service-source-evidence';evidence.append(node('summary','Independent source reads and scope'));const pre=node('pre');pre.textContent=JSON.stringify(results.map((r,i)=>({source:requests[i][0],question:requests[i][1],status:r.status,...(r.status==='fulfilled'?{evidence:r.value}:{error:r.reason.message})})),null,2);evidence.append(pre);detail.append(evidence);cancel.remove();notify('applied',{statuses:results.map(r=>r.status)})
    }finally{if(g===generation)pending.open=false}
   }
-  return {open:(service,origin,namespace)=>{if(scope)return open(service,origin,namespace)},setScope:value=>{invalidate();scope=value?clone(value):null;inventory=null},invalidate,suspend:()=>suspendPending(pending,invalidate)};
+  function handoffFilters(intent){const filters=node('details');filters.append(node('summary','Activity filters are not carried'),node('p','Origin signal: '+intent.origin.signal),node('p',FieldPresentation.selectorText(intent.origin.where)));return filters}
+  function handoffAction(lease,control,g){return lease===handoff&&g===generation&&lease.current()&&Visuals.actionVisible(control)&&!control.closest('[inert]')}
+  function stageService(intent,{onBack,current=()=>true}={}){
+   if(typeof onBack!=='function'||typeof current!=='function')throw Error('Service handoff requires a return owner');
+   const checked=ServiceHandoff.validate(intent),serviceScope=ServiceHandoff.scope(checked);invalidate();scope=clone(serviceScope);selected=checked.service;selectedScope=clone(serviceScope);inventoryParts.forEach(n=>n.hidden=true);detail.hidden=false;detail.setAttribute('aria-label','Service handoff');
+   const lease={intent:checked,onBack,current};handoff=lease;const g=generation,title=node('h3',identity.name(checked.service,serviceScope.namespace));title.tabIndex=-1;
+   const back=button('Back to paused Activity',()=>{if(!handoffAction(lease,back,g))return;invalidate();onBack()}),read=button('Read service overview',()=>{if(!handoffAction(lease,read,g))return;detail.setAttribute('aria-label','Service detail');void open(checked.service,read,serviceScope.namespace,lease)});
+   detail.append(back,title,node('p',RecordEnvironment.label(checked.environmentSelector)+' · '+identity.label(serviceScope.namespace)+' · ['+new Date(serviceScope.fromMs).toISOString()+', '+new Date(serviceScope.toMs).toISOString()+')','evidence-note'),handoffFilters(checked),read);if(Visuals.actionVisible(title)&&!title.closest('[inert]'))title.focus({preventScroll:true});return true;
+  }
+  return {stageService,open:(service,origin,namespace)=>{if(scope)return open(service,origin,namespace)},setScope:value=>{invalidate();scope=value?clone(value):null;inventory=null},invalidate,suspend:()=>{if(handoff&&(pending.open||pending.dashboard)){const lease=handoff;stageService(lease.intent,{onBack:lease.onBack,current:lease.current});return true}return suspendPending(pending,invalidate)}};
  }
 
 export {scopeQuestion,suggestions,suspendPending,mount};

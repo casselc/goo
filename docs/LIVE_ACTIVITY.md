@@ -259,3 +259,9 @@ flowchart LR
 
 [Storyboard241](../journeys/241-activity-actions-storyboard.md) covers source-free
 reveal/staging, keyboard actions, same-data geometry and stale row callbacks.
+
+## Follow an observed service
+
+[Service actions → Open service](ACTIVITY_SERVICE_CONTEXT.md) stages the row’s
+qualified identity and completed window without reading. Read is explicit; Back
+returns to the same paused Activity. Current-only named environments are supported.

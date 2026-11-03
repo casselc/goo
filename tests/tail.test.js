@@ -9,3 +9,10 @@ test('selection keeps exact per-poll references, survives buffer eviction, refus
  const first=make(1);s.toggle(first,selector,now);first.membership.token='forged';s.toggle(make(2),selector,now);const b=new TailBuffer(1);b.append([make(1),make(2)]);assert.equal(s.items.size,2);const intent=s.intent('f'.repeat(64),['review'],'note',now);assert.equal(intent.refs[0].token,'1'.padStart(64,'0'));assert.equal('record' in intent,false);assert.equal('readWindow' in intent,false);assert.throws(()=>s.toggle(make(3,'b'.repeat(64)),selector,now));assert.throws(()=>s.toggle(make(3),{environment:'other'},now));assert.throws(()=>s.intent('f'.repeat(64),[],'',now+1001));assert.equal(s.items.get(row(1).key).readWindow.fromMs,1);s.clear();assert.equal(s.items.size,0);
  for(let i=1;i<=20;i++)s.toggle(make(i),selector,now);assert.throws(()=>s.toggle(make(21),selector,now));
 });
+
+test('service context retains per-occurrence window and applied predicates without aliasing',()=>{
+ const {recordQuestion}=require('../ui/tail.mjs'),selector={signal:'logs',environment:'prod',where:{field:{kind:'column',key:'body'},op:'eq',value:'original'}},item={readWindow:{fromMs:1000,toMs:61000}};
+ const q=recordQuestion(selector,'logs',item);assert.deepEqual(q,{signal:'logs',environment:'prod',fromMs:1000,toMs:61000,limit:100,offset:0,where:selector.where});
+ selector.where.value='later';item.readWindow.toMs=121000;assert.equal(q.where.value,'original');assert.equal(q.toMs,61000);
+ assert.throws(()=>recordQuestion(selector,'logs',item),/Original tail read window/);
+});

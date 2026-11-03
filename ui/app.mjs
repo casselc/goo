@@ -132,7 +132,7 @@ for(const event of ['input','change'])el('minutes').addEventListener(event,()=>{
 
 el('defineMeasurement').onclick=()=>{dispatchEvent(new CustomEvent('goo:navigate-explore'));dispatchEvent(new CustomEvent('goo:measurements-tab'));el('measureEditor').open=true;el('measureLibrary').focus()};
 const liveExploration=InvestigationTrail.mount(el('exploration'),{lazy:true});
-uiConfiguration.then(config=>{const lab=config?.profile==='lab';if(!lab)el('inventoryEnvironment').value='';StreamEntry.mount(el('exploration'),{environment:lab?'local':'',autoStart:lab,onLeaveFixed:()=>liveExploration.suspend(),onEnterFixed:()=>liveExploration.resume(),onOpenFixed:(q,recordLayout,options)=>liveExploration.openQuestion(q,[],{stage:true,activity:true,recordLayout,...options}),onOpenTrace:(q,row,opener,options)=>{dispatchEvent(new CustomEvent('goo:navigate-explore'));liveExploration.openTrace(q,row.TraceId,row.SpanId,null,opener,options)}})});
+uiConfiguration.then(config=>{const lab=config?.profile==='lab';if(!lab)el('inventoryEnvironment').value='';StreamEntry.mount(el('exploration'),{environment:lab?'local':'',autoStart:lab,onLeaveFixed:()=>liveExploration.suspend(),onEnterFixed:()=>liveExploration.resume(),onOpenFixed:(q,recordLayout,options)=>liveExploration.openQuestion(q,[],{stage:true,activity:true,recordLayout,...options}),onOpenService:openObservedService,onOpenTrace:(q,row,opener,options)=>{dispatchEvent(new CustomEvent('goo:navigate-explore'));liveExploration.openTrace(q,row.TraceId,row.SpanId,null,opener,options)}})});
 const nativeRecordNavigation=NativeRecordNavigation.mount(el('nativeRecordReturn'),{nativeHost:el('measurementWorkbench'),holdResourceOrigin:question=>ResourceReturn.hold(document.querySelector('[data-workspace-panel="explore"]'),question),active:()=>appWorkspace.current()==='explore'&&el('exploreMeasurementsMode').getAttribute('aria-selected')==='true',stageQuestion:q=>{appWorkspace.navigate('explore',{writeHash:false});exploreMode(false);liveExploration.openQuestion(q,[],{stage:true})},showNative:()=>{appWorkspace.navigate('explore',{writeHash:false});exploreMode(true)},suspendRecords:()=>liveExploration.suspend()});
 Measurements.mount(el('measurementWorkbench'),{onRecordContext:(detail,opener)=>nativeRecordNavigation.stage(detail,opener),onRestoreStep:hash=>nativeRecordNavigation.restore(hash)});
 function exploreMode(measures){el('exploration').hidden=measures;el('measurementWorkbench').hidden=!measures;el('exploreRecordsMode').setAttribute('aria-selected',String(!measures));el('exploreMeasurementsMode').setAttribute('aria-selected',String(measures));el('exploreRecordsMode').tabIndex=measures?-1:0;el('exploreMeasurementsMode').tabIndex=measures?0:-1;dispatchEvent(new CustomEvent('goo:explore-mode',{detail:{measurements:measures}}))}
@@ -142,6 +142,16 @@ globalThis.addEventListener('goo:measurements-tab',()=>exploreMode(true));
 globalThis.addEventListener('goo:navigate-explore',()=>exploreMode(false));
 for(const id of ['exploreRecordsMode','exploreMeasurementsMode'])el(id).onkeydown=e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const measures=e.key==='End'||(e.key!=='Home'&&id==='exploreRecordsMode');exploreMode(measures);el(measures?'exploreMeasurementsMode':'exploreRecordsMode').focus()}};
 const liveInventory=Inventory.mount(el('serviceInventory'));
+// Destination staging and return remain owned by their original adapters.
+function openObservedService(intent,{current,onBack}){
+ if(!current())return false;
+ try{
+  appWorkspace.navigate('services');entityTabs.select('services');
+  if(liveInventory.stageService(intent,{current,onBack:()=>{if(!current())return false;appWorkspace.navigate('explore',{writeHash:false});exploreMode(false);return onBack()}}))return true;
+ }catch{}
+ appWorkspace.navigate('explore',{writeHash:false});exploreMode(false);return false;
+}
+
 let entityKind='services';
 const stageResourceQuestion=q=>{appWorkspace.navigate('explore');exploreMode(false);history.pushState(null,'',Workspace.questionLink(q));liveExploration.openQuestion(q,[],{stage:true})};
 const hostBrowser=HostBrowser.mount(el('hostEntityPanel'),{active:()=>entityKind==='hosts'&&appWorkspace.current()==='services',onReturn:()=>{appWorkspace.navigate('services');entityTabs.select('hosts')},onRecordQuestion:stageResourceQuestion});

@@ -4,7 +4,7 @@ An operator opens a saved Activity view over ordinary OTel logs, starts the stre
 and pauses on an observation. Inspect stays the first record action; selection
 remains a separate pressed button, and valid trace IDs retain Open trace.
 
-1. Read the qualified service identity. Open the service identity disclosure (accessible name **Filter service**). The
+1. Read the qualified service identity. Open the service identity disclosure (accessible name **Service actions**). The
    disclosure only reveals local actions; no source read occurs.
 2. Choose **Only this service** or **Only this namespace**. These stage literal
    `column:service` and `resource:service.namespace` predicates, preserving the

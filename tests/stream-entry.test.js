@@ -8,3 +8,11 @@ test('live filter drafts reject missing/coerced values and enforce a bounded sel
 
 // Generic startup retains Activity entry while requiring an explicit first selector.
 test('explicit startup gate never claims on route or visibility changes and can start deliberately',()=>{for(const hash of ['','#explore']){const gate=new EntryGate(hash,{automatic:false});assert.equal(gate.eligible,true);for(let i=0;i<3;i++)assert.equal(gate.claim({active:true,visible:true,records:true}),false);assert.equal(gate.started,false);gate.explicit();assert.equal(gate.started,true);assert.equal(gate.paused,false);assert.equal(gate.claim({active:true,visible:true,records:true}),false)}});
+
+test('private service return lease survives hidden source but rejects retirement and ABA',()=>{
+ const {serviceReturnCurrent}=require('../ui/stream-entry.mjs'),anchor={},expected={revision:2,anchor,selectorKey:'scope',scopeEpoch:4},actual={...expected,retained:true,connected:true,enabled:false};
+ assert.equal(serviceReturnCurrent(expected,actual),true);
+ for(const patch of [{revision:3},{anchor:{}},{selectorKey:'other'},{scopeEpoch:5},{retained:false},{connected:false},{enabled:true}])assert.equal(serviceReturnCurrent(expected,{...actual,...patch}),false);
+ // Restoring identical selector text cannot revive an older scope epoch or anchor.
+ assert.equal(serviceReturnCurrent(expected,{...actual,selectorKey:'scope',scopeEpoch:6}),false);
+});

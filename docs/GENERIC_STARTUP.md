@@ -89,3 +89,9 @@ Executable generic/runtime journeys start the compiled binary from an empty
 working directory and use real OTLP data. Current results and limitations are
 recorded in [VALIDATION.md](../VALIDATION.md); earlier journey191 two-process results
 are historical, not evidence of this migration.
+
+## Restored cloud workspaces
+
+Before live validation, verify persistent compiler/npm dependencies, artifact
+storage and lab prerequisites. See [managed runtime recovery](CLOUD_RUNTIME_RECOVERY.md).
+These test/setup requirements do not add a Node or Python product server.
