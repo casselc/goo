@@ -451,6 +451,15 @@ freshness, refresh and evidence behavior; the frame performs no source reads.
 See [the API](UI_CHART_FRAME.md) and the `/ui-components` example. The standalone
 journey uses synthetic display data and explicitly verifies no telemetry reads.
 
+The scoped `goo-chart` renderer uses this frame with compact visible extent,
+value knowledge and sampling facts, followed by the plotted data. **Read facts**
+contains the supplied origin, full capture clock and quality details. Nonfixed
+freshness and unavailable/partial states stay visible. Local presentation changes
+on the same snapshot preserve the read disclosure and its focus; a new snapshot
+starts a new disclosure. The application adapter puts existing display controls
+and caller Find/grouping tools in **Chart settings** after the plot. Neither
+native disclosure performs a read. See [chart-first exploration](CHART_FIRST_EXPLORATION.md).
+
 ## Supplied percentile domain
 
 `goo-latency` now accepts optional `ceiling-ns="100000000"` in server HTML or

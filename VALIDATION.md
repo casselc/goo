@@ -1,5 +1,18 @@
 # Validation record
 
+## Chart-first shared exploration — 317
+
+Shared chart and root-control cut delivered; final real-OTel browser and Bombadil checks pass.
+[Contract](docs/CHART_FIRST_EXPLORATION.md) · [journey](docs/journeys/317-plotted-values.md) · [architecture](docs/reviews/WHOLE_PRODUCT_ARCHITECTURE_317.md) · [whole-product design](docs/reviews/WHOLE_PRODUCT_DESIGN_317.md).
+
+- Full Go suite and all 1,033 frontend tests pass (35.25 seconds on the root-control rerun, zero failures/skips). Quality tests retain extent, value knowledge, unknown sampling and nonfixed freshness across ranked, time-series, histogram and summary shapes. This presentation cut changes no query model or source executor; it needs no new semantic model.
+- Unchanged-source native baseline passes in 24.4 seconds (26.7 runner). Actual narrow parent rows end at 1,073/1,118px and the cohort row at 909px in an 844px viewport; desktop parent second row also exceeds 900px. Tests measure labels, values, tracks/fills and occlusion rather than container intersection. Twelve source requests and held-parent restoration pass.
+- First shared-chart-only browser cut improved desktop but failed the narrow gate (second row bottom 917px). Root controls and the known successful applied-state message were then consolidated without changing composition order or hiding acquisition actions. Final geometry shows track bottoms 792/837px for the narrow parent and 684px for the cohort; all labels/counts/fills are fully visible and unobscured at the measured fine-pointer sizes. This does not establish every mobile/long-label combination.
+- Architecture review found and corrected an input-order assumption introduced by relocating Find: authored display Apply now targets its explicit input rather than the completeness checkbox. The final native source-Apply workflow confirms the named Find updates, the completeness checkbox stays unchanged and no source read occurs.
+- Final combined native/browser campaign passes in 58.266 seconds (60.164 runner), with no page errors. Native checks pass: keyboard Read facts/Chart settings, Table/Bars, ordering, Find with its original 107-record denominator, authored source Apply/restore, native touch group selection and exact held-parent return. Local actions retain snapshots and the twelve-source-request budget. The new harness needed exact denominator targeting and hidden/disabled control-state guards; those were test corrections, not product changes.
+- The real UI-saved parent drives a successful 30-second Bombadil campaign: 520 snapshots, all ten actions, zero violations and one explicit Explore source request. Local settings, selection, staged child, retired commands and Back preserve the full held snapshot, certainty and exact read facts. Actor and main browser counters stay separate. No configuration was seeded through APIs.
+- CA-enabled Docker build and package-only recreation pass. The five changed UI assets are served byte-for-byte by the Go container and OpenAPI responds. Docker network mutation interrupted one browser import with `ERR_NETWORK_CHANGED`; packaging and browser runs were then serialized. Initial frontend invocation without the required module-mock flag was corrected; the reported full-suite verdict uses the documented flag.
+
 ## Activity-to-service context — 316
 
 [Contract](docs/ACTIVITY_SERVICE_CONTEXT.md) · [journey and frames](docs/journeys/316-service-handoff.md).

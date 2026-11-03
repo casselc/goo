@@ -41,7 +41,7 @@ export function mount(target,snapshot,{onScope,onWindow,onSelect,onInspectTrace,
  completeLabel.append(complete,document.createTextNode(temporal?'Complete intervals only':'Complete groups only'));
  scale.setAttribute('aria-label','Count scale');for(const [value,text] of [['population','Population share'],['max','Captured values']]){const option=node('option',text);option.value=value;scale.append(option)}scale.value=preference.scale||(distribution?'population':'max');scaleLabel.append(scale);
  order.setAttribute('aria-label','Group order');for(const [value,text] of [['source','Source order'],['label','Label'],['value-desc','Value · descending'],['value-asc','Value · ascending']]){const option=node('option',text);option.value=value;order.append(option)}order.value=preference.order||(distribution?'value-desc':'source');orderLabel.append(order);
- more.className='ui-disclosure';more.append(node('summary','More options'),orderLabel,completeLabel);
+ more.className='ui-disclosure scoped-breakdown-settings';const settings=node('div',undefined,'scoped-breakdown-settings-controls');more.append(node('summary','Chart settings'),settings);settings.append(label,measureLabel);if(distribution)settings.append(scaleLabel,orderLabel);settings.append(completeLabel);
  inspect.type='button';inspect.disabled=true;inspect.hidden=!onInspectTrace;inspect.title='Read this trace across services in the captured window. Matching records do not establish a complete trace or root latency.';
  stage.type='button';stage.disabled=true;stage.hidden=temporal?!onWindow:!onScope;
  status.className='scoped-breakdown-selection';status.setAttribute('aria-live','polite');let selected=null,actionsPaused=false;
@@ -70,7 +70,7 @@ export function mount(target,snapshot,{onScope,onWindow,onSelect,onInspectTrace,
   selectionSummary();
   if(selected&&selected.state!=='unknown'&&!actionsPaused)onSelect?.(selected,snapshot);
  });
- toolbar.append(label,measureLabel);if(distribution)toolbar.append(scaleLabel,stage,inspect,more);else toolbar.append(completeLabel,stage,inspect);section.append(context,toolbar,chart);
+ toolbar.append(stage,inspect);toolbar.hidden=!hasActions;section.append(context,chart,toolbar,more);
  if(showFacets&&!temporal&&onScope)for(const field of dimensions){const facet=node('goo-scope-facet');facet.snapshot=snapshot;facet.field=field;facet.addEventListener('goo-scope',event=>{if(!actionsPaused)onScope(event.detail,snapshot)});facets.push(facet);section.append(facet)}
  stage.addEventListener('click',()=>{
   if(actionsPaused||!selected||selected.state==='unknown')return;
@@ -78,5 +78,5 @@ export function mount(target,snapshot,{onScope,onWindow,onSelect,onInspectTrace,
   else onScope?.(groupIntent(snapshot,selected.key),snapshot);
  });
  inspect.addEventListener('click',()=>{if(!actionsPaused&&selected&&!inspect.disabled)onInspectTrace?.(selected,inspect)});
- section.append(status);target.replaceChildren(section);return {snapshot,chart,presentation,setQuery(value){query=value;display();return {visible:displayRows(snapshot,chart.display).length,total:snapshot.rows.length}},setPresentation(value){if(value?.title!==undefined)preference.title=value.title;if(value?.value!==undefined)chooseMeasure(value.value);if(value?.kind!==undefined&&choices.includes(value.kind))pick.value=value.kind;if(value?.scale!==undefined)scale.value=value.scale;if(value?.order!==undefined)order.value=value.order;if(value?.query!==undefined)query=value.query;if(value?.requiresComplete!==undefined)complete.checked=value.requiresComplete;display();selectionSummary()},suspendActions(){actionsPaused=true;stage.disabled=true;inspect.disabled=true;for(const facet of facets){facet.inert=true;facet.setAttribute('aria-disabled','true');for(const button of facet.querySelectorAll('button'))button.disabled=true}selectionSummary()}};
+ section.append(status);target.replaceChildren(section);return {snapshot,chart,presentation,appendSettings(...nodes){settings.append(...nodes)},setQuery(value){query=value;display();return {visible:displayRows(snapshot,chart.display).length,total:snapshot.rows.length}},setPresentation(value){if(value?.title!==undefined)preference.title=value.title;if(value?.value!==undefined)chooseMeasure(value.value);if(value?.kind!==undefined&&choices.includes(value.kind))pick.value=value.kind;if(value?.scale!==undefined)scale.value=value.scale;if(value?.order!==undefined)order.value=value.order;if(value?.query!==undefined)query=value.query;if(value?.requiresComplete!==undefined)complete.checked=value.requiresComplete;display();selectionSummary()},suspendActions(){actionsPaused=true;stage.disabled=true;inspect.disabled=true;for(const facet of facets){facet.inert=true;facet.setAttribute('aria-disabled','true');for(const button of facet.querySelectorAll('button'))button.disabled=true}selectionSummary()}};
 }

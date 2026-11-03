@@ -28,3 +28,10 @@ Redis/ClickHouse/collector prerequisites are running before its drain step. A
 missing tool, artifact target or stopped dependency is a setup failure, not proof
 that a product journey passed or failed. Keep actor requests and main-journey
 requests separately attributed when running optional Bombadil campaigns.
+
+Finish Docker builds and container recreation before Chromium journeys. Docker
+network changes can produce `net::ERR_NETWORK_CHANGED` during ES-module loading
+even when the journey uses a separate loopback Go process. Keep these phases
+sequential; an interrupted import is not evidence of a product startup exception.
+The generic journey runtime uses a fixed loopback port; assign one wrapper owner
+at a time rather than launching parallel journeys against the same runtime.

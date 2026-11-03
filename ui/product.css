@@ -1581,3 +1581,7 @@ td details {
 .population-parent-context p{font-size:11px;line-height:1.4;margin:4px 0}
 .population-workspace,.population-child{scroll-margin-top:56px}
 @media(pointer:coarse){.population-child-header>button,.population-parent-context>summary{min-height:44px}.population-workspace,.population-child{scroll-margin-top:68px}}
+
+/* One root acquisition row; full action names stay in accessible labels. */
+.population-workspace>.population-actions{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center}
+@media(max-width:600px){.population-workspace>.population-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.population-workspace>.population-actions>button{min-width:0;white-space:normal}.population-workspace>.section-heading>button{flex:none}}

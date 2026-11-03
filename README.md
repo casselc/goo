@@ -9,6 +9,9 @@ incompatible fields stay as explicit drafts ([scope continuity](journeys/239-act
 original window and supported environment policy; read the overview explicitly
 and return to the same paused rows.
 
+[Shared chart surfaces](docs/CHART_FIRST_EXPLORATION.md) put plotted values before
+settings, with visible certainty and expandable exact read facts.
+
 Explore and narrow live telemetry, then [compare captured counts](docs/CAPTURED_COUNT_COMPARISON.md),
 [inspect group changes](docs/GROUP_COUNT_COMPARISON.md), and
 [stage a chosen group](docs/GROUP_SIDE_STAGING.md) for an independent read.

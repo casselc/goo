@@ -19,9 +19,19 @@ falls from 406/448px to 198/217px, with 32px fine/44px coarse targets and loaded
 match announcements. The measured trail/parent subset falls from 156px to 73px;
 that is not a measurement of every outer origin/header. Named return owners remain
 distinct. Desktop chart data and narrow facet values are visible sooner, but the
-narrow parent chart stays 23px below the viewport and the cohort's visible chart
-portion contains metadata rather than plotted bars. Shared chart-header/read-facts
-density remains an explicit follow-on, not a completed data-first claim.
+315 narrow parent chart started 23px below the viewport and the cohort's visible
+chart portion contained metadata rather than plotted bars. Shared chart-header/read-facts
+density was retained for the bounded 317 follow-through below; 315 alone did not
+complete the data-first claim.
+
+317 puts plotted values before shared Chart settings and exposes exact metadata
+through Read facts. The real route task now shows both 100/7 parent bars and the
+seven-record cohort at 1280×900 and 390×844, including positive fills and unoccluded
+labels/counts. Visible scope, denominator and uncertainty remain. This is the
+measured fine-pointer layout, not proof that every long-label, coarse-pointer or
+other chart family fits its first viewport. See [chart-first exploration](CHART_FIRST_EXPLORATION.md).
+The next capability priority is an end-to-end Services environment-policy task,
+not more small chart-padding changes.
 
 316 adds [Activity-to-service context](ACTIVITY_SERVICE_CONTEXT.md) for current-only
 named environments, with exact resource namespace and occurrence window. Opening

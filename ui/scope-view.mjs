@@ -23,12 +23,19 @@ export function frozenConfig(value){
   return Object.freeze(result);
 }
 
+// Read chrome is presentation only: no certainty is inferred from displayed rows.
+export function qualityFacts(snapshot){
+ const q=snapshot.quality,kind=snapshot.shape==='time-series'?'intervals':snapshot.shape==='histogram'?'bins':snapshot.shape==='summary'?'summary':'groups';
+ const values=[`${q.extent} ${kind}`,`${q.value} values`,`${q.sampling} upstream sampling`];
+ return {visible:[...values,...(q.freshness!=='fixed'?[`${q.freshness} snapshot`]:[])],exact:[snapshot.origin,...values,`${q.freshness} snapshot`,snapshot.capturedAt?'Captured '+snapshot.capturedAt:'Capture time unavailable'].filter(Boolean)};
+}
 function quality(snapshot){
-  const box=n('div',undefined,'scope-view-quality');
-  const q=snapshot.quality;
-  for(const text of [snapshot.origin,`${q.extent} ${snapshot.shape==='time-series'?'intervals':snapshot.shape==='histogram'?'bins':snapshot.shape==='summary'?'summary':'groups'}`,`${q.value} values`,`${q.sampling} upstream sampling`,`${q.freshness} snapshot`])if(text)box.append(n('span',text));
-  box.title='Extent describes the captured query, not complete upstream telemetry.';
-  return box;
+ const box=n('div',undefined,'scope-view-quality');box.textContent=qualityFacts(snapshot).visible.join(' · ');
+ box.title='Extent describes the captured query, not complete upstream telemetry.';return box;
+}
+function readFacts(snapshot,open=false){
+ const details=n('details',undefined,'scope-view-read-facts');details.open=open;details.append(n('summary','Read facts'));
+ for(const text of qualityFacts(snapshot).exact)details.append(n('p',text));return details;
 }
 
 function capturedClock(value){
@@ -207,13 +214,13 @@ class Chart extends SuppliedElement {
   get selectedKey(){return this.querySelector('goo-time-bars')?.selectedKey??null}
   render(){
     try{
-      const snapshot=this.read('snapshot'),display=this.read('display');
+      const snapshot=this.read('snapshot'),display=this.read('display'),oldFacts=this.querySelector('.scope-view-read-facts'),sameFacts=this._factsSnapshot===snapshot,factsOpen=sameFacts&&!!oldFacts?.open,factsFocused=sameFacts&&oldFacts?.contains(document.activeElement);this._factsSnapshot=snapshot;
       if(!snapshot||!display){this.refuse([this._inputErrors?.snapshot||this._inputErrors?.display||'Supply a dataset snapshot and display mapping.']);return}
       const checked=validateDisplay(snapshot,display);if(!checked.ok){
         const rawDisplay={...display,scale:'max',requiresComplete:false};
         if(display.scale==='population'&&!display.requiresComplete&&snapshot.shape==='ranked'&&['bar','table'].includes(display.kind)&&validateDisplay(snapshot,rawDisplay).ok){
           const frame=n('goo-chart-frame',undefined,'scope-view');frame.data={title:display.title||'Scoped breakdown',window:capturedClock(snapshot.capturedAt),state:'unavailable'};
-          const status=n('p',checked.reasons.join('; '),'scope-view-unavailable');status.setAttribute('role','status');const values=table(this,snapshot,{...rawDisplay,kind:'table'});values.querySelector('caption').textContent='Supplied values · shares unavailable';frame.append(quality(snapshot),status,values);this.replaceChildren(frame);return;
+          const status=n('p',checked.reasons.join('; '),'scope-view-unavailable');status.setAttribute('role','status');const values=table(this,snapshot,{...rawDisplay,kind:'table'});values.querySelector('caption').textContent='Supplied values · shares unavailable';frame.append(quality(snapshot),status,values,readFacts(snapshot,factsOpen));this.replaceChildren(frame);if(factsFocused)frame.querySelector('.scope-view-read-facts>summary')?.focus({preventScroll:true});return;
         }
         this.refuse(checked.reasons);return;
       }
@@ -230,7 +237,7 @@ class Chart extends SuppliedElement {
         const fallback=n('details',undefined,'scope-view-values');fallback.append(n('summary','Exact values'),table(this,snapshot,display,rows));root.append(fallback);
         const note=n('small','Approximate geometry','scope-view-coordinate-note');note.title='Plot coordinates are approximate; exact source values and methods remain in cell tooltips.';root.append(note);
       }
-      this.replaceChildren(root);
+      root.append(readFacts(snapshot,factsOpen));this.replaceChildren(root);if(factsFocused)root.querySelector('.scope-view-read-facts>summary')?.focus({preventScroll:true});
       const clock=root.querySelector('.chart-frame-window');if(clock&&typeof snapshot.capturedAt==='string')clock.title=snapshot.capturedAt;
     }catch(error){this.refuse([error instanceof SyntaxError?'Invalid snapshot or display JSON.':error.message||'Unable to display supplied data.'])}
   }
