@@ -51,6 +51,11 @@ baseline** can refresh that operand against the currently held selected result;
 its separate UTC read clocks stay visible. Changing local Summary/Groups/order
 presentation does not read telemetry.
 
+[Fixed baseline acquisition](FIXED_BASELINE_READS.md) uses aggregate-only reads for
+supported string groupings, retaining full selected records and independent read
+receipts. Numeric-column groupings keep the full baseline path. Aggregate-only
+reads do not claim to check baseline record-page consistency.
+
 Persisted labels are generic Baseline and Selected. Although the UI can create a
 pair from a remainder calculation, the stored questions can later be edited and
 are not a proof of a complement, causal relationship or atomic partition. Count
@@ -85,8 +90,13 @@ flowchart LR
   D -->|Export| Y[Portable YAML]
   Y -->|Existing CLI or UI import| C
   C -->|Open: stage only| Q[Configured fixed pair]
-  Q -->|Explicit Run| R[Independent selected and baseline reads]
-  R --> V[Existing comparison API and shared displays]
+  Q -->|Explicit Run| S[Full selected read with records]
+  Q -->|Same fixed baseline query| B{Supported string grouping?}
+  B -->|Yes| A[Independent aggregate read and receipts]
+  B -->|No| F[Independent full baseline read]
+  S --> V[Existing comparison API and shared displays]
+  A --> V
+  F --> V
 ```
 
 See [temporary authored cohorts](AUTHORED_COHORTS.md),

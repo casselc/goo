@@ -1,20 +1,24 @@
 # Known issues and gaps
 
 The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
-[active roadmap](ROADMAP_2026_11_02.md) replace the older parallel feature queues.
+[active roadmap](ROADMAP_2026_11_03.md) replace the older parallel feature queues.
 312 delivers the selected corrections: shared selection-command readiness/leases,
 explicit facet-to-comparison promotion, bounded facet lookup lifetime, terminal
 record-page diagnostics and detached returned query metadata. 313 hides the dormant root editor while retaining its state, removes redundant
 nested exits, explains actual comparison restrictions, and cancels retired
 trace/context requests. Omitted aggregate titles follow current grouping/measure;
-explicit titles remain literal with qualified context. Source cost is the measured
-314 task, not evidence for a replacement query engine.
+explicit titles remain literal with qualified context. 314 delivers one measured
+[fixed-baseline acquisition saving](FIXED_BASELINE_READS.md): supported string-group
+baselines read aggregates; selected records, stored captures, held parents and
+temporary rest reads retain their prior acquisition. Numeric-column baselines use
+the full path. Aggregate receipts do not claim unacquired row-page consistency.
+No whole-system latency improvement or replacement query engine is implied.
 
 The 313 desktop/narrow frames still expose presentation density: the two-value
 facet and nested cards consume substantial height before charts/records, and a
 mixed Activity → service visit retains multiple outer context/trail returns.
 The local nested Back is unambiguous, but broader ancestry consolidation and
-shared facet/context compaction remain post-314 review inputs, not completed work.
+shared facet/context compaction are now the proposed 315 compact-data work, not completed behavior.
 
 310 adds one [declarative categorical facet](DECLARATIVE_FACETS.md)
 for ordinary single-query views. Counts use the currently applied scope, including

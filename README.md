@@ -33,7 +33,8 @@ beside the default table, with
 [Include a fixed comparison in the view](docs/SAVED_COHORT_QUERIES.md) to save,
 export and rerun both questions. Shared
 [comparison-window controls](docs/PAIRED_COMPARISON_WINDOWS.md) stage both fixed
-questions together before explicit Run.
+questions together before explicit Run. [Fixed baselines](docs/FIXED_BASELINE_READS.md)
+acquire aggregates where supported while selected records keep their full read.
 [Declarative facets](docs/DECLARATIVE_FACETS.md) add a chosen field control to a
 view, with explicit scoped value reads and the existing selection workflow.
 [Portable YAML definitions](docs/PORTABLE_VIEWS.md) let teams export and import
@@ -42,7 +43,7 @@ these views through the same saved-view catalog.
 to an explicitly chosen Goo server.
 [Record paging](docs/RECORD_PAGE_PROFILE.md) retains any held aggregate and timeline.
 
-[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_02.md) ·
+[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_03.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
 [Go/frontend library review and proposal](docs/LIBRARY_REFACTOR_PLAN_2026_10_28.md)
 

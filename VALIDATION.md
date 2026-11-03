@@ -1,5 +1,56 @@
 # Validation record
 
+## Measured fixed-baseline acquisition — 314
+
+[Read contract](docs/FIXED_BASELINE_READS.md) ·
+[architecture review](docs/reviews/SOURCE_DEMAND_ARCHITECTURE_314.md) ·
+[actual journey/measurement](docs/journeys/314-source-demand.md) ·
+[post-source product review](docs/reviews/POST_SOURCE_PRODUCT_314.md) ·
+[revised active roadmap](docs/ROADMAP_2026_11_03.md).
+
+- Full Go suite passes (`cmd/goo` 15.237 seconds, read-audit 0.022 seconds,
+  `workbench` 2.093 seconds; unchanged exploration cached). Actual executor/transport
+  tests lock the baseline count/groups/measure budget at four→two statements, or
+  five→three with timeline, preserving independent receipts. Negative controls
+  distinguish row-page contradiction from aggregate count/group disagreement;
+  aggregate acquisition never claims to have checked a row page.
+- Frontend suite passes: 1,011 tests, zero failures/skips (27.31 seconds,
+  concurrency two). Shared closed DTO validation refuses inspection/snapshot slots,
+  mismatched intent and unrequested receipts. Fixed-baseline tests cover exact
+  request ownership, numeric-column full-path selection, malformed/error refusal
+  without retry, no-data/diagnostic states and abort/late fulfillment. Captured,
+  held-parent and temporary rest branches remain unchanged.
+- Four alternating actual ClickHouse audits use the same GUI-authored baseline:
+  count 100, one group, duration and aggregate fingerprint agree. Full acquisition
+  consumes four statements/73,680 response bytes; aggregate acquisition two/258.
+  Executor DTOs are 88,891/1,767 bytes. Scanned rows/bytes vary with source work;
+  timings are exploratory, not a latency SLA or universal speedup.
+- The pre-change real-OTel full flow passes in 22.0 seconds (24.0 runner): Service
+  Customize, 107-record parent, method facet, POST seven versus rest 100, explicit
+  fixed-pair Save/Run, trace inspection and cancellation. It records 18 source
+  HTTP requests, separately from executor SQL. Discovery requests differ by
+  namespace scope, so neither was removed as a duplicate.
+- The exact-query post-change saved-view run passes in 6.9 seconds (10.2 runner).
+  It reopens the actual GUI-authored store, retains exact selected/baseline questions
+  and selected rows, and matches cohort query/count/state/groups/duration while
+  allowing independent bases/clocks. Baseline HTTP body falls from 88,973 to
+  1,768 bytes. Its measured header time is 366ms versus 160ms before; there is
+  deliberately no latency-speedup claim. Full selected→aggregate baseline→pure
+  comparison is the successful acquisition budget. A retired second baseline is
+  actually aborted with no late compare. Neither run reports page errors.
+- One harness locator was narrowed to the existing summary component; semantic
+  equality excludes acquisition basis/clock identity rather than equating fresh
+  receipts. No production retry, cache or endpoint was added. Standard wrappers
+  pause/restore demo traffic. Owned raw stores/full-response copies were pruned;
+  existing 313 frames remain current because workflow controls did not change.
+
+Post-314 review prioritizes shared facet/context density, then an explicit typed
+Activity-to-service continuation. Neither is claimed delivered by the read-saving
+experiment. Compose configuration and image build pass; all three changed/new UI
+modules match the running Go server. Its aggregate API returns the measured 100
+records/one group with count/groups receipts and no inspection/snapshot slots.
+All 1,161 local Markdown links in changed documents resolve. Traffic is restored.
+
 ## One active investigation canvas — 313
 
 [Delivery plan](docs/reviews/ACTIVE_CANVAS_PLAN_313.md) ·
