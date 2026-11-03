@@ -88,6 +88,7 @@ func (q CaptureQuestion) Scope() (QuestionScope, error) {
 		s.SourceBinding = "clickhouse.otel-measurements/v1"
 		s.Grain = d.Grain
 		s.Environment = d.Environment
+		s.EnvironmentSelector = copyEnvironmentSelector(d.EnvironmentSelector)
 		s.FromMS = v.FromMS
 		s.ToMS = v.ToMS
 		binding := detached(d.Source)
@@ -262,10 +263,10 @@ func DescribeDiscoveryTransform(origin CaptureQuestion, d measurements.Discovery
 	if e = d.Validate(); e != nil {
 		return nil, e
 	}
-	if a.Family == "comparison" || a.EnvironmentSelector != nil || a.Environment != d.Environment || a.FromMS != d.FromMS || a.ToMS != d.ToMS {
+	if a.Family == "comparison" || !a.sameEnvironment(QuestionScope{Environment: d.Environment, EnvironmentSelector: d.EnvironmentSelector}) || a.FromMS != d.FromMS || a.ToMS != d.ToMS {
 		return nil, fmt.Errorf("discovery must retain original environment/window")
 	}
-	b := QuestionScope{Family: "discovery", Signal: "metrics", SourceBinding: "clickhouse.otel-metric-discovery/v1", Grain: "observed-instrument-metadata", Environment: d.Environment, FromMS: d.FromMS, ToMS: d.ToMS, Binding: &measurements.Binding{Services: []string{d.Service}}, Convention: "Unbound; no semantic-convention profile inferred", SchemaMetadata: "Observed catalog metadata only; no completeness guarantee"}
+	b := QuestionScope{Family: "discovery", Signal: "metrics", SourceBinding: "clickhouse.otel-metric-discovery/v1", Grain: "observed-instrument-metadata", Environment: d.Environment, EnvironmentSelector: copyEnvironmentSelector(d.EnvironmentSelector), FromMS: d.FromMS, ToMS: d.ToMS, Binding: &measurements.Binding{Namespace: d.Namespace.Clone(), Services: []string{d.Service}}, Convention: "Unbound; no semantic-convention profile inferred", SchemaMetadata: "Observed catalog metadata only; no completeness guarantee"}
 	return describeScopeChanges(origin, CaptureQuestion{}, a, b, "service-time"), nil
 }
 

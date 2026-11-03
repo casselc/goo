@@ -58,7 +58,7 @@ func TestServiceScopeSQLAndNativeBoundary318(t *testing.T) {
 				t.Fatal(err)
 			}
 			current := selector.Policy == "current-only"
-			if (plan.NativeCapability == nil) != current || !current && plan.NativeCapability.State != "unsupported" {
+			if (plan.NativeCapability == nil) != current || !current && plan.NativeCapability.State != "gauge-only" {
 				t.Fatal("native capability does not preserve policy")
 			}
 			if (len(plan.Declarations) > 0) != current {
@@ -86,7 +86,7 @@ func TestServiceScopeSQLAndNativeBoundary318(t *testing.T) {
 				t.Fatal("typed record profile generated no questions")
 			}
 			if !current {
-				input.Instruments = []measurements.Instrument{{Metric: "untrusted"}}
+				input.Instruments = []measurements.Instrument{{Metric: "untrusted", Supported: true}}
 				if _, err := PlanServiceDashboard(input, nil); err == nil {
 					t.Fatal("unsupported native instrument admitted")
 				}
@@ -221,5 +221,39 @@ func TestTypedCurrentScopeNativeProjection318(t *testing.T) {
 	input.Scope.EnvironmentSelector = &serviceSelectors318()[1]
 	if _, err := PlanServiceDashboard(input, nil); err == nil {
 		t.Fatal("effective name converted to native current-only name")
+	}
+}
+
+func TestTypedGaugeDashboardNativePolicy319(t *testing.T) {
+	selector := serviceSelectors318()[1]
+	definition := measurements.Definition{APIVersion: measurements.Version, Name: "typed-gauge", Title: "Typed gauge", Kind: "gauge", EnvironmentSelector: &selector, LookbackMinutes: 1, MaxGapMS: 60000, Grain: "per-stream", Source: measurements.Binding{Services: []string{"api"}, Scope: "sdk", Metric: "load", Unit: "items"}}
+	input := DashboardRequest{Scope: InventoryQuestion{EnvironmentSelector: &selector, FromMS: 100000, ToMS: 160000}, Service: "api", Signals: []string{"metrics"}, Instruments: []measurements.Instrument{{Kind: "gauge", Scope: "sdk", Metric: "load", Unit: "items", Supported: true, Definition: &definition}}}
+	plan, err := PlanServiceDashboard(input, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if plan.NativeCapability == nil || plan.NativeCapability.State != "gauge-only" || len(plan.NativeOptions) != 1 {
+		t.Fatal("typed gauge native option unavailable")
+	}
+	found := false
+	for _, widget := range plan.Widgets {
+		if widget.Measurement != nil {
+			found = true
+			if widget.Measurement.Definition.Environment != "" || !reflect.DeepEqual(widget.Measurement.Definition.EnvironmentSelector, &selector) {
+				t.Fatal("dashboard gauge lost checked policy")
+			}
+			if _, err := measurements.Compile(*widget.Measurement); err != nil {
+				t.Fatal(err)
+			}
+		}
+	}
+	if !found {
+		t.Fatal("typed native value question missing")
+	}
+	// The equal label does not admit a current-only definition in an effective scope.
+	definition.EnvironmentSelector = nil
+	definition.Environment = "prod"
+	if _, err := PlanServiceDashboard(input, nil); err == nil {
+		t.Fatal("current-only gauge silently substituted for effective policy")
 	}
 }

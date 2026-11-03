@@ -13,7 +13,7 @@ function questionFromEvidence(receipt){
 function captureQuestion(step){validateStep(step);return step.kind==='record'?{kind:'explore',explore:structuredClone(step.record)}:{kind:'measurement',measurement:{definition:structuredClone(step.measurement),fromMs:step.scope.fromMs,toMs:step.scope.toMs,...exactBounds(step.scope)}}}
 // Comparison-only Go zero/omitempty defaults; stored definitions and digests are untouched.
 function nativeDefinitionForComparison(definition){
-  const d=structuredClone(definition),source=d.source;delete d.environment;
+  const d=structuredClone(definition),source=d.source;delete d.environment;delete d.environmentSelector;
   for(const k of ['scope','version','schemaURL'])if(source[k]===undefined||source[k]===null)source[k]='';
   for(const k of ['metric','unit'])if(source[k]==='')delete source[k];
   if(source.attributes===null||source.attributes&&typeof source.attributes==='object'&&!Array.isArray(source.attributes)&&Object.keys(source.attributes).length===0)delete source.attributes;
@@ -29,21 +29,21 @@ function nativeDefinitionForComparison(definition){
 function evidenceDifference(step,capture){
   const identify=QuestionSession?.identity||(null);const expected=captureQuestion(step),actual=capture,changes=[];if(expected.kind!==actual.kind)return ['Signal family differs'];
   const a=expected.explore||expected.measurement,b=actual.explore||actual.measurement;if(!b)return ['Question unavailable'];
-  if(a.definition? a.definition.environment!==b.definition?.environment : !RecordEnvironment.sameQuestionEnvironment(a,b))changes.push('Environment differs');
+  if(a.definition? !RecordEnvironment.sameQuestionEnvironment(a.definition,b.definition) : !RecordEnvironment.sameQuestionEnvironment(a,b))changes.push('Environment differs');
   if(a.fromMs!==b.fromMs||a.toMs!==b.toMs||a.fromNS!==b.fromNS||a.toNS!==b.toNS)changes.push('Fixed window differs');
   function definition(q){if(q.definition)return stable(nativeDefinitionForComparison(q.definition));const d=structuredClone(q);for(const k of ['environment','environmentSelector','fromMs','toMs','offset','limit'])delete d[k];return identify?identify(d):stable(d)}
   function stable(x){if(Array.isArray(x))return '['+x.map(stable).join(',')+']';if(x&&typeof x==='object')return '{'+Object.keys(x).sort().map(k=>JSON.stringify(k)+':'+stable(x[k])).join(',')+'}';return JSON.stringify(x)}
   if(definition(a)!==definition(b))changes.push('Question definition differs');return changes;
  }
 function recordStep(q,view='Records'){return {version:1,kind:'record',scope:{...RecordEnvironment.questionFields(q),fromMs:q.fromMs,toMs:q.toMs},view,record:structuredClone(q)}}
-function measurementStep(q){return {version:1,kind:'measurement',scope:{environment:q.definition.environment,fromMs:q.fromMs,toMs:q.toMs,...exactBounds(q)},view:'Overview',measurement:structuredClone(q.definition)}}
+function measurementStep(q){return {version:1,kind:'measurement',scope:{...RecordEnvironment.questionFields(q.definition),fromMs:q.fromMs,toMs:q.toMs,...exactBounds(q)},view:'Overview',measurement:structuredClone(q.definition)}}
 function validateStep(s){
   const closed=(value,keys)=>value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).every(key=>keys.includes(key));
   if(!closed(s,['version','kind','scope','view','record','measurement'])||!closed(s.scope,['environment','environmentSelector','fromMs','toMs','fromNS','toNS']))throw Error('Invalid question step fields.');
   const b=s.scope;if(s?.version!==1||!b||!Number.isSafeInteger(b.fromMs)||!Number.isSafeInteger(b.toMs)||b.fromMs<0||b.toMs<=b.fromMs||b.toMs-b.fromMs>7200000||b.toMs>=4102444800000)throw Error('Invalid question step scope.');
   if(b.fromNS!==undefined||b.toNS!==undefined){if(s.kind!=='measurement'||s.measurement?.kind==='lifecycle'||typeof b.fromNS!=='string'||typeof b.toNS!=='string'||!/^(0|[1-9][0-9]*)$/.test(b.fromNS)||!/^(0|[1-9][0-9]*)$/.test(b.toNS))throw Error('Invalid exact native scope.');const f=BigInt(b.fromNS),t=BigInt(b.toNS);if(t<=f||t-f>7200000000000n||t>=4102444800000000000n||BigInt(b.fromMs)!==f/1000000n||BigInt(b.toMs)!==(t+999999n)/1000000n)throw Error('Exact scope differs from enclosing bounds.');}
   if(s.kind==='record'){RecordEnvironment.selection(b);if(s.measurement||!s.record||!RecordEnvironment.sameQuestionEnvironment(s.record,b)||s.record.fromMs!==b.fromMs||s.record.toMs!==b.toMs)throw Error('Record step scope differs.');validateLink({version:1,question:s.record,view:s.view})}
-  else if(s.kind==='measurement'){if(b.environmentSelector!=null||typeof b.environment!=='string'||!b.environment||s.record||s.view!=='Overview'||!s.measurement||s.measurement.environment!==b.environment||!s.measurement.source||typeof s.measurement.source!=='object'||Array.isArray(s.measurement.source))throw Error('Invalid measurement step.');}
+  else if(s.kind==='measurement'){if(s.record||s.view!=='Overview'||!s.measurement||!RecordEnvironment.sameQuestionEnvironment(s.measurement,b)||!s.measurement.source||typeof s.measurement.source!=='object'||Array.isArray(s.measurement.source)||s.measurement.environmentSelector!=null&&(s.measurement.kind!=='gauge'||s.measurement.grain!=='per-stream'||s.measurement.source.resource!=null))throw Error('Invalid measurement step.');}
   else throw Error('Unsupported question step.');return s;
  }
 function stepLink(s){validateStep(s);const hash='#step='+encodeURIComponent(JSON.stringify(s));if(hash.length>48000)throw Error('Question step is too large to share.');return hash}

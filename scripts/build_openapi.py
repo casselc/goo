@@ -67,18 +67,28 @@ for wire in ('exploration.InventoryQuestion','exploration.InventoryQuestionInput
  shape['oneOf']=[{'required':['environment'],'not':{'required':['environmentSelector']},'properties':{'environment':{'type':'string','minLength':1}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''}}}]
  shape['description']='Fixed service discovery scope. Legacy environment is current-key-only; an explicit environmentSelector preserves current-only/effective policy and named/empty/unreported scope. Null or mixed nonempty selectors are refused. Metric data-point presence is not native metric evaluation.'
 cap=schemas['exploration.DashboardNativeCapability']
-cap['properties']['state']['const']='unsupported'
+cap['properties']['state']['const']='gauge-only'
 cap['properties']['reason']['minLength']=1
 schemas['exploration.DashboardPlan']['properties']['nativeCapability']['description']='Present when native evaluation and declared scalar-environment bindings cannot represent this checked scope. Record-family widgets and raw metric data-point presence remain available; empty native options are not evidence of no metrics.'
+
+# Native typed definitions deliberately admit only service per-stream gauges.
+for wire in ('measurements.Definition','measurements.DefinitionInput','measurements.DiscoveryQuestion','measurements.DiscoveryQuestionInput'):
+ shape=schemas[wire];target='identity.EnvironmentSelectorInput' if wire.endswith('Input') else 'identity.EnvironmentSelector'
+ shape['properties']['environment']={'type':'string'};shape['properties']['environmentSelector']={'$ref':'#/components/schemas/'+target}
+ shape['oneOf']=[{'required':['environment'],'not':{'required':['environmentSelector']},'properties':{'environment':{'type':'string','minLength':1}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''}}}]
+ if 'Definition' in wire:
+  shape.setdefault('allOf',[]).append({'if':{'required':['environmentSelector']},'then':{'properties':{'kind':{'const':'gauge'},'grain':{'const':'per-stream'},'source':{'properties':{'resource':{'type':'null'}}}},'required':['kind','grain','source']}})
+ shape['description']='Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges only. Other discovered native families remain unsupported metadata.'
+schemas['exploration.DashboardPlan']['properties']['nativeCapability']['description']='gauge-only means this service policy supports typed per-stream gauges while other native families and entity bindings need current-only named scope. Empty native options do not prove no metric observations.'
 
 # Authored fixed record steps retain the checked environment independently of native definitions.
 for suffix in ('', 'Input'):
  step_scope=schemas['workbench.StepScope'+suffix]
  if suffix:step_scope['required']=[key for key in step_scope.get('required',[]) if key!='environment']
  step_scope['oneOf']=[{'required':['environment'],'properties':{'environment':{'type':'string','minLength':1},'environmentSelector':{'type':'null'}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''},'environmentSelector':ref('identity.EnvironmentSelector'+suffix)}}]
- step_scope['description']='Fixed authored scope. Record steps preserve checked environment policy and exact bounds; a native measurement step still requires its named environment.'
+ step_scope['description']='Fixed authored scope. Record and admitted native gauge steps preserve checked environment policy and exact bounds. Runtime also verifies equality with the question/definition environment.'
  step=schemas['workbench.Step'+suffix]
- step['allOf']=[{'if':{'properties':{'kind':{'const':'measurement'}},'required':['kind']},'then':{'properties':{'scope':{'properties':{'environmentSelector':{'type':'null'},'environment':{'type':'string','minLength':1}},'required':['environment']}}}}]
+ # Definition admission owns typed-gauge restrictions; native scope equality is checked by Go.
 
 summary['description']='Bounded discovery metadata, not a receipt. Legacy environment null means unknown or an explicitly versioned selector. environmentSelector preserves policy/scope; legacy name filters do not match selector captures.'
 summary['properties']['environmentSelector']['description']='Exact versioned policy/scope, separate from legacy current-only environment. Read with version 250 or newer.'

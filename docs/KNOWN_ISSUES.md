@@ -37,11 +37,15 @@ not more small chart-padding changes.
 resource namespace and occurrence window. 318 extends its record path to effective
 named, empty and unreported policies through inventory, discovery, dashboard and
 Customize; exact membership and paused return pass live. See
-[service environment policies](SERVICE_ENVIRONMENT_POLICIES.md). Native evaluation,
-deployments, entity-bound service annotations and service-bound view libraries
-still require a current-only named environment and refuse other policies visibly,
-before reading. Raw metric data-point presence does not imply evaluable native
-values. This closes the record-family gap, not every native/entity policy boundary.
+[service environment policies](SERVICE_ENVIRONMENT_POLICIES.md). 319 adds typed
+[service per-stream gauge values](NATIVE_GAUGE_ENVIRONMENT_POLICIES.md), with exact
+policy and separate raw stream identities through discovery, evaluation, native
+steps, packages and capture metadata. Other typed native families/resource kernels
+still refuse before I/O. Deployments, entity-bound service annotations and service-
+bound view libraries remain current-only named capabilities. The gauge inspector
+still limits record-context navigation to intervals; exact-point planner/protocol
+support is not a new UI navigation action. Raw metric presence remains distinct
+from native values and telemetry completeness.
 
 310 adds one [declarative categorical facet](DECLARATIVE_FACETS.md)
 for ordinary single-query views. Counts use the currently applied scope, including

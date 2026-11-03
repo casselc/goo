@@ -36,7 +36,11 @@ func validateExactStream(d Definition) error {
 	if r := b.Resource; r != nil {
 		identityOK = r.AttributeKey() != "" && r.ID != "" && s.Resource[r.AttributeKey()] == r.ID
 	}
-	if !identityOK || s.Resource["deployment.environment.name"] != d.Environment || !b.Namespace.Matches(s.Resource) || s.Scope != b.Scope || s.Version != b.Version || s.SchemaURL != b.SchemaURL || s.Name != b.Metric || s.Unit != b.Unit {
+	selection, err := d.EnvironmentSelection()
+	if err != nil {
+		return err
+	}
+	if !identityOK || !selection.Matches(s.Resource) || !b.Namespace.Matches(s.Resource) || s.Scope != b.Scope || s.Version != b.Version || s.SchemaURL != b.SchemaURL || s.Name != b.Metric || s.Unit != b.Unit {
 		return fmt.Errorf("exact stream conflicts with metric source binding")
 	}
 	for k, v := range b.Attributes {

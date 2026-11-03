@@ -97,7 +97,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: cannot unmarshal bool into Go struct field Question.definition.stockDomain of type string\"}\n"
+      "response": "{\"error\":\"json: cannot unmarshal bool into Go struct field wire.stockDomain of type string\"}\n"
     }
   ]
 }

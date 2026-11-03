@@ -29,18 +29,23 @@ records. Customize stages the same typed record scope; Run explicitly acquires i
 Origin scope and generated investigation titles display the policy. Rediscovery
 retains it until the environment input is actually edited.
 
-Existing native metric evaluation, deployments, entity-bound service annotations
-and service-bound view libraries require a current-only named environment. For
-other policies, those continuations show an unavailable reason and issue no read.
-A dashboard plan reports `nativeCapability: {state: "unsupported", reason: ...}`;
-empty native options must not be read as proof that no metrics exist. Direct
-planning inputs cannot inject unsupported native instruments or selections.
+319 adds [typed native gauge evaluation](NATIVE_GAUGE_ENVIRONMENT_POLICIES.md)
+for service-bound per-stream gauges. Other typed native families and resource-bound
+kernels refuse before source access. A service plan reports `nativeCapability`
+with state `gauge-only` when that subset applies; unsupported instrument entries
+have a reason and no executable definition. Empty options are not proof that no
+metrics exist. Instrument values retain separate raw stream identities.
+
+Deployments, entity-bound service annotations and service-bound view libraries
+still require a current-only named environment. For other policies those
+continuations show an unavailable reason and issue no read. Direct planning and
+evaluation guards apply as well as the UI.
 
 A typed current-only named selector can use those scalar bindings only after
 checked equivalence to the same current-only name. Legacy string inputs retain
 that historical meaning. Effective named selections never fall back to a scalar
-name merely because their text matches. This cut does not migrate native
-measurement definitions or environment-entity stores.
+name merely because their text matches. The typed gauge cut does not migrate other native families or environment-entity
+stores.
 
 ```mermaid
 flowchart TD
@@ -51,7 +56,7 @@ flowchart TD
   R --> Q[Customize: typed record question]
   C --> N{Current-only named?}
   N -->|Checked equivalent name| B[Existing native and entity bindings]
-  N -->|Other valid policy| U[Visible unavailable reason: no binding read]
+  N -->|Other valid policy| U[Typed gauge subset; entity bindings unavailable]
   S -->|Back| P[Same paused Activity]
   R -->|Back| P
 ```

@@ -11,26 +11,28 @@ import (
 
 // DiscoveryQuestion is a bounded inventory of observations, never a completeness claim.
 type DiscoveryQuestion struct {
-	Namespace   *identity.Namespace `json:"namespace,omitempty"`
-	Environment string              `json:"environment"`
-	Service     string              `json:"service"`
-	FromMS      int64               `json:"fromMs"`
-	ToMS        int64               `json:"toMs"`
+	Namespace           *identity.Namespace           `json:"namespace,omitempty"`
+	Environment         string                        `json:"environment,omitempty"`
+	EnvironmentSelector *identity.EnvironmentSelector `json:"environmentSelector,omitempty"`
+	Service             string                        `json:"service"`
+	FromMS              int64                         `json:"fromMs"`
+	ToMS                int64                         `json:"toMs"`
 }
 type Instrument struct {
-	CapabilityPlan *InstrumentCapabilityPlan `json:"capabilityPlan,omitempty"`
-	Kind           string                    `json:"kind"`
-	Scope          string                    `json:"scope"`
-	Version        string                    `json:"version"`
-	SchemaURL      string                    `json:"schemaURL"`
-	Metric         string                    `json:"metric"`
-	Unit           string                    `json:"unit"`
-	Temporality    int                       `json:"temporality"`
-	Monotonic      bool                      `json:"monotonic"`
-	Dimensions     []string                  `json:"dimensions"`
-	Records        int                       `json:"records"`
-	Supported      bool                      `json:"supported"`
-	Definition     *Definition               `json:"definition,omitempty"`
+	UnsupportedReason string                    `json:"unsupportedReason,omitempty"`
+	CapabilityPlan    *InstrumentCapabilityPlan `json:"capabilityPlan,omitempty"`
+	Kind              string                    `json:"kind"`
+	Scope             string                    `json:"scope"`
+	Version           string                    `json:"version"`
+	SchemaURL         string                    `json:"schemaURL"`
+	Metric            string                    `json:"metric"`
+	Unit              string                    `json:"unit"`
+	Temporality       int                       `json:"temporality"`
+	Monotonic         bool                      `json:"monotonic"`
+	Dimensions        []string                  `json:"dimensions"`
+	Records           int                       `json:"records"`
+	Supported         bool                      `json:"supported"`
+	Definition        *Definition               `json:"definition,omitempty"`
 }
 type DiscoveryResult struct {
 	Question    DiscoveryQuestion `json:"question"`
@@ -40,16 +42,28 @@ type DiscoveryResult struct {
 }
 
 func (q DiscoveryQuestion) Validate() error {
-	d := Definition{APIVersion: Version, Name: "discovered", Title: "Discovered metric", Kind: "gauge", Environment: q.Environment, LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: Binding{Namespace: q.Namespace.Clone(), Services: []string{q.Service}, Scope: "discovery", Metric: "discovery", Unit: "1"}}
+	d := Definition{APIVersion: Version, Name: "discovered", Title: "Discovered metric", Kind: "gauge", Environment: q.Environment, EnvironmentSelector: copyEnvironmentSelector(q.EnvironmentSelector), LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: Binding{Namespace: q.Namespace.Clone(), Services: []string{q.Service}, Scope: "discovery", Metric: "discovery", Unit: "1"}}
 	return (Question{Definition: d, FromMS: q.FromMS, ToMS: q.ToMS}).Validate()
 }
 func (s Source) Discover(ctx context.Context, q DiscoveryQuestion) (*DiscoveryResult, error) {
+	q = q.clone()
 	if e := q.Validate(); e != nil {
 		return nil, e
 	}
 	parts := []string{}
 	namespaceSQL := ""
-	params := map[string]string{"from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10), "service": q.Service, "environment": q.Environment}
+	params := map[string]string{"from": strconv.FormatInt(q.FromMS, 10), "to": strconv.FormatInt(q.ToMS, 10), "service": q.Service}
+	environmentSQL := "ResourceAttributes['deployment.environment.name']={environment:String}"
+	if q.EnvironmentSelector == nil {
+		params["environment"] = q.Environment
+	} else {
+		selection, _ := q.EnvironmentSelection()
+		var e error
+		environmentSQL, e = metricEnvironmentPredicate(selection, func(value, _ string) string { params["environment"] = value; return "{environment:String}" })
+		if e != nil {
+			return nil, e
+		}
+	}
 	if q.Namespace != nil {
 		namespaceSQL = " AND NOT mapContains(ResourceAttributes,'service.namespace')"
 		if q.Namespace.Mode == "value" {
@@ -66,7 +80,7 @@ func (s Source) Discover(ctx context.Context, q DiscoveryQuestion) (*DiscoveryRe
 		if kind == "counter" {
 			mono = "IsMonotonic"
 		}
-		parts = append(parts, fmt.Sprintf("SELECT '%s' AS kind, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schemaURL, MetricName AS metric, MetricUnit AS unit, %s AS temporality, %s AS monotonic, mapKeys(Attributes) AS dimensions, mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName))) AS resource, Attributes AS attributes, ResourceSchemaUrl AS resourceSchemaURL FROM otel_metrics_%s WHERE TimeUnix>=fromUnixTimestamp64Milli({from:Int64}) AND TimeUnix<fromUnixTimestamp64Milli({to:Int64}) AND ServiceName={service:String} AND ResourceAttributes['deployment.environment.name']={environment:String}", kind, tempo, mono, table)+namespaceSQL)
+		parts = append(parts, fmt.Sprintf("SELECT '%s' AS kind, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schemaURL, MetricName AS metric, MetricUnit AS unit, %s AS temporality, %s AS monotonic, mapKeys(Attributes) AS dimensions, mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName))) AS resource, Attributes AS attributes, ResourceSchemaUrl AS resourceSchemaURL FROM otel_metrics_%s WHERE TimeUnix>=fromUnixTimestamp64Milli({from:Int64}) AND TimeUnix<fromUnixTimestamp64Milli({to:Int64}) AND ServiceName={service:String} AND %s", kind, tempo, mono, table, environmentSQL)+namespaceSQL)
 	}
 	// A single global limit bounds all families. Exceeding it fails without publishing a partial catalog.
 	sql := "SELECT * FROM (" + parts[0] + " UNION ALL " + parts[1] + " UNION ALL " + parts[2] + ") LIMIT 10001 FORMAT JSONEachRow"
@@ -77,6 +91,7 @@ func (s Source) Discover(ctx context.Context, q DiscoveryQuestion) (*DiscoveryRe
 	return discoverRows(q, rows)
 }
 func discoverRows(q DiscoveryQuestion, rows []json.RawMessage) (*DiscoveryResult, error) {
+	q = q.clone()
 	out := &DiscoveryResult{Question: q, Instruments: []Instrument{}, Records: len(rows), Warning: "Observed metadata only; not a complete instrument or dimension inventory. No fleet aggregation is implied. Empty version/schema values are exact matches. Counter and histogram support is restricted by the measurement kernels."}
 	groups := map[string]*Instrument{}
 	dims := map[string]map[string]bool{}
@@ -89,11 +104,19 @@ func discoverRows(q DiscoveryQuestion, rows []json.RawMessage) (*DiscoveryResult
 		if e := json.Unmarshal(row, &raw); e != nil {
 			return nil, e
 		}
+		if q.EnvironmentSelector != nil {
+			selection, e := q.EnvironmentSelection()
+			if e != nil || !selection.Matches(raw.DiscoveryObservation.Resource) || !q.Namespace.Matches(raw.DiscoveryObservation.Resource) || raw.DiscoveryObservation.Resource["service.name"] != q.Service {
+				return nil, fmt.Errorf("discovered metric resource differs from typed environment/service scope")
+			}
+		}
 		i := raw.Instrument
 		if i.Kind == "counter" && !i.Monotonic && i.Temporality == 2 {
 			i.Kind = "stock"
 		}
 		i.CapabilityPlan = nil
+		i.Definition = nil
+		i.UnsupportedReason = ""
 		keys := i.Dimensions
 		i.Dimensions = nil
 		i.Records = 0
@@ -121,8 +144,12 @@ func discoverRows(q DiscoveryQuestion, rows []json.RawMessage) (*DiscoveryResult
 		}
 		sort.Strings(i.Dimensions)
 		i.Supported = i.Scope != "" && i.Unit != "" && (i.Kind == "gauge" || i.Kind == "stock" && i.Temporality == 2 && !i.Monotonic || (i.Temporality == 1 || i.Temporality == 2) && (i.Kind == "histogram" && (i.Unit == "s" || i.Unit == "ms") || i.Kind == "counter" && i.Monotonic))
+		if q.EnvironmentSelector != nil && i.Kind != "gauge" {
+			i.Supported = false
+			i.UnsupportedReason = typedGaugeReason
+		}
 		if i.Supported {
-			d := Definition{APIVersion: Version, Name: "metric-" + k[:12], Title: i.Metric, Kind: i.Kind, Environment: q.Environment, LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: Binding{Namespace: q.Namespace.Clone(), Services: []string{q.Service}, Scope: i.Scope, Version: i.Version, SchemaURL: i.SchemaURL, Metric: i.Metric, Unit: i.Unit}}
+			d := Definition{APIVersion: Version, Name: "metric-" + k[:12], Title: i.Metric, Kind: i.Kind, Environment: q.Environment, EnvironmentSelector: copyEnvironmentSelector(q.EnvironmentSelector), LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: Binding{Namespace: q.Namespace.Clone(), Services: []string{q.Service}, Scope: i.Scope, Version: i.Version, SchemaURL: i.SchemaURL, Metric: i.Metric, Unit: i.Unit}}
 			if d.Validate() == nil {
 				i.Definition = &d
 			} else {

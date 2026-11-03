@@ -84,7 +84,7 @@ func PlanNativeRecordContext(parent measurements.Question, stream metrics.Stream
 	if v, ok := resource[identity.NamespaceKey]; ok {
 		namespace = identity.FromValue(&v)
 	}
-	q := Query{Signal: signal, Environment: parent.Definition.Environment, FromMS: int64(fromMS), ToMS: int64(toMS), Limit: 100, Where: &Predicate{All: []Predicate{
+	q := Query{Signal: signal, Environment: parent.Definition.Environment, EnvironmentSelector: copyEnvironmentSelector(parent.Definition.EnvironmentSelector), FromMS: int64(fromMS), ToMS: int64(toMS), Limit: 100, Where: &Predicate{All: []Predicate{
 		{Field: &Field{Kind: "column", Key: "service"}, Op: "eq", Value: resource["service.name"]},
 		*NamespacePredicate(namespace),
 		{Field: &Field{Kind: "resource", Key: "service.instance.id"}, Op: "eq", Value: resource["service.instance.id"]},

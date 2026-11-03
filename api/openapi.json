@@ -10988,7 +10988,7 @@
           },
           "state": {
             "type": "string",
-            "const": "unsupported"
+            "const": "gauge-only"
           }
         },
         "required": [
@@ -11076,7 +11076,7 @@
                 "type": "null"
               }
             ],
-            "description": "Present when native evaluation and declared scalar-environment bindings cannot represent this checked scope. Record-family widgets and raw metric data-point presence remain available; empty native options are not evidence of no metrics."
+            "description": "gauge-only means this service policy supports typed per-stream gauges while other native families and entity bindings need current-only named scope. Empty native options do not prove no metric observations."
           },
           "nativeLimit": {
             "type": "integer"
@@ -24419,6 +24419,9 @@
           "environment": {
             "type": "string"
           },
+          "environmentSelector": {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
           "grain": {
             "type": "string"
           },
@@ -24475,14 +24478,73 @@
           "name",
           "title",
           "kind",
-          "environment",
           "lookbackMinutes",
           "maxGapMs",
           "grain",
           "source"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/measurements.Definition"
+        "x-go-type": "github.com/casselc/goo/measurements.Definition",
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "not": {
+              "required": [
+                "environmentSelector"
+              ]
+            },
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              }
+            }
+          }
+        ],
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "environmentSelector"
+              ]
+            },
+            "then": {
+              "properties": {
+                "kind": {
+                  "const": "gauge"
+                },
+                "grain": {
+                  "const": "per-stream"
+                },
+                "source": {
+                  "properties": {
+                    "resource": {
+                      "type": "null"
+                    }
+                  }
+                }
+              },
+              "required": [
+                "kind",
+                "grain",
+                "source"
+              ]
+            }
+          }
+        ],
+        "description": "Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges only. Other discovered native families remain unsupported metadata."
       },
       "measurements.DefinitionInput": {
         "additionalProperties": false,
@@ -24512,14 +24574,10 @@
             "description": "Optional per-stream counter-only exact exported decimal domain. Omitted keeps integer counter semantics. Host authority requires this opt-in; Pinned CPU-time defaults use cumulative seconds; explicitly expanded network/disk profiles certify whole byte counts below 2^53 and retain cumulative temporality."
           },
           "environment": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": "string"
+          },
+          "environmentSelector": {
+            "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
           },
           "grain": {
             "anyOf": [
@@ -24649,7 +24707,67 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/measurements.Definition"
+        "x-go-type": "github.com/casselc/goo/measurements.Definition",
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "not": {
+              "required": [
+                "environmentSelector"
+              ]
+            },
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              }
+            }
+          }
+        ],
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "environmentSelector"
+              ]
+            },
+            "then": {
+              "properties": {
+                "kind": {
+                  "const": "gauge"
+                },
+                "grain": {
+                  "const": "per-stream"
+                },
+                "source": {
+                  "properties": {
+                    "resource": {
+                      "type": "null"
+                    }
+                  }
+                }
+              },
+              "required": [
+                "kind",
+                "grain",
+                "source"
+              ]
+            }
+          }
+        ],
+        "description": "Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges only. Other discovered native families remain unsupported metadata."
       },
       "measurements.DimensionCoverage": {
         "properties": {
@@ -24770,6 +24888,9 @@
           "environment": {
             "type": "string"
           },
+          "environmentSelector": {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
           "fromMs": {
             "type": "integer"
           },
@@ -24791,26 +24912,50 @@
           }
         },
         "required": [
-          "environment",
           "service",
           "fromMs",
           "toMs"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/measurements.DiscoveryQuestion"
+        "x-go-type": "github.com/casselc/goo/measurements.DiscoveryQuestion",
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "not": {
+              "required": [
+                "environmentSelector"
+              ]
+            },
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              }
+            }
+          }
+        ],
+        "description": "Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges only. Other discovered native families remain unsupported metadata."
       },
       "measurements.DiscoveryQuestionInput": {
         "additionalProperties": false,
         "properties": {
           "environment": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": "string"
+          },
+          "environmentSelector": {
+            "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
           },
           "fromMs": {
             "anyOf": [
@@ -24861,7 +25006,36 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/measurements.DiscoveryQuestion"
+        "x-go-type": "github.com/casselc/goo/measurements.DiscoveryQuestion",
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "not": {
+              "required": [
+                "environmentSelector"
+              ]
+            },
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              }
+            }
+          }
+        ],
+        "description": "Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges only. Other discovered native families remain unsupported metadata."
       },
       "measurements.DiscoveryResult": {
         "properties": {
@@ -25725,6 +25899,9 @@
           "unit": {
             "type": "string"
           },
+          "unsupportedReason": {
+            "type": "string"
+          },
           "version": {
             "type": "string"
           }
@@ -26202,6 +26379,16 @@
             ]
           },
           "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "unsupportedReason": {
             "anyOf": [
               {
                 "type": "string"
@@ -44678,39 +44865,7 @@
           "view"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.Step",
-        "allOf": [
-          {
-            "if": {
-              "properties": {
-                "kind": {
-                  "const": "measurement"
-                }
-              },
-              "required": [
-                "kind"
-              ]
-            },
-            "then": {
-              "properties": {
-                "scope": {
-                  "properties": {
-                    "environmentSelector": {
-                      "type": "null"
-                    },
-                    "environment": {
-                      "type": "string",
-                      "minLength": 1
-                    }
-                  },
-                  "required": [
-                    "environment"
-                  ]
-                }
-              }
-            }
-          }
-        ]
+        "x-go-type": "github.com/casselc/goo/workbench.Step"
       },
       "workbench.StepInput": {
         "additionalProperties": false,
@@ -44791,39 +44946,7 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.Step",
-        "allOf": [
-          {
-            "if": {
-              "properties": {
-                "kind": {
-                  "const": "measurement"
-                }
-              },
-              "required": [
-                "kind"
-              ]
-            },
-            "then": {
-              "properties": {
-                "scope": {
-                  "properties": {
-                    "environmentSelector": {
-                      "type": "null"
-                    },
-                    "environment": {
-                      "type": "string",
-                      "minLength": 1
-                    }
-                  },
-                  "required": [
-                    "environment"
-                  ]
-                }
-              }
-            }
-          }
-        ]
+        "x-go-type": "github.com/casselc/goo/workbench.Step"
       },
       "workbench.StepScope": {
         "properties": {
@@ -44889,7 +45012,7 @@
             }
           }
         ],
-        "description": "Fixed authored scope. Record steps preserve checked environment policy and exact bounds; a native measurement step still requires its named environment."
+        "description": "Fixed authored scope. Record and admitted native gauge steps preserve checked environment policy and exact bounds. Runtime also verifies equality with the question/definition environment."
       },
       "workbench.StepScopeInput": {
         "additionalProperties": false,
@@ -44994,7 +45117,7 @@
             }
           }
         ],
-        "description": "Fixed authored scope. Record steps preserve checked environment policy and exact bounds; a native measurement step still requires its named environment."
+        "description": "Fixed authored scope. Record and admitted native gauge steps preserve checked environment policy and exact bounds. Runtime also verifies equality with the question/definition environment."
       },
       "workbench.TimelineViewDeclaration": {
         "properties": {

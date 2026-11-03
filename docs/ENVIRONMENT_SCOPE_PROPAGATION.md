@@ -5,8 +5,10 @@
 
 > 318 extends inventory/service discovery, raw metric data-point presence and record
 > dashboards/Customize to typed selectors; see [current service policies](SERVICE_ENVIRONMENT_POLICIES.md).
-> Native evaluation and entity-bound service operations still require current-only
-> named scope. Historical limitations below describe earlier implementation stages.
+> 319 adds typed service per-stream gauge discovery/evaluation and retained metadata;
+> see [native gauge policies](NATIVE_GAUGE_ENVIRONMENT_POLICIES.md). Other typed native
+> families/resource kernels and entity-bound operations remain restricted. Historical
+> limitations below describe earlier implementation stages.
 
 The shipped 247 tool deliberately stops at local inspection. This audit prepares
 main-flow adoption; it does not enable missing/empty environment selectors in

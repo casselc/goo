@@ -15055,6 +15055,16 @@
       "environment": {
         "type": "string"
       },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "grain": {
         "type": "string"
       },
@@ -15108,7 +15118,6 @@
       "name",
       "title",
       "kind",
-      "environment",
       "lookbackMinutes",
       "maxGapMs",
       "grain",
@@ -15144,6 +15153,23 @@
         "anyOf": [
           {
             "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"
@@ -15397,6 +15423,16 @@
       "environment": {
         "type": "string"
       },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "fromMs": {
         "type": "integer"
       },
@@ -15418,7 +15454,6 @@
       }
     },
     "required": [
-      "environment",
       "service",
       "fromMs",
       "toMs"
@@ -15433,6 +15468,23 @@
         "anyOf": [
           {
             "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"
@@ -16187,6 +16239,9 @@
       "unit": {
         "type": "string"
       },
+      "unsupportedReason": {
+        "type": "string"
+      },
       "version": {
         "type": "string"
       }
@@ -16664,6 +16719,16 @@
         ]
       },
       "unit": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "unsupportedReason": {
         "anyOf": [
           {
             "type": "string"

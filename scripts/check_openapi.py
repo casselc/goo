@@ -811,8 +811,10 @@ def check_record_step_selector(spec):
         assert list(check.iter_errors(ambiguous)), 'ambiguous authored environment accepted'
         invalid=copy.deepcopy(step);invalid['scope']['environmentSelector']['policy']='unknown'
         assert list(check.iter_errors(invalid)), 'unknown authored policy accepted'
-        native=copy.deepcopy(step);native['kind']='measurement'
-        assert list(check.iter_errors(native)), 'native typed scope implicitly enabled'
+        native={'version':1,'kind':'measurement','scope':copy.deepcopy(scope),'view':'Overview','measurement':{'apiVersion':'goo/measurement-package/v1alpha1','name':'typed-gauge','title':'Typed gauge','kind':'gauge','environmentSelector':copy.deepcopy(selector),'lookbackMinutes':1,'maxGapMs':60000,'grain':'per-stream','source':{'services':['api'],'scope':'sdk','version':'','schemaURL':'','metric':'load','unit':'items'}}}
+        check.validate(native)
+        native['measurement']['kind']='counter'
+        assert list(check.iter_errors(native)), 'typed native non-gauge step accepted'
 
 
 def check(spec):
@@ -854,6 +856,15 @@ def check(spec):
             check_service.validate(body({**base,'environmentSelector':case['selector']}))
         for scope in (base,{**base,'environment':None},{**base,'environment':'prod','environmentSelector':None},{**base,'environment':'prod','environmentSelector':good},{**base,'environmentSelector':None}):
             assert not check_service.is_valid(body(scope)), f'{path}: invalid service environment union accepted'
+
+    native_definition={'apiVersion':'goo/measurement-package/v1alpha1','name':'typed-gauge','title':'Typed gauge','kind':'gauge','lookbackMinutes':1,'maxGapMs':60000,'grain':'per-stream','source':{'services':['api'],'scope':'sdk','version':'','schemaURL':'','metric':'load','unit':'items'}}
+    native_check=validator(spec,{'$ref':'#/components/schemas/measurements.DefinitionInput'})
+    discovery_check=validator(spec,spec['paths']['/metric-discovery']['post']['requestBody']['content']['application/json']['schema'])
+    for case in bank['cases']:
+        typed={**native_definition,'environmentSelector':case['selector']};native_check.validate(typed)
+        discovery_check.validate({'environmentSelector':case['selector'],'service':'api','fromMs':100000,'toMs':160000})
+        for invalid in ({**typed,'environment':'prod'},{**typed,'environment':None},{**typed,'environmentSelector':None},{**typed,'kind':'counter'},{**typed,'grain':'consumer-group'},{**typed,'source':{**typed['source'],'resource':{'kind':'host','id':'host'}}}):
+            assert not native_check.is_valid(invalid), 'invalid typed native union/profile admitted'
 
     routes = set(route_sources(ROOT))
     documented = {(m, p) for p, item in spec['paths'].items() for m in item if m in ('get', 'post') and 'x-go-source' in item[m]}

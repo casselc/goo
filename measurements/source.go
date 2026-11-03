@@ -84,7 +84,17 @@ func Compile(q Question) (Plan, error) {
 			lower = strconv.FormatInt(n, 10)
 		}
 	}
-	where := timeColumn + ">=" + clock + "(" + param(lower, "Int64") + ") AND " + timeColumn + upper + clock + "(" + param(end, "Int64") + ") AND ResourceAttributes['deployment.environment.name']=" + param(d.Environment, "String")
+	where := timeColumn + ">=" + clock + "(" + param(lower, "Int64") + ") AND " + timeColumn + upper + clock + "(" + param(end, "Int64") + ") AND "
+	if d.EnvironmentSelector == nil {
+		where += "ResourceAttributes['deployment.environment.name']=" + param(d.Environment, "String")
+	} else {
+		selection, _ := d.EnvironmentSelection()
+		environment, e := metricEnvironmentPredicate(selection, param)
+		if e != nil {
+			return Plan{}, e
+		}
+		where += environment
+	}
 	services := []string{}
 	for _, s := range d.Source.Services {
 		services = append(services, param(s, "String"))
@@ -139,6 +149,11 @@ func Compile(q Question) (Plan, error) {
 // lifecycle questions additionally publish first-observation custody in CustodyDir
 // and may apply previous correction lineage. HTTP composition declares this mixed effect.
 func (s Source) Run(ctx context.Context, q Question, previous *Result) (*Result, error) {
+	var cloneErr error
+	q, cloneErr = q.detached()
+	if cloneErr != nil {
+		return nil, cloneErr
+	}
 	plan, e := Compile(q)
 	if e != nil {
 		return nil, e
@@ -220,9 +235,10 @@ type metricRow struct {
 
 func ns(ms int64) string { return strconv.FormatInt(ms*1000000, 10) }
 func prepareResult(q Question, rows []json.RawMessage, at time.Time) (*Result, error) {
-	encodedQuestion, _ := json.Marshal(q)
-	var cloned Question
-	json.Unmarshal(encodedQuestion, &cloned)
+	cloned, cloneErr := q.detached()
+	if cloneErr != nil {
+		return nil, cloneErr
+	}
 	q = cloned
 	plan, e := Compile(q)
 	if e != nil {
@@ -273,6 +289,7 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time) (*Result, error)
 	hs := []metrics.HistogramPoint{}
 	ss := []metrics.StockPoint{}
 	d := q.Definition
+	selection, _ := d.EnvironmentSelection()
 	for rowIndex, raw := range copied {
 		strictFilesystem := HostFilesystemDefinition(d)
 		strictFilesystemGauge := HostFilesystemUtilizationDefinition(d)
@@ -359,7 +376,7 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time) (*Result, error)
 		if resource := d.Source.Resource; resource != nil {
 			identityOK = resource.AttributeKey() != "" && row.Resource[resource.AttributeKey()] == resource.ID
 		}
-		if !d.Source.Namespace.Matches(row.Resource) || !identityOK || row.Resource["deployment.environment.name"] != d.Environment || row.Scope != d.Source.Scope || row.Version != d.Source.Version || row.SchemaURL != d.Source.SchemaURL || row.Name != d.Source.Metric || row.Unit != d.Source.Unit || row.Flags&^uint32(1) != 0 {
+		if !d.Source.Namespace.Matches(row.Resource) || !identityOK || !selection.Matches(row.Resource) || row.Scope != d.Source.Scope || row.Version != d.Source.Version || row.SchemaURL != d.Source.SchemaURL || row.Name != d.Source.Metric || row.Unit != d.Source.Unit || row.Flags&^uint32(1) != 0 {
 			return nil, fmt.Errorf("metric source identity/unit/flags mismatch")
 		}
 		for k, v := range d.Source.Attributes {

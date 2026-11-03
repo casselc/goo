@@ -32,8 +32,8 @@ and the explicit unavailable native/entity bindings on other policies.
 
 Unknown resource reporting, empty service name, malformed identity and unsupported
 windows still refuse with an explanation in the service menu. They do not fall
-back to a broader query. Native measurement definitions and entity stores have
-not gained general typed-policy support.
+back to a broader query. 319 supports typed service gauges through the existing native interface; other
+typed native families and entity stores remain outside that capability.
 
 ## Return and lifetime
 

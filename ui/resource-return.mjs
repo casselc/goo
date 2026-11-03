@@ -3,7 +3,7 @@ import * as RecordEnvironment from './record-environment.mjs';
 import * as UI from './components.mjs';
 import {actionVisible,revealFocus} from './dom-visibility.mjs';
 import * as EvidenceSummary from './evidence-summary.mjs';
-function originEnvironment(question){const q=question.inventory||question.explore||question,definition=q.definition||question.measurement?.definition;return definition?.environment??(q.environmentSelector!=null||q.environment!==undefined?RecordEnvironment.questionLabel(q):'Environment unavailable')}
+function originEnvironment(question){const q=question.inventory||question.explore||question,definition=q.definition||question.measurement?.definition;return definition?RecordEnvironment.questionLabel(definition):(q.environmentSelector!=null||q.environment!==undefined?RecordEnvironment.questionLabel(q):'Environment unavailable')}
 const active=new WeakMap();
 function mount(parent,{className='',id}={}){
  const node=UI.node,bar=node('div');bar.className='resource-return controls '+className;if(id)bar.id=id;bar.hidden=true;parent.prepend(bar);let revision=0,holdRevision=0,origin=null;

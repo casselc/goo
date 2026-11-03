@@ -68,6 +68,22 @@ func TestNativeJSONHTTPWireFixtures(t *testing.T) {
 	if f.Version != 1 || len(f.Cases) != 68 {
 		t.Fatal("coverage changed", len(f.Cases))
 	}
+	if os.Getenv("GOO_UPDATE_NATIVE_JSON_HTTP_FIXTURES") == "1" {
+		for index := range f.Cases {
+			w := nativeJSONWireResponse(t, f.Cases[index])
+			if w.Code != f.Cases[index].Status {
+				t.Fatalf("%s status changed during regeneration: %d", f.Cases[index].Name, w.Code)
+			}
+			f.Cases[index].Response = w.Body.String()
+		}
+		updated, e := json.MarshalIndent(f, "", "  ")
+		if e != nil {
+			t.Fatal(e)
+		}
+		if e = os.WriteFile("../../testdata/http/native-json.json", append(updated, '\n'), 0600); e != nil {
+			t.Fatal(e)
+		}
+	}
 	for _, c := range f.Cases {
 		t.Run(c.Name, func(t *testing.T) {
 			w := nativeJSONWireResponse(t, c)

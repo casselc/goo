@@ -78,7 +78,7 @@ type DashboardNativeCapability struct {
 	Reason string `json:"reason"`
 }
 
-const dashboardNativePolicyReason = "Native metric evaluation and declared bindings require a current-only named environment. Captured record and metric data-point presence remain available in this scope."
+const dashboardNativePolicyReason = "Native values in this environment policy support service-bound per-stream gauges only. Other native families and declared entity bindings require a current-only named environment."
 
 type DashboardPlan struct {
 	NativeCapability      *DashboardNativeCapability `json:"nativeCapability,omitempty"`
@@ -132,13 +132,11 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		}
 	}
 	nativeEnvironment, nativeSupported := in.Scope.CurrentEnvironmentName()
-	if !nativeSupported && (len(in.Instruments) > 0 || in.NativeSelection != nil && len(*in.NativeSelection) > 0) {
-		return nil, fmt.Errorf("%s", dashboardNativePolicyReason)
-	}
+
 	scope := in.Scope.clone()
 	p := &DashboardPlan{Version: DashboardVersion, Scope: scope, Service: in.Service, Widgets: []DashboardWidget{}, Declarations: []DashboardDeclaration{}, NativeOptions: []DashboardNativeOption{}, NativeLimit: DashboardNativeLimit, Warnings: []string{"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.", "Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.", "Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration."}}
 	if !nativeSupported {
-		p.NativeCapability = &DashboardNativeCapability{State: "unsupported", Reason: dashboardNativePolicyReason}
+		p.NativeCapability = &DashboardNativeCapability{State: "gauge-only", Reason: dashboardNativePolicyReason}
 		p.Warnings = append(p.Warnings, dashboardNativePolicyReason)
 	}
 	httpCandidate := false
@@ -514,8 +512,11 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 	native := 0
 	nativeDefaults := 0
 	for _, instrument := range instruments {
-		if !signals["metrics"] || !instrument.Supported || instrument.Definition == nil {
+		if !signals["metrics"] || !instrument.Supported {
 			continue
+		}
+		if instrument.Definition == nil {
+			return nil, fmt.Errorf("supported native instrument requires a definition")
 		}
 		if instrument.Kind != "gauge" && instrument.Kind != "counter" && instrument.Kind != "histogram" && instrument.Kind != "stock" {
 			return nil, fmt.Errorf("unsupported native instrument kind")
@@ -525,7 +526,7 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		}
 		d := *instrument.Definition
 		q := measurements.Question{Definition: d, FromMS: in.Scope.FromMS, ToMS: in.Scope.ToMS}
-		if !d.Source.Namespace.Equal(in.Scope.Namespace) || d.Environment != nativeEnvironment || len(d.Source.Services) != 1 || d.Source.Services[0] != in.Service || d.Kind != instrument.Kind || d.Source.Metric != instrument.Metric || d.Source.Unit != instrument.Unit || d.Source.Scope != instrument.Scope || d.Source.Version != instrument.Version || d.Source.SchemaURL != instrument.SchemaURL || q.Validate() != nil {
+		if !d.Source.Namespace.Equal(in.Scope.Namespace) || !dashboardSameNativeEnvironment(in.Scope, d) || len(d.Source.Services) != 1 || d.Source.Services[0] != in.Service || d.Kind != instrument.Kind || d.Source.Metric != instrument.Metric || d.Source.Unit != instrument.Unit || d.Source.Scope != instrument.Scope || d.Source.Version != instrument.Version || d.Source.SchemaURL != instrument.SchemaURL || q.Validate() != nil {
 			return nil, fmt.Errorf("instrument definition does not match dashboard scope and identity")
 		}
 		encoded, _ := json.Marshal(d)
@@ -676,17 +677,22 @@ func dashboardNativeHTTP(scope InventoryQuestion, service string, i measurements
 	}
 	return dashboardNativeDuration(scope, service, i)
 }
+func dashboardSameNativeEnvironment(scope InventoryQuestion, d measurements.Definition) bool {
+	a, e := scope.EnvironmentSelection()
+	if e != nil {
+		return false
+	}
+	b, e := d.EnvironmentSelection()
+	return e == nil && a.Equal(b)
+}
 func dashboardNativeDuration(scope InventoryQuestion, service string, i measurements.Instrument) bool {
 	if !i.Supported || i.Definition == nil || i.Kind != "histogram" || (i.Temporality != 1 && i.Temporality != 2) {
 		return false
 	}
 	d := i.Definition
 	q := measurements.Question{Definition: *d, FromMS: scope.FromMS, ToMS: scope.ToMS}
-	environment, supported := scope.CurrentEnvironmentName()
-	if !supported {
-		return false
-	}
-	return d.Kind == i.Kind && d.Source.Metric == i.Metric && d.Source.Unit == i.Unit && d.Source.Scope == i.Scope && d.Source.Version == i.Version && d.Source.SchemaURL == i.SchemaURL && d.Source.Namespace.Equal(scope.Namespace) && d.Environment == environment && len(d.Source.Services) == 1 && d.Source.Services[0] == service && q.Validate() == nil
+
+	return d.Kind == i.Kind && d.Source.Metric == i.Metric && d.Source.Unit == i.Unit && d.Source.Scope == i.Scope && d.Source.Version == i.Version && d.Source.SchemaURL == i.SchemaURL && d.Source.Namespace.Equal(scope.Namespace) && dashboardSameNativeEnvironment(scope, *d) && len(d.Source.Services) == 1 && d.Source.Services[0] == service && q.Validate() == nil
 }
 
 // Legacy RPC is an explicit profile, never an alias union with newer convention keys.

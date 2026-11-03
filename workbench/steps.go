@@ -41,7 +41,7 @@ func (s Step) Validate() error {
 		}
 		return q.Validate()
 	case "measurement":
-		if s.Scope.EnvironmentSelector != nil || s.Measurement == nil || s.Record != nil || s.View != "Overview" || s.Measurement.Environment != s.Scope.Environment {
+		if s.Measurement == nil || s.Record != nil || s.View != "Overview" || !s.Measurement.SameEnvironment(measurements.Definition{Environment: s.Scope.Environment, EnvironmentSelector: s.Scope.EnvironmentSelector}) {
 			return errors.New("measurement step requires one definition matching scope")
 		}
 		return (measurements.Question{Definition: *s.Measurement, FromMS: s.Scope.FromMS, ToMS: s.Scope.ToMS, FromNS: s.Scope.FromNS, ToNS: s.Scope.ToNS}).Validate()

@@ -72,20 +72,21 @@ type LifecycleBinding struct {
 	AllowanceMS    int64    `json:"allowanceMs" yaml:"allowanceMs"`
 }
 type Definition struct {
-	CounterDomain     string            `json:"counterDomain,omitempty" yaml:"counterDomain,omitempty"`
-	StateProfile      string            `json:"stateProfile,omitempty" yaml:"stateProfile,omitempty"`
-	StockDomain       string            `json:"stockDomain,omitempty" yaml:"stockDomain,omitempty"`
-	HistogramBucketMS *int64            `json:"histogramBucketMs,omitempty" yaml:"histogramBucketMs,omitempty"`
-	APIVersion        string            `json:"apiVersion" yaml:"apiVersion"`
-	Name              string            `json:"name" yaml:"name"`
-	Title             string            `json:"title" yaml:"title"`
-	Kind              string            `json:"kind" yaml:"kind"`
-	Environment       string            `json:"environment" yaml:"environment"`
-	LookbackMinutes   int               `json:"lookbackMinutes" yaml:"lookbackMinutes"`
-	MaxGapMS          int64             `json:"maxGapMs" yaml:"maxGapMs"`
-	Grain             string            `json:"grain" yaml:"grain"`
-	Source            Binding           `json:"source" yaml:"source"`
-	Lifecycle         *LifecycleBinding `json:"lifecycle,omitempty" yaml:"lifecycle,omitempty"`
+	CounterDomain       string                        `json:"counterDomain,omitempty" yaml:"counterDomain,omitempty"`
+	StateProfile        string                        `json:"stateProfile,omitempty" yaml:"stateProfile,omitempty"`
+	StockDomain         string                        `json:"stockDomain,omitempty" yaml:"stockDomain,omitempty"`
+	HistogramBucketMS   *int64                        `json:"histogramBucketMs,omitempty" yaml:"histogramBucketMs,omitempty"`
+	APIVersion          string                        `json:"apiVersion" yaml:"apiVersion"`
+	Name                string                        `json:"name" yaml:"name"`
+	Title               string                        `json:"title" yaml:"title"`
+	Kind                string                        `json:"kind" yaml:"kind"`
+	Environment         string                        `json:"environment,omitempty" yaml:"environment,omitempty"`
+	EnvironmentSelector *identity.EnvironmentSelector `json:"environmentSelector,omitempty" yaml:"environmentSelector,omitempty"`
+	LookbackMinutes     int                           `json:"lookbackMinutes" yaml:"lookbackMinutes"`
+	MaxGapMS            int64                         `json:"maxGapMs" yaml:"maxGapMs"`
+	Grain               string                        `json:"grain" yaml:"grain"`
+	Source              Binding                       `json:"source" yaml:"source"`
+	Lifecycle           *LifecycleBinding             `json:"lifecycle,omitempty" yaml:"lifecycle,omitempty"`
 }
 type Question struct {
 	Definition Definition `json:"definition"`
@@ -167,7 +168,13 @@ func (d Definition) Validate() error {
 	if err := d.Source.Namespace.Validate(); err != nil {
 		return err
 	}
-	if d.APIVersion != Version || !stable.MatchString(d.Name) || d.Title == "" || !text(d.Title, 160) || d.Environment == "" || !text(d.Environment, 128) || d.LookbackMinutes < 1 || d.LookbackMinutes > 120 || d.MaxGapMS < 1 || d.MaxGapMS > 600000 {
+	if _, e := d.EnvironmentSelection(); e != nil {
+		return fmt.Errorf("explicit checked environment required: %w", e)
+	}
+	if d.EnvironmentSelector != nil && (d.Kind != "gauge" || d.Grain != "per-stream" || d.Source.Resource != nil) {
+		return fmt.Errorf("%s", typedGaugeReason)
+	}
+	if d.APIVersion != Version || !stable.MatchString(d.Name) || d.Title == "" || !text(d.Title, 160) || d.LookbackMinutes < 1 || d.LookbackMinutes > 120 || d.MaxGapMS < 1 || d.MaxGapMS > 600000 {
 		return fmt.Errorf("require versioned named package, explicit environment, 1..120 minute lookback and 1..600000 ms gap/freshness")
 	}
 	if d.HistogramBucketMS != nil && (d.Kind != "histogram" || *d.HistogramBucketMS < 1 || *d.HistogramBucketMS > 7200000) {
@@ -303,6 +310,19 @@ func Read(text string) (Definition, error) {
 	var n yaml.Node
 	if e := yaml.Unmarshal([]byte(text), &n); e != nil {
 		return d, e
+	}
+	if len(n.Content) > 0 && n.Content[0].Kind == yaml.MappingNode {
+		root := n.Content[0]
+		for i := 0; i+1 < len(root.Content); i += 2 {
+			if (root.Content[i].Value == "environment" || root.Content[i].Value == "environmentSelector") && root.Content[i+1].Tag == "!!null" {
+				return d, fmt.Errorf("%s must be omitted or non-null", root.Content[i].Value)
+			}
+			if root.Content[i].Value == "environmentSelector" {
+				if e := validateSelectorYAML(root.Content[i+1], false); e != nil {
+					return d, e
+				}
+			}
+		}
 	}
 	var walk func(*yaml.Node, int) error
 	walk = func(n *yaml.Node, depth int) error {

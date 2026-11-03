@@ -527,7 +527,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"require versioned named package, explicit environment, 1..120 minute lookback and 1..600000 ms gap/freshness\"}\n"
+      "response": "{\"error\":\"explicit checked environment required: environment scope requires explicit named, empty or unreported mode and a bounded named value\"}\n"
     },
     {
       "name": "/metric-discovery/array",
@@ -541,7 +541,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type measurements.DiscoveryQuestion\"}\n"
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type map[string]jsontext.Value\"}\n"
     },
     {
       "name": "/metric-discovery/truncated",
@@ -700,7 +700,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"require versioned named package, explicit environment, 1..120 minute lookback and 1..600000 ms gap/freshness\"}\n"
+      "response": "{\"error\":\"explicit checked environment required: environment scope requires explicit named, empty or unreported mode and a bounded named value\"}\n"
     },
     {
       "name": "/metric-discovery/method-refusal",
@@ -728,7 +728,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field DiscoveryQuestion.fromMs of type int64\"}\n"
+      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field wire.fromMs of type int64\"}\n"
     },
     {
       "name": "/measurements/valid",
@@ -770,7 +770,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"require versioned named package, explicit environment, 1..120 minute lookback and 1..600000 ms gap/freshness\"}\n"
+      "response": "{\"error\":\"explicit checked environment required: environment scope requires explicit named, empty or unreported mode and a bounded named value\"}\n"
     },
     {
       "name": "/measurements/array",
@@ -943,7 +943,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"require versioned named package, explicit environment, 1..120 minute lookback and 1..600000 ms gap/freshness\"}\n"
+      "response": "{\"error\":\"explicit checked environment required: environment scope requires explicit named, empty or unreported mode and a bounded named value\"}\n"
     },
     {
       "name": "/measurements/method-refusal",
