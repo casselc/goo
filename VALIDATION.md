@@ -1,5 +1,60 @@
 # Validation record
 
+## Compact supplied facets and active context — 315
+
+[Contract](docs/COMPACT_CANVAS.md) ·
+[paired frames and executable storyboard](docs/journeys/315-compact-canvas.md) ·
+[design review](docs/reviews/COMPACT_CANVAS_DESIGN_315.md) ·
+[architecture review](docs/reviews/COMPACT_CANVAS_ARCHITECTURE_315.md).
+
+- Full Go suite passes (`cmd/goo` 14.912 seconds; unchanged exploration/workbench
+  cached). Frontend suite passes: 1,015 tests, zero failures/skips (28.61 seconds,
+  concurrency two). Focused checks cover UTC milliseconds/cross-date windows,
+  loaded-match text, source-free controlled rendering and hidden/inert origin Back
+  callbacks without consuming the retained return lease. No new source model,
+  API, query executor or measurement grammar was introduced.
+- Unchanged-source real-OTel baseline passes in 17.7 seconds (20.4 runner).
+  Two-value facets measure 406.3px at 1280×900 and 448.3px at 390×844; chart tops
+  are 1098px/1492px. Before/after use the same canvas anchor and fine-pointer media.
+- Final native flow passes in 27.3 seconds (31.3 runner), with no page errors.
+  Facets measure 197.7px/216.5px; both narrow value rows are visible. Desktop chart
+  top is 701.3px. The measured trail/child-header subset falls 156→73px; the earlier
+  ~400px outer-context estimate was not fully measured, so no such total is claimed.
+- Keyboard Enter/focus checks exercise Origin scope, Read details, filtered applied
+  selectors and Parent paused with zero source reads. Find announces one/two loaded
+  values independently of the 107-record total. Native Chromium touch dispatch
+  confirms Include and Open child use 44px coarse targets. Same-owner updates retain
+  Find/disclosure state; Back retains exact parent basis/readAt/107 with no read.
+  All checkpoints preserve the same 15-source-request budget.
+- Chart-container intersection is not proof of visible plotted values: the narrow
+  cohort has 140.9px visible from top 703.1px, containing headings/read facts, while
+  its actual bar remains below the viewport. The narrow root chart starts at
+  867.2px (23.2px below 844). Desktop bars and narrow facet values are visible;
+  remaining chart metadata overhead is explicitly retained, not silently passed.
+- Review found and corrected a CSS scope that could affect Activity with retained
+  fixed tools, and a trail selector that missed its real wrapper. Exact Primary
+  predicates now appear once in their existing scope disclosure with a visible
+  filtered marker; critical readiness/read-quality status remains visible. An
+  extra harness expectation of disclosure-open state across replaced owners was
+  removed; exact held receipts and same-owner disclosure retention stay asserted.
+- Eight paired frames are current. Owned raw stores and intermediate image copies
+  were pruned. The final shared Read details target was aligned to 32px fine/44px
+  coarse; its already-32px tool row keeps closed facet geometry unchanged.
+
+The maintained compact-facet Bombadil campaign passes for 25 seconds: 461 trace
+records, ten actions and zero violations/API requests. It exercises supplied SSR
+and SPA models, Find one-of-four/clear four-of-four while the full total stays 130,
+two legitimate Read intents, disconnected/reconnected stale callbacks, and visible
+32px targets including Read details. Actual coarse 44px targets are verified in
+the real native journey, not inferred from the desktop campaign. An initial driver
+false positive measured hidden controls; only visible targets are now measured.
+Temporary campaign artifacts/logs were removed (21MiB), keeping the maintained driver.
+
+Compose configuration/build and service recreation pass. All six changed UI
+assets match the running Go server. The visible improvements do not claim all
+narrow chart/context debt is resolved; the next product outcome remains the checked
+service-context handoff.
+
 ## Measured fixed-baseline acquisition — 314
 
 [Read contract](docs/FIXED_BASELINE_READS.md) ·

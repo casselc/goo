@@ -1755,7 +1755,8 @@ facet declaration validator. It reuses `goo-facet-list` for local filtering and
 emits Include/Exclude/load/clear intents; only the application adapter reads
 counted values or changes the pending selection tray. Its data property and JSON
 attribute support detached SPA updates and server-rendered HTML. See
-[declarative facets](DECLARATIVE_FACETS.md).
+[declarative facets](DECLARATIVE_FACETS.md) and the
+[compact controls/current-versus-origin context](COMPACT_CANVAS.md).
 
 
 The facet's controlled property/attribute is `data`:

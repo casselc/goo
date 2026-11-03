@@ -35,8 +35,10 @@ export and rerun both questions. Shared
 [comparison-window controls](docs/PAIRED_COMPARISON_WINDOWS.md) stage both fixed
 questions together before explicit Run. [Fixed baselines](docs/FIXED_BASELINE_READS.md)
 acquire aggregates where supported while selected records keep their full read.
-[Declarative facets](docs/DECLARATIVE_FACETS.md) add a chosen field control to a
+[Compact declarative facets](docs/DECLARATIVE_FACETS.md) add a chosen field control to a
 view, with explicit scoped value reads and the existing selection workflow.
+[Canvas context](docs/COMPACT_CANVAS.md) keeps origin, parent and current scope
+distinct while reducing repeated chrome.
 [Portable YAML definitions](docs/PORTABLE_VIEWS.md) let teams export and import
 these views through the same saved-view catalog.
 [CLI validation and import](docs/VIEW_ARTIFACT_CLI.md) connect repository checks

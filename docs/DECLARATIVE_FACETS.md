@@ -103,3 +103,11 @@ flowchart LR
 See [view grammar direction](VIEW_GRAMMAR_PROPOSAL_260.md),
 [architecture review](reviews/DECLARATIVE_FACET_ARCHITECTURE_310.md) and
 [design review](reviews/DECLARATIVE_FACET_DESIGN_310.md).
+
+## Compact supplied-value controls — 315
+
+The [compact facet/canvas presentation](COMPACT_CANVAS.md) keeps explicit Read
+values and Include/Exclude actions. Local Find announces matching loaded values
+separately from the full captured-record count. Read details remains a native
+keyboard-accessible disclosure of the independent receipts. These presentation
+changes add no model fields, source reads or inferred completeness.

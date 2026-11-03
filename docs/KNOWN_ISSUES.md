@@ -14,11 +14,14 @@ temporary rest reads retain their prior acquisition. Numeric-column baselines us
 the full path. Aggregate receipts do not claim unacquired row-page consistency.
 No whole-system latency improvement or replacement query engine is implied.
 
-The 313 desktop/narrow frames still expose presentation density: the two-value
-facet and nested cards consume substantial height before charts/records, and a
-mixed Activity → service visit retains multiple outer context/trail returns.
-The local nested Back is unambiguous, but broader ancestry consolidation and
-shared facet/context compaction are now the proposed 315 compact-data work, not completed behavior.
+315 delivers the [compact facet/context cut](COMPACT_CANVAS.md): a two-value facet
+falls from 406/448px to 198/217px, with 32px fine/44px coarse targets and loaded-value
+match announcements. The measured trail/parent subset falls from 156px to 73px;
+that is not a measurement of every outer origin/header. Named return owners remain
+distinct. Desktop chart data and narrow facet values are visible sooner, but the
+narrow parent chart stays 23px below the viewport and the cohort's visible chart
+portion contains metadata rather than plotted bars. Shared chart-header/read-facts
+density remains an explicit follow-on, not a completed data-first claim.
 
 310 adds one [declarative categorical facet](DECLARATIVE_FACETS.md)
 for ordinary single-query views. Counts use the currently applied scope, including

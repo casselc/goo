@@ -282,3 +282,25 @@ goo-group-count-comparison[hidden]{display:none}
 .group-count-category details{margin:0}.group-count-category summary{font-size:12px;overflow-wrap:anywhere;cursor:pointer}.group-count-category code{display:block;white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px;margin-top:6px}
 
 .group-count-stage{font:inherit;color:inherit;line-height:inherit;background:none;border:0;padding:0;text-align:inherit;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}.group-count-stage:hover:not(:disabled){text-decoration-style:solid}.group-count-stage:disabled{cursor:default;text-decoration:none}.group-count-stage:focus-visible{outline:2px solid var(--accent,#76d8c4);outline-offset:3px;border-radius:2px}
+
+/* Supplied categorical facets own their compact internal layout, independent of product chrome. */
+goo-categorical-facet.filter-counted-values{display:grid;gap:4px;padding:6px;margin:6px 0;font-size:12px;line-height:1.35}
+goo-categorical-facet .categorical-facet-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 8px;min-width:0}
+goo-categorical-facet .categorical-facet-header h4{font-size:13px;line-height:1.35;margin:0;min-width:0;overflow-wrap:anywhere}
+goo-categorical-facet .categorical-facet-actions,goo-categorical-facet .categorical-facet-row-actions{display:flex;align-items:center;gap:4px;margin:0;min-width:0}
+goo-categorical-facet :is(.categorical-facet-scope,.categorical-facet-count){display:block;font-size:11px;line-height:1.35;margin:0;color:var(--muted,#98a8bf);overflow-wrap:anywhere}
+goo-categorical-facet :is(button,input){font:inherit;box-sizing:border-box;min-height:32px;margin:0;padding:4px 7px}
+goo-categorical-facet .categorical-facet-tools{display:grid;grid-template-columns:minmax(80px,1fr) auto auto;gap:4px 8px;align-items:center;min-width:0}
+goo-categorical-facet .categorical-facet-tools>input{min-width:0;max-width:100%;width:100%;font-size:12px}
+goo-categorical-facet .categorical-facet-matches{font-size:11px;color:var(--muted,#98a8bf);white-space:nowrap}
+goo-categorical-facet .categorical-facet-receipts{min-width:0;padding:0;margin:0;border:0;font-size:11px}
+goo-categorical-facet .categorical-facet-receipts>summary{cursor:pointer;min-height:32px;display:flex;align-items:center;gap:4px;white-space:nowrap}
+goo-categorical-facet .categorical-facet-receipts[open]{grid-column:1/-1}
+goo-categorical-facet .categorical-facet-receipts p{font-size:11px;margin:4px 0;overflow-wrap:anywhere}
+goo-categorical-facet>.categorical-facet-values{display:block;min-width:0;max-height:18rem;overflow:auto}
+goo-categorical-facet .categorical-facet-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;min-width:0;margin:0;padding:2px 0;border-top:1px solid var(--border,#303b4b)}
+goo-categorical-facet .categorical-facet-row-actions{flex-wrap:wrap;justify-content:flex-end}
+goo-categorical-facet .categorical-facet-value{overflow-wrap:anywhere;min-width:0}
+goo-categorical-facet .categorical-facet-value-count{font-variant-numeric:tabular-nums;min-width:3ch;text-align:right}
+@media(max-width:480px){goo-categorical-facet .categorical-facet-tools{grid-template-columns:minmax(0,1fr) auto}goo-categorical-facet .categorical-facet-matches{grid-column:1/-1;grid-row:2}goo-categorical-facet .categorical-facet-receipts[open]{grid-row:3}}
+@media(pointer:coarse){goo-categorical-facet :is(button,input){min-height:44px}goo-categorical-facet .categorical-facet-receipts>summary{min-height:44px}}

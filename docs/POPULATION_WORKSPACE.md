@@ -23,6 +23,13 @@ resuming Activity. A nested drilldown returns with **Back to parent population**
 its held parent remains paused. Closing or replacing trace/log context aborts its
 pending request, while generation checks still reject late responses.
 
+[Compact context](COMPACT_CANVAS.md) keeps the current fixed UTC window and
+critical read status visible. Exact selectors appear once in the existing scope
+disclosure; a filtered marker remains visible. Nested canvases name their purpose,
+with a named parent Back and a source-free **Parent paused** disclosure. Resource
+origins retain their own named return and **Origin scope**, distinct from the
+child's current question.
+
 The default companion retains the complete predicate tree, including AND/OR,
 missing-key and present-empty-string distinctions, where that tree is valid for
 the other signal. Signal-specific measures are planned independently. A span-only
