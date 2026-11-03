@@ -4,7 +4,7 @@ const query=()=>({signal:'logs',environmentSelector:E.current('prod'),fromMs:100
 const row=()=>({ServiceName:'edge-api',timestamp_ns:'1000000000',ResourceAttributes:{'deployment.environment.name':'prod','service.namespace':'shop'},Attributes:{'service.namespace':'wrong-log-namespace'}});
 test('observed service context preserves original intent and explicitly encodes an equivalent destination',()=>{
  const q=query(),r=row(),before=structuredClone({q,r}),intent=H.create(q,r),scope=H.scope(intent);
- assert.deepEqual(intent.origin,q);assert.deepEqual(scope,{environment:'prod',namespace:{mode:'value',value:'shop'},fromMs:1000,toMs:61000});assert.equal(E.sameQuestionEnvironment(q,scope),true);assert.equal(scope.where,undefined);assert.equal(scope.signal,undefined);assert.equal(scope.service,undefined);assert.equal(intent.service,'edge-api');assert(Object.isFrozen(intent.origin.where.field));
+ assert.deepEqual(intent.origin,q);assert.deepEqual(scope,{environmentSelector:E.current('prod'),namespace:{mode:'value',value:'shop'},fromMs:1000,toMs:61000});assert.equal(E.sameQuestionEnvironment(q,scope),true);assert.equal(scope.where,undefined);assert.equal(scope.signal,undefined);assert.equal(scope.service,undefined);assert.equal(intent.service,'edge-api');assert(Object.isFrozen(intent.origin.where.field));
  assert.deepEqual({q,r},before);q.where.value='changed';r.ResourceAttributes['service.namespace']='changed';scope.namespace.value='changed';assert.equal(intent.origin.where.value,'timeout');assert.equal(intent.namespace.value,'shop');assert.equal(H.scope(intent).namespace.value,'shop');
  const legacy={...query(),environment:'prod'};delete legacy.environmentSelector;assert.deepEqual(H.create(legacy,row()).origin,legacy);
 });
@@ -14,7 +14,7 @@ test('namespace presence comes only from a known resource map and preserves empt
  for(const value of [null,12,'x\0y','x'.repeat(129)]){const bad=row();bad.ResourceAttributes['service.namespace']=value;assert.throws(()=>H.create(query(),bad))}
 });
 test('unsupported environment policies never weaken to a same-named legacy selector',()=>{
- for(const selector of [E.effective({mode:'named',value:'prod'}),E.effective({mode:'empty'}),E.effective({mode:'unreported'}),{...E.current('prod'),version:'future'},{...E.current('prod'),policy:'future'}])assert.notEqual(H.reason({...query(),environmentSelector:selector},row()),'');
+ for(const selector of [{...E.current('prod'),version:'future'},{...E.current('prod'),policy:'future'}])assert.notEqual(H.reason({...query(),environmentSelector:selector},row()),'');
  assert.throws(()=>H.create({...query(),environment:'prod'},row()));const q=query();delete q.environmentSelector;q.environment='';assert.throws(()=>H.create(q,row()));const r=row();r.ResourceAttributes['deployment.environment.name']='other';assert.throws(()=>H.create(query(),r),/environment/);
 });
 test('service identities and completed observation windows are bounded and checked, with no clock recomputation',()=>{
@@ -24,3 +24,5 @@ test('service identities and completed observation windows are bounded and check
  const intent=H.create(query(),row());for(const patch of [{fromMs:1001},{toMs:61001},{namespace:{mode:'missing',value:''}},{environmentSelector:E.effective({mode:'named',value:'prod'})},{extra:true},{version:'future'}])assert.throws(()=>H.validate({...intent,...patch}));
  assert.equal(H.reason(query(),row()),'');
 });
+
+test('typed service context preserves effective named, empty and unreported policies exactly',()=>{for(const [scope,resource] of [[{mode:'named',value:'prod'},{'deployment.environment':'prod'}],[{mode:'empty'},{'deployment.environment.name':'','deployment.environment':'prod'}],[{mode:'unreported'},{}]]){const q={...query(),environmentSelector:E.effective(scope)},r={...row(),ResourceAttributes:resource},intent=H.create(q,r),destination=H.scope(intent);assert.deepEqual(destination.environmentSelector,q.environmentSelector);assert.equal(destination.environment,undefined);assert.equal(E.currentName(destination),null);assert.deepEqual(intent.origin.where,q.where);assert.equal(H.reason(q,r),'');const conflict={...r,ResourceAttributes:{'deployment.environment.name':'other'}};assert.throws(()=>H.create(q,conflict));}assert.equal(E.currentName(query()),'prod');assert.equal(E.currentName({environment:'prod'}),'prod');});

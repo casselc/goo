@@ -4418,6 +4418,22 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.DashboardFamily"
   },
+  "exploration.DashboardNativeCapability": {
+    "properties": {
+      "reason": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "state",
+      "reason"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.DashboardNativeCapability"
+  },
   "exploration.DashboardNativeOption": {
     "properties": {
       "default": {
@@ -4480,6 +4496,16 @@
               "$ref": "#/components/schemas/exploration.DashboardFamily"
             },
             "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "nativeCapability": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.DashboardNativeCapability"
           },
           {
             "type": "null"
@@ -6672,6 +6698,16 @@
       "environment": {
         "type": "string"
       },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "fromMs": {
         "type": "integer"
       },
@@ -6690,7 +6726,6 @@
       }
     },
     "required": [
-      "environment",
       "fromMs",
       "toMs"
     ],
@@ -6704,6 +6739,23 @@
         "anyOf": [
           {
             "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"

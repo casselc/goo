@@ -33,11 +33,15 @@ other chart family fits its first viewport. See [chart-first exploration](CHART_
 The next capability priority is an end-to-end Services environment-policy task,
 not more small chart-padding changes.
 
-316 adds [Activity-to-service context](ACTIVITY_SERVICE_CONTEXT.md) for current-only
-named environments, with exact resource namespace and occurrence window. Opening
-stages without reads; explicit Read acquires, and Back restores paused Activity.
-Effective fallback and empty/unreported environments remain refused; this does not
-generalize the Services APIs to every typed environment policy.
+316 introduced [Activity-to-service context](ACTIVITY_SERVICE_CONTEXT.md) with exact
+resource namespace and occurrence window. 318 extends its record path to effective
+named, empty and unreported policies through inventory, discovery, dashboard and
+Customize; exact membership and paused return pass live. See
+[service environment policies](SERVICE_ENVIRONMENT_POLICIES.md). Native evaluation,
+deployments, entity-bound service annotations and service-bound view libraries
+still require a current-only named environment and refuse other policies visibly,
+before reading. Raw metric data-point presence does not imply evaluable native
+values. This closes the record-family gap, not every native/entity policy boundary.
 
 310 adds one [declarative categorical facet](DECLARATIVE_FACETS.md)
 for ordinary single-query views. Counts use the currently applied scope, including

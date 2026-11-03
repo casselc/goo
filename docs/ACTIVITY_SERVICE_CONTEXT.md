@@ -10,7 +10,7 @@ those observations, not the originating row's signal.
 ## What carries, and what does not
 
 The context carries the row's reported service name, resource-qualified
-`service.namespace`, current-key-only named environment and that occurrence's
+`service.namespace`, checked environment policy and that occurrence's
 completed read window. A later tail poll must not replace that window. The row's
 resource map must be known: absent namespace key and present empty namespace are
 distinct; an omitted resource map is unknown, not proof of a missing namespace.
@@ -22,13 +22,18 @@ service/namespace identity predicates within the carried environment and window.
 A log-body condition therefore cannot silently become a span predicate, and this
 handoff is labelled service context rather than the exact Activity population.
 
-This first cut supports legacy named environments and typed **current-only named**
-selectors. The existing Services string encoding has identical selection/SQL
-semantics for that policy; the original typed intent remains intact. Effective
-current/legacy fallback, empty/unreported environment, unknown namespace reporting,
-empty service name, malformed identity and unsupported windows are refused with
-an explanation in the service menu. They do not fall back to a broader query.
-The wider Services/native-metric APIs have not gained general typed-policy support.
+316 delivered the current-only named cut. 318 adds typed effective named, empty
+and unreported selection through record service discovery, dashboards and
+Customize. The exact selector representation is retained: a legacy name remains
+current-only; a typed selector does not become an equivalent-looking string.
+Current-key presence wins over the legacy key, including present empty values.
+See [service environment policies](SERVICE_ENVIRONMENT_POLICIES.md) for membership
+and the explicit unavailable native/entity bindings on other policies.
+
+Unknown resource reporting, empty service name, malformed identity and unsupported
+windows still refuse with an explanation in the service menu. They do not fall
+back to a broader query. Native measurement definitions and entity stores have
+not gained general typed-policy support.
 
 ## Return and lifetime
 

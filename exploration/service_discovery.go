@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/casselc/goo/identity"
 	"strconv"
 	"strings"
 	"time"
@@ -43,7 +42,7 @@ func CompileServiceDiscovery(q InventoryQuestion) (Plan, error) {
 	if e := q.Validate(); e != nil {
 		return Plan{}, e
 	}
-	selection, err := identity.CurrentEnvironment(q.Environment)
+	selection, err := q.EnvironmentSelection()
 	if err != nil {
 		return Plan{}, err
 	}
@@ -64,8 +63,12 @@ func CompileServiceDiscovery(q InventoryQuestion) (Plan, error) {
 	// Count exporter data-point records, never metric values or histogram observations.
 	// Each family is aggregated before the union to bound intermediate cardinality.
 	metricParts := []string{}
+	metricEnvironment, _, err := environmentSelectionPredicate(selection)
+	if err != nil {
+		return Plan{}, err
+	}
 	for _, family := range []string{"gauge", "sum", "histogram"} {
-		metricParts = append(metricParts, "SELECT "+namespaceColumn("ResourceAttributes")+" AS namespace, ServiceName AS service, count() AS n, min(toUnixTimestamp64Milli(TimeUnix)) AS first_ms, max(toUnixTimestamp64Milli(TimeUnix)) AS last_ms FROM otel_metrics_"+family+" WHERE TimeUnix>=fromUnixTimestamp64Milli({from:Int64}) AND TimeUnix<fromUnixTimestamp64Milli({to:Int64}) AND ResourceAttributes['deployment.environment.name']={environment:String} "+namespaceFilter(q.Namespace, c.params)+" GROUP BY namespace, service")
+		metricParts = append(metricParts, "SELECT "+namespaceColumn("ResourceAttributes")+" AS namespace, ServiceName AS service, count() AS n, min(toUnixTimestamp64Milli(TimeUnix)) AS first_ms, max(toUnixTimestamp64Milli(TimeUnix)) AS last_ms FROM otel_metrics_"+family+" WHERE TimeUnix>=fromUnixTimestamp64Milli({from:Int64}) AND TimeUnix<fromUnixTimestamp64Milli({to:Int64}) AND "+metricEnvironment+" "+namespaceFilter(q.Namespace, c.params)+" GROUP BY namespace, service")
 	}
 	metrics := "SELECT namespace, service, 'metrics' AS signal, toString(sum(n)) AS count, toString(min(first_ms)) AS first_ms, toString(max(last_ms)) AS last_ms FROM (" + strings.Join(metricParts, " UNION ALL ") + ") GROUP BY namespace, service"
 	signals := "SELECT * FROM (" + aggregate("spans", spanBase) + " UNION ALL " + aggregate("logs", logBase) + " UNION ALL " + metrics + ") ORDER BY service, namespace, signal LIMIT 1001 FORMAT JSONEachRow"
@@ -77,7 +80,7 @@ func CompileServiceDiscovery(q InventoryQuestion) (Plan, error) {
 	return Plan{Count: signals, Groups: edges, Parameters: c.params}, nil
 }
 func (s Source) DiscoverServices(ctx context.Context, q InventoryQuestion) (*ServiceDiscovery, error) {
-	q.Namespace = q.Namespace.Clone()
+	q = q.clone()
 	p, e := CompileServiceDiscovery(q)
 	if e != nil {
 		return nil, e

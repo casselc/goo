@@ -58,6 +58,19 @@ for wire in ('exploration.Query','exploration.QueryInput','exploration.TailSelec
  if input_wire:shape['required']=[key for key in shape.get('required',[]) if key!='environment']
  shape['oneOf']=[{'required':['environment'],'properties':{'environment':{'type':'string','minLength':1},'environmentSelector':{'type':'null'}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''},'environmentSelector':{'$ref':'#/components/schemas/'+target}}}]
  shape['description']='Choose the historical current-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge record questions do not support the selector yet.'
+# Service discovery preserves the same checked environment, with a stricter
+# non-null wire union so an explicit null cannot disappear into a legacy name.
+for wire in ('exploration.InventoryQuestion','exploration.InventoryQuestionInput'):
+ shape=schemas[wire];target='identity.EnvironmentSelectorInput' if wire.endswith('Input') else 'identity.EnvironmentSelector'
+ shape['properties']['environment']={'type':'string'}
+ shape['properties']['environmentSelector']={'$ref':'#/components/schemas/'+target}
+ shape['oneOf']=[{'required':['environment'],'not':{'required':['environmentSelector']},'properties':{'environment':{'type':'string','minLength':1}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''}}}]
+ shape['description']='Fixed service discovery scope. Legacy environment is current-key-only; an explicit environmentSelector preserves current-only/effective policy and named/empty/unreported scope. Null or mixed nonempty selectors are refused. Metric data-point presence is not native metric evaluation.'
+cap=schemas['exploration.DashboardNativeCapability']
+cap['properties']['state']['const']='unsupported'
+cap['properties']['reason']['minLength']=1
+schemas['exploration.DashboardPlan']['properties']['nativeCapability']['description']='Present when native evaluation and declared scalar-environment bindings cannot represent this checked scope. Record-family widgets and raw metric data-point presence remain available; empty native options are not evidence of no metrics.'
+
 # Authored fixed record steps retain the checked environment independently of native definitions.
 for suffix in ('', 'Input'):
  step_scope=schemas['workbench.StepScope'+suffix]

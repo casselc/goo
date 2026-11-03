@@ -3,6 +3,11 @@
 > 250 implements the [server record API cut](RECORD_SELECTOR_API.md). Browser
 > handoffs remain gated; the historical table below is not the current support list.
 
+> 318 extends inventory/service discovery, raw metric data-point presence and record
+> dashboards/Customize to typed selectors; see [current service policies](SERVICE_ENVIRONMENT_POLICIES.md).
+> Native evaluation and entity-bound service operations still require current-only
+> named scope. Historical limitations below describe earlier implementation stages.
+
 The shipped 247 tool deliberately stops at local inspection. This audit prepares
 main-flow adoption; it does not enable missing/empty environment selectors in
 Activity, fixed questions, captures or reusable packages.

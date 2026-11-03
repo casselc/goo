@@ -22,5 +22,7 @@ function questionFields(question){
 }
 function sameQuestionEnvironment(a,b){try{return equal(selection(a),selection(b))}catch{return false}}
 function questionLabel(question){return question.environmentSelector!=null?label(question.environmentSelector):question.environment}
+// Scalar-only adapters may project a name only after this exact policy proof.
+function currentName(question){try{const value=selection(question);return value.policy==='current-only'&&value.scope.mode==='named'?value.scope.value:null}catch{return null}}
 function hasQuestionSelector(question){return !!question&&typeof question==='object'&&(question.environmentSelector!=null||['explore','comparison','explanation','baseline','selection'].some(key=>hasQuestionSelector(question[key])))}
-export {version,normalizeScope,normalize,effective,current,equal,matches,assertPreview,label,selection,questionFields,sameQuestionEnvironment,questionLabel,hasQuestionSelector};
+export {version,normalizeScope,normalize,effective,current,equal,matches,assertPreview,label,selection,questionFields,sameQuestionEnvironment,questionLabel,currentName,hasQuestionSelector};

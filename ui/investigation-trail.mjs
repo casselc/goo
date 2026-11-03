@@ -1,9 +1,11 @@
+import * as RecordEnvironment from './record-environment.mjs';
 /* Application-owned, in-memory view retention. No telemetry or durable evidence store. */
 import * as Exploration from './exploration.mjs';
 import * as UI from './components.mjs';
 import * as Workspace from './workspace.mjs';
 import {stagedView} from './view-template-handoff.mjs';
 const global=globalThis;
+function visitTitle(question){return question?RecordEnvironment.questionLabel(question)+' · '+question.signal:'New question'}
 function mount(host,{lazy=false}={}){
   const node=UI.node,bar=node('nav',undefined,'investigation-trail controls'),back=node('button','Back to question'),forward=node('button','Forward'),label=node('span'),body=node('div');bar.setAttribute('aria-label','Investigation trail');label.setAttribute('role','status');bar.append(back,forward,label);host.replaceChildren(bar,body);
   const entries=[];let index=-1,serial=0;
@@ -11,7 +13,7 @@ function mount(host,{lazy=false}={}){
   function leave(){const entry=entries[index];if(!entry||!entry.view.isConnected)return;if(entry.view.contains(document.activeElement))entry.focus=document.activeElement;entry.scroll=global.scrollY;entry.hash=location.hash;entry.api.suspend();entry.scrolls=[...entry.view.querySelectorAll('*')].filter(element=>element.scrollTop||element.scrollLeft).map(element=>({element,top:element.scrollTop,left:element.scrollLeft}));entry.displays=[...entry.view.querySelectorAll('*')].filter(e=>e.localName.startsWith('goo-')).map(element=>({element,children:[...element.childNodes]}));entry.view.remove()}
   function restore(){if(index<0){create();return}const entry=entries[index];if(!entry)return;if(entry.view.isConnected){entry.api.resume?.();return}body.append(entry.view);for(const {element,children}of entry.displays||[])element.replaceChildren(...children);for(const {element,top,left}of entry.scrolls||[]){element.scrollTop=top;element.scrollLeft=left}entry.api.resume?.();update()}
   function select(next){if(next<0||next>=entries.length||next===index)return;leave();index=next;const entry=entries[index];body.append(entry.view);for(const {element,children}of entry.displays||[])element.replaceChildren(...children);entry.api.resume?.();global.dispatchEvent(new CustomEvent('goo:navigate-explore'));update();if(entry.focus?.isConnected&&!entry.focus.disabled&&entry.focus.getClientRects().length)entry.focus.focus({preventScroll:true});else entry.api.focusRun();history.replaceState(null,'',entry.hash||'#explore');for(const {element,top,left}of entry.scrolls||[]){element.scrollTop=top;element.scrollLeft=left}global.scrollTo({top:entry.scroll||0,behavior:'instant'})}
-  function create(q,fields=[],options={}){const replaceBlank=!!q&&entries[index]?.view.dataset.questionPhase==='initial';leave();if(replaceBlank){entries[index].api.dispose();entries.splice(index,1);index--}for(const entry of entries.splice(index+1))entry.api.dispose();const view=node('div'),entry={view,title:q?q.environment+' · '+q.signal:'New question',scroll:0,id:++serial};body.append(view);entries.push(entry);index=entries.length-1;if(entries.length>8){entries.shift().api.dispose();index--}entry.api=Exploration.mount(view,{managed:true,initialBaseline:options.baseline,active:()=>entries[index]===entry&&view.isConnected});update();if(q)entry.api.openQuestion(q,fields,options);return entry.api}
+  function create(q,fields=[],options={}){const replaceBlank=!!q&&entries[index]?.view.dataset.questionPhase==='initial';leave();if(replaceBlank){entries[index].api.dispose();entries.splice(index,1);index--}for(const entry of entries.splice(index+1))entry.api.dispose();const view=node('div'),entry={view,title:visitTitle(q),scroll:0,id:++serial};body.append(view);entries.push(entry);index=entries.length-1;if(entries.length>8){entries.shift().api.dispose();index--}entry.api=Exploration.mount(view,{managed:true,initialBaseline:options.baseline,active:()=>entries[index]===entry&&view.isConnected});update();if(q)entry.api.openQuestion(q,fields,options);return entry.api}
   back.onclick=()=>select(index-1);forward.onclick=()=>select(index+1);
   const openQuestion=(q,fields=[],options={})=>create(q,fields,options);
   global.addEventListener('goo:open-population',e=>{let view;if(e.detail.view!==undefined){try{view=stagedView(e.detail.view,e.detail.question)}catch{return}}openQuestion(e.detail.question,[],{baseline:e.detail.baseline,...(e.detail.rest?{stage:true,rest:e.detail.rest}:{}),...(view?{stage:true,view}:{})})});
@@ -26,4 +28,4 @@ function mount(host,{lazy=false}={}){
   if(!lazy)create();else restoreFixed();
   return {openQuestion,suspend:leave,resume:restore,openTrace:(...args)=>{restore();return entries[index].api.openTrace(...args)},run:q=>{restore();return entries[index].api.run(q)}};
  }
-export {mount};
+export {visitTitle,mount};

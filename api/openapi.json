@@ -10980,6 +10980,24 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.DashboardFamily"
       },
+      "exploration.DashboardNativeCapability": {
+        "properties": {
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "const": "unsupported"
+          }
+        },
+        "required": [
+          "state",
+          "reason"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.DashboardNativeCapability"
+      },
       "exploration.DashboardNativeOption": {
         "properties": {
           "default": {
@@ -11048,6 +11066,17 @@
               }
             ],
             "description": "Opt-in bounded family descriptors. HTTP/RPC/DB/messaging candidate metadata must be confirmed by the executable question before treating counts as observed; no hidden source read or fallback is performed by this planner."
+          },
+          "nativeCapability": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.DashboardNativeCapability"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Present when native evaluation and declared scalar-environment bindings cannot represent this checked scope. Record-family widgets and raw metric data-point presence remain available; empty native options are not evidence of no metrics."
           },
           "nativeLimit": {
             "type": "integer"
@@ -13668,6 +13697,9 @@
           "environment": {
             "type": "string"
           },
+          "environmentSelector": {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
           "fromMs": {
             "type": "integer"
           },
@@ -13686,25 +13718,49 @@
           }
         },
         "required": [
-          "environment",
           "fromMs",
           "toMs"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.InventoryQuestion"
+        "x-go-type": "github.com/casselc/goo/exploration.InventoryQuestion",
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "not": {
+              "required": [
+                "environmentSelector"
+              ]
+            },
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              }
+            }
+          }
+        ],
+        "description": "Fixed service discovery scope. Legacy environment is current-key-only; an explicit environmentSelector preserves current-only/effective policy and named/empty/unreported scope. Null or mixed nonempty selectors are refused. Metric data-point presence is not native metric evaluation."
       },
       "exploration.InventoryQuestionInput": {
         "additionalProperties": false,
         "properties": {
           "environment": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": "string"
+          },
+          "environmentSelector": {
+            "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
           },
           "fromMs": {
             "anyOf": [
@@ -13745,7 +13801,36 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.InventoryQuestion"
+        "x-go-type": "github.com/casselc/goo/exploration.InventoryQuestion",
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "not": {
+              "required": [
+                "environmentSelector"
+              ]
+            },
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              }
+            }
+          }
+        ],
+        "description": "Fixed service discovery scope. Legacy environment is current-key-only; an explicit environmentSelector preserves current-only/effective policy and named/empty/unreported scope. Null or mixed nonempty selectors are refused. Metric data-point presence is not native metric evaluation."
       },
       "exploration.InventoryResult": {
         "properties": {

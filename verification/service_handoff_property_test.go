@@ -10,7 +10,7 @@ import (
 	"hegel.dev/go/hegel"
 )
 
-const serviceHandoffJS = `import assert from 'node:assert/strict';import fs from 'node:fs';import * as H from '../ui/service-handoff.mjs';const {q,row,expected}=JSON.parse(fs.readFileSync(0,'utf8'));const before=structuredClone({q,row}),intent=H.create(q,row);assert.deepEqual(H.scope(intent),expected);assert.deepEqual(intent.origin,q);assert.equal(intent.service,row.ServiceName);assert.deepEqual({q,row},before);assert(Object.isFrozen(intent.origin));for(const policy of ['effective','unknown']){const bad=structuredClone(q);delete bad.environment;bad.environmentSelector={version:'goo/environment-selector/v1',policy,scope:{mode:'named',value:expected.environment}};assert.throws(()=>H.create(bad,row));}for(const change of [r=>delete r.ResourceAttributes,r=>r.ResourceAttributes=null,r=>r.ServiceName='',r=>r.timestamp_ns=String(BigInt(q.toMs)*1000000n),r=>r.ResourceAttributes['service.namespace']=null]){const bad=structuredClone(row);change(bad);assert.throws(()=>H.create(q,bad));}for(const change of [x=>x.extra=true,x=>x.fromMs++,x=>x.environmentSelector.policy='effective',x=>x.namespace={mode:'missing',value:''}]){const bad=structuredClone(intent);change(bad);assert.throws(()=>H.validate(bad));}`
+const serviceHandoffJS = `import assert from 'node:assert/strict';import fs from 'node:fs';import * as H from '../ui/service-handoff.mjs';const {q,row,expected}=JSON.parse(fs.readFileSync(0,'utf8'));const before=structuredClone({q,row}),intent=H.create(q,row);assert.deepEqual(H.scope(intent),expected);assert.deepEqual(intent.origin,q);assert.equal(intent.service,row.ServiceName);assert.deepEqual({q,row},before);assert(Object.isFrozen(intent.origin));for(const policy of ['unknown']){const bad=structuredClone(q);delete bad.environment;bad.environmentSelector={version:'goo/environment-selector/v1',policy,scope:{mode:'named',value:expected.environment}};assert.throws(()=>H.create(bad,row));}for(const change of [r=>delete r.ResourceAttributes,r=>r.ResourceAttributes=null,r=>r.ServiceName='',r=>r.timestamp_ns=String(BigInt(q.toMs)*1000000n),r=>r.ResourceAttributes['service.namespace']=null]){const bad=structuredClone(row);change(bad);assert.throws(()=>H.create(q,bad));}for(const change of [x=>x.extra=true,x=>x.fromMs++,x=>x.environmentSelector.policy='effective',x=>x.namespace={mode:'missing',value:''}]){const bad=structuredClone(intent);change(bad);assert.throws(()=>H.validate(bad));}`
 
 func TestHegelObservedServiceHandoffPreservesExecutableScope(t *testing.T) {
 	hegel.Test(t, func(tc *hegel.T) {
@@ -50,6 +50,8 @@ func TestHegelObservedServiceHandoffPreservesExecutableScope(t *testing.T) {
 			q["environment"] = env
 		} else {
 			q["environmentSelector"] = selector
+			delete(expected, "environment")
+			expected["environmentSelector"] = selector
 		}
 		row := map[string]any{"ServiceName": service, "ResourceAttributes": resource, "timestamp_ns": fmt.Sprint((from + int64(seed%60000)) * 1000000)}
 		// The JS constructor must produce exactly the scope accepted by existing Go

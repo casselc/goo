@@ -844,6 +844,17 @@ def check(spec):
         for invalid in (base,{**base,'environment':''},{**base,'environment':'prod','environmentSelector':good},{**base,'environmentSelector':None},{**base,'environmentSelector':{**good,'version':'unsupported'}}):
             assert not check_body.is_valid(invalid), f'{path}: invalid selector union accepted: {invalid}'
 
+    for path in ('/inventory','/discovery','/dashboards/plan'):
+        check_service=validator(spec,spec['paths'][path]['post']['requestBody']['content']['application/json']['schema'])
+        def body(scope):
+            return {'scope':scope,'service':'api','signals':['spans'],'fields':[],'instruments':[]} if path=='/dashboards/plan' else scope
+        base={'fromMs':100000,'toMs':160000}
+        check_service.validate(body({**base,'environment':'prod'}))
+        for case in bank['cases']:
+            check_service.validate(body({**base,'environmentSelector':case['selector']}))
+        for scope in (base,{**base,'environment':None},{**base,'environment':'prod','environmentSelector':None},{**base,'environment':'prod','environmentSelector':good},{**base,'environmentSelector':None}):
+            assert not check_service.is_valid(body(scope)), f'{path}: invalid service environment union accepted'
+
     routes = set(route_sources(ROOT))
     documented = {(m, p) for p, item in spec['paths'].items() for m in item if m in ('get', 'post') and 'x-go-source' in item[m]}
     assert routes == documented, f'Go route coverage changed: missing={routes-documented}, stale={documented-routes}'

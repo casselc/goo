@@ -1,6 +1,7 @@
 package exploration
 
 import (
+	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -15,10 +16,59 @@ import (
 // InventoryQuestion discovers observed span names; it does not declare fleet
 // membership, request identity, or application-owned operation contracts.
 type InventoryQuestion struct {
-	Namespace   *identity.Namespace `json:"namespace,omitempty"`
-	Environment string              `json:"environment"`
-	FromMS      int64               `json:"fromMs"`
-	ToMS        int64               `json:"toMs"`
+	Namespace           *identity.Namespace           `json:"namespace,omitempty"`
+	EnvironmentSelector *identity.EnvironmentSelector `json:"environmentSelector,omitempty"`
+	Environment         string                        `json:"environment,omitempty"`
+	FromMS              int64                         `json:"fromMs"`
+	ToMS                int64                         `json:"toMs"`
+}
+
+// UnmarshalJSON keeps the checked selector union closed. Explicit null selectors
+// or names must not disappear into zero values and acquire a different scope.
+func (q *InventoryQuestion) UnmarshalJSON(data []byte) error {
+	type wire InventoryQuestion
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return err
+	}
+	for key := range fields {
+		switch key {
+		case "namespace", "environment", "environmentSelector", "fromMs", "toMs":
+		default:
+			return fmt.Errorf("json: unknown field %q", key)
+		}
+	}
+	for _, key := range []string{"environment", "environmentSelector"} {
+		if raw, ok := fields[key]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+			return fmt.Errorf("%s must be omitted or non-null", key)
+		}
+	}
+	var value wire
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&value); err != nil {
+		return err
+	}
+	*q = InventoryQuestion(value)
+	return nil
+}
+func (q InventoryQuestion) clone() InventoryQuestion {
+	q.Namespace = q.Namespace.Clone()
+	q.EnvironmentSelector = copyEnvironmentSelector(q.EnvironmentSelector)
+	return q
+}
+func (q InventoryQuestion) EnvironmentSelection() (identity.EnvironmentSelection, error) {
+	return q.Query().EnvironmentSelection()
+}
+
+// CurrentEnvironmentName is a proof of representability by existing native
+// definitions, never a fallback for effective selectors of the same name.
+func (q InventoryQuestion) CurrentEnvironmentName() (string, bool) {
+	s, e := q.EnvironmentSelection()
+	if e != nil || !s.CurrentOnly() || s.Scope().Mode != "named" {
+		return "", false
+	}
+	return s.Scope().Value, true
 }
 
 func (q InventoryQuestion) Validate() error {
@@ -38,7 +88,7 @@ func NamespacePredicate(n *identity.Namespace) *Predicate {
 	return p
 }
 func (q InventoryQuestion) Query() Query {
-	v := Query{Signal: "spans", Environment: q.Environment, FromMS: q.FromMS, ToMS: q.ToMS, Limit: 100}
+	v := Query{Signal: "spans", Environment: q.Environment, EnvironmentSelector: copyEnvironmentSelector(q.EnvironmentSelector), FromMS: q.FromMS, ToMS: q.ToMS, Limit: 100}
 	if q.Namespace != nil {
 		v.Where = NamespacePredicate(q.Namespace)
 	}
@@ -68,7 +118,7 @@ func CompileInventory(q InventoryQuestion) (Plan, error) {
 	if e := q.Validate(); e != nil {
 		return Plan{}, e
 	}
-	selection, err := identity.CurrentEnvironment(q.Environment)
+	selection, err := q.EnvironmentSelection()
 	if err != nil {
 		return Plan{}, err
 	}
@@ -96,7 +146,7 @@ func inventoryNumber(s string) (*big.Int, error) {
 	return new(big.Int).SetUint64(n), nil
 }
 func (s Source) Inventory(ctx context.Context, q InventoryQuestion) (*InventoryResult, error) {
-	q.Namespace = q.Namespace.Clone()
+	q = q.clone()
 	plan, e := CompileInventory(q)
 	if e != nil {
 		return nil, e

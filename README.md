@@ -6,8 +6,9 @@ with ordinary OpenTelemetry data; application manifests and Go annotations add
 shared definitions when available. Logs/Spans switching preserves shared filters;
 incompatible fields stay as explicit drafts ([scope continuity](journeys/239-activity-signal-scope-storyboard.md)).
 [Open an observed service](docs/ACTIVITY_SERVICE_CONTEXT.md) from Activity with its
-original window and supported environment policy; read the overview explicitly
-and return to the same paused rows.
+original window and [checked environment policy](docs/SERVICE_ENVIRONMENT_POLICIES.md),
+including current/legacy precedence, empty and unreported record scopes. Read the
+overview explicitly and return to the same paused rows.
 
 [Shared chart surfaces](docs/CHART_FIRST_EXPLORATION.md) put plotted values before
 settings, with visible certainty and expandable exact read facts.

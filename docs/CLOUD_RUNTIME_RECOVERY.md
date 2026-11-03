@@ -35,3 +35,7 @@ even when the journey uses a separate loopback Go process. Keep these phases
 sequential; an interrupted import is not evidence of a product startup exception.
 The generic journey runtime uses a fixed loopback port; assign one wrapper owner
 at a time rather than launching parallel journeys against the same runtime.
+
+API schema checks use the pinned `requirements-api.txt` offline tooling. In this
+workspace it is installed in `/workspace/.venvs/goo-api`; avoid a temporary venv
+link that disappears on restore. These validators are not product runtime dependencies.

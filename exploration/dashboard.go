@@ -73,23 +73,31 @@ type DashboardFamily struct {
 	RuleSet  string `json:"ruleSet,omitempty"`
 	Selected bool   `json:"selected"`
 }
+type DashboardNativeCapability struct {
+	State  string `json:"state"`
+	Reason string `json:"reason"`
+}
+
+const dashboardNativePolicyReason = "Native metric evaluation and declared bindings require a current-only named environment. Captured record and metric data-point presence remain available in this scope."
+
 type DashboardPlan struct {
-	RuntimeStreamsOmitted int                     `json:"runtimeStreamsOmitted,omitempty"`
-	NativeOptionsOmitted  int                     `json:"nativeOptionsOmitted,omitempty"`
-	Profile               string                  `json:"profile,omitempty"`
-	Families              []DashboardFamily       `json:"families,omitempty"`
-	Version               string                  `json:"version"`
-	Scope                 InventoryQuestion       `json:"scope"`
-	Service               string                  `json:"service"`
-	Widgets               []DashboardWidget       `json:"widgets"`
-	Declarations          []DashboardDeclaration  `json:"declarations"`
-	Warnings              []string                `json:"warnings"`
-	NativeOptions         []DashboardNativeOption `json:"nativeOptions"`
-	NativeLimit           int                     `json:"nativeLimit"`
+	NativeCapability      *DashboardNativeCapability `json:"nativeCapability,omitempty"`
+	RuntimeStreamsOmitted int                        `json:"runtimeStreamsOmitted,omitempty"`
+	NativeOptionsOmitted  int                        `json:"nativeOptionsOmitted,omitempty"`
+	Profile               string                     `json:"profile,omitempty"`
+	Families              []DashboardFamily          `json:"families,omitempty"`
+	Version               string                     `json:"version"`
+	Scope                 InventoryQuestion          `json:"scope"`
+	Service               string                     `json:"service"`
+	Widgets               []DashboardWidget          `json:"widgets"`
+	Declarations          []DashboardDeclaration     `json:"declarations"`
+	Warnings              []string                   `json:"warnings"`
+	NativeOptions         []DashboardNativeOption    `json:"nativeOptions"`
+	NativeLimit           int                        `json:"nativeLimit"`
 }
 
 func DashboardRecordQuestion(scope InventoryQuestion, service, signal string) Query {
-	q := Query{Signal: signal, Environment: scope.Environment, FromMS: scope.FromMS, ToMS: scope.ToMS, Limit: 100, Where: &Predicate{Field: &Field{Kind: "column", Key: "service"}, Op: "eq", Value: service}}
+	q := Query{Signal: signal, Environment: scope.Environment, EnvironmentSelector: copyEnvironmentSelector(scope.EnvironmentSelector), FromMS: scope.FromMS, ToMS: scope.ToMS, Limit: 100, Where: &Predicate{Field: &Field{Kind: "column", Key: "service"}, Op: "eq", Value: service}}
 	if scope.Namespace != nil {
 		q.Where = &Predicate{All: []Predicate{*q.Where, *NamespacePredicate(scope.Namespace)}}
 	}
@@ -123,9 +131,16 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			return nil, err
 		}
 	}
-	scope := in.Scope
-	scope.Namespace = in.Scope.Namespace.Clone()
+	nativeEnvironment, nativeSupported := in.Scope.CurrentEnvironmentName()
+	if !nativeSupported && (len(in.Instruments) > 0 || in.NativeSelection != nil && len(*in.NativeSelection) > 0) {
+		return nil, fmt.Errorf("%s", dashboardNativePolicyReason)
+	}
+	scope := in.Scope.clone()
 	p := &DashboardPlan{Version: DashboardVersion, Scope: scope, Service: in.Service, Widgets: []DashboardWidget{}, Declarations: []DashboardDeclaration{}, NativeOptions: []DashboardNativeOption{}, NativeLimit: DashboardNativeLimit, Warnings: []string{"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.", "Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.", "Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration."}}
+	if !nativeSupported {
+		p.NativeCapability = &DashboardNativeCapability{State: "unsupported", Reason: dashboardNativePolicyReason}
+		p.Warnings = append(p.Warnings, dashboardNativePolicyReason)
+	}
 	httpCandidate := false
 	httpAuto := false
 	if signals["spans"] {
@@ -510,7 +525,7 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		}
 		d := *instrument.Definition
 		q := measurements.Question{Definition: d, FromMS: in.Scope.FromMS, ToMS: in.Scope.ToMS}
-		if !d.Source.Namespace.Equal(in.Scope.Namespace) || d.Environment != in.Scope.Environment || len(d.Source.Services) != 1 || d.Source.Services[0] != in.Service || d.Kind != instrument.Kind || d.Source.Metric != instrument.Metric || d.Source.Unit != instrument.Unit || d.Source.Scope != instrument.Scope || d.Source.Version != instrument.Version || d.Source.SchemaURL != instrument.SchemaURL || q.Validate() != nil {
+		if !d.Source.Namespace.Equal(in.Scope.Namespace) || d.Environment != nativeEnvironment || len(d.Source.Services) != 1 || d.Source.Services[0] != in.Service || d.Kind != instrument.Kind || d.Source.Metric != instrument.Metric || d.Source.Unit != instrument.Unit || d.Source.Scope != instrument.Scope || d.Source.Version != instrument.Version || d.Source.SchemaURL != instrument.SchemaURL || q.Validate() != nil {
 			return nil, fmt.Errorf("instrument definition does not match dashboard scope and identity")
 		}
 		encoded, _ := json.Marshal(d)
@@ -579,7 +594,7 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		return nil, fmt.Errorf("native selection is absent from supported instrument inventory")
 	}
 	for _, d := range declarations {
-		if d.Environment == in.Scope.Environment && d.Service == in.Service {
+		if nativeSupported && d.Environment == nativeEnvironment && d.Service == in.Service {
 			d.Namespace = d.Namespace.Clone()
 			d.Operations = append([]DashboardOperation(nil), d.Operations...)
 			d.Match = "exact"
@@ -667,7 +682,11 @@ func dashboardNativeDuration(scope InventoryQuestion, service string, i measurem
 	}
 	d := i.Definition
 	q := measurements.Question{Definition: *d, FromMS: scope.FromMS, ToMS: scope.ToMS}
-	return d.Kind == i.Kind && d.Source.Metric == i.Metric && d.Source.Unit == i.Unit && d.Source.Scope == i.Scope && d.Source.Version == i.Version && d.Source.SchemaURL == i.SchemaURL && d.Source.Namespace.Equal(scope.Namespace) && d.Environment == scope.Environment && len(d.Source.Services) == 1 && d.Source.Services[0] == service && q.Validate() == nil
+	environment, supported := scope.CurrentEnvironmentName()
+	if !supported {
+		return false
+	}
+	return d.Kind == i.Kind && d.Source.Metric == i.Metric && d.Source.Unit == i.Unit && d.Source.Scope == i.Scope && d.Source.Version == i.Version && d.Source.SchemaURL == i.SchemaURL && d.Source.Namespace.Equal(scope.Namespace) && d.Environment == environment && len(d.Source.Services) == 1 && d.Source.Services[0] == service && q.Validate() == nil
 }
 
 // Legacy RPC is an explicit profile, never an alias union with newer convention keys.

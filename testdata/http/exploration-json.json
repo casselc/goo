@@ -298,7 +298,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type exploration.InventoryQuestion\"}\n"
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type map[string]jsontext.Value\"}\n"
     },
     {
       "name": "/inventory/truncated",
@@ -485,7 +485,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field InventoryQuestion.fromMs of type int64\"}\n"
+      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field wire.fromMs of type int64\"}\n"
     },
     {
       "name": "/discovery/valid",
@@ -541,7 +541,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type exploration.InventoryQuestion\"}\n"
+      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type map[string]jsontext.Value\"}\n"
     },
     {
       "name": "/discovery/truncated",
@@ -728,7 +728,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field InventoryQuestion.fromMs of type int64\"}\n"
+      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field wire.fromMs of type int64\"}\n"
     },
     {
       "name": "/explore/valid",

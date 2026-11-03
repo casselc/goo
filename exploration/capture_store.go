@@ -101,8 +101,7 @@ func (q CaptureQuestion) Validate() error {
 func (q CaptureQuestion) Normalized() CaptureQuestion {
 	q.Explanation = detached(q.Explanation)
 	if q.Inventory != nil {
-		v := *q.Inventory
-		v.Namespace = v.Namespace.Clone()
+		v := q.Inventory.clone()
 		q.Inventory = &v
 	}
 	if q.Measurement != nil {

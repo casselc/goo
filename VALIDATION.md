@@ -1,5 +1,17 @@
 # Validation record
 
+## Typed service environment policies — 318
+
+[Contract](docs/SERVICE_ENVIRONMENT_POLICIES.md) · [executable storyboard and frames](docs/journeys/318-typed-service-scope.md) · [architecture](docs/reviews/SERVICE_ENVIRONMENT_ARCHITECTURE_318.md) · [design](docs/reviews/SERVICE_ENVIRONMENT_DESIGN_318.md).
+
+- Full Go suite and all 1,037 frontend tests pass (51.85 seconds, zero frontend failures/skips). Final decoder hardening has additional passing focused Go/HTTP checks. Sixty generated Hegel cases pass (5.433 seconds): browser handoff → Go scope/record planning, current/legacy precedence, empty/unreported membership, parameterization, native eligibility and detached caller/returned selectors. Inventory capture normalization/catalog paths retain the selector.
+- OpenAPI validates 100 operations, 436 fixture responses, 161 admitted requests and 28 mux refusals, including new service-selector schema controls. Invalid, null, mixed and case-folded alias scope inputs refuse before source access. Four frozen decoder error descriptions changed; request/status/source semantics remain intact.
+- Real OTel native journey passes in 21.5 seconds (23.8 runner), with no page errors. One service/namespace has five resource cohorts. Current-only selects three spans/one metric point; effective named selects the current three plus legacy two/two points; effective empty selects five/one point; unreported selects seven/one point. Exact returned span-name sets independently reject conflicting-current and losing legacy matches; equal named/empty counts alone are not the oracle.
+- Opening service context reads nothing. Explicit overview reads retain policy, resource namespace and occurrence window. Effective Customize stages the exact typed question; Run returns only `/current: 3` and `/legacy: 2`. Back to service and paused Activity preserve observations/focus and do not restart the tail. Main total: 36 source HTTP attempts, including four tails, six discovery/previews, 25 overview/widget reads and one customized Run; these are not physical SQL counts.
+- Unsupported typed policies issue no native metric-discovery/evaluation, deployment, service-annotation or service-view-library requests. Visible unavailable reasons and planner `nativeCapability` distinguish unsupported evaluation from absent telemetry. Raw metric data-point presence remains available, without interpreting values or claiming health. Current-only named separately exercises the existing metric-discovery path.
+- A separate fresh-fixture 30-second Bombadil campaign passes: 550 snapshots, phases 0–6, exit zero (30.127 seconds process wall). Exactly one scope read, one preview and one typed tail; no other source/API calls. The selected legacy-only observation, exact paused rows/window, staged policy, focus and source-free Back remain correct. Main and actor counts are separate.
+- Final CA-enabled image build/package recreation pass. All eight changed UI assets and OpenAPI are served byte-for-byte; the strict decoder is present in the running Go image. Docker mutations finish before Chromium starts. Three maintained screenshots/compact summaries remain; reviewed raw actor/browser artifacts and isolated stores were removed, with traffic restored.
+
 ## Chart-first shared exploration — 317
 
 Shared chart and root-control cut delivered; final real-OTel browser and Bombadil checks pass.
