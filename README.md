@@ -13,6 +13,9 @@ overview explicitly and return to the same paused rows.
 Activity can [reuse a saved baseline in its checked policy](docs/ACTIVITY_BASELINE_POLICIES.md):
 latency compares frozen evidence, while Explain explicitly rereads the saved scope.
 
+Temporary and saved count comparisons use [one supplied-pair presentation](docs/COUNT_PAIR_PRESENTATION.md),
+with a Summary/Groups choice and explicit operand windows and read clocks.
+
 Ordinary count views can [compare the preceding equal-length window](docs/PREVIOUS_WINDOW_COMPARISON.md),
 then save both fixed questions for explicit reuse.
 

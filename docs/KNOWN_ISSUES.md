@@ -10,8 +10,12 @@ rates or completeness claims. 322 completes
 [typed saved-baseline continuity in Activity](ACTIVITY_BASELINE_POLICIES.md):
 latency reuses frozen captured evidence, while Explain explicitly rereads saved
 query scope and can observe late arrivals. Shared receipt/scope checks do not
-grant snapshot authority. Local Find remains a candidate after the consolidation
-round in the revised general-purpose/depth/consolidate cadence.
+grant snapshot authority. 323 consolidates [supplied count-pair presentation](COUNT_PAIR_PRESENTATION.md)
+without combining the distinct held, query and captured acquisition owners.
+The measured temporary Groups view is shorter; fixed Groups remains taller than
+its previous presentation because explicit operand facts and material aggregate
+warnings stay visible. This does not establish universal compactness.
+Local Find remains the next general-purpose candidate after that consolidation.
 
 The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
 [active roadmap](ROADMAP_2026_11_03.md) replace the older parallel feature queues.

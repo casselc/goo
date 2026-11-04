@@ -304,3 +304,15 @@ goo-categorical-facet .categorical-facet-value{overflow-wrap:anywhere;min-width:
 goo-categorical-facet .categorical-facet-value-count{font-variant-numeric:tabular-nums;min-width:3ch;text-align:right}
 @media(max-width:480px){goo-categorical-facet .categorical-facet-tools{grid-template-columns:minmax(0,1fr) auto}goo-categorical-facet .categorical-facet-matches{grid-column:1/-1;grid-row:2}goo-categorical-facet .categorical-facet-receipts[open]{grid-row:3}}
 @media(pointer:coarse){goo-categorical-facet :is(button,input){min-height:44px}goo-categorical-facet .categorical-facet-receipts>summary{min-height:44px}}
+
+/* Passive supplied count-pair chrome shared by temporary and saved comparisons. */
+.count-pair-presentation{min-width:0;max-width:100%}
+.count-pair-operands{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 16px;margin:4px 0}
+.count-pair-operand{display:grid;align-content:start;gap:2px;min-width:0;font-size:12px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.count-pair-operand small{font-size:11px;color:var(--muted,#98a8bf)}
+.count-pair-count{font-weight:600}.count-pair-notice{font-size:11px;margin:4px 0}
+.count-pair-notice[data-state=diagnostic],.count-pair-notice[data-state=incompatible]{color:var(--warning,#f5b85d)}
+.count-pair-facts{margin:4px 0}.count-pair-facts>summary{font-size:12px;min-height:32px;align-content:center}
+.count-pair-facts dl{font-size:11px;overflow-wrap:anywhere}.count-pair-facts dt{font-weight:600}.count-pair-facts dd{margin:0 0 4px}
+@media(pointer:coarse){.count-pair-facts>summary,.count-pair-presentation>label>select{min-height:44px}}
+.count-pair-notice.evidence-note{padding:0;border:0;background:transparent}

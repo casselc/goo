@@ -9,6 +9,12 @@ server-rendered HTML or an SPA. Application adapters own source reads, query sco
 navigation, subscriptions, retention and publication. Ordinary OTel data does not
 need a goo manifest to use the supplied record/attribute displays.
 
+[Supplied count-pair composition](COUNT_PAIR_PRESENTATION.md) reuses the existing
+measure/group display elements in `comparison-visual.mjs`. The host supplies checked
+comparison models and operand facts, and retains acquisition, navigation and
+declaration ownership. Temporary and saved comparisons share the display without
+sharing a source-state manager.
+
 The [standalone reference source](../ui/components.html), served at `/ui-components`
 by the local lab, contains labeled synthetic display fixtures. It loads display
 modules rather than the application/query client; these conformance examples are
