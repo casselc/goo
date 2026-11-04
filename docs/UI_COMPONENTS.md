@@ -15,6 +15,11 @@ comparison models and operand facts, and retains acquisition, navigation and
 declaration ownership. Temporary and saved comparisons share the display without
 sharing a source-state manager.
 
+[Loaded-record Find](HELD_RECORD_FIND.md) reuses pure projection/matching in
+`record-presentation.mjs` and chosen-value access in `record-columns.mjs`. The tail
+adapter owns visibility, loaded counts, selection and stream lifecycle; display
+helpers do not search the source or discard records.
+
 The [standalone reference source](../ui/components.html), served at `/ui-components`
 by the local lab, contains labeled synthetic display fixtures. It loads display
 modules rather than the application/query client; these conformance examples are

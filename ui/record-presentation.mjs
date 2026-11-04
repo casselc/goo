@@ -1,3 +1,4 @@
+import * as RecordColumns from './record-columns.mjs';
 import * as UI from './components.mjs';
 import * as EvidenceSummary from './evidence-summary.mjs';
 import * as ServiceIdentity from './service-identity.mjs';
@@ -10,6 +11,17 @@ const global=globalThis;
  function describe(record,signal){const r=record||{},time=typeof r.timestamp_ns==='string'&&r.timestamp_ns.length<=32?evidence.unixNs(r.timestamp_ns):null,namespace=r.ResourceAttributes?.['service.namespace'];let duration='Duration unavailable';try{if(typeof r.duration_ns==='string'&&/^\d{1,20}$/.test(r.duration_ns)&&BigInt(r.duration_ns)<=18446744073709551615n)duration=ui.durationMS(r.duration_ns)}catch{}
   const ns=identity.namespace(typeof namespace==='string'?namespace:undefined),name=typeof r.ServiceName==='string'?(r.ServiceName||'Empty service name'):'Service not reported';return {qualifiedService:identity.name(name,ns),signal:signal==='spans'?'spans':'logs',time:time?{...time,compact:time.exact.split('T')[1].slice(0,12)+'Z'}:null,service:typeof r.ServiceName==='string'?(r.ServiceName||'Empty service name'):'Service not reported',namespace:typeof namespace==='string'?(namespace||'Empty namespace'):'Namespace not reported',message:signal==='spans'?(typeof r.SpanName==='string'&&r.SpanName||'Unnamed span'):typeof r.Body==='string'?(r.Body||'Empty log body'):'Log body unavailable',label:signal==='spans'?(typeof r.StatusCode==='string'&&r.StatusCode||'Unreported status'):(typeof r.SeverityText==='string'&&r.SeverityText||'Unset severity'),duration:signal==='spans'?duration:null};
  }
+ // Local, per-value projection only. No raw record JSON, hidden attributes or
+ // action/retention metadata enter the loaded-record search corpus.
+ function findQuery(query){if(typeof query!=='string'||!query.isWellFormed()||query.length>256||new TextEncoder().encode(query).length>1024)throw Error('Find loaded records accepts at most 256 well-formed characters.');return query.toLowerCase()}
+ function findValues(record,signal,fieldColumns=[]){const r=record||{},m=describe(r,signal),values=[];
+  for(const value of [signal==='spans'?r.SpanName:r.Body,r.ServiceName,signal==='spans'?r.StatusCode:r.SeverityText,r.ResourceAttributes?.['service.namespace']])if(typeof value==='string')values.push(value);
+  if(m.time)values.push(m.time.text,m.time.exact,m.time.compact);if(signal==='spans'&&m.duration!=='Duration unavailable')values.push(m.duration);
+  for(const [key,size]of [['TraceId',32],['SpanId',16],['ParentSpanId',16]])if(validID(r[key],size))values.push(r[key]);
+  for(const field of fieldColumns){const value=RecordColumns.value(r,field);if(!value.present||value.value===null||value.value==='')continue;const display=RecordColumns.presentation(r,field);if(field.kind==='column'&&field.key==='timestamp_ns'&&!m.time||field.kind==='column'&&field.key==='duration_ns'&&describe(r,'spans').duration==='Duration unavailable')continue;if(typeof display.text==='string')values.push(typeof value.value==='string'&&!(field.kind==='column'&&['timestamp_ns','duration_ns'].includes(field.key))?value.value:display.text);}
+  return values;
+ }
+ function matchesLoaded(record,signal,fieldColumns,query){const needle=findQuery(query);return !needle||findValues(record,signal,fieldColumns).some(value=>value.toLowerCase().includes(needle))}
  // Exact reported parent links within supplied observations, never a same-trace guess.
  function ancestry(record,records=[],limit=8){limit=Number.isInteger(limit)?Math.max(1,Math.min(limit,16)):8;const trace=record?.TraceId;if(!validID(trace,32)||!validID(record?.SpanId,16))return {state:'unreported',path:[]};if(!Array.isArray(records)||records.length>200||records.some(r=>!r||typeof r!=='object'||Array.isArray(r)))return {state:'unavailable',path:[]};const path=[],seen=new Set();let current=record;while(current){const id=current.SpanId;if(seen.has(id))return {state:'cycle',path};if(path.length>=limit)return {state:'depth-limit',path};seen.add(id);path.unshift(id);const parent=current.ParentSpanId;if(parent===undefined||parent===null)return {state:'parent-unreported',path};if(parent===''||typeof parent==='string'&&/^0{16}$/.test(parent))return {state:'no-reported-parent',path};if(!validID(parent,16))return {state:'invalid-parent',path};if(seen.has(parent))return {state:'cycle',path};const candidates=records.filter(r=>r.TraceId===trace&&r.SpanId===parent);if(candidates.length>1)return {state:'ambiguous-parent',path};if(!candidates.length)return {state:'parent-not-held',path};current=candidates[0]}return {state:'parent-unreported',path}}
  function timestamp(record,{compact=false,mobileCompact=false}={}){const m=describe(record),e=ui.node(m.time?'time':'span',m.time?(compact?m.time.compact:m.time.text):'Timestamp unavailable');if(m.time){if(mobileCompact&&!compact){const full=ui.node('span',m.time.text,'record-time-full'),short=ui.node('span',m.time.compact,'record-time-short');short.setAttribute('aria-hidden','true');e.replaceChildren(full,short)}e.dateTime=m.time.exact;e.title=m.time.exact+' · '+m.time.title;e.tabIndex=0}return e}
@@ -37,4 +49,4 @@ const global=globalThis;
   if(!global.customElements.get('goo-record-summary'))global.customElements.define('goo-record-summary',GooRecordSummary);
   if(!global.customElements.get('goo-record-context'))global.customElements.define('goo-record-context',GooRecordContext);
  }
- export {describe,ancestry,validID,timestamp,service,summary,description,attributes,detail,table};
+ export {findQuery,findValues,matchesLoaded,describe,ancestry,validID,timestamp,service,summary,description,attributes,detail,table};

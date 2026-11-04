@@ -13,6 +13,9 @@ overview explicitly and return to the same paused rows.
 Activity can [reuse a saved baseline in its checked policy](docs/ACTIVITY_BASELINE_POLICIES.md):
 latency compares frozen evidence, while Explain explicitly rereads the saved scope.
 
+Activity supports [local Find over loaded logs and spans](docs/HELD_RECORD_FIND.md),
+including chosen column values, without changing the source query or selection.
+
 Temporary and saved count comparisons use [one supplied-pair presentation](docs/COUNT_PAIR_PRESENTATION.md),
 with a Summary/Groups choice and explicit operand windows and read clocks.
 

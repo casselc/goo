@@ -15,7 +15,10 @@ without combining the distinct held, query and captured acquisition owners.
 The measured temporary Groups view is shorter; fixed Groups remains taller than
 its previous presentation because explicit operand facts and material aggregate
 warnings stay visible. This does not establish universal compactness.
-Local Find remains the next general-purpose candidate after that consolidation.
+324 adds [local Find over loaded Activity records](HELD_RECORD_FIND.md). It searches
+core values and chosen columns, preserves hidden selections and all loaded context,
+and reports matched/loaded counts. It is not source search or proof of absence;
+unchosen attributes and missing/null placeholders are excluded.
 
 The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
 [active roadmap](ROADMAP_2026_11_03.md) replace the older parallel feature queues.
