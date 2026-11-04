@@ -6,6 +6,7 @@ class El{
  append(...nodes){for(const n of nodes){n.parent=this;this.children.push(n)}}
  prepend(...nodes){for(const n of nodes)n.parent=this;this.children.unshift(...nodes)}
  replaceChildren(...nodes){for(const n of this.children)n.parent=null;this.children=[];this.append(...nodes)}
+ setAttribute(){}
  focus(){document.activeElement=this}
  querySelector(){return this.children.find(n=>n.tag==='button')}
 }
@@ -19,8 +20,13 @@ const hash='a'.repeat(64),receipt=()=>({version:'goo/kept-observations/v1',id:ha
 const find=(root,text)=>{for(const n of root.children){if(n.textContent===text)return n;const found=find(n,text);if(found)return found}};
 test('kept inspector continuation detaches receipt, refuses retired member controls and restores same inspector without read',()=>{
  globalThis.document={hidden:false,activeElement:null};globalThis.scrollY=123;globalThis.scrollTo=()=>{};
- try{const host=new El('section');host.root=true;let active=true,calls=[];const owner=mount(host,{active:()=>active,onOpenTraceView:(view,source)=>{calls.push({view,source});active=false;return true}}),v=receipt();owner.show(v);v.members[0].record.TraceId='mutated';
- const inspect=find(host,'Inspect kept record');inspect.onclick();const action=find(host,'Open trace as view');action.onclick();assert.equal(calls.length,1);assert.equal(calls[0].view.queries[0].where.trace,'c'.repeat(32));assert(calls[0].source.current());assert.equal(calls[0].source.onBack(),false);active=true;assert(calls[0].source.onBack());assert.equal(document.activeElement,action);
+ try{const host=new El('section');host.root=true;let active=true,calls=[];const owner=mount(host,{active:()=>active,onOpenView:(view,source)=>{calls.push({view,source});active=false;return true}}),v=receipt();owner.show(v);v.members[0].record.TraceId='mutated';
+ const inspect=find(host,'Inspect kept record');inspect.onclick();assert.equal(find(host,'Surrounding logs').disabled,true);find(host,'Surrounding logs').onclick();assert.equal(calls.length,0);const action=find(host,'Open trace as view');action.onclick();assert.equal(calls.length,1);assert.equal(calls[0].view.queries[0].where.trace,'c'.repeat(32));assert(calls[0].source.current());assert.equal(calls[0].source.onBack(),false);active=true;assert(calls[0].source.onBack());assert.equal(document.activeElement,action);
  assert.equal(inspectors.at(-1).close(),false);inspect.onclick();const repeated=find(host,'Open trace as view');assert.notEqual(repeated,action);repeated.onclick();assert.equal(calls.length,2);active=true;owner.show(receipt());assert.equal(calls[0].source.current(),false);action.onclick();assert.equal(calls.length,2);find(host,'Inspect kept record').onclick();const fresh=find(host,'Open trace as view');document.hidden=true;fresh.onclick();assert.equal(calls.length,2);document.hidden=false;owner.clear();fresh.onclick();assert.equal(calls.length,2);
+ }finally{delete globalThis.document;delete globalThis.scrollY;delete globalThis.scrollTo}
+});
+test('trace-less log inspector independently stages surrounding context and preserves original return scope',()=>{
+ globalThis.document={hidden:false,activeElement:null};globalThis.scrollY=42;globalThis.scrollTo=()=>{};
+ try{const host=new El('section');host.root=true;const v=receipt();v.selector.where={field:{kind:'column',key:'body'},op:'contains',value:'original'};for(const member of v.members){delete member.record.TraceId;member.record.ServiceName='api';member.record.ResourceAttributes['service.namespace']=''}let called;const owner=mount(host,{onOpenView:(view,source)=>{called={view,source};return true}});owner.show(v);find(host,'Inspect kept record').onclick();assert.equal(find(host,'Open trace as view').disabled,true);find(host,'Open trace as view').onclick();assert.equal(called,undefined);const action=find(host,'Surrounding logs');assert.equal(action.disabled,false);action.onclick();assert.equal(called.view.queries[0].signal,'logs');assert.deepEqual(called.source.question.where,v.selector.where);assert.deepEqual([called.source.question.fromMs,called.source.question.toMs],[100000,160000]);assert(called.source.onBack());assert.equal(document.activeElement,action);owner.clear();assert.equal(called.source.current(),false);action.onclick();assert.equal(called.source.current(),false);
  }finally{delete globalThis.document;delete globalThis.scrollY;delete globalThis.scrollTo}
 });

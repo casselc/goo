@@ -11,9 +11,9 @@ record inspector, beside its provenance. It reuses the staged records-only
 Waterfall, existing Run and retained navigation; no new catalog, wizard, evidence
 format or capture owner was introduced.
 
-The concise explanation is **New trace question · original observation window;
-kept evidence unchanged.** A closed **Trace question scope** disclosure shows the
-original record predicates that are not carried into the trace question.
+The shared inspector now uses one trace/log action row and the concise note
+**New questions · kept evidence unchanged. Run explicitly.** A closed
+**Question scopes** disclosure shows the original predicates not carried forward.
 
 ## Scope and source contract
 
@@ -68,21 +68,20 @@ cancellation; late adoption is still refused.
 
 ## Actual frames and verification
 
-Reviewed all three final screenshots for fixture `575e4492`:
+The three maintained 327 screenshot paths were refreshed by the 328 combined
+journey, fixture `45c59ed1`, using a trace-enabled kept log with present-empty
+namespace. They show the current shared two-action inspector, its original-window
+staged span question and two-service gateway/worker Waterfall. The 50 ms/30 ms
+bars share a scale; the new read clock is later than the frozen read window,
+and unknown coverage remains visible.
 
-- `327-kept-original-inspection.png`: contextual action, frozen Observed at and
-  original fixed read window beside the kept-unchanged explanation.
-- `327-original-window-staged.png`: original window and current/legacy precedence,
-  with an explicit staged state and Run rather than implied trace results.
-- `327-cross-service-live-waterfall.png`: two supplied gateway/worker spans on one
-  scale, a fresh read clock and visible unknown coverage.
+This refresh validates current visual documentation and the kept-log trace path.
+It does not claim that the refreshed run re-executed kept-span preservation.
+Historical 327 two-signal semantic validation is retained separately below.
+The crops do not show Back or expanded omissions; exact predicate/return/custody
+claims depend on native assertions, not appearance. No visual blocker found.
 
-The frozen window is [16:22:30.822, 16:23:30.822) UTC; the Waterfall read clock is
-16:23:36.962023427Z. The crops do not show Back or expanded omitted predicates;
-exact omission, immutable custody and return focus/scroll are native assertions,
-not screenshot inferences. No visual semantic/accessibility blocker was found.
-
-Verification reports native PASS 64.512s (69.995s runner) and actor PASS 408 states/30.149s. Both
+Historical 327 verification reports native PASS 64.512s (69.995s runner) and actor PASS 408 states/30.149s. Both
 kept signals exercised original-window typed scope, cross-service trace reads and
 retained return. Each stage allowed only the two metadata GETs; completed Back
 was API-free, and pending Back admitted the exact cancel control without late

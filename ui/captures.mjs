@@ -32,11 +32,11 @@ function catalogTable(summaries,onOpen){
  }
  return viewport;
 }
-function mount({openLive,openRecordQuestion,openKeptTraceView,restoreKeptRoute}){
-  const el=id=>document.getElementById(id);let explanationDraftHost=null;let retainedKeptReturn=false;let currentKept=null,current=null,viewGeneration=0,listGeneration=0,draftGeneration=0,draft=null,listCursor='',listHistory=[],explanationOwner=null;const explanationHost=node('section');explanationHost.id='captureExplanationEvidence';explanationHost.hidden=true;el('captureInventoryEvidence').after(explanationHost);const keptHost=node('section');keptHost.hidden=true;explanationHost.after(keptHost);const keptView=KeptSaved.mount(keptHost,{active:()=>!el('generalCaptureWorkspace').hidden&&!keptHost.closest('[data-workspace-panel]').hidden&&location.hash==='#kept='+currentKept?.id,onOpenTraceView:(view,source)=>{
+function mount({openLive,openRecordQuestion,openKeptView,restoreKeptRoute}){
+  const el=id=>document.getElementById(id);let explanationDraftHost=null;let retainedKeptReturn=false;let currentKept=null,current=null,viewGeneration=0,listGeneration=0,draftGeneration=0,draft=null,listCursor='',listHistory=[],explanationOwner=null;const explanationHost=node('section');explanationHost.id='captureExplanationEvidence';explanationHost.hidden=true;el('captureInventoryEvidence').after(explanationHost);const keptHost=node('section');keptHost.hidden=true;explanationHost.after(keptHost);const keptView=KeptSaved.mount(keptHost,{active:()=>!el('generalCaptureWorkspace').hidden&&!keptHost.closest('[data-workspace-panel]').hidden&&location.hash==='#kept='+currentKept?.id,onOpenView:(view,source)=>{
  const receipt=currentKept,current=()=>currentKept===receipt&&source.current();
- if(!current()||!openKeptTraceView)return false;
- return openKeptTraceView(view,{current,onBack:()=>{if(!current())return false;retainedKeptReturn=true;try{restoreKeptRoute();history.replaceState(null,'','#kept='+receipt.id);return source.onBack()}finally{retainedKeptReturn=false}}});
+ if(!current()||!openKeptView)return false;
+ return openKeptView(view,{current,question:structuredClone(source.question),onBack:()=>{if(!current())return false;retainedKeptReturn=true;try{restoreKeptRoute();history.replaceState(null,'','#kept='+receipt.id);return source.onBack()}finally{retainedKeptReturn=false}}});
  }});KeptSaved.library(el('captureLibraryPanel'));
   const savedExplore=SavedRecords.mount(el('captureExploreEvidence'),{prefix:'saved',summaryProvided:true,active:()=>!el('generalCaptureWorkspace').hidden&&!el('captureExploreEvidence').hidden&&el('generalCaptureWorkspace').getAttribute('aria-busy')!=='true'&&location.hash==='#capture='+current?.receipt.id,onOpenQuestion:openRecordQuestion,onPage:cursor=>open(current.receipt.id,cursor)}),savedInventory=Inventory.mount(el('captureInventoryEvidence'),{prefix:'saved',readOnly:true});
   global.addEventListener('goo:workspace',e=>{if(e.detail.route!=='investigations'){savedExplore.suspend();savedComparison.suspend();explanationOwner?.invalidate?.()}});

@@ -3732,3 +3732,33 @@ read. POST recipe planning remains outside that exception. The bounded actor in
 `bombadil/kept-trace-view.ts` must reach verified phase 6 with exactly one source
 page, zero kept/catalog reads and zero writes after instrumentation. Initial
 receipt opening is separate. See [validation](../VALIDATION.md) for actual results.
+
+## Kept log → surrounding logs — 328
+
+`TestHegelKeptLogContext328` reuses the actual Go-valid receipt fixture with 327's
+trace-continuation regression. It checks log-only context without trace identity,
+per-member versus fixed page bounds, independent clipped radius calculations,
+exact reported service/namespace and environment, original-filter omission,
+namespace absence/empty/value distinctions and invalid/unknown reporting refusal.
+Both paths retain their existing Go view/query validation and compilation checks.
+
+```sh
+go test -run '^TestHegelKept(TraceContinuation327|LogContext328)$' -count=1 -v
+```
+
+The [native journey](../docs/journeys/328-kept-log-context.md) independently
+exercises real OTLP namespace distractors, explicit source acquisition, trace
+coexistence and unchanged kept custody/retained return. Metadata setup GETs and
+pending-read cancellation control remain separate from source/custody reads.
+`bombadil/kept-surrounding-logs.ts` starts at a genuine kept receipt; require
+verified phase 6, exactly one source/page read and zero kept/catalog reads or writes
+after instrumentation. Initial stored opening is separate. See
+[validation](../VALIDATION.md) for actual outcomes and limits.
+
+For a focused driver retry before pruning native artifacts, set
+`GOO_KEPT_CONTEXT_ACTOR_ONLY=1` for the 328 journey. This requires the genuine main
+summary, capture store and original source records; it does not seed new receipts
+or create another fixture/Keep. The normal journey still creates real OTLP inputs
+and UI-kept receipts. Document focused replay results separately from a combined
+journey invocation. Temporary stores are removed after review, so rerun the normal
+journey to create fresh replay inputs after cleanup.

@@ -23,98 +23,12 @@ func TestHegelKeptTraceContinuation327(t *testing.T) {
 		seed := hegel.Draw(tc, hegel.Integers(1, 100000))
 		mode := hegel.Draw(tc, hegel.SampledFrom([]string{"legacy", "current", "named", "empty", "unreported"}))
 		signal := []string{"logs", "spans"}[seed%2]
-		name := fmt.Sprintf("prod-%d'雪", seed%13)
-		scope := identity.EnvironmentScope{Mode: mode}
-		if mode == "legacy" || mode == "current" || mode == "named" {
-			scope.Mode = "named"
-			scope.Value = name
-		}
-		selected, e := identity.EffectiveEnvironment(scope)
-		if mode == "legacy" || mode == "current" {
-			selected, e = identity.CurrentEnvironment(name)
-		}
+		fixtures, e := keptContinuationFixtures(seed, mode, signal, true)
 		if e != nil {
 			tc.Fatal(e)
 			return
 		}
-		selector, _ := selected.Selector()
-		ns := identity.Namespace{Mode: "missing"}
-		if seed%3 != 0 {
-			ns.Mode = "value"
-			if seed%3 == 2 {
-				ns.Value = "team'雪"
-			}
-		}
-		hash := func(v any) string { b, _ := json.Marshal(v); h := sha256.Sum256(b); return hex.EncodeToString(h[:]) }
-		base := int64(1790000000000) + int64(seed)*1000
-		record := func(from int64, index int) json.RawMessage {
-			resource := map[string]string{"service.name": "api"}
-			switch mode {
-			case "legacy", "current":
-				resource[identity.EnvironmentKey] = name
-			case "named":
-				resource[identity.LegacyEnvironmentKey] = name
-			case "empty":
-				resource[identity.EnvironmentKey] = ""
-				resource[identity.LegacyEnvironmentKey] = name
-			}
-			if ns.Mode == "value" {
-				resource[identity.NamespaceKey] = ns.Value
-			}
-			r := map[string]any{"timestamp_ns": strconv.FormatInt(from*1000000+int64(index)+1, 10), "ServiceName": "api", "ResourceAttributes": resource, "Attributes": map[string]string{"tenant": fmt.Sprint(seed)}, "TraceId": fmt.Sprintf("%032x", seed+index), "SpanId": fmt.Sprintf("%016x", seed+index)}
-			if signal == "logs" {
-				r["Body"] = "kept log"
-			} else {
-				r["SpanName"] = "kept span"
-			}
-			raw, _ := json.Marshal(r)
-			return raw
-		}
-		tailSelector := exploration.TailSelector{Signal: signal, EnvironmentSelector: &selector, Where: &exploration.Predicate{All: []exploration.Predicate{*exploration.NamespacePredicate(&ns), {Field: &exploration.Field{Kind: "attribute", Key: "tenant"}, Op: "eq", Value: fmt.Sprint(seed)}}}}
-		if signal == "logs" && seed%3 == 0 {
-			tailSelector.Signal = ""
-		}
-		if mode == "legacy" {
-			tailSelector.Environment = name
-			tailSelector.EnvironmentSelector = nil
-		}
-		tail := exploration.KeptObservations{Version: exploration.KeptObservationsVersion, ID: strings.Repeat("a", 64), IntentDigest: strings.Repeat("b", 64), Connection: strings.Repeat("c", 64), KeptAt: time.UnixMilli(base + 600000), Selector: tailSelector}
-		for i := 0; i < 2; i++ {
-			from := base + int64(i)*120000
-			r := record(from, i)
-			tail.Members = append(tail.Members, exploration.KeptObservation{Key: hash(r) + ":1", FromMS: from, ToMS: from + 60000, ObservedAt: time.UnixMilli(from + 61000), Basis: strings.Repeat("d", 64), Limited: i == 1, Late: i == 1, Record: r})
-		}
-		tail.Digest = hash(tail)
-		if e = tail.Validate(); e != nil {
-			tc.Fatal("invalid actual Go tail fixture", e)
-			return
-		}
-		q := exploration.Query{Signal: signal, Environment: tailSelector.Environment, EnvironmentSelector: tailSelector.EnvironmentSelector, FromMS: base + 300000, ToMS: base + 420000, Limit: 100, Offset: seed % 4 * 100, GroupBy: []exploration.Field{{Kind: "attribute", Key: "cohort"}}, Where: tailSelector.Where}
-		if signal == "spans" {
-			q.Summary = "span-duration"
-			q.SpanStatus = true
-		}
-		page := exploration.KeptRecords{Version: exploration.KeptRecordsVersion, ID: strings.Repeat("e", 64), IntentDigest: strings.Repeat("f", 64), KeptAt: time.UnixMilli(base + 600000), Origin: "result-page", Question: q, ObservedAt: time.UnixMilli(base + 421000).UTC().Format(time.RFC3339Nano), Basis: "original-page", State: "observed", ReturnedRecords: 10, RecordsLimited: true}
-		for i := 0; i < 2; i++ {
-			r := record(q.FromMS, i)
-			page.Members = append(page.Members, exploration.KeptRecord{Index: i + 2, Digest: hash(r), Record: r})
-		}
-		page.Digest = hash(page)
-		if e = page.Validate(); e != nil {
-			tc.Fatal("invalid actual Go page fixture", e)
-			return
-		}
-		capture := page
-		capture.Origin = "saved-capture"
-		capture.CaptureID = strings.Repeat("1", 64)
-		capture.CaptureAt = time.UnixMilli(base + 500000).UTC().Format(time.RFC3339Nano)
-		capture.Digest = ""
-		capture.Digest = hash(capture)
-		if e = capture.Validate(); e != nil {
-			tc.Fatal("invalid actual Go capture fixture", e)
-			return
-		}
-		input, _ := json.Marshal([]any{tail, page, capture})
+		input, _ := json.Marshal(fixtures)
 		cmd := exec.Command("node", "--input-type=module", "-e", keptTrace327JS)
 		cmd.Stdin = bytes.NewReader(input)
 		out, e := cmd.CombinedOutput()
@@ -142,6 +56,107 @@ func TestHegelKeptTraceContinuation327(t *testing.T) {
 			}
 		}
 	}, options(30)...)
+}
+
+// Shared data-only receipt fixture for kept trace and temporal-log continuation.
+func keptContinuationFixtures(seed int, mode, signal string, withTrace bool) ([]any, error) {
+	name := fmt.Sprintf("prod-%d'雪", seed%13)
+	scope := identity.EnvironmentScope{Mode: mode}
+	if mode == "legacy" || mode == "current" || mode == "named" {
+		scope.Mode = "named"
+		scope.Value = name
+	}
+	selected, e := identity.EffectiveEnvironment(scope)
+	if mode == "legacy" || mode == "current" {
+		selected, e = identity.CurrentEnvironment(name)
+	}
+	if e != nil {
+		return nil, e
+	}
+	selector, _ := selected.Selector()
+	ns := identity.Namespace{Mode: "missing"}
+	if seed%3 != 0 {
+		ns.Mode = "value"
+		if seed%3 == 2 {
+			ns.Value = "team'雪"
+		}
+	}
+	hash := func(v any) string { b, _ := json.Marshal(v); h := sha256.Sum256(b); return hex.EncodeToString(h[:]) }
+	base := int64(1790000000000) + int64(seed)*1000
+	record := func(from int64, index int, widthMS int64) json.RawMessage {
+		resource := map[string]string{"service.name": "api"}
+		switch mode {
+		case "legacy", "current":
+			resource[identity.EnvironmentKey] = name
+		case "named":
+			resource[identity.LegacyEnvironmentKey] = name
+		case "empty":
+			resource[identity.EnvironmentKey] = ""
+			resource[identity.LegacyEnvironmentKey] = name
+		}
+		if ns.Mode == "value" {
+			resource[identity.NamespaceKey] = ns.Value
+		}
+		offset := int64(0)
+		if !withTrace {
+			offset = int64(seed) % widthMS
+		}
+		r := map[string]any{"timestamp_ns": strconv.FormatInt((from+offset)*1000000+int64(index)+1, 10), "ServiceName": "api", "ResourceAttributes": resource, "Attributes": map[string]string{"tenant": fmt.Sprint(seed)}}
+		if withTrace {
+			r["TraceId"] = fmt.Sprintf("%032x", seed+index)
+			r["SpanId"] = fmt.Sprintf("%016x", seed+index)
+		}
+		if signal == "logs" {
+			r["Body"] = "kept log"
+		} else {
+			r["SpanName"] = "kept span"
+		}
+		raw, _ := json.Marshal(r)
+		return raw
+	}
+	tailSelector := exploration.TailSelector{Signal: signal, EnvironmentSelector: &selector, Where: &exploration.Predicate{All: []exploration.Predicate{*exploration.NamespacePredicate(&ns), {Field: &exploration.Field{Kind: "attribute", Key: "tenant"}, Op: "eq", Value: fmt.Sprint(seed)}}}}
+	if signal == "logs" && seed%3 == 0 {
+		tailSelector.Signal = ""
+	}
+	if mode == "legacy" {
+		tailSelector.Environment = name
+		tailSelector.EnvironmentSelector = nil
+	}
+	tail := exploration.KeptObservations{Version: exploration.KeptObservationsVersion, ID: strings.Repeat("a", 64), IntentDigest: strings.Repeat("b", 64), Connection: strings.Repeat("c", 64), KeptAt: time.UnixMilli(base + 600000), Selector: tailSelector}
+	for i := 0; i < 2; i++ {
+		from := base + int64(i)*120000
+		r := record(from, i, 60000)
+		tail.Members = append(tail.Members, exploration.KeptObservation{Key: hash(r) + ":1", FromMS: from, ToMS: from + 60000, ObservedAt: time.UnixMilli(from + 61000), Basis: strings.Repeat("d", 64), Limited: i == 1, Late: i == 1, Record: r})
+	}
+	tail.Digest = hash(tail)
+	if e = tail.Validate(); e != nil {
+		return nil, fmt.Errorf("invalid actual Go tail fixture: %w", e)
+	}
+	q := exploration.Query{Signal: signal, Environment: tailSelector.Environment, EnvironmentSelector: tailSelector.EnvironmentSelector, FromMS: base + 300000, ToMS: base + 420000, Limit: 100, Offset: seed % 4 * 100, GroupBy: []exploration.Field{{Kind: "attribute", Key: "cohort"}}, Where: tailSelector.Where}
+	if signal == "spans" {
+		q.Summary = "span-duration"
+		q.SpanStatus = true
+	}
+	page := exploration.KeptRecords{Version: exploration.KeptRecordsVersion, ID: strings.Repeat("e", 64), IntentDigest: strings.Repeat("f", 64), KeptAt: time.UnixMilli(base + 600000), Origin: "result-page", Question: q, ObservedAt: time.UnixMilli(base + 421000).UTC().Format(time.RFC3339Nano), Basis: "original-page", State: "observed", ReturnedRecords: 10, RecordsLimited: true}
+	for i := 0; i < 2; i++ {
+		r := record(q.FromMS, i, q.ToMS-q.FromMS)
+		page.Members = append(page.Members, exploration.KeptRecord{Index: i + 2, Digest: hash(r), Record: r})
+	}
+	page.Digest = hash(page)
+	if e = page.Validate(); e != nil {
+		return nil, fmt.Errorf("invalid actual Go page fixture: %w", e)
+	}
+	capture := page
+	capture.Origin = "saved-capture"
+	capture.CaptureID = strings.Repeat("1", 64)
+	capture.CaptureAt = time.UnixMilli(base + 500000).UTC().Format(time.RFC3339Nano)
+	capture.Digest = ""
+	capture.Digest = hash(capture)
+	if e = capture.Validate(); e != nil {
+		return nil, fmt.Errorf("invalid actual Go capture fixture: %w", e)
+	}
+
+	return []any{tail, page, capture}, nil
 }
 
 const keptTrace327JS = `

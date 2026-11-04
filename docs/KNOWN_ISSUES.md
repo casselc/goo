@@ -28,6 +28,14 @@ The new question retains the original member window and checked environment,
 then replaces record filters with its reported trace ID. Run is a fresh source
 read, not a frozen or complete trace reconstruction. The retained return path
 exists only in this tab; missing/invalid trace IDs remain explicitly unavailable.
+328 adds [surrounding logs from a kept log](KEPT_LOG_CONTEXT.md) without requiring
+trace identity. It retains checked environment/service/namespace and clips a
+30-second radius to the original window, omitting original message/severity
+filters. Unknown namespace reporting remains unavailable; missing and empty keys
+are distinct. Time context does not establish causality.
+The older surrounding-log inspector still searches across namespaces for a service
+name. Consolidating its planning with the new qualified-service context is the
+next roadmap item; the new kept-log action already enforces exact namespace.
 
 The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
 [active roadmap](ROADMAP_2026_11_03.md) replace the older parallel feature queues.
