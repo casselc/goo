@@ -10,6 +10,9 @@ original window and [checked environment policy](docs/SERVICE_ENVIRONMENT_POLICI
 including current/legacy precedence, empty and unreported record scopes. Read the
 overview explicitly and return to the same paused rows.
 
+Ordinary count views can [compare the preceding equal-length window](docs/PREVIOUS_WINDOW_COMPARISON.md),
+then save both fixed questions for explicit reuse.
+
 [Native service gauges](docs/NATIVE_GAUGE_ENVIRONMENT_POLICIES.md) and
 [counter/histogram intervals](docs/TYPED_NATIVE_INTERVALS.md) can read values under
 that same policy, retaining distinct current-key and legacy-key streams.

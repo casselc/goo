@@ -119,3 +119,8 @@ The ordinary count profile still applies. A default HTTP view requesting span
 status may need an explicit profile edit before this comparison is eligible; 312
 does not quietly strip projections or broaden comparison support. Held-parent
 observations remain temporary and do not offer this durable query conversion.
+
+321 adds **Compare previous window** for ordinary count compositions, using this
+same query operand grammar. It stages an adjacent equal-duration baseline for
+explicit Run and preserves that relation through window changes. See the
+[previous-window contract](PREVIOUS_WINDOW_COMPARISON.md).

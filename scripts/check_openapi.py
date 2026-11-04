@@ -706,6 +706,12 @@ def check_fixed_query_count_views(spec):
         vc=validator(spec,{'$ref':'#/components/schemas/workbench.ExplorationView'+suffix})
         ac=validator(spec,{'$ref':'#/components/schemas/workbench.ViewArtifact'+suffix})
         cc.validate(comparison);vc.validate(view)
+        previous=copy.deepcopy(view);previous['queries'][0]['fromMs']=61000;previous['queries'][0]['toMs']=121000
+        vc.validate(previous)
+        ac.validate({'version':'goo.view-artifact/1','namespace':'platform','name':'previous-counts','revision':'v1','view':previous})
+        invalid_previous=copy.deepcopy(previous);invalid_previous['composition']['children'][2]['comparison']['baselineQuery']['environment']='prod';invalid_previous['composition']['children'][2]['comparison']['baselineQuery']['environmentSelector']={'version':'goo/environment-selector/v1','policy':'effective','scope':{'mode':'named','value':'prod'}}
+        assert not vc.is_valid(invalid_previous),'mixed previous-window environment union accepted'
+
         ac.validate({'version':'goo.view-artifact/1','namespace':'platform','name':'fixed-cohorts','revision':'v1','view':view})
         for mutation in (
             lambda x:x.update(baselineCapture=''), lambda x:x.update(baselineCapture=None),

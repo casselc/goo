@@ -3,8 +3,8 @@
 > Delivered in 309. See [validation](../VALIDATION.md) and the
 > [executable storyboard](journeys/309-paired-window.md).
 
-A saved fixed-query comparison asks about two populations within the same time
-window. Moving that window must change both questions together. It must not change
+The original saved fixed-query profile compares two populations within the same
+time window. 321 also admits a [preceding equal-duration window](PREVIOUS_WINDOW_COMPARISON.md). Moving that window must change both questions together. It must not change
 either population's predicates or replace a held observation with a new question.
 
 ## Stage a shared UTC range
@@ -13,7 +13,9 @@ In **Applied population** (or **Configured population** before Run), open
 **Comparison window** to edit the UTC start and
 exclusive end, then choose **Stage window**. **Use fresh comparison window** uses
 one current clock value and preserves the window duration.
-Both actions update the selected root and its `baselineQuery` together, preserving
+Both actions update the selected root and its `baselineQuery` together. Same-window
+pairs remain aligned; preceding-window pairs recompute an adjacent baseline of
+the new selected duration. Both preserve
 environment policy, distinct predicates, signal, grouping, measures, delivery limits
 and presentation. Page offsets remain zero. Captured baselines and temporary
 held-parent comparisons do not acquire this query transformation.

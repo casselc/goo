@@ -1,5 +1,14 @@
 # Known issues and gaps
 
+321 adds [previous-window count comparisons](PREVIOUS_WINDOW_COMPARISON.md) to
+ordinary single-query log/span count compositions. It stages an adjacent
+same-duration baseline for explicit Run, retains both fixed questions through
+Save/export/open, and preserves adjacency when changing the selected window.
+Other distinct/unequal windows, facet compositions and specialized measure
+profiles remain outside this action. Counts are descriptive observations, not
+rates or completeness claims. Selector-bearing saved Activity baselines and local
+Find in the held stream remain candidates in the revised tick-tock roadmap.
+
 The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
 [active roadmap](ROADMAP_2026_11_03.md) replace the older parallel feature queues.
 312 delivers the selected corrections: shared selection-command readiness/leases,
@@ -30,8 +39,9 @@ seven-record cohort at 1280×900 and 390×844, including positive fills and unoc
 labels/counts. Visible scope, denominator and uncertainty remain. This is the
 measured fine-pointer layout, not proof that every long-label, coarse-pointer or
 other chart family fits its first viewport. See [chart-first exploration](CHART_FIRST_EXPLORATION.md).
-The next capability priority is an end-to-end Services environment-policy task,
-not more small chart-padding changes.
+318–320 subsequently delivered the bounded Services environment-policy path
+through ordinary native values. The post-320 cadence returns to a general-purpose
+time-change task before choosing another depth slice.
 
 316 introduced [Activity-to-service context](ACTIVITY_SERVICE_CONTEXT.md) with exact
 resource namespace and occurrence window. 318 extends its record path to effective

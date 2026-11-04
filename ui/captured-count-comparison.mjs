@@ -7,7 +7,9 @@ const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 function closed(x,keys){if(!object(x)||Object.keys(x).some(k=>!keys.includes(k)))throw Error('Unknown captured-count comparison fields.');}
 export const eligible=cohortEligible;
 export const queryVariant=value=>value?.kind?.name==='query-count-comparison';
-export function queryCompatible(a,b){compatibleCohorts(a,b);for(const q of [a,b])if((q.offset??0)!==0||(q.limit??100)>100)throw Error('Fixed comparison queries require page zero and limits up to 100.');if(a.fromMs!==b.fromMs||a.toMs!==b.toMs)throw Error('Fixed comparison queries require the same fixed window.');return true;}
+export function windowRelation(selected,baseline){if(selected.fromMs===baseline.fromMs&&selected.toMs===baseline.toMs)return 'same';if(baseline.toMs===selected.fromMs&&selected.toMs-selected.fromMs===baseline.toMs-baseline.fromMs)return 'previous';throw Error('Fixed comparisons require the same window or the adjacent previous equal-duration window.')}
+export function queryCompatible(a,b){compatibleCohorts(a,b);for(const q of [a,b])if((q.offset??0)!==0||(q.limit??100)>100)throw Error('Fixed comparison queries require page zero and limits up to 100.');windowRelation(a,b);return true;}
+export function previousQuery(q){validateRecordQuestion(q);if(!eligible(q))throw Error('Choose an ordinary single-group Count query.');const width=q.toMs-q.fromMs;if(q.fromMs<width)throw Error('The previous comparison window would begin before the Unix epoch.');const baseline={...structuredClone(q),fromMs:q.fromMs-width,toMs:q.fromMs,offset:0};queryCompatible({...q,offset:0},baseline);return baseline;}
 export function validate(value,q){
  validateRecordQuestion(q);closed(value,['version','scope','kind','baselineCapture','baselineQuery','display']);closed(value.scope,['kind','signal']);closed(value.kind,['name','version']);closed(value.display,['value','title','view','order']);
  if(!eligible(q))throw Error('Captured count comparison requires one ordinary grouping without status, numeric or reported-edge measures.');

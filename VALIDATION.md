@@ -1,5 +1,19 @@
 # Validation record
 
+## Previous-window count views — 321
+
+[Contract](docs/PREVIOUS_WINDOW_COMPARISON.md) · [journey](docs/journeys/321-previous-window.md) · [architecture](docs/reviews/PREVIOUS_WINDOW_ARCHITECTURE_321.md) · [design](docs/reviews/PREVIOUS_WINDOW_DESIGN_321.md).
+
+- Full Go suite and all 1,048 frontend tests pass (19.566 seconds, zero frontend failures/skips). Focused source tests cover existing same-window pairs, adjacent equal-duration admission, exact complete-query cloning, epoch refusal, resize/shift, invalid gaps/overlaps/future/unequal windows, policies/profiles, and save/YAML/plan round trips. Initial sandbox-only attempts lacked loopback access; the successful integration runs used loopback-enabled execution.
+- Thirty generated Hegel Go/JS cases pass (15.474 seconds, zero skips): all environment policies and namespace variants, detached query ownership, exact predicates and grouping, previous/shift/resize relations, invalid window/policy/profile controls and portable artifact round trips. Source review confirms group drilldowns use the selected operand's actual window and selector. No new executor, query algebra, endpoint or component was introduced.
+- OpenAPI validates 100 operations, 436 fixture responses, 161 admitted requests and 28 mux refusals, plus 15 actual handler responses covering admission and runtime window/page/policy refusals. Generation remains 644 wire types and 666 schemas. New HTTP tests confirm these save/encode/plan/refusal paths do not read telemetry.
+- Final CA-enabled package build/recreation passes; three changed UI modules and OpenAPI are served byte-for-byte. Schema regeneration completed after the first build, so a final rebuild incorporated it before browser execution.
+
+
+- Integrated real-OTel journey passes in 54.8 seconds (about one minute including runner), with three explicit pair Runs: initial comparison, saved-view reopen, and selected-window shift of ten seconds. Each retains full counts 9 selected / 5 previous despite inspection limit two, count change +4, and groups alpha +4 / beta +3 / gamma −3. Both exact UTC windows and independent read clocks remain visible. Stage, Save/export, reopen and window edits do not read telemetry; held original bytes remain unchanged.
+- Main page source budget is ten HTTP attempts: four setup exploration reads (root logs, linked logs and spans, customized logs) and six reads for the three pairs (one full selected exploration and one aggregate-only baseline each). Three `/compare` calls derive supplied comparisons separately; these are not source reads or physical SQL counts.
+- A genuine UI-saved view drives the configured 30-second Bombadil campaign (35.713 seconds process wall): 456 snapshots, phases 0–8, exit zero, exactly two source reads and one derived comparison, zero capture writes. Independent raw review confirms exact 9/5/group values, retained evidence immutability, local Find/order, fresh adjacent-window staging and stale-control refusal without additional reads. Design accepts all three actual frames; two harness-only disclosure/timestamp-format corrections required no product change. Reviewed bulk artifacts are pruned, compact summaries and maintained frames retained, and traffic restored.
+
 ## Typed service counter and histogram intervals — 320
 
 [Contract](docs/TYPED_NATIVE_INTERVALS.md) · [journey and frames](docs/journeys/320-typed-native-intervals.md) · [architecture](docs/reviews/NATIVE_INTERVAL_ENVIRONMENT_ARCHITECTURE_320.md) · [design](docs/reviews/NATIVE_INTERVAL_ENVIRONMENT_DESIGN_320.md).

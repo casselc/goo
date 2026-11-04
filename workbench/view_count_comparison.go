@@ -98,11 +98,16 @@ func (d CountComparisonViewDeclaration) Validate(q exploration.Query) error {
 			return errors.New("query comparison requires only a fixed baseline query")
 		}
 		baseline := *d.BaselineQuery
-		if q.Offset != 0 || baseline.Offset != 0 || q.FromMS != baseline.FromMS || q.ToMS != baseline.ToMS {
-			return errors.New("query comparison requires matching fixed windows and page-zero queries")
-		}
+		// Validate both questions before doing window arithmetic. Compatible
+		// cohorts retain their independently checked predicates and profile.
 		if err := exploration.CompatibleCountCohortQueries(q, baseline); err != nil {
 			return err
+		}
+		width := q.ToMS - q.FromMS
+		sameWindow := q.FromMS == baseline.FromMS && q.ToMS == baseline.ToMS
+		previousWindow := q.FromMS >= width && baseline.FromMS == q.FromMS-width && baseline.ToMS == q.FromMS
+		if q.Offset != 0 || baseline.Offset != 0 || !sameWindow && !previousWindow {
+			return errors.New("query comparison requires page-zero queries in the same fixed window or an adjacent equal-duration previous window")
 		}
 	}
 	if !text(d.Display.Title, 120, d.Display.Title != "", false) {
