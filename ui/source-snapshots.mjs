@@ -5,7 +5,7 @@ import {createSourceAdapter,asComparison,importSnapshot,getSnapshotInfo,asHistog
 import {identity} from './question-session.mjs';
 import {validateRecordQuestion} from './question-protocol.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
-import {validate as validateSaved} from './saved-capture-protocol.mjs';
+import {validate as validateSaved,checkedRecord} from './saved-capture-protocol.mjs';
 import {fromExploration as recordPageFromExploration} from './record-page.mjs';
 
 const source=createSourceAdapter({id:'goo.explore'}),stored=createSourceAdapter({id:'goo.verified-saved-explore'});
@@ -75,7 +75,7 @@ export function adoptStoredExplore(page){
   const expected=page.receipt.question.explore;
   // SavedProtocol historically checked selector pages only. All stored pages
   // must match their immutable receipt, including named-environment pages.
-  sameQuestion(expected,page.explore.question,true);
+  checkedRecord(expected,page.explore.question);
   return {...page,explore:admit(page.explore,expected,stored,{paging:true})};
 }
 

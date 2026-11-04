@@ -1,10 +1,11 @@
+import {validate as validatePredicate} from './predicate-validation.mjs';
 /* Checked stored response boundary. No source reads, DOM or persistence. */
 import * as Environment from './record-environment.mjs';
 import * as Questions from './question-protocol.mjs';
 import * as Session from './question-session.mjs';
 import * as Explanation from './explanation.mjs';
 function recordIdentity(q){const value=structuredClone(q);delete value.offset;delete value.limit;return Session.identity(value)}
-function checkedRecord(expected,actual){Questions.validateRecordQuestion(expected);Questions.validateRecordQuestion(actual);if(recordIdentity(expected)!==recordIdentity(actual))throw Error('Stored record scope differs from its immutable receipt.');}
+function checkedRecord(expected,actual){Questions.validateRecordQuestion(expected);Questions.validateRecordQuestion(actual);validatePredicate(expected.where,expected.signal);validatePredicate(actual.where,actual.signal);if(recordIdentity(expected)!==recordIdentity(actual))throw Error('Stored record scope differs from its immutable receipt.');}
 function validate(page,expectedID){
   const receipt=page?.receipt;if(!/^[a-f0-9]{64}$/.test(receipt?.id)||expectedID!==undefined&&receipt.id!==expectedID)throw Error('Returned capture differs from the requested ID.');
   const q=receipt.question;if(!Environment.hasQuestionSelector(q)&&!Environment.hasQuestionSelector(page.explore?.question)&&!['baseline','selection'].some(side=>Environment.hasQuestionSelector(page.comparison?.request?.[side]?.question)||Environment.hasQuestionSelector(page.explanation?.request?.[side])))return page;
@@ -15,4 +16,4 @@ function validate(page,expectedID){
   return page;
 }
 function validateRefresh(page,previous){validate(page);if(page.receipt.parent!==previous.receipt.id||Session.identity(page.receipt.question)!==Session.identity(previous.receipt.question))throw Error('Refreshed capture changed its predecessor or immutable question.');return page}
-export {validate,validateRefresh};
+export {checkedRecord,validate,validateRefresh};

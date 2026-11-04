@@ -10,6 +10,9 @@ original window and [checked environment policy](docs/SERVICE_ENVIRONMENT_POLICI
 including current/legacy precedence, empty and unreported record scopes. Read the
 overview explicitly and return to the same paused rows.
 
+Activity can [reuse a saved baseline in its checked policy](docs/ACTIVITY_BASELINE_POLICIES.md):
+latency compares frozen evidence, while Explain explicitly rereads the saved scope.
+
 Ordinary count views can [compare the preceding equal-length window](docs/PREVIOUS_WINDOW_COMPARISON.md),
 then save both fixed questions for explicit reuse.
 

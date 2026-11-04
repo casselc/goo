@@ -6,8 +6,12 @@ same-duration baseline for explicit Run, retains both fixed questions through
 Save/export/open, and preserves adjacency when changing the selected window.
 Other distinct/unequal windows, facet compositions and specialized measure
 profiles remain outside this action. Counts are descriptive observations, not
-rates or completeness claims. Selector-bearing saved Activity baselines and local
-Find in the held stream remain candidates in the revised tick-tock roadmap.
+rates or completeness claims. 322 completes
+[typed saved-baseline continuity in Activity](ACTIVITY_BASELINE_POLICIES.md):
+latency reuses frozen captured evidence, while Explain explicitly rereads saved
+query scope and can observe late arrivals. Shared receipt/scope checks do not
+grant snapshot authority. Local Find remains a candidate after the consolidation
+round in the revised general-purpose/depth/consolidate cadence.
 
 The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
 [active roadmap](ROADMAP_2026_11_03.md) replace the older parallel feature queues.

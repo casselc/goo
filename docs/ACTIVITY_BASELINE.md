@@ -1,5 +1,9 @@
 # Captured baselines for Activity latency
 
+322 completes [checked-policy continuity](ACTIVITY_BASELINE_POLICIES.md), including
+effective named, present-empty and unreported scopes. Stored baseline evidence
+stays frozen; the separate Explain saved-scope workflow explicitly rereads its query.
+
 Open the optional span latency panel, then **Baseline**. Load a page of saved
 duration captures and choose one, or paste a capture link from this workspace.
 The catalog uses existing 20-receipt pages and explicit Next; opening the

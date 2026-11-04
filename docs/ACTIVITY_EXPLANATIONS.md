@@ -117,3 +117,9 @@ complete stored capture hashes/membership separately from the 100-row public pag
 JSON transport formatting is not mistaken for record-byte identity. See
 [VALIDATION.md](../VALIDATION.md) for exact executed results, finite model limits
 and the final regression/review status.
+
+322 completes [typed saved-baseline and side-question continuity](ACTIVITY_BASELINE_POLICIES.md).
+Saved scope admission shares the receipt/result scope validator with stored
+exploration admission, without promoting saved counts into explanation evidence.
+Typed side questions use the checked shared-link protocol and retain their actual
+operand window and policy. Opening stages; explicit Run reads telemetry.
