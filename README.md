@@ -17,6 +17,8 @@ Activity supports [local Find over loaded logs and spans](docs/HELD_RECORD_FIND.
 including chosen column values, without changing the source query or selection.
 While paused, [select all loaded matches atomically](docs/LOADED_MATCH_SELECTION.md)
 for explicit Keep, retaining existing hidden selections and the 20-item limit.
+Reopen a kept log or span and [stage its original-window trace Waterfall](docs/KEPT_TRACE_CONTINUATION.md);
+Run reads fresh telemetry, and Back restores the retained kept inspector.
 
 Temporary and saved count comparisons use [one supplied-pair presentation](docs/COUNT_PAIR_PRESENTATION.md),
 with a Summary/Groups choice and explicit operand windows and read clocks.

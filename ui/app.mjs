@@ -132,7 +132,8 @@ for(const event of ['input','change'])el('minutes').addEventListener(event,()=>{
 
 el('defineMeasurement').onclick=()=>{dispatchEvent(new CustomEvent('goo:navigate-explore'));dispatchEvent(new CustomEvent('goo:measurements-tab'));el('measureEditor').open=true;el('measureLibrary').focus()};
 const liveExploration=InvestigationTrail.mount(el('exploration'),{lazy:true});
-uiConfiguration.then(config=>{const lab=config?.profile==='lab';if(!lab)el('inventoryEnvironment').value='';StreamEntry.mount(el('exploration'),{environment:lab?'local':'',autoStart:lab,onLeaveFixed:()=>liveExploration.suspend(),onEnterFixed:()=>liveExploration.resume(),onOpenFixed:(q,recordLayout,options)=>liveExploration.openQuestion(q,[],{stage:true,activity:true,recordLayout,...options}),onOpenService:openObservedService,onOpenTrace:(q,row,opener,options)=>{dispatchEvent(new CustomEvent('goo:navigate-explore'));liveExploration.openTrace(q,row.TraceId,row.SpanId,null,opener,options)}})});
+let activityEntry;
+uiConfiguration.then(config=>{const lab=config?.profile==='lab';if(!lab)el('inventoryEnvironment').value='';activityEntry=StreamEntry.mount(el('exploration'),{environment:lab?'local':'',autoStart:lab,onLeaveFixed:()=>liveExploration.suspend(),onEnterFixed:()=>liveExploration.resume(),onOpenFixed:(q,recordLayout,options)=>liveExploration.openQuestion(q,[],{stage:true,activity:true,recordLayout,...options}),onOpenService:openObservedService,onOpenTrace:(q,row,opener,options)=>{dispatchEvent(new CustomEvent('goo:navigate-explore'));liveExploration.openTrace(q,row.TraceId,row.SpanId,null,opener,options)}})});
 const nativeRecordNavigation=NativeRecordNavigation.mount(el('nativeRecordReturn'),{nativeHost:el('measurementWorkbench'),holdResourceOrigin:question=>ResourceReturn.hold(document.querySelector('[data-workspace-panel="explore"]'),question),active:()=>appWorkspace.current()==='explore'&&el('exploreMeasurementsMode').getAttribute('aria-selected')==='true',stageQuestion:q=>{appWorkspace.navigate('explore',{writeHash:false});exploreMode(false);liveExploration.openQuestion(q,[],{stage:true})},showNative:()=>{appWorkspace.navigate('explore',{writeHash:false});exploreMode(true)},suspendRecords:()=>liveExploration.suspend()});
 Measurements.mount(el('measurementWorkbench'),{onRecordContext:(detail,opener)=>nativeRecordNavigation.stage(detail,opener),onRestoreStep:hash=>nativeRecordNavigation.restore(hash)});
 function exploreMode(measures){el('exploration').hidden=measures;el('measurementWorkbench').hidden=!measures;el('exploreRecordsMode').setAttribute('aria-selected',String(!measures));el('exploreMeasurementsMode').setAttribute('aria-selected',String(measures));el('exploreRecordsMode').tabIndex=measures?-1:0;el('exploreMeasurementsMode').tabIndex=measures?0:-1;dispatchEvent(new CustomEvent('goo:explore-mode',{detail:{measurements:measures}}))}
@@ -165,7 +166,18 @@ const definitionTabs=ResourceTabs.mount([
 for(const event of ['goo:draft-telemetry-package','goo:preview-telemetry-package'])globalThis.addEventListener(event,()=>{appWorkspace.navigate('definitions');definitionTabs.select('records')});
 TelemetryPackages.mount(el('telemetryPackages'));
 globalThis.addEventListener('goo:navigate-explore',()=>appWorkspace.navigate('explore'));
-Captures.mount({openRecordQuestion:q=>{appWorkspace.navigate('explore');liveExploration.openQuestion(q,[],{stage:true})},openLive:page=>{if(page.measurement){globalThis.dispatchEvent(new CustomEvent('goo:open-measurement',{detail:{yaml:JSON.stringify(page.measurement.question.definition)}}))}else if(page.explore){appWorkspace.navigate('explore');liveExploration.openQuestion(page.receipt.question.explore,page.explore.fields,{stage:true})}else{appWorkspace.navigate('services');liveInventory.openQuestion(page.receipt.question.inventory)}}});
+const keptTraceReturn=ResourceReturn.mount(document.querySelector('[data-workspace-panel="explore"]'),{className:'kept-trace-return'});let keptTraceLease=null;
+function clearKeptTraceReturn(){keptTraceLease?.visit.releaseReturn();keptTraceLease=null;keptTraceReturn.clear()}
+function syncKeptTraceReturn(){if(keptTraceLease&&(!keptTraceLease.current()||appWorkspace.current()!=='explore'))clearKeptTraceReturn()}
+globalThis.addEventListener('goo:question-state',syncKeptTraceReturn);globalThis.addEventListener('goo:workspace',syncKeptTraceReturn);globalThis.addEventListener('goo:explore-mode',event=>{if(event.detail.measurements)clearKeptTraceReturn();else syncKeptTraceReturn()});
+Captures.mount({restoreKeptRoute:()=>appWorkspace.navigate('investigations',{writeHash:false}),openKeptTraceView:(view,source)=>{
+ if(!source.current())return false;
+ activityEntry?.enterFixed();
+ liveExploration.openQuestion(view.queries[0],[],{stage:true,view,retainedReturn:true});
+ const visit=liveExploration.visit();keptTraceLease={visit,current:()=>source.current()&&visit.current()};
+ keptTraceReturn.show({title:'Kept observation',question:view.queries[0],backLabel:'Back to kept observation',onBack:()=>{if(!source.current()||!visit.current())return;visit.suspend();visit.releaseReturn();keptTraceLease=null;source.onBack()}});
+ return true;
+},openRecordQuestion:q=>{appWorkspace.navigate('explore');liveExploration.openQuestion(q,[],{stage:true})},openLive:page=>{if(page.measurement){globalThis.dispatchEvent(new CustomEvent('goo:open-measurement',{detail:{yaml:JSON.stringify(page.measurement.question.definition)}}))}else if(page.explore){appWorkspace.navigate('explore');liveExploration.openQuestion(page.receipt.question.explore,page.explore.fields,{stage:true})}else{appWorkspace.navigate('services');liveInventory.openQuestion(page.receipt.question.inventory)}}});
 globalThis.addEventListener('goo:show-general-capture',()=>{el('savedOperationEvidence').hidden=true});
 globalThis.addEventListener('goo:navigate-investigations',()=>appWorkspace.navigate('investigations',{writeHash:false}));
 Documents.mount(el('investigationDocuments'));

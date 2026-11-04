@@ -23,6 +23,11 @@ unchosen attributes and missing/null placeholders are excluded.
 while paused. The full union, including hidden selections, must have valid original
 references and fit 20 items; otherwise nothing changes. This is local selection,
 not bulk source acquisition or a completeness claim.
+327 adds [kept observation → staged trace view](KEPT_TRACE_CONTINUATION.md).
+The new question retains the original member window and checked environment,
+then replaces record filters with its reported trace ID. Run is a fresh source
+read, not a frozen or complete trace reconstruction. The retained return path
+exists only in this tab; missing/invalid trace IDs remain explicitly unavailable.
 
 The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
 [active roadmap](ROADMAP_2026_11_03.md) replace the older parallel feature queues.

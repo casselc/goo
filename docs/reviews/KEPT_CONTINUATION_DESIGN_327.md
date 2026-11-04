@@ -1,74 +1,90 @@
-# Continue from a kept observation — design proposal 327
+# Continue from a kept observation — final review 327
 
-Status: proposed bounded general-purpose task; no implementation or browser work.
+Status: final source and all three actual frames accepted. Native and actor passed
+as reported by verification. No product/browser edits were made for this review.
 
-## Missing task
+## Delivered user task
 
-A responder reopens kept evidence and wants to investigate its distributed trace.
-`ui/kept-saved.mjs` currently reconstructs original records and provenance, then
-offers Inspect kept record only. Preservation is useful, but the investigation
-stops at that inspector. Reuse the existing staged records-only Waterfall rather
-than adding another trace browser, capture type or catalog.
+A responder reopens kept evidence, inspects an original log/span and continues
+into its distributed trace. **Open trace as view** lives in the individual kept-
+record inspector, beside its provenance. It reuses the staged records-only
+Waterfall, existing Run and retained navigation; no new catalog, wizard, evidence
+format or capture owner was introduced.
 
-## Interaction
+The concise explanation is **New trace question · original observation window;
+kept evidence unchanged.** A closed **Trace question scope** disclosure shows the
+original record predicates that are not carried into the trace question.
 
-Offer **Open trace as view** inside the individual kept-record inspector, adjacent
-to existing observation actions. This gives the action the member's exact window
-and provenance context, avoids adding buttons to every catalog/table row and works
-for kept logs carrying a TraceId as well as kept spans.
+## Scope and source contract
 
-Stage a span question using the validated member's original read window, checked
-typed environment policy and valid nonzero TraceId. For result-page/capture keeps,
-use the validated question's fixed window already mapped to that member. Select
-existing Waterfall presentation, offset zero and ordinary record limits. Do not
-substitute the keep custody time, event timestamp or present clock for the stored
-read window. Do not infer an environment from one raw resource key.
+Full kept-receipt validation precedes staging. The question uses the validated
+member's original read window, checked typed environment policy and valid nonzero
+TraceId, with span signal, Waterfall presentation and offset zero. Result-page or
+capture keeps use their validated question's fixed window. Custody time, event
+timestamp and current clock never substitute for that window.
 
-The trace question deliberately expands beyond the original record predicates,
-service and span restrictions: retaining those could hide ancestors or other
-services. Retain environment/window/TraceId only, with a concise **New trace
-question · original observation window; kept evidence unchanged** statement and
-existing scope details identifying original filters not carried. No automatic
-source read or Keep occurs. Existing explicit **Run** acquires the trace.
+Original record predicates, service and span restrictions are deliberately omitted
+so ancestors and other services can appear. Retain environment/window/TraceId;
+do not infer policy from a raw resource key. Missing/invalid TraceId or unsupported
+scope produces an unavailable reason before effects, with no silent fallback.
 
-Invalid/missing TraceId or unsupported checked scope shows one concise unavailable
-reason in that inspector. Refuse before side effects; no manual fallback silently
-changes the environment/window. A missing source trace after Run means no current
-matching source rows, not that the stored observation ceased to exist.
+Staging performs no telemetry read or custody/saved-evidence-catalog read/write.
+Creating the existing Exploration visit does perform exactly these configuration
+metadata requests, counted separately:
 
-## Evidence and navigation
+- `GET /api/recipes`
+- `GET /api/retained-evidence/status`
 
-Keep frozen Kept at, Observed at, stored read basis and original occurrence
-identity intact. The new view's result has its own source-read clock, coverage and
-readiness. It is a fresh read of an old fixed question, not a reconstruction from
-kept records or a complete frozen trace. Explicit Run can legitimately return
-changed, expired or unavailable source data. Existing presentation uncertainty
-must communicate those states without a second evidence card/wall of prose.
+No recipe POST or broader metadata/source exception is admitted. Staging is
+source-free, not all-IO-free. Existing explicit **Run** acquires current source
+data through the old fixed question; absent or expired source data does not erase
+the kept observation or prove that its trace never existed.
 
-A named **Back to kept observation** returns to the same retained inspector,
-member, selection/table scroll and opener with zero telemetry reads. Reopening
-from the catalog does not promise a still-retained paused Activity stream; its
-return owner is the kept observation, not a fabricated Activity ancestry. Reuse
-existing retained child navigation/focus ownership and one deepest Back action.
+## Provenance and retained return
 
-Action validity requires active generation, current stored member and actual
-visibility. Detached/reattached hidden controls cannot stage a new question;
-return/disposal invalidates pending child work. Late source completion cannot
-replace the restored kept view. Kept bytes/digest and custody fields remain
-unchanged through stage, Run, Back and failures.
+Frozen Kept at, Observed at, read basis, occurrence identity and stored bytes stay
+unchanged. The new view owns its separate read clock, coverage and readiness.
+It is not a frozen complete trace reconstructed from selected kept records.
 
-## Bounded acceptance
+Existing ResourceReturn provides **Back to kept observation**, restoring the same
+retained inspector/action focus and scroll instead of reopening the store. Each
+Inspect renews a member-visit lease; current generation, actual visibility and
+source ownership guard actions. Close returns the existing focus.close result,
+preserving the inspector dismissal/focus contract. Detached/reattached old controls cannot stage a
+new visit or adopt late results.
 
-Use both a kept log and a kept span with typed environment policy and cross-service
-trace ancestry. Reopen through server catalog (not only browser recent links),
-inspect one original member, stage zero-IO Waterfall, explicitly Run, then return
-without rereading kept/source data. Verify original exact window/policy, omitted
-original filters, real cross-service ancestor/sibling visibility and new read clock.
-Keep storage bytes/digest unchanged. Exercise invalid TraceId, unavailable source,
-stale hidden action and return during read with no fallback or unexpected mutation.
+Generic Trail navigation is suppressed only while that retained-return lease
+exists. Releasing it invalidates the old return and restores ordinary Trail
+controls; nested population Back keeps its separate parent meaning. Entering the
+fixed trace clears unrelated Activity origin. Catalog reopen does not fabricate
+a retained paused Activity ancestry.
 
-Maintain three actual frames: kept inspector with contextual action/provenance,
-staged original-window trace question and freshly read Waterfall with distinct
-source clock. Native assertions establish zero-IO staging/return and immutable
-custody separately from visual proof. This proposal needs no new backend
-preservation format, grammar family, query syntax, registry or compatibility shim.
+Completed-read Back makes zero API requests. Pending-read Back may abort the
+browser request and send the existing
+`POST /api/queries/<original X-Goo-Query-ID>/cancel`, body `{}`, response 202.
+That is cancellation control, not a source/custody/catalog reread. A held response
+whose underlying read already completed does not prove physical server
+cancellation; late adoption is still refused.
+
+## Actual frames and verification
+
+Reviewed all three final screenshots for fixture `575e4492`:
+
+- `327-kept-original-inspection.png`: contextual action, frozen Observed at and
+  original fixed read window beside the kept-unchanged explanation.
+- `327-original-window-staged.png`: original window and current/legacy precedence,
+  with an explicit staged state and Run rather than implied trace results.
+- `327-cross-service-live-waterfall.png`: two supplied gateway/worker spans on one
+  scale, a fresh read clock and visible unknown coverage.
+
+The frozen window is [16:22:30.822, 16:23:30.822) UTC; the Waterfall read clock is
+16:23:36.962023427Z. The crops do not show Back or expanded omitted predicates;
+exact omission, immutable custody and return focus/scroll are native assertions,
+not screenshot inferences. No visual semantic/accessibility blocker was found.
+
+Verification reports native PASS 64.512s (69.995s runner) and actor PASS 408 states/30.149s. Both
+kept signals exercised original-window typed scope, cross-service trace reads and
+retained return. Each stage allowed only the two metadata GETs; completed Back
+was API-free, and pending Back admitted the exact cancel control without late
+adoption. Original inspector identity, focus, scroll and stored bytes survived.
+No further UI changes or additional product requirements are requested.

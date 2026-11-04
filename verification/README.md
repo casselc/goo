@@ -3705,3 +3705,30 @@ original Keep references and source budgets. The bounded Bombadil specification
 fresh real records. Require all phases through verified phase 8, one explicit tail
 and zero writes; process exit zero alone is insufficient. Fixtures/readiness reads
 are separate from the page ledger. See [validation](../VALIDATION.md) for results.
+
+## Kept observation → staged trace view — 327
+
+`TestHegelKeptTraceContinuation327` generates 30 cases using actual Go-validated
+kept-tail, kept-result-page and kept-saved-capture receipts. Both members of each
+receipt produce 180 views admitted by Go view validation/compilation. The oracle
+checks per-occurrence versus fixed page bounds, five environment representations,
+namespace presence, exact trace-only Waterfall scope, omitted original filters,
+invalid IDs/indices/scope and detached input/output ownership.
+
+```sh
+go test -run '^TestHegelKeptTraceContinuation327$' -count=1 -v
+```
+
+Focused frontend tests cover inspector cache renewal, stale member actions,
+retained focus and irreversible per-visit return leases. The
+[native task](../docs/journeys/327-kept-trace-continuation.md) independently checks
+real OTLP, catalog reopening, exact source questions and immutable custody,
+source-free staging, zero-IO completed-read return and cancellation/late response
+refusal. A pending-read return may send only its original query-cancellation
+control POST; it must not reread telemetry or kept contents/catalogs.
+Existing GET retention-configuration and GET recipe-definition metadata during
+view setup are counted separately; neither is a telemetry or stored-evidence
+read. POST recipe planning remains outside that exception. The bounded actor in
+`bombadil/kept-trace-view.ts` must reach verified phase 6 with exactly one source
+page, zero kept/catalog reads and zero writes after instrumentation. Initial
+receipt opening is separate. See [validation](../VALIDATION.md) for actual results.
