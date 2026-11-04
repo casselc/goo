@@ -1,5 +1,18 @@
 # Validation record
 
+## Per-pass selection work — 326
+
+[Measurement](docs/reviews/LOADED_MATCH_SELECTION_BENCHMARK_326.md) · [architecture](docs/reviews/SELECTION_AVAILABILITY_ARCHITECTURE_326.md) · [existing task](docs/journeys/325-select-loaded-matches.md).
+
+- Full Go suite and all 1,066 frontend tests pass (66.716 seconds, concurrency two, zero frontend failures/skips). Existing Find and atomic-selection Hegel regressions pass together: sixty generated cases, 34.595 seconds, zero skips. The only product change is one chosen-column layout snapshot per synchronous projection/matching pass and removal of the unused private returned plan. Matching, original references, full readiness/click preflight, atomic commit, expiry and command leases remain unchanged; no cache, admission API, endpoint or format is added.
+- A reproducible standalone Chromium 154 benchmark measures the actual Tail.mount one-second refresh callback using bounded synthetic fixtures. The baseline short case has 100 loaded rows / 77,985 bytes plus one hidden selected occurrence; the large case has 100 rows / 1,068,385 bytes plus twenty hidden selected occurrences / 213,761 bytes. Those selected refs model post-eviction retention through real addMany setup, not server-issued custody. Three ticks per case establish deterministic clone counts, not a latency percentile or production performance claim. Genuine OTLP custody/source validation remains the native lane.
+- CA-enabled build/recreation passes. Served tail.mjs and unchanged OpenAPI match source byte-for-byte; full tests and packaging finish before after-measurement/native browser runs.
+- Paired Chromium inputs/results match independently: each of three short-case ticks drops from 106 to 6 clone calls, and the large overflow case from 124 to 24; no-Find remains zero. Enabled action drops from 219 to 19 clone calls while retaining three planner calls and the same three-item union. Every nonempty-Find idle tick still runs the planner once, and active-phase source/write counts remain zero. After samples include slower wall times; this establishes reduced cloning and equivalent task behavior, not a latency improvement. No advisory cache was added.
+
+- The unchanged real-OTLP task passes in 52.5 seconds (54.8 runner). Both signals retain original occurrence keys/records/windows through explicit Keep; overflow refusal, hidden selection, zero/all-selected states, retired Find/layout/selection/signal controls and success focus still pass. The sixteen local checkpoints issue zero API calls. Main POSTs remain two explicit tails, two Keeps and one Activity-view save, with no Explore/planning/annotation calls or page errors.
+- The configured thirty-second Bombadil regression passes in 30.126 seconds wall, exit zero: 402 snapshots covering phases 0–8, final verified paused three-item selection, one explicit tail and zero writes. Independent raw review confirms stability, source bounds and no violations/overflow throughout. Design compared all three regenerated frames against 325 and accepted unchanged geometry/controls/counts/state; timestamps and fixture IDs naturally differ. Raw browser/store/actor bulk is removed after review; compact summaries and maintained frames remain, traffic restored.
+
+
 ## Atomic selection of loaded Find matches — 325
 
 [Contract](docs/LOADED_MATCH_SELECTION.md) · [journey](docs/journeys/325-select-loaded-matches.md) · [architecture](docs/reviews/LOADED_MATCH_SELECTION_ARCHITECTURE_325.md) · [design](docs/reviews/LOADED_MATCH_SELECTION_DESIGN_325.md).

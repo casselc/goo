@@ -41,3 +41,8 @@ See the [executable journey](journeys/325-select-loaded-matches.md),
 [architecture review](reviews/LOADED_MATCH_SELECTION_ARCHITECTURE_325.md),
 [design review](reviews/LOADED_MATCH_SELECTION_DESIGN_325.md) and
 [validation](../VALIDATION.md).
+
+326 consolidates repeated layout reads: each matching/projection pass takes one
+detached chosen-column snapshot. The batch control no longer retains an unused
+detached record plan. Full readiness and click-time validation remain unchanged;
+there is no readiness cache. See the [bounded browser measurement](reviews/LOADED_MATCH_SELECTION_BENCHMARK_326.md).
