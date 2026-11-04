@@ -15,6 +15,8 @@ latency compares frozen evidence, while Explain explicitly rereads the saved sco
 
 Activity supports [local Find over loaded logs and spans](docs/HELD_RECORD_FIND.md),
 including chosen column values, without changing the source query or selection.
+While paused, [select all loaded matches atomically](docs/LOADED_MATCH_SELECTION.md)
+for explicit Keep, retaining existing hidden selections and the 20-item limit.
 
 Temporary and saved count comparisons use [one supplied-pair presentation](docs/COUNT_PAIR_PRESENTATION.md),
 with a Summary/Groups choice and explicit operand windows and read clocks.

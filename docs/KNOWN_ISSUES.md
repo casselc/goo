@@ -19,6 +19,10 @@ warnings stay visible. This does not establish universal compactness.
 core values and chosen columns, preserves hidden selections and all loaded context,
 and reports matched/loaded counts. It is not source search or proof of absence;
 unchosen attributes and missing/null placeholders are excluded.
+325 adds [atomic selection of loaded Find matches](LOADED_MATCH_SELECTION.md)
+while paused. The full union, including hidden selections, must have valid original
+references and fit 20 items; otherwise nothing changes. This is local selection,
+not bulk source acquisition or a completeness claim.
 
 The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
 [active roadmap](ROADMAP_2026_11_03.md) replace the older parallel feature queues.

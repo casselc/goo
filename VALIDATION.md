@@ -1,5 +1,18 @@
 # Validation record
 
+## Atomic selection of loaded Find matches — 325
+
+[Contract](docs/LOADED_MATCH_SELECTION.md) · [journey](docs/journeys/325-select-loaded-matches.md) · [architecture](docs/reviews/LOADED_MATCH_SELECTION_ARCHITECTURE_325.md) · [design](docs/reviews/LOADED_MATCH_SELECTION_DESIGN_325.md).
+
+- Full Go suite and all 1,066 frontend tests pass (20.228 seconds, concurrency two, zero frontend failures/skips). Batch planning detaches its result and commits by replanning the original inputs. Successful union preserves existing selected occurrence objects; refusal and idempotence preserve the original Map/selector/member identities. Individual additions now use the same admission boundary.
+- Thirty generated atomic-selection cases and the thirty-case Find regression pass together in 6.056 seconds, zero skips. Checks cover exact 20/21 boundaries, hidden/evicted selection, original Keep references, expired or malformed membership, mixed ownership, duplicate clock/diagnostic conflicts, derived-size nonconflicts, clone failures, detached inputs/plans and unchanged state on refusal. The older fixture only corrects synthetic occurrence ordinals to the server's one-based keys.
+- Architecture and design accept the contextual paused-only action, one readiness reason, signature plus revision guards and success focus on enabled Keep without activating it. Pending preservation blocks changes. No new module, endpoint, operator or storage format is introduced. Selection itself performs no requests or writes.
+- CA-enabled package build/recreation passes. Served tail.mjs/product.css and unchanged OpenAPI are byte-for-byte identical to source. Build and full checks complete before the sole browser wrapper starts.
+- Real-OTel native journey passes first attempt in 52.6 seconds runner time. Logs exercise live refusal without automatic Pause, a 21-match union with one hidden selected item refused unchanged at 22, then two matches plus the hidden item admitted as three. Spans repeat the exact original-reference union and Keep. Sixteen local checkpoints make zero API calls; zero/all-selected and retired Find/layout/selection/signal commands preserve state. Successful batch focus is on Keep, without activating it.
+- Main page POST budget is exactly two explicit tail connections, two explicit Keep writes and one Activity-view configuration save, with no Explore/planning/annotation writes. Both Keep responses retain original keys, records and per-occurrence windows. Fixture readiness uses separate test-client reads. This counts HTTP attempts, not physical SQL statements or the polling of an already active SSE connection.
+- Configured 30-second Bombadil campaign passes in 30.100 seconds wall, exit zero: 443 snapshots through every phase 0–8, final verified paused selection of three, one explicit tail and zero writes. Independent raw review confirms stable row identities, no overflow or violations, and source/zero-write bounds in every snapshot. Design accepts all three actual maintained frames. Reviewed raw browser/actor/store/temp bulk is removed after review; compact summaries and maintained frames remain, and traffic is restored.
+
+
 ## Find loaded Activity observations — 324
 
 [Contract](docs/HELD_RECORD_FIND.md) · [journey](docs/journeys/324-held-find.md) · [architecture](docs/reviews/HELD_FIND_ARCHITECTURE_324.md) · [design](docs/reviews/HELD_FIND_DESIGN_324.md).

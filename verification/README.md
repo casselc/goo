@@ -3684,3 +3684,24 @@ explicit actual-read recovery. Go HTTP fixtures separately validate the expanded
 count-cohort response through OpenAPI and shared JS admission, including empty,
 diagnostic and duration-summary cases. See the
 [storyboard](../docs/journeys/307-authored-cohorts.md).
+
+## Atomic loaded-match selection — 325
+
+`TestHegelLoadedMatchSelectionAtomic325` checks 30 generated command sequences
+against an independent union oracle. It covers original hidden/evicted selections,
+exact 20/21 limits, duplicate identity versus derived size, expiry, malformed and
+mixed ownership, clone failure, detached planning, immutable inputs and full object
+identity on refusal. `TestHegelHeldFindState324` remains the Find/state regression.
+Run both from this module with the configured Go/Hegel environment:
+
+```sh
+go test -run 'TestHegel(LoadedMatchSelectionAtomic325|HeldFindState324)$' -count=1 -v
+```
+
+The [native storyboard](../docs/journeys/325-select-loaded-matches.md) separately
+checks real OTLP logs/spans, paused-only and stale controls, keyboard focus, exact
+original Keep references and source budgets. The bounded Bombadil specification
+`bombadil/loaded-match-selection.ts` uses a genuine UI-saved Activity view with
+fresh real records. Require all phases through verified phase 8, one explicit tail
+and zero writes; process exit zero alone is insufficient. Fixtures/readiness reads
+are separate from the page ledger. See [validation](../VALIDATION.md) for results.
