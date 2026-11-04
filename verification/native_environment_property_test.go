@@ -23,7 +23,7 @@ const norm=c=>{c=structuredClone(c);c.question.offset??=0;if(c.question.environm
 for(const [index,series]of result.gauges.series.entries()){
  assert(E.matches(E.selection(result.question.definition),series.stream.resource));
  assert.deepEqual(norm(C.plan(result.question,series.stream,'logs',point,String(BigInt(point)+1n))),norm(contexts[index]));
- const bad=structuredClone(result.question);bad.definition.kind='counter';assert.throws(()=>C.plan(bad,series.stream,'logs',point,String(BigInt(point)+1n)));
+ const bad=structuredClone(result.question);bad.definition.kind='stock';assert.throws(()=>C.plan(bad,series.stream,'logs',point,String(BigInt(point)+1n)));
 }
 if(result.gauges.series.length===2)assert(!sameNativeStream(result.gauges.series[0].stream,result.gauges.series[1].stream),'raw environment maps are distinct stream identity');
 assert.deepEqual(result,before);
@@ -117,7 +117,7 @@ func TestHegelNativeGaugeEnvironment319(t *testing.T) {
 				return
 			}
 		}
-		for _, kind := range []string{"counter", "histogram", "stock", "state", "lifecycle"} {
+		for _, kind := range []string{"stock", "state", "lifecycle"} {
 			unsupported := question
 			unsupported.Definition.Kind = kind
 			if _, err := measurements.Compile(unsupported); err == nil {

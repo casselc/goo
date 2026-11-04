@@ -813,8 +813,8 @@ def check_record_step_selector(spec):
         assert list(check.iter_errors(invalid)), 'unknown authored policy accepted'
         native={'version':1,'kind':'measurement','scope':copy.deepcopy(scope),'view':'Overview','measurement':{'apiVersion':'goo/measurement-package/v1alpha1','name':'typed-gauge','title':'Typed gauge','kind':'gauge','environmentSelector':copy.deepcopy(selector),'lookbackMinutes':1,'maxGapMs':60000,'grain':'per-stream','source':{'services':['api'],'scope':'sdk','version':'','schemaURL':'','metric':'load','unit':'items'}}}
         check.validate(native)
-        native['measurement']['kind']='counter'
-        assert list(check.iter_errors(native)), 'typed native non-gauge step accepted'
+        native['measurement']['kind']='stock'
+        assert list(check.iter_errors(native)), 'typed native stock step accepted'
 
 
 def check(spec):
@@ -862,8 +862,12 @@ def check(spec):
     discovery_check=validator(spec,spec['paths']['/metric-discovery']['post']['requestBody']['content']['application/json']['schema'])
     for case in bank['cases']:
         typed={**native_definition,'environmentSelector':case['selector']};native_check.validate(typed)
+        for kind in ('counter','histogram'):
+            positive={**typed,'kind':kind,'source':{**typed['source'],'unit':'ms' if kind=='histogram' else 'items'}}
+            native_check.validate(positive)
+        assert not native_check.is_valid({**typed,'kind':'histogram'}), 'typed non-duration histogram accepted'
         discovery_check.validate({'environmentSelector':case['selector'],'service':'api','fromMs':100000,'toMs':160000})
-        for invalid in ({**typed,'environment':'prod'},{**typed,'environment':None},{**typed,'environmentSelector':None},{**typed,'kind':'counter'},{**typed,'grain':'consumer-group'},{**typed,'source':{**typed['source'],'resource':{'kind':'host','id':'host'}}}):
+        for invalid in ({**typed,'environment':'prod'},{**typed,'environment':None},{**typed,'environmentSelector':None},{**typed,'kind':'stock'},{**typed,'grain':'consumer-group'},{**typed,'source':{**typed['source'],'resource':{'kind':'host','id':'host'}}}):
             assert not native_check.is_valid(invalid), 'invalid typed native union/profile admitted'
 
     routes = set(route_sources(ROOT))

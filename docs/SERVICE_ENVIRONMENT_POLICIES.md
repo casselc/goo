@@ -30,9 +30,10 @@ Origin scope and generated investigation titles display the policy. Rediscovery
 retains it until the environment input is actually edited.
 
 319 adds [typed native gauge evaluation](NATIVE_GAUGE_ENVIRONMENT_POLICIES.md)
-for service-bound per-stream gauges. Other typed native families and resource-bound
-kernels refuse before source access. A service plan reports `nativeCapability`
-with state `gauge-only` when that subset applies; unsupported instrument entries
+for service-bound per-stream gauges. 320 adds [typed service counters and explicit histograms](TYPED_NATIVE_INTERVALS.md).
+Stock/state/lifecycle and resource-bound kernels refuse before source access. A
+service plan reports `nativeCapability` with state `service-per-stream` when that
+subset applies; unsupported instrument entries
 have a reason and no executable definition. Empty options are not proof that no
 metrics exist. Instrument values retain separate raw stream identities.
 

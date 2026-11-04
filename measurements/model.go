@@ -171,8 +171,11 @@ func (d Definition) Validate() error {
 	if _, e := d.EnvironmentSelection(); e != nil {
 		return fmt.Errorf("explicit checked environment required: %w", e)
 	}
-	if d.EnvironmentSelector != nil && (d.Kind != "gauge" || d.Grain != "per-stream" || d.Source.Resource != nil) {
-		return fmt.Errorf("%s", typedGaugeReason)
+	if d.EnvironmentSelector != nil && (!typedServiceKind(d.Kind) || d.Grain != "per-stream" || d.Source.Resource != nil) {
+		return fmt.Errorf("%s", typedServiceNativeReason)
+	}
+	if d.EnvironmentSelector != nil && d.Kind == "histogram" && d.Source.Unit != "s" && d.Source.Unit != "ms" {
+		return fmt.Errorf("typed explicit histograms require duration unit s or ms")
 	}
 	if d.APIVersion != Version || !stable.MatchString(d.Name) || d.Title == "" || !text(d.Title, 160) || d.LookbackMinutes < 1 || d.LookbackMinutes > 120 || d.MaxGapMS < 1 || d.MaxGapMS > 600000 {
 		return fmt.Errorf("require versioned named package, explicit environment, 1..120 minute lookback and 1..600000 ms gap/freshness")

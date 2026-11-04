@@ -5,17 +5,22 @@ existing versioned environment selector. The selected policy survives instrument
 discovery, definition validation, SQL, source-row membership, evaluation, widget
 questions, packages and captures. It never becomes a same-looking legacy name.
 
+320 extends this path to [typed counter/histogram intervals](TYPED_NATIVE_INTERVALS.md).
+The gauge behavior described here is unchanged.
+
 ## What can be evaluated
 
 | Definition | Supported path |
 | --- | --- |
 | Legacy named environment | Existing native families retain their current-key-only behavior. |
 | Typed selector + service-bound per-stream gauge | Current-only named, effective named, effective empty and unreported. |
-| Typed selector + counter, histogram, stock, state or lifecycle | Refused before source access. |
+| Typed selector + service per-stream counter or explicit s/ms histogram | Supported by the 320 interval contract. |
+| Typed selector + stock, state or lifecycle | Refused before source access. |
 | Typed selector + host/pod/container resource binding | Refused before source access. |
 
 Services retains the checked equivalent-name bridge for current-only scopes.
-Other scopes advertise a `gauge-only` native capability. Discovery can report
+Other scopes advertise a `service-per-stream` native capability for gauges, counters
+and explicit duration histograms. Discovery can report
 unsupported instrument metadata with an explicit reason; it provides no executable
 prototype for an unsupported family. These entries are not zero-valued gauges.
 
@@ -53,8 +58,8 @@ a single half-open nanosecond point,
 `[atNS, atNS + 1)`, inside an enclosing millisecond query. It carries the policy,
 reported service, namespace and instance; it does not infer lookaround, causality
 or complete telemetry. The existing inspector still offers record navigation for
-interval measurements, not a new gauge-point navigation button. Counter/histogram
-typed context remains unsupported.
+interval measurements, not a new gauge-point navigation button. 320 adds typed counter/histogram interval context through the existing interval
+navigation.
 
 ```mermaid
 flowchart LR

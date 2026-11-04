@@ -119,7 +119,7 @@ func TestHegelTypedServiceEnvironment318(t *testing.T) {
 			tc.Fatal(err)
 			return
 		}
-		if !selection.CurrentOnly() && (plan.NativeCapability == nil || plan.NativeCapability.State != "gauge-only" || plan.NativeCapability.Reason == "") {
+		if !selection.CurrentOnly() && (plan.NativeCapability == nil || plan.NativeCapability.State != "service-per-stream" || plan.NativeCapability.Reason == "") {
 			tc.Fatal("unsupported native evaluation disguised as absent observations")
 			return
 		}

@@ -144,9 +144,9 @@ func discoverRows(q DiscoveryQuestion, rows []json.RawMessage) (*DiscoveryResult
 		}
 		sort.Strings(i.Dimensions)
 		i.Supported = i.Scope != "" && i.Unit != "" && (i.Kind == "gauge" || i.Kind == "stock" && i.Temporality == 2 && !i.Monotonic || (i.Temporality == 1 || i.Temporality == 2) && (i.Kind == "histogram" && (i.Unit == "s" || i.Unit == "ms") || i.Kind == "counter" && i.Monotonic))
-		if q.EnvironmentSelector != nil && i.Kind != "gauge" {
+		if q.EnvironmentSelector != nil && !typedServiceKind(i.Kind) {
 			i.Supported = false
-			i.UnsupportedReason = typedGaugeReason
+			i.UnsupportedReason = typedServiceNativeReason
 		}
 		if i.Supported {
 			d := Definition{APIVersion: Version, Name: "metric-" + k[:12], Title: i.Metric, Kind: i.Kind, Environment: q.Environment, EnvironmentSelector: copyEnvironmentSelector(q.EnvironmentSelector), LookbackMinutes: 2, MaxGapMS: 60000, Grain: "per-stream", Source: Binding{Namespace: q.Namespace.Clone(), Services: []string{q.Service}, Scope: i.Scope, Version: i.Version, SchemaURL: i.SchemaURL, Metric: i.Metric, Unit: i.Unit}}

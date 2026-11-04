@@ -40,7 +40,7 @@ func TestTypedNativeGaugeStep319(t *testing.T) {
 				func(s *Step) {
 					s.Scope.EnvironmentSelector = &identity.EnvironmentSelector{Version: identity.EnvironmentSelectorVersion, Policy: "current-only", Scope: identity.EnvironmentScope{Mode: "named", Value: "prod"}}
 				},
-				func(s *Step) { s.Measurement.Kind = "counter" },
+				func(s *Step) { s.Measurement.Kind = "stock" },
 			} {
 				var invalid Step
 				if err := json.Unmarshal(raw, &invalid); err != nil {

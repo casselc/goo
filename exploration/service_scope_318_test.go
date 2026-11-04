@@ -58,7 +58,7 @@ func TestServiceScopeSQLAndNativeBoundary318(t *testing.T) {
 				t.Fatal(err)
 			}
 			current := selector.Policy == "current-only"
-			if (plan.NativeCapability == nil) != current || !current && plan.NativeCapability.State != "gauge-only" {
+			if (plan.NativeCapability == nil) != current || !current && plan.NativeCapability.State != "service-per-stream" {
 				t.Fatal("native capability does not preserve policy")
 			}
 			if (len(plan.Declarations) > 0) != current {
@@ -232,7 +232,7 @@ func TestTypedGaugeDashboardNativePolicy319(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if plan.NativeCapability == nil || plan.NativeCapability.State != "gauge-only" || len(plan.NativeOptions) != 1 {
+	if plan.NativeCapability == nil || plan.NativeCapability.State != "service-per-stream" || len(plan.NativeOptions) != 1 {
 		t.Fatal("typed gauge native option unavailable")
 	}
 	found := false

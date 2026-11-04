@@ -65,7 +65,11 @@ func (q Question) detached() (Question, error) {
 	return copy, e
 }
 
-const typedGaugeReason = "Typed environment native evaluation supports service-bound per-stream gauges only; other families and resource bindings are unavailable."
+const typedServiceNativeReason = "Typed environment native evaluation supports service-bound per-stream gauges, monotonic counters and explicit duration histograms. Stock, state, lifecycle and resource bindings remain unavailable."
+
+func typedServiceKind(kind string) bool {
+	return kind == "gauge" || kind == "counter" || kind == "histogram"
+}
 
 // Lower only a checked logical selection into the metric adapter. Full resource
 // identity remains untouched; selecting an effective label never merges streams.

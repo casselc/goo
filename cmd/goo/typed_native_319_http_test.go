@@ -98,7 +98,7 @@ func TestTypedNativeGaugeHTTPAndPackage319(t *testing.T) {
 		t.Fatal("typed revision lookup lost policy", reopened.Code, reopened.Body.String())
 	}
 	entries, _ := os.ReadDir(filepath.Join(dir, "measurement-packages"))
-	for _, kind := range []string{"counter", "stock", "histogram", "state", "lifecycle"} {
+	for _, kind := range []string{"stock", "state", "lifecycle"} {
 		bad := prototype
 		bad.Kind = kind
 		response := post("/measurements", measurements.Question{Definition: bad, FromMS: 100000, ToMS: 160000})

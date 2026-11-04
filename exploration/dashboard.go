@@ -78,7 +78,7 @@ type DashboardNativeCapability struct {
 	Reason string `json:"reason"`
 }
 
-const dashboardNativePolicyReason = "Native values in this environment policy support service-bound per-stream gauges only. Other native families and declared entity bindings require a current-only named environment."
+const dashboardNativePolicyReason = "Native values in this environment policy support service-bound per-stream gauges, monotonic counters and explicit duration histograms. Stock, state, lifecycle and resource bindings remain unavailable; declared entities require a current-only named environment."
 
 type DashboardPlan struct {
 	NativeCapability      *DashboardNativeCapability `json:"nativeCapability,omitempty"`
@@ -136,7 +136,7 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 	scope := in.Scope.clone()
 	p := &DashboardPlan{Version: DashboardVersion, Scope: scope, Service: in.Service, Widgets: []DashboardWidget{}, Declarations: []DashboardDeclaration{}, NativeOptions: []DashboardNativeOption{}, NativeLimit: DashboardNativeLimit, Warnings: []string{"Metadata suggests widgets, not service health or telemetry completeness. Each widget is a separate bounded source read; no transactional snapshot is claimed.", "Counts are captured records, not request throughput. Generic spans include retries and mixed span kinds; unset status is not verified success.", "Native evaluations preserve full OTel identity, units and temporality. At most two supported instruments are loaded; selection is local to this service visit, not saved dashboard configuration."}}
 	if !nativeSupported {
-		p.NativeCapability = &DashboardNativeCapability{State: "gauge-only", Reason: dashboardNativePolicyReason}
+		p.NativeCapability = &DashboardNativeCapability{State: "service-per-stream", Reason: dashboardNativePolicyReason}
 		p.Warnings = append(p.Warnings, dashboardNativePolicyReason)
 	}
 	httpCandidate := false

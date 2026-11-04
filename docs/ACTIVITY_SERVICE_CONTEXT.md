@@ -32,8 +32,9 @@ and the explicit unavailable native/entity bindings on other policies.
 
 Unknown resource reporting, empty service name, malformed identity and unsupported
 windows still refuse with an explanation in the service menu. They do not fall
-back to a broader query. 319 supports typed service gauges through the existing native interface; other
-typed native families and entity stores remain outside that capability.
+back to a broader query. 319–320 support typed service gauges, counters and explicit duration histograms
+through the existing native interface. Other typed families/resource kernels and
+entity stores remain outside that capability.
 
 ## Return and lifetime
 

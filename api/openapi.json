@@ -10988,7 +10988,7 @@
           },
           "state": {
             "type": "string",
-            "const": "gauge-only"
+            "const": "service-per-stream"
           }
         },
         "required": [
@@ -11076,7 +11076,7 @@
                 "type": "null"
               }
             ],
-            "description": "gauge-only means this service policy supports typed per-stream gauges while other native families and entity bindings need current-only named scope. Empty native options do not prove no metric observations."
+            "description": "service-per-stream means this policy supports typed gauges, monotonic counters and explicit duration histograms. Other native families and entity bindings remain unavailable. Empty native options do not prove no metric observations."
           },
           "nativeLimit": {
             "type": "integer"
@@ -24523,7 +24523,11 @@
             "then": {
               "properties": {
                 "kind": {
-                  "const": "gauge"
+                  "enum": [
+                    "gauge",
+                    "counter",
+                    "histogram"
+                  ]
                 },
                 "grain": {
                   "const": "per-stream"
@@ -24542,9 +24546,39 @@
                 "source"
               ]
             }
+          },
+          {
+            "if": {
+              "required": [
+                "environmentSelector",
+                "kind"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "histogram"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "source": {
+                  "properties": {
+                    "unit": {
+                      "enum": [
+                        "s",
+                        "ms"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "unit"
+                  ]
+                }
+              }
+            }
           }
         ],
-        "description": "Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges only. Other discovered native families remain unsupported metadata."
+        "description": "Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges, monotonic counters and explicit duration histograms. Stock/state/lifecycle/resource-bound families remain unsupported metadata."
       },
       "measurements.DefinitionInput": {
         "additionalProperties": false,
@@ -24746,7 +24780,11 @@
             "then": {
               "properties": {
                 "kind": {
-                  "const": "gauge"
+                  "enum": [
+                    "gauge",
+                    "counter",
+                    "histogram"
+                  ]
                 },
                 "grain": {
                   "const": "per-stream"
@@ -24765,9 +24803,39 @@
                 "source"
               ]
             }
+          },
+          {
+            "if": {
+              "required": [
+                "environmentSelector",
+                "kind"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "histogram"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "source": {
+                  "properties": {
+                    "unit": {
+                      "enum": [
+                        "s",
+                        "ms"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "unit"
+                  ]
+                }
+              }
+            }
           }
         ],
-        "description": "Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges only. Other discovered native families remain unsupported metadata."
+        "description": "Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges, monotonic counters and explicit duration histograms. Stock/state/lifecycle/resource-bound families remain unsupported metadata."
       },
       "measurements.DimensionCoverage": {
         "properties": {
@@ -24946,7 +25014,7 @@
             }
           }
         ],
-        "description": "Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges only. Other discovered native families remain unsupported metadata."
+        "description": "Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges, monotonic counters and explicit duration histograms. Stock/state/lifecycle/resource-bound families remain unsupported metadata."
       },
       "measurements.DiscoveryQuestionInput": {
         "additionalProperties": false,
@@ -25035,7 +25103,7 @@
             }
           }
         ],
-        "description": "Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges only. Other discovered native families remain unsupported metadata."
+        "description": "Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges, monotonic counters and explicit duration histograms. Stock/state/lifecycle/resource-bound families remain unsupported metadata."
       },
       "measurements.DiscoveryResult": {
         "properties": {

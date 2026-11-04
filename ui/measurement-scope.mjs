@@ -1,3 +1,4 @@
+import * as Environment from './record-environment.mjs';
 /* Pure native histogram scope checks. A checked shape is not source authority. */
 const record=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const own=(value,key)=>Object.prototype.hasOwnProperty.call(value,key);
@@ -16,14 +17,15 @@ function checkedStream(stream,definition){
  if(!text(stream.resourceSchemaURL??'',1024)||!text(stream.scope,256)||!text(stream.version,128)||!text(stream.schemaURL,1024)||!text(stream.name,256)||!text(stream.unit,64))fail('Invalid native stream identity');
  const wire={...(stream.resourceSchemaURL?{resourceSchemaURL:stream.resourceSchemaURL}:{}),resource:stream.resource??null,scope:stream.scope,version:stream.version,schemaURL:stream.schemaURL,name:stream.name,unit:stream.unit,attributes:stream.attributes??null};
  if(bytes(JSON.stringify(wire).replace(/[<>&\u2028\u2029]/g,c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0')))>16384)fail('Native stream exceeds the wire budget');
- if(!source.services.includes(resource['service.name'])||!resource['service.instance.id']||resource['deployment.environment.name']!==definition.environment||stream.scope!==source.scope||stream.version!==source.version||stream.schemaURL!==source.schemaURL||stream.name!==source.metric||stream.unit!==source.unit)fail('Native stream differs from its measurement binding');
+ if(!source.services.includes(resource['service.name'])||!resource['service.instance.id']||!Environment.matches(Environment.selection(definition),resource)||stream.scope!==source.scope||stream.version!==source.version||stream.schemaURL!==source.schemaURL||stream.name!==source.metric||stream.unit!==source.unit)fail('Native stream differs from its measurement binding');
  const namespace=source.namespace;if(namespace&&(namespace.mode==='missing'?own(resource,'service.namespace'):!own(resource,'service.namespace')||resource['service.namespace']!==(namespace.value??'')))fail('Native stream namespace differs from its binding');
  for(const [key,value] of Object.entries(source.attributes||{}))if(!own(attributes,key)||attributes[key]!==value)fail('Native stream attributes differ from its binding');
 }
 export function validateHistogramMeasurementQuestion(question){
  if(!keys(question,['definition','fromMs','toMs','fromNS','toNS']))fail('A checked histogram measurement question is required');
  const d=question.definition,b=d?.source;
- if(!keys(d,['apiVersion','name','title','kind','environment','lookbackMinutes','maxGapMs','grain','source','histogramBucketMs'])||d.apiVersion!=='goo/measurement-package/v1alpha1'||!text(d.name,128)||!/^[A-Za-z][A-Za-z0-9_.-]{0,127}$/.test(d.name)||!d.title||!text(d.title,160)||!d.environment||!text(d.environment,128)||d.kind!=='histogram'||!['per-stream','consumer-group'].includes(d.grain)||!Number.isInteger(d.lookbackMinutes)||d.lookbackMinutes<1||d.lookbackMinutes>120||!Number.isInteger(d.maxGapMs)||d.maxGapMs<1||d.maxGapMs>600000)fail('Invalid native histogram definition');
+ try{Environment.selection(d)}catch{fail('Invalid native histogram environment')};if(d.environmentSelector!=null&&(d.grain!=='per-stream'||b?.resource!=null))fail('Typed native histograms require a per-stream service binding');
+ if(!keys(d,['apiVersion','name','title','kind','environment','environmentSelector','lookbackMinutes','maxGapMs','grain','source','histogramBucketMs'])||d.apiVersion!=='goo/measurement-package/v1alpha1'||!text(d.name,128)||!/^[A-Za-z][A-Za-z0-9_.-]{0,127}$/.test(d.name)||!d.title||!text(d.title,160)||d.kind!=='histogram'||!['per-stream','consumer-group'].includes(d.grain)||!Number.isInteger(d.lookbackMinutes)||d.lookbackMinutes<1||d.lookbackMinutes>120||!Number.isInteger(d.maxGapMs)||d.maxGapMs<1||d.maxGapMs>600000)fail('Invalid native histogram definition');
  if(!keys(b,['services','scope','version','schemaURL','metric','unit','attributes','namespace','exactStream'])||!Array.isArray(b.services)||b.services.length<1||b.services.length>8||new Set(b.services).size!==b.services.length||b.services.some(value=>!value||!text(value,128))||!b.scope||!text(b.scope,256)||!text(b.version,128)||!text(b.schemaURL,1024)||!b.metric||!text(b.metric,256)||!['s','ms'].includes(b.unit))fail('Invalid native histogram source binding');
  mapping(b.attributes,16,128,512);
  if(b.namespace!==undefined&&b.namespace!==null&&(!keys(b.namespace,['mode','value'])||!['missing','value'].includes(b.namespace.mode)||!text(b.namespace.value??'',128)||b.namespace.mode==='missing'&&(b.namespace.value??'')!==''))fail('Invalid measurement namespace');

@@ -40,8 +40,10 @@ Customize; exact membership and paused return pass live. See
 [service environment policies](SERVICE_ENVIRONMENT_POLICIES.md). 319 adds typed
 [service per-stream gauge values](NATIVE_GAUGE_ENVIRONMENT_POLICIES.md), with exact
 policy and separate raw stream identities through discovery, evaluation, native
-steps, packages and capture metadata. Other typed native families/resource kernels
-still refuse before I/O. Deployments, entity-bound service annotations and service-
+steps, packages and capture metadata. 320 extends this path to
+[service counters and explicit duration histogram intervals](TYPED_NATIVE_INTERVALS.md),
+preserving unknown decreases and independent distributions. Typed stock, state,
+lifecycle, resource-bound and consumer-group definitions still refuse before I/O. Deployments, entity-bound service annotations and service-
 bound view libraries remain current-only named capabilities. The gauge inspector
 still limits record-context navigation to intervals; exact-point planner/protocol
 support is not a new UI navigation action. Raw metric presence remains distinct

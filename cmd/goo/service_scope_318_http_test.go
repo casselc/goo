@@ -105,7 +105,7 @@ func TestTypedServiceScopeHTTP318(t *testing.T) {
 	response := httptest.NewRecorder()
 	mux.ServeHTTP(response, httptest.NewRequest("POST", "/dashboards/plan", strings.NewReader(`{"scope":{"environmentSelector":`+good+`,"fromMs":1,"toMs":60001},"service":"api","signals":["spans","logs","metrics"],"fields":[],"instruments":[]}`)))
 	var plan exploration.DashboardPlan
-	if response.Code != 200 || json.Unmarshal(response.Body.Bytes(), &plan) != nil || plan.NativeCapability == nil || plan.NativeCapability.State != "gauge-only" || reads != before {
+	if response.Code != 200 || json.Unmarshal(response.Body.Bytes(), &plan) != nil || plan.NativeCapability == nil || plan.NativeCapability.State != "service-per-stream" || reads != before {
 		t.Fatal("typed record plan/native capability missing", response.Code, response.Body.String())
 	}
 }

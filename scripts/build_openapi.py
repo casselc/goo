@@ -67,19 +67,20 @@ for wire in ('exploration.InventoryQuestion','exploration.InventoryQuestionInput
  shape['oneOf']=[{'required':['environment'],'not':{'required':['environmentSelector']},'properties':{'environment':{'type':'string','minLength':1}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''}}}]
  shape['description']='Fixed service discovery scope. Legacy environment is current-key-only; an explicit environmentSelector preserves current-only/effective policy and named/empty/unreported scope. Null or mixed nonempty selectors are refused. Metric data-point presence is not native metric evaluation.'
 cap=schemas['exploration.DashboardNativeCapability']
-cap['properties']['state']['const']='gauge-only'
+cap['properties']['state']['const']='service-per-stream'
 cap['properties']['reason']['minLength']=1
 schemas['exploration.DashboardPlan']['properties']['nativeCapability']['description']='Present when native evaluation and declared scalar-environment bindings cannot represent this checked scope. Record-family widgets and raw metric data-point presence remain available; empty native options are not evidence of no metrics.'
 
-# Native typed definitions deliberately admit only service per-stream gauges.
+# Native typed definitions admit the existing service per-stream numeric kernels.
 for wire in ('measurements.Definition','measurements.DefinitionInput','measurements.DiscoveryQuestion','measurements.DiscoveryQuestionInput'):
  shape=schemas[wire];target='identity.EnvironmentSelectorInput' if wire.endswith('Input') else 'identity.EnvironmentSelector'
  shape['properties']['environment']={'type':'string'};shape['properties']['environmentSelector']={'$ref':'#/components/schemas/'+target}
  shape['oneOf']=[{'required':['environment'],'not':{'required':['environmentSelector']},'properties':{'environment':{'type':'string','minLength':1}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''}}}]
  if 'Definition' in wire:
-  shape.setdefault('allOf',[]).append({'if':{'required':['environmentSelector']},'then':{'properties':{'kind':{'const':'gauge'},'grain':{'const':'per-stream'},'source':{'properties':{'resource':{'type':'null'}}}},'required':['kind','grain','source']}})
- shape['description']='Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges only. Other discovered native families remain unsupported metadata.'
-schemas['exploration.DashboardPlan']['properties']['nativeCapability']['description']='gauge-only means this service policy supports typed per-stream gauges while other native families and entity bindings need current-only named scope. Empty native options do not prove no metric observations.'
+  shape.setdefault('allOf',[]).append({'if':{'required':['environmentSelector']},'then':{'properties':{'kind':{'enum':['gauge','counter','histogram']},'grain':{'const':'per-stream'},'source':{'properties':{'resource':{'type':'null'}}}},'required':['kind','grain','source']}})
+  shape['allOf'].append({'if':{'required':['environmentSelector','kind'],'properties':{'kind':{'const':'histogram'}}},'then':{'properties':{'source':{'properties':{'unit':{'enum':['s','ms']}},'required':['unit']}}}})
+ shape['description']='Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges, monotonic counters and explicit duration histograms. Stock/state/lifecycle/resource-bound families remain unsupported metadata.'
+schemas['exploration.DashboardPlan']['properties']['nativeCapability']['description']='service-per-stream means this policy supports typed gauges, monotonic counters and explicit duration histograms. Other native families and entity bindings remain unavailable. Empty native options do not prove no metric observations.'
 
 # Authored fixed record steps retain the checked environment independently of native definitions.
 for suffix in ('', 'Input'):

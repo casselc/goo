@@ -1,5 +1,17 @@
 # Validation record
 
+## Typed service counter and histogram intervals — 320
+
+[Contract](docs/TYPED_NATIVE_INTERVALS.md) · [journey and frames](docs/journeys/320-typed-native-intervals.md) · [architecture](docs/reviews/NATIVE_INTERVAL_ENVIRONMENT_ARCHITECTURE_320.md) · [design](docs/reviews/NATIVE_INTERVAL_ENVIRONMENT_DESIGN_320.md).
+
+- Full Go suite and all 1,045 frontend tests pass (35.50 seconds, zero frontend failures/skips). Typed counters and explicit duration histograms reuse checked environment membership and existing interval kernels. Unsupported typed families/resource grains and invalid histogram units refuse before source access.
+- Sixty new Hegel cases pass (4.717 seconds), covering all policies, namespace, same-instance raw-resource separation, exact one-second counter deltas/rates, unknown decreases, cumulative/delta histogram buckets, s/ms units, foreign-source rejection, exact-stream selectors, Go/JS context and detached ownership. Sixty earlier gauge/service cases also pass (7.587 seconds).
+- OpenAPI validates 100 operations, 436 fixture responses, 161 admitted requests and 28 mux refusals. Package build/recreation passes; all three changed UI modules and OpenAPI are served byte-for-byte. Packaging finished before browser verification.
+
+
+- Real OTel journey passes all six cases in 54.5 seconds (56.9 runner), checking exact current/effective/empty/unreported counter membership, independent one-second deltas/rates 10 and 25, unknown decreases without fabricated values, and separate histogram counts/buckets four and six. Main source budget is 52 HTTP attempts: four tails, six environment discovery/previews, 36 overview/widget reads (including eight native widget evaluations), and six explicit measurement Runs. These are not physical SQL counts. Preview, Share and return actions perform no telemetry reads.
+- A genuine UI-generated counter Share link drives a separate 30-second Bombadil campaign: 495 snapshots, phases 0–8, exit zero (30.128 seconds wall), one measurement/source read and zero capture writes. Independent raw review confirms policy/result immutability, local controls, inspectable unknown intervals, sharing and completion. Three actual frames were accepted by design; collapsed companion streams and cropped policy metadata are established by native/property assertions rather than screenshot claims.
+
 ## Typed native service gauge values — 319
 
 [Contract](docs/NATIVE_GAUGE_ENVIRONMENT_POLICIES.md) · [actual journey and frames](docs/journeys/319-typed-native-values.md) · [architecture](docs/reviews/NATIVE_ENVIRONMENT_ARCHITECTURE_319.md) · [design](docs/reviews/NATIVE_ENVIRONMENT_DESIGN_319.md).

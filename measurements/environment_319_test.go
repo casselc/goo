@@ -111,7 +111,7 @@ func TestTypedGaugeMembershipAndRawStreamIdentity319(t *testing.T) {
 	}
 }
 func TestTypedGaugeClosedProfileAndWire319(t *testing.T) {
-	for _, kind := range []string{"counter", "stock", "histogram", "state", "lifecycle"} {
+	for _, kind := range []string{"stock", "state", "lifecycle"} {
 		d := gauge319(selectors319()[1])
 		d.Kind = kind
 		if _, err := Compile(Question{Definition: d, FromMS: 100000, ToMS: 160000}); err == nil {
@@ -203,17 +203,27 @@ func TestTypedNativeDiscovery319(t *testing.T) {
 	q := DiscoveryQuestion{Service: "api", Namespace: d.Source.Namespace, FromMS: 100000, ToMS: 160000}.WithEnvironmentFrom(d)
 	resource := rows319(d)[1].Resource
 	observations := []json.RawMessage{}
-	for _, kind := range []string{"gauge", "counter", "histogram"} {
-		observations = append(observations, raw(map[string]any{"kind": kind, "scope": "sdk", "version": "", "schemaURL": "", "metric": "load-" + kind, "unit": "items", "temporality": 1, "monotonic": true, "dimensions": []string{}, "resource": resource, "attributes": map[string]string{}}))
+	for _, kind := range []string{"gauge", "counter", "histogram", "stock"} {
+		unit := "items"
+		if kind == "histogram" {
+			unit = "ms"
+		}
+		tempo := 1
+		monotonic := true
+		if kind == "stock" {
+			tempo = 2
+			monotonic = false
+		}
+		observations = append(observations, raw(map[string]any{"kind": kind, "scope": "sdk", "version": "", "schemaURL": "", "metric": "load-" + kind, "unit": unit, "temporality": tempo, "monotonic": monotonic, "dimensions": []string{}, "resource": resource, "attributes": map[string]string{}}))
 	}
 	result, err := discoverRows(q, observations)
 	if err != nil {
 		t.Fatal(err)
 	}
 	for _, instrument := range result.Instruments {
-		if instrument.Kind == "gauge" {
+		if typedServiceKind(instrument.Kind) {
 			if !instrument.Supported || instrument.Definition == nil || !instrument.Definition.SameEnvironment(d) {
-				t.Fatal("typed gauge prototype lost scope")
+				t.Fatal("typed native prototype lost scope")
 			}
 		} else if instrument.Supported || instrument.Definition != nil || instrument.UnsupportedReason == "" {
 			t.Fatal("typed unsupported family became executable")

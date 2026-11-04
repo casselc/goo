@@ -10,8 +10,9 @@ original window and [checked environment policy](docs/SERVICE_ENVIRONMENT_POLICI
 including current/legacy precedence, empty and unreported record scopes. Read the
 overview explicitly and return to the same paused rows.
 
-[Native service gauges](docs/NATIVE_GAUGE_ENVIRONMENT_POLICIES.md) can read values
-under that same policy, retaining distinct current-key and legacy-key streams.
+[Native service gauges](docs/NATIVE_GAUGE_ENVIRONMENT_POLICIES.md) and
+[counter/histogram intervals](docs/TYPED_NATIVE_INTERVALS.md) can read values under
+that same policy, retaining distinct current-key and legacy-key streams.
 
 [Shared chart surfaces](docs/CHART_FIRST_EXPLORATION.md) put plotted values before
 settings, with visible certainty and expandable exact read facts.
