@@ -160,7 +160,10 @@ func tsPredicate(p exploration.Predicate, values map[exploration.Field]string) b
 	return false
 }
 func tsFields(p exploration.Predicate) []exploration.Field {
-	fields := map[exploration.Field]bool{}
+	fields := map[exploration.Field]bool{
+		{Kind: "resource", Key: "deployment.environment.name"}: true,
+		{Kind: "resource", Key: "deployment.environment"}:      true,
+	}
 	var visit func(exploration.Predicate)
 	visit = func(p exploration.Predicate) {
 		if p.Field != nil {
@@ -246,10 +249,42 @@ func tsWitnessOrder(a, b tsWitness) bool {
 	}
 	return false
 }
+
+// Independent presence/precedence oracle: deliberately does not call the shared
+// identity matcher used by production. Fields, not fixture display labels, own
+// the reported OTel resource evidence.
+func tsEnvironmentMatches(request exploration.TraceSearchRequest, values map[exploration.Field]string) bool {
+	current, hasCurrent := values[exploration.Field{Kind: "resource", Key: "deployment.environment.name"}]
+	legacy, hasLegacy := values[exploration.Field{Kind: "resource", Key: "deployment.environment"}]
+	if request.EnvironmentSelector == nil {
+		return hasCurrent && current == request.Environment
+	}
+	selector := request.EnvironmentSelector
+	if selector.Policy == "current-only" {
+		return selector.Scope.Mode == "named" && hasCurrent && current == selector.Scope.Value
+	}
+	if selector.Policy != "effective" {
+		return false
+	}
+	if selector.Scope.Mode == "unreported" {
+		return !hasCurrent && !hasLegacy
+	}
+	if !hasCurrent && !hasLegacy {
+		return false
+	}
+	value := legacy
+	if hasCurrent {
+		value = current
+	}
+	if selector.Scope.Mode == "empty" {
+		return value == ""
+	}
+	return selector.Scope.Mode == "named" && value != "" && value == selector.Scope.Value
+}
 func tsInScope(request exploration.TraceSearchRequest, r tsRecord) bool {
 	id := r.Values[exploration.Field{Kind: "column", Key: "trace_id"}]
 	start := tsInteger(r.Values[exploration.Field{Kind: "column", Key: "timestamp_ns"}], "uint64")
-	if r.Environment != request.Environment || !tcID(id, 32) || start == nil {
+	if !tsEnvironmentMatches(request, r.Values) || !tcID(id, 32) || start == nil {
 		return false
 	}
 	lo := new(big.Int).Mul(big.NewInt(request.FromMS), big.NewInt(1000000))
@@ -311,7 +346,7 @@ func tsLogical(records []tsRecord) []exploration.TraceSearchRecord {
 		for k, v := range r.Values {
 			values[k] = v
 		}
-		out[i] = exploration.TraceSearchRecord{Environment: r.Environment, Fields: values}
+		out[i] = exploration.TraceSearchRecord{Fields: values}
 	}
 	return out
 }

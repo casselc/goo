@@ -19114,34 +19114,78 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "minItems": 1,
+            "maxItems": 4
           },
           "environment": {
             "type": "string"
+          },
+          "environmentSelector": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "fromMs": {
             "type": "integer"
           },
           "limit": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
           },
           "toMs": {
             "type": "integer"
           },
           "version": {
-            "type": "string"
+            "type": "string",
+            "const": "goo/trace-search/v1"
           }
         },
         "required": [
           "version",
-          "environment",
           "fromMs",
           "toMs",
           "conditions",
           "limit"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchRequest"
+        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchRequest",
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              },
+              "environmentSelector": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              },
+              "environmentSelector": {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              }
+            }
+          }
+        ],
+        "description": "Fixed-window trace-wide search. A scalar environment means current-key-only; an explicit environmentSelector preserves current-only/effective policy and named/empty/unreported scope. No implicit wildcard or projection to a weaker scalar. Conditions are independent EXISTS tests within the selected environment and window, not same-span or causal claims."
       },
       "exploration.TraceSearchRequestInput": {
         "additionalProperties": false,
@@ -19164,12 +19208,24 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "minItems": 1,
+            "maxItems": 4
           },
           "environment": {
+            "type": "string"
+          },
+          "environmentSelector": {
             "anyOf": [
               {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
                 "type": "null"
@@ -19194,7 +19250,9 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "minimum": 1,
+            "maximum": 100
           },
           "toMs": {
             "anyOf": [
@@ -19214,11 +19272,43 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "const": "goo/trace-search/v1"
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchRequest"
+        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchRequest",
+        "required": [],
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              },
+              "environmentSelector": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              },
+              "environmentSelector": {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              }
+            }
+          }
+        ],
+        "description": "Fixed-window trace-wide search. A scalar environment means current-key-only; an explicit environmentSelector preserves current-only/effective policy and named/empty/unreported scope. No implicit wildcard or projection to a weaker scalar. Conditions are independent EXISTS tests within the selected environment and window, not same-span or causal claims."
       },
       "exploration.TraceSearchResult": {
         "properties": {
@@ -19303,7 +19393,8 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "minItems": 2
           },
           "kind": {
             "type": "string"
@@ -19340,7 +19431,8 @@
           "durationNs"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchWitness"
+        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchWitness",
+        "description": "Representative matching span with qualified field evidence, including presence and values for both deployment.environment.name and deployment.environment regardless of condition fields. Go admission independently checks the requested environment policy against this evidence."
       },
       "exploration.ValueComparison": {
         "properties": {

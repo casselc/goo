@@ -14,5 +14,7 @@ module trace_search {
  action observe_compare=all{phase==7,phase'=8,source'=6,coherent'=true}
  action observe_open_repeated=all{phase==8,phase'=9,source'=8,coherent'=true}
  action observe_next_trace_page=all{phase==9,phase'=10,source'=10,coherent'=true}
+ // Typed-scope journey returns to the retained search after its checked trace.
+ action observe_back=all{phase==5,phase'=11,source'=4,coherent'=true}
  val safety=coherent and source>=0
 }

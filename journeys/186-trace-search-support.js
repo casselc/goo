@@ -65,7 +65,7 @@ function assertResult(facts, request, result) {
       expect(witness.timestampNs).toBe(record.startNs);
       expect(witness.durationNs).toBe(record.durationNs);
       expect(witness.kind).toBe(kindNames[record.kind]);
-      const required = new Set();
+      const required = new Set(['resource:deployment.environment.name', 'resource:deployment.environment']);
       const collect = predicate => {
         if (predicate.all || predicate.any) (predicate.all || predicate.any).forEach(collect);
         else required.add(predicate.field.kind + ':' + predicate.field.key);

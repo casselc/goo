@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Journey340](340-typed-trace-search.md) follows genuine Activity/Services span
+contexts through typed trace-wide search and fresh exact-trace reads. It checks
+current/legacy precedence, empty/unreported scope, full counts, environment
+witnesses, retained Back and an unobstructed Close return.
+
 [Journey339](339-population-chrome.md) measures fresh-document scope/control
 consolidation against the same genuine saved pair, then checks exact facts,
 standalone/nested controls, truthful withheld geometry and zero-read disclosure.

@@ -20,6 +20,23 @@ def validator(spec, schema):
     return Draft202012Validator({'allOf': [schema], 'components': spec['components']})
 
 
+def check_typed_trace_search(spec):
+    base={'version':'goo/trace-search/v1','fromMs':1000,'toMs':61000,'limit':10,'conditions':[{'field':{'kind':'column','key':'service'},'op':'eq','value':'api'}]}
+    scopes=[{'version':'goo/environment-selector/v1','policy':policy,'scope':{'mode':mode,**({'value':'prod'} if mode=='named' else {})}} for policy,mode in [('current-only','named'),('effective','named'),('effective','empty'),('effective','unreported')]]
+    for wire in ('exploration.TraceSearchRequestInput','exploration.TraceSearchRequest'):
+        check=validator(spec,{'$ref':'#/components/schemas/'+wire})
+        check.validate({**base,'environment':'prod'})
+        for selector in scopes:
+            request={**base,'environmentSelector':selector}
+            check.validate(request)
+            check.validate({**request,'environment':''})
+            assert not check.is_valid({**request,'environment':'prod'}), 'mixed trace-search scopes accepted'
+        for fields in ({},{'environment':''},{'environmentSelector':None},{'environmentSelector':{}},{'environmentSelector':{**scopes[1],'policy':'unknown'}},{'environmentSelector':{**scopes[1],'policy':'current-only','scope':{'mode':'empty'}}}):
+            assert not check.is_valid({**base,**fields}), 'invalid trace-search selection admitted'
+    witness=spec['components']['schemas']['exploration.TraceSearchWitness']
+    assert witness['properties']['fieldValues']['minItems']==2
+
+
 def check_view_artifacts(spec):
     fixtures=json.loads((ROOT/'testdata/http/view-artifacts.json').read_text())['cases']
     request=json.loads(next(c['body'] for c in fixtures if c['name']=='encode'))
@@ -845,6 +862,7 @@ def check_record_step_selector(spec):
 
 
 def check(spec):
+    check_typed_trace_search(spec)
     check_record_step_selector(spec)
     validate_spec(spec)
     check_activity_scope_views(spec)

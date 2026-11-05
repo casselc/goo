@@ -17,19 +17,28 @@ func traceSearchTestRequest() TraceSearchRequest {
 }
 func traceSearchTestRecords() []TraceSearchRecord {
 	row := func(id, service, status, work string, at uint64) TraceSearchRecord {
-		return TraceSearchRecord{Environment: "prod", Fields: map[Field]string{{Kind: "column", Key: "trace_id"}: id, {Kind: "column", Key: "span_id"}: "0000000000000001", {Kind: "column", Key: "timestamp_ns"}: fmt.Sprint(at), {Kind: "column", Key: "duration_ns"}: "60000000", {Kind: "column", Key: "service"}: service, {Kind: "column", Key: "status_class"}: status, {Kind: "column", Key: "status"}: map[string]string{"error": "Error", "ok": "Ok"}[status], {Kind: "column", Key: "kind"}: "Server", {Kind: "column", Key: "name"}: "operation", {Kind: "attribute", Key: "work"}: work}}
+		return TraceSearchRecord{Fields: map[Field]string{{Kind: "resource", Key: "deployment.environment.name"}: "prod", {Kind: "column", Key: "trace_id"}: id, {Kind: "column", Key: "span_id"}: "0000000000000001", {Kind: "column", Key: "timestamp_ns"}: fmt.Sprint(at), {Kind: "column", Key: "duration_ns"}: "60000000", {Kind: "column", Key: "service"}: service, {Kind: "column", Key: "status_class"}: status, {Kind: "column", Key: "status"}: map[string]string{"error": "Error", "ok": "Ok"}[status], {Kind: "column", Key: "kind"}: "Server", {Kind: "column", Key: "name"}: "operation", {Kind: "attribute", Key: "work"}: work}}
 	}
 	a, b, c, d := strings.Repeat("a", 32), strings.Repeat("b", 32), strings.Repeat("c", 32), strings.Repeat("d", 32)
 	rows := []TraceSearchRecord{row(a, "db", "ok", "9007199254740993", 1000000000), row(a, "worker", "error", "0", 1100000000), row(b, "db", "error", "9007199254740994", 1200000000), row(c, "db", "ok", "1", 1300000000), row(d, "worker", "error", "1", 1400000000), row(strings.Repeat("0", 32), "db", "error", "9", 1500000000), row(strings.Repeat("A", 32), "db", "error", "9", 1500000000), row(strings.Repeat("a", 32)+"\n", "db", "error", "9", 1500000000), row(strings.Repeat("e", 32), "db", "error", "9", 999999999), row(strings.Repeat("f", 32), "db", "error", "9", 61000000000)}
 	wrong := row(strings.Repeat("1", 32), "db", "error", "9", 1500000000)
-	wrong.Environment = "other"
-	tied := TraceSearchRecord{Environment: rows[0].Environment, Fields: map[Field]string{}}
+	wrong.Fields[Field{Kind: "resource", Key: "deployment.environment.name"}] = "other"
+	tied := TraceSearchRecord{Fields: map[Field]string{}}
 	for k, v := range rows[0].Fields {
 		tied.Fields[k] = v
 	}
 	tied.Fields[Field{Kind: "attribute", Key: "work"}] = "9007199254740995"
 	rows = append(rows, wrong, rows[0], tied)
 	return rows
+}
+func traceSearchTestResources(fields map[Field]string) map[string]string {
+	resources := map[string]string{}
+	for field, value := range fields {
+		if field.Kind == "resource" {
+			resources[field.Key] = value
+		}
+	}
+	return resources
 }
 func TestTraceSearchReferenceFullTraceExistsAndLimits(t *testing.T) {
 	r := traceSearchTestRequest()
@@ -90,7 +99,7 @@ func TestClickHouseTraceSearchParity(t *testing.T) {
 	for _, r := range records {
 		v := r.Fields
 		column := func(k string) string { return v[Field{Kind: "column", Key: k}] }
-		payload = append(payload, map[string]any{"trace": column("trace_id"), "span": column("span_id"), "parent": column("parent_span_id"), "service": column("service"), "operation": column("name"), "kind": column("kind"), "timestamp": column("timestamp_ns"), "duration": column("duration_ns"), "status": column("status"), "resources": map[string]string{"deployment.environment.name": r.Environment}, "attributes": map[string]string{"work": v[Field{Kind: "attribute", Key: "work"}]}})
+		payload = append(payload, map[string]any{"trace": column("trace_id"), "span": column("span_id"), "parent": column("parent_span_id"), "service": column("service"), "operation": column("name"), "kind": column("kind"), "timestamp": column("timestamp_ns"), "duration": column("duration_ns"), "status": column("status"), "resources": traceSearchTestResources(v), "attributes": map[string]string{"work": v[Field{Kind: "attribute", Key: "work"}]}})
 	}
 	data, _ := json.Marshal(payload)
 	inline := " FROM (SELECT JSONExtractString(j,'trace') AS TraceId, JSONExtractString(j,'span') AS SpanId, JSONExtractString(j,'parent') AS ParentSpanId, JSONExtractString(j,'service') AS ServiceName, JSONExtractString(j,'operation') AS SpanName, JSONExtractString(j,'kind') AS SpanKind, JSONExtractString(j,'status') AS StatusCode, toUInt64(JSONExtractString(j,'duration')) AS Duration, fromUnixTimestamp64Nano(toInt64(JSONExtractString(j,'timestamp'))) AS Timestamp, JSONExtract(j,'resources','Map(String,String)') AS ResourceAttributes, JSONExtract(j,'attributes','Map(String,String)') AS SpanAttributes FROM (SELECT JSONExtractArrayRaw({fixture:String})[number+1] AS j FROM numbers(" + fmt.Sprint(len(payload)) + ")))"
@@ -211,7 +220,7 @@ func TestClickHouseTraceSearchAbsentDerivedEvidenceTieParity(t *testing.T) {
 	request.Conditions = []Predicate{{All: []Predicate{{Field: &Field{Kind: "column", Key: "exception_type"}, Op: "missing"}, {Field: &Field{Kind: "resource", Key: "zone"}, Op: "exists"}}}}
 	records := []TraceSearchRecord{}
 	for _, zone := range []string{"a", "z"} {
-		records = append(records, TraceSearchRecord{Environment: "prod", Fields: map[Field]string{{Kind: "column", Key: "trace_id"}: strings.Repeat("a", 32), {Kind: "column", Key: "span_id"}: "0000000000000001", {Kind: "column", Key: "timestamp_ns"}: "1000000000", {Kind: "column", Key: "duration_ns"}: "100", {Kind: "column", Key: "service"}: "db", {Kind: "column", Key: "name"}: "operation", {Kind: "column", Key: "kind"}: "Server", {Kind: "resource", Key: "zone"}: zone}})
+		records = append(records, TraceSearchRecord{Fields: map[Field]string{{Kind: "resource", Key: "deployment.environment.name"}: "prod", {Kind: "column", Key: "trace_id"}: strings.Repeat("a", 32), {Kind: "column", Key: "span_id"}: "0000000000000001", {Kind: "column", Key: "timestamp_ns"}: "1000000000", {Kind: "column", Key: "duration_ns"}: "100", {Kind: "column", Key: "service"}: "db", {Kind: "column", Key: "name"}: "operation", {Kind: "column", Key: "kind"}: "Server", {Kind: "resource", Key: "zone"}: zone}})
 	}
 	// Both exception types are unreported as a unique type. Their hidden first
 	// values deliberately sort opposite the visible resource-zone evidence.
@@ -245,11 +254,11 @@ func TestClickHouseTraceSearchAbsentDerivedEvidenceTieParity(t *testing.T) {
 
 func TestTraceSearchAbsentProofRequiresCanonicalEmptyPayload(t *testing.T) {
 	p := Predicate{Field: &Field{Kind: "attribute", Key: "optional"}, Op: "missing"}
-	if _, e := decodeTraceSearchValues(json.RawMessage(`[[0,"hidden"]]`), p); e == nil {
+	if _, e := decodeTraceSearchValues(json.RawMessage(`[[0,"hidden"],[0,""],[1,"prod"]]`), p); e == nil {
 		t.Fatal("absent evidence retained hidden tie value")
 	}
-	out, e := decodeTraceSearchValues(json.RawMessage(`[[0,""]]`), p)
-	if e != nil || len(out) != 1 || out[0].Value != nil {
+	out, e := decodeTraceSearchValues(json.RawMessage(`[[0,""],[0,""],[1,"prod"]]`), p)
+	if e != nil || len(out) != 3 || out[0].Value != nil {
 		t.Fatal("canonical absent evidence refused", out, e)
 	}
 }

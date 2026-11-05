@@ -58,6 +58,20 @@ for wire in ('exploration.Query','exploration.QueryInput','exploration.TailSelec
  if input_wire:shape['required']=[key for key in shape.get('required',[]) if key!='environment']
  shape['oneOf']=[{'required':['environment'],'properties':{'environment':{'type':'string','minLength':1},'environmentSelector':{'type':'null'}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''},'environmentSelector':{'$ref':'#/components/schemas/'+target}}}]
  shape['description']='Choose the historical current-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge record questions do not support the selector yet.'
+# Trace-wide search uses the same explicit selection as ordinary record questions.
+for wire in ('exploration.TraceSearchRequest','exploration.TraceSearchRequestInput'):
+ shape=schemas[wire];target='identity.EnvironmentSelectorInput' if wire.endswith('Input') else 'identity.EnvironmentSelector'
+ shape['required']=[key for key in shape.get('required',[]) if key!='environment']
+ shape['properties']['environment']={'type':'string'}
+ shape['properties']['version']['const']='goo/trace-search/v1'
+ shape['properties']['conditions'].update(minItems=1,maxItems=4)
+ shape['properties']['limit'].update(minimum=1,maximum=100)
+ shape['oneOf']=[{'required':['environment'],'properties':{'environment':{'type':'string','minLength':1},'environmentSelector':{'type':'null'}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''},'environmentSelector':{'$ref':'#/components/schemas/'+target}}}]
+ shape['description']='Fixed-window trace-wide search. A scalar environment means current-key-only; an explicit environmentSelector preserves current-only/effective policy and named/empty/unreported scope. No implicit wildcard or projection to a weaker scalar. Conditions are independent EXISTS tests within the selected environment and window, not same-span or causal claims.'
+for wire in ('exploration.TraceSearchWitness','exploration.TraceSearchWitnessInput'):
+ if wire in schemas:
+  schemas[wire]['properties']['fieldValues']['minItems']=2
+  schemas[wire]['description']='Representative matching span with qualified field evidence, including presence and values for both deployment.environment.name and deployment.environment regardless of condition fields. Go admission independently checks the requested environment policy against this evidence.'
 # Service discovery preserves the same checked environment, with a stricter
 # non-null wire union so an explicit null cannot disappear into a legacy name.
 for wire in ('exploration.InventoryQuestion','exploration.InventoryQuestionInput'):

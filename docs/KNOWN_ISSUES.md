@@ -5,10 +5,13 @@ gains are about 29px desktop and 32px narrow, not a complete mobile density fix.
 Exact policies/UTC bounds stay in the existing disclosure, with independent
 comparison/facet receipts unchanged. See [contract](POPULATION_CHROME.md).
 
-The next general-purpose gap is typed trace-wide search: its existing request,
-compiler and checked continuation remain scalar-current-environment-only. Normal
-effective named, empty and unreported scopes are refused. 340 will carry the
-shared typed selector end to end rather than project it into a weaker scalar.
+340 carries typed current-only/effective named, empty and unreported scopes
+through trace-wide span search, mandatory environment witness proof and checked
+exact-trace continuation. Ordinary Activity/Services span entry is supported;
+log-only parent filters and reported-edge origins are not silently converted.
+The list is bounded, conditions may match different spans/services, and reported
+trace IDs/witnesses do not imply unique invocations, complete traces or causality.
+See [search contract](TRACE_SEARCH.md) and [validation](../VALIDATION.md).
 
 338 extends fresh-pair facets with independent category populations from both
 windows, including baseline-only values. Ready grouping absence means zero only
@@ -24,7 +27,7 @@ Five existing unique roles can coexist without removing a valid timeline. The
 selected-only initial acquisition is superseded by 338 above. See
 [contract](PAIRED_FACETS.md) and final [validation](../VALIDATION.md).
 
-Bombadil driver JPEGs in reviewed 337–339 campaigns can repeat stale loading or
+Bombadil driver JPEGs in reviewed 337–340 campaigns can repeat stale loading or
 staged frames while independent DOM/API checks reach a verified applied state.
 Those captures do not prove terminal appearance. Maintained visual frames use
 Playwright; per-campaign audits and compact results are in

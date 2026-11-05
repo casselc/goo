@@ -179,3 +179,60 @@ func TestTraceSearchHTTPPredicateBudgetRefusedBeforeSource(t *testing.T) {
 		t.Fatal("oversize predicate tree reached source", response.Code, called)
 	}
 }
+
+func TestTraceSearchHTTPTypedEnvironment340(t *testing.T) {
+	for _, tc := range []struct {
+		name, environment, selector string
+		valid                       bool
+	}{
+		{"effective named", "", `{"version":"goo/environment-selector/v1","policy":"effective","scope":{"mode":"named","value":"prod"}}`, true},
+		{"effective empty", "", `{"version":"goo/environment-selector/v1","policy":"effective","scope":{"mode":"empty"}}`, true},
+		{"effective unreported", "", `{"version":"goo/environment-selector/v1","policy":"effective","scope":{"mode":"unreported"}}`, true},
+		{"current named", "", `{"version":"goo/environment-selector/v1","policy":"current-only","scope":{"mode":"named","value":"prod"}}`, true},
+		{"mixed authority", "prod", `{"version":"goo/environment-selector/v1","policy":"effective","scope":{"mode":"named","value":"prod"}}`, false},
+		{"current empty", "", `{"version":"goo/environment-selector/v1","policy":"current-only","scope":{"mode":"empty"}}`, false},
+		{"unknown selector authority", "", `{"version":"goo/environment-selector/v1","policy":"effective","scope":{"mode":"unreported"},"query":"all"}`, false},
+		{"unreported named", "", `{"version":"goo/environment-selector/v1","policy":"effective","scope":{"mode":"unreported","value":"prod"}}`, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			reads := 0
+			source := exploration.Source{Endpoint: "http://unused", Client: &http.Client{Transport: nativeDependencyTransport(func(r *http.Request) (*http.Response, error) {
+				reads++
+				return &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(""))}, nil
+			})}}
+			mux := http.NewServeMux()
+			registerExploration(mux, source, &exploration.ResultSnapshots{}, nil)
+			var body map[string]json.RawMessage
+			_ = json.Unmarshal([]byte(traceSearchHTTPBody), &body)
+			body["environmentSelector"] = json.RawMessage(tc.selector)
+			delete(body, "environment")
+			if tc.environment != "" {
+				raw, _ := json.Marshal(tc.environment)
+				body["environment"] = raw
+			}
+			raw, _ := json.Marshal(body)
+			response := httptest.NewRecorder()
+			mux.ServeHTTP(response, httptest.NewRequest("POST", "/trace-search", strings.NewReader(string(raw))))
+			if !tc.valid {
+				if response.Code != 400 || reads != 0 {
+					t.Fatal(response.Code, response.Body.String(), reads)
+				}
+				return
+			}
+			if response.Code != 200 || reads != 1 {
+				t.Fatal(response.Code, response.Body.String(), reads)
+			}
+			var result exploration.TraceSearchResult
+			if err := json.Unmarshal(response.Body.Bytes(), &result); err != nil || result.Request.Environment != "" || result.Request.EnvironmentSelector == nil || result.State != "no_data" {
+				t.Fatal(result, err)
+			}
+			var envelope map[string]json.RawMessage
+			_ = json.Unmarshal(response.Body.Bytes(), &envelope)
+			var echo map[string]json.RawMessage
+			_ = json.Unmarshal(envelope["request"], &echo)
+			if _, exists := echo["environment"]; exists {
+				t.Fatal("typed echo contains scalar authority")
+			}
+		})
+	}
+}

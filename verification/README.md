@@ -1,5 +1,26 @@
 # Semantic properties and model conformance
 
+## Typed trace-wide search (340)
+
+Existing 90 intersection and 70 contextual cases now include explicit resource
+scope evidence. Forty generated five-policy cases check the actual JavaScript
+request builder, Go compilation and reference results against an independent
+presence/precedence oracle; missing and present-empty remain distinct. The
+existing trace-search model gains a retained-Back branch for six-event typed
+journeys, with strict completion, semantic mutations and source-budget negatives.
+
+```sh
+go -C verification test -run '^(TestHegelTypedTraceSearchEnvironment340|TestTypedTraceSearchPolicyContrasts340|TestQuintTypedTraceSearchModel340)$' -count=1 .
+GOO_TYPED_TRACE_SEARCH_BOMBADIL=1 bash scripts/run_journeys.sh 340-typed-trace-search.spec.js
+```
+
+The observed checker uses `GOO_TYPED_TRACE_SEARCH_LEDGER` and
+`TestQuintTypedTraceSearchObserved340`; the native harness supplies full actual
+requests, witnesses, parent questions and both exact-trace signal queries.
+See [contract](../docs/TRACE_SEARCH.md) and
+[journey](../docs/journeys/340-typed-trace-search.md) for the entry paths and read
+budgets. Models check effects, not source honesty or complete telemetry coverage.
+
 ## Two-window category populations (338)
 
 Generated properties exercise the actual pure JavaScript projection across

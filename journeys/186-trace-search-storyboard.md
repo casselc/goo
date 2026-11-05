@@ -202,3 +202,25 @@ route returns 404; native readiness uses the existing metadata-only
 `/operation-packages` route. The superseded binary and corrected readiness check
 are retained in the deployment receipt. The final Go tie fix and API gate
 completed before any browser trace-search acceptance ran.
+
+
+## 340 typed-policy integration regression
+
+On 2026-11-05 the deployed center-return fix was checked against these original
+scalar workflows: main passed in 27.8 seconds and ownership in 25.6 seconds.
+The fresh 55-second actor reached all 16 phases across 919 snapshots, retaining
+the 135/100 parent, 15 matches, cross-service/same-span/repeated-120 proofs and
+four-read terminal budget. These are separate runs from the historical campaign
+above. Witness expectations now require both qualified deployment-environment
+resource keys, preserving missing versus present-empty evidence.
+
+Fresh observed-ledger validation also passed: `TestQuintTraceSearchLiveLedger`
+in 16.73 seconds and `TestQuintTraceSearchOwnershipLedger` in 11.58 seconds
+(package 28.334 seconds, no skips). Their mutation checks still reject invalid
+source budgets, action ordering, held evidence and stale-owner publication.
+
+The current regression receipt is `artifacts/trace-search/340-regression-summary.json`.
+The two observed inputs are retained compressed in their run directories; unzip
+before revalidation. Raw actor captures were removed after semantic review; no
+current actor screenshot is claimed as terminal visual proof. Maintained native
+frames above remain the visual record.

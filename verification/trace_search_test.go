@@ -25,6 +25,13 @@ func tsGeneratedRequest(seed, count, limit int) exploration.TraceSearchRequest {
 func tsGeneratedRecord(request exploration.TraceSearchRequest, id string, ordinal, flags int) tsRecord {
 	fields := map[exploration.Field]string{}
 	put := func(kind, key, value string) { fields[exploration.Field{Kind: kind, Key: key}] = value }
+	if request.EnvironmentSelector == nil {
+		put("resource", "deployment.environment.name", request.Environment)
+	} else if request.EnvironmentSelector.Scope.Mode == "named" {
+		put("resource", "deployment.environment.name", request.EnvironmentSelector.Scope.Value)
+	} else if request.EnvironmentSelector.Scope.Mode == "empty" {
+		put("resource", "deployment.environment.name", "")
+	}
 	put("column", "trace_id", id)
 	put("column", "span_id", fmt.Sprintf("%016x", ordinal+1))
 	put("column", "parent_span_id", "")
@@ -71,6 +78,7 @@ func tsGeneratedRecords(request exploration.TraceSearchRequest, flags []int) []t
 	records = append(records, tsGeneratedRecord(request, strings.Repeat("0", 32), 0, 15), tsGeneratedRecord(request, "ABCDEFABCDEFABCDEFABCDEFABCDEFAB", 0, 15))
 	wrong := tsGeneratedRecord(request, "ddddddddddddddddddddddddddddddd0", 0, 15)
 	wrong.Environment += "-other"
+	wrong.Values[exploration.Field{Kind: "resource", Key: "deployment.environment.name"}] = wrong.Environment
 	records = append(records, wrong)
 	late := tsGeneratedRecord(request, "ddddddddddddddddddddddddddddddd1", 0, 15)
 	late.Values[exploration.Field{Kind: "column", Key: "timestamp_ns"}] = strconv.FormatInt(request.ToMS*1000000, 10)
@@ -83,7 +91,7 @@ func tsCheckReference(request exploration.TraceSearchRequest, records []tsRecord
 	snapshot := func() string {
 		out := make([]tsRecord, len(logical))
 		for i, r := range logical {
-			out[i] = tsRecord{Environment: r.Environment, Values: r.Fields}
+			out[i] = tsRecord{Values: r.Fields}
 		}
 		return tsSnapshot(out)
 	}
@@ -216,7 +224,18 @@ func TestHegelTraceSearchContextualClientRequest(t *testing.T) {
 		seed := hegel.Draw(tc, hegel.Integers(1, 1000000))
 		limit := hegel.Draw(tc, hegel.Integers(1, 100))
 		request := tsGeneratedRequest(seed, 3, limit)
-		parent := exploration.Query{Signal: "spans", Environment: request.Environment, FromMS: request.FromMS, ToMS: request.ToMS, Limit: 100, Offset: 100, Where: &request.Conditions[0], GroupBy: []exploration.Field{{Kind: "column", Key: "service"}}}
+		switch seed % 4 {
+		case 0:
+			request.EnvironmentSelector = tsSelector340("current-only", "named", request.Environment)
+		case 1:
+			request.EnvironmentSelector = tsSelector340("effective", "named", request.Environment)
+		case 2:
+			request.EnvironmentSelector = tsSelector340("effective", "empty", "")
+		case 3:
+			request.EnvironmentSelector = tsSelector340("effective", "unreported", "")
+		}
+		request.Environment = ""
+		parent := exploration.Query{Signal: "spans", Environment: request.Environment, EnvironmentSelector: request.EnvironmentSelector, FromMS: request.FromMS, ToMS: request.ToMS, Limit: 100, Offset: 100, Where: &request.Conditions[0], GroupBy: []exploration.Field{{Kind: "column", Key: "service"}}}
 		row := map[string]string{"ServiceName": "checkout", "SpanName": "observed work"}
 		seedPredicate := exploration.Predicate{All: []exploration.Predicate{tsLeaf("column", "service", "eq", "checkout"), tsLeaf("column", "name", "eq", "observed work")}}
 		input, _ := json.Marshal(map[string]any{"parent": parent, "row": row, "second": request.Conditions[1], "limit": limit})
@@ -231,7 +250,7 @@ func TestHegelTraceSearchContextualClientRequest(t *testing.T) {
 			Request   exploration.TraceSearchRequest
 			Unchanged bool
 		}
-		if json.Unmarshal(raw, &out) != nil || !out.Unchanged || out.Request.Validate() != nil || out.Request.Environment != parent.Environment || out.Request.FromMS != parent.FromMS || out.Request.ToMS != parent.ToMS || out.Request.Limit != limit || len(out.Request.Conditions) != 2 {
+		if json.Unmarshal(raw, &out) != nil || !out.Unchanged || out.Request.Validate() != nil || out.Request.Environment != parent.Environment || !aeJSONEqual(out.Request.EnvironmentSelector, parent.EnvironmentSelector) || out.Request.FromMS != parent.FromMS || out.Request.ToMS != parent.ToMS || out.Request.Limit != limit || len(out.Request.Conditions) != 2 {
 			tc.Errorf("client request lost typed scope/ownership %s", raw)
 			return
 		}
@@ -287,7 +306,7 @@ func TestTraceSearchQualifiedWitnessTie(t *testing.T) {
 		t.Fatal("qualified missing/empty field tie lost")
 	}
 	items, total := tsOracle(r, records)
-	if total != "1" || len(items) != 1 || items[0].Witnesses[0].MatchingRecords != "2" || len(items[0].Witnesses[0].FieldValues) != 2 || items[0].Witnesses[0].FieldValues[0].Field.Kind != "attribute" || items[0].Witnesses[0].FieldValues[0].Value != nil || items[0].Witnesses[0].FieldValues[1].Value == nil || *items[0].Witnesses[0].FieldValues[1].Value != "y" {
+	if total != "1" || len(items) != 1 || items[0].Witnesses[0].MatchingRecords != "2" || len(items[0].Witnesses[0].FieldValues) != 4 || items[0].Witnesses[0].FieldValues[0].Field.Kind != "attribute" || items[0].Witnesses[0].FieldValues[0].Value != nil || items[0].Witnesses[0].FieldValues[3].Value == nil || *items[0].Witnesses[0].FieldValues[3].Value != "y" {
 		t.Fatal("witness tie order or namespace collapsed")
 	}
 }

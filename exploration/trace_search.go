@@ -17,12 +17,13 @@ import (
 const TraceSearchVersion = "goo/trace-search/v1"
 
 type TraceSearchRequest struct {
-	Version     string      `json:"version"`
-	Environment string      `json:"environment"`
-	FromMS      int64       `json:"fromMs"`
-	ToMS        int64       `json:"toMs"`
-	Conditions  []Predicate `json:"conditions"`
-	Limit       int         `json:"limit"`
+	Version             string                        `json:"version"`
+	Environment         string                        `json:"environment,omitempty"`
+	EnvironmentSelector *identity.EnvironmentSelector `json:"environmentSelector,omitempty"`
+	FromMS              int64                         `json:"fromMs"`
+	ToMS                int64                         `json:"toMs"`
+	Conditions          []Predicate                   `json:"conditions"`
+	Limit               int                           `json:"limit"`
 }
 type TraceSearchPlan struct {
 	SQL        string            `json:"sql"`
@@ -60,6 +61,11 @@ type TraceSearchResult struct {
 	Warnings      []string           `json:"warnings"`
 }
 
+// EnvironmentSelection uses the same checked wire boundary as ordinary queries.
+func (r TraceSearchRequest) EnvironmentSelection() (identity.EnvironmentSelection, error) {
+	return (Query{Environment: r.Environment, EnvironmentSelector: r.EnvironmentSelector}).EnvironmentSelection()
+}
+
 func (r TraceSearchRequest) Validate() error {
 	if r.Version != TraceSearchVersion || len(r.Conditions) < 1 || len(r.Conditions) > 4 || r.Limit < 1 || r.Limit > 100 {
 		return fmt.Errorf("trace search requires v1, one to four conditions and limit 1..100")
@@ -76,7 +82,7 @@ func (r TraceSearchRequest) Validate() error {
 		}
 	}
 	for i := range r.Conditions {
-		q := Query{Signal: "spans", Environment: r.Environment, FromMS: r.FromMS, ToMS: r.ToMS, Where: &r.Conditions[i], Limit: 1}
+		q := Query{Signal: "spans", Environment: r.Environment, EnvironmentSelector: r.EnvironmentSelector, FromMS: r.FromMS, ToMS: r.ToMS, Where: &r.Conditions[i], Limit: 1}
 		if e := q.Validate(); e != nil {
 			return fmt.Errorf("condition %d: %w", i, e)
 		}
@@ -91,7 +97,7 @@ func CompileTraceSearch(r TraceSearchRequest) (TraceSearchPlan, error) {
 	if e := r.Validate(); e != nil {
 		return TraceSearchPlan{}, e
 	}
-	selection, err := identity.CurrentEnvironment(r.Environment)
+	selection, err := r.EnvironmentSelection()
 	if err != nil {
 		return TraceSearchPlan{}, err
 	}
@@ -128,6 +134,10 @@ func newTraceSearchResult(r TraceSearchRequest, plan TraceSearchPlan) *TraceSear
 	return &TraceSearchResult{Request: detached(r), State: "no_data", MatchedTraces: "0", Items: []TraceSearchItem{}, Plan: plan, Warnings: []string{"Distinct valid reported trace IDs within this environment and fixed window; not unique invocations or complete traces.", "Conditions are independent EXISTS tests. One observed span may satisfy several conditions; no ordering, parent topology or causal relationship is implied.", "Each witness is one representative matching record, not every matching span. Duplicate records remain in matching-record counts.", "This is one source aggregate read. Sampling, late arrivals, source coverage and records outside the fixed window remain unknown."}}
 }
 func (s Source) SearchTraces(ctx context.Context, r TraceSearchRequest) (*TraceSearchResult, error) {
+	if err := r.Validate(); err != nil {
+		return nil, err
+	}
+	r = detached(r)
 	plan, e := CompileTraceSearch(r)
 	if e != nil {
 		return nil, e
@@ -136,6 +146,7 @@ func (s Source) SearchTraces(ctx context.Context, r TraceSearchRequest) (*TraceS
 	if e != nil {
 		return nil, e
 	}
+	selection, _ := r.EnvironmentSelection()
 	out := newTraceSearchResult(r, plan)
 	if len(rows) > r.Limit+1 {
 		return nil, fmt.Errorf("trace search source row bound exceeded")
@@ -191,15 +202,19 @@ func (s Source) SearchTraces(ctx context.Context, r TraceSearchRequest) (*TraceS
 				return nil, e
 			}
 			expectedColumns := map[string]string{"service": tuple[3], "name": tuple[4], "kind": tuple[5], "duration_ns": tuple[6], "timestamp_ns": tuple[0], "span_id": tuple[1], "trace_id": id}
+			resources := map[string]string{}
 			for _, fieldValue := range fields {
 				if fieldValue.Field.Kind == "column" {
 					if expected, known := expectedColumns[fieldValue.Field.Key]; known && (fieldValue.Value == nil || *fieldValue.Value != expected) {
 						return nil, fmt.Errorf("trace witness field and record disagree")
 					}
 				}
-				if fieldValue.Field == (Field{Kind: "resource", Key: "deployment.environment.name"}) && (fieldValue.Value == nil || *fieldValue.Value != r.Environment) {
-					return nil, fmt.Errorf("trace witness environment disagrees")
+				if fieldValue.Field.Kind == "resource" && fieldValue.Value != nil {
+					resources[fieldValue.Field.Key] = *fieldValue.Value
 				}
+			}
+			if !selection.Matches(resources) {
+				return nil, fmt.Errorf("trace witness environment disagrees with requested policy")
 			}
 			item.Witnesses = append(item.Witnesses, TraceSearchWitness{ConditionIndex: i, MatchingRecords: count, SpanID: tuple[1], ParentSpanID: tuple[2], Service: tuple[3], Operation: tuple[4], Kind: tuple[5], TimestampNS: tuple[0], DurationNS: tuple[6], FieldValues: fields})
 		}
@@ -234,8 +249,7 @@ func (s Source) SearchTraces(ctx context.Context, r TraceSearchRequest) (*TraceS
 // TraceSearchRecord is a logical captured OTel record for independent reference
 // execution. Fixed columns and map keys use the ordinary Predicate field model.
 type TraceSearchRecord struct {
-	Environment string
-	Fields      map[Field]string
+	Fields map[Field]string
 }
 
 func ReferenceTraceSearch(r TraceSearchRequest, records []TraceSearchRecord) ([]TraceSearchItem, string, error) {
@@ -248,7 +262,7 @@ func ReferenceTraceSearch(r TraceSearchRequest, records []TraceSearchRecord) ([]
 		id := v[Field{Kind: "column", Key: "trace_id"}]
 		ts := v[Field{Kind: "column", Key: "timestamp_ns"}]
 		timeNS, ok := canonicalNS(ts)
-		if record.Environment != r.Environment || !exampleID(id, 32) || !ok || timeNS < uint64(r.FromMS)*1000000 || timeNS >= uint64(r.ToMS)*1000000 {
+		if !referenceTraceEnvironment(r, v) || !exampleID(id, 32) || !ok || timeNS < uint64(r.FromMS)*1000000 || timeNS >= uint64(r.ToMS)*1000000 {
 			continue
 		}
 		if _, ok := canonicalNS(v[Field{Kind: "column", Key: "duration_ns"}]); !ok {
@@ -289,6 +303,32 @@ func ReferenceTraceSearch(r TraceSearchRequest, records []TraceSearchRecord) ([]
 	}
 	return items, total, nil
 }
+
+// The reference chooses current/legacy presence independently of the SQL compiler.
+func referenceTraceEnvironment(r TraceSearchRequest, fields map[Field]string) bool {
+	selection, err := r.EnvironmentSelection()
+	if err != nil {
+		return false
+	}
+	current, hasCurrent := fields[Field{Kind: "resource", Key: identity.EnvironmentKey}]
+	legacy, hasLegacy := fields[Field{Kind: "resource", Key: identity.LegacyEnvironmentKey}]
+	scope := selection.Scope()
+	if selection.CurrentOnly() {
+		return hasCurrent && current == scope.Value
+	}
+	if !hasCurrent && !hasLegacy {
+		return scope.Mode == "unreported"
+	}
+	value := legacy
+	if hasCurrent {
+		value = current
+	}
+	if value == "" {
+		return scope.Mode == "empty"
+	}
+	return scope.Mode == "named" && value == scope.Value
+}
+
 func traceWitnessLess(a, b TraceSearchWitness) bool {
 	at, _ := canonicalNS(a.TimestampNS)
 	bt, _ := canonicalNS(b.TimestampNS)
@@ -322,7 +362,8 @@ func traceWitnessLess(a, b TraceSearchWitness) bool {
 }
 
 func traceSearchFields(p Predicate) []Field {
-	set := map[Field]bool{}
+	// Scope evidence is mandatory even when no user condition names an environment key.
+	set := map[Field]bool{{Kind: "resource", Key: identity.EnvironmentKey}: true, {Kind: "resource", Key: identity.LegacyEnvironmentKey}: true}
 	var walk func(Predicate)
 	walk = func(p Predicate) {
 		if p.Field != nil {
