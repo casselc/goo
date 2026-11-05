@@ -2,7 +2,9 @@
 
 Comparison roles come from the application owner that acquired the operands.
 They remain consistent in facts, Summary, Groups, narrow labels, accessible group
-actions, absence explanations and exact-change tooltips.
+actions, absence explanations and exact-change tooltips. Group-to-record children
+retain the same operand name in their heading, alongside the original UTC window;
+Back restores the supplied parent pair ([journey](journeys/334-comparison-record-drill.md)).
 
 - Fresh adjacent queries: **Previous window** and **Selected window**.
 - Other fixed query baselines: their existing fixed-baseline and selected names.

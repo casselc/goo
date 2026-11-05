@@ -1,5 +1,17 @@
 # Semantic properties and model conformance
 
+## Comparison supporting records (334)
+
+Thirty generated Go/JavaScript planner cases check both operand windows, typed
+policy, missing/empty groups, full predicates and retired same-count source identity.
+The [native journey](../docs/journeys/334-comparison-record-drill.md) separately
+checks real records, role headings, retained return and late-response rejection.
+
+```sh
+go test -C verification -run '^TestHegelComparisonRecordDrill334$' -count=1 .
+GOO_COMPARISON_RECORD_BOMBADIL=1 bash scripts/run_journeys.sh journeys/334-comparison-record-drill.spec.js
+```
+
 ## Incident-flow correctness checkpoint (312)
 
 The [real incident storyboard](../docs/journeys/312-incident-checkpoint.md) covers

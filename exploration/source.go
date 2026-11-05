@@ -1,7 +1,6 @@
 package exploration
 
 import (
-	"bufio"
 	"bytes"
 	"context"
 	"crypto/sha256"
@@ -104,10 +103,8 @@ func (s Source) read(ctx context.Context, sql string, params map[string]string) 
 		return nil, fmt.Errorf("source exceeds 8 MiB")
 	}
 	rows := []json.RawMessage{}
-	scan := bufio.NewScanner(bytes.NewReader(b))
-	scan.Buffer(make([]byte, 4096), 8<<20)
-	for scan.Scan() {
-		line := bytes.TrimSpace(scan.Bytes())
+	for line := range bytes.Lines(b) {
+		line = bytes.TrimSpace(line)
 		if len(line) == 0 {
 			continue
 		}
@@ -120,7 +117,7 @@ func (s Source) read(ctx context.Context, sql string, params map[string]string) 
 			return nil, fmt.Errorf("source row budget exceeded")
 		}
 	}
-	return rows, scan.Err()
+	return rows, nil
 }
 func (s Source) Fetch(ctx context.Context, q Query) (*Result, error) { return s.fetch(ctx, q, q.Limit) }
 

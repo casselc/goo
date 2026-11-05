@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+334 preserves natural comparison operand labels when staging supporting records.
+These are independent reads of the exact operand scope, not frozen copies or
+completeness claims. The runtime is pinned to Go 1.27.3; extended-library version
+gaps remain a separately reviewed maintenance task ([review](reviews/GO_RUNTIME_REVIEW_334.md)).
+
 321 adds [previous-window count comparisons](PREVIOUS_WINDOW_COMPARISON.md) to
 ordinary single-query log/span count compositions. It stages an adjacent
 same-duration baseline for explicit Run, retains both fixed questions through

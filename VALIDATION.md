@@ -1,5 +1,17 @@
 # Validation record
 
+## Comparison supporting records and Go maintenance — 334
+
+[Journey](docs/journeys/334-comparison-record-drill.md) · [architecture](docs/reviews/COMPARISON_RECORD_DRILL_ARCHITECTURE_334.md) · [design](docs/reviews/COMPARISON_RECORD_DRILL_DESIGN_334.md) · [Go review](docs/reviews/GO_RUNTIME_REVIEW_334.md).
+
+- Existing group-side staging already preserves the exact operand query, typed environment, group predicate and explicit Run. The child heading now reuses the same natural role as Summary/Groups. No new query executor, projection or controls.
+- Full frontend suite: 1,096 passed, zero failures/skips, 44.248 seconds. Full root Go suite passes under verified Go 1.27.3. All three Go image pins and CI's `.go-version` agree. The official archive size and SHA256 were verified before activation.
+- Thirty generated Go/JS drill cases plus the existing hundred-case group-side property and predicate-budget negative pass (69.344 seconds on 1.27.2 before the patch update). Exact windows, typed policy, missing/empty groups, whole predicate conjunction and stale same-count source identity are checked; these are planner checks, not browser claims.
+- Instrumentation also passes on 1.27.3 (11 tests, zero skips). Operation-example compilation was interrupted during a host I/O stall; report-example checks were not started. Neither example image was rebuilt, and those checks are not claimed as passing. The environment recovered after stopping the extra check; cgroup counters report zero OOM kills.
+- `bytes.Lines` replaces redundant scanning of an already bounded response. Exact 8 MiB valid single-object input is now accepted; byte overflow, 1,002 rows and invalid non-object rows still refuse. Final unterminated objects, whitespace and body-close/error behavior remain covered. No benchmark speedup claim.
+- Rebuilt/recreated only the Go server; served `population-workspace.mjs` matches source. Real OTLP native journey passes (1.4 minutes): full 13/107 pair; previous 9 and selected 70 JSON/DOM records match exact operand windows/service/policy; four Back operations preserve pair/presentation/Find/focus without reads. A genuine completed child response released after Back cannot restore the child. No page errors.
+- Bombadil runs 30 seconds with 223 admitted snapshots spanning phases 0–9. Final state independently requires two verified reads and two returns, four source reads, one comparison, zero writes, immutable retained pair and no horizontal overflow. Zero exit alone is not admission. Architecture/design accept actual frames; desktop records appear in the initial viewport. Narrow frame is a region capture, supplemented by the document-overflow assertion. Native 334 covers logs; existing 333 spans coverage and planner signal generation remain separate.
+
 ## Activity full-window comparison and operand roles — 333
 
 [Contract](docs/ACTIVITY_WINDOW_COMPARISON.md) · [roles](docs/COMPARISON_OPERAND_ROLES.md) · [journey](docs/journeys/333-activity-window-comparison.md) · [architecture](docs/reviews/ACTIVITY_WINDOW_COMPARISON_ARCHITECTURE_333.md) · [design](docs/reviews/ACTIVITY_WINDOW_COMPARISON_DESIGN_333.md).

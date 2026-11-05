@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM golang:1.27.2-alpine AS go-build
+FROM golang:1.27.3-alpine AS go-build
 # Bind the source once rather than copying the full toolchain snapshot for every
 # package on VFS builders. Both Go caches are disposable build-only mounts.
 RUN --mount=type=bind,source=.,target=/src,readonly \

@@ -1,7 +1,6 @@
 package exploration
 
 import (
-	"bufio"
 	"context"
 	"encoding/json"
 	"errors"
@@ -61,7 +60,7 @@ func TestRecordSourceResponseWireContract(t *testing.T) {
 	cases := []struct {
 		name, payload, wantError string
 		status, wantRows         int
-		broken, scanner          bool
+		broken                   bool
 	}{
 		{name: "empty", status: 200},
 		{name: "trimmed objects", status: 200, payload: " \r\n {\"n\":18446744073709551615} \r\n\t{}\n", wantRows: 2},
@@ -73,7 +72,9 @@ func TestRecordSourceResponseWireContract(t *testing.T) {
 		{name: "row overflow", status: 200, payload: strings.Repeat("{}\n", 1002), wantError: "source row budget exceeded"},
 		{name: "byte boundary", status: 200, payload: strings.Repeat(exactLine, 8), wantRows: 8},
 		{name: "byte overflow", status: 200, payload: strings.Repeat(" ", (8<<20)+1), wantError: "source exceeds 8 MiB"},
-		{name: "scanner boundary", status: 200, payload: strings.Repeat(" ", 8<<20), scanner: true},
+		{name: "single whitespace byte boundary", status: 200, payload: strings.Repeat(" ", 8<<20)},
+		{name: "single object byte boundary", status: 200, payload: `{"x":"` + strings.Repeat("a", (8<<20)-8) + `"}`, wantRows: 1},
+		{name: "unterminated final object", status: 200, payload: "{}\n{\"n\":1}", wantRows: 2},
 		{name: "created", status: 201, broken: true, wantError: "exploration source HTTP 201"},
 		{name: "unavailable", status: 503, broken: true, wantError: "exploration source HTTP 503"},
 		{name: "read failure", status: 200, broken: true, wantError: "body failure"},
@@ -94,12 +95,6 @@ func TestRecordSourceResponseWireContract(t *testing.T) {
 			}
 			if tc.status != 200 && body.reads != 0 {
 				t.Fatal("error body consumed")
-			}
-			if tc.scanner {
-				if !errors.Is(err, bufio.ErrTooLong) || rows == nil {
-					t.Fatal("scanner contract", rows, err)
-				}
-				return
 			}
 			if tc.wantError != "" {
 				if err == nil || err.Error() != tc.wantError || rows != nil {

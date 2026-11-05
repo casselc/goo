@@ -29,6 +29,9 @@ to its original verified record; one kept route visit acquires the receipt once.
 Activity's [Compare previous window by service](docs/ACTIVITY_WINDOW_COMPARISON.md)
 stages both full fixed populations for explicit Run; loaded rows never supply their
 totals. Summary and Groups retain the [actual operand roles](docs/COMPARISON_OPERAND_ROLES.md).
+Follow either group into supporting records with that same operand label, exact
+window and checked filters; Run reads fresh data and Back restores the comparison
+([journey](docs/journeys/334-comparison-record-drill.md)).
 General [saved-capture navigation](docs/CAPTURE_NAVIGATION.md) also keeps pending
 reads and Save/Refresh display adoption with the current task.
 
@@ -111,7 +114,7 @@ apply; this does not install a collector or create source tables.
 ## Build from source
 
 All six Go modules require Go 1.27 or newer. [`.go-version`](.go-version)
-pins the validated compiler (currently 1.27.2) used by CI and Docker builds.
+pins the validated compiler (currently 1.27.3) used by CI and Docker builds.
 Keep that file and the three Docker build images aligned when updating it.
 Instrumentation, examples and verification retain separate dependency graphs;
 `go test ./...` at the root does not test nested modules. See
