@@ -32,6 +32,9 @@ totals. Summary and Groups retain the [actual operand roles](docs/COMPARISON_OPE
 Follow either group into supporting records with that same operand label, exact
 window and checked filters; Run reads fresh data and Back restores the comparison
 ([journey](docs/journeys/334-comparison-record-drill.md)).
+[Saved-view restoration](docs/SAVED_VIEW_RESTORATION.md) joins browser history
+notifications without replacing local work. Opening stages configuration; Run
+reads telemetry, and a failed opening offers an explicit retry.
 General [saved-capture navigation](docs/CAPTURE_NAVIGATION.md) also keeps pending
 reads and Save/Refresh display adoption with the current task.
 

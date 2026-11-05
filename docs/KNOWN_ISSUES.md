@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+335 consolidates [saved-view restoration](SAVED_VIEW_RESTORATION.md): one metadata
+acquisition per visit, retained local tasks on passive notifications, and explicit
+retry after a failed opening. This does not cache definitions across visits or
+run telemetry on open. Final validation is recorded separately.
+
 334 preserves natural comparison operand labels when staging supporting records.
 These are independent reads of the exact operand scope, not frozen copies or
 completeness claims. The runtime is pinned to Go 1.27.3; extended-library version

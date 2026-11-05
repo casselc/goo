@@ -1,5 +1,18 @@
 # Semantic properties and model conformance
 
+## Saved-view restoration (335)
+
+Generated history schedules exercise the actual population owner with deferred,
+abort-insensitive definition reads. The observer fixture checks acquisition and
+caller admission; the [native journey](../docs/journeys/335-saved-view-restore.md)
+separately checks the real parent synchronization, rendering, controls and focus.
+
+```sh
+go test -C verification -run '^TestHegelSavedViewRestore335$' -count=1 .
+node --experimental-test-module-mocks tests/saved-view-route-owner.test.mjs
+GOO_SAVED_RESTORE_BOMBADIL=1 bash scripts/run_journeys.sh journeys/335-saved-view-restore.spec.js
+```
+
 ## Comparison supporting records (334)
 
 Thirty generated Go/JavaScript planner cases check both operand windows, typed
