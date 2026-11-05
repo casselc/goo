@@ -3801,3 +3801,21 @@ same-ID sharing and late-result admission, and must fail. Browser focus, genuine
 receipt verification and custody/source accounting belong to the
 [native journey](../docs/journeys/331-kept-matching-record.md), including its
 thirty-second actor. See [contract](../docs/KEPT_MATCH_NAVIGATION.md).
+
+
+## Capture route and campaign admission — 332
+
+`TestHegelCaptureRoute332` and `TestHegelKeptMatchNavigation331` exercise actual
+capture adapters with passive rendering/transport doubles. Run them together:
+`go test -C verification -run '^TestHegel(CaptureRoute332|KeptMatchNavigation331)$' -count=1 .`.
+The expanded capture fixture includes Activity-origin Save departure/ABA and
+original requested attachments, separately from GET/Refresh admission. Mutation
+controls must reject unsafe joining, late reads, Save authority and queued
+HashChangeEvent retirement. It does not establish native browser focus or source
+execution; those belong to the [real journey](../docs/journeys/332-capture-route.md).
+
+All shared Bombadil finish calls now require positive trace observations and no
+recorded violations. Optional named/model selectors identify the expected extractor;
+journeys retain their own completion/result/IO checks. See
+[campaign admission](../docs/CAMPAIGN_ADMISSION.md) for the stable result shape and
+the distinction between process `exited` and a completed task.

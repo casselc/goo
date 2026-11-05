@@ -49,8 +49,16 @@ verified original receipt member. Its hint is in-tab only; copied receipt URLs
 open the selection. Leaving/revisiting verifies afresh, while retained context
 Back preserves its existing receipt and inspector without reads.
 
+332 extends current-visit admission to [general saved captures](CAPTURE_NAVIGATION.md):
+stored page reads, pending refresh display and Save display leases. Authorized
+publication/attachment effects remain separate from stale UI adoption. The shared
+[campaign gate](CAMPAIGN_ADMISSION.md) rejects empty/unobserved runs without
+claiming journey completion. The checkpoint also records independent saved-view
+restore acquisition and misleading Current held labels on fresh fixed-query
+comparisons as finite follow-ups, not delivered fixes.
+
 The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
-[active roadmap](ROADMAP_2026_11_03.md) replace the older parallel feature queues.
+[active roadmap](ROADMAP_2026_11_05.md) replace the older parallel feature queues.
 312 delivers the selected corrections: shared selection-command readiness/leases,
 explicit facet-to-comparison promotion, bounded facet lookup lifetime, terminal
 record-page diagnostics and detached returned query metadata. 313 hides the dormant root editor while retaining its state, removes redundant

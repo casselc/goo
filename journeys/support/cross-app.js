@@ -5,6 +5,7 @@ const path = require('node:path');
 const { spawn } = require('node:child_process');
 const { stripVTControlCharacters } = require('node:util');
 const { validateGoEvents } = require('./go-verdict');
+const { admitBombadil } = require('./bombadil-verdict');
 const goo = process.env.GOO_QUERY_URL || 'http://127.0.0.1:8088';
 const frames = path.resolve('docs/journeys/screenshots');
 
@@ -118,7 +119,9 @@ async function startBombadil({ dir, url, specification, seconds, width, height }
     const complete = async result => {
       if (completing) return; completing = true; exited = true;
       try {
-        const record = {...result, startedAt, endedAt:Date.now(), status:result.code===0?'passed':'failed',...(width===undefined?{}:{viewport:{width,height}})};
+        // This artifact reports process termination only. Journey completion is
+        // established separately from admitted observations and local assertions.
+        const record = {...result, startedAt, endedAt:Date.now(), status:result.code===0&&!result.signal&&!result.error?'exited':'failed',...(width===undefined?{}:{viewport:{width,height}})};
         const temporary = path.join(dir, 'run-result.json.tmp');
         await fs.writeFile(temporary, JSON.stringify(record, null, 2));
         await fs.rename(temporary, path.join(dir, 'run-result.json'));
@@ -135,10 +138,11 @@ async function startBombadil({ dir, url, specification, seconds, width, height }
     async ready(action) {
       await expect.poll(() => stripVTControlCharacters(logs.join('')).includes(action), { timeout: 20000 }).toBe(true);
     },
-    async finish() {
+    async finish(options) {
       const result = await finished; await save();
       expect(result.code, logs.join('').slice(-3000)).toBe(0);
-      return result;
+      const observed = admitBombadil(result, await fs.readFile(path.join(dir, 'trace.jsonl'), 'utf8'), options);
+      return {run:result, ...observed};
     },
     async stop() { if (!exited) { processHandle.kill('SIGINT'); await finished; } await save(); },
   };

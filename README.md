@@ -26,6 +26,8 @@ refuses before a read. Find preserved records later with bounded, literal
 [kept content search](docs/KEPT_CONTENT_SEARCH.md), without querying telemetry.
 [Open matching record](docs/KEPT_MATCH_NAVIGATION.md) takes a search witness directly
 to its original verified record; one kept route visit acquires the receipt once.
+General [saved-capture navigation](docs/CAPTURE_NAVIGATION.md) also keeps pending
+reads and Save/Refresh display adoption with the current task.
 
 Temporary and saved count comparisons use [one supplied-pair presentation](docs/COUNT_PAIR_PRESENTATION.md),
 with a Summary/Groups choice and explicit operand windows and read clocks.
@@ -79,7 +81,7 @@ these views through the same saved-view catalog.
 to an explicitly chosen Goo server.
 [Record paging](docs/RECORD_PAGE_PROFILE.md) retains any held aggregate and timeline.
 
-[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_03.md) ·
+[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_05.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
 [Go/frontend library review and proposal](docs/LIBRARY_REFACTOR_PLAN_2026_10_28.md)
 

@@ -1,11 +1,9 @@
 # Implementation plan
 
-> Active execution order: [November product roadmap and backlog](ROADMAP_2026_11_03.md).
-> Delivered 312: whole-product incident-flow review and bounded correctness fixes
-> for selection commands, facet lifetime/promotion and source certainty/ownership.
-> Next 313 consolidates the active investigation canvas; 314 measures actual source
-> demand before optimizing reads. Delivery notes below are retained history, not
-> parallel active queues.
+> Active execution order: [November 5 whole-product roadmap](ROADMAP_2026_11_05.md).
+> The 332 checkpoint reconciles route ownership, comparison clarity and observed
+> campaign completion. Delivery notes below are retained history, not parallel
+> active queues.
 
 
 

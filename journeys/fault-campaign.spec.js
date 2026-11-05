@@ -36,7 +36,7 @@ test('28 correlate generated retry, rejection and missing-terminal workloads', a
         const actor = await startBombadil({ dir: appDir, url: url.href,
           specification: 'verification/bombadil/scenario.ts', seconds: 12 });
         try {
-          const outcome = await actor.finish(), result = await capturedScenario(appDir, scenarios[target]);
+          const {run: outcome} = await actor.finish(), result = await capturedScenario(appDir, scenarios[target]);
           expect(observed.requests.some(previous => previous.result.id === result.id)).toBe(false);
           observed.requests.push({ result, startedAt, actor: outcome });
         } finally { await actor.stop(); }
@@ -55,7 +55,7 @@ test('28 correlate generated retry, rejection and missing-terminal workloads', a
       const actual = { action: checkpoint.action, target, issued: observed.requests.length, checked: checked.size, revisits, done };
       expect(actual).toEqual(checkpoint); observed.checkpoints.push(actual); await persist();
     }
-    observed.exploration = await explorer.finish();
+    ({run: observed.exploration} = await explorer.finish());
     const records = (await fs.readFile(path.join(dir, 'goo/trace.jsonl'), 'utf8')).trim().split('\n').map(JSON.parse);
     const steps = records.filter(record => record.action?.Custom?.name === 'goo.navigate').length;
     expect(steps).toBeGreaterThan(0); observed.exploration.steps = steps;

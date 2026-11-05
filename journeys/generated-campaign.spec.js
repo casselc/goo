@@ -37,7 +37,7 @@ test('27 replay a Quint-generated workload with Bombadil over both apps', async 
         const actor = await startBombadil({ dir: appDir, url: app,
           specification: 'verification/bombadil/report.ts', seconds: 6 });
         try {
-          const outcome = await actor.finish();
+          const {run: outcome} = await actor.finish();
           const report = await capturedReport(appDir);
           expect(observations.reports.some(previous => previous.report.id === report.id)).toBe(false);
           observations.reports.push({ report, workloadStartedAt, observedAt: new Date().toISOString(), actor: outcome });
@@ -80,7 +80,7 @@ test('27 replay a Quint-generated workload with Bombadil over both apps', async 
       observations.checkpoints.push(actual);
       await persist();
     }
-    observations.exploration = await explorer.finish();
+    ({run: observations.exploration} = await explorer.finish());
     await persist();
     await verifyWithGo(dir, 'TestQuintBrowserCampaignLiveObservations', {
       GOO_CAMPAIGN_OBSERVATIONS: path.join(dir, 'observations.json'),
