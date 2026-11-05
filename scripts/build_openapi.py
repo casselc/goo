@@ -273,14 +273,19 @@ schemas['KeptResource']={'oneOf':[ref('exploration.KeptObservations'),ref('explo
 
 keptSearch=schemas['exploration.KeptSearchPage'];keptSearch['properties']['version']['const']='goo/kept-search/v1'
 keptSearch['properties']['items'].update(type='array',maxItems=20)
-for name in ('total','matched'):keptSearch['properties'][name].update(minimum=0,maximum=1000)
+for name in ('total','matched','eligible','checked'):keptSearch['properties'][name].update(minimum=0,maximum=1000)
 keptSummary=schemas['exploration.KeptSummary'];keptSummary['additionalProperties']=False
 keptSummary['properties']['observations'].update(minimum=1,maximum=20)
 keptSummary['properties']['origin']['enum']=['tail-selection','result-page','saved-capture']
 keptSummary['properties']['signal']['enum']=['logs','spans']
 for name in ('id','digest'):keptSummary['properties'][name]['pattern']='^[a-f0-9]{64}$'
 keptSummary['oneOf']=[{'required':['environment'],'not':{'required':['environmentSelector']}},{'required':['environmentSelector'],'not':{'required':['environment']}}]
-keptSearch['description']='Bounded derived metadata only. Exact reopen independently verifies records. Twenty selections per page,1000 physical root entries; cursor binds filters and metadata state. Missing/corrupt metadata refuses rather than truncating. Repair is explicit bounded source-free maintenance.'
+keptSearch['properties']['bytes'].update(minimum=0,maximum=33554432)
+keptSearch['properties']['matchingRecords'].update(minimum=0,maximum=400)
+schemas['exploration.KeptSearchQuery']['properties']['text'].update(maxLength=256,description='Case-sensitive literal UTF-8 text; Go admission limits encoded length to 256 bytes.')
+contentMatch=schemas['exploration.KeptContentMatch'];contentMatch['additionalProperties']=False;contentMatch['properties']['records'].update(minimum=1,maximum=20)
+witness=schemas['exploration.KeptMatchWitness'];witness['additionalProperties']=False;witness['properties']['memberIndex'].update(minimum=0,maximum=19);witness['properties']['field']['enum']=['Body','SpanName','ServiceName','TraceId','SpanId'];witness['properties']['text'].update(maxLength=320)
+keptSearch['description']='Source-free kept discovery. Empty text checks derived metadata and reports exact eligible/matched counts. Literal text scans verified immutable receipts, at most 64 receipts/32 MiB and 20 matching selections per response; checked, bytes, matched and matchingRecords are page-local. eligible is the metadata-filtered candidate count. hasMore means unchecked candidates remain; empty items can have a continuation. Cursor binds query and metadata state; corrupt receipt/index refuses without partial success.'
 repairPage=schemas['exploration.KeptRepairPage']['properties']
 repairPage['indexed'].update(minimum=0,maximum=64);repairPage['bytes'].update(minimum=0,maximum=33554432)
 for name in ('completed','total'):repairPage[name].update(minimum=0,maximum=1000)
@@ -878,7 +883,7 @@ for (method,path),(file,block) in sorted(route_source.items()):
    elif parameter['name']=='environment':
     parameter['schema']={'type':'string','minLength':1,'maxLength':128}
     parameter['description']='Historical current-key-only environment filter. Matches equivalent typed current-only selections, never effective selections of the same name. Mutually exclusive with environmentSelector.'
- if path=='/kept-observations/search':op['parameters']=[{'name':name,'in':'query','schema':({'type':'string','enum':['','tail-selection','result-page','saved-capture']} if name=='origin' else {'type':'string','enum':['','logs','spans']} if name=='signal' else {'type':'string','maxLength':1024})} for name in ('origin','signal','cursor')]
+ if path=='/kept-observations/search':op['parameters']=[{'name':name,'in':'query','schema':({'type':'string','enum':['','tail-selection','result-page','saved-capture']} if name=='origin' else {'type':'string','enum':['','logs','spans']} if name=='signal' else {'type':'string','maxLength':256,'description':'Case-sensitive literal UTF-8 text, at most 256 bytes. Empty text lists metadata.'} if name=='text' else {'type':'string','maxLength':1024})} for name in ('origin','signal','text','cursor')]
  for p in {'/captures':['cursor'],'/captures/{id}':['cursor'],'/captures/{id}/followups':['row'],'/captures/{id}/compare':['selection','distribution']}.get(path,[]):
   if method=='get' and not any(v['name']==p and v['in']=='query' for v in op['parameters']):op['parameters'].append({'name':p,'in':'query','schema':{'type':'string'},'description':'Single canonical value; saved evidence is not reread from the telemetry source.'})
  controlled=method=='post' and path in ('/environment-scopes','/environment-scopes/records','/metric-discovery','/pod-metric-discovery','/host-discovery','/pod-discovery','/measurements','/explore','/explore/page','/explore/counted-values','/record-aggregates','/trace-search','/population/explain','/inventory','/discovery','/captures','/captures/live')

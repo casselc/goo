@@ -13,6 +13,7 @@ import (
 	"slices"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/casselc/goo/identity"
 	"github.com/casselc/goo/internal/directorylock"
@@ -22,6 +23,9 @@ const KeptCatalogLimit = 1000
 const KeptCatalogEntryBytes = 4096
 const KeptRepairBytes = 32 << 20
 const KeptRepairBatch = 64
+const KeptSearchBatch = 64
+const KeptSearchBytes = 32 << 20
+const KeptSearchTextBytes = 256
 const keptCatalogVersion = "goo/kept-search/v1"
 
 var ErrKeepCapacity = errors.New("keep storage capacity reached; existing exact IDs remain accessible")
@@ -29,7 +33,18 @@ var ErrKeptCatalog = errors.New("kept observation index unavailable; repair the 
 var ErrKeptCursor = errors.New("kept observation cursor no longer matches; restart discovery or repair")
 var keptCatalogSlots = make(chan struct{}, 2)
 
+type KeptMatchWitness struct {
+	MemberIndex int    `json:"memberIndex"`
+	Field       string `json:"field"`
+	Text        string `json:"text"`
+}
+type KeptContentMatch struct {
+	Records int              `json:"records"`
+	Witness KeptMatchWitness `json:"witness"`
+}
+
 type KeptSummary struct {
+	Match               *KeptContentMatch             `json:"match,omitempty"`
 	ID                  string                        `json:"id"`
 	Version             string                        `json:"version"`
 	Origin              string                        `json:"origin"`
@@ -215,18 +230,22 @@ func (s KeptObservationStore) readKeepIndex(file keptFile) (KeptSummary, string,
 	}
 	checksum := entry.Checksum
 	entry.Checksum = ""
-	if entry.Version != 1 || entry.Summary.ID != file.ID || entry.Summary.Validate() != nil || checksum != tailMembershipHash(entry) || entry.Size != file.Size || entry.ModifiedNS != file.ModifiedNS {
+	if entry.Summary.Match != nil || entry.Version != 1 || entry.Summary.ID != file.ID || entry.Summary.Validate() != nil || checksum != tailMembershipHash(entry) || entry.Size != file.Size || entry.ModifiedNS != file.ModifiedNS {
 		return entry.Summary, "", ErrKeptCatalog
 	}
 	return entry.Summary, checksum, nil
 }
 
 type KeptSearchQuery struct {
+	Text   string `json:"text,omitempty"`
 	Origin string `json:"origin,omitempty"`
 	Signal string `json:"signal,omitempty"`
 }
 
 func (q KeptSearchQuery) Validate() error {
+	if len(q.Text) > KeptSearchTextBytes || !utf8.ValidString(q.Text) {
+		return errors.New("kept text must be valid UTF-8 and at most 256 bytes")
+	}
 	if q.Origin != "" && !slices.Contains([]string{"tail-selection", "result-page", "saved-capture"}, q.Origin) || q.Signal != "" && !slices.Contains([]string{"logs", "spans"}, q.Signal) {
 		return errors.New("unsupported kept origin or signal")
 	}
@@ -234,13 +253,17 @@ func (q KeptSearchQuery) Validate() error {
 }
 
 type KeptSearchPage struct {
-	Version    string          `json:"version"`
-	Query      KeptSearchQuery `json:"query"`
-	Items      []KeptSummary   `json:"items"`
-	Total      int             `json:"total"`
-	Matched    int             `json:"matched"`
-	HasMore    bool            `json:"hasMore"`
-	NextCursor string          `json:"nextCursor,omitempty"`
+	Eligible        int             `json:"eligible"`
+	Checked         int             `json:"checked"`
+	Bytes           int64           `json:"bytes"`
+	MatchingRecords int             `json:"matchingRecords"`
+	Version         string          `json:"version"`
+	Query           KeptSearchQuery `json:"query"`
+	Items           []KeptSummary   `json:"items"`
+	Total           int             `json:"total"`
+	Matched         int             `json:"matched"`
+	HasMore         bool            `json:"hasMore"`
+	NextCursor      string          `json:"nextCursor,omitempty"`
 }
 type keptCatalogCursor struct {
 	Basis string `json:"basis"`
@@ -329,6 +352,7 @@ func (s KeptObservationStore) Search(ctx context.Context, q KeptSearchQuery, cur
 		return strings.Compare(a.ID, b.ID)
 	})
 	page.Total = len(files)
+	page.Eligible = len(sums)
 	page.Matched = len(sums)
 	start := 0
 	if cursor != "" {
@@ -337,6 +361,46 @@ func (s KeptObservationStore) Search(ctx context.Context, q KeptSearchQuery, cur
 			return nil, ErrKeptCursor
 		}
 	}
+	if q.Text != "" {
+		page.Matched = 0
+		sizes := make(map[string]int64, len(files))
+		for _, file := range files {
+			sizes[file.ID] = file.Size
+		}
+		end := start
+		for end < len(sums) && page.Checked < KeptSearchBatch && len(page.Items) < 20 {
+			summary := sums[end]
+			if page.Bytes+sizes[summary.ID] > KeptSearchBytes {
+				break
+			}
+			if e = ctx.Err(); e != nil {
+				return nil, e
+			}
+			v, n, e := s.loadBounded(summary.ID, KeptSearchBytes-page.Bytes)
+			if e != nil {
+				return nil, fmt.Errorf("%w: keep %s: %v", ErrKeptCatalog, summary.ID, e)
+			}
+			verified, e := keptSummary(v)
+			if e != nil || tailMembershipHash(verified) != tailMembershipHash(summary) {
+				return nil, ErrKeptCatalog
+			}
+			page.Bytes += n
+			page.Checked++
+			end++
+			summary.Match = keptContentMatch(v, summary.Signal, q.Text)
+			if summary.Match != nil {
+				page.Items = append(page.Items, summary)
+				page.Matched++
+				page.MatchingRecords += summary.Match.Records
+			}
+		}
+		page.HasMore = end < len(sums)
+		if page.HasMore {
+			page.NextCursor = keptCursorToken(keptCatalogCursor{basis, tailMembershipHash(q), sums[end-1].ID})
+		}
+		return page, nil
+	}
+	page.Checked = len(sums)
 	end := min(start+20, len(sums))
 	page.Items = append(page.Items, sums[start:end]...)
 	page.HasMore = end < len(sums)
@@ -421,4 +485,49 @@ func (s KeptObservationStore) RepairCatalog(ctx context.Context, cursor string) 
 		result.NextCursor = keptCursorToken(keptCatalogCursor{basis, "repair-v1", files[result.Completed-1].ID})
 	}
 	return result, nil
+}
+
+// Search only the admitted string fields of verified immutable receipt members.
+func keptContentMatch(v keptResource, signal, text string) *KeptContentMatch {
+	var records []json.RawMessage
+	switch v := v.(type) {
+	case *KeptObservations:
+		for _, m := range v.Members {
+			records = append(records, m.Record)
+		}
+	case *KeptRecords:
+		for _, m := range v.Members {
+			records = append(records, m.Record)
+		}
+	}
+	primary := "Body"
+	if signal == "spans" {
+		primary = "SpanName"
+	}
+	var result *KeptContentMatch
+	for index, raw := range records {
+		var fields map[string]json.RawMessage
+		if json.Unmarshal(raw, &fields) != nil {
+			continue
+		}
+		for _, field := range []string{primary, "ServiceName", "TraceId", "SpanId"} {
+			var value string
+			if json.Unmarshal(fields[field], &value) != nil {
+				continue
+			}
+			offset := strings.Index(value, text)
+			if offset < 0 {
+				continue
+			}
+			if result == nil {
+				before := []rune(value[:offset])
+				after := []rune(value[offset+len(text):])
+				excerpt := string(before[max(0, len(before)-32):]) + text + string(after[:min(32, len(after))])
+				result = &KeptContentMatch{Witness: KeptMatchWitness{index, field, excerpt}}
+			}
+			result.Records++
+			break
+		}
+	}
+	return result
 }

@@ -7093,6 +7093,42 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.KeepTailIntent"
   },
+  "exploration.KeptContentMatch": {
+    "properties": {
+      "records": {
+        "type": "integer"
+      },
+      "witness": {
+        "$ref": "#/components/schemas/exploration.KeptMatchWitness"
+      }
+    },
+    "required": [
+      "records",
+      "witness"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.KeptContentMatch"
+  },
+  "exploration.KeptMatchWitness": {
+    "properties": {
+      "field": {
+        "type": "string"
+      },
+      "memberIndex": {
+        "type": "integer"
+      },
+      "text": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "memberIndex",
+      "field",
+      "text"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.KeptMatchWitness"
+  },
   "exploration.KeptObservation": {
     "properties": {
       "basis": {
@@ -7328,6 +7364,15 @@
   },
   "exploration.KeptSearchPage": {
     "properties": {
+      "bytes": {
+        "type": "integer"
+      },
+      "checked": {
+        "type": "integer"
+      },
+      "eligible": {
+        "type": "integer"
+      },
       "hasMore": {
         "type": "boolean"
       },
@@ -7347,6 +7392,9 @@
       "matched": {
         "type": "integer"
       },
+      "matchingRecords": {
+        "type": "integer"
+      },
       "nextCursor": {
         "type": "string"
       },
@@ -7361,6 +7409,10 @@
       }
     },
     "required": [
+      "eligible",
+      "checked",
+      "bytes",
+      "matchingRecords",
       "version",
       "query",
       "items",
@@ -7377,6 +7429,9 @@
         "type": "string"
       },
       "signal": {
+        "type": "string"
+      },
+      "text": {
         "type": "string"
       }
     },
@@ -7415,6 +7470,16 @@
       "keptAt": {
         "format": "date-time",
         "type": "string"
+      },
+      "match": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.KeptContentMatch"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "observations": {
         "type": "integer"

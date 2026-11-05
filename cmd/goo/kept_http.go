@@ -85,12 +85,12 @@ func registerKeptObservations(mux *http.ServeMux, dir string, bank *exploration.
 			return
 		}
 		for key, list := range values {
-			if len(list) != 1 || (key != "origin" && key != "signal" && key != "cursor") {
+			if len(list) != 1 || (key != "origin" && key != "signal" && key != "cursor" && key != "text") {
 				fail(w, 400, errors.New("unsupported kept search query"))
 				return
 			}
 		}
-		q := exploration.KeptSearchQuery{Origin: values.Get("origin"), Signal: values.Get("signal")}
+		q := exploration.KeptSearchQuery{Text: values.Get("text"), Origin: values.Get("origin"), Signal: values.Get("signal")}
 		if err := q.Validate(); err != nil {
 			fail(w, 400, err)
 			return

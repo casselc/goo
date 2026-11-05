@@ -128,6 +128,14 @@ func TestKeptCatalogRepairResumesBeyondWholeStoreBudget(t *testing.T) {
 	if e != nil || second.HasMore || second.Completed != 12 {
 		t.Fatal(second, e)
 	}
+	content, e := s.Search(ctx, KeptSearchQuery{Text: "absent"}, "")
+	if e != nil || !content.HasMore || content.Checked != 11 || content.Bytes > KeptSearchBytes {
+		t.Fatal(content, e)
+	}
+	continuation, e := s.Search(ctx, KeptSearchQuery{Text: "absent"}, content.NextCursor)
+	if e != nil || continuation.Checked != 1 || continuation.HasMore {
+		t.Fatal(continuation, e)
+	}
 	if page, e := s.Search(ctx, KeptSearchQuery{}, ""); e != nil || page.Total != 12 {
 		t.Fatal(page, e)
 	}
@@ -273,5 +281,102 @@ func TestKeptRepairReadsUseActualRemainingBudget(t *testing.T) {
 	}
 	if _, n, e := s.loadBounded(in.RequestID, int64(len(raw))); e != nil || n != int64(len(raw)) {
 		t.Fatal("exact bounded read", n, e)
+	}
+}
+
+func TestKeptContentSearchBoundedContinuationAndVerification(t *testing.T) {
+	s, _, _ := populateKeeps(t, 70)
+	ctx := context.Background()
+	q := KeptSearchQuery{Text: "absent"}
+	first, e := s.Search(ctx, q, "")
+	if e != nil || first.Checked != 64 || first.Matched != 0 || len(first.Items) != 0 || !first.HasMore || first.NextCursor == "" || first.Eligible != 70 || first.Bytes <= 0 || first.Bytes > KeptSearchBytes {
+		t.Fatal(first, e)
+	}
+	second, e := s.Search(ctx, q, first.NextCursor)
+	if e != nil || second.Checked != 6 || second.HasMore {
+		t.Fatal(second, e)
+	}
+	if _, e = s.Search(ctx, KeptSearchQuery{Text: "same"}, first.NextCursor); !errors.Is(e, ErrKeptCursor) {
+		t.Fatal("query cursor reused", e)
+	}
+	page, e := s.Search(ctx, KeptSearchQuery{Text: "same"}, "")
+	if e != nil || page.Checked != 20 || page.Matched != 20 || page.MatchingRecords != 40 || !page.HasMore {
+		t.Fatal(page, e)
+	}
+	for _, item := range page.Items {
+		if item.Match == nil || item.Match.Records != 2 || item.Match.Witness.MemberIndex != 0 || item.Match.Witness.Field != "Body" || !strings.Contains(item.Match.Witness.Text, "same") {
+			t.Fatal(item)
+		}
+	}
+	path := filepath.Join(s.Dir, page.Items[0].ID+".json")
+	info, _ := os.Stat(path)
+	raw, _ := os.ReadFile(path)
+	broken := strings.Replace(string(raw), "same", "oops", 1)
+	if e = os.WriteFile(path, []byte(broken), 0600); e != nil {
+		t.Fatal(e)
+	}
+	if e = os.Chtimes(path, info.ModTime(), info.ModTime()); e != nil {
+		t.Fatal(e)
+	}
+	if result, e := s.Search(ctx, KeptSearchQuery{Text: "same"}, ""); !errors.Is(e, ErrKeptCatalog) || result != nil {
+		t.Fatal("corrupt receipt accepted", result, e)
+	}
+}
+
+func TestKeptContentSearchLiteralFieldsAndWitness(t *testing.T) {
+	for _, signal := range []string{"logs", "spans"} {
+		for _, field := range []string{"Body", "SpanName", "ServiceName", "TraceId", "SpanId", "Other"} {
+			value := strings.Repeat("前", 100) + "A.*é" + strings.Repeat("後", 100)
+			row, _ := json.Marshal(map[string]any{field: value})
+			v := &KeptRecords{Members: []KeptRecord{{Record: row}, {Record: row}}}
+			match := keptContentMatch(v, signal, "A.*é")
+			expected := field != "Other" && (field != "Body" || signal == "logs") && (field != "SpanName" || signal == "spans")
+			if expected != (match != nil) {
+				t.Fatal(signal, field, match)
+			}
+			if match != nil && (match.Records != 2 || match.Witness.Field != field || len([]rune(match.Witness.Text)) > 320 || !strings.Contains(match.Witness.Text, "A.*é")) {
+				t.Fatal(match)
+			}
+			if keptContentMatch(v, signal, "a.*é") != nil {
+				t.Fatal("case folded")
+			}
+		}
+	}
+	for _, text := range []string{strings.Repeat("x", 257), string([]byte{0xff}), strings.Repeat("é", 129)} {
+		if (KeptSearchQuery{Text: text}).Validate() == nil {
+			t.Fatal("invalid query accepted")
+		}
+	}
+	if (KeptSearchQuery{Text: strings.Repeat("é", 128)}).Validate() != nil {
+		t.Fatal("valid byte limit refused")
+	}
+}
+
+func TestKeptContentSearchRejectsUnverifiedMetadata(t *testing.T) {
+	for _, injectMatch := range []bool{false, true} {
+		s, _, in := populateKeeps(t, 1)
+		path := filepath.Join(s.catalogDir(), in.RequestID+".json")
+		raw, e := os.ReadFile(path)
+		if e != nil {
+			t.Fatal(e)
+		}
+		var entry keptIndexEntry
+		if e = json.Unmarshal(raw, &entry); e != nil {
+			t.Fatal(e)
+		}
+		if injectMatch {
+			entry.Summary.Match = &KeptContentMatch{Records: 1, Witness: KeptMatchWitness{0, "Body", "same"}}
+		} else {
+			entry.Summary.KeptAt = entry.Summary.KeptAt.Add(time.Second)
+		}
+		entry.Checksum = ""
+		entry.Checksum = tailMembershipHash(entry)
+		raw, _ = json.Marshal(entry)
+		if e = os.WriteFile(path, raw, 0600); e != nil {
+			t.Fatal(e)
+		}
+		if result, e := s.Search(context.Background(), KeptSearchQuery{Text: "same"}, ""); result != nil || !errors.Is(e, ErrKeptCatalog) {
+			t.Fatal("derived metadata accepted as verified", result, e)
+		}
 	}
 }

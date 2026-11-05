@@ -142,8 +142,10 @@ breaker. Scope displays its original environment policy; unreported, empty and
 named scopes are never merged. Selection counts are not telemetry population counts.
 Local browser recent links and unresolved requests remain separate below.
 
-`GET /api/kept-observations/search` reads derived metadata only, never telemetry
-or full record payloads. Metadata retains receipt version, exact ID/content digest,
+Without Record text, `GET /api/kept-observations/search` reads derived metadata
+only, never telemetry or full record payloads. Optional [Record text](KEPT_CONTENT_SEARCH.md)
+checks bounded batches of verified original receipts, with page-local counts and
+one bounded witness. Neither path reads telemetry. Metadata retains receipt version, exact ID/content digest,
 origin, signal, versioned environment policy/scope, selected occurrence count and
 keep time. It contains no original question, source capability, record contents or
 labels. **Open kept observations** uses the existing exact-ID verifier. Summary
@@ -151,7 +153,7 @@ checksums and file size/mtime stamps detect common staleness; they do **not**
 establish record integrity or authenticity. Exact reopen checks authoritative
 contents even if same-size corruption escaped discovery stamps.
 
-Origin/signal changes only stage filters. Find applies them; More/Previous continue
+Origin/signal/text changes only stage filters. Find applies them; More/Previous continue
 the applied query. Cursors bind filters and the full metadata snapshot, so changed
 catalogs refuse continuation rather than silently duplicating/skipping selections.
 History advances only after successful reads. Collapsing either containing

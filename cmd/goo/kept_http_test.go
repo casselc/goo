@@ -136,6 +136,13 @@ func TestKeptDiscoveryHTTPAndExplicitRepair(t *testing.T) {
 	if len(page.Items) != 1 || page.Items[0].ID != in.RequestID {
 		t.Fatal(page)
 	}
+	json.Unmarshal(call("GET", "/kept-observations/search?text=original", "", 200), &page)
+	if page.Checked != 1 || page.Matched != 1 || page.MatchingRecords != 1 || page.Items[0].Match.Witness.Text != "original" {
+		t.Fatal(page)
+	}
+	call("GET", "/kept-observations/search?text=one&text=two", "", 400)
+	call("GET", "/kept-observations/search?text=%FF", "", 400)
+	call("GET", "/kept-observations/search?text="+strings.Repeat("x", 257), "", 400)
 	call("GET", "/kept-observations/search?signal=metrics", "", 400)
 	call("GET", "/kept-observations/search?signal=%ZZ", "", 400)
 	call("GET", "/kept-observations/search?signal=logs&signal=spans", "", 400)

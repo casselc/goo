@@ -1988,6 +1988,15 @@
             }
           },
           {
+            "name": "text",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 256,
+              "description": "Case-sensitive literal UTF-8 text, at most 256 bytes. Empty text lists metadata."
+            }
+          },
+          {
             "name": "cursor",
             "in": "query",
             "schema": {
@@ -14104,6 +14113,56 @@
           "refs"
         ]
       },
+      "exploration.KeptContentMatch": {
+        "properties": {
+          "records": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "witness": {
+            "$ref": "#/components/schemas/exploration.KeptMatchWitness"
+          }
+        },
+        "required": [
+          "records",
+          "witness"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.KeptContentMatch",
+        "additionalProperties": false
+      },
+      "exploration.KeptMatchWitness": {
+        "properties": {
+          "field": {
+            "type": "string",
+            "enum": [
+              "Body",
+              "SpanName",
+              "ServiceName",
+              "TraceId",
+              "SpanId"
+            ]
+          },
+          "memberIndex": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 19
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 320
+          }
+        },
+        "required": [
+          "memberIndex",
+          "field",
+          "text"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.KeptMatchWitness",
+        "additionalProperties": false
+      },
       "exploration.KeptObservation": {
         "properties": {
           "basis": {
@@ -14408,6 +14467,21 @@
       },
       "exploration.KeptSearchPage": {
         "properties": {
+          "bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 33554432
+          },
+          "checked": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "eligible": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          },
           "hasMore": {
             "type": "boolean"
           },
@@ -14431,6 +14505,11 @@
             "minimum": 0,
             "maximum": 1000
           },
+          "matchingRecords": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 400
+          },
           "nextCursor": {
             "type": "string"
           },
@@ -14448,6 +14527,10 @@
           }
         },
         "required": [
+          "eligible",
+          "checked",
+          "bytes",
+          "matchingRecords",
           "version",
           "query",
           "items",
@@ -14457,7 +14540,7 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.KeptSearchPage",
-        "description": "Bounded derived metadata only. Exact reopen independently verifies records. Twenty selections per page,1000 physical root entries; cursor binds filters and metadata state. Missing/corrupt metadata refuses rather than truncating. Repair is explicit bounded source-free maintenance."
+        "description": "Source-free kept discovery. Empty text checks derived metadata and reports exact eligible/matched counts. Literal text scans verified immutable receipts, at most 64 receipts/32 MiB and 20 matching selections per response; checked, bytes, matched and matchingRecords are page-local. eligible is the metadata-filtered candidate count. hasMore means unchecked candidates remain; empty items can have a continuation. Cursor binds query and metadata state; corrupt receipt/index refuses without partial success."
       },
       "exploration.KeptSearchQuery": {
         "properties": {
@@ -14466,6 +14549,11 @@
           },
           "signal": {
             "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 256,
+            "description": "Case-sensitive literal UTF-8 text; Go admission limits encoded length to 256 bytes."
           }
         },
         "required": [],
@@ -14505,6 +14593,16 @@
           "keptAt": {
             "format": "date-time",
             "type": "string"
+          },
+          "match": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.KeptContentMatch"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "observations": {
             "type": "integer",

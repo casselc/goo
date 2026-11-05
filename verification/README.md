@@ -3775,3 +3775,17 @@ namespace presence, typed environment, clipping, detached inputs and invalid
 reporting refusal are checked independently. Compilation is not SQL execution.
 See the [review](../docs/reviews/SURROUNDING_CONTEXT_ARCHITECTURE_329.md) and
 [real source journey](../docs/journeys/329-qualified-log-context.md).
+
+
+## Kept content search — 330
+
+`TestKeptContentSearchProperties330` generates twenty catalogs through public
+Freeze/KeepRecords admission. Its independent membership oracle checks both
+signals, literal punctuation/Unicode/whitespace, admitted fields, matching-record
+multiplicity, first-member/field witnesses, bounded continuation and query-binding
+negative controls. Run with `go test -C verification -run '^TestKeptContentSearchProperties330$' -count=1 .`.
+The [native journey](../docs/journeys/330-kept-content-search.md) uses genuine
+OTLP and UI Keeps; `GOO_KEPT_CONTENT_BOMBADIL=1` enables the thirty-second catalog
+campaign. Completion must observe actual search DTOs and exact receipt opening,
+with zero source reads or custody writes after instrumentation. Exit zero alone
+is insufficient. See [contract](../docs/KEPT_CONTENT_SEARCH.md).
