@@ -1,0 +1,43 @@
+name: Retention driver
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  retention:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    env:
+      GOMAXPROCS: '2'
+      GOO_XTDB_TEST_URL: postgres://xtdb@127.0.0.1:15432/xtdb?sslmode=disable
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: .go-version
+      - name: Start the pinned XTDB fixture
+        run: docker compose -f compose.yaml -f compose.xtdb.yaml up -d --no-deps --wait --wait-timeout 180 xtdb
+      - name: Exercise native store and HTTP contracts; refuse skipped coverage
+        run: |
+          go test -p 1 ./retention ./cmd/goo -run '^TestXTDB' -count=1 -json | tee "$RUNNER_TEMP/retention-tests.json"
+          python3 - <<'PY'
+          import json, os, pathlib
+          events = [json.loads(line) for line in (pathlib.Path(os.environ['RUNNER_TEMP']) / 'retention-tests.json').read_text().splitlines()]
+          native = [event for event in events if event.get('Test', '').startswith('TestXTDB')]
+          assert not any(event['Action'] in ('skip', 'fail') for event in native), 'native retention coverage skipped or failed'
+          assert sum(event['Action'] == 'pass' and '/' not in event['Test'] for event in native) >= 11, 'native retention campaign did not complete'
+          PY
+      - name: Assess the actual root dependency graph
+        run: |
+          go install -p 1 golang.org/x/vuln/cmd/govulncheck@v1.9.0
+          govulncheck -db https://vuln.go.dev ./...
+      - name: Show XTDB diagnostics on failure
+        if: failure()
+        run: docker compose -f compose.yaml -f compose.xtdb.yaml logs --tail 100 xtdb
+      - name: Stop the CI fixture
+        if: always()
+        run: docker compose -f compose.yaml -f compose.xtdb.yaml stop xtdb

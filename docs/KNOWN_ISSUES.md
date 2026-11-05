@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+336 updates the root/verification retention driver graph and removes unused
+`x/crypto` in favor of the driver's standard-library PBKDF2. Native XTDB checks
+validate the existing optional store, not a production deployment or newer XTDB
+server. Vulnerability DB access is currently blocked by managed-proxy policy; no
+clean security assessment is claimed ([review](reviews/GO_DEPENDENCY_UPDATE_336.md)).
+
 335 consolidates [saved-view restoration](SAVED_VIEW_RESTORATION.md): one metadata
 acquisition per visit, retained local tasks on passive notifications, and explicit
 retry after a failed opening. This does not cache definitions across visits or
@@ -7,8 +13,8 @@ run telemetry on open. Final validation is recorded separately.
 
 334 preserves natural comparison operand labels when staging supporting records.
 These are independent reads of the exact operand scope, not frozen copies or
-completeness claims. The runtime is pinned to Go 1.27.3; extended-library version
-gaps remain a separately reviewed maintenance task ([review](reviews/GO_RUNTIME_REVIEW_334.md)).
+completeness claims. The runtime is pinned to Go 1.27.3; 336 modernizes the root/verification driver
+closure. Other module graphs remain independent ([runtime review](reviews/GO_RUNTIME_REVIEW_334.md)).
 
 321 adds [previous-window count comparisons](PREVIOUS_WINDOW_COMPARISON.md) to
 ordinary single-query log/span count compositions. It stages an adjacent

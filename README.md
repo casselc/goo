@@ -119,6 +119,9 @@ apply; this does not install a collector or create source tables.
 All six Go modules require Go 1.27 or newer. [`.go-version`](.go-version)
 pins the validated compiler (currently 1.27.3) used by CI and Docker builds.
 Keep that file and the three Docker build images aligned when updating it.
+The optional XTDB retention driver and verification graph use the current checked
+[pgx dependency closure](docs/reviews/GO_DEPENDENCY_UPDATE_336.md), including standard
+library PBKDF2; native retention checks require `GOO_XTDB_TEST_URL`.
 Instrumentation, examples and verification retain separate dependency graphs;
 `go test ./...` at the root does not test nested modules. See
 [verification setup](verification/README.md#reproducible-entry-point) for the pinned sibling checkout and native

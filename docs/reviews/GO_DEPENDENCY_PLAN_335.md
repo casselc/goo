@@ -2,6 +2,8 @@
 
 Status: read-only assessment, not an implemented dependency update. The 335
 saved-view ownership work remains independent of this maintenance proposal.
+The driver closure is implemented in [336](GO_DEPENDENCY_UPDATE_336.md); the
+security assessment remains pending database access.
 
 ## Current graph and relevance
 
