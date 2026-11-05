@@ -1,5 +1,9 @@
 # Facets over fixed-window comparisons
 
+338 extends this initial 337 contract with [both-window category values](CATEGORY_PAIRS.md).
+The selected-only acquisition described below records the original cut; common
+filtering, scope preservation and staging/Run boundaries continue to apply.
+
 Keep a categorical facet while comparing two fresh fixed queries. The facet's
 **Selected window values** come from an explicit independent read of the applied
 selected query, including its existing filters. They are not loaded-row totals,

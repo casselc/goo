@@ -1,5 +1,9 @@
 # Paired categorical facets — architecture and verification (337)
 
+338 extends value acquisition to both windows and refreshes the maintained frames;
+this review records the original 337 acceptance. See the [current category
+contract](../CATEGORY_PAIRS.md) and 338 reviews for the newer behavior.
+
 Status: source, semantics and observed effects accepted; visual evidence has separate limits.
 
 ## Authority and data boundaries

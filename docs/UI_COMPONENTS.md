@@ -1782,19 +1782,32 @@ attribute support detached SPA updates and server-rendered HTML. See
 
 
 The facet's controlled property/attribute is `data`:
-`{declaration, values, disabled?, hasStaged?, basisLabel?}`. The optional literal
+`{declaration, values, baseline?, baselineLabel?, disabled?, hasStaged?, basisLabel?}`. The optional literal
 `basisLabel` is nonblank, at most 120 UTF-8 bytes, well-formed text without control
-characters; its default is **Applied fixed scope**. Comparison owners supply
-**Selected window values**. This label is display metadata, not persisted facet
+characters; its default is **Applied fixed scope**, or **Both window values**
+when a baseline state is supplied. `baselineLabel` uses the same literal bounds,
+requires a baseline state and defaults to **Fixed baseline**. This label is display metadata, not persisted facet
 grammar or source/count authority. Values are `unloaded`, `loading`,
 `error`, or `ready`; ready values carry the matching qualified field, unique
 `{value, count}` items, a canonical decimal total and both count/group read
 receipts. `null` means missing and `""` means present empty. Exact positive counts
 must sum to the supplied total. Invalid replacement data withdraws the old model.
 The element emits `goo:facet-load`, `goo:facet-stage` (`{mode, value}`), and
-`goo:facet-clear`; the host binds these to its current declaration and scope.
+`goo:facet-clear`; paired errors also emit `goo:facet-retry` with
+`{side: "selected" | "baseline"}`. The host binds these to its current declaration
+and scope.
 An optional `interaction.current()` lease disables stale actions. Local Find is
 presentation only and survives updates to the same admitted value read.
+
+With `baseline`, the same element derives a literal-category union from the ready
+side(s), bounded at 2,000 values (1,000 per operand). Missing keys and present-empty
+strings retain distinct identity. An absent category is zero only within a ready,
+validated grouping partition; an unloaded/loading/error side remains unknown.
+One-sided failures preserve successful counts and expose failed-side Retry.
+Shared-scale bars appear only when both sides are ready; local Find never changes
+that full-union domain. Independent operand count/group clocks and exact scope
+labels remain in Read details. These are observed matching-row partitions, not
+proof of upstream telemetry completeness or the older held pair's read basis.
 
 This is a typed control model in the shared context, not a ranked snapshot or a
 new completeness witness. Valid JSON data does not grant source/action authority.

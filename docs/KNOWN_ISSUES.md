@@ -1,16 +1,26 @@
 # Known issues and gaps
 
+338 extends fresh-pair facets with independent category populations from both
+windows, including baseline-only values. Ready grouping absence means zero only
+within the returned partition; missing/failed reads remain unknown and upstream
+coverage remains unverified. Each source side still refuses more than 1,000
+categories; the union may contain 2,000. This cap is not a byte or DOM-work budget.
+See [category contract](CATEGORY_PAIRS.md) and [validation](../VALIDATION.md).
+
 337 composes categorical facets with fresh fixed-query count pairs. Values/counts
 are from the selected query; a common filter narrows both original scopes for
 explicit Run. Captured and temporary set comparisons remain outside this action.
-Five existing unique roles can coexist without removing a valid timeline. Baseline-
-only facet values and per-category comparisons remain the 338 depth task. See
+Five existing unique roles can coexist without removing a valid timeline. The
+selected-only initial acquisition is superseded by 338 above. See
 [contract](PAIRED_FACETS.md) and final [validation](../VALIDATION.md).
 
 The 337 Bombadil campaigns advance through DOM/API states, but recorded JPEGs
 can repeat stale loading states (initial or child). The final campaign has four
 unique images across 448 captures; 441 show the same child loading state despite
 completed DOM/API checks. Those captures do not prove the terminal visual state.
+The 338 campaign independently reproduces this capture limitation: 461 JPEGs,
+four unique hashes, with 453 (including the terminal capture) repeating a child
+loading frame despite the verified applied DOM/API state.
 Maintained frames use independently captured Playwright viewports; the observed
 capture limitation is retained for test-driver investigation, not attributed to
 Goo rendering or all Bombadil runs.

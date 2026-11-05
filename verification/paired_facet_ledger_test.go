@@ -93,7 +93,7 @@ func validatePairedFacet337(t *testing.T, steps []pairedFacetStep337) {
 	}
 }
 func TestQuintPairedFacetModelSmoke337(t *testing.T) {
-	counts := [][5]int{{0, 0, 0, 0, 0}, {2, 0, 1, 0, 0}, {2, 1, 1, 0, 0}, {2, 1, 1, 0, 0}, {2, 1, 1, 0, 0}, {4, 1, 2, 0, 0}, {4, 2, 2, 0, 0}, {4, 2, 2, 0, 0}, {4, 2, 2, 0, 0}, {6, 2, 3, 0, 0}, {6, 2, 3, 0, 0}, {7, 2, 3, 0, 0}, {7, 2, 3, 0, 0}, {7, 2, 3, 1, 0}, {7, 2, 3, 1, 1}, {7, 2, 3, 1, 1}, {9, 2, 4, 1, 1}}
+	counts := [][5]int{{0, 0, 0, 0, 0}, {2, 0, 1, 0, 0}, {2, 2, 1, 0, 0}, {2, 2, 1, 0, 0}, {2, 2, 1, 0, 0}, {4, 2, 2, 0, 0}, {4, 4, 2, 0, 0}, {4, 4, 2, 0, 0}, {4, 4, 2, 0, 0}, {6, 4, 3, 0, 0}, {6, 4, 3, 0, 0}, {7, 4, 3, 0, 0}, {7, 4, 3, 0, 0}, {7, 4, 3, 1, 0}, {7, 4, 3, 1, 1}, {7, 4, 3, 1, 1}, {9, 4, 4, 1, 1}}
 	steps := make([]pairedFacetStep337, len(counts))
 	for i, c := range counts {
 		steps[i] = pairedFacetStep337{Action: pairedFacetActions337[i], Reads: c[0], Lookups: c[1], Compares: c[2], Saves: c[3], Encodes: c[4], Preserved: true}

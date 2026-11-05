@@ -44050,7 +44050,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.FacetViewDeclaration",
         "additionalProperties": false,
-        "description": "One explicit categorical field over the applied selected query. Existing counted-values projection derives counts on explicit Load; no values, selections, requests or runtime state are stored. A fresh fixed-query count comparison can retain the facet when both questions support it; values/counts describe the selected window, and common filtering preserves both original scopes. Captured comparisons, numeric, histogram, reported-edge and grouped-time profiles remain unsupported. Ordinary category templates retain the explicit facet field rather than rebinding it."
+        "description": "One explicit categorical field over the applied query. Existing counted-values projection derives counts on explicit Load; no values, selections, requests or runtime state are stored. A fresh fixed-query count comparison can retain the facet when both questions support it; independent value reads describe both original windows, and common filtering preserves both original scopes. Captured comparisons, numeric, histogram, reported-edge and grouped-time profiles remain unsupported. Ordinary category templates retain the explicit facet field rather than rebinding it."
       },
       "workbench.FacetViewDeclarationInput": {
         "additionalProperties": false,
@@ -44178,7 +44178,7 @@
           "field",
           "display"
         ],
-        "description": "One explicit categorical field over the applied selected query. Existing counted-values projection derives counts on explicit Load; no values, selections, requests or runtime state are stored. A fresh fixed-query count comparison can retain the facet when both questions support it; values/counts describe the selected window, and common filtering preserves both original scopes. Captured comparisons, numeric, histogram, reported-edge and grouped-time profiles remain unsupported. Ordinary category templates retain the explicit facet field rather than rebinding it."
+        "description": "One explicit categorical field over the applied query. Existing counted-values projection derives counts on explicit Load; no values, selections, requests or runtime state are stored. A fresh fixed-query count comparison can retain the facet when both questions support it; independent value reads describe both original windows, and common filtering preserves both original scopes. Captured comparisons, numeric, histogram, reported-edge and grouped-time profiles remain unsupported. Ordinary category templates retain the explicit facet field rather than rebinding it."
       },
       "workbench.FacetViewDisplay": {
         "properties": {

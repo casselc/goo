@@ -1,5 +1,9 @@
 # Paired categorical facet design — 337
 
+338 extends value acquisition to both windows and refreshes the maintained frames;
+this review records the original 337 acceptance. See the [current category
+contract](../CATEGORY_PAIRS.md) and 338 reviews for the newer behavior.
+
 Status: final source and refreshed native viewport frames accepted.
 This review performed no browser run, build or telemetry measurement.
 

@@ -1,5 +1,25 @@
 # Semantic properties and model conformance
 
+## Two-window category populations (338)
+
+Generated properties exercise the actual pure JavaScript projection across
+independent ready, loading, failed and empty states, exact uint64 counts, literal
+missing/empty identities and disjoint 2,000-value unions. The 21-step Quint model
+checks baseline-only staging, explicit reads, return and save/export/reopen, with
+mutated effects and unfinished prefixes as negative controls. The live journey
+supplies its observed ledger to the same checker and separately exercises
+failed-side retry and retirement of an actual held counted-values response.
+
+```sh
+go -C verification test -run '^Test(HegelCategoryPairProjection338|CategoryPairFullUnion338|QuintCategoryPairModelSmoke338)$' -count=1 .
+GOO_CATEGORY_PAIR_BOMBADIL=1 bash scripts/run_journeys.sh 338-category-pair.spec.js
+```
+
+Use the configured writable `XDG_CACHE_HOME` for Hegel's native library. Model
+conformance checks effects, while semantic properties and the native request/row
+checks own count and scope claims. See the [contract](../docs/CATEGORY_PAIRS.md)
+and [storyboard](../docs/journeys/338-category-pair.md).
+
 ## Paired categorical facets (337)
 
 Forty generated cases exercise the actual JavaScript common-filter planner and
@@ -29,7 +49,7 @@ caller admission; the [native journey](../docs/journeys/335-saved-view-restore.m
 separately checks the real parent synchronization, rendering, controls and focus.
 
 ```sh
-go test -C verification -run '^TestHegelSavedViewRestore335$' -count=1 .
+go -C verification test -run '^TestHegelSavedViewRestore335$' -count=1 .
 node --experimental-test-module-mocks tests/saved-view-route-owner.test.mjs
 GOO_SAVED_RESTORE_BOMBADIL=1 bash scripts/run_journeys.sh journeys/335-saved-view-restore.spec.js
 ```
@@ -42,7 +62,7 @@ The [native journey](../docs/journeys/334-comparison-record-drill.md) separately
 checks real records, role headings, retained return and late-response rejection.
 
 ```sh
-go test -C verification -run '^TestHegelComparisonRecordDrill334$' -count=1 .
+go -C verification test -run '^TestHegelComparisonRecordDrill334$' -count=1 .
 GOO_COMPARISON_RECORD_BOMBADIL=1 bash scripts/run_journeys.sh journeys/334-comparison-record-drill.spec.js
 ```
 
@@ -58,7 +78,7 @@ view admission and YAML; the source adapter separately checks 972 bounded count/
 offset/limit/lookahead states through its real transport interface.
 
 ```sh
-go test -C verification -run '^TestHegelIncident' -count=1 .
+go -C verification test -run '^TestHegelIncident' -count=1 .
 ./node_modules/.bin/playwright test journeys/312-incident-checkpoint.spec.js
 go test ./exploration -run '312$' -count=1
 ```
@@ -79,7 +99,7 @@ preserves the HTTP marker, literal method field and duration measure through loc
 choices and explicit child reads.
 
 ```sh
-go test -C verification -run '^(TestHegelHTTPMethodFacetTemplateScopeAndLiteralBinding|TestQuintHTTPMethodFacetModelSmoke)$' -count=1 .
+go -C verification test -run '^(TestHegelHTTPMethodFacetTemplateScopeAndLiteralBinding|TestQuintHTTPMethodFacetModelSmoke)$' -count=1 .
 ./node_modules/.bin/playwright test journeys/311-http-method-facet.spec.js
 ```
 
@@ -95,7 +115,7 @@ than private source authority. A bounded optional Bombadil driver exercises scop
 value reads, local staging/Clear and explicit child Run/value acquisition.
 
 ```sh
-go test -C verification -run '^(TestHegelDeclarativeFacet|TestQuintDeclarativeFacetModelSmoke)' -count=1 .
+go -C verification test -run '^(TestHegelDeclarativeFacet|TestQuintDeclarativeFacetModelSmoke)' -count=1 .
 ./node_modules/.bin/playwright test journeys/310-declarative-facet.spec.js
 ./node_modules/.bin/playwright test journeys/categorical-facet-components.spec.js
 ```
@@ -112,7 +132,7 @@ authority. The optional bounded Bombadil driver covers local edit/discard/stage,
 fresh-window staging and explicit Run through the same controls.
 
 ```sh
-go test -C verification -run '^(TestHegelPairedWindowJSOutputAdmittedByGo|TestQuintPairedWindowModelSmoke)$' -count=1 .
+go -C verification test -run '^(TestHegelPairedWindowJSOutputAdmittedByGo|TestQuintPairedWindowModelSmoke)$' -count=1 .
 GOO_PAIRED_WINDOW_BOMBADIL=1 ./node_modules/.bin/playwright test journeys/309-paired-window.spec.js
 ```
 
@@ -127,7 +147,7 @@ and an unfinished prefix; the model checks workflow effects rather than private
 source authority.
 
 ```sh
-go test -C verification -run '^(TestHegelFixedQueryViewArtifactRoundTripAndIsolation|TestQuintSavedFixedCohortModelSmoke)$' -count=1 .
+go -C verification test -run '^(TestHegelFixedQueryViewArtifactRoundTripAndIsolation|TestQuintSavedFixedCohortModelSmoke)$' -count=1 .
 ./node_modules/.bin/playwright test journeys/308-saved-fixed-cohorts.spec.js
 ```
 
@@ -136,9 +156,9 @@ go test -C verification -run '^(TestHegelFixedQueryViewArtifactRoundTripAndIsola
 The [real journey and storyboard](../journeys/271-duration-histogram-storyboard.md) cover exact eight-bin duration geometry, one-record inspection pages versus full group totals, source-bound gestures, manual bounds, explicit selected/rest reads, retired callbacks and Saved display. The 100 generated actual Go DTO → JavaScript cases include duration boundaries/zeroes/extreme counts, malformed tagged families and numeric histogram nonregression. Four producer controls reject unknown/null/duplicate/overflow groups.
 
 ```sh
-go test -C verification -run '^(TestHegel(CanonicalDurationHistogram|TaggedNumericHistogram)|TestCanonicalDurationHistogramRefuses)' -count=1 -v .
+go -C verification test -run '^(TestHegel(CanonicalDurationHistogram|TaggedNumericHistogram)|TestCanonicalDurationHistogramRefuses)' -count=1 -v .
 ./node_modules/.bin/playwright test journeys/271-duration-histogram.spec.js
-GOO_DURATION_HISTOGRAM_LEDGER="$PWD/artifacts/scoped-271/model-trace.json" go test -C verification -run '^TestQuintDurationHistogramObservedBrowserLedger$' -count=1 -v .
+GOO_DURATION_HISTOGRAM_LEDGER="$PWD/artifacts/scoped-271/model-trace.json" go -C verification test -run '^TestQuintDurationHistogramObservedBrowserLedger$' -count=1 -v .
 ```
 
 Optional `GOO_DURATION_HISTOGRAM_BOMBADIL=1` runs the maintained 35-second external-driver campaign. The final run passed with 491 snapshots across eight phases, three explicit Explore reads and one comparison. The eight-step observed model checks read conservation and explicit selected/rest effects with seven negative controls and a prefix rejection. It does not prove private source or action authority. Keep compact ledgers and maintained frames; remove successful raw campaign directories.
@@ -148,9 +168,9 @@ Optional `GOO_DURATION_HISTOGRAM_BOMBADIL=1` runs the maintained 35-second exter
 The [real journey and storyboard](../journeys/270-histogram-comparison-storyboard.md) compare independent captured and valid-value denominators, exact signed endpoints, local scale changes, explicit side-range planning/execution and immutable Saved views. The Hegel lane runs 100 actual Go canonical comparison DTOs through the real JavaScript constructor, validator and model, including empty/no-valid/diagnostic operands and malformed bindings, geometry and accounting.
 
 ```sh
-go test -C verification -run '^TestHegelCanonicalHistogramComparison' -count=1 -v .
+go -C verification test -run '^TestHegelCanonicalHistogramComparison' -count=1 -v .
 ./node_modules/.bin/playwright test journeys/270-histogram-comparison.spec.js
-GOO_HISTOGRAM_COMPARISON_LEDGER="$PWD/artifacts/scoped-270/model-trace.json" go test -C verification -run '^TestQuintHistogramComparisonObservedBrowserLedger$' -count=1 -v .
+GOO_HISTOGRAM_COMPARISON_LEDGER="$PWD/artifacts/scoped-270/model-trace.json" go -C verification test -run '^TestQuintHistogramComparisonObservedBrowserLedger$' -count=1 -v .
 ```
 
 The six-step observed Quint model checks independent exact percentages and read/planner conservation, rejects seven altered traces and an unfinished prefix, and does not claim private action-authority verification. Optional `GOO_HISTOGRAM_COMPARISON_BOMBADIL=1` runs the maintained external-driver campaign. The final 35-second run passed with 492 snapshots across 11 phases, three explicit Explore reads and one side planner call. Keep its compact summary/ledger/model trace; remove successful raw campaign artifacts after review.
@@ -204,9 +224,9 @@ independent. XTDB and browser campaigns are separate opt-ins.
 ### Canonical fixed histograms — 269
 
 ```sh
-go test -C verification -run '^TestHegelCanonicalHistogram' -count=1 -v .
+go -C verification test -run '^TestHegelCanonicalHistogram' -count=1 -v .
 ./node_modules/.bin/playwright test journeys/269-scoped-histogram.spec.js
-GOO_SCOPED_HISTOGRAM_LEDGER="$PWD/artifacts/scoped-269/model-trace.json" go test -C verification -run '^TestQuintScopedHistogramObservedBrowserLedger$' -count=1 -v .
+GOO_SCOPED_HISTOGRAM_LEDGER="$PWD/artifacts/scoped-269/model-trace.json" go -C verification test -run '^TestQuintScopedHistogramObservedBrowserLedger$' -count=1 -v .
 ```
 
 The 100 generated cases pass actual Go source DTOs through actual JS contracts.
@@ -231,9 +251,9 @@ model traces and current frames, not raw successful campaigns or capture stores.
 ### Exact status fractions — 268
 
 ```sh
-go test -C verification -run '^TestHegelStatusFraction' -count=1 -v .
+go -C verification test -run '^TestHegelStatusFraction' -count=1 -v .
 ./node_modules/.bin/playwright test journeys/268-status-fractions.spec.js
-GOO_STATUS_FRACTION_LEDGER="$PWD/artifacts/scoped-268/model-trace.json" go test -C verification -run '^TestQuintStatusFractionsObservedBrowserLedger$' -count=1 -v .
+GOO_STATUS_FRACTION_LEDGER="$PWD/artifacts/scoped-268/model-trace.json" go -C verification test -run '^TestQuintStatusFractionsObservedBrowserLedger$' -count=1 -v .
 ```
 
 The 100 generated cases use actual Go source DTOs for grouped/time/summary status
@@ -259,9 +279,9 @@ summaries/model traces and actual documentation frames, not raw successful runs.
 ### Ordinary Distribution shares — 267
 
 ```sh
-go test -C verification -run '^(TestHegelDistributionPartitionShares|TestHegelDistributionMeasureConservation)$' -count=1 -v .
+go -C verification test -run '^(TestHegelDistributionPartitionShares|TestHegelDistributionMeasureConservation)$' -count=1 -v .
 ./node_modules/.bin/playwright test journeys/267-distribution-shares.spec.js
-GOO_DISTRIBUTION_SHARE_LEDGER="$PWD/artifacts/scoped-267/model-trace.json" go test -C verification -run '^TestQuintDistributionSharesObservedBrowserLedger$' -count=1 -v .
+GOO_DISTRIBUTION_SHARE_LEDGER="$PWD/artifacts/scoped-267/model-trace.json" go -C verification test -run '^TestQuintDistributionSharesObservedBrowserLedger$' -count=1 -v .
 ```
 
 The 100 generated cases use actual Go-produced dataset DTOs and the actual JS
@@ -288,9 +308,9 @@ summaries/model traces and current frames; raw successful campaigns are disposab
 Run from the repository root:
 
 ```sh
-go test -C verification -run '^TestHegelScopeAction' -count=1 -v .
+go -C verification test -run '^TestHegelScopeAction' -count=1 -v .
 ./node_modules/.bin/playwright test journeys/266-scope-actions.spec.js
-GOO_SCOPE_ACTION_LEDGER="$PWD/artifacts/scoped-266/model-trace.json" go test -C verification -run '^TestQuintScopeActionsObservedBrowserLedger$' -count=1 -v .
+GOO_SCOPE_ACTION_LEDGER="$PWD/artifacts/scoped-266/model-trace.json" go -C verification test -run '^TestQuintScopeActionsObservedBrowserLedger$' -count=1 -v .
 ```
 
 Two Hegel suites run 100 generated cases against the actual JavaScript action
@@ -323,9 +343,9 @@ successful campaign screenshots/logs are disposable. See the
 Run these additional view-contract checks from the repository root:
 
 ```sh
-go test -C verification -run '^(TestHegelSnapshotConstructionProjection|TestHegelSnapshotDefensiveBoundary|TestQuintSnapshotConstructionLedger)$' -count=1 -v .
+go -C verification test -run '^(TestHegelSnapshotConstructionProjection|TestHegelSnapshotDefensiveBoundary|TestQuintSnapshotConstructionLedger)$' -count=1 -v .
 ./node_modules/.bin/playwright test journeys/265-snapshot-boundary.spec.js
-GOO_SNAPSHOT_AUTHORITY_LEDGER="$PWD/artifacts/scoped-265/model-trace.json" go test -C verification -run '^TestQuintSnapshotAuthorityObservedBrowserLedger$' -count=1 -v .
+GOO_SNAPSHOT_AUTHORITY_LEDGER="$PWD/artifacts/scoped-265/model-trace.json" go -C verification test -run '^TestQuintSnapshotAuthorityObservedBrowserLedger$' -count=1 -v .
 ```
 
 The two Hegel suites run80 generated cases against the actual JavaScript
@@ -3301,7 +3321,7 @@ Run with `GOO_HOST_DISK_LEDGER=/absolute/path/to/ledger.json` and
 `QUINT_BIN=/absolute/path/to/quint` using:
 
 ```sh
-go test -C verification -run '^(TestHostDiskObserved|TestQuintHostDiskObserved)$' -v .
+go -C verification test -run '^(TestHostDiskObserved|TestQuintHostDiskObserved)$' -v .
 ```
 
 Accepted package3.805 s: disk.17 s, prior CPU.16 s and network.17 s, Quint3.27 s.
@@ -3320,7 +3340,7 @@ Set `GOO_HOST_FILESYSTEM_LEDGER=/absolute/path/to/ledger.json` and
 `QUINT_BIN=/absolute/path/to/quint`, then run:
 
 ```sh
-go test -C verification -run '^(TestHostFilesystemObserved|TestQuintHostFilesystemObserved)$' -v .
+go -C verification test -run '^(TestHostFilesystemObserved|TestQuintHostFilesystemObserved)$' -v .
 ```
 
 Accepted raw 0.16 s/Quint 2.30 s, package 2.479 s. The initial observer expected atNS
@@ -3346,7 +3366,7 @@ Set `GOO_FILESYSTEM_UTILIZATION_LEDGER=/absolute/path/to/ledger.json` and
 `QUINT_BIN=/absolute/path/to/quint`, then run:
 
 ```sh
-go test -C verification -run '^(TestFilesystemUtilizationObserved|TestQuintFilesystemUtilizationObserved)$' -v .
+go -C verification test -run '^(TestFilesystemUtilizationObserved|TestQuintFilesystemUtilizationObserved)$' -v .
 ```
 
 Accepted raw 0.11 s/Quint 2.11 s, package 2.233 s.
@@ -3364,7 +3384,7 @@ Set `GOO_HOST_CONTROLS_LEDGER=/absolute/path/to/ledger.json` and
 `QUINT_BIN=/absolute/path/to/quint`, then run:
 
 ```sh
-go test -C verification -run '^(TestHostControlsObserved|TestQuintHostControlsObserved)$' -v .
+go -C verification test -run '^(TestHostControlsObserved|TestQuintHostControlsObserved)$' -v .
 ```
 
 Accepted raw 0.18 s/Quint 2.19 s, package 2.379 s. The first browser check exposed
@@ -3564,9 +3584,9 @@ page positions (including duplicate occurrences), the 20-observation cap,
 submission/busy locks and revision retirement. Run from the repository root:
 
 ```sh
-go test -C verification -run '^(TestHegelRecordInteractionSelectionStateSwarm|TestQuintRecordInteractionsModelSmoke)$' -count=1 -v .
+go -C verification test -run '^(TestHegelRecordInteractionSelectionStateSwarm|TestQuintRecordInteractionsModelSmoke)$' -count=1 -v .
 GOO_RECORD_INTERACTIONS_BOMBADIL=1 playwright test journeys/298-record-interactions.spec.js
-GOO_RECORD_INTERACTIONS_LEDGER="$PWD/artifacts/record-interactions-298/model-trace.json" go test -C verification -run '^TestQuintRecordInteractionsObservedBrowserLedger$' -count=1 -v .
+GOO_RECORD_INTERACTIONS_LEDGER="$PWD/artifacts/record-interactions-298/model-trace.json" go -C verification test -run '^TestQuintRecordInteractionsObservedBrowserLedger$' -count=1 -v .
 ```
 
 Use the configured Go/Node toolchains and local OTel/ClickHouse lab as in the
@@ -3587,9 +3607,9 @@ destination interval widths must match before the specimen query is replaced;
 hidden/complete-only settings do not relax measure or interval-count admission.
 
 ```sh
-go test -C verification -run '^(TestHegelTimeTemplateTargetBinding|TestHegelTimeTemplateAcquisitionRefusals|TestQuintTimeTemplateModelSmoke)$' -count=1 -v .
+go -C verification test -run '^(TestHegelTimeTemplateTargetBinding|TestHegelTimeTemplateAcquisitionRefusals|TestQuintTimeTemplateModelSmoke)$' -count=1 -v .
 GOO_TIME_TEMPLATE_BOMBADIL=1 playwright test journeys/299-time-aware-template.spec.js
-GOO_TIME_TEMPLATE_LEDGER="$PWD/artifacts/template-299/model-trace.json" go test -C verification -run '^TestQuintTimeTemplateObservedBrowserLedger$' -count=1 -v .
+GOO_TIME_TEMPLATE_LEDGER="$PWD/artifacts/template-299/model-trace.json" go -C verification test -run '^TestQuintTimeTemplateObservedBrowserLedger$' -count=1 -v .
 ```
 
 Use the configured local Go/Node/Quint toolchains and OTel/ClickHouse lab. The real
@@ -3605,9 +3625,9 @@ or duplicate store copies. See the [storyboard](../journeys/299-time-aware-templ
 ## Comparison templates with a destination baseline — 300
 
 ```sh
-go test -C verification -run '^(TestHegelComparisonTemplateDestinationBinding|TestHegelComparisonTemplateRefusals|TestQuintComparisonTemplateModelSmoke)$' -count=1 -v .
+go -C verification test -run '^(TestHegelComparisonTemplateDestinationBinding|TestHegelComparisonTemplateRefusals|TestQuintComparisonTemplateModelSmoke)$' -count=1 -v .
 GOO_COMPARISON_TEMPLATE_BOMBADIL=1 playwright test journeys/300-comparison-template.spec.js
-GOO_COMPARISON_TEMPLATE_LEDGER="$PWD/artifacts/template-300/model-trace.json" go test -C verification -run '^TestQuintComparisonTemplateObservedBrowserLedger$' -count=1 -v .
+GOO_COMPARISON_TEMPLATE_LEDGER="$PWD/artifacts/template-300/model-trace.json" go -C verification test -run '^TestQuintComparisonTemplateObservedBrowserLedger$' -count=1 -v .
 ```
 
 Use the pinned local Go/Node/Quint toolchains and OTel/ClickHouse lab. Fifty valid
@@ -3631,9 +3651,9 @@ successful raw campaign and duplicate store copies. See the
 ## Supplied-span timing records — 301
 
 ```sh
-go test -C verification -run '^(TestHegelSuppliedWaterfallGeometryAndDeclarations|TestHegelSuppliedWaterfallAdmissionRefusals|TestQuintSuppliedWaterfallModelSmoke)$' -count=1 -v .
+go -C verification test -run '^(TestHegelSuppliedWaterfallGeometryAndDeclarations|TestHegelSuppliedWaterfallAdmissionRefusals|TestQuintSuppliedWaterfallModelSmoke)$' -count=1 -v .
 GOO_SUPPLIED_WATERFALL_BOMBADIL=1 playwright test journeys/301-supplied-span-waterfall.spec.js
-GOO_SUPPLIED_WATERFALL_LEDGER="$PWD/artifacts/waterfall-301/model-trace.json" go test -C verification -run '^TestQuintSuppliedWaterfallObservedBrowserLedger$' -count=1 -v .
+GOO_SUPPLIED_WATERFALL_LEDGER="$PWD/artifacts/waterfall-301/model-trace.json" go -C verification test -run '^TestQuintSuppliedWaterfallObservedBrowserLedger$' -count=1 -v .
 ```
 
 Use the configured local Go/Node/Quint toolchains and OTel/ClickHouse lab. One
@@ -3829,7 +3849,7 @@ See the [review](../docs/reviews/SURROUNDING_CONTEXT_ARCHITECTURE_329.md) and
 Freeze/KeepRecords admission. Its independent membership oracle checks both
 signals, literal punctuation/Unicode/whitespace, admitted fields, matching-record
 multiplicity, first-member/field witnesses, bounded continuation and query-binding
-negative controls. Run with `go test -C verification -run '^TestKeptContentSearchProperties330$' -count=1 .`.
+negative controls. Run with `go -C verification test -run '^TestKeptContentSearchProperties330$' -count=1 .`.
 The [native journey](../docs/journeys/330-kept-content-search.md) uses genuine
 OTLP and UI Keeps; `GOO_KEPT_CONTENT_BOMBADIL=1` enables the thirty-second catalog
 campaign. Completion must observe actual search DTOs and exact receipt opening,
@@ -3853,7 +3873,7 @@ thirty-second actor. See [contract](../docs/KEPT_MATCH_NAVIGATION.md).
 
 `TestHegelCaptureRoute332` and `TestHegelKeptMatchNavigation331` exercise actual
 capture adapters with passive rendering/transport doubles. Run them together:
-`go test -C verification -run '^TestHegel(CaptureRoute332|KeptMatchNavigation331)$' -count=1 .`.
+`go -C verification test -run '^TestHegel(CaptureRoute332|KeptMatchNavigation331)$' -count=1 .`.
 The expanded capture fixture includes Activity-origin Save departure/ABA and
 original requested attachments, separately from GET/Refresh admission. Mutation
 controls must reject unsafe joining, late reads, Save authority and queued
@@ -3873,7 +3893,7 @@ the distinction between process `exited` and a completed task.
 and existing checked builders, then validates/compiles both questions in Go.
 Thirty cases cover exact clocks, namespace predicates, typed scope, detached inputs,
 phase/dirty/active refusal and loaded-count irrelevance. Compile admission is not
-source execution. Run `go test -C verification -run '^TestHegelActivityWindowComparison333$' -count=1 .`.
+source execution. Run `go -C verification test -run '^TestHegelActivityWindowComparison333$' -count=1 .`.
 The [native journey](../docs/journeys/333-activity-window-comparison.md) supplies
 ordinary OTLP populations and retained Activity behavior; its actor requires the
 expected model snapshots and its own verified completion through shared admission.

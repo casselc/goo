@@ -8,7 +8,7 @@ though the parent inspection page holds only 100 of 107 spans.
 
 Promote the rest comparison using **Include comparison in view**, retain its
 checked method facet, save its fixed selected/baseline queries, then Run explicitly.
-Facet counts identify Selected window values; preserving the control performs no
+The paired facet identifies Both window values; preserving the control performs no
 automatic value or population read. Inspect the timeout trace
 and retire one outstanding actual trace read. Local staging and retirement must
 not publish late results or issue automatic replacement reads.
@@ -71,7 +71,7 @@ GOO_SOURCE_DEMAND_AFTER=1 GOO_GENERIC_BINARY=/absolute/path/to/goo bash scripts/
 Replay consumes that run's `http.json`, `fixed-queries.json` and temporary
 `capture-store`, selecting the saved view by its exact two operand questions.
 It does not need historical `*-before.json` files or manufacture an older full-read
-profile. It preserves the facet and Selected window label, exact queries, selected
+profile. It preserves the facet and Both window label, exact queries, selected
 rows, counts and cohort semantics while requiring fresh acquisition clocks. The
 baseline must omit rows and `viewDataset`; the source budget remains one full
 selected read, one aggregate baseline read and one source-free comparison, with
@@ -82,6 +82,16 @@ current observations, with no historical reduction assertion.
 These per-run artifacts are temporary; repeat the full phase after cleanup rather
 than checking private/raw store data into Git. Earlier measurements above remain
 historical. 337 updates the promotion label and retains the facet declaration;
-full-flow rerun passes in 18.8 seconds, while current replay acceptance is pending.
+its full-flow rerun passed in 18.8 seconds and current-definition replay passed
+in 8.3 seconds. Those are historical 337 measurements, not a new 338 replay.
 Set `GOO_GENERIC_BINARY` to reuse the reviewed compiled runtime (otherwise each
 lane builds its own binary with `GOO_TEST_GO`, or `go` from PATH).
+
+338 reruns the ordinary flow with the reviewed Go 1.27.3 executable: passes in
+33.1 seconds, with the paired **Both window values** label and zero automatic
+facet-value reads. The fixed Run still acquires seven selected records, an
+aggregate-only baseline count of 100 and one derived comparison; the actual held
+trace request aborts with `ERR_ABORTED`. There are no page errors. The optional
+exact-definition replay lane is deliberately skipped in this invocation. Reviewed
+raw stores/bodies and the temporary executable are removed; compact receipts and
+maintained frames remain.

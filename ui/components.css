@@ -302,7 +302,20 @@ goo-categorical-facet .categorical-facet-row{display:grid;grid-template-columns:
 goo-categorical-facet .categorical-facet-row-actions{flex-wrap:wrap;justify-content:flex-end}
 goo-categorical-facet .categorical-facet-value{overflow-wrap:anywhere;min-width:0}
 goo-categorical-facet .categorical-facet-value-count{font-variant-numeric:tabular-nums;min-width:3ch;text-align:right}
+/* Paired facet values use one full-union zero-based scale, independent of Find. */
+goo-categorical-facet.categorical-facet-paired :is(.categorical-facet-row,.categorical-facet-pair-columns){display:grid;grid-template-columns:minmax(0,1fr) minmax(130px,200px) 128px;align-items:center;gap:8px;min-width:0}
+goo-categorical-facet .categorical-facet-pair-counts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;min-width:0}
+goo-categorical-facet .categorical-facet-pair-columns{font-size:11px;color:var(--muted,#98a8bf)}
+goo-categorical-facet .categorical-facet-pair-columns .categorical-facet-pair-counts{text-align:right}
+goo-categorical-facet .categorical-facet-pair-counts .comparison-bar-cell{min-width:0;width:100%;text-align:right}
+goo-categorical-facet .categorical-facet-pair-counts .comparison-value{font-size:12px;margin:0 0 2px;overflow-wrap:anywhere}
+goo-categorical-facet .categorical-facet-pair-counts .comparison-bar-track{height:4px}
+goo-categorical-facet .categorical-facet-pair-counts .unavailable .comparison-bar-track{visibility:hidden}
+goo-categorical-facet .categorical-facet-side-label{display:none;font-size:10px;color:var(--muted,#98a8bf)}
+goo-categorical-facet .categorical-facet-side-status{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 8px;font-size:11px;overflow-wrap:anywhere}
+@media(max-width:600px){goo-categorical-facet.categorical-facet-paired .categorical-facet-pair-columns{display:none}goo-categorical-facet.categorical-facet-paired .categorical-facet-row{grid-template-columns:minmax(0,1fr) auto;gap:4px 8px}goo-categorical-facet.categorical-facet-paired .categorical-facet-value{grid-column:1/-1}goo-categorical-facet .categorical-facet-side-label{display:block}goo-categorical-facet .categorical-facet-pair-counts{gap:6px}goo-categorical-facet .categorical-facet-pair-counts .comparison-value{font-size:11px}}
 @media(max-width:480px){goo-categorical-facet .categorical-facet-tools{grid-template-columns:minmax(0,1fr) auto}goo-categorical-facet .categorical-facet-matches{grid-column:1/-1;grid-row:2}goo-categorical-facet .categorical-facet-receipts[open]{grid-row:3}}
+goo-categorical-facet.categorical-facet-paired .categorical-facet-row[hidden]{display:none}
 @media(pointer:coarse){goo-categorical-facet :is(button,input){min-height:44px}goo-categorical-facet .categorical-facet-receipts>summary{min-height:44px}}
 
 /* Passive supplied count-pair chrome shared by temporary and saved comparisons. */

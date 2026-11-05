@@ -113,3 +113,7 @@ values and Include/Exclude actions. Local Find announces matching loaded values
 separately from the full captured-record count. Read details remains a native
 keyboard-accessible disclosure of the independent receipts. These presentation
 changes add no model fields, source reads or inferred completeness.
+
+338 extends fresh-pair facets with independent [category populations from both
+windows](CATEGORY_PAIRS.md), retaining successful-side counts on failure and
+allowing baseline-only values in the same common-filter intent.

@@ -20,7 +20,7 @@ missing handoffs behind direct deep links or seeded saved views.
    exact trace question and window explicitly.
 6. In a separate ordinary-profile lane, verify explicit comparison promotion
    retains the contributed facet, applied filters and record presentation. Facet
-   counts are labeled Selected window values; promotion stages the fixed pair
+   counts are labeled Both window values; promotion stages the fixed pair
    without acquiring values or either population.
 
 ![Activity incident entry](screenshots/312-activity-incident.png)
@@ -48,3 +48,9 @@ concurrently with browser checks:
 ```sh
 GOO_GENERIC_BINARY=/absolute/path/to/goo bash scripts/run_journeys.sh journeys/312-incident-checkpoint.spec.js
 ```
+
+338 reruns the current paired-facet label and promotion contract against the
+reviewed Go 1.27.3 executable: passes in 1.0 minute, with 107 full matches, 100
+inspection rows, seven cohort records, three trace records, no seeded definitions
+and no page errors. Maintained frames are refreshed; raw owned stores/requests
+are pruned after review, retaining compact receipts.

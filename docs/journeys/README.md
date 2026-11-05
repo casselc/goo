@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Journey338](338-category-pair.md) compares both fixed-window category populations,
+including baseline-only values, observed zero versus unknown, failed-side Retry
+and retirement of a held value read. The same common filter stages both original
+scopes; explicit Run, Back and Save/YAML/reopen retain their existing boundaries.
+
 [Journey337](337-paired-facet.md) keeps a categorical facet beside a fresh fixed
 comparison, stages common filters over both original windows, and executes the
 narrowed pair explicitly. It covers retained group records/Back and Save/YAML
@@ -8,7 +13,7 @@ reopen, with Hegel/Quint and a bounded Bombadil campaign.
 [Journey312](312-incident-checkpoint.md) executes the whole incident path from
 Activity through service/method filtering and a correlated trace to Save/reopen.
 It also checks stale selection commands, pending lookup/Back and explicit
-comparison inclusion retaining the facet under the 337 contract. The [review and active roadmap](../ROADMAP_2026_11_02.md)
+comparison inclusion retaining the facet under the 337 contract. The [active roadmap](../ROADMAP_2026_11_05.md)
 record the remaining navigation/context friction separately from delivered fixes.
 
 [Journey311](311-http-method-facet.md) follows actual Discovery → HTTP Customize →
