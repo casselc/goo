@@ -9,7 +9,7 @@ test('321 compare current records with an adjacent previous window',async({page,
  test.setTimeout(240000);page.setDefaultTimeout(20000);
  const owned=await fs.mkdtemp(path.join(os.tmpdir(),'goo-previous-321-')),dir=path.resolve('artifacts/previous-window-321');let runtime;
  try{
-  const binary=path.join(owned,'goo');await promisify(execFile)('go',['build','-mod=readonly','-o',binary,'./cmd/goo'],{timeout:120000});runtime=await startRuntime(binary,dir);
+  const binary=process.env.GOO_GENERIC_BINARY||path.join(owned,'goo');if(!process.env.GOO_GENERIC_BINARY)await promisify(execFile)(process.env.GOO_TEST_GO||'go',['build','-mod=readonly','-o',binary,'./cmd/goo'],{timeout:120000});runtime=await startRuntime(binary,dir);
   await page.setViewportSize({width:1280,height:900});
   const token=randomBytes(4).toString('hex'),environment='previous321-'+token,service='gateway321-'+token,namespace='team321',toMs=Date.now(),fromMs=toMs-60000;
   const selector={version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'named',value:environment}},where={all:[{field:{kind:'column',key:'service'},op:'eq',value:service},{field:{kind:'resource',key:'service.namespace'},op:'eq',value:namespace},{field:{kind:'attribute',key:'tenant'},op:'eq',value:'team'}]},q={signal:'logs',environmentSelector:selector,fromMs,toMs,where,groupBy:[{kind:'attribute',key:'cohort'}],limit:2,offset:0};

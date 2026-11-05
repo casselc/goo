@@ -1,5 +1,15 @@
 # Known issues and gaps
 
+339 consolidates fixed-population scope facts and control styling; measured entry
+gains are about 29px desktop and 32px narrow, not a complete mobile density fix.
+Exact policies/UTC bounds stay in the existing disclosure, with independent
+comparison/facet receipts unchanged. See [contract](POPULATION_CHROME.md).
+
+The next general-purpose gap is typed trace-wide search: its existing request,
+compiler and checked continuation remain scalar-current-environment-only. Normal
+effective named, empty and unreported scopes are refused. 340 will carry the
+shared typed selector end to end rather than project it into a weaker scalar.
+
 338 extends fresh-pair facets with independent category populations from both
 windows, including baseline-only values. Ready grouping absence means zero only
 within the returned partition; missing/failed reads remain unknown and upstream
@@ -14,16 +24,12 @@ Five existing unique roles can coexist without removing a valid timeline. The
 selected-only initial acquisition is superseded by 338 above. See
 [contract](PAIRED_FACETS.md) and final [validation](../VALIDATION.md).
 
-The 337 Bombadil campaigns advance through DOM/API states, but recorded JPEGs
-can repeat stale loading states (initial or child). The final campaign has four
-unique images across 448 captures; 441 show the same child loading state despite
-completed DOM/API checks. Those captures do not prove the terminal visual state.
-The 338 campaign independently reproduces this capture limitation: 461 JPEGs,
-four unique hashes, with 453 (including the terminal capture) repeating a child
-loading frame despite the verified applied DOM/API state.
-Maintained frames use independently captured Playwright viewports; the observed
-capture limitation is retained for test-driver investigation, not attributed to
-Goo rendering or all Bombadil runs.
+Bombadil driver JPEGs in reviewed 337–339 campaigns can repeat stale loading or
+staged frames while independent DOM/API checks reach a verified applied state.
+Those captures do not prove terminal appearance. Maintained visual frames use
+Playwright; per-campaign audits and compact results are in
+[validation](../VALIDATION.md). This is an observed capture limitation, not an
+attribution to Goo rendering or every Bombadil run.
 
 336 updates the root/verification retention driver graph and removes unused
 `x/crypto` in favor of the driver's standard-library PBKDF2. Native XTDB checks

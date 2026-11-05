@@ -44,6 +44,8 @@ Fresh fixed comparisons can keep a [categorical facet](docs/PAIRED_FACETS.md):
 read [both window category populations](docs/CATEGORY_PAIRS.md), choose
 Include/Exclude, then stage **Filter both windows**. Run reads the narrowed pair;
 Back restores its original observations.
+The [compact scope disclosure](docs/POPULATION_CHROME.md) keeps exact windows and
+policies available without duplicating them above the data; opening it reads nothing.
 
 Ordinary count views can [compare the preceding equal-length window](docs/PREVIOUS_WINDOW_COMPARISON.md),
 then save both fixed questions for explicit reuse.

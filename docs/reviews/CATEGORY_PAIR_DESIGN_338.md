@@ -1,5 +1,9 @@
 # Category population comparison design — 338
 
+339 compacts the page-level scope/control presentation and refreshes maintained
+frames; this review records the original 338 acceptance. See the
+[current presentation contract](../POPULATION_CHROME.md) for that consolidation.
+
 Status: final surface source and five actual viewport frames accepted; native,
 model and actor checks pass. This review directly inspects source and frames;
 execution results are reported by the native owner and independently reviewed by

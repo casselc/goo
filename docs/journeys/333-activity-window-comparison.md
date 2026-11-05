@@ -24,3 +24,16 @@ Maintained running-app frames: `333-activity-comparison-entry.png`, `333-staged-
 The reopened and narrow frames include the full bounded record page: [reopened composition](screenshots/333-reopened-comparison.png), [narrow composition](screenshots/333-comparison-narrow.png). The native viewport assertion independently checks that the 390px viewport has no horizontal overflow.
 
 The actual browser ledger records zero new source requests for dirty refusal, comparison staging, local Summary/Groups switches, Save, paused Activity return and saved-view Open. Each explicit pair Run sends one exploration request and one aggregate request, followed by one supplied comparison. Environment scope discovery/preview are separate source operations before the staged-action budget; definitions, recipe and saved-view GETs are metadata. These are application requests, not physical SQL query counts. Source read timestamps are checked separately from fixed event-time question boundaries and the Activity completed read clock. No custody capture or document is written.
+
+339 consolidates exact page-level window facts inside the Applied/Configured
+population disclosure. The maintained actor opens that disclosure before
+inspecting visible selected/baseline UTC bounds, including after staging a new
+window; opening facts does not acquire source data.
+
+The 339 regression passes in 59.8 seconds. The held Activity page still contains
+100 records while independent full counts remain 107/13. The updated 30-second
+actor reaches phase 8 across 505 snapshots, verifies the pair and fresh staged
+window, and ends with two source attempts, one comparison, zero capture writes,
+immutable supplied facts and no overflow. Opening exact Scope facts before the
+visibility checks adds no source read. Current maintained frames are refreshed;
+reviewed raw output is pruned after compact receipts are retained.

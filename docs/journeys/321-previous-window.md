@@ -21,3 +21,17 @@ The native main assertions passed: three explicit pair Runs each used one curren
 `GOO_PREVIOUS_WINDOW_BOMBADIL=1` opens the genuinely UI-saved view in a separate 30-second campaign. It passed with 456 snapshots across phases 0–8, exit zero and 35.713 seconds wall time. It performed two source requests and one derived comparison, with no capture writes. After verifying full 9/5 populations and exact group differences, local display controls and fresh-window staging preserved held observations and made no additional source requests; the old detached Find callback remained harmless. Actor counters are separate from the main page.
 
 Reviewed raw browser/campaign output has been removed; compact main/campaign summaries and these three maintained frames remain. The standard wrapper restored its traffic generator after the run.
+
+339 consolidates exact page-level window facts inside the Applied/Configured
+population disclosure. The maintained actor opens that disclosure before
+inspecting visible selected/baseline UTC bounds, including after staging a new
+window; opening facts does not acquire source data.
+
+The 339 regression passes in 44.0 seconds using the reviewed Go 1.27.3 executable.
+All three 9/5 pairs retain their original selectors and independent bounds. The
+updated 30-second actor reaches phase 8 across 475 snapshots, verifies the pair
+and fresh staged window, and ends with two source attempts, one comparison, zero
+capture writes, immutable held facts and no overflow. Exact scope facts are opened
+through the summary before visibility checks; that gesture adds no source read.
+Current maintained frames are refreshed. Reviewed raw stores and actor output are
+pruned after compact receipts are retained.

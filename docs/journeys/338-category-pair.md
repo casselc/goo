@@ -64,7 +64,7 @@ Admission requires four verified transitions, six source requests including two
 category lookups, two comparisons, zero writes, immutable retained parent facts
 and no horizontal overflow.
 
-Final deployed-source validation passes in 4.2 minutes for logs and spans. The
+Initial 338 delivery validation passed in 4.2 minutes for logs and spans. The
 21-step observed Quint replay passes in 29.934 seconds. Its terminal effects are
 11 population/page reads, 4 category lookups, 5 comparisons, 1 Save and 1 encode.
 The real failed-side retry, retained healthy observation, pending-owner hide/show,
@@ -83,3 +83,21 @@ stream entries are preserved.
 
 This cut does not add partial-category paging, rates, upstream completeness,
 frozen-capture filtering or a new query engine.
+
+## Consolidation regression — 339
+
+The same complete logs/spans journey passes on 339 in 3.4 minutes (3.5 runner),
+with observed Quint replay in 32.383 seconds and the unchanged 21-step terminal
+budget: 11 record reads, four value lookups, five comparisons, one Save and one
+encode. Counts remain 107/13 → baseline-only 0/2 → 32/8 → 27/4, reopen 27/4 and three
+previous-window POST records. Failure/retry, pending-owner retirement and local
+zero-read gestures all pass. The maintained five frames are refreshed for the
+compact Scope disclosure; exact window/policy facts remain available by opening it.
+
+The current 35-second actor passes 342 snapshots through phases 0–7, four verified
+transitions, six source requests including two lookups, two comparisons and zero writes and immutable parent facts. A new
+independent capture audit finds two unique JPEGs across 342: 334, including the
+terminal image, repeat a configured/staged child despite the applied 0/2 DOM/API
+snapshot. It is an intermediate staged image, not a loading image or terminal
+visual proof. Current Playwright frames provide the visual record. Reviewed raw
+output is pruned; compact current receipts and one audited sample remain.

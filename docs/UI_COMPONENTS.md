@@ -1805,7 +1805,15 @@ strings retain distinct identity. An absent category is zero only within a ready
 validated grouping partition; an unloaded/loading/error side remains unknown.
 One-sided failures preserve successful counts and expose failed-side Retry.
 Shared-scale bars appear only when both sides are ready; local Find never changes
-that full-union domain. Independent operand count/group clocks and exact scope
+that full-union domain. The shared `comparison-visual.cell` helper accepts
+`geometry: false` to withhold bars while preserving the exact supplied numeric
+value, its `data-value` and known-value styling. The default is `true`; the option
+must be boolean. A null value remains unavailable independently of geometry.
+`data-geometry` distinguishes `shown`, `withheld` and `unavailable`; hidden tracks
+are decorative, and operand groups retain their accessible numeric labels. Display
+`text` formats a value without replacing its numeric data. The paired facet uses
+this policy while either operand is unknown, rather than passing null for a known
+count. Independent operand count/group clocks and exact scope
 labels remain in Read details. These are observed matching-row partitions, not
 proof of upstream telemetry completeness or the older held pair's read basis.
 

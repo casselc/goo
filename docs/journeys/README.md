@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey339](339-population-chrome.md) measures fresh-document scope/control
+consolidation against the same genuine saved pair, then checks exact facts,
+standalone/nested controls, truthful withheld geometry and zero-read disclosure.
+
 [Journey338](338-category-pair.md) compares both fixed-window category populations,
 including baseline-only values, observed zero versus unknown, failed-side Retry
 and retirement of a held value read. The same common filter stages both original
