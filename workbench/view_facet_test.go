@@ -116,8 +116,12 @@ func TestFacetCompositionProfilesVisibilityAndTemplate310(t *testing.T) {
 			comparison.BaselineCapture = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 		}
 		v.Composition.Children = append(v.Composition.Children, facetComposition(true).Composition.Children[2])
-		if err := v.Validate(); err == nil {
-			t.Fatal("facet accompanied a comparison")
+		err := v.Validate()
+		if capture && err == nil {
+			t.Fatal("facet accompanied an immutable captured comparison")
+		}
+		if !capture && err != nil {
+			t.Fatal("facet refused a fresh query comparison", err)
 		}
 	}
 }

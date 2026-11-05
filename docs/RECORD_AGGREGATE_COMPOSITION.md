@@ -222,3 +222,12 @@ Visual ordering preserves original page positions for shared record interactions
 [Add breakdown](ADD_BREAKDOWN.md) grows a records-only view into the existing
 aggregate-and-records composition through explicit grouping and Run. No public
 display component gains source or authoring ownership.
+
+## Paired categorical facets — 337
+
+A [categorical facet can accompany a fresh fixed-query count pair](PAIRED_FACETS.md).
+All five existing unique roles can coexist, including a checked timeline; no
+component is silently dropped to meet the historical four-child bound. The facet
+reads selected-window values explicitly and stages one common predicate delta
+against both original operands. Captured comparisons retain their separate facet
+restriction. A control alone still cannot satisfy visible-data admission.

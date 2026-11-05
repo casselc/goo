@@ -1,5 +1,20 @@
 # Known issues and gaps
 
+337 composes categorical facets with fresh fixed-query count pairs. Values/counts
+are from the selected query; a common filter narrows both original scopes for
+explicit Run. Captured and temporary set comparisons remain outside this action.
+Five existing unique roles can coexist without removing a valid timeline. Baseline-
+only facet values and per-category comparisons remain the 338 depth task. See
+[contract](PAIRED_FACETS.md) and final [validation](../VALIDATION.md).
+
+The 337 Bombadil campaigns advance through DOM/API states, but recorded JPEGs
+can repeat stale loading states (initial or child). The final campaign has four
+unique images across 448 captures; 441 show the same child loading state despite
+completed DOM/API checks. Those captures do not prove the terminal visual state.
+Maintained frames use independently captured Playwright viewports; the observed
+capture limitation is retained for test-driver investigation, not attributed to
+Goo rendering or all Bombadil runs.
+
 336 updates the root/verification retention driver graph and removes unused
 `x/crypto` in favor of the driver's standard-library PBKDF2. Native XTDB checks
 validate the existing optional store, not a production deployment or newer XTDB

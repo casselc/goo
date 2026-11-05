@@ -151,6 +151,10 @@ chart vendor. No additional permanent evidence archive is needed for this review
 
 ## 312 bounded resolution and actual acceptance
 
+This records the original 312 resolution. [337](../PAIRED_FACETS.md) supersedes
+its control-removal step: fresh fixed comparisons now retain the facet, and the
+maintained 312 journey/frame follow that current contract.
+
 The historical findings above remain the review record. The offered-promotion
 failure is now corrected through the agreed explicit conversion. The actual
 [comparison action frame](../journeys/screenshots/312-comparison-without-facet.png)

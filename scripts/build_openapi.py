@@ -165,7 +165,7 @@ for suffix in ('', 'Input'):
  composition['required']=['version','kind','children']
  composition['properties']['kind']['type']='object'
  composition['properties']['version']['const']='goo.composition/1'
- composition['description']='One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison or facet. A facet is an explicit field control, not a visible data child; comparisons and facets cannot coexist. Fixed query comparisons alone can retain a baseline recipe. No rows, subscriptions or runtime guarantees are stored.'
+ composition['description']='One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison and facet within five unique roles. A facet is an explicit field control, not a visible data child. It may accompany a fresh fixed-query count comparison, validated against both operands; captured comparisons remain outside that combination. No rows, subscriptions or runtime guarantees are stored.'
  for name,kind_name in [('CompositionKind','stack'),('RecordViewKind','record-table')]:
   kind=schemas['workbench.'+name+suffix];kind['additionalProperties']=False
   kind['required']=['name','version']
@@ -177,19 +177,19 @@ for suffix in ('', 'Input'):
  child['oneOf']=[{'required':[role],'not':{'anyOf':[{'required':[other]} for other in ('aggregate','records','timeline','comparison','facet') if other!=role]}} for role in ('aggregate','records','timeline','comparison','facet')]
  for field in ('aggregate','records','timeline','comparison','facet'):
   child['properties'][field]['type']='object'
- children=composition['properties']['children'];children.update(type='array',minItems=1,maxItems=4,items={'$ref':'#/components/schemas/workbench.ViewCompositionChild'+suffix,'type':'object'})
+ children=composition['properties']['children'];children.update(type='array',minItems=1,maxItems=5,items={'$ref':'#/components/schemas/workbench.ViewCompositionChild'+suffix,'type':'object'})
  children['allOf']=[{'contains':{'required':[role]},'minContains':1,'maxContains':1} for role in ('records',)]
  children['allOf'].extend([{'contains':{'required':[role]},'minContains':0,'maxContains':1} for role in ('aggregate','timeline','comparison','facet')])
  children['allOf'].append({'contains':{'not':{'required':['facet']},'properties':{'hidden':{'const':False}}},'minContains':1})
  children['allOf'].append({'if':{'contains':{'required':['aggregate']}},'else':{'maxItems':2,'items':{'anyOf':[{'required':['records'],'properties':{'hidden':{'const':False},'records':{'properties':{'scope':{'properties':{'signal':{'enum':['logs','spans']}}}}}}},{'required':['facet']}]}}})
- children['allOf'].append({'if':{'contains':{'required':['facet']}},'then':{'not':{'contains':{'required':['comparison']}}}})
+ children['allOf'].append({'if':{'contains':{'required':['facet']}},'then':{'items':{'properties':{'comparison':{'required':['baselineQuery'],'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}}}}}}}})
  facet=schemas['workbench.FacetViewDeclaration'+suffix];facet['additionalProperties']=False
  facet['required']=['version','scope','kind','field','display']
  facet['properties']['version']['const']='goo.view/1'
  for field in ('scope','kind','field','display'):facet['properties'][field]['type']='object'
  facet['properties']['scope']['required']=['kind','signal']
  facet['properties']['field']={'allOf':[facet['properties']['field'],{'required':['kind','key'],'oneOf':[{'properties':{'kind':{'const':'column'},'key':{'enum':['service','trace_id','span_id','scope','scope_version','name','kind','status','duration_bucket','status_class','body','severity','body_pattern_v1','exception_event','exception_type','exception_type_state']}}},{'properties':{'kind':{'enum':['attribute','resource']},'key':{'type':'string','minLength':1,'maxLength':128}}}]}]}
- facet['description']='One explicit categorical field over the applied root scope. Existing counted-values projection derives counts on explicit Load; no values, selections, requests or runtime state are stored. Numeric, histogram, reported-edge and grouped-time profiles and comparison compositions are outside this first cut. Ordinary category templates retain the explicit facet field rather than rebinding it.'
+ facet['description']='One explicit categorical field over the applied selected query. Existing counted-values projection derives counts on explicit Load; no values, selections, requests or runtime state are stored. A fresh fixed-query count comparison can retain the facet when both questions support it; values/counts describe the selected window, and common filtering preserves both original scopes. Captured comparisons, numeric, histogram, reported-edge and grouped-time profiles remain unsupported. Ordinary category templates retain the explicit facet field rather than rebinding it.'
  kind=schemas['workbench.FacetViewKind'+suffix];kind['additionalProperties']=False;kind['required']=['name','version']
  kind['properties']['name']['const']='categorical-facet';kind['properties']['version']['const']=1
  display=schemas['workbench.FacetViewDisplay'+suffix];display['additionalProperties']=False;display['required']=['basis']

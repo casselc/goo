@@ -40,6 +40,9 @@ reads and Save/Refresh display adoption with the current task.
 
 Temporary and saved count comparisons use [one supplied-pair presentation](docs/COUNT_PAIR_PRESENTATION.md),
 with a Summary/Groups choice and explicit operand windows and read clocks.
+Fresh fixed comparisons can keep a [categorical facet](docs/PAIRED_FACETS.md):
+read Selected window values, choose Include/Exclude, then stage **Filter both
+windows**. Run reads the narrowed pair; Back restores its original observations.
 
 Ordinary count views can [compare the preceding equal-length window](docs/PREVIOUS_WINDOW_COMPARISON.md),
 then save both fixed questions for explicit reuse.

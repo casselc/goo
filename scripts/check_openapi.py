@@ -706,6 +706,27 @@ def check_fixed_query_count_views(spec):
         vc=validator(spec,{'$ref':'#/components/schemas/workbench.ExplorationView'+suffix})
         ac=validator(spec,{'$ref':'#/components/schemas/workbench.ViewArtifact'+suffix})
         cc.validate(comparison);vc.validate(view)
+        paired_facet=copy.deepcopy(view)
+        paired_facet['composition']['children'].append({'facet':{'version':'goo.view/1','scope':scope,'kind':{'name':'categorical-facet','version':1},'field':{'kind':'attribute','key':'http.request.method'},'display':{'basis':'applied'}}})
+        vc.validate(paired_facet)
+        hidden_facet=copy.deepcopy(paired_facet);hidden_facet['composition']['children'][-1]['hidden']=True
+        vc.validate(hidden_facet)
+        ac.validate({'version':'goo.view-artifact/1','namespace':'platform','name':'paired-facet','revision':'v1','view':paired_facet})
+        all_roles=copy.deepcopy(paired_facet)
+        all_roles['queries'][0]['bucketMs']=1000
+        all_roles['composition']['children'][2]['comparison']['baselineQuery']['bucketMs']=1000
+        all_roles['composition']['children'].append({'timeline':{'version':'goo.view/1','scope':scope,'kind':{'name':'time-bar','version':1},'display':{'value':'count'}}})
+        vc.validate(all_roles)
+        duplicate=copy.deepcopy(all_roles);duplicate['composition']['children'].append(copy.deepcopy(duplicate['composition']['children'][-1]))
+        assert not vc.is_valid(duplicate),'sixth/duplicate composition role admitted'
+        for hidden in (False,True):
+            captured_facet=copy.deepcopy(paired_facet)
+            child=captured_facet['composition']['children'][2]
+            child['hidden']=hidden
+            child['comparison'].pop('baselineQuery')
+            child['comparison'].update(kind={'name':'captured-count-comparison','version':1},baselineCapture='a'*64)
+            captured_facet['composition']['children'][-1]['hidden']=hidden
+            assert not vc.is_valid(captured_facet),'facet admitted with captured comparison'
         previous=copy.deepcopy(view);previous['queries'][0]['fromMs']=61000;previous['queries'][0]['toMs']=121000
         vc.validate(previous)
         ac.validate({'version':'goo.view-artifact/1','namespace':'platform','name':'previous-counts','revision':'v1','view':previous})

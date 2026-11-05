@@ -12,7 +12,7 @@ import (
 	"hegel.dev/go/hegel"
 )
 
-const incidentTransitionsJS = `import fs from 'node:fs';import assert from 'node:assert/strict';import * as C from '../ui/view-composition.mjs';import {partitionQueries,selectionCommandCurrent} from '../ui/population-workspace.mjs';const {view,seed}=JSON.parse(fs.readFileSync(0,'utf8')),q=view.queries[0],before=JSON.stringify(view),field=C.facet(view.composition).field,value=seed%3===0?null:seed%3===1?'':'blue';const parts=partitionQueries([q],[{signal:q.signal,field,value,mode:seed%2?'include':'exclude'}]),selected=parts.selected[0],rest=parts.rest[0],out=C.includeComparisonWithoutFacet(view.composition,selected,rest);assert.equal(C.facet(out),undefined);assert.deepEqual(C.records(out),C.records(view.composition));assert.deepEqual(C.aggregate(out),C.aggregate(view.composition));assert.deepEqual(C.comparison(out).baselineQuery,rest);assert.equal(JSON.stringify(view),before);for(const bad of [{...rest,toMs:rest.toMs+1},{...rest,offset:1},{...rest,groupBy:[{kind:'column',key:'service'}]}])assert.throws(()=>C.includeComparisonWithoutFacet(view.composition,selected,bad));assert.throws(()=>C.includeComparisonWithoutFacet(view.composition,{...selected,spanStatus:true},rest));assert.equal(JSON.stringify(view),before);
+const incidentTransitionsJS = `import fs from 'node:fs';import assert from 'node:assert/strict';import * as C from '../ui/view-composition.mjs';import * as CC from '../ui/captured-count-comparison.mjs';import {partitionQueries,selectionCommandCurrent} from '../ui/population-workspace.mjs';const {view,seed}=JSON.parse(fs.readFileSync(0,'utf8')),q=view.queries[0],before=JSON.stringify(view),field=C.facet(view.composition).field,value=seed%3===0?null:seed%3===1?'':'blue';const parts=partitionQueries([q],[{signal:q.signal,field,value,mode:seed%2?'include':'exclude'}]),selected=parts.selected[0],rest=parts.rest[0],out=C.setComparison(view.composition,CC.createQuery(selected,rest),selected);assert.deepEqual(C.facet(out),C.facet(view.composition));assert.deepEqual(out.children.filter(child=>!child.comparison),view.composition.children);assert.deepEqual(C.records(out),C.records(view.composition));assert.deepEqual(C.aggregate(out),C.aggregate(view.composition));assert.deepEqual(C.comparison(out).baselineQuery,rest);assert.equal(JSON.stringify(view),before);for(const bad of [{...rest,toMs:rest.toMs+1},{...rest,offset:1},{...rest,groupBy:[{kind:'column',key:'service'}]}])assert.throws(()=>C.setComparison(view.composition,CC.createQuery(selected,bad),selected));assert.throws(()=>C.setComparison(view.composition,CC.createQuery({...selected,spanStatus:true},rest),{...selected,spanStatus:true}));assert.equal(JSON.stringify(view),before);
 const owner={},expected={owner,generation:seed,draftRevision:seed+1,selectionKey:JSON.stringify([field,value]),questionKey:JSON.stringify(q)},ready={...expected,active:true,visible:true,connected:true,child:false,busy:false,countPending:false,sourceDraft:false,queryDraft:false,recordPending:false,pagePending:false};assert(selectionCommandCurrent(expected,ready));for(const key of ['generation','draftRevision','selectionKey','questionKey'])assert(!selectionCommandCurrent(expected,{...ready,[key]:String(ready[key])+'changed'}));assert(!selectionCommandCurrent(expected,{...ready,owner:{}}));for(const key of ['active','visible','connected'])assert(!selectionCommandCurrent(expected,{...ready,[key]:false}));for(const key of ['child','busy','countPending','sourceDraft','queryDraft','recordPending','pagePending'])assert(!selectionCommandCurrent(expected,{...ready,[key]:true}));assert(selectionCommandCurrent(expected,ready));const renewed={...expected,owner:{}};assert(!selectionCommandCurrent(expected,{...ready,owner:renewed.owner}));assert(selectionCommandCurrent(renewed,{...ready,owner:renewed.owner}));process.stdout.write(JSON.stringify({version:1,title:'Explicit comparison',queries:[selected],composition:out}));`
 
 func TestHegelIncidentPromotionAndSelectionLeaseGuards(t *testing.T) {
@@ -60,14 +60,18 @@ func TestHegelIncidentPromotionAndSelectionLeaseGuards(t *testing.T) {
 			return
 		}
 		var baseline *exploration.Query
+		var retained []workbench.ViewCompositionChild
 		for _, c := range promoted.Composition.Children {
-			if c.Facet != nil {
-				tc.Fatal("facet survived explicit removal")
-				return
+			if c.Comparison == nil {
+				retained = append(retained, c)
 			}
 			if c.Comparison != nil {
 				baseline = c.Comparison.BaselineQuery
 			}
+		}
+		if !reflect.DeepEqual(retained, source.Composition.Children) {
+			tc.Fatal("comparison promotion changed original children")
+			return
 		}
 		if baseline == nil || !reflect.DeepEqual(promoted.Queries[0].GroupBy, q.GroupBy) || !promoted.Queries[0].SameEnvironment(q) || promoted.Queries[0].FromMS != q.FromMS || promoted.Queries[0].ToMS != q.ToMS {
 			tc.Fatal("query context changed")

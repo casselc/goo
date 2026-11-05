@@ -186,10 +186,12 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 	if _, err := exploration.Compile(q); err != nil {
 		return err
 	}
-	if c.Version != "goo.composition/1" || c.Kind.Name != "stack" || c.Kind.Version != 1 || (len(c.Children) < 1 || len(c.Children) > 4) {
-		return errors.New("require a pinned record composition with optional timeline and captured-count comparison")
+	if c.Version != "goo.composition/1" || c.Kind.Name != "stack" || c.Kind.Version != 1 || (len(c.Children) < 1 || len(c.Children) > 5) {
+		return errors.New("require a pinned record composition with one to five children")
 	}
-	aggregate, records, timeline, comparison, facet, visibleData, visibleRecords := false, false, false, false, false, false, false
+	aggregate, records, timeline, visibleData, visibleRecords := false, false, false, false, false
+	var comparison *CountComparisonViewDeclaration
+	var facet *FacetViewDeclaration
 	for _, child := range c.Children {
 		roles := 0
 		for _, present := range []bool{child.Aggregate != nil, child.Records != nil, child.Timeline != nil, child.Comparison != nil, child.Facet != nil} {
@@ -219,18 +221,18 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 				return err
 			}
 		} else if child.Comparison != nil {
-			if comparison {
+			if comparison != nil {
 				return errors.New("composition allows at most one comparison child")
 			}
-			comparison = true
+			comparison = child.Comparison
 			if err := child.Comparison.Validate(q); err != nil {
 				return err
 			}
 		} else if child.Facet != nil {
-			if facet {
+			if facet != nil {
 				return errors.New("composition allows at most one facet child")
 			}
-			facet = true
+			facet = child.Facet
 			if err := child.Facet.Validate(q); err != nil {
 				return err
 			}
@@ -247,11 +249,18 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 	if !records || !visibleData {
 		return errors.New("composition requires records and at least one visible data child")
 	}
-	if facet && comparison {
-		return errors.New("facets cannot accompany fixed or captured comparisons")
+	if facet != nil && comparison != nil {
+		if comparison.Kind.Name != "query-count-comparison" || comparison.BaselineQuery == nil {
+			return errors.New("facets can accompany only fresh fixed-query count comparisons")
+		}
+		// The facet reads selected-window values, but its common narrowing intent
+		// must be admitted by both independently checked operand definitions.
+		if err := facet.Validate(*comparison.BaselineQuery); err != nil {
+			return err
+		}
 	}
 	rawChildren := 1
-	if facet {
+	if facet != nil {
 		rawChildren++
 	}
 	if !aggregate && (len(c.Children) != rawChildren || !visibleRecords || q.Signal != "logs" && q.Signal != "spans") {

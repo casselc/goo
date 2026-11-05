@@ -1,5 +1,26 @@
 # Semantic properties and model conformance
 
+## Paired categorical facets (337)
+
+Forty generated cases exercise the actual JavaScript common-filter planner and
+Go validation, predicate evaluation, SQL compilation and YAML round trips. The
+17-step Quint effect model checks staging, independent operand reads, return,
+save/export/reopen and completion, with eight mutated ledgers and an unfinished
+prefix as negative controls. The native journey supplies an observed ledger to
+the same checker; its Bombadil campaign independently exercises pending choices
+and retained Run-handler refusal. Browser frames, rather than actor captures,
+provide the current visual record.
+
+```sh
+go -C verification test -run '^Test(HegelPairedFacetAtomicScope337|QuintPairedFacetModelSmoke337)$' -count=1 .
+GOO_PAIRED_FACET_BOMBADIL=1 bash scripts/run_journeys.sh 337-paired-facet.spec.js
+```
+
+See the [contract](../docs/PAIRED_FACETS.md) and
+[journey](../docs/journeys/337-paired-facet.md) for scope, request accounting and
+capture limitations. The model checks effects; predicate authority is checked
+separately by the generated semantic cases.
+
 ## Saved-view restoration (335)
 
 Generated history schedules exercise the actual population owner with deferred,

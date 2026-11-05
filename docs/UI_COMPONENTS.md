@@ -246,7 +246,9 @@ owner must apply the event and supply the next model; the element performs no
 fetch, storage or subscription. `GooRecordColumns.mount(host,table,options)`
 projects supplied record rows into the common record-table shell; `update`,
 `setLayout`, `layout` and `dispose` belong to its application adapter. Include/Exclude
-intents delegate through `onFacet`; `canRefine` guards stale owners. Styles live
+intents delegate through `onFacet`; `canRefine` guards stale owners. A host may
+return `false` from `onFacet` to refuse an intent; the attribute inspector reports
+**Not staged** instead of claiming a selection was accepted. Styles live
 in `components.css`. See [field behavior and storyboard](RECORD_COLUMNS.md).
 
 The attribute adapter exposes optional Include/Exclude callbacks and `mountShared`; `commonGroups` preserves namespaces and only offers supported exact strings. Display elements remain passive. Bounded row marks/provenance are page-owned application state; see [record contract](RECORD_POPULATIONS.md).
@@ -1780,7 +1782,11 @@ attribute support detached SPA updates and server-rendered HTML. See
 
 
 The facet's controlled property/attribute is `data`:
-`{declaration, values, disabled?, hasStaged?}`. Values are `unloaded`, `loading`,
+`{declaration, values, disabled?, hasStaged?, basisLabel?}`. The optional literal
+`basisLabel` is nonblank, at most 120 UTF-8 bytes, well-formed text without control
+characters; its default is **Applied fixed scope**. Comparison owners supply
+**Selected window values**. This label is display metadata, not persisted facet
+grammar or source/count authority. Values are `unloaded`, `loading`,
 `error`, or `ready`; ready values carry the matching qualified field, unique
 `{value, count}` items, a canonical decimal total and both count/group read
 receipts. `null` means missing and `""` means present empty. Exact positive counts

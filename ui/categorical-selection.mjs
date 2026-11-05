@@ -1,0 +1,7 @@
+// Categorical intent only; Go still validates and evaluates every applied query.
+export function selectionQueries(queries,items){
+  const out=structuredClone(queries),groups=new Map();
+  for(const item of items){const {signal,field,value,mode}=item;if(!out.some(q=>q.signal===signal)||!['include','exclude'].includes(mode)||!['column','resource','attribute'].includes(field?.kind)||typeof field.key!=='string'||!(value===null||typeof value==='string'))throw Error('Invalid facet selection.');const key=JSON.stringify([signal,field.kind,field.key]);if(!groups.has(key))groups.set(key,{signal,field,include:[],exclude:[]});if(!groups.get(key)[mode].includes(value))groups.get(key)[mode].push(value)}
+  const leaf=(field,op,value)=>({field:structuredClone(field),op,...(value===undefined||value===''?{}:{value})});
+  for(const q of out){const clauses=[];for(const g of groups.values()){if(g.signal!==q.signal)continue;if(g.include.length){const values=g.include.map(v=>leaf(g.field,v===null?'missing':'eq',v===null?undefined:v));clauses.push(values.length===1?values[0]:{any:values})}for(const v of g.exclude)clauses.push(v===null?leaf(g.field,'exists'):{any:[leaf(g.field,'missing'),leaf(g.field,'ne',v)]})}if(!clauses.length)continue;q.offset=0;q.where={all:[...(q.where?[q.where]:[]),...clauses]};let count=0;function check(p,depth=0){if(++count>32||depth>4)throw Error('Selection exceeds the query predicate budget. Remove values or simplify the existing filters.');for(const c of p.all||p.any||[])check(c,depth+1)}check(q.where)}return out
+ }

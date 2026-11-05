@@ -19,7 +19,9 @@ missing handoffs behind direct deep links or seeded saved views.
 5. Save/reopen the trace view without automatic acquisition, then Run the same
    exact trace question and window explicitly.
 6. In a separate ordinary-profile lane, verify explicit comparison promotion
-   without the facet control preserves applied filters and record presentation.
+   retains the contributed facet, applied filters and record presentation. Facet
+   counts are labeled Selected window values; promotion stages the fixed pair
+   without acquiring values or either population.
 
 ![Activity incident entry](screenshots/312-activity-incident.png)
 
@@ -27,12 +29,22 @@ missing handoffs behind direct deep links or seeded saved views.
 
 ![Reopened exact trace view](screenshots/312-reopened-trace.png)
 
-![Explicit control removal before comparison](screenshots/312-comparison-without-facet.png)
+![Facet retained when promoting a fixed comparison](screenshots/312-comparison-with-facet.png)
 
 [Maintained browser test](../../journeys/312-incident-checkpoint.spec.js) ·
 [whole-product verification review](../reviews/WHOLE_PRODUCT_VERIFICATION_312.md).
-Validation: final finite browser run passed in 38.9s (43.4s runner), including
+Historical 312 validation: final finite browser run passed in 38.9s (43.4s runner), including
 all selected lifecycle/promotion checks, with no page errors. Fifty actual
 JavaScript/Go transition and lease cases passed in 16.36s. The review records
 measured request counts, response sizes/timings and honest navigation friction;
 no production code is owned by this storyboard.
+
+337 updates the promotion action to **Include comparison in view**, preserving
+the checked facet declaration on the saved fixed pair. The frozen 337 runtime
+rerun passes in 51.9 seconds, including facet retention and unchanged local
+promotion source budget. Reuse an explicitly compiled binary to avoid compiling
+concurrently with browser checks:
+
+```sh
+GOO_GENERIC_BINARY=/absolute/path/to/goo bash scripts/run_journeys.sh journeys/312-incident-checkpoint.spec.js
+```

@@ -41,7 +41,9 @@ profiles remain outside the facet contract. Existing summary/status/time-bucket
 projections do not change the counted-record population: the existing counted-
 values recipe derives its query from the applied scope and declared field.
 
-Facet plus comparison remains refused, even when hidden. At least one data child
+[337](PAIRED_FACETS.md) permits a facet with a fresh fixed-query count comparison
+when both operands support the field. Captured comparison combinations remain
+refused, even when hidden. At least one data child
 must remain visible; a facet alone is a control, not a data result. Ordinary
 presentation reuse retains the declared field and checks it against the destination;
 it copies no source question or observations. Since 311, an aggregate-and-records

@@ -3,6 +3,7 @@ import * as CapturedCount from './captured-count-comparison.mjs';
 import * as Aggregate from './view-declaration.mjs';
 import * as Timeline from './timeline-declaration.mjs';
 import * as Facet from './facet-declaration.mjs';
+import {selectionQueries} from './categorical-selection.mjs';
 import {validateRecordQuestion} from './question-protocol.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
 const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
@@ -19,12 +20,12 @@ export function recordDisplay(value,q){
 }
 export function validate(value,q){
  validateRecordQuestion(q);closed(value,['version','kind','children']);closed(value.kind,['name','version']);
- if(value.version!=='goo.composition/1'||value.kind.name!=='stack'||value.kind.version!==1||!Array.isArray(value.children)||![1,2,3,4].includes(value.children.length))throw Error('Use a pinned records-only stack or aggregate and records with optional timeline/comparison.');
+ if(value.version!=='goo.composition/1'||value.kind.name!=='stack'||value.kind.version!==1||!Array.isArray(value.children)||![1,2,3,4,5].includes(value.children.length))throw Error('Use a pinned record composition with one to five unique roles.');
  const roles=new Set();let visible=false;
  for(const child of value.children){closed(child,['aggregate','records','timeline','comparison','facet','hidden']);const names=['aggregate','records','timeline','comparison','facet'].filter(name=>Object.hasOwn(child,name));if(names.length!==1||child.hidden!==undefined&&typeof child.hidden!=='boolean')throw Error('Choose exactly one typed role per composition child.');const name=names[0];if(roles.has(name))throw Error('Use each composition role once.');roles.add(name);visible ||= name!=='facet'&&child.hidden!==true;if(name==='aggregate')Aggregate.validate(child.aggregate,q);else if(name==='timeline')Timeline.validate(child.timeline,q);else if(name==='comparison')CapturedCount.validate(child.comparison,q);else if(name==='facet')Facet.validate(child.facet,q);else recordDisplay(child.records,q)}
  if(!roles.has('records'))throw Error('Keep a records child.');
  if(!roles.has('aggregate')){if([...roles].some(role=>!['records','facet'].includes(role))||value.children.find(child=>child.records)?.hidden===true||!['logs','spans'].includes(q.signal)||q.numeric||q.numericHistogram||q.reportedEdge||q.groupTimeSeries)throw Error('Records-only compositions require one ordinary logs or spans records child without specialized query directives.');if(q.where)validatePredicate(q.where,q.signal);}
- if(roles.has('facet')&&roles.has('comparison'))throw Error('Facets do not support comparison compositions yet.');
+ if(roles.has('facet')&&roles.has('comparison')){const pair=comparison(value);if(!CapturedCount.queryVariant(pair))throw Error('Facets require a fresh fixed-query comparison.');Facet.validate(facet(value),pair.baselineQuery);}
  if(!visible)throw Error('Keep at least one composition child visible.');
  return structuredClone(value);
 }
@@ -84,5 +85,13 @@ export function rebaseFixedComparison(value,q,range){
 
 export function setFacet(value,next,q){return validate({...value,children:next?(facet(value)?value.children.map(child=>child.facet?{...child,facet:next}:child):[{facet:next},...value.children]):value.children.filter(child=>!child.facet)},q)}
 
-// Explicit promotion drops only the unsupported control, never its applied predicate.
-export function includeComparisonWithoutFacet(value,q,baseline){const current=validate(value,q);if(!facet(current)||!CapturedCount.eligible(q)||aggregate(current)?.display.value!=='count'||comparison(current))throw Error('Choose an ordinary count view with a facet and no existing comparison.');const next=CapturedCount.createQuery(q,baseline);return setComparison(setFacet(current,null,q),next,q)}
+// One checked categorical intent narrows both original fixed scopes atomically.
+export function narrowFixedComparison(value,q,items){
+ const current=validate(value,q),pair=comparison(current),control=facet(current);
+ if(!control||!CapturedCount.queryVariant(pair))throw Error('Choose a categorical facet on a fresh fixed-query comparison.');
+ if(!Array.isArray(items)||!items.length||items.length>32)throw Error('Choose one to 32 categorical facet selections.');
+ for(const item of items){closed(item,['signal','field','value','mode']);closed(item.field,['kind','key']);if(item.signal!==q.signal||item.field.kind!==control.field.kind||item.field.key!==control.field.key||!['include','exclude'].includes(item.mode)||!Object.hasOwn(item,'value'))throw Error('Selections must use this comparison facet.');const reason=Facet.selectionReason(item.value,q.signal,control.field);if(reason)throw Error(reason);}
+ const [query,baselineQuery]=selectionQueries([q,pair.baselineQuery],items);
+ const composition=validate({...current,children:current.children.map(child=>child.comparison?{...child,comparison:{...child.comparison,baselineQuery}}:child)},query);
+ return {query,composition};
+}

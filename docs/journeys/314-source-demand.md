@@ -6,20 +6,26 @@ selected-versus-rest comparison. The selected cohort has seven POST spans; its
 complement has 100 GET spans. Counts describe the full matching population even
 though the parent inspection page holds only 100 of 107 spans.
 
-Promote the rest comparison using Include comparison without facet, save its
-fixed selected/baseline queries, then Run explicitly. Inspect the timeout trace
+Promote the rest comparison using **Include comparison in view**, retain its
+checked method facet, save its fixed selected/baseline queries, then Run explicitly.
+Facet counts identify Selected window values; preserving the control performs no
+automatic value or population read. Inspect the timeout trace
 and retire one outstanding actual trace read. Local staging and retirement must
 not publish late results or issue automatic replacement reads.
 
 [Maintained browser measurement](../../journeys/314-source-demand.spec.js) reuses
 the real OTel fixture and standard traffic-pausing wrapper from
-[313](313-active-canvas.md); its existing screenshots describe the unchanged UI.
+[313](313-active-canvas.md). The maintained [337 storyboard](337-paired-facet.md)
+covers the retained-facet comparison control.
 
 The measurement records exact HTTP request bodies, response bytes, header/body
 elapsed times and checkpoint budgets. An artifact freezes both fixed comparison
 queries for a separate backend audit. HTTP actions are not SQL statement counts;
 this test does not attribute ClickHouse statements to individual UI actions.
-The before run passed in 22.0s (24.0s runner), with no page errors. It made
+
+## Historical acquisition-profile experiment
+
+The original 314 before run passed in 22.0s (24.0s runner), with no page errors. It made
 18 source HTTP requests, including one retired trace read. Entering the service
 accounted for eight; Customize and local staging added none. Parent/facet reads,
 ephemeral comparison and fixed comparison each added two reads. Inspecting the
@@ -42,6 +48,8 @@ response was 1,768 bytes, about 98% smaller than the full response. Header elaps
 was 366ms, compared with 160ms before: this run demonstrates less response data,
 not a latency improvement. The selected inspection still acquired a full result.
 
+## Current source-budget contract and replay
+
 The maintained fixed Run budget is one full selected read, one aggregate baseline
 read and one source-free comparison. A second Run held the real aggregate
 response; navigation aborted it with `net::ERR_ABORTED`, and releasing the late
@@ -53,12 +61,27 @@ Run the ordinary self-contained flow with:
 bash scripts/run_journeys.sh journeys/314-source-demand.spec.js
 ```
 
-The optional `GOO_SOURCE_DEMAND_AFTER=1` mode is a two-phase measurement: it needs
-the preceding GUI-authored store and frozen before-response artifacts from this
-experiment. It reopens those exact queries rather than substituting a fresh
-fixture/window. It is not an independent test requiring checked-in raw evidence. The temporary
-store and full-response copies were pruned after this experiment; only the compact
-summary and fixed baseline query remain locally.
-The regular flow enforces the same full/aggregate/comparison acquisition budget.
-The existing 313 images are reused because the workflow's visible controls did
-not change.
+The optional `GOO_SOURCE_DEMAND_AFTER=1` mode replays the **current** full flow's
+GUI-saved definition and checks retirement. Run the ordinary flow first, then run:
+
+```sh
+GOO_SOURCE_DEMAND_AFTER=1 GOO_GENERIC_BINARY=/absolute/path/to/goo bash scripts/run_journeys.sh journeys/314-source-demand.spec.js
+```
+
+Replay consumes that run's `http.json`, `fixed-queries.json` and temporary
+`capture-store`, selecting the saved view by its exact two operand questions.
+It does not need historical `*-before.json` files or manufacture an older full-read
+profile. It preserves the facet and Selected window label, exact queries, selected
+rows, counts and cohort semantics while requiring fresh acquisition clocks. The
+baseline must omit rows and `viewDataset`; the source budget remains one full
+selected read, one aggregate baseline read and one source-free comparison, with
+zero automatic facet value reads. A held second baseline read is aborted on
+departure and cannot publish a late comparison. Byte sizes are recorded only as
+current observations, with no historical reduction assertion.
+
+These per-run artifacts are temporary; repeat the full phase after cleanup rather
+than checking private/raw store data into Git. Earlier measurements above remain
+historical. 337 updates the promotion label and retains the facet declaration;
+full-flow rerun passes in 18.8 seconds, while current replay acceptance is pending.
+Set `GOO_GENERIC_BINARY` to reuse the reviewed compiled runtime (otherwise each
+lane builds its own binary with `GOO_TEST_GO`, or `go` from PATH).

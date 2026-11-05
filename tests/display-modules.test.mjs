@@ -32,13 +32,14 @@ test('display entry imports a closed passive graph without publishing namespaces
   // Count bars and canonical temporal charts share the passive key-range gesture helper.
   assert.ok(visited.has(new URL('../ui/interval-range.mjs', import.meta.url).href));
   // Record lists add bounded page and pure declaration validation, never an app owner.
-  for (const name of ['categorical-facet', 'facet-declaration', 'record-list', 'record-span-waterfall', 'record-page', 'view-composition', 'view-declaration', 'timeline-declaration', 'captured-count-comparison', 'count-cohort-context'])
+  for (const name of ['categorical-facet', 'facet-declaration', 'categorical-selection', 'record-list', 'record-span-waterfall', 'record-page', 'view-composition', 'view-declaration', 'timeline-declaration', 'captured-count-comparison', 'count-cohort-context'])
     assert.ok(visited.has(new URL('../ui/' + name + '.mjs', import.meta.url).href));
   // Declared facets add only their passive element and pure declaration validator;
   // counted-values acquisition stays outside this display graph.
+  // Common paired narrowing shares the existing pure categorical AST builder, never an app owner.
   // Operand role names add one shared pure bounded-label validator, with no owner or IO.
   assert.ok(visited.has(new URL('../ui/comparison-role-labels.mjs', import.meta.url).href));
-  assert.equal(visited.size, 52);
+  assert.equal(visited.size, 53);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

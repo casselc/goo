@@ -69,7 +69,7 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
   onFilter:originalOptions.onFilter?((...args)=>{if(actions.canRefine())originalOptions.onFilter(...args)}):undefined,
   onBreakdown:originalOptions.onBreakdown?((...args)=>{if(actions.canRefine())originalOptions.onBreakdown(...args)}):undefined,
   onTraceSearch:originalOptions.onTraceSearch?((...args)=>{if(actions.canTraceSearch())originalOptions.onTraceSearch(...args)}):undefined,
-  onFacet:originalOptions.onFacet?((...args)=>{if(actions.canRefine())originalOptions.onFacet(...args)}):undefined,
+  onFacet:originalOptions.onFacet?((...args)=>actions.canRefine()?originalOptions.onFacet(...args):false):undefined,
   onPlot:originalOptions.onPlot?((field,button)=>{if(actions.canPlot())originalOptions.onPlot(field,button)}):undefined
  };
  const panel=node('section'),inspect=UI.inspector(panel,{onClose:()=>{const row=panel.closest('.record-detail-row');if(row)row.hidden=true;for(const button of target.querySelectorAll('[data-inspect-record]'))button.setAttribute('aria-pressed','false')}});
@@ -90,7 +90,7 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
   const shared=node('details'),fields=node('div');shared.append(node('summary','Fields shared by selected records'),fields);let built=false;
   shared.addEventListener('toggle',()=>{if(!shared.open||built||!current()||!recordSelection.contains(shared))return;built=true;const allowed=()=>current()&&recordSelection.contains(shared)&&actions.canRefine();Attributes.mountShared(fields,selection.indexes().map(index=>rows[index]),{
    canPlot:()=>current()&&actions.canPlot(),onPlot:actions.onPlot?((field,button)=>{if(current()&&actions.canPlot())actions.onPlot(field,button)}):undefined,
-   onFacet:(...args)=>{if(allowed())options.onFacet?.(...args)},canRefine:allowed
+   onFacet:actions.onFacet?((...args)=>allowed()?actions.onFacet(...args):false):undefined,canRefine:allowed
   })});
   const provenance=node('details');provenance.append(node('summary','Selected record scope and provenance'),node('p','Page positions identify retained observations in this read only; reported trace/span IDs do not establish unique events, complete traces or causal relationships.'),node('pre',JSON.stringify({question:origin,basis,observations:selection.indexes().map(index=>({pageIndex:index,timestamp_ns:rows[index].timestamp_ns,traceId:rows[index].TraceId,spanId:rows[index].SpanId}))},null,2)));
   recordSelection.append(shared,provenance);
