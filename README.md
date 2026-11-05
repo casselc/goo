@@ -24,6 +24,8 @@ context for the same service and namespace, including without a trace ID. Both
 surrounding-log entry points share exact namespace admission; unknown reporting
 refuses before a read. Find preserved records later with bounded, literal
 [kept content search](docs/KEPT_CONTENT_SEARCH.md), without querying telemetry.
+[Open matching record](docs/KEPT_MATCH_NAVIGATION.md) takes a search witness directly
+to its original verified record; one kept route visit acquires the receipt once.
 
 Temporary and saved count comparisons use [one supplied-pair presentation](docs/COUNT_PAIR_PRESENTATION.md),
 with a Summary/Groups choice and explicit operand windows and read clocks.

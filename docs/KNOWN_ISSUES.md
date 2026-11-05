@@ -43,10 +43,11 @@ service and trace/span IDs. It checks verified receipts in bounded pages, not li
 telemetry or arbitrary attributes. Match and checked counts are page-local; a
 zero-match page with continuation leaves unchecked candidates. Corrupt/unreadable
 receipts fail the request rather than silently establish absence.
-Native acceptance exposed two exact-ID reads for one ordinary kept Open through
-existing popstate/hashchange routing. Both verify the same receipt; this is extra
-custody IO, not a telemetry read. Consolidating that open lifecycle and following
-the matching original member is the next depth item.
+331 fixes duplicate kept Open reads by sharing one active route visit across
+browser notifications. [Open matching record](KEPT_MATCH_NAVIGATION.md) inspects the
+verified original receipt member. Its hint is in-tab only; copied receipt URLs
+open the selection. Leaving/revisiting verifies afresh, while retained context
+Back preserves its existing receipt and inspector without reads.
 
 The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
 [active roadmap](ROADMAP_2026_11_03.md) replace the older parallel feature queues.

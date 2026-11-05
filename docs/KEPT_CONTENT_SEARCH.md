@@ -41,6 +41,9 @@ snippet preserves the entire literal plus up to 32 Unicode code points on each
 side (at most 320 total). It is rendered as text. **Open kept observations** uses
 the original exact receipt ID and independently verifies the original records;
 the snippet is not a replacement receipt or a new observation basis.
+**[Open matching record](KEPT_MATCH_NAVIGATION.md)** directly inspects the verified
+original member in this tab. The ordinary Open link still opens the selection;
+its copied URL does not carry the ephemeral member hint.
 
 Editing filters retires old results and pending requests without a new read.
 Leaving discovery also retires pending work. Existing catalog and inspector

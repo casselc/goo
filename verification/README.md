@@ -3789,3 +3789,15 @@ OTLP and UI Keeps; `GOO_KEPT_CONTENT_BOMBADIL=1` enables the thirty-second catal
 campaign. Completion must observe actual search DTOs and exact receipt opening,
 with zero source reads or custody writes after instrumentation. Exit zero alone
 is insufficient. See [contract](../docs/KEPT_CONTENT_SEARCH.md).
+
+
+## Matching kept member and route visit — 331
+
+`TestHegelKeptMatchNavigation331` drives the actual captures owner through
+`fixtures/kept-route-331.mjs`, with passive rendering/transport mocked. Generated
+scenarios exercise duplicate events, pending hints, explicit retries, fresh visits,
+abort-insensitive completions and refused inspection. Mutation controls remove
+same-ID sharing and late-result admission, and must fail. Browser focus, genuine
+receipt verification and custody/source accounting belong to the
+[native journey](../docs/journeys/331-kept-matching-record.md), including its
+thirty-second actor. See [contract](../docs/KEPT_MATCH_NAVIGATION.md).

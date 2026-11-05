@@ -2,6 +2,8 @@ import {test,mock} from 'node:test';
 import assert from 'node:assert/strict';
 class El{
  constructor(tag,text){this.tag=tag;this.textContent=text||'';this.children=[];this.parent=null;this.hidden=false;this.dataset={};this.disabled=false}
+ get firstElementChild(){return this.children[0]}
+ after(node){const siblings=this.parent.children;node.parent=this.parent;siblings.splice(siblings.indexOf(this)+1,0,node)}
  get isConnected(){return this.root||!!this.parent?.isConnected}
  append(...nodes){for(const n of nodes){n.parent=this;this.children.push(n)}}
  prepend(...nodes){for(const n of nodes)n.parent=this;this.children.unshift(...nodes)}
@@ -12,7 +14,7 @@ class El{
 }
 const inspectors=[];
 mock.module('../ui/components.mjs',{exports:{node:(tag,text)=>new El(tag,text),actionVisible:el=>el.isConnected&&!el.hidden,inspector:(host,{onClose})=>{const cache=new Map();const api={close:onClose,show({key,content}){if(!cache.has(key))cache.set(key,content);host.replaceChildren(cache.get(key))}};inspectors.push(api);return api}}});
-mock.module('../ui/record-presentation.mjs',{exports:{table:()=>{const viewport=new El('table'),body=new El('tbody');viewport.append(body);return {viewport,body,row:()=>{const row=new El('tr'),cells=Array.from({length:4},()=>new El('td'));row.append(...cells);return {row,cells}}}},detail:()=>new El('div'),description:()=>''}});
+mock.module('../ui/record-presentation.mjs',{exports:{table:()=>{const viewport=new El('table'),body=new El('tbody');viewport.append(body);return {viewport,body,row:()=>{const row=new El('tr'),cells=Array.from({length:4},()=>new El('td'));row.append(...cells);return {row,cells}}}},detail:()=>{const detail=new El('div');detail.append(new El('goo-record-summary','Original record summary'));return detail},description:()=>''}});
 mock.module('../ui/inspection-focus.mjs',{exports:{mount:()=>({open(){},close(){return false},dispose(){}})}});
 mock.module('../ui/record-results.mjs',{exports:{traceView:(q,id)=>{if(!id)throw Error('A valid trace ID is required.');return {queries:[{...q,where:{trace:id}}]}}}});
 const {mount}=await import('../ui/kept-saved.mjs');
@@ -28,5 +30,12 @@ test('kept inspector continuation detaches receipt, refuses retired member contr
 test('trace-less log inspector independently stages surrounding context and preserves original return scope',()=>{
  globalThis.document={hidden:false,activeElement:null};globalThis.scrollY=42;globalThis.scrollTo=()=>{};
  try{const host=new El('section');host.root=true;const v=receipt();v.selector.where={field:{kind:'column',key:'body'},op:'contains',value:'original'};for(const member of v.members){delete member.record.TraceId;member.record.ServiceName='api';member.record.ResourceAttributes['service.namespace']=''}let called;const owner=mount(host,{onOpenView:(view,source)=>{called={view,source};return true}});owner.show(v);find(host,'Inspect kept record').onclick();assert.equal(find(host,'Open trace as view').disabled,true);find(host,'Open trace as view').onclick();assert.equal(called,undefined);const action=find(host,'Surrounding logs');assert.equal(action.disabled,false);action.onclick();assert.equal(called.view.queries[0].signal,'logs');assert.deepEqual(called.source.question.where,v.selector.where);assert.deepEqual([called.source.question.fromMs,called.source.question.toMs],[100000,160000]);assert(called.source.onBack());assert.equal(document.activeElement,action);owner.clear();assert.equal(called.source.current(),false);action.onclick();assert.equal(called.source.current(),false);
+ }finally{delete globalThis.document;delete globalThis.scrollY;delete globalThis.scrollTo}
+});
+test('matching member opens the exact preserved occurrence through the existing inspector',()=>{
+ globalThis.document={hidden:false,activeElement:null};globalThis.scrollY=0;globalThis.scrollTo=()=>{};
+ try{const host=new El('section');host.root=true;const v=receipt();v.members[1].record.TraceId='d'.repeat(32);let called;const owner=mount(host,{onOpenView:(view,source)=>{called={view,source};return true}});owner.show(v);
+ assert.equal(owner.inspect(-1),false);assert.equal(owner.inspect(2),false);assert.equal(find(host,'Open trace as view'),undefined);
+ document.hidden=true;assert.equal(owner.inspect(1),false);document.hidden=false;assert.equal(owner.inspect(1),true);const summary=find(host,'Original record summary');assert.equal(summary.parent.children[summary.parent.children.indexOf(summary)+1].tag,'goo-evidence-summary');find(host,'Open trace as view').onclick();assert.equal(called.view.queries[0].where.trace,'d'.repeat(32));const stale=find(host,'Open trace as view');owner.show(v);assert.equal(called.source.current(),false);stale.onclick();assert.equal(owner.inspect(0),true);find(host,'Open trace as view').onclick();assert.equal(called.view.queries[0].where.trace,'c'.repeat(32));owner.clear();assert.equal(owner.inspect(0),false);
  }finally{delete globalThis.document;delete globalThis.scrollY;delete globalThis.scrollTo}
 });
