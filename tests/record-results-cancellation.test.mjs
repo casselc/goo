@@ -49,7 +49,7 @@ function setup(t){
  const el=id=>container.querySelector('#'+id);
  const complete=(index,{more=false}={})=>{const r=requests[index];r.resolve({question:structuredClone(r.q),rows:[],count:'0',state:'no_data',basis:'held-'+index,capturedAt:'2026-11-02T00:00:00Z',hasMore:more,warnings:[]})};
  t.after(()=>{owner.dispose();waterfallHook=null;mounts.length=0;for(const [key,value]of previous){if(value===undefined)delete globalThis[key];else globalThis[key]=value}});
- return {owner,requests,el,complete,container,get returns(){return returns},withdraw:async()=>{active=false;for(const fn of events.get('goo:workspace')||[])fn();await flush()},openSurrounding:()=>{owner.table(new Element('div'),[],'logs',origin,'origin');mounts.at(-1).at(-1).openSurrounding(origin,{ServiceName:'api',timestamp_ns:'1500000000'},'origin',null)}};
+ return {owner,requests,el,complete,container,get returns(){return returns},withdraw:async()=>{active=false;for(const fn of events.get('goo:workspace')||[])fn();await flush()},openSurrounding:(row={ServiceName:'api',timestamp_ns:'1500000000',ResourceAttributes:{}})=>{owner.table(new Element('div'),[],'logs',origin,'origin');mounts.at(-1).at(-1).openSurrounding(origin,row,'origin',null)}};
 }
 
 test('trace close aborts its read and a late successful response cannot start linked logs or publish',async t=>{
@@ -96,4 +96,29 @@ test('ordinary completion preserves explicit close focus/return handling and mak
  const x=setup(t);let returns=0;const pending=x.owner.openTrace(origin,trace,'',null,null,{onClose:()=>{returns++;return true}});x.complete(0);await flush();x.complete(1);await pending;
  assert.equal(x.requests.length,2);assert.equal(mounts.length,1);assert.equal(x.requests.every(r=>!r.signal.aborted),true);
  x.el('exploreContextClose').onclick();assert.equal(returns,1);assert.equal(x.returns,0);assert.equal(x.requests.length,2);
+});
+
+test('surrounding action refuses unknown reporting before a source request',t=>{
+ const x=setup(t);
+ for(const row of [{ServiceName:'api',timestamp_ns:'1500000000'},...[null,[],new Map()].map(ResourceAttributes=>({ServiceName:'api',timestamp_ns:'1500000000',ResourceAttributes})),{ServiceName:'api',timestamp_ns:'1500000000',ResourceAttributes:{'service.namespace':null}},{ServiceName:'',timestamp_ns:'1500000000',ResourceAttributes:{}}]){
+  x.el('surroundingScope').textContent='previous exact scope';x.openSurrounding(row);assert.equal(x.el('surroundingScope').textContent,'');assert.equal(x.requests.length,0);assert.match(x.el('surroundingStatus').textContent,/Surrounding logs unavailable/);
+ }
+});
+
+test('surrounding action reads exact namespace and preserves it through paging',async t=>{
+ const x=setup(t);
+ for(const namespace of [undefined,'','payments']){
+  const resource={};if(namespace!==undefined)resource['service.namespace']=namespace;
+  const index=x.requests.length;x.openSurrounding({ServiceName:'api',timestamp_ns:'1500000000',ResourceAttributes:resource});
+  assert.equal(x.requests.length,index+1);const first=x.requests[index];assert.deepEqual(first.q.where.all[1],{field:{kind:'resource',key:'service.namespace'},op:namespace===undefined?'missing':'eq',...(namespace===undefined?{}:{value:namespace})});
+  assert.match(x.el('surroundingScope').textContent,/exact service api/);assert(x.el('surroundingScope').textContent.includes(namespace===undefined?'namespace missing':namespace===''?'namespace present empty':'namespace "payments"'));
+  x.complete(index,{more:true});await flush();const paging=x.el('surroundingNext').onclick();assert.equal(x.requests[index+1].q.offset,100);assert.deepEqual(x.requests[index+1].q.where,first.q.where);x.complete(index+1);await paging;
+  const count=x.requests.length;x.el('surroundingClose').onclick();assert.equal(x.requests.length,count);
+ }
+});
+
+test('a refused replacement retires pending surrounding work without reading again',async t=>{
+ const x=setup(t);x.openSurrounding();const pending=x.requests[0];
+ x.openSurrounding({ServiceName:'api',timestamp_ns:'1500000000'});assert.equal(pending.signal.aborted,true);assert.equal(x.requests.length,1);assert.equal(x.el('surroundingScope').textContent,'');
+ x.complete(0);await flush();assert.equal(mounts.length,2);assert.match(x.el('surroundingStatus').textContent,/Surrounding logs unavailable/);assert.equal(x.el('surroundingNext').disabled,true);
 });

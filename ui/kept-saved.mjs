@@ -4,8 +4,6 @@ import * as Records from './record-presentation.mjs';
 import * as RecordResults from './record-results.mjs';
 import * as Discovery from './discovery.mjs';
 import * as Composition from './view-composition.mjs';
-import * as ServiceIdentity from './service-identity.mjs';
-import {validate as validatePredicate} from './predicate-validation.mjs';
 import * as Environment from './record-environment.mjs';
 import * as InspectionFocus from './inspection-focus.mjs';
 import * as Catalog from './kept-catalog.mjs';
@@ -20,12 +18,9 @@ function keptMember(value,memberIndex){
 }
 function traceView(value,memberIndex){const {member,question}=keptMember(value,memberIndex);return RecordResults.traceView(question,member.record.TraceId)}
 function surroundingView(value,memberIndex){
- const {member,question}=keptMember(value,memberIndex),row=member.record,resource=row.ResourceAttributes;
+ const {member,question}=keptMember(value,memberIndex);
  if((question.signal||'logs')!=='logs')throw Error('Surrounding logs requires a kept log observation.');
- if(typeof row.ServiceName!=='string'||!row.ServiceName.length)throw Error('A reported service name is required.');
- if(!Object.hasOwn(row,'ResourceAttributes')||!resource||typeof resource!=='object'||Array.isArray(resource)||![Object.prototype,null].includes(Object.getPrototypeOf(resource)))throw Error('Service namespace reporting is unknown.');
- const hasNamespace=Object.hasOwn(resource,'service.namespace');if(hasNamespace&&typeof resource['service.namespace']!=='string')throw Error('Service namespace must be a reported string.');
- const q=Discovery.surroundingQuestion(question,row,30000,0);q.where=ServiceIdentity.serviceWhere(row.ServiceName,ServiceIdentity.namespace(hasNamespace?resource['service.namespace']:undefined));validatePredicate(q.where,'logs');
+ const q=Discovery.surroundingQuestion(question,member.record,30000,0);
  return Composition.view({version:1,title:'Surrounding logs',queries:[q],composition:Composition.createRecords(q)});
 }
 function mount(host,{active=()=>true,onOpenView}={}){let generation=0,focus,inspection=0;

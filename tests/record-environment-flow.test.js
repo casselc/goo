@@ -5,7 +5,7 @@ const trace='0123456789abcdef0123456789abcdef';
 test('record context constructors preserve every checked selector representation without aliasing',()=>{
  for(const fixture of bank.cases)for(const legacy of [{},{environment:''}]){
   const q={signal:'logs',...legacy,environmentSelector:structuredClone(fixture.selector),fromMs:1000,toMs:61000,where:{field:{kind:'column',key:'body'},op:'contains',value:'private'}},before=structuredClone(q);
-  const contexts=[traceQuestion(q,trace),traceQuestion(q,trace,'0123456789abcdef','logs'),surroundingQuestion(q,{timestamp_ns:'2000000000',ServiceName:'worker'},1000),inspectionQuestion(q,'spans',{readWindow:{fromMs:1000,toMs:61000}})];
+  const contexts=[traceQuestion(q,trace),traceQuestion(q,trace,'0123456789abcdef','logs'),surroundingQuestion(q,{timestamp_ns:'2000000000',ServiceName:'worker',ResourceAttributes:{}},1000),inspectionQuestion(q,'spans',{readWindow:{fromMs:1000,toMs:61000}})];
   for(const context of contexts){assert.deepEqual(E.questionFields(context),E.questionFields(q),fixture.name);assert.ok(E.sameQuestionEnvironment(context,q));assert.notEqual(context.environmentSelector,q.environmentSelector);assert.notEqual(context.environmentSelector.scope,q.environmentSelector.scope);context.environmentSelector.scope.mode='broken';assert.deepEqual(q,before);assert.equal(JSON.stringify(context.where||{}).includes('private'),false)}
  }
 });
@@ -18,5 +18,5 @@ test('semantic equality preserves current policy and distinguishes empty, absent
 });
 test('context builders reject ambiguous environment input before constructing a replacement question',()=>{
  const q={environment:'prod',environmentSelector:E.effective({mode:'empty'}),fromMs:1000,toMs:61000};
- assert.throws(()=>traceQuestion(q,trace));assert.throws(()=>surroundingQuestion(q,{timestamp_ns:'2000000000',ServiceName:'worker'}));assert.throws(()=>inspectionQuestion(q,'logs',{readWindow:{fromMs:1000,toMs:61000}}));
+ assert.throws(()=>traceQuestion(q,trace));assert.throws(()=>surroundingQuestion(q,{timestamp_ns:'2000000000',ServiceName:'worker',ResourceAttributes:{}}));assert.throws(()=>inspectionQuestion(q,'logs',{readWindow:{fromMs:1000,toMs:61000}}));
 });

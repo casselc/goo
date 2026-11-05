@@ -33,9 +33,10 @@ trace identity. It retains checked environment/service/namespace and clips a
 30-second radius to the original window, omitting original message/severity
 filters. Unknown namespace reporting remains unavailable; missing and empty keys
 are distinct. Time context does not establish causality.
-The older surrounding-log inspector still searches across namespaces for a service
-name. Consolidating its planning with the new qualified-service context is the
-next roadmap item; the new kept-log action already enforces exact namespace.
+329 uses one checked planner for both surrounding-log entry points. The older
+inspector now reads the exact reported namespace, including missing versus empty,
+and refuses unknown reporting before acquisition. Its explicit-read, radius,
+paging and close ownership remain separate from kept-view staging and Run.
 
 The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
 [active roadmap](ROADMAP_2026_11_03.md) replace the older parallel feature queues.

@@ -19,7 +19,9 @@ Namespace selection distinguishes a reported value, a present-empty string and a
 known missing key. A supplied resource map without the key means missing; an
 absent/invalid map means reporting is unknown and the action is unavailable.
 Nonstrings and missing/empty service names are refused. No namespace wildcard or
-service fallback is inferred. Other instances of the same qualified service can
+service fallback is inferred. Both this staged view and the older surrounding-log
+inspector use Discovery.surroundingQuestion; the older inspector reads immediately
+on its explicit action and retains its own radius, paging and close controls. Other instances of the same qualified service can
 appear; this does not identify a physical instance.
 
 Original message, severity, trace and other record predicates are omitted so nearby
@@ -48,7 +50,9 @@ Kept bytes, digest, custody time and observation basis remain unchanged. Saving 
 sharing the new view preserves the query, not its in-tab return path. No new source
 executor, endpoint, product module or preservation format is needed.
 
-See the [journey](journeys/328-kept-log-context.md),
+See the [qualified-context journey](journeys/329-qualified-log-context.md),
+[shared-planner review](reviews/SURROUNDING_CONTEXT_ARCHITECTURE_329.md),
+[kept journey](journeys/328-kept-log-context.md),
 [architecture review](reviews/KEPT_LOG_CONTEXT_ARCHITECTURE_328.md),
 [design review](reviews/KEPT_LOG_CONTEXT_DESIGN_328.md) and
 [validation](../VALIDATION.md).

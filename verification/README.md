@@ -3762,3 +3762,16 @@ or create another fixture/Keep. The normal journey still creates real OTLP input
 and UI-kept receipts. Document focused replay results separately from a combined
 journey invocation. Temporary stores are removed after review, so rerun the normal
 journey to create fresh replay inputs after cleanup.
+
+
+## Shared qualified surrounding-context planner — 329
+
+The existing 328 Hegel property now compares the direct Discovery planner with
+the kept adapter. Together with 327 it checks sixty generated cases and admits
+900 views through Go validation/compilation (720 surrounding, 180 trace). Radius
+variants use 1, 30 and 300 seconds; separate offset-100 queries compile without
+pretending that an initial ExplorationView can start on a later page. Exact
+namespace presence, typed environment, clipping, detached inputs and invalid
+reporting refusal are checked independently. Compilation is not SQL execution.
+See the [review](../docs/reviews/SURROUNDING_CONTEXT_ARCHITECTURE_329.md) and
+[real source journey](../docs/journeys/329-qualified-log-context.md).

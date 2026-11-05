@@ -20,7 +20,9 @@ for explicit Keep, retaining existing hidden selections and the 20-item limit.
 Reopen a kept log or span and [stage its original-window trace Waterfall](docs/KEPT_TRACE_CONTINUATION.md);
 Run reads fresh telemetry, and Back restores the retained kept inspector.
 For kept logs, [Surrounding logs](docs/KEPT_LOG_CONTEXT.md) stages bounded time
-context for the same service and namespace, including without a trace ID.
+context for the same service and namespace, including without a trace ID. Both
+surrounding-log entry points share exact namespace admission; unknown reporting
+refuses before a read.
 
 Temporary and saved count comparisons use [one supplied-pair presentation](docs/COUNT_PAIR_PRESENTATION.md),
 with a Summary/Groups choice and explicit operand windows and read clocks.
