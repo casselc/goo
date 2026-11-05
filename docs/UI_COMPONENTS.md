@@ -1802,3 +1802,10 @@ category templates. The category can bind to the destination grouping; the facet
 field remains literal, with its supplied data and scope lease owned by the existing
 application adapter. No new element, module or acquisition owner is added; the
 passive graph remains 51. See [HTTP service views](HTTP_SERVICE_VIEW_TEMPLATE.md).
+
+
+Summary (`goo-measure-comparison`) and group-count (`goo-group-count-comparison`)
+displays accept `display.labels: [baselineRole, selectionRole]`; see
+[operand roles](COMPARISON_OPERAND_ROLES.md) for literal bounds and neutral defaults.
+Application-owned count pairs propagate their checked operand-fact labels to both
+displays. The labels do not acquire source, navigation or evidence authority.

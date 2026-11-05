@@ -3819,3 +3819,15 @@ recorded violations. Optional named/model selectors identify the expected extrac
 journeys retain their own completion/result/IO checks. See
 [campaign admission](../docs/CAMPAIGN_ADMISSION.md) for the stable result shape and
 the distinction between process `exited` and a completed task.
+
+
+## Activity previous-window composition — 333
+
+`TestHegelActivityWindowComparison333` exercises the actual exported entry planner
+and existing checked builders, then validates/compiles both questions in Go.
+Thirty cases cover exact clocks, namespace predicates, typed scope, detached inputs,
+phase/dirty/active refusal and loaded-count irrelevance. Compile admission is not
+source execution. Run `go test -C verification -run '^TestHegelActivityWindowComparison333$' -count=1 .`.
+The [native journey](../docs/journeys/333-activity-window-comparison.md) supplies
+ordinary OTLP populations and retained Activity behavior; its actor requires the
+expected model snapshots and its own verified completion through shared admission.

@@ -26,6 +26,9 @@ refuses before a read. Find preserved records later with bounded, literal
 [kept content search](docs/KEPT_CONTENT_SEARCH.md), without querying telemetry.
 [Open matching record](docs/KEPT_MATCH_NAVIGATION.md) takes a search witness directly
 to its original verified record; one kept route visit acquires the receipt once.
+Activity's [Compare previous window by service](docs/ACTIVITY_WINDOW_COMPARISON.md)
+stages both full fixed populations for explicit Run; loaded rows never supply their
+totals. Summary and Groups retain the [actual operand roles](docs/COMPARISON_OPERAND_ROLES.md).
 General [saved-capture navigation](docs/CAPTURE_NAVIGATION.md) also keeps pending
 reads and Save/Refresh display adoption with the current task.
 

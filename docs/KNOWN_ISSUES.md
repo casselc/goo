@@ -53,9 +53,15 @@ Back preserves its existing receipt and inspector without reads.
 stored page reads, pending refresh display and Save display leases. Authorized
 publication/attachment effects remain separate from stale UI adoption. The shared
 [campaign gate](CAMPAIGN_ADMISSION.md) rejects empty/unobserved runs without
-claiming journey completion. The checkpoint also records independent saved-view
-restore acquisition and misleading Current held labels on fresh fixed-query
-comparisons as finite follow-ups, not delivered fixes.
+claiming journey completion. Independent saved-view restore acquisition remains a separate consolidation
+follow-up; 333 addresses the fixed-query operand-name inconsistency below.
+
+333 adds [Activity previous-window staging](ACTIVITY_WINDOW_COMPARISON.md) with
+reported service-name grouping, exact completed-read bounds, applied scope and
+explicit Run. It is count-only and does not treat loaded Activity rows as a full
+population. Summary/Groups now retain actual operand roles, including Selected
+window for fresh fixed queries against a frozen baseline. Generic saved-view
+restoration ownership remains the separate consolidation follow-up.
 
 The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
 [active roadmap](ROADMAP_2026_11_05.md) replace the older parallel feature queues.

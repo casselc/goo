@@ -1,3 +1,4 @@
+import {comparisonRoleLabels} from './comparison-role-labels.mjs';
 /* Passive population summaries. Go owns aggregates, comparison changes and their basis. */
 import {validateSnapshot,measureValue,fractionFacts} from './view-model.mjs';
 import {validateComparison} from './view-comparison.mjs';
@@ -10,12 +11,13 @@ const n=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined
 function frozenConfig(value){
   if(value===undefined)return undefined;
   if(!value||typeof value!=='object'||Array.isArray(value)||![Object.prototype,null].includes(Object.getPrototypeOf(value)))throw TypeError('Supply display options.');
-  const keys=Reflect.ownKeys(value);if(keys.length>3)throw TypeError('Too many display options.');
+  const keys=Reflect.ownKeys(value);if(keys.length>4)throw TypeError('Too many display options.');
   const result={};for(const key of keys){
-    if(typeof key!=='string'||!['title','fields','compact'].includes(key))throw TypeError('Unsupported display option.');
+    if(typeof key!=='string'||!['title','fields','compact','labels'].includes(key))throw TypeError('Unsupported display option.');
     const descriptor=Object.getOwnPropertyDescriptor(value,key);if(!Object.hasOwn(descriptor,'value')||!descriptor.enumerable)throw TypeError('Display options must contain plain values.');
     const item=descriptor.value;
-    if(key==='fields'){
+    if(key==='labels')result.labels=comparisonRoleLabels(item);
+    else if(key==='fields'){
       if(!Array.isArray(item)||Object.getPrototypeOf(item)!==Array.prototype||item.length>64)throw TypeError('Choose at most64 bounded field keys.');
       if(Reflect.ownKeys(item).length!==item.length+1)throw TypeError('Fields must be an ordinary dense array.');
       const descriptors=Object.getOwnPropertyDescriptors(item),fields=[];
@@ -33,13 +35,13 @@ const clock=value=>{if(value===null||value===undefined)return null;const d=new D
 function options(display,fields,{comparison=false}={}){
   if(display===undefined)display={};
   if(!display||typeof display!=='object'||Array.isArray(display))throw TypeError('Supply display options.');
-  const allowed=comparison?['fields','title']:['fields','title','compact'];
+  const allowed=comparison?['fields','title','labels']:['fields','title','compact'];
   if(Object.keys(display).some(key=>!allowed.includes(key)))throw TypeError('Unsupported display option.');
   if(display.title!==undefined&&(typeof display.title!=='string'||display.title.length>512))throw TypeError('Use a short display title.');
   if(display.compact!==undefined&&typeof display.compact!=='boolean')throw TypeError('compact must be boolean.');
   const keys=display.fields??fields.filter(numeric).map(field=>field.key);
   if(!Array.isArray(keys)||!keys.length||keys.length>64||new Set(keys).size!==keys.length||keys.some(key=>!fields.some(field=>field.key===key&&numeric(field))))throw TypeError('Choose distinct supplied numeric measures.');
-  return {...display,fields:keys,compact:display.compact!==false,configured:display.fields!==undefined};
+  return {...display,...(comparison?{labels:comparisonRoleLabels(display.labels)}:{}),fields:keys,compact:display.compact!==false,configured:display.fields!==undefined};
 }
 
 function provenance(snapshot,label){
@@ -60,7 +62,7 @@ function provenance(snapshot,label){
   root.append(details);return root;
 }
 
-function valueCell(field,row,{delta,snapshot}={}){
+function valueCell(field,row,{delta,snapshot,labels}={}){
   const cell=delta?undefined:row?.cells?.[field?.key],raw=delta?delta.value:row?.values?.[field?.key];
   const body=n('div',undefined,'measure-cell');body.dataset.state=delta?.state||cell?.state||'recorded';
   const text=delta&&delta.state!=='derived'?'Unavailable':field?formatCell(field,raw,cell):'Unavailable';
@@ -68,7 +70,7 @@ function valueCell(field,row,{delta,snapshot}={}){
   const details=n('details',undefined,'measure-exact'),status=delta?delta.state:cell?.state;
   details.append(n('summary',status?(cell?.support?`${status} · ${cell.support.valid}/${cell.support.total} valid`:status):'Exact value'));
   details.append(n('p',delta?(delta.state==='derived'?exactText({...field,aggregation:undefined},raw):delta.reason||'Change is unavailable.'):field?exactText(field,raw,cell,snapshot?fractionFacts(snapshot,row,field.key):null):'Measure not supplied.'));
-  if(delta?.state==='derived')details.append(n('p','Selection − baseline · exact supplied change'));
+  if(delta?.state==='derived')details.append(n('p',(labels||comparisonRoleLabels())[1]+' − '+(labels||comparisonRoleLabels())[0]+' · exact supplied change'));
   body.append(details);return body;
 }
 
@@ -95,8 +97,8 @@ function compatibleFields(a,b){return a&&b&&a.type===b.type&&a.unit===b.unit&&['
 function comparisonBody(comparison,display){
   const viewport=n('goo-table'),table=n('table',undefined,'measure-comparison'),head=n('thead'),header=n('tr'),body=n('tbody');viewport.setAttribute('density','compact');
   const prefix='measure-comparison-'+(++tableSequence);table.setAttribute('role','table');head.setAttribute('role','rowgroup');body.setAttribute('role','rowgroup');header.setAttribute('role','row');
-  table.append(n('caption','Independent captured values · supplied changes'));
-  for(const [index,text] of ['Measure','Baseline','Selection','Change'].entries()){const th=n('th',text);th.scope='col';th.id=prefix+'-column-'+index;th.setAttribute('role','columnheader');header.append(th)}head.append(header);
+  table.append(n('caption','Independent values · supplied changes'));
+  for(const [index,text] of ['Measure',...display.labels,'Change'].entries()){const th=n('th',text);th.scope='col';th.id=prefix+'-column-'+index;th.setAttribute('role','columnheader');header.append(th)}head.append(header);
   const snapshots=[comparison.baseline,comparison.selection],rows=snapshots.map(snapshot=>snapshot.rows[0]);
   for(const [index,key] of display.fields.entries()){
     const fields=snapshots.map(snapshot=>snapshot.fields.find(field=>field.key===key)),field=fields.find(Boolean),tr=n('tr');tr.dataset.field=key;
@@ -108,14 +110,14 @@ function comparisonBody(comparison,display){
     if(plot){const axis=n('small','Shared scale','measure-axis-label');axis.title=domain.min+' → '+domain.max+(field.unit?' '+field.unit:'')+' · signed zero axis';name.append(axis)}
     for(let side=0;side<2;side++){
       const cell=n('td');cell.dataset.side=side?'selection':'baseline';cell.setAttribute('role','cell');cell.setAttribute('headers',name.id+' '+prefix+'-column-'+(side+1));
-      const label=n('span',side?'Selection':'Baseline','measure-side-label');label.setAttribute('aria-hidden','true');cell.append(label,valueCell(fields[side],rows[side]));
+      const label=n('span',display.labels[side],'measure-side-label');label.setAttribute('aria-hidden','true');cell.append(label,valueCell(fields[side],rows[side]));
       if(plot){
         const track=n('div',undefined,'measure-comparison-track');track.dataset.min=domain.min;track.dataset.max=domain.max;track.style.setProperty('--measure-zero',domain.zero+'%');track.setAttribute('aria-hidden','true');
         const bar=domain.bars[side];if(bar){const fill=n('span',undefined,'measure-comparison-fill');fill.dataset.side=side?'selection':'baseline';fill.style.left=bar.start+'%';fill.style.width=bar.width+'%';track.append(fill)}else track.dataset.unavailable='true';cell.querySelector('.measure-value').after(track);
       }
       tr.append(cell);
     }
-    const delta=n('td');delta.dataset.side='change';delta.setAttribute('role','cell');delta.setAttribute('headers',name.id+' '+prefix+'-column-3');const label=n('span','Change','measure-side-label');label.setAttribute('aria-hidden','true');delta.append(label,valueCell(field,null,{delta:comparison.changes[key]||{state:'unavailable',value:null,reason:'No supplied change.'}}));tr.append(delta);body.append(tr);
+    const delta=n('td');delta.dataset.side='change';delta.setAttribute('role','cell');delta.setAttribute('headers',name.id+' '+prefix+'-column-3');const label=n('span','Change','measure-side-label');label.setAttribute('aria-hidden','true');delta.append(label,valueCell(field,null,{labels:display.labels,delta:comparison.changes[key]||{state:'unavailable',value:null,reason:'No supplied change.'}}));tr.append(delta);body.append(tr);
   }
   table.append(head,body);viewport.append(table);return viewport;
 }
@@ -152,7 +154,7 @@ class Comparison extends Supplied{
     const comparison=this.comparison,valid=validateComparison(comparison);if(!valid.ok){this.refuse(this._inputErrors?.comparison?[this._inputErrors.comparison]:valid.reasons);return}
     const fields=[...new Map([...comparison.baseline.fields,...comparison.selection.fields].map(field=>[field.key,field])).values()],display=options(this.display,fields,{comparison:true});
     const root=n('goo-chart-frame',undefined,'measure-frame'),provenances=n('div',undefined,'measure-comparison-provenance');root.data={title:display.title||'Population comparison',state:comparison.state==='diagnostic'?'unknown':comparison.state};
-    provenances.append(provenance(comparison.baseline,'Baseline'),provenance(comparison.selection,'Selection'));root.append(provenances,comparisonBody(comparison,display));this.replaceChildren(root);
+    provenances.append(provenance(comparison.baseline,display.labels[0]),provenance(comparison.selection,display.labels[1]));root.append(provenances,comparisonBody(comparison,display));this.replaceChildren(root);
   }catch(error){this.refuse([error instanceof SyntaxError?'Invalid comparison JSON.':error.message||'Comparison unavailable.'])}}
 }
 

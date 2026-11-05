@@ -36,7 +36,9 @@ test('display entry imports a closed passive graph without publishing namespaces
     assert.ok(visited.has(new URL('../ui/' + name + '.mjs', import.meta.url).href));
   // Declared facets add only their passive element and pure declaration validator;
   // counted-values acquisition stays outside this display graph.
-  assert.equal(visited.size, 51);
+  // Operand role names add one shared pure bounded-label validator, with no owner or IO.
+  assert.ok(visited.has(new URL('../ui/comparison-role-labels.mjs', import.meta.url).href));
+  assert.equal(visited.size, 52);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

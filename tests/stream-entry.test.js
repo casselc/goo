@@ -16,3 +16,23 @@ test('private service return lease survives hidden source but rejects retirement
  // Restoring identical selector text cannot revive an older scope epoch or anchor.
  assert.equal(serviceReturnCurrent(expected,{...actual,selectorKey:'scope',scopeEpoch:6}),false);
 });
+
+const {previousWindowView}=require('../ui/stream-entry.mjs');
+function comparisonContext(){return {active:true,clean:true,phase:'paused',selector:{signal:'logs',environmentSelector:{version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'unreported'}},where:{all:[{field:{kind:'resource',key:'tenant'},op:'eq',value:''},{any:[{field:{kind:'attribute',key:'region'},op:'eq',value:'west'},{field:{kind:'attribute',key:'region'},op:'missing'}]}]}},readWindow:{fromMs:120000,toMs:180000},rows:Array.from({length:100},()=>({record:{Body:'sample'}})),evicted:7}}
+test('Activity previous-window planner freezes full checked scopes and preserves typed policies and predicates',()=>{
+ const input=comparisonContext(),before=structuredClone(input),layout={columns:['utc','summary'],fieldColumns:[{kind:'resource',key:'tenant'}]},view=previousWindowView(input,layout),q=view.queries[0],pair=view.composition.children.find(c=>c.comparison).comparison;
+ assert.deepEqual(q,{...input.selector,...input.readWindow,groupBy:[{kind:'column',key:'service'}],limit:100,offset:0});
+ assert.deepEqual(pair.baselineQuery,{...q,fromMs:60000,toMs:120000});
+ assert.deepEqual(view.composition.children.find(c=>c.records).records.display,layout);
+ assert.equal(pair.kind.name,'query-count-comparison');assert.equal(JSON.stringify(view).includes('sample'),false);assert.equal(Object.hasOwn(view,'count'),false);
+ require('../ui/view-template-handoff.mjs').stagedView(view,q);
+ q.where.all[0].value='mutated';pair.baselineQuery.environmentSelector.scope.mode='empty';layout.columns.push('service');assert.deepEqual(input,before);assert.equal(view.composition.children.find(c=>c.records).records.display.columns.length,2);
+});
+test('Activity previous-window planner refuses dirty, expired and incomplete owners before staging',()=>{
+ const c=comparisonContext();for(const patch of [{active:false},{active:undefined},{clean:false},{clean:undefined},{selector:null},{readWindow:null},...['loading','reconnecting','stale','stopped','unavailable','no_data',undefined].map(phase=>({phase}))])assert.throws(()=>previousWindowView({...c,...patch}));
+ for(const readWindow of [{fromMs:0,toMs:60000},{fromMs:-1,toMs:59999},{fromMs:120000,toMs:120000},{fromMs:120000,toMs:180001},{fromMs:Number.MAX_SAFE_INTEGER,toMs:Number.MAX_SAFE_INTEGER+1}])assert.throws(()=>previousWindowView({...c,readWindow}));
+ for(const phase of ['unknown','partial','paused'])assert.equal(previousWindowView({...c,phase}).queries[0].toMs,180000);
+});
+test('Activity previous-window planner keeps named, empty and missing typed environment selection exact',()=>{
+ for(const policy of ['current-only','effective'])for(const scope of [{mode:'named',value:'prod'},{mode:'empty'},{mode:'unreported'}]){const c=comparisonContext();c.selector.environmentSelector={version:'goo/environment-selector/v1',policy,scope};if(policy==='current-only'&&scope.mode!=='named'){assert.throws(()=>previousWindowView(c));continue}const v=previousWindowView(c),q=v.queries[0],b=v.composition.children.find(c=>c.comparison).comparison.baselineQuery;assert.deepEqual(q.environmentSelector,c.selector.environmentSelector);assert.deepEqual(b.environmentSelector,c.selector.environmentSelector)}
+});

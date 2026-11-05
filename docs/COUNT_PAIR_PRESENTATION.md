@@ -60,3 +60,9 @@ See [comparison windows](PAIRED_COMPARISON_WINDOWS.md),
 [journey](journeys/323-count-pair-presentation.md),
 [architecture](reviews/COUNT_PAIR_ARCHITECTURE_323.md) and
 [design](reviews/COUNT_PAIR_DESIGN_323.md).
+
+
+The [operand-role contract](COMPARISON_OPERAND_ROLES.md) keeps the acquisition
+owner's exact names across Summary and Groups, including accessible group actions
+and change/absence explanations. Fresh fixed queries are not labeled Current held.
+Role changes remain presentation-only; clocks, scope and compatibility are unchanged.
