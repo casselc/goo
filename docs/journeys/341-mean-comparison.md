@@ -95,3 +95,10 @@ zero/no-data visual record. Genuine lab telemetry, stored views, volumes and the
 Reviewed raw campaign images/trace, temporary stores and the copied report are
 removed. Compact main/campaign receipts, the final executable model input and
 passing log, runtime receipt, visual audit and one terminal sample remain.
+
+The 342 ownership regression passes this journey on the same reviewed Go 1.27.3
+binary in 34.1 seconds (36.6 seconds including the runner). All three means,
+zero/no-data states, saved declaration, supporting-record return and cancellation
+remain valid. Observed replay passes in 13.45 seconds, with zero skips; maintained
+frames are refreshed. No new actor runs in this bounded regression; the 341
+campaign described above remains historical.

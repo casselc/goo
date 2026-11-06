@@ -1,5 +1,69 @@
 # Validation record
 
+## Retained-parent ownership consolidation — 342
+
+The final frozen frontend suite passes **1,155 tests**, with no failures or skips
+(65.16 seconds). The separate Go 1.27.3/Hegel gate passes 40 generated schedules
+in 2.27 seconds. It invokes the production local-handler and remount-state helpers
+through Node: current callbacks work, retired references remain inert across
+repeated/hidden/detached/replaced-question schedules, and generated raw text,
+checkbox, caret and exact disclosure state survive helper remount. These are
+helper schedules, not a claim that a mocked DOM proves application navigation,
+network IO or receipt custody.
+
+Architecture accepts the bounded frozen implementation. One return path renews
+current definition controls; immutable tokens fence retired handlers. Pending
+comparison/page/display work retires without discarding a ready held pair.
+Ordinary uncustomized distributions rebind only local group actions while retaining
+the adapter's baseline, read clocks, comparison model and Compare surface.
+Navigation guards on unapplied facet/window definitions remain intact.
+
+The managed Docker build passes with Go 1.27.3; health and exact served-source
+parity pass for `population-workspace.mjs`, `distributions.mjs` and the new
+`retained-definition-controls.mjs`. No backend API, grammar wire format or dependency
+changed, so no unchanged backend/API suite rerun is claimed in this milestone.
+The retry passes all native cases: 30 source HTTP attempts including setup
+(27 projected), 57 observed events, 16 raw preservation facts and seven Back
+returns. Every current focus target is in the viewport and passes center hit
+validation. The ordinary held 9/3 comparison retains its Compare surface and raw
+receipts; fresh group actions work while retired callbacks leave state and API
+counts unchanged. Repeated ordinary returns, late metadata, cancellation of a
+real pending rest-baseline response, renewed comparison promotion, fixed-pair/facet
+return and explicit draft refusal/discard all pass. The fixed-pair source timeout
+did not recur. The independent Go/Quint gate passes in 6.67 seconds with no skips and eight
+negative controls. It requires all sixteen named raw facts, exact JSON preservation
+with numeric fidelity, source/comparison/metadata counter agreement and a completed
+lifecycle (57 events, final depth 1, 27 projected attempts), rather than trusting
+self-reported coherence. Receipt, draft, stale-callback, late-response, Back-read
+and incomplete-prefix mutations are rejected.
+
+The full native journey passes in 2.2 minutes with no page errors. Its separate
+35.649-second Bombadil campaign exits zero with 548 snapshots across phases 0–8,
+two Back returns, 4 source attempts, 1 comparison and 0 writes. Independent terminal
+observations confirm retired actions inert, current controls working and held
+observations immutable, with no horizontal overflow. The driver audit finds five
+JPEG hashes; its 537 dominant terminal captures genuinely show the applied 9/5 pair
+and Groups Find “stable” (previous 3/selected 4). Root reviewed the terminal sample;
+this is not a stale-loading result. Maintained Playwright frames pass design review.
+The existing 341 mean-comparison journey also passes on the same reviewed binary
+in 34.1 seconds (36.6 seconds including the runner), without another actor
+campaign. All three mean/zero/no-data pairs and its observed model gate pass
+(13.45 seconds, zero skips); its four maintained frames are regenerated.
+
+
+One live attempt passed the ordinary, metadata and temporary-comparison return
+cases, then a fixed-pair ClickHouse read reached the existing 10-second header
+limit. The UI refused the comparison and showed the unavailable source; no
+ownership failure was observed at that boundary. Read-only diagnostics later
+showed ClickHouse at 6.33% CPU/~834 MiB with no lingering source queries and about
+29 GiB available memory. This is not evidence of an OOM. The retry uses the same
+binary and unchanged query limits, with sample traffic paused by the wrapper. Reviewed raw 342 driver,
+report and temporary-store output was reduced from 35 MB to 524,404 bytes;
+compact receipts, the final raw-fact model ledger/log, runtime/visual audit and
+one terminal sample remain. Genuine lab data, views, volumes and all 51 stale
+pending entries are preserved.
+
+
 ## Previous-window mean-duration summary — 341
 
 Go 1.27.3 full suite: **2,212 passing test events**, no failures, 26 expected

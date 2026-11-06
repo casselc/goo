@@ -39,6 +39,8 @@ totals. Summary and Groups retain the [actual operand roles](docs/COMPARISON_OPE
 Follow either group into supporting records with that same operand label, exact
 window and checked filters; Run reads fresh data and Back restores the comparison
 ([journey](docs/journeys/334-comparison-record-drill.md)).
+[Retained-parent controls](docs/PARENT_RETURN.md) renew locally on Back while
+keeping questions, observations and receipts; departed actions remain retired.
 [Saved-view restoration](docs/SAVED_VIEW_RESTORATION.md) joins browser history
 notifications without replacing local work. Opening stages configuration; Run
 reads telemetry, and a failed opening offers an explicit retry.

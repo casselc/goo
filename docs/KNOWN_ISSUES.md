@@ -1,5 +1,15 @@
 # Known issues and gaps
 
+342 consolidates ordinary retained-parent control renewal, preserving held
+comparisons while retiring old snapshot-bound callbacks and pending work. Local
+rebinding of an uncustomized distribution is limited to ordinary single-field
+profiles; specialized pattern, histogram and grouped-time owners are not
+implicitly generalized. Dirty definition navigation guards remain unchanged.
+See [return contract](PARENT_RETURN.md) and [validation](../VALIDATION.md). Source
+read refusals may still expose verbose transport details; a concise failure reason
+with an explicit retry action is a later refinement, without changing budgets or
+turning unavailable reads into no-data.
+
 341 adds fresh previous-window mean-duration summaries for ordinary span-duration
 queries. Captured mean baselines, per-category means and percentile comparison
 remain outside this cut. Independent read clocks and unknown upstream coverage
