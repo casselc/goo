@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+357 implements the pinned current RPC profile. Go/UI/API, generated/read-only SQL,
+native/model and focused actor checks pass. Current records require Server
+kind and nonempty `rpc.system.name`, with optional method groups retained.
+Native seconds remain separate from older RPC milliseconds and span records.
+See [contract](CURRENT_RPC_PROFILE_357.md) and
+[convention research](CURRENT_RPC_CONVENTION_357.md).
+
 356 connects service widgets to existing authored-template reuse; source, full
 UI, generated, native/model and focused browser checks pass. It stages the
 whole ordinary grouped record question, without native/specialized coercion or
@@ -1632,8 +1639,9 @@ Automatic span admission reuses at most 100 already-held service records; a page
 without a matching witness leaves All spans selected and offers the HTTP candidate
 when current method metadata exists. It does not prove HTTP work absent. Explicit
 view/range changes preserve the selected population and perform bounded fresh
-widget reads. The delivered incoming RPC profile explicitly uses legacy `rpc.system`/`rpc.method`
-and native `rpc.server.duration` milliseconds. Newer RPC bindings, legacy-only
+widget reads. Current RPC is now pinned to OTel v1.45.0, with the independent older
+`rpc.system`/`rpc.method` profile and `rpc.server.duration` milliseconds retained
+as distinct observations. Legacy-only
 HTTP keys, resource USE and Kubernetes remain separate profiles/deliveries.
 Messaging Consumer/Producer views are delivered for exact reported role and
 nonempty `messaging.system`. Consumer spans can describe receive or process work;

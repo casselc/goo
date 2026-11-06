@@ -1788,3 +1788,26 @@ Template entry waits for all overview reads to settle, because departing a pendi
 overview retires its owner. Existing destination/inspection revisions and visible
 action checks refuse stale adoption. No new query, display or catalogue engine is
 introduced. See [contract and flow diagram](SERVICE_TEMPLATES.md).
+
+## Current RPC observation profile — 357
+
+The planner adds `rpc-server-current` under the pinned OTel v1.45.0 observation
+contract. Its shared RPC predicate builder requires reported Server kind and
+nonempty `rpc.system.name`; the older profile independently requires `rpc.system`
+and `rpc.method`. Current method grouping retains absent/empty values and `_OTHER`
+without substituting span names or older service attributes.
+
+The service owner computes a bounded same-row current witness from its existing
+supporting read and passes `rpcServerCurrentObserved` to pure planning. Scope and
+window changes recompute that hint while retaining the chosen profile. Metadata
+alone offers a candidate. Automatic precedence puts current RPC after HTTP and
+before older RPC; dual-emitted records can match both explicitly selected lenses.
+
+Current native recognition uses `rpc.server.call.duration` Histogram seconds
+through the existing exact-instrument binder and histogram evaluator. Older
+millisecond instruments keep independent identity, units, intervals and clocks.
+Neither native metadata nor recorded span Error certifies RPC conformance,
+protocol outcomes or a shared span/metric denominator. Existing query evaluation,
+widget recovery, template reuse and supporting-record navigation remain the owners
+of execution and presentation. See [contract](CURRENT_RPC_PROFILE_357.md) and
+[pinned research](CURRENT_RPC_CONVENTION_357.md).

@@ -1056,7 +1056,7 @@ def check(spec):
                     accepted.append((shape, request))
     # The 13-case history envelope adds 12 JSON responses, 5 accepted
     # requests and one method-mux refusal to previous417/154/27.
-    assert responses == 436 and requests == 161 and mux_refusals == 28, (responses, requests, mux_refusals)
+    assert responses == 450 and requests == 173 and mux_refusals == 28, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)

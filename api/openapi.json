@@ -11113,7 +11113,7 @@
           },
           "profile": {
             "type": "string",
-            "description": "Selected all-spans, http-server, rpc-server, db-client, messaging-consumer or messaging-producer family for opt-in requests; absent on legacy requests."
+            "description": "Selected all-spans, http-server, rpc-server-current, rpc-server, db-client, messaging-consumer or messaging-producer family for explicit profile requests; absent for the generic overview."
           },
           "runtimeStreamsOmitted": {
             "type": "integer",
@@ -11181,7 +11181,7 @@
                 "type": "null"
               }
             ],
-            "description": "Optional advisory positive hint from already-held, same-scope Client span observations with a nonempty current db.system.name on the same row. false/omitted is unknown, not database absence or health. Auto prefers eligible HTTP then RPC before DB; no new source probe is implied."
+            "description": "Optional advisory positive hint from already-held, same-scope Client span observations with a nonempty current db.system.name on the same row. false/omitted is unknown, not database absence or health. Auto prefers eligible HTTP, current RPC, then legacy RPC before DB; no new source probe is implied."
           },
           "fields": {
             "anyOf": [
@@ -11292,7 +11292,18 @@
                 "type": "null"
               }
             ],
-            "description": "Optional auto, all-spans, http-server, rpc-server, db-client, messaging-consumer or messaging-producer selection. Omitted/empty/null preserves the legacy v2 response. auto selects HTTP only with a positive supplied server-observation hint plus current-key metadata, or a compatible native HTTP instrument. Automatic precedence is HTTP, legacy RPC, DB client, messaging consumer, messaging producer, then All spans. RPC admission requires both legacy rpc.system/rpc.method keys plus a positive rpcServerObserved hint, or an eligible legacy RPC duration instrument. Flat keys alone leave All spans selected; hints are advisory, not authenticated conformance."
+            "description": "Optional auto, all-spans, http-server, rpc-server-current, rpc-server, db-client, messaging-consumer or messaging-producer selection. Omitted/empty/null selects the generic record overview. Automatic precedence is HTTP, current RPC, legacy RPC, DB client, messaging consumer, messaging producer, then All spans. Current RPC is pinned to OTel semantic conventions v1.45.0: positive same-row Server/rpc.system.name hint plus current-key metadata, or a compatible rpc.server.call.duration histogram in seconds. Method is optional; missing and empty method groups remain distinct. Legacy RPC requires its independent rpc.system/rpc.method population or millisecond duration instrument. Flat keys alone are candidates, not observations; no alias union, conformance claim or hidden probe."
+          },
+          "rpcServerCurrentObserved": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional advisory positive hint from an already-held same-scope Server span with a nonempty rpc.system.name on that same row. rpc.method is conditional, not required for this witness. False/omitted means unknown, not absence or conformance. Current RPC uses its own pinned profile; no legacy key fallback or new probe."
           },
           "rpcServerObserved": {
             "anyOf": [
@@ -11303,7 +11314,7 @@
                 "type": "null"
               }
             ],
-            "description": "Optional advisory positive hint from already-held, same-scope Server span observations with nonempty legacy rpc.system and rpc.method on the same row. false/omitted is unknown, not RPC absence or conformance. HTTP admission has automatic precedence; this does not authorize a probe."
+            "description": "Optional advisory positive hint from already-held, same-scope Server span observations with nonempty legacy rpc.system and rpc.method on the same row. false/omitted is unknown, not RPC absence or conformance. HTTP and current RPC have automatic precedence; this does not authorize a probe."
           },
           "scope": {
             "allOf": [

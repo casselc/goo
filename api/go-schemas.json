@@ -4709,6 +4709,16 @@
           }
         ]
       },
+      "rpcServerCurrentObserved": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "rpcServerObserved": {
         "anyOf": [
           {

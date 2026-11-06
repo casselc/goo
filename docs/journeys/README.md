@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey357](357-current-rpc.md) follows pinned current RPC observations, optional
+method groups, independent native seconds, exact widget recovery and retained
+supporting-record return. Older RPC records and milliseconds remain distinct.
+
 [Journey356](356-service-templates.md) applies an authored template from service
 evidence without borrowing specimen scope. Configuration inspection/Apply and
 Save/reopen read no telemetry; explicit Run and retained Back are checked under

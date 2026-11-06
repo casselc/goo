@@ -98,6 +98,22 @@ widget remains not observed. Registered operation bindings retain their declared
 populations. This slice does not establish request throughput, business success,
 complete traces, percentile merging or a complete RED dashboard.
 
+## Current RPC observations
+
+**Current RPC** (`rpc-server-current`) is pinned to OTel semantic conventions
+v1.45.0. It requires reported Server kind and nonempty `rpc.system.name` in the
+fixed service scope. `rpc.method` is conditional: missing, empty and `_OTHER`
+groups remain distinct. The profile does not synthesize a method or join an older
+`rpc.service` value onto it. Native `rpc.server.call.duration` histograms use
+seconds and retain independent stream identity and clocks.
+
+Metadata alone offers a candidate. A positive same-row held-page witness or
+recognized native instrument can admit automatic selection after HTTP and before
+Legacy RPC. Empty/failed current reads do not switch profiles. Recorded span
+Error remains distinct from framework-specific RPC status. See the
+[current profile contract](CURRENT_RPC_PROFILE_357.md) and
+[official pinned research](CURRENT_RPC_CONVENTION_357.md).
+
 ## Incoming RPC with an explicit legacy convention
 
 The `rpc-server` profile is a separate **legacy RPC server-span observation**
@@ -111,8 +127,9 @@ than claiming current semantic-convention conformance.
 
 Both legacy keys make an RPC candidate available. Auto chooses it only with a
 positive scoped held-page Server/system/method hint, or with an eligible exact
-`rpc.server.duration` histogram in milliseconds. Incoming HTTP retains automatic
-priority when both families qualify; explicit RPC selection remains available.
+`rpc.server.duration` histogram in milliseconds. Incoming HTTP and Current RPC
+retain automatic priority when their families qualify; explicit Legacy RPC
+selection remains available.
 Missing hints are unknown, and client-only keys can offer an explicit RPC lens
 whose actual population is empty. The same staged profile/explicit Apply policy
 and manual All spans fallback apply.
@@ -127,7 +144,8 @@ per-stream millisecond measurement, with its original library/schema/temporality
 identity; seconds do not become eligible by conversion. Eligible RPC instruments
 rank before unrelated defaults only while RPC is active, within the existing
 two-instrument bound. Logs and registered operation declarations keep their own
-populations. Current-convention RPC support remains a separate future contract.
+populations. Current RPC is a distinct profile above, without alias unions or
+millisecond conversion.
 
 ## Database client span observations
 

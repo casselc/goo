@@ -1,9 +1,9 @@
 # Automatic operational dashboards — product initiative
 
-Status: **C2a HTTP/legacy-RPC and C2b database-client/messaging roles delivered**.
+Status: **HTTP, current/older RPC and database-client/messaging roles delivered**.
 Later stages remain proposed. Clarified by the user on 2026-10-25 after the whole-product review.
 This is the expanded C2 initiative in the
-[current roadmap](ROADMAP_2026_10_25.md), not a claim every family is implemented.
+[current roadmap](ROADMAP_2026_11_05.md), not a claim every family is implemented.
 
 ## Desired experience
 
@@ -62,25 +62,37 @@ C2a.1 is implemented and checked against ordinary OTel data. Actual source,
 browser, actor and independent verification evidence is recorded in
 [VALIDATION.md](../VALIDATION.md) and [journey 187](../journeys/187-http-server-dashboard-storyboard.md).
 
+## Current RPC observations — 357
+
+The current profile is pinned to official OTel v1.45.0: Server kind and nonempty
+`rpc.system.name`, with conditional method groups retained. Native
+`rpc.server.call.duration` histograms keep seconds, exact streams and independent
+clocks. Automatic precedence is HTTP, current RPC, older RPC, DB client, messaging
+consumer/producer, then All spans. Metadata candidates remain distinct from actual
+record/native evidence. See [contract](CURRENT_RPC_PROFILE_357.md),
+[research](CURRENT_RPC_CONVENTION_357.md) and
+[executed journey](journeys/357-current-rpc.md).
+
 ## Incoming RPC slice — explicit legacy binding
 
 C2a.2 is delivered. The first RPC view uses a named legacy observation profile,
 `goo/rpc-server-legacy-span-observations/v1`: exact reported `Server` kind and
 present, nonempty `rpc.system` and `rpc.method` attributes. It does not union
-`rpc.system.name` or newer method names into that population. Custom nonempty
+`rpc.system.name` into that population. Custom nonempty
 values remain reported values rather than verified convention compliance.
 
 Flat key discovery suggests a selectable RPC candidate. Automatic admission also
 requires a positive same-row server/system/method observation from the existing
 scoped service page, or a compatible legacy native instrument. HTTP keeps its
-existing automatic priority; RPC follows when independently admitted, ahead of DB and messaging.
+existing automatic priority, followed by current RPC; this older lens follows
+when independently admitted, ahead of DB and messaging.
 All spans remains the fallback. Manual selection and range/native changes retain the resolved profile.
 No absence is inferred from a bounded metadata page, and no fallback read is hidden.
 
 The relevant native binding is `rpc.server.duration`, histogram, unit `ms`, with
 existing typed identity/temporality validation. A same-name seconds instrument
-is not silently converted into this binding; newer call-duration names need a
-separate explicit profile. Native results keep their own stream populations and
+is not silently converted into this binding; the current call-duration name has
+its separate profile above. Native results keep their own stream populations and
 interval coverage. Recorded span Error, gRPC numeric status, HTTP status and
 business success are separate facts; this cut does not invent a protocol-wide
 failure policy or a unique-call denominator.
@@ -203,7 +215,7 @@ Already implemented:
 
 - [Service overview planner](../exploration/dashboard.go), automatic service views,
   bounded widget execution, scoped record/native presenters and investigation
-  continuations. C2a/C2b.1 supply HTTP/legacy-RPC server-span and current-key
+  continuations. C2a/C2b.1 and 357 supply HTTP/current-and-older-RPC server-span and current-key
   database-client defaults, with All spans fallback. Omitted-profile plans retain
   mixed-kind span grain.
 - [Native HTTP/messaging capability candidates](../measurements/instrument_capabilities.go),
@@ -216,8 +228,8 @@ Already implemented:
 
 Work that must be planned explicitly:
 
-1. Extend the delivered HTTP/legacy-RPC/database-client/messaging selection with
-   newer convention bindings and the remaining role/resource families.
+1. Extend delivered HTTP/current-and-older-RPC/database-client/messaging selection
+   with remaining convention, role and resource families under explicit contracts.
 2. [Host inventory and explicit gauge/stock authority](HOST_RESOURCES.md) are now
    delivered separately from service-name discovery. Kubernetes ownership/entity
    mappings remain planned; do not manufacture service labels or relax original

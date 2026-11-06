@@ -1,5 +1,26 @@
 # Semantic properties and model conformance
 
+## Current RPC observations (357)
+
+Forty generated cases compare actual bounded JavaScript witnesses and Go plans
+against independent scoped raw-map membership, including optional method groups,
+dual emission, precedence and native name/unit/type/engine-temporality constraints.
+Twenty read-only fixture CTEs check both current and older SQL populations with
+count, record-ID multiset and missing/empty/literal method-group parity.
+
+```sh
+GOO_RPC_357_CHURL=http://127.0.0.1:8123 go -C verification test -run '^Test(HegelCurrentRPC357|CurrentRPCCompiledSQL357|QuintCurrentRPCProtocol357)$' -count=1 .
+```
+
+The native observed checker is `TestQuintCurrentRPCObserved357`, using
+`GOO_CURRENT_RPC_357_REPORT`. It reuses the selected-widget recovery model; the
+independent adapter checks whole RPC scope/membership, fixed retry, supporting
+record staging/Run and retained return. Native-only profile cases and manual
+All spans remain direct native assertions. The early generated-wrapper smoke
+accepts genuine recovery order and rejects duplicate retry while busy. See
+[contract](../docs/CURRENT_RPC_PROFILE_357.md) and [validation](../VALIDATION.md)
+for the current execution status and bounded model claims.
+
 ## Service-context authored templates (356)
 
 Forty generated cases pass actual widget-question admission through JavaScript,

@@ -1,5 +1,87 @@
 # Validation record
 
+## Pinned current RPC observations — 357
+
+The current RPC profile is pinned to official OTel semantic conventions v1.45.0,
+commit `fb30ca17193b551473b1f43c315482918ab6987c`. Record membership requires reported
+Server kind and nonempty `rpc.system.name`; conditional method values retain
+missing/null, empty and `_OTHER` groups. Older `rpc.system`/`rpc.method` records
+and millisecond duration instruments remain distinct observations. Current native
+recognition uses `rpc.server.call.duration` Histogram seconds through the existing
+instrument binder and histogram evaluator, with no alias conversion or new kernel.
+
+All dashboard planner/API checks pass, including 14 new direct-Go HTTP wire cases.
+The full main Go suite passes across 21 tested packages with 2,304 test-pass events
+(including subtests). Twenty-six existing optional ClickHouse/XTDB integration
+and process-helper cases skip in that suite; its related RPC live validation is
+separate below. All 1,216 UI tests pass in 23.406 seconds, zero skips. The parent
+owner test uses the actual current witness helper: narrowing outside its held row
+clears the positive hint while retaining Current RPC, without another source probe.
+
+Schema export produces 649 Go wire shapes. OpenAPI validates 100 operations,
+450 fixture responses, 173 admitted requests and 28 mux refusals. The new optional
+hint remains advisory, not authenticated observation or conformance; manual profile
+selection and actual query admission retain their independent authority.
+
+The generated gate passes in 15.949 seconds, zero skips: 40 Hegel cases in 9.63
+seconds, 40 current/legacy SQL profile comparisons in 3.73 seconds and the actual
+Quint wrapper smoke in 2.58 seconds. The raw-map membership and bounded same-row
+witness oracles are independent of product descriptors. They cover five environment
+policies, resource namespaces, time/role/system boundaries, optional methods,
+current/older/mixed populations, manual selection, precedence and exact native
+name/unit/type/identity. Temporality 1/2 is an existing engine capability, not an
+OTel RPC requirement. Twenty source fixtures produce 120 pure-CTE SELECTs under
+`readonly=1`; actual counts, ID multisets and method-group maps agree, with no DDL
+or lab-data writes. The smoke accepts a recovery lifecycle and rejects a busy
+duplicate retry through the existing task-specific model.
+
+The genuine combined journey passes in 110.168 seconds. Current-only and effective
+scopes yield 5/6 current records, while the separate older lens yields 3 records.
+Raw ClickHouse IDs, method groups, duration sums and complete supporting-record
+requests agree with independent fixture oracles. Both default current native
+streams evaluate successfully: distinct delta and cumulative instrumentation
+scopes each provide a known four-observation seconds interval. Source failures
+remain Current RPC; explicit Retry reacquires exactly one frozen widget question
+without changing healthy receipts. Supporting records stage before Run, and
+returning through Services reads nothing. Manual All spans and a genuinely empty
+current interval do not silently broaden the selected profile.
+
+The 35.163-second focused actor passes with 530 snapshots and all seven phases,
+visible five-record recovery, one explicit retry read (9→10) and unchanged plan
+count. Full healthy DOM/receipt and old-callback comparisons remain in-browser.
+The Use saved template action's disabled/title availability is checked separately
+against pending work, rather than mistaken for changed evidence. Removing four
+repeated large snapshots from extractor output reduces the raw trace from roughly
+123 MB to 6,495,911 bytes without dropping those comparisons. The final actual
+terminal JPEG independently shows Current RPC, five records, recorded Error 1/5,
+mean 3ms and two independent native interval-count lanes.
+
+Required observed replay passes in 22.74 seconds within the unchanged 50-second
+budget: two real sequences accepted and six corrupted reports rejected, zero
+skips. It reuses the selected-widget recovery model; whole RPC membership and
+other workflow facts receive independent adapter/native admission. A preceding
+combined attempt timed out during concurrent trace diagnostics; the same report
+passed alone in 13.14 seconds, and the final compact serial combined run passes.
+No timeout or product semantic constraint was relaxed.
+
+The initial metric fixture incorrectly mixed delta/cumulative/unknown temporality
+under one bound stream identity. The existing evaluator correctly refused it;
+distinct real instrumentation scopes now preserve the intended independent
+streams, and native success is asserted rather than inferred from descriptors.
+Wrong unit/type/unsupported-temporality descriptors remain independently tested.
+Actual desktop/narrow frames pass design review. Main browser accounting is 70
+API requests, 42 source-endpoint attempts and seven overview plans. The forwarding
+proxy records 105 SQL requests across API setup, browser and actor traffic;
+direct raw oracle queries bypass that proxy. All 51 pre-existing stale Redis
+pending entries and lab stores/volumes remain preserved.
+Reviewed diagnostic bulk is reduced from 189 MiB to 14 MiB, retaining genuine
+fixtures, compact outcomes, compressed traces and the audited terminal sample.
+
+The Go 1.27.3 image builds and serves healthy. Both changed UI modules and the
+OpenAPI asset match reviewed source bytes. See [profile contract](docs/CURRENT_RPC_PROFILE_357.md),
+[official research](docs/CURRENT_RPC_CONVENTION_357.md) and
+[storyboard](docs/journeys/357-current-rpc.md).
+
 ## Service-context authored templates — 356
 
 Completed ordinary grouped record widgets now offer Use saved template. The
