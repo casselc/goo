@@ -1,5 +1,62 @@
 # Validation record
 
+## Trace and log-context recovery — 345
+
+Four existing application adapters now preserve and render the shared source-read
+refusal without changing the Go wire contract or source budgets. Trace search
+reuses explicit Run; trace expansion exposes Retry trace context with its existing
+successful spans-then-linked-logs continuation. Linked-log and surrounding-log
+recovery retain a failed page's offset until an intentional scope/radius change.
+Trace origins are deeply detached and current-generation handlers refuse old
+callbacks; pending recovery buttons prevent duplicate reads.
+
+All **1,167 frontend tests** pass with zero failures/skips (28.05 seconds),
+including twenty focused mounted-owner tests. Four added tests cover exact retry
+questions, detached typed scope, duplicate suppression, failed-page preservation,
+explicit new-scope page-zero reset, healthy trace retention and late cancelled
+responses. The first full run lacked sandbox permission for the suite's local
+HTTP-listener test; the complete rerun with listener access passes.
+
+Go 1.27.3 semantic regression passes forty generated typed-environment cases and
+the existing Quint trace-search model including unfinished/extra-return-read
+negative controls (9.378 seconds total), with zero skips. No Go production code or
+API schema changes in this milestone. The embedded Go server builds and its
+four changed adapters, two shared refusal modules and unchanged OpenAPI match
+reviewed source byte for byte.
+
+The new genuine OTLP/ClickHouse journey passes on its first run in 11.2 seconds
+(15.9-second runner): eight source API attempts, seventeen API requests, twenty-one
+physical source SQL calls and zero browser errors. Trace search recovery repeats
+the exact failed request (2→3 source attempts). Initial span expansion fails
+without reading logs; Retry trace context reads spans then linked logs (4→6),
+recovering two cross-service spans while independently refusing logs. Find linked
+logs retries only the failed log question (6→7), recovering exactly one linked
+record while excluding unlinked and foreign-environment decoys. The known trace
+text and its real basis/capture clock remain unchanged. A retained old retry adds
+no IO; closing a pending search retires its late source refusal (7→8) without
+restoring an error or result. Inspector return focus is connected, inside the
+viewport and unobstructed at its center. Five current frames cover search/trace
+failure, desktop/narrow partial context and recovered linked logs.
+
+The existing typed trace-search regression passes in 2.5 minutes (2.6-minute
+runner), retaining the effective/current-only named, empty and unreported profile
+counts and exact trace continuations. Its fresh observed Quint replay passes in
+9.86 seconds, zero skips; the original 50-second helper is sufficient and was not
+changed. The 40.162-second actor reaches phases 0–8 in 739 snapshots, source four,
+four verified transitions, preserved policy, ready context and no overflow.
+
+Independent agent/root audit finds three distinct JPEGs among 739 images, with
+729 sharing the dominant image. The terminal image contains the correct three-
+span waterfall but still shows linked logs loading, despite positive DOM/API
+captured-log completion. It does not establish settled log appearance. Current
+Playwright frames supply visual acceptance; the compact audit preserves this
+limitation. No rerun or production change was needed.
+
+Reviewed raw browser/actor bulk and disposable binaries are removed after compact
+summaries, model replay inputs/log, a labelled terminal sample, audit and current
+frames are retained. Genuine lab telemetry, stored views, volumes and 51 pre-existing
+stale pending stream entries remain untouched.
+
 ## Source-read refusals and explicit recovery — 344
 
 The shared Go read boundary now emits a closed five-category refusal for runtime

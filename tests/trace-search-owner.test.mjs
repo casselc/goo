@@ -3,8 +3,9 @@ import {test,mock} from 'node:test';
 import * as Environment from '../ui/record-environment.mjs';
 class Element {
  constructor(tag='div',text=''){this.localName=tag;this.textContent=text||'';this.children=[];this.attributes={};this.dataset={};this.hidden=false;this.isConnected=true;this.disabled=false;this.listeners=new Map();this.scrolls=[];this.focuses=[];}
+ set textContent(value){this._text=value??'';if(this.children){for(const child of this.children)child.parentElement=null;this.children=[];}}get textContent(){return this._text+(this.children||[]).map(child=>child.textContent).join('');}
  append(...children){for(const child of children){child.parentElement=this;this.children.push(child)}}
- replaceChildren(...children){for(const child of this.children)child.parentElement=null;this.children=[];this.append(...children)}
+ replaceChildren(...children){for(const child of this.children)child.parentElement=null;this.children=[];this._text='';this.append(...children)}
  setAttribute(key,value){this.attributes[key]=String(value)} getAttribute(key){return this.attributes[key]}
  contains(node){return node===this||this.children.some(child=>child.contains(node))}
  addEventListener(type,callback){this.listeners.set(type,callback)} removeEventListener(type){this.listeners.delete(type)}
@@ -65,4 +66,10 @@ test('retirement and departed Close handlers never scroll or focus a previous op
   if(method==='inactive')f.setActive(false);else if(method==='dirty')f.setClean(false);else f.owner[method]();
   assert.deepEqual(f.opener.scrolls,[]);assert.deepEqual(f.opener.focuses,[]);close.onclick();assert.deepEqual(f.opener.scrolls,[]);assert.deepEqual(f.opener.focuses,[]);assert.equal(document.activeElement,other);assert.equal(requests.length,0);if(method!=='dispose')f.owner.dispose();
  }
+});
+
+test('typed trace-search refusal retries the same fixed question explicitly and cancellation retires a late refusal',async()=>{
+ const f=fixture(Environment.effective({mode:'named',value:'prod'})),run=button(f.host,'Run trace search'),first=run.onclick(),request=structuredClone(requests[0].request);document.activeElement=f.opener;
+ requests[0].resolve({ok:false,status:502,data:{error:'Source read timed out.',refusal:{kind:'timeout',detail:'The source read exceeded its time allowance.'}}});await first;const refused=all(f.host).find(node=>node.dataset.sourceRefusalKind==='timeout');assert(refused);assert.equal(refused.children[1].localName,'details');assert.equal(!!refused.children[1].open,false);assert.equal(document.activeElement,f.opener);assert.equal(button(f.host,'Open trace (fresh read)'),undefined);assert.equal(requests.length,1);
+ const retry=run.onclick();assert.deepEqual(requests[1].request,request);requests[1].resolve(response(requests[1].request,{[Environment.legacyKey]:'prod'}));await retry;assert(button(f.host,'Open trace (fresh read)'));const next=run.onclick();assert.equal(requests.length,3);button(f.host,'Cancel trace search').onclick();assert.equal(requests[2].signal.aborted,true);requests[2].resolve({ok:false,status:502,data:{error:'Source unavailable.',refusal:{kind:'unavailable',detail:'The source read could not be completed.'}}});await next;assert.equal(all(f.host).filter(node=>node.dataset.sourceRefusalKind).length,0);assert.equal(button(f.host,'Open trace (fresh read)'),undefined);assert.equal(requests.length,3);f.owner.dispose();
 });

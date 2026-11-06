@@ -1,5 +1,14 @@
 # Known issues and gaps
 
+345 extends the shared refusal display to trace search, trace expansion and
+linked/surrounding logs. Trace retry preserves the failed offset and, after
+success, continues into the existing linked-log read; log recovery alone does
+not reread spans. Current context/generation fences retire old callbacks and
+responses. Live polling and specialized signal recovery are not generalized.
+Native fault/recovery and actual desktop/narrow frame acceptance pass; see
+[validation](../VALIDATION.md). See
+[context recovery](CONTEXT_RECOVERY.md).
+
 343 removes duplicate local facet filtering and makes long-label suffixes visible.
 The 2,000-value paired fixture still renders roughly 32,000 elements; lower
 synchronous search work is not a claim that initial mount cost is solved.
@@ -57,7 +66,7 @@ Five existing unique roles can coexist without removing a valid timeline. The
 selected-only initial acquisition is superseded by 338 above. See
 [contract](PAIRED_FACETS.md) and final [validation](../VALIDATION.md).
 
-Bombadil driver JPEGs in reviewed 337–340 and 344 regression campaigns can repeat stale loading or
+Bombadil driver JPEGs in reviewed 337–340 and 344–345 regression campaigns can repeat stale loading or
 staged frames while independent DOM/API checks reach a verified applied state.
 Those captures do not prove terminal appearance. Maintained visual frames use
 Playwright; per-campaign audits and compact results are in

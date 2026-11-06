@@ -89,3 +89,26 @@ actual 60-second observation window, retaining both versions in the independent
 oracle. It does not change the product window or replace real data with mocks.
 The journey does not add arbitrary trace joins, a causal path query, upstream
 completeness or automatic background searches.
+
+
+## Context-recovery regression (345)
+
+The unchanged typed trace-search journey passed against the reviewed 345 server:
+2.5-minute test, 2.6-minute runner. Its actual observed Quint check passed in
+9.86 seconds, with no skips and the existing 50-second helper budget unchanged.
+Effective, current-only, empty and unreported policy profiles preserve exact
+questions, independent witnesses and trace/log continuation. Maintained native
+frames were regenerated.
+
+The 40.162-second Bombadil campaign reached phase 8 in 739 snapshots, with source
+4, verified 4, policy preserved and no overflow. Final contextReady is true; that
+extractor explicitly checks for captured logs, while the independent response
+check verifies the exact one-log result.
+
+Driver captures remain separate evidence: 739 JPEGs contain three unique hashes,
+and 729 repeat the terminal image. It displays the real three-span waterfall but
+linked logs still read Loading with the action disabled. That image is stale at
+acquisition, not proof of settled log appearance. A labelled sample/audit and
+compact model/campaign inputs remain; the new 345 native storyboard provides
+current partial and recovered log frames. No rerun was needed for this capture
+limitation.

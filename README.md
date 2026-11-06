@@ -13,6 +13,8 @@ overview explicitly and return to the same paused rows.
 [Source-read failures](docs/SOURCE_REFUSALS.md) show a concise reason and safe
 technical details. Retry stays explicit; available paired observations retain
 their counts and receipts while a refused side remains unknown.
+[Trace and log context recovery](docs/CONTEXT_RECOVERY.md) uses the same reasons: retry
+a failed trace page or reread linked/surrounding logs in their original checked scope.
 
 Span-duration views can compare the adjacent previous window using the existing
 **Compare previous window** action. Run reads both scopes independently; the
