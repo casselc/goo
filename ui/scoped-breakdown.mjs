@@ -19,13 +19,13 @@ export function boundContext(snapshot,value='count',explicitTitle=''){
  return {title:explicitTitle||(temporal?measured+' over time':measured+' by '+human),text:binding+' · '+measured};
 }
 
-export function mount(target,snapshot,{onScope,onWindow,onSelect,onInspectTrace,distribution=false,facets:showFacets=true,initialPresentation,onPresentation,allowedMeasures}={}){
+export function mount(target,snapshot,{onScope,onWindow,onSelect,onInspectTrace,traceLabel,distribution=false,facets:showFacets=true,initialPresentation,onPresentation,allowedMeasures}={}){
  const check=validateSnapshot(snapshot);
  if(!check.ok){target.replaceChildren(node('p','Display unavailable: '+check.reasons.join('; ')));return}
  const temporal=snapshot.shape==='time-series',dimensions=snapshot.dimensions||[],multi=dimensions.length>1;
  const section=node('section'),context=node('p',undefined,'evidence-note scoped-breakdown-context'),toolbar=node('div'),label=node('label','View as '),pick=node('select'),chart=node('goo-chart'),status=node('p');
  const stage=node('button',temporal?'Stage selected interval':'Stage selected group'),completeLabel=node('label'),complete=node('input'),measureLabel=node('label','Measure '),measure=node('select');
- const scaleLabel=node('label','Scale '),scale=node('select'),orderLabel=node('label','Sort '),order=node('select'),more=node('details'),inspect=node('button','Open selected trace');
+ const scaleLabel=node('label','Scale '),scale=node('select'),orderLabel=node('label','Sort '),order=node('select'),more=node('details'),inspect=node('button',traceLabel||'Open selected trace');
  section.className='scoped-breakdown';section.setAttribute('aria-label',temporal?'Scoped timeline':'Scoped breakdown');
  toolbar.className='ui-actions';pick.setAttribute('aria-label',temporal?'Timeline view':'Breakdown view');
  const choices=eligibleKinds(snapshot),labels={table:'Table',bar:'Bars',line:'Line','time-bar':'Intervals'};

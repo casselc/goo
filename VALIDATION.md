@@ -1,5 +1,91 @@
 # Validation record
 
+## Captured span-page waterfalls — 360
+
+Saved span evidence now offers Table/Span waterfall over the same checked current
+stored page. The existing passive record kind, original-index interactions and
+local inspector are reused. Kind/column changes do not read telemetry; field
+preferences persist across representations and pages of the same capture. Pending
+record selection blocks presentation changes. A new capture resets the choices.
+Page/departure/disposal and per-render tokens retire old actions. Eligible resume
+retains the same admitted page, receipt, basis and source clock. Column changes
+preserve the picker's open/search state and owned keyboard focus.
+
+The final full UI suite passes 1,228 tests in 19.920 seconds, zero skips, including
+five focused saved-owner cases. Those cases use the real SavedRecords/admission
+with declared mocked record-result ports; the native journey below checks the
+actual passive element and local inspector. No backend wire shape or Go engine
+changes; the prior full main Go/API gates were not repeated.
+
+Forty Hegel state/swarm schedules pass in 9.02 seconds. They exercise actual saved
+owner/admission and passive geometry against an independent Go BigInt/identity/
+parent/scale oracle, including invalid timing, integer boundaries, mixed traces,
+duplicate IDs, cycles, column/kind/selection guards and retired actions. The
+actual generated Quint wrapper accepts the complete path and rejects two controls
+in 6.18 seconds. Combined Go package: 15.221 seconds, zero skips.
+
+The genuine combined native journey passes in 79.732 seconds. Ordinary OTLP spans
+cover three traces and multiple services. Scalar scope counts 1,007 records;
+effective typed scope counts 1,014, including seven legacy-only resources while
+excluding conflicting current labels and other namespaces. Both captures retain
+1,000 inspection records and expose 100 per page. Duplicate reported IDs remain
+two exact original occurrences; known-zero, missing-parent, ambiguous-parent and
+large exact nanosecond strings are checked in the real component.
+
+After capture, a scoped test fault proxy refuses all upstream reads; a direct Go
+query proves the source is unavailable. Each capture then completes nine observed
+steps: reopen, waterfall, columns, exact occurrence inspection, close, table,
+next stored page, previous stored page and returned inspection. All eighteen facts
+have zero telemetry and zero ClickHouse-attempt deltas. Each case performs only
+three explicit capture-store GETs. A held genuine metadata response and an old
+Inspect callback prove retirement during paging and after returning to the same
+page. Raw captured bytes, whole questions, receipts, read clocks and original row
+positions remain unchanged. Native field editing also checks restored search,
+open state, focus and keyboard interaction. These are stored fragments, never
+complete-trace or source-completeness claims.
+
+The focused Bombadil campaign passes in 35.216 seconds with 582 snapshots across
+all ten stages. Positive completion requires the exact duplicate-ID occurrence,
+visible selected pane, chosen field, unchanged 100-row page/question/clock/basis,
+zero source reads and zero writes. Full-record comparisons stay in-browser;
+extractor output is compact. The original terminal JPEG independently shows
+occurrence "4" at 5ms selected and the distinct duplicate-ID occurrence "5" at
+1ms, with explicit fresh-read actions idle. Actual desktop/narrow Playwright
+frames document stored and fresh contexts separately.
+
+The separate explicit fresh expansion succeeds with two evidence API requests:
+one span page and one linked-log page. An independent raw count finds 344 spans;
+the ordered first 100 and single linked log agree with the API. Environment policy
+and original fixed bounds are retained, while the captured search predicates are
+deliberately omitted. Closing fresh context leaves the immutable captured page
+unchanged. These API requests are not claimed as two physical SQL statements.
+
+Required observed replay passes in 14.94 seconds (Go package 14.954), zero skips:
+both actual nine-fact sequences are accepted and six corrupted reports rejected.
+The adapter independently checks real capture hashes, scoped counts, retained
+ordering, exact inspected rows, page/receipt identity and clocks. The model covers
+the stored-presentation protocol and separate store/telemetry counters, not pixels.
+An earlier passive-only preflight passed in 15.06 seconds before the canonical
+whole-journey run; it did not stand in for that run's fresh-source and actor checks.
+
+Two native test expectations were repaired without product changes: rendered
+numeric-looking string fields are intentionally quoted, and actual ClickHouse
+rows use `SpanAttributes`. A raw full-trace test query also exceeded the helper's
+101-row limit. The independent oracle now uses COUNT plus LIMIT 100; no source,
+helper, model-time or actor-time budget was increased.
+
+The final Go 1.27.3 image is
+`sha256:4f141f2af47109700870aaaf6a18dba68c024c2f7966221994210311ea8f4d5e`;
+extracted binary SHA256 is
+`c61df92de1872dac43cbb175f4f12e161547394b822c97c7c4bb9a91d7576f26`.
+Health is 200 and all four changed served UI modules match reviewed source bytes.
+Reviewed diagnostics shrink from 76MiB to 13MiB, retaining all six capture files,
+compact replay inputs/outcomes and current frames. Existing lab stores/volumes
+and all 51 stale pending entries remain preserved.
+See [contract and diagram](docs/CAPTURED_SPAN_PAGES.md),
+[storyboard](docs/journeys/360-captured-span-waterfall.md) and
+[design review](docs/reviews/CAPTURED_SPAN_DESIGN_360.md).
+
 ## Fixed-question reading and editing — 358
 
 Fixed questions now show checked scope and explicit Run, then their existing

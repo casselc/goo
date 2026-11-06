@@ -1,0 +1,14 @@
+spec: saved_waterfall_360.qnt
+module: saved_waterfall_360
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  reopen: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and coherent == {{.obs.coherent}}'}
+  waterfall: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and coherent == {{.obs.coherent}}'}
+  columns: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and coherent == {{.obs.coherent}}'}
+  inspect_occurrence: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and coherent == {{.obs.coherent}}'}
+  close_inspector: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and coherent == {{.obs.coherent}}'}
+  table: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and coherent == {{.obs.coherent}}'}
+  page_next: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and coherent == {{.obs.coherent}}'}
+  page_previous: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and coherent == {{.obs.coherent}}'}
+  return_inspect: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and coherent == {{.obs.coherent}}'}

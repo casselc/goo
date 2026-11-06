@@ -1832,3 +1832,26 @@ Programmatic set/populate remains available for owner restoration.
 Existing population coverage, task return, specialized renderers and
 SavedRecords ownership remain authoritative. See
 [interaction and data-flow contract](FIXED_QUESTION_PRESENTATION.md).
+
+## Captured span-page representation — 360
+
+`SavedRecords` admits stored exploration pages through the existing snapshot
+adapter and retrieves the bound immutable `RecordPage`. Its Table/Span waterfall
+choice supplies that exact page to `RecordResults`/`RecordInteractions`, reusing
+the existing passive waterfall, original-index handles and local inline inspector.
+Page length, retained inspection count and full query count remain separate.
+
+The owner holds validated display columns and a per-render token, in addition to
+its existing capture/page revision. Kind or column replacement disposes old row
+actions; pending record selection prevents presentation changes. Column remounts
+preserve an owned picker's open/search state and keyboard focus without taking
+focus from another control. Departure, pending paging and disposal revoke actions
+before later responses can publish. Eligible resume uses the same admitted page,
+receipt, record-page identity and source clock rather than reacquiring data.
+
+`Captures` retains visit/ID/cursor/response ownership and admits resume only under
+the visible current capture. Store GETs remain independent of telemetry queries.
+The existing explicit fresh trace reader remains available with contextual fresh-
+read labels, including dynamically rendered trace-group actions. No new source
+executor, record kind, capture format or relationship inference is introduced.
+See [contract and data-flow diagram](CAPTURED_SPAN_PAGES.md).

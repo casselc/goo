@@ -75,6 +75,10 @@ notifications without replacing local work. Opening stages configuration; Run
 reads telemetry, and a failed opening offers an explicit retry.
 General [saved-capture navigation](docs/CAPTURE_NAVIGATION.md) also keeps pending
 reads and Save/Refresh display adoption with the current task.
+Saved span pages offer [Table or Span waterfall](docs/CAPTURED_SPAN_PAGES.md)
+without rereading telemetry. Inspect uses the exact stored occurrence; **Expand
+trace (fresh read)** deliberately acquires separate context. A saved page remains
+a bounded fragment, not a complete trace.
 
 Temporary and saved count comparisons use [one supplied-pair presentation](docs/COUNT_PAIR_PRESENTATION.md),
 with a Summary/Groups choice and explicit operand windows and read clocks.

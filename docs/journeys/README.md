@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Journey360](360-captured-span-waterfall.md) reopens scalar/typed captures with
+telemetry refused, switches stored pages between Table and Span waterfall, inspects
+exact duplicate-ID occurrences, changes fields and pages, then separately expands
+fresh context. Desktop/narrow frames and positive actor/model outcomes are recorded.
+
 [Journey358](358-fixed-question-presentation.md) compares actual fixed-question
 charts before/after read/Edit consolidation, checks private draft guards, explicit
 Run/cancel/return and preserves full profiles, source budgets and saved bytes.

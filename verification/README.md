@@ -3997,3 +3997,25 @@ Whole-query/data/draft admission and viewport geometry remain separate claims.
 reads; retained screenshot-driver output is not a substitute for actual result
 frames. See [validation](../VALIDATION.md) and the
 [storyboard](../docs/journeys/358-fixed-question-presentation.md).
+
+## Captured span-page waterfall — 360
+
+`TestHegelSavedWaterfall360` exercises the actual saved-page controller/admission
+and passive timing model with an independent Go BigInt/identity/parent/scale
+oracle and forty state/swarm schedules. Mocked record-result ports observe owner
+commands; the native journey proves the real component and inspector.
+`TestQuintSavedWaterfallProtocol360` runs the actual generated wrapper before
+browser work. Required observed replay uses `TestQuintSavedWaterfallObserved360`
+with `GOO_SAVED_WATERFALL_360_REPORT` set to the genuine final summary. Without that
+explicit report, the observed test skips; the required native gate passes with
+zero skips. Two actual nine-fact protocols and six corruptions check stored page
+authority while separating capture-store GETs from telemetry reads.
+
+`bombadil/captured-span-waterfall360.ts` requires visible positive exact-occurrence
+completion without telemetry or writes. Compare original raw records separately
+from typed display text: numeric-looking strings are deliberately quoted, and
+ClickHouse-backed rows expose `SpanAttributes`. The independent raw SQL helper
+retains its 101-row limit; use a full COUNT and bounded page query rather than
+raising that limit or counting a returned page as a population total. See
+[validation](../VALIDATION.md) and the
+[storyboard](../docs/journeys/360-captured-span-waterfall.md).

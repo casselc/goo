@@ -3,11 +3,12 @@
 const http=require('node:http');
 const {once}=require('node:events');
 async function startSourceFaultProxy(upstream='http://127.0.0.1:8123'){
- const calls=[],sockets=new Set();let armed=null;
+ const calls=[],sockets=new Set();let armed=null,refused=false;
  const server=http.createServer(async(req,res)=>{
   const chunks=[];for await(const chunk of req)chunks.push(chunk);const body=Buffer.concat(chunks),url=new URL(req.url,'http://fixture.invalid');
   const call={index:calls.length,sql:body.toString(),parameters:Object.fromEntries(url.searchParams),fault:null,status:null,closed:false};calls.push(call);
   res.on('close',()=>{call.closed=true});
+  if(refused){call.fault='refused';call.status=503;res.writeHead(503,{'content-type':'text/plain'});res.end('Scoped source unavailable');return;}
   if(armed&&armed.matches(call)){
    const fault=armed;armed=null;call.fault=fault.kind;fault.startedResolve(call);
    if(fault.kind==='hold')await fault.releasePromise;
@@ -22,6 +23,7 @@ async function startSourceFaultProxy(upstream='http://127.0.0.1:8123'){
  });
  server.on('connection',socket=>{sockets.add(socket);socket.on('close',()=>sockets.delete(socket))});server.listen(0,'127.0.0.1');await once(server,'listening');
  return{url:'http://127.0.0.1:'+server.address().port,calls,
+  refuseAll(value=true){refused=!!value},
   arm({kind='unavailable',matches,status,body}){if(armed)throw Error('Unconsumed source fault');let startedResolve,release;const started=new Promise(resolve=>startedResolve=resolve),releasePromise=new Promise(resolve=>release=resolve);armed={kind,matches,status,body,startedResolve,releasePromise};return{started,release}},
   async stop(){for(const socket of sockets)socket.destroy();await new Promise(resolve=>server.close(resolve))}
  };

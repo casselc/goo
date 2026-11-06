@@ -13,6 +13,12 @@ qualified fields, parent pager and held aggregate/timeline remain with their
 existing application owners. Changing presentation reads no telemetry. Logs and
 metrics cannot use this kind, including through hidden or reusable declarations.
 
+[Captured span pages](CAPTURED_SPAN_PAGES.md) reuse this same kind from their
+Table/Span waterfall choice. They supply only the checked current stored page;
+local Inspect keeps its exact original occurrence, while fresh trace expansion
+remains a separately labelled source read. Stored paging does not fetch omitted
+telemetry or imply complete trace coverage.
+
 The task is to see where time went in the supplied spans, inspect an observation
 and Keep it or explicitly expand its trace when more context is needed. A bar is
 an Inspect control in the application. Selection and Expand trace controls sit

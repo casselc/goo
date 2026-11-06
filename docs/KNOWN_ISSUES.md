@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+360 adds Table/Span waterfall to checked captured span pages with local exact-
+occurrence inspection and zero telemetry reads. Field preferences, keyboard focus,
+selection guards, stored paging and retired callbacks are verified. Full UI,
+generated, native/model and positive actor checks pass. This is a bounded stored
+page, not a complete trace. Explicit fresh expansion remains separate. See
+[contract](CAPTURED_SPAN_PAGES.md) and [validation](../VALIDATION.md).
+
 358 implements fixed-question read/Edit presentation over the existing owners.
 UI, mounted-widget, generated, native/model, positive actor and Activity-handoff
 checks pass. Dirty/invalid drafts remain visible; hidden callbacks are admitted
@@ -10,9 +17,9 @@ is a driver diagnostic; genuine Playwright frames establish appearance. See
 
 The adopted [359 reconciliation](reviews/ROADMAP_RECONCILIATION_359.md) selects
 source-free captured span-page waterfalls, then retained-page comparison and
-current RPC capability parity. These remain proposed: captured inspection still
-needs its local entry, and curated measurement discovery still treats the current
-RPC duration instrument as generic. Existing pod/container defaults are delivered;
+current RPC capability parity. 360's captured inspection entry is delivered. Retained-page comparison and RPC
+capability parity remain proposed; curated measurement discovery still treats the
+current RPC duration instrument as generic. Existing pod/container defaults are delivered;
 broader receiver coverage and verified workload ownership remain separate.
 
 357 implements the pinned current RPC profile. Go/UI/API, generated/read-only SQL,
@@ -1426,8 +1433,9 @@ breakdown sums are inclusive and can overlap. The
 unions and outside-duration subtotals with explicit known/unknown coverage, not
 CPU time, complete exclusive time or a critical path. Its row/group sums can
 also overlap; omitted pages and missing spans remain unknown. Saved raw-record
-reopen is source-free, while expanding its trace still performs a fresh read;
-a stored-waterfall UI is not added. Deployment context reads remain
+reopen is source-free. 360 now presents the checked current stored span page as a
+waterfall with local occurrence inspection; explicit expansion still performs a
+fresh read. Deployment context reads remain
 explicit and independent of telemetry and captured custody. Convention capability
 explanations offer existing binding authoring; no general schema resolver is added.
 

@@ -6,8 +6,8 @@
 > profile, followed by 358 evidence-first fixed-question presentation (all delivered).
 > The 359 whole-product checkpoint is complete. Its adopted next sequence is
 > 360 captured span-page waterfalls (breadth), 361 retained-page comparison
-> (depth), then 362 current RPC capability parity (consolidation). These are
-> proposed; 360 is next. Delivery notes below are retained history, not parallel
+> (depth), then 362 current RPC capability parity (consolidation). 360 is delivered;
+> 361 and 362 remain proposed, with 361 next. Delivery notes below are retained history, not parallel
 > active queues.
 
 
