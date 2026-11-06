@@ -1,10 +1,15 @@
 # Known issues and gaps
 
+353 implements exact reported-edge questions under all checked record environment
+policies. Full Go/UI/API, generated real-SQL oracles, native/model, focused browser
+and actual-frame checks pass. Parent ownership is resolved before child
+filters. Counts remain child span records; async links, inferred topology and
+complete-trace claims are outside this relationship. See [semantics](REPORTED_EDGES.md).
+
 352 implements typed wider-child links and saved Activity-view discovery from a
 service workspace. Source, generated, native/model and focused browser checks pass.
-Exact typed reported-edge
-queries remain unsupported until 353; a wider child population is not an exact
-relationship. Saved views are filtered by environment policy, not selected service,
+353 now enables exact typed reported-edge queries; wider child populations
+remain separate from an exact relationship. Saved views are filtered by environment policy, not selected service,
 and retain their own rolling selectors. See [contract](TYPED_SERVICE_CONTINUATIONS.md).
 
 350 carries typed environment policy through existing record-package authoring,
@@ -12,9 +17,9 @@ JSON/YAML, immutable storage and explicit reuse, including from saved records.
 All package handoffs stage before Run. Original previews keep fixed bounds;
 saved/imported definitions resolve their lookback when explicitly staged. This
 does not add a new grammar, WYSIWYG editor, native-stream composition or Databricks
-lowering. Typed reported-edge queries remain explicitly unsupported by their
-existing compiler boundary; effective scopes cannot generate a code-local Go
-template. See [package scopes](TYPED_PACKAGE_SCOPES.md) and
+lowering. 353 admits typed reported-edge profiles while retaining their source
+relationship; no single-function annotation expresses that relationship. Effective
+scopes also cannot generate a code-local Go template. See [package scopes](TYPED_PACKAGE_SCOPES.md) and
 [validation](../VALIDATION.md).
 
 The older broad Discovery browser regression currently stops at its surrounding-

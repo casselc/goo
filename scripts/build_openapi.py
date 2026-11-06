@@ -57,7 +57,9 @@ for wire in ('exploration.Query','exploration.QueryInput','exploration.TailSelec
  shape=schemas[wire];input_wire=wire.endswith('Input');target='identity.EnvironmentSelectorInput' if input_wire else 'identity.EnvironmentSelector'
  if input_wire:shape['required']=[key for key in shape.get('required',[]) if key!='environment']
  shape['oneOf']=[{'required':['environment'],'properties':{'environment':{'type':'string','minLength':1},'environmentSelector':{'type':'null'}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''},'environmentSelector':{'$ref':'#/components/schemas/'+target}}}]
- shape['description']='Choose the historical current-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge record questions do not support the selector yet.'
+ shape['description']='Choose a current-key-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge span questions apply the same checked environment policy to parent ownership and child membership.'
+for wire in ('exploration.Query','exploration.QueryInput'):
+ schemas[wire].setdefault('allOf',[]).append({'if':{'required':['reportedEdge'],'properties':{'reportedEdge':{'not':{'type':'null'}}}},'then':{'properties':{'signal':{'const':'spans'}}}})
 # Trace-wide search uses the same explicit selection as ordinary record questions.
 for wire in ('exploration.TraceSearchRequest','exploration.TraceSearchRequestInput'):
  shape=schemas[wire];target='identity.EnvironmentSelectorInput' if wire.endswith('Input') else 'identity.EnvironmentSelector'

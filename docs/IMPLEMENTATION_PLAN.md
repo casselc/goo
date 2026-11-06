@@ -2,7 +2,7 @@
 
 > Active execution order: [November 5 whole-product roadmap](ROADMAP_2026_11_05.md).
 > The 351 checkpoint selects the finite 352 breadth, 353 depth and 354 recovery
-> consolidation sequence; 352 is delivered. Delivery notes below are retained history, not parallel
+> consolidation sequence; 352 and 353 are delivered, with 354 next. Delivery notes below are retained history, not parallel
 > active queues.
 
 

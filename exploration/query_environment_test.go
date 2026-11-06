@@ -86,8 +86,8 @@ func TestSelectorCompatibilityAndRefusals250(t *testing.T) {
 	}
 	a.Signal = "spans"
 	a.ReportedEdge = &ReportedEdge{}
-	if err := a.Validate(); err == nil || !strings.Contains(err.Error(), "environmentSelector") {
-		t.Fatal("reported-edge bridge accepted selector", err)
+	if err := a.Validate(); err == nil {
+		t.Fatal("malformed reported edge accepted", err)
 	}
 	a.Signal = "logs"
 	a.ReportedEdge = nil

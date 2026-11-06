@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey353](353-reported-edge.md) follows exact reported parent relationships
+under typed policies through records, capture/reopen and retained Services. It
+contrasts an independent parent-ownership oracle with wider child populations.
+
 [Journey352](352-service-continuations.md) checks typed distributed continuations
 and saved rolling Activity views from service context. Execution status and
 actual frames are recorded in that storyboard.

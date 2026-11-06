@@ -180,19 +180,16 @@ func TestHegelServiceContinuations352(t *testing.T) {
 				}
 			}
 		}
-		if mode > 0 {
-			if !got.ExactRefused || got.ExactReason == "" || got.Exact.ReportedEdge != nil {
-				tc.Fatal("unsupported typed exact edge was constructed or silently projected", got.ExactRefused, got.ExactReason)
-				return
-			}
-			exact := got.Wider
-			exact.ReportedEdge = &exploration.ReportedEdge{Parent: exploration.EdgeService{Service: edge["parent"].(string), Namespace: namespace.Clone()}, Child: exploration.EdgeService{Service: service, Namespace: namespace.Clone()}}
-			if exact.Validate() == nil {
-				tc.Fatal("backend unexpectedly admitted unsupported typed exact edge")
-				return
-			}
-		} else if got.ExactRefused || got.Exact.Validate() != nil || got.Exact.ReportedEdge == nil || got.Exact.Environment != name || got.Exact.FromMS != from || got.Exact.ToMS != to {
-			tc.Fatal("supported scalar exact edge changed", got.ExactReason)
+		// 353 extends the former explicit typed refusal. Keep every existing wider
+		// population oracle above, and require the exact helper to retain the full
+		// original representation instead of projecting a typed policy to scalar.
+		exactExpected := exploration.Query{Signal: "spans", Environment: scope.Environment, EnvironmentSelector: scope.EnvironmentSelector, FromMS: from, ToMS: to, Limit: 100, Summary: "span-duration", SpanStatus: true, GroupBy: []exploration.Field{{Kind: "column", Key: "name"}}, ReportedEdge: &exploration.ReportedEdge{Parent: exploration.EdgeService{Service: edge["parent"].(string), Namespace: namespace.Clone()}, Child: exploration.EdgeService{Service: service, Namespace: namespace.Clone()}, DiscoveryNamespace: scope.Namespace.Clone()}}
+		if got.ExactRefused || got.Exact.Validate() != nil || continuationJSON352(got.Exact) != continuationJSON352(exactExpected) {
+			tc.Fatal("exact edge lost the original qualified scope/profile", got.ExactReason)
+			return
+		}
+		if _, err := exploration.Compile(got.Exact); err != nil {
+			tc.Fatal("actual exact helper did not compile", err)
 			return
 		}
 		if got.Saved.Validate() != nil || continuationJSON352(got.Saved.Selector) != continuationJSON352(view.Selector) || len(got.Filter) != 1 {

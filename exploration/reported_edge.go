@@ -1,6 +1,8 @@
 package exploration
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/casselc/goo/identity"
 	"strings"
@@ -17,6 +19,23 @@ type ReportedEdge struct {
 	Parent             EdgeService         `json:"parent" yaml:"parent"`
 	Child              EdgeService         `json:"child" yaml:"child"`
 	DiscoveryNamespace *identity.Namespace `json:"discoveryNamespace,omitempty" yaml:"discoveryNamespace,omitempty"`
+}
+
+// UnmarshalJSON checks literal identity before encoding/json can repair invalid
+// Unicode. Unknown fields fail closed; duplicate fields retain stdlib semantics.
+func (e *ReportedEdge) UnmarshalJSON(data []byte) error {
+	if !identity.WellFormedJSON(data) {
+		return fmt.Errorf("invalid reported edge Unicode")
+	}
+	type wire ReportedEdge
+	var value wire
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&value); err != nil {
+		return err
+	}
+	*e = ReportedEdge(value)
+	return nil
 }
 
 func (e *ReportedEdge) Validate() error {
@@ -50,9 +69,9 @@ func (c *compiler) edgeNamespace(n *identity.Namespace) string {
 	}
 	return present + " AND ResourceAttributes['service.namespace']=" + c.param(n.Value, "String")
 }
-func (c *compiler) reportedEdge(q Query) string {
+func (c *compiler) reportedEdge(q Query, environment string) string {
 	e := q.ReportedEdge
-	parentScope := "Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND mapContains(ResourceAttributes,'deployment.environment.name') AND ResourceAttributes['deployment.environment.name']={environment:String}"
+	parentScope := "Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND " + environment
 	if e.DiscoveryNamespace != nil {
 		parentScope += " AND " + c.edgeNamespace(e.DiscoveryNamespace)
 	}

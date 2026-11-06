@@ -65,9 +65,6 @@ func (q Query) Validate() error {
 		}
 	}
 	if q.ReportedEdge != nil {
-		if q.EnvironmentSelector != nil {
-			return fmt.Errorf("reported parent-edge queries do not support environmentSelector yet")
-		}
 		if q.Signal != "spans" {
 			return fmt.Errorf("reported edges require spans")
 		}

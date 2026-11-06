@@ -36,7 +36,7 @@ func validateSelectedRecord(selection identity.EnvironmentSelection, signal stri
 	return nil
 }
 func validateSelectedRows(q Query, rows []json.RawMessage) error {
-	if q.EnvironmentSelector == nil {
+	if q.EnvironmentSelector == nil && q.ReportedEdge == nil {
 		return nil
 	}
 	selection, err := q.EnvironmentSelection()
@@ -44,9 +44,42 @@ func validateSelectedRows(q Query, rows []json.RawMessage) error {
 		return err
 	}
 	for _, wire := range rows {
+		if q.ReportedEdge != nil {
+			if err = validateReportedEdgeRecord(q.ReportedEdge, wire); err != nil {
+				return err
+			}
+		}
 		if err = validateSelectedRecord(selection, q.Signal, q.FromMS, q.ToMS, wire); err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+// Parent ownership is certified by the checked source plan, not reconstructed
+// from a bounded record page or refreshed while reopening captured evidence.
+func validateReportedEdgeRecord(edge *ReportedEdge, wire json.RawMessage) error {
+	if !identity.WellFormedJSON(wire) {
+		return fmt.Errorf("reported-edge source has malformed record JSON")
+	}
+	var record struct {
+		Service  *string            `json:"ServiceName"`
+		Trace    string             `json:"TraceId"`
+		Parent   string             `json:"ParentSpanId"`
+		Resource map[string]*string `json:"ResourceAttributes"`
+	}
+	if err := json.Unmarshal(wire, &record); err != nil || record.Service == nil || *record.Service != edge.Child.Service || !exampleID(record.Trace, 32) || !exampleID(record.Parent, 16) {
+		return fmt.Errorf("reported-edge source returned a different child identity or invalid relationship IDs")
+	}
+	resource := make(map[string]string, len(record.Resource))
+	for key, value := range record.Resource {
+		if value == nil {
+			return fmt.Errorf("reported-edge source has null resource attribute")
+		}
+		resource[key] = *value
+	}
+	if !edge.Child.Namespace.Matches(resource) {
+		return fmt.Errorf("reported-edge source returned a different child namespace")
 	}
 	return nil
 }

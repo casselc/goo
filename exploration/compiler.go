@@ -100,9 +100,6 @@ func (c *compiler) source(q Query, selection identity.EnvironmentSelection) (str
 	if q.Signal == "logs" {
 		table, attrs = "otel_logs", "LogAttributes"
 	}
-	if q.ReportedEdge != nil && !selection.CurrentOnly() {
-		return "", "", fmt.Errorf("reported edges require the historical current-only environment")
-	}
 	environment, bindings, err := environmentSelectionPredicate(selection)
 	if err != nil {
 		return "", "", err
@@ -126,7 +123,7 @@ func (c *compiler) source(q Query, selection identity.EnvironmentSelection) (str
 	}
 	where := "Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND " + environment + " AND " + c.predicate(q.Where)
 	if q.ReportedEdge != nil {
-		where += " AND " + c.reportedEdge(q)
+		where += " AND " + c.reportedEdge(q, environment)
 	}
 	return " FROM " + table + " WHERE " + where, attrs, nil
 }

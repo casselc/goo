@@ -23,7 +23,7 @@ test('tail response identity handles Go omission defaults without erasing select
  assert.notEqual(T.transportIdentity({environment:'prod'}),T.transportIdentity({environmentSelector:E.current('prod')}));
  assert.notEqual(T.transportIdentity({environmentSelector:E.effective({mode:'empty'})}),T.transportIdentity({environmentSelector:E.effective({mode:'unreported'})}));
  assert.throws(()=>T.transportIdentity({environment:'prod',environmentSelector:E.current('prod')}));
- const q={signal:'spans',environmentSelector:E.current('prod'),fromMs:1,toMs:2,reportedEdge:{parent:{},child:{}}};assert.throws(()=>P.validateRecordQuestion(q),/parent edges/);
+ const q={signal:'spans',environmentSelector:E.current('prod'),fromMs:1,toMs:2,reportedEdge:{parent:{},child:{}}};assert.throws(()=>P.validateRecordQuestion(q),/Invalid reported edge identity/);
 });
 test('invalid selector starts leave the retained session unchanged and never reinterpret empty legacy names',()=>{
  const s=new S.Session(),q={signal:'logs',environment:'prod',fromMs:1,toMs:2},token=s.start(q);s.publish(token,{question:q});const before=s.snapshot();

@@ -40,6 +40,20 @@ def check_package_scopes(spec):
     assert not definition.is_valid({}), 'missing package source accepted'
 
 
+def check_typed_reported_edges(spec):
+    edge={'parent':{'service':'api', 'namespace':{'mode':'missing'}},'child':{'service':'worker', 'namespace':{'mode':'value','value':''}}}
+    base={'signal':'spans','fromMs':1000,'toMs':61000,'limit':100,'offset':0,'reportedEdge':edge,'summary':'span-duration','spanStatus':True,'groupBy':[{'kind':'column','key':'name'}]}
+    scopes=[{'version':'goo/environment-selector/v1','policy':policy,'scope':{'mode':mode,**({'value':'prod'} if mode=='named' else {})}} for policy,mode in [('current-only','named'),('effective','named'),('effective','empty'),('effective','unreported')]]
+    for wire in ('exploration.Query','exploration.QueryInput'):
+        check=validator(spec,{'$ref':'#/components/schemas/'+wire})
+        check.validate({**base,'environment':'prod'})
+        for selector in scopes:
+            selected={**base,'environmentSelector':selector,**({'environment':''} if wire=='exploration.Query' else {})}
+            check.validate(selected)
+            assert not check.is_valid({**selected,'signal':'logs'}), 'reported edges must remain span-only'
+            assert not check.is_valid({**selected,'environment':'prod'}), 'typed edge cannot project to an ambiguous scalar scope'
+
+
 def check_typed_trace_search(spec):
     base={'version':'goo/trace-search/v1','fromMs':1000,'toMs':61000,'limit':10,'conditions':[{'field':{'kind':'column','key':'service'},'op':'eq','value':'api'}]}
     scopes=[{'version':'goo/environment-selector/v1','policy':policy,'scope':{'mode':mode,**({'value':'prod'} if mode=='named' else {})}} for policy,mode in [('current-only','named'),('effective','named'),('effective','empty'),('effective','unreported')]]
@@ -915,6 +929,7 @@ def check_record_step_selector(spec):
 
 def check(spec):
     check_package_scopes(spec)
+    check_typed_reported_edges(spec)
     check_typed_trace_search(spec)
     check_record_step_selector(spec)
     validate_spec(spec)

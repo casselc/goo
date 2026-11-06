@@ -21,6 +21,8 @@ Stage opens a fixed question in Explore; Run explicitly reads it.
 environment policy and fixed window in wider child records. Service workspaces
 also expose saved rolling Activity views under that policy; opening stages the
 view’s own selector before explicit Start.
+[Reported-edge investigation](docs/REPORTED_EDGES.md) follows an exact observed
+parent relationship under the same policy, with capture and source-free reopen.
 
 [Source-read failures](docs/SOURCE_REFUSALS.md) show a concise reason and safe
 technical details. Retry stays explicit; available paired observations retain

@@ -1732,3 +1732,19 @@ exact reported-edge actions remain explicit unavailable capabilities until the
 library using only environment fields, independently of scalar native-metric
 support. Saved selectors and rolling windows remain their own configuration.
 See [continuation contract](TYPED_SERVICE_CONTINUATIONS.md).
+
+## Exact reported edges under typed policy — 353
+
+The compiler reuses the checked environment expression for both the outer child
+population and the independent parent ownership subquery. Parent grouping sees
+the complete fixed discovery scope before selected-owner and child predicates;
+same-owner duplicate parents do not multiply child records and distinct service/
+namespace owners remain ambiguous. All query values remain parameters.
+
+`ReportedEdge` locally rejects malformed identity JSON before Unicode repair.
+Scalar and typed edge rows pass raw local child identity/namespace/ID checks plus
+checked environment/signal/time admission at source, snapshot and captured-load
+boundaries. Those child fields cannot re-prove parent uniqueness from a bounded
+page; capture reopening preserves the original relationship evidence without a
+source lookup. The UI uses the existing exact link, staged question and counted
+lookup paths with the complete typed profile. See [contract](REPORTED_EDGES.md).

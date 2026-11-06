@@ -1,5 +1,75 @@
 # Validation record
 
+## Exact typed reported edges — 353
+
+One checked environment predicate now applies to parent ownership and child
+membership. Ownership groups all identities in the original policy/window/
+discovery namespace before selected-parent or child WHERE filters. Current-only
+scalar and typed named scopes have equivalent membership; effective named, empty
+and unreported retain current-key precedence and legacy fallback. The existing
+exact UI action and counted lookups preserve whole profiles.
+
+Scalar and typed edge rows receive raw child service/namespace, canonical trace/
+parent ID, Unicode, environment, signal and half-open timestamp admission at source,
+snapshot and captured-load boundaries. A local edge decoder rejects identity
+Unicode repair and unknown fields before planning. Captured child rows do not
+independently prove parent uniqueness; reopening performs no parent lookup.
+
+The final complete Go suite passes, including raw-row snapshot publication
+refusals. All 1,195 UI tests pass in 20.975 seconds, zero skips. OpenAPI exports
+649 shapes and validates 100 operations, 436 fixture responses, 161 admitted
+requests and 28 mux refusals. Typed edge cases admit every policy and preserve
+span-only and non-ambiguous environment rules. The Go 1.27.3 image runs healthy;
+all five changed served UI/OpenAPI assets match reviewed source bytes.
+
+Generated checks pass, zero skips: 20 read-only ClickHouse cases (3.68 seconds),
+40 new exact-edge Hegel cases (3.92 seconds), and 40 maintained continuation cases
+(3.97 seconds), 11.585 seconds total runtime. An independent raw owner-set oracle
+resolves every scoped parent before selecting owner and children. It covers
+same-owner duplicates, service/namespace ambiguity, both-side label conflicts,
+window/ID boundaries, child filters, scalar equivalence and six raw-row poisons.
+Actual generated SQL counts and ID multisets preserve child duplicates. Only
+physical table references are redirected to a pure SELECT JSON-array fixture CTE;
+readonly=1 remains enabled, with no DDL or lab-data writes. Early test fixtures
+were corrected for a read-only-incompatible format function and mandatory row
+duration; production semantics were unchanged.
+
+The complete live journey passes in 88.873 seconds, including required Quint
+replay in 22.34 seconds: four actual case projections and ten rejected mutants,
+zero skips. Exact populations 2/3/1/1 contrast with wider 7/10/3/3 under the four
+policies; raw source IDs and an independent ownership oracle agree. Captures
+explicitly reread the original full profile with a fresh source clock. Reopen
+and retained Back preserve immutable bytes without telemetry. Scalar equivalence
+and one effective Draft → YAML Plan round trip retain the complete relationship.
+Main accounting is 77 browser API requests / 12 source attempts; initial inventory
+captures, direct scalar checks, metadata planning and SQL oracles are separate.
+
+The focused 35.200-second Bombadil campaign passes with 527 snapshots and all ten
+phases. Completion requires the visible retained graph, exact three-ID result and
+successful capture, with only discovery, Run and capture reading telemetry (three
+source attempts / one capture) and no passive reads or forbidden writes. The
+actual terminal JPEG shows the settled graph. The model covers finite lifecycle;
+independent admission checks raw ownership/membership, profiles, custody and
+ordered request boundaries, without a completeness or transactional claim.
+
+Native harness corrections used the current saved-record screenshot anchor,
+the known Go empty-environment echo and documented 201 capture creation status.
+Application behavior and semantic budgets did not change for those corrections.
+Source/design review and four current desktop/narrow frames pass.
+
+The maintained 352 main regression passes in 68.038 seconds, with its required
+model in 27.77 seconds, four positive cases and ten rejected mutants, zero skips.
+It retains wider-child, saved-view selector, passive return and explicit Start
+oracles under current exact-link capability (89 API / 32 source attempts).
+Its frames were refreshed; the older saved-view actor was maintained but not
+rerun. Compact inputs/replays/outcomes and audited terminal samples remain after
+reviewed raw screenshot bulk was pruned. Lab data/volumes and all 51 existing
+pending entries are preserved.
+
+See [semantics](docs/REPORTED_EDGES.md),
+[storyboard](docs/journeys/353-reported-edge.md) and
+[independent review](docs/reviews/REPORTED_EDGE_REVIEW_353.md).
+
 ## Typed service continuation and saved-view reuse — 352
 
 Distributed wider-child questions preserve the checked environment representation,

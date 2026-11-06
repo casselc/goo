@@ -6,6 +6,14 @@ service/namespace identities and the original fixed environment/window. Expandin
 a link does not query telemetry; **Run question** performs a new bounded read.
 The adjacent child-service link remains explicitly labeled as a wider population.
 
+Milestone 353 extends this path to every checked record environment policy:
+scalar or typed current-only named, and effective named, present-empty and
+unreported. Effective selection gives the present current key precedence over
+legacy fallback, including an explicitly empty current value. Both parent
+ownership and child membership use that same policy and the same fixed window.
+The selected parent service is tested only after ownership across the original
+scope has been resolved; child filters cannot hide a conflicting parent owner.
+
 A typed `reportedEdge` selector is part of the ordinary record question. It is
 preserved through filters, grouping, reusable YAML packages, captures and typed
 investigation steps. **Use wider child service population** deliberately removes
@@ -14,10 +22,10 @@ span-parent semantics cannot silently become a log search.
 
 ```mermaid
 flowchart LR
-  D[Discovery: fixed environment/window/namespace scope] --> E[Resolved reported edge]
+  D[Discovery: checked policy and fixed window/namespace scope] --> E[Resolved reported edge]
   E --> Q[Typed parent and child identity selector]
   Q --> P[Resolve parent ownership across original discovery scope]
-  P --> C[Select matching child records by trace and parent-span ID]
+  P --> C[Select child records in the same policy by trace and parent-span ID]
   C --> F[Apply child filters, full summaries and grouping]
   F --> R[Inspect ordered span page and representative traces]
   F --> S[Capture immutable question, full totals and bounded row bank]
@@ -55,3 +63,18 @@ retain the runtime relationship; a single-function annotation cannot express it.
 duplicate parent rows, ambiguous ownership, foreign trace/environment parents,
 out-of-window parents, internal spans, parent-search namespace scope, child-error
 filters, full duration/status totals, trace expansion and saved investigations.
+
+## Local admission and custody
+
+Source results, temporary snapshots and captured loads check the raw child
+service, namespace presence/value, environment, signal, half-open timestamp
+window and canonical trace/parent-span IDs. Reported identity JSON rejects
+malformed Unicode before it can be repaired into another service or namespace.
+These local fields do not independently establish parent uniqueness. That
+relationship comes from the original checked source execution; capture reopening
+retains its question, read clock and stored evidence without looking up parents
+again. Late evidence can change ownership only on an explicit fresh read.
+
+[Journey 353](journeys/353-reported-edge.md) exercises typed policies, conflicts on
+both sides, ambiguous namespace owners, same-owner duplicates, outside-window
+parents, scalar equivalence and exact-record capture/reopen/retained Back.

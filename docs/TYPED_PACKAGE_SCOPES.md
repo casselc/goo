@@ -65,3 +65,7 @@ directly over ordinary OpenTelemetry from any language.
 See the [architecture contract](reviews/PACKAGE_SCOPE_ARCHITECTURE_350.md),
 [design review](reviews/PACKAGE_SCOPE_DESIGN_350.md) and
 [validation record](../VALIDATION.md).
+
+Milestone 353 also admits reported-edge profiles under typed environment policies;
+package planning and storage preserve the complete relationship. See
+[reported-edge semantics](REPORTED_EDGES.md).

@@ -1030,7 +1030,7 @@ td details {
 /* Comparisons keep identical zero-based scales and exact labels. Color is redundant with side names. */
 .cohort-table {table-layout:fixed;width:100%}.cohort-table th:first-child {width:20%}.cohort-table td {vertical-align:middle}
 .comparison-key {font-size:12px;color:var(--muted,#9bacc0)}
-.edge-investigate,.edge-unavailable {display:block;margin-bottom:8px}
+.edge-investigate {display:block;margin-bottom:8px}
 @media(max-width:650px){.cohort-table{table-layout:auto}.cohort-table .comparison-bar-cell{min-width:100px}}
 .edge-investigate{font-weight:600}.edge-wider{font-size:12px;color:var(--muted,#9bacc0)}
 /* Equal fractions need equal pixel lengths even when table columns size differently. */

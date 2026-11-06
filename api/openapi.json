@@ -16904,7 +16904,30 @@
             }
           }
         ],
-        "description": "Choose the historical current-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge record questions do not support the selector yet."
+        "description": "Choose a current-key-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge span questions apply the same checked environment policy to parent ownership and child membership.",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "reportedEdge"
+              ],
+              "properties": {
+                "reportedEdge": {
+                  "not": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "const": "spans"
+                }
+              }
+            }
+          }
+        ]
       },
       "exploration.QueryInput": {
         "additionalProperties": false,
@@ -17147,7 +17170,30 @@
             }
           }
         ],
-        "description": "Choose the historical current-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge record questions do not support the selector yet."
+        "description": "Choose a current-key-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge span questions apply the same checked environment policy to parent ownership and child membership.",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "reportedEdge"
+              ],
+              "properties": {
+                "reportedEdge": {
+                  "not": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "const": "spans"
+                }
+              }
+            }
+          }
+        ]
       },
       "exploration.QuestionScope": {
         "properties": {
@@ -18510,7 +18556,7 @@
             }
           }
         ],
-        "description": "Choose the historical current-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge record questions do not support the selector yet."
+        "description": "Choose a current-key-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge span questions apply the same checked environment policy to parent ownership and child membership."
       },
       "exploration.TailSelectorInput": {
         "additionalProperties": false,
@@ -18602,7 +18648,7 @@
             }
           }
         ],
-        "description": "Choose the historical current-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge record questions do not support the selector yet."
+        "description": "Choose a current-key-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge span questions apply the same checked environment policy to parent ownership and child membership."
       },
       "exploration.TelemetryPackage": {
         "properties": {

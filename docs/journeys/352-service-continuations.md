@@ -1,6 +1,11 @@
 # Typed service continuations
 
-A discovered service graph keeps its environment policy when opening a wider child population. Exact reported-edge investigation remains visibly unavailable for typed policies. The wider question retains the fixed window and exact service/namespace; its independent source oracle includes spans that were not linked to the parent.
+Milestone [353](353-reported-edge.md) enables exact typed-edge execution alongside
+the wider population exercised here. Current screenshots and executable checks
+reflect that capability; the original 352 timing record below remains historical.
+The current regression result is recorded at the end.
+
+A discovered service graph keeps its environment policy when opening a wider child population. Exact reported-edge investigation is available under the same policies; this journey follows the distinct wider-child action. The wider question retains the fixed window and exact service/namespace; its independent source oracle includes spans that were not linked to the parent.
 
 The journey ingests genuine OTLP spans under current-only named, effective named, effective empty and effective unreported policies. It distinguishes missing and empty namespaces, legacy fallback and conflicting current attributes. Real public inventory captures provide the typed catalogue entry. Four public metadata Activity view definitions represent preconfigured team views.
 
@@ -31,3 +36,11 @@ The native ledger preserves raw API call boundaries and source questions. Each w
 The final verification package was compiled separately before semantic replay; its cold setup took roughly two minutes. The model's 50s execution limit was unchanged. The final actor-only invocation reused the actual captured fixtures and refreshed genuine OTLP logs; it did not rerun the already completed main cases or rewrite saved definitions.
 
 A final narrow-layout audit on the same `520e6f57` capture recorded document width 390px and non-overlapping, fully contained cells for all three stacked edge cards. Its screenshot was recaptured after two animation frames; telemetry behavior and accepted model inputs were unchanged.
+
+Under the final 353 binary, the maintained main journey passes in **68.038s**
+with required model replay in **27.77s**, four positive cases and ten rejecting
+controls, zero skips. It retains the original wider3/5/3/2, worker1/2/1/1,
+immutable configuration and zero-passive-read oracles, with **89 browser API / 32
+source attempts**. Current frames use token `c83779ba` and show exact links beside
+the wider actions. The older saved-view actor was updated for that capability
+but not rerun; 353's focused actor separately validates the new exact path.

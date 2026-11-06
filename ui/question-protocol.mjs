@@ -71,7 +71,7 @@ function validateLink(value){return validateRecord(value)}
 function validateRecordQuestion(question,view='Records'){validateRecord({version:1,question,view});return question}
 function validateRecord(value){
   const q=value?.question;if(value?.version!==1||!['Records','Distribution'].includes(value.view)||!q||!['spans','logs'].includes(q.signal)||!Number.isSafeInteger(q.fromMs)||!Number.isSafeInteger(q.toMs)||q.fromMs<0||q.toMs<=q.fromMs||q.toMs-q.fromMs>7200000||q.toMs>8640000000000000)throw Error('Invalid shared question or fixed window.');
-  RecordEnvironment.selection(q);if(q.environmentSelector!=null&&q.reportedEdge)throw Error('Reported parent edges do not support environment selectors.');
+  RecordEnvironment.selection(q);
   const allowed=['environmentSelector','signal','environment','fromMs','toMs','limit','offset','where','groupBy','numeric','numericHistogram','summary','spanStatus','bucketMs','groupTimeSeries','reportedEdge'];if(Object.keys(q).some(k=>!allowed.includes(k)))throw Error('Unsupported shared question field.');
   function field(f){if(!f||!['column','attribute','resource'].includes(f.kind)||typeof f.key!=='string'||!f.key.length||f.key.length>512)throw Error('Invalid shared field.');}
   let count=0;function predicate(p,depth=0){if(++count>64||depth>8||!p||typeof p!=='object')throw Error('Invalid shared selectors.');if(p.all||p.any){const a=p.all||p.any;if(!Array.isArray(a)||!a.length||p.all&&p.any||p.numeric)throw Error('Invalid shared selectors.');a.forEach(x=>predicate(x,depth+1));}else if(p.numeric){validateNumericPredicate(p)}else{field(p.field);if(!['eq','ne','contains','exists','missing','gte','lte'].includes(p.op)||p.value!==undefined&&typeof p.value!=='string')throw Error('Invalid shared predicate.');}}

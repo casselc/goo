@@ -11,10 +11,10 @@ that window, preserving the environment policy and the child's exact namespace.
 It does not restrict the result to the selected parent relationship. Empty and
 missing namespaces remain different identities.
 
-Typed environment policies currently cannot execute the exact reported-edge
-query. That action is explicitly unavailable; wider child records remain usable.
-No effective policy is weakened to a current-key-only environment name. Exact
-typed edges are the separate compiler/source milestone 353.
+Milestone 353 now also supports **Investigate reported edge** under the same typed
+policy. That narrower population retains the reported parent relationship;
+wider child records deliberately omit it. See [reported edges](REPORTED_EDGES.md)
+for ownership, ambiguous-parent and custody semantics.
 
 ```mermaid
 flowchart LR

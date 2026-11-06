@@ -1,0 +1,24 @@
+import fs from 'node:fs';
+import {edgeQuestion} from '../ui/distributed-services.mjs';
+import {normalize} from '../ui/filter-editor.mjs';
+import {query as countedQuery} from '../ui/filter-values.mjs';
+import {validateRecordQuestion} from '../ui/question-protocol.mjs';
+
+const {scope, edge, where} = JSON.parse(fs.readFileSync(0, 'utf8'));
+const before = JSON.stringify({scope, edge, where});
+const exact = edgeQuestion(scope, edge);
+const filtered = validateRecordQuestion({...structuredClone(exact), where: normalize(where)});
+const counted = countedQuery(filtered, {kind: 'attribute', key: 'release'});
+const outputs = JSON.stringify({exact, filtered, counted});
+const unchanged = before === JSON.stringify({scope, edge, where});
+if (scope.environmentSelector) scope.environmentSelector.scope = {mode: 'named', value: 'caller mutation'};
+else scope.environment = 'caller mutation';
+if (scope.namespace) scope.namespace.value = 'caller mutation';
+edge.parent = 'caller mutation';
+edge.childNamespace = 'caller mutation';
+where.value = 'caller mutation';
+const detached = outputs === JSON.stringify({exact, filtered, counted});
+const countedBefore = JSON.stringify(counted);
+filtered.reportedEdge.parent.service = 'caller mutation';
+const countedDetached = countedBefore === JSON.stringify(counted);
+process.stdout.write(JSON.stringify({exact, filtered: JSON.parse(outputs).filtered, counted, unchanged, detached, countedDetached}));
