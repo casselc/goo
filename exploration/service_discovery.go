@@ -38,8 +38,16 @@ type ServiceDiscovery struct {
 	Warnings     []string          `json:"warnings"`
 }
 
+// ValidateServiceDiscoveryQuestion keeps exact service selection exclusive to
+// operation inventory. Discovery owns a wider multi-signal topology scope.
+func ValidateServiceDiscoveryQuestion(q InventoryQuestion) error {
+	if q.Service != nil {
+		return fmt.Errorf("service selection is supported by operation inventory, not service discovery")
+	}
+	return q.Validate()
+}
 func CompileServiceDiscovery(q InventoryQuestion) (Plan, error) {
-	if e := q.Validate(); e != nil {
+	if e := ValidateServiceDiscoveryQuestion(q); e != nil {
 		return Plan{}, e
 	}
 	selection, err := q.EnvironmentSelection()

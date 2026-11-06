@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Journey349](349-service-inventory.md) follows a discovered service into its
+operation inventory despite 1,050 unrelated pairs, then exact records, retained
+Activity Back and selected-service capture/reopen. It also checks typed scope,
+empty names, truthful budget/unavailable states and responsive table captions.
+
 [Journey340](340-typed-trace-search.md) follows genuine Activity/Services span
 contexts through typed trace-wide search and fresh exact-trace reads. It checks
 current/legacy precedence, empty/unreported scope, full counts, environment
@@ -858,7 +863,7 @@ validates the captured discovery path, not SDK instrumentation completeness.
 
 | Frame | User journey |
 | --- | --- |
-| [Observed services](screenshots/31a-observed-service-inventory.png) | Discover two services, full captured counts, error statuses and span-duration buckets without a manifest. |
+| [Observed services](screenshots/31a-observed-service-inventory.png) | Discover two services, then inspect only the selected service's 113 spans, error statuses and span-duration buckets without a manifest. |
 | [Fixed-window exploration](screenshots/31b-inventory-fixed-window-exploration.png) | Open one exact service/name pair; 113 matching spans remain distinct from the 100 displayed records. |
 | [Reusable preview](screenshots/31c-inventory-reusable-package-preview.png) | Build and independently preview a reusable package from the selected question. |
 | [Mobile inventory](screenshots/31d-mobile-service-inventory.png) | Use the same discovery surface on a narrow screen with readable stacked cards. |

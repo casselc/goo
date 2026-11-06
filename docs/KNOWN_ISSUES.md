@@ -1,5 +1,15 @@
 # Known issues and gaps
 
+349 scopes operation inventory and its capture to the selected service before
+grouping. Whole-environment inventory and an individually oversized service still
+refuse more than 1,000 pairs; no partial result is admitted. This is observed span
+instrumentation, not declared operations, fleet membership or health. Capture
+performs an explicit new read of the original selected scope; it does not preserve
+the displayed catalog verbatim. Discovery/dashboard scope reject the inventory-only
+selector. Generated semantic, real-source continuation/custody and responsive-frame
+checks pass; see
+[contract](SERVICE_OPERATION_INVENTORY.md) and [validation](../VALIDATION.md).
+
 348 connects fresh fixed-query count/mean pairs to the existing count/share
 explanation engine. It explains population composition, not latency attribution;
 Run rereads both full scopes and retains separate clocks. Side follow-up stages

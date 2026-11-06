@@ -9,6 +9,9 @@ incompatible fields stay as explicit drafts ([scope continuity](journeys/239-act
 original window and [checked environment policy](docs/SERVICE_ENVIRONMENT_POLICIES.md),
 including current/legacy precedence, empty and unreported record scopes. Read the
 overview explicitly and return to the same paused rows.
+[Operation inventory](docs/SERVICE_OPERATION_INVENTORY.md) reads the selected
+service before grouping limits; unrelated services cannot exhaust its budget.
+Saving inventory explicitly rereads that service's original scope.
 
 [Source-read failures](docs/SOURCE_REFUSALS.md) show a concise reason and safe
 technical details. Retry stays explicit; available paired observations retain

@@ -1,5 +1,91 @@
 # Validation record
 
+## Selected-service operation inventory — 349
+
+The service overview now sends an exact optional service selector before the
+inventory aggregation and its unchanged 1,001-row sentinel. Omitted service still
+means all names; present-empty selects the empty name. Namespace, environment
+policy and fixed bounds remain independent. Discovery and dashboard scope reject
+this inventory-only field before acquisition. Source, stored-capture and UI
+admission check selected service membership rather than filtering a broader
+response into authority. Save explicitly rereads that service's inventory.
+
+The complete Go suite passes. Focused checks cover exact/empty/literal service,
+parameterized pre-grouping predicates, unchanged cap refusal, detached scope,
+no-data, poisoned rows, capture/reopen and shared-consumer admission. Existing
+Unicode validation is shared with inventory; predecode row checks refuse absent,
+null and malformed identities instead of repairing them into empty/U+FFFD names,
+including raw stored-capture loading. Valid U+FFFD and surrogate pairs remain valid.
+
+Forty generated actual-UI → Go cases pass in 9.897 seconds with no skips, covering
+service presence, namespace modes, five environment representations, full-window
+echo checks, foreign-row refusal, operation continuation and custody detachment.
+OpenAPI generation/check passes: 100 Go operations, 436 fixture responses, 161 admitted
+requests, 28 mux refusals, negative controls and SSE schemas. New schema checks
+distinguish inventory service from discovery/dashboard scope and refuse null/NUL.
+
+All 1,178 frontend tests pass with zero failures/skips (21.40 seconds after the
+responsive-table correction). Nine direct
+mounted handoff cases pass, including exact empty-name service capture, foreign
+raw-row/weakened-echo refusal, local Find without acquisition, current operation
+continuation and retired pending/callback refusal. Searching locally retires old
+row controls; the test checks that old callback is inert before reacquiring the
+newly displayed operation.
+
+The native source matrix confirms seven effective-policy spans/three operations,
+five current-only spans/two operations, missing-namespace two and present-empty
+namespace three despite 1,050 unrelated pairs. A real empty service name survives
+OTLP ingestion and exact selection. Whole-scope refusal initially exposed an
+untyped grouping-limit error classified as unavailable. That branch now returns
+typed `budget`; a 1,001-valid-row HTTP negative and the affected source/HTTP/server
+packages pass, and the rebuilt real source returns the canonical safe limit
+refusal. A genuine upstream 503 remains typed unavailable without private detail.
+
+The complete browser journey passes with typed effective entry through existing
+scope discovery/adoption, selected inventory 7/3, exact-operation records 3,
+retained paused Activity Back with visible unobstructed focus, selected-service
+capture reread and immutable stored reopen with zero telemetry IO. The initial
+positive run takes 10.3 seconds (12.7 runner); the final responsive-table run
+passes in 9.2 seconds (11.6 runner), with 16 browser source attempts,
+31 browser API requests, 52 scoped physical source calls and no browser errors;
+these counting scopes differ. Scalar environment entry intentionally stays scalar
+current-only. Fixture preflight uses a proper record predicate and waits for the
+new OTLP log's actual query visibility. Wire requests are compared separately
+from Go's admitted echo, which omits an inert empty scalar environment alongside
+a typed selector; capture uses that admitted question.
+
+Actual narrow-frame review found a caption shrinking into a table-caption wrapper
+after the owning table switched to block layout. The new table now opts into the
+existing shared `mobile-layout="stacked"` behavior, rather than adding CSS. Mounted
+and full UI tests pass; the Go image builds and runs healthy. Five served modules,
+shared styles and OpenAPI match reviewed source exactly. The final native check
+measures a block caption 296px wide, equal to its table, within viewport bounds
+47–343px at 390px. Its full literal service caption stays intact. Agent/root
+actual-frame review accepts desktop, narrow operations and stored narrow capture;
+these are deliberately scrolled task views, not fresh-entry scope placement proof.
+
+The existing 316 handoff regression passes in 37.6 seconds (39.3 runner), including
+desktop/narrow retained return and late discovery cancellation. Its real 25-second
+Bombadil campaign reaches phases 0–4 across 446 snapshots, finishing with 13 paused
+rows and exactly one explicit tail/source read. Agent/root independently inspect
+the retained actual terminal JPEG: it agrees with the observed state and visible
+error row. This optional-selector change reuses that ownership coverage rather
+than introducing another model.
+
+The maintained inventory → exact records → reusable package → narrow inventory
+regression passes in 34.5 seconds (36.6 runner), refreshing all four 31 frames.
+Its selected-service oracle now checks 113 spans/one operation; the catalog still
+discovers two services and the independent source check includes exact service.
+The existing required Quint replay passes in 5.82 seconds with zero skips: four
+observed steps and all three unchanged rejecting controls. Its old UI gesture
+timed out on a hidden, enabled Save reusable question button; the test now opens
+the existing Reusable question package disclosure first. No production shim,
+package-model weakening or increased deadline was added. Typed-scope package
+authoring remains the separate 350 task.
+
+See the [contract](docs/SERVICE_OPERATION_INVENTORY.md)
+and [storyboard](docs/journeys/349-service-inventory.md).
+
 ## Explain fresh comparison populations in place — 348
 
 Applied fresh count and mean comparisons now reuse the existing explanation

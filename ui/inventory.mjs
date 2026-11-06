@@ -8,7 +8,23 @@ import * as ServiceBrowser from './service-browser.mjs';
 import * as ServiceIdentity from './service-identity.mjs';
 const global=globalThis;
 const identity=ServiceIdentity;
-function question(capture,row){const q=capture.question;return {signal:'spans',...RecordEnvironment.questionFields(q),fromMs:q.fromMs,toMs:q.toMs,where:identity.and(identity.serviceWhere(row.service,q.namespace),{field:{kind:'column',key:'name'},op:'eq',value:row.name}),groupBy:[],limit:100,offset:0};}
+const own=(value,key)=>Object.hasOwn(value,key),text=value=>typeof value==='string'&&value.isWellFormed()&&!value.includes('\0')&&new TextEncoder().encode(value).length<=128;
+function inventoryQuestion(scope,...selection){
+ const out={...RecordEnvironment.questionFields(scope),fromMs:scope.fromMs,toMs:scope.toMs};
+ if(!Number.isSafeInteger(out.fromMs)||!Number.isSafeInteger(out.toMs)||out.fromMs<0||out.toMs<=out.fromMs||out.toMs-out.fromMs>7200000||out.toMs>4102444800000)throw Error('Choose a fixed inventory window of at most 120 minutes.');
+ if(scope.namespace!=null){const ns=scope.namespace;if(typeof ns!=='object'||Array.isArray(ns)||Object.keys(ns).some(key=>!['mode','value'].includes(key))||!['missing','value'].includes(ns.mode)||ns.mode==='missing'&&own(ns,'value')&&ns.value!==''||ns.mode==='value'&&own(ns,'value')&&!text(ns.value))throw Error('Choose an exact namespace or all namespaces.');out.namespace=structuredClone(ns);}
+ if(selection.length||own(scope,'service')){const service=selection.length?selection[0]:scope.service;if(!text(service))throw Error('Choose an exact service name up to 128 UTF8 bytes.');out.service=service;}
+ return out;
+}
+function inventoryCaptureTitle(question){
+ const q=inventoryQuestion(question);if(!own(q,'service'))return 'Span inventory';const label=q.service===''?'(empty service name)':JSON.stringify(q.service);let preview='';for(const point of label){if(new TextEncoder().encode(preview+point).length>96)break;preview+=point;}return preview+(preview===label?'':'…')+' operation inventory';
+}
+function inventoryMatches(request,result){try{
+ const allowed=['environment','environmentSelector','namespace','service','fromMs','toMs'],echo=result?.question;if(!echo||Object.keys(echo).some(key=>!allowed.includes(key))||Object.keys(request).some(key=>!allowed.includes(key)))return false;
+ const selected=inventoryQuestion(request),actual=inventoryQuestion(echo);if(!RecordEnvironment.sameQuestionEnvironment(selected,actual)||selected.fromMs!==actual.fromMs||selected.toMs!==actual.toMs||!identity.same(selected.namespace,actual.namespace)||own(selected,'service')!==own(actual,'service')||own(selected,'service')&&selected.service!==actual.service||!Array.isArray(result.rows))return false;
+ return !own(selected,'service')||result.rows.every(row=>row.service===selected.service);
+ }catch{return false}}
+function question(capture,row){const q=inventoryQuestion(capture.question);if(own(q,'service')&&row.service!==q.service)throw Error('The operation does not belong to the selected service.');return {signal:'spans',...RecordEnvironment.questionFields(q),fromMs:q.fromMs,toMs:q.toMs,where:identity.and(identity.serviceWhere(row.service,q.namespace),{field:{kind:'column',key:'name'},op:'eq',value:row.name}),groupBy:[],limit:100,offset:0};}
 const node=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n};
 function metricContext(capture,row){const environment=RecordEnvironment.currentName(capture.question);return {service:row.service,...(environment===null?RecordEnvironment.questionFields(capture.question):{environment}),fromMs:capture.question.fromMs,toMs:capture.question.toMs,...(capture.question.namespace?{namespace:structuredClone(capture.question.namespace)}:{})}}
 function mountEvidence(host,{prefix=''}={}){
@@ -66,4 +82,4 @@ function mountCatalog(host){
  }
 function mount(host,options={}){return options.readOnly?mountEvidence(host,options):mountCatalog(host)}
 
-export {question,metricContext,catalogRows,catalogModel,mount};
+export {inventoryQuestion,inventoryMatches,inventoryCaptureTitle,question,metricContext,catalogRows,catalogModel,mount};

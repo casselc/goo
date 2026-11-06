@@ -357,6 +357,8 @@ func validateCapture(c *SavedCapture) error {
 		}
 	} else if c.Inventory == nil || c.Explore != nil || !reflect.DeepEqual(c.Inventory.Question, *c.Question.Inventory) || len(c.Inventory.Rows) > 1000 || !regexpRevision.MatchString(c.Inventory.Basis) {
 		return errors.New("invalid saved inventory")
+	} else if err := validateInventoryServiceRows(*c.Question.Inventory, c.Inventory.Rows); err != nil {
+		return err
 	}
 	return nil
 }

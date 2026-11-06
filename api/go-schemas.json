@@ -6724,6 +6724,16 @@
           }
         ]
       },
+      "service": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "toMs": {
         "type": "integer"
       }
@@ -6781,6 +6791,23 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/identity.NamespaceInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "service": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "type": "string"
               },
               {
                 "type": "null"

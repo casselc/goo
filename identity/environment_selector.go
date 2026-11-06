@@ -50,7 +50,7 @@ func (s EnvironmentSelection) Selector() (EnvironmentSelector, error) {
 // them to disappear into Go string zero values. Semantic selection stays checked.
 func (w *EnvironmentSelector) UnmarshalJSON(data []byte) error {
 	*w = EnvironmentSelector{}
-	if !wellFormedSelectorJSON(data) {
+	if !WellFormedJSON(data) {
 		return fmt.Errorf("environment selector JSON contains malformed Unicode")
 	}
 	var fields map[string]json.RawMessage
@@ -110,10 +110,10 @@ func (w *EnvironmentSelector) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// encoding/json otherwise replaces invalid UTF-8 and unpaired surrogate escapes
-// before field validation. Reject those lossy representations, preserving valid
-// surrogate pairs and literal U+FFFD. JSON grammar is checked separately above.
-func wellFormedSelectorJSON(data []byte) bool {
+// WellFormedJSON rejects Unicode representations encoding/json would repair.
+// It preserves valid surrogate pairs and literal U+FFFD. Callers must separately
+// validate JSON grammar; this guard does not change duplicate-key policy.
+func WellFormedJSON(data []byte) bool {
 	if !utf8.Valid(data) {
 		return false
 	}

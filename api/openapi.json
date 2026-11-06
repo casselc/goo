@@ -3966,7 +3966,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/InventoryRequest"
+                "$ref": "#/components/schemas/ServiceDiscoveryRequest"
               }
             }
           }
@@ -11306,14 +11306,26 @@
             "description": "Optional advisory positive hint from already-held, same-scope Server span observations with nonempty legacy rpc.system and rpc.method on the same row. false/omitted is unknown, not RPC absence or conformance. HTTP admission has automatic precedence; this does not authorize a probe."
           },
           "scope": {
-            "anyOf": [
+            "allOf": [
               {
-                "$ref": "#/components/schemas/exploration.InventoryQuestionInput"
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.InventoryQuestionInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
-                "type": "null"
+                "not": {
+                  "required": [
+                    "service"
+                  ]
+                }
               }
-            ]
+            ],
+            "description": "Environment/namespace/window only; use the dashboard request service field for its service name."
           },
           "service": {
             "anyOf": [
@@ -13725,6 +13737,12 @@
               }
             ]
           },
+          "service": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^[^\\u0000]*$",
+            "description": "Inventory only: omitted selects all service names; a present string selects exactly that name, including empty. At most 128 UTF-8 bytes; runtime enforces the byte limit. Null is refused. Applied before grouping and the existing 1001-row sentinel."
+          },
           "toMs": {
             "type": "integer"
           }
@@ -13763,7 +13781,7 @@
             }
           }
         ],
-        "description": "Fixed service discovery scope. Legacy environment is current-key-only; an explicit environmentSelector preserves current-only/effective policy and named/empty/unreported scope. Null or mixed nonempty selectors are refused. Metric data-point presence is not native metric evaluation."
+        "description": "Fixed inventory scope. Legacy environment is current-key-only; an explicit environmentSelector preserves current-only/effective policy and named/empty/unreported scope. Null or mixed nonempty selectors are refused. Optional exact service is supported only by inventory and inventory captures, not service discovery or dashboard scope."
       },
       "exploration.InventoryQuestionInput": {
         "additionalProperties": false,
@@ -13800,6 +13818,12 @@
                 "type": "null"
               }
             ]
+          },
+          "service": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^[^\\u0000]*$",
+            "description": "Inventory only: omitted selects all service names; a present string selects exactly that name, including empty. At most 128 UTF-8 bytes; runtime enforces the byte limit. Null is refused. Applied before grouping and the existing 1001-row sentinel."
           },
           "toMs": {
             "anyOf": [
@@ -13842,7 +13866,7 @@
             }
           }
         ],
-        "description": "Fixed service discovery scope. Legacy environment is current-key-only; an explicit environmentSelector preserves current-only/effective policy and named/empty/unreported scope. Null or mixed nonempty selectors are refused. Metric data-point presence is not native metric evaluation."
+        "description": "Fixed inventory scope. Legacy environment is current-key-only; an explicit environmentSelector preserves current-only/effective policy and named/empty/unreported scope. Null or mixed nonempty selectors are refused. Optional exact service is supported only by inventory and inventory captures, not service discovery or dashboard scope."
       },
       "exploration.InventoryResult": {
         "properties": {
@@ -47683,6 +47707,20 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewTemplateReference",
         "additionalProperties": false
+      },
+      "ServiceDiscoveryRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/exploration.InventoryQuestionInput"
+          },
+          {
+            "not": {
+              "required": [
+                "service"
+              ]
+            }
+          }
+        ]
       },
       "KeptResource": {
         "oneOf": [

@@ -110,6 +110,9 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 	if in.Profile != "" && in.Profile != "auto" && in.Profile != "all-spans" && in.Profile != "http-server" && in.Profile != "rpc-server" && in.Profile != "db-client" && in.Profile != "messaging-consumer" && in.Profile != "messaging-producer" {
 		return nil, fmt.Errorf("unsupported dashboard profile")
 	}
+	if in.Scope.Service != nil {
+		return nil, fmt.Errorf("dashboard scope must omit service; use the dashboard service field")
+	}
 	if err := in.Scope.Validate(); err != nil {
 		return nil, err
 	}

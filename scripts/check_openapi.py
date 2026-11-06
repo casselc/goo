@@ -932,6 +932,15 @@ def check(spec):
         check_service.validate(body({**base,'environment':'prod'}))
         for case in bank['cases']:
             check_service.validate(body({**base,'environmentSelector':case['selector']}))
+        for service in ('', 'api', "api'雪"):
+            selected=body({**base,'environment':'prod','service':service})
+            if path=='/inventory':
+                check_service.validate(selected)
+            else:
+                assert not check_service.is_valid(selected), f'{path}: inventory-only service selector accepted'
+        if path=='/inventory':
+            for service in (None, 3, 'a'*129, 'a\x00b'):
+                assert not check_service.is_valid({**base,'environment':'prod','service':service}), 'invalid inventory service accepted'
         for scope in (base,{**base,'environment':None},{**base,'environment':'prod','environmentSelector':None},{**base,'environment':'prod','environmentSelector':good},{**base,'environmentSelector':None}):
             assert not check_service.is_valid(body(scope)), f'{path}: invalid service environment union accepted'
 

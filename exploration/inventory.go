@@ -8,14 +8,19 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/casselc/goo/identity"
+	"github.com/casselc/goo/internal/sourcefailure"
 	"math/big"
 	"strconv"
+	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // InventoryQuestion discovers observed span names; it does not declare fleet
 // membership, request identity, or application-owned operation contracts.
 type InventoryQuestion struct {
+	// Omitted means all service names; a present empty string is an exact name.
+	Service             *string                       `json:"service,omitempty"`
 	Namespace           *identity.Namespace           `json:"namespace,omitempty"`
 	EnvironmentSelector *identity.EnvironmentSelector `json:"environmentSelector,omitempty"`
 	Environment         string                        `json:"environment,omitempty"`
@@ -33,15 +38,18 @@ func (q *InventoryQuestion) UnmarshalJSON(data []byte) error {
 	}
 	for key := range fields {
 		switch key {
-		case "namespace", "environment", "environmentSelector", "fromMs", "toMs":
+		case "service", "namespace", "environment", "environmentSelector", "fromMs", "toMs":
 		default:
 			return fmt.Errorf("json: unknown field %q", key)
 		}
 	}
-	for _, key := range []string{"environment", "environmentSelector"} {
+	for _, key := range []string{"service", "environment", "environmentSelector"} {
 		if raw, ok := fields[key]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
 			return fmt.Errorf("%s must be omitted or non-null", key)
 		}
+	}
+	if raw, ok := fields["service"]; ok && !identity.WellFormedJSON(raw) {
+		return fmt.Errorf("invalid service name Unicode")
 	}
 	var value wire
 	decoder := json.NewDecoder(bytes.NewReader(data))
@@ -53,6 +61,9 @@ func (q *InventoryQuestion) UnmarshalJSON(data []byte) error {
 	return nil
 }
 func (q InventoryQuestion) clone() InventoryQuestion {
+	if q.Service != nil {
+		q.Service = new(*q.Service)
+	}
 	q.Namespace = q.Namespace.Clone()
 	q.EnvironmentSelector = copyEnvironmentSelector(q.EnvironmentSelector)
 	return q
@@ -72,6 +83,9 @@ func (q InventoryQuestion) CurrentEnvironmentName() (string, bool) {
 }
 
 func (q InventoryQuestion) Validate() error {
+	if q.Service != nil && (!utf8.ValidString(*q.Service) || len(*q.Service) > 128 || strings.ContainsRune(*q.Service, 0)) {
+		return fmt.Errorf("invalid service")
+	}
 	if e := q.Namespace.Validate(); e != nil {
 		return e
 	}
@@ -92,7 +106,28 @@ func (q InventoryQuestion) Query() Query {
 	if q.Namespace != nil {
 		v.Where = NamespacePredicate(q.Namespace)
 	}
+	if q.Service != nil {
+		service := Predicate{Field: &Field{Kind: "column", Key: "service"}, Op: "eq", Value: *q.Service}
+		if v.Where == nil {
+			v.Where = &service
+		} else {
+			v.Where = &Predicate{All: []Predicate{*v.Where, service}}
+		}
+	}
 	return v
+}
+
+// A selected inventory must never admit another service, including when the
+// selected name is empty. Used for fresh source rows and stored-capture admission.
+func validateInventoryServiceRows(q InventoryQuestion, rows []InventoryRow) error {
+	if q.Service != nil {
+		for _, row := range rows {
+			if row.Service != *q.Service {
+				return fmt.Errorf("inventory row service differs from selected service")
+			}
+		}
+	}
+	return nil
 }
 
 type InventoryRow struct {
@@ -102,6 +137,28 @@ type InventoryRow struct {
 	Errors  string   `json:"errors"`
 	Buckets []string `json:"buckets"`
 }
+
+// UnmarshalJSON preserves reported identity in both fresh source rows and stored
+// captures. Missing/null dimensions and lossy Unicode cannot become an empty or
+// replacement-character service name before the exact-service proof runs.
+func (row *InventoryRow) UnmarshalJSON(data []byte) error {
+	if !identity.WellFormedJSON(data) {
+		return fmt.Errorf("invalid inventory dimension Unicode")
+	}
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return err
+	}
+	for _, key := range []string{"service", "name"} {
+		var value *string
+		if json.Unmarshal(fields[key], &value) != nil || value == nil {
+			return fmt.Errorf("missing inventory dimension")
+		}
+	}
+	type wire InventoryRow
+	return json.Unmarshal(data, (*wire)(row))
+}
+
 type InventoryResult struct {
 	Question     InventoryQuestion `json:"question"`
 	CapturedAt   string            `json:"capturedAt"`
@@ -156,25 +213,18 @@ func (s Source) Inventory(ctx context.Context, q InventoryQuestion) (*InventoryR
 		return nil, e
 	}
 	if len(raw) > 1000 {
-		return nil, fmt.Errorf("more than 1000 service/span-name pairs; narrow the window; no partial inventory")
+		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("more than 1000 service/span-name pairs; narrow the window; no partial inventory"))
 	}
 	r := &InventoryResult{Question: q, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), State: "no_data", Rows: []InventoryRow{}, BucketLabels: append([]string(nil), durationLabels...), Plan: plan, Warnings: []string{"Observed captured spans only; sampling, ingestion completeness and fleet membership are unknown.", "Span names are not declared business operations. Error counts use OTel Error span status, not inferred HTTP status or business failures.", "Duration buckets describe individual spans, not end-to-end requests, root traces or native metric histograms. Drilldowns are separate live reads of the fixed window."}}
 	total := new(big.Int)
 	seen := map[[2]string]bool{}
 	for _, v := range raw {
-		var dimensions map[string]json.RawMessage
-		if json.Unmarshal(v, &dimensions) != nil {
-			return nil, fmt.Errorf("invalid inventory dimensions")
-		}
-		for _, key := range []string{"service", "name"} {
-			var value *string
-			if json.Unmarshal(dimensions[key], &value) != nil || value == nil {
-				return nil, fmt.Errorf("missing inventory dimension")
-			}
-		}
 		var row InventoryRow
 		if e = json.Unmarshal(v, &row); e != nil {
 			return nil, fmt.Errorf("invalid inventory row")
+		}
+		if e := validateInventoryServiceRows(q, []InventoryRow{row}); e != nil {
+			return nil, e
 		}
 		count, e := inventoryNumber(row.Count)
 		if e != nil || count.Sign() == 0 {

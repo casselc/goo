@@ -51,3 +51,5 @@ from the main journey's seven completed-read and four retired-read source calls.
 The actor exited 0; process wall time including startup was 34.637s. Raw actor/browser
 artifacts were pruned after review; three maintained screenshots and compact
 results remain.
+
+349 regression: the unchanged handoff assertions passed against the reviewed Go binary in **37.6s** (**39.3s** runner), including narrow touch, seven completed overview source reads and withdrawal of the held discovery response. The 25s Bombadil campaign produced **446** snapshots, reached phases 0–4, and ended with 13 paused rows, `returned`, `passive` and `pausedExact` true, and exactly one source/API attempt (its explicit tail). The actual final JPEG shows that paused 13-row Activity state; logical extraction and visual review agree. Actor requests remain separate from the Playwright counters. This regression precedes the 349 mobile table-layout presentation adjustment; the final 349 journey validates that adjustment separately.
