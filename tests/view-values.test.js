@@ -29,3 +29,8 @@ test('no-valid, unknown and no-data are distinct from numeric zero with exact su
   assert.equal(formatCell(field,'0',{state:'derived'}),'0 USD');
   assert.equal(supportText({support}),'0/9007199254740993 valid · missing 9007199254740992 · empty 0 · invalid 1');
 });
+test('mean duration uses consistent milliseconds without losing rational nanosecond authority',()=>{
+ const field={key:'duration.mean',type:'rational',unit:'ns',aggregation:{family:'duration',kind:'mean',method:'exact-rational'}};
+ for(const [raw,text]of [['0','0 ms'],['1500','≈ 0.002 ms'],['1000000000','1000 ms'],['9007199254740993/3','≈ 3002399751.58 ms'],['-1/3','−<0.001 ms']])assert.equal(formatCell(field,raw),text);
+ assert.equal(formatCell(field,null,{state:'no_data'}),'No data');assert.equal(formatCell(field,null,{state:'unknown'}),'Unknown');assert.match(exactText(field,'9007199254740993/3'),/^9007199254740993\/3 ns.*exact-rational/);
+});

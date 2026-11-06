@@ -7,7 +7,7 @@ import (
 	"github.com/casselc/goo/exploration"
 )
 
-// CountComparisonViewDeclaration is the count-comparison operand union. A pinned
+// CountComparisonViewDeclaration is the ordinary comparison operand union. A pinned
 // kind chooses either an immutable capture ID or one portable fixed baseline
 // query. The parent owns the current query; neither arm carries captured results.
 type CountComparisonViewDeclaration struct {
@@ -86,8 +86,16 @@ func (d *CountComparisonViewDisplay) UnmarshalJSON(data []byte) error {
 }
 
 func (d CountComparisonViewDeclaration) Validate(q exploration.Query) error {
-	if d.Version != "goo.view/1" || d.Scope.Kind != "record-query" || d.Scope.Signal != q.Signal || (d.Kind.Name != "captured-count-comparison" && d.Kind.Name != "query-count-comparison") || d.Kind.Version != 1 || d.Display.Value != "count" {
-		return errors.New("require a pinned count-comparison display for the configured record query")
+	if d.Version != "goo.view/1" || d.Scope.Kind != "record-query" || d.Scope.Signal != q.Signal || (d.Kind.Name != "captured-count-comparison" && d.Kind.Name != "query-count-comparison") || d.Kind.Version != 1 || (d.Display.Value != "count" && d.Display.Value != "duration.mean") {
+		return errors.New("require a pinned ordinary count or mean-duration comparison display for the configured record query")
+	}
+	if d.Display.Value == "duration.mean" {
+		// Summary means retain the whole population's exact duration sum/count.
+		// Count groups and captured operands are separate authoring contracts;
+		// neither becomes a per-category or captured mean through this display.
+		if d.Kind.Name != "query-count-comparison" || q.Signal != "spans" || q.Summary != "span-duration" || d.Display.View != "" && d.Display.View != "summary" || d.Display.Order != "" {
+			return errors.New("mean-duration comparison requires fresh span-duration queries, summary view and no group ordering")
+		}
 	}
 	if d.Kind.Name == "captured-count-comparison" {
 		if !ID.MatchString(d.BaselineCapture) || d.BaselineQuery != nil {

@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+341 adds fresh previous-window mean-duration summaries for ordinary span-duration
+queries. Captured mean baselines, per-category means and percentile comparison
+remain outside this cut. Independent read clocks and unknown upstream coverage
+remain explicit; a zero mean requires contributing spans. Exact source sums/counts
+and rational view cells are authoritative, rather than rounded decimal deltas.
+
 339 consolidates fixed-population scope facts and control styling; measured entry
 gains are about 29px desktop and 32px narrow, not a complete mobile density fix.
 Exact policies/UTC bounds stay in the existing disclosure, with independent

@@ -723,6 +723,18 @@ def check_fixed_query_count_views(spec):
         vc=validator(spec,{'$ref':'#/components/schemas/workbench.ExplorationView'+suffix})
         ac=validator(spec,{'$ref':'#/components/schemas/workbench.ViewArtifact'+suffix})
         cc.validate(comparison);vc.validate(view)
+        mean=copy.deepcopy(comparison)
+        mean['scope']['signal']='spans'
+        mean['baselineQuery'].update(signal='spans',summary='span-duration')
+        mean['display']={'value':'duration.mean'}
+        cc.validate(mean)
+        for path,value in [('kind','captured-count-comparison'),('view','groups'),('order','change'),('signal','logs'),('summary','status')]:
+            bad=copy.deepcopy(mean)
+            if path=='kind':
+                bad['kind']['name']=value;bad.pop('baselineQuery');bad['baselineCapture']='a'*64
+            elif path in ('view','order'):bad['display'][path]=value
+            else:bad['baselineQuery'][path]=value
+            assert not cc.is_valid(bad),f'mean comparison admitted invalid {path}'
         paired_facet=copy.deepcopy(view)
         paired_facet['composition']['children'].append({'facet':{'version':'goo.view/1','scope':scope,'kind':{'name':'categorical-facet','version':1},'field':{'kind':'attribute','key':'http.request.method'},'display':{'basis':'applied'}}})
         vc.validate(paired_facet)

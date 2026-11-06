@@ -216,11 +216,12 @@ for suffix in ('', 'Input'):
  comparison['properties']['baselineCapture'].update(type='string',pattern='^[a-f0-9]{64}$')
  for field in ('scope','kind','display'):comparison['properties'][field]['type']='object'
  comparison['properties']['scope']['required']=['kind','signal']
- comparison['description']='Count-only comparison with either one exact immutable capture or a fixed baseline query. Query operands require the same checked environment, grouping and measure profile with page zero; predicates may differ. Windows must be identical or the baseline must be the immediately preceding adjacent equal-duration window. Go checks this cross-field arithmetic after validating both questions. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority.'
+ comparison['description']='Count comparison or summary mean-duration comparison (fresh span-duration queries only; no ordering or group means) with either one exact immutable capture or a fixed baseline query. Query operands require the same checked environment, grouping and measure profile with page zero; predicates may differ. Windows must be identical or the baseline must be the immediately preceding adjacent equal-duration window. Go checks this cross-field arithmetic after validating both questions. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority.'
  kind=schemas['workbench.CountComparisonViewKind'+suffix];kind['additionalProperties']=False;kind['required']=['name','version']
  kind['properties']['name']['enum']=['captured-count-comparison','query-count-comparison'];kind['properties']['version']['const']=1
  display=schemas['workbench.CountComparisonViewDisplay'+suffix];display['additionalProperties']=False;display['required']=['value']
- display['properties']['value']['const']='count';display['properties']['title']['maxLength']=120
+ display['properties']['value']['enum']=['count','duration.mean'];display['properties']['title']['maxLength']=120
+ comparison.setdefault('allOf',[]).append({'if':{'properties':{'display':{'properties':{'value':{'const':'duration.mean'}},'required':['value']}},'required':['display']},'then':{'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}},'scope':{'properties':{'signal':{'const':'spans'}}},'baselineQuery':{'properties':{'signal':{'const':'spans'},'summary':{'const':'span-duration'}},'required':['signal','summary']},'display':{'properties':{'view':{'enum':['','summary']},'order':{'const':''}}}},'required':['baselineQuery']}})
  display['properties']['view']['enum']=['','summary','groups'];display['properties']['order']['enum']=['','change','label']
  timeline=schemas['workbench.TimelineViewDeclaration'+suffix];timeline['additionalProperties']=False
  timeline['required']=['version','scope','kind','display']

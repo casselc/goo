@@ -42353,7 +42353,76 @@
             }
           }
         ],
-        "description": "Count-only comparison with either one exact immutable capture or a fixed baseline query. Query operands require the same checked environment, grouping and measure profile with page zero; predicates may differ. Windows must be identical or the baseline must be the immediately preceding adjacent equal-duration window. Go checks this cross-field arithmetic after validating both questions. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority."
+        "description": "Count comparison or summary mean-duration comparison (fresh span-duration queries only; no ordering or group means) with either one exact immutable capture or a fixed baseline query. Query operands require the same checked environment, grouping and measure profile with page zero; predicates may differ. Windows must be identical or the baseline must be the immediately preceding adjacent equal-duration window. Go checks this cross-field arithmetic after validating both questions. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority.",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "display": {
+                  "properties": {
+                    "value": {
+                      "const": "duration.mean"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ]
+                }
+              },
+              "required": [
+                "display"
+              ]
+            },
+            "then": {
+              "properties": {
+                "kind": {
+                  "properties": {
+                    "name": {
+                      "const": "query-count-comparison"
+                    }
+                  }
+                },
+                "scope": {
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
+                    }
+                  }
+                },
+                "baselineQuery": {
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
+                    },
+                    "summary": {
+                      "const": "span-duration"
+                    }
+                  },
+                  "required": [
+                    "signal",
+                    "summary"
+                  ]
+                },
+                "display": {
+                  "properties": {
+                    "view": {
+                      "enum": [
+                        "",
+                        "summary"
+                      ]
+                    },
+                    "order": {
+                      "const": ""
+                    }
+                  }
+                }
+              },
+              "required": [
+                "baselineQuery"
+              ]
+            }
+          }
+        ]
       },
       "workbench.CountComparisonViewDeclarationInput": {
         "additionalProperties": false,
@@ -42485,7 +42554,76 @@
             }
           }
         ],
-        "description": "Count-only comparison with either one exact immutable capture or a fixed baseline query. Query operands require the same checked environment, grouping and measure profile with page zero; predicates may differ. Windows must be identical or the baseline must be the immediately preceding adjacent equal-duration window. Go checks this cross-field arithmetic after validating both questions. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority."
+        "description": "Count comparison or summary mean-duration comparison (fresh span-duration queries only; no ordering or group means) with either one exact immutable capture or a fixed baseline query. Query operands require the same checked environment, grouping and measure profile with page zero; predicates may differ. Windows must be identical or the baseline must be the immediately preceding adjacent equal-duration window. Go checks this cross-field arithmetic after validating both questions. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority.",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "display": {
+                  "properties": {
+                    "value": {
+                      "const": "duration.mean"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ]
+                }
+              },
+              "required": [
+                "display"
+              ]
+            },
+            "then": {
+              "properties": {
+                "kind": {
+                  "properties": {
+                    "name": {
+                      "const": "query-count-comparison"
+                    }
+                  }
+                },
+                "scope": {
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
+                    }
+                  }
+                },
+                "baselineQuery": {
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
+                    },
+                    "summary": {
+                      "const": "span-duration"
+                    }
+                  },
+                  "required": [
+                    "signal",
+                    "summary"
+                  ]
+                },
+                "display": {
+                  "properties": {
+                    "view": {
+                      "enum": [
+                        "",
+                        "summary"
+                      ]
+                    },
+                    "order": {
+                      "const": ""
+                    }
+                  }
+                }
+              },
+              "required": [
+                "baselineQuery"
+              ]
+            }
+          }
+        ]
       },
       "workbench.CountComparisonViewDisplay": {
         "properties": {
@@ -42503,7 +42641,10 @@
           },
           "value": {
             "type": "string",
-            "const": "count"
+            "enum": [
+              "count",
+              "duration.mean"
+            ]
           },
           "view": {
             "type": "string",
@@ -42559,7 +42700,10 @@
                 "type": "null"
               }
             ],
-            "const": "count"
+            "enum": [
+              "count",
+              "duration.mean"
+            ]
           },
           "view": {
             "anyOf": [

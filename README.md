@@ -10,6 +10,13 @@ original window and [checked environment policy](docs/SERVICE_ENVIRONMENT_POLICI
 including current/legacy precedence, empty and unreported record scopes. Read the
 overview explicitly and return to the same paused rows.
 
+Span-duration views can compare the adjacent previous window using the existing
+**Compare previous window** action. Run reads both scopes independently; the
+summary shows mean duration in milliseconds and each side's contributing spans.
+Exact sums/counts remain authoritative; empty data never becomes zero latency.
+See the [mean comparison contract](docs/reviews/MEAN_COMPARISON_ARCHITECTURE_341.md)
+and [executable journey](docs/journeys/341-mean-comparison.md).
+
 Activity can [reuse a saved baseline in its checked policy](docs/ACTIVITY_BASELINE_POLICIES.md):
 latency compares frozen evidence, while Explain explicitly rereads the saved scope.
 

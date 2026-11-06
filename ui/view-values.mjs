@@ -55,7 +55,8 @@ export function formatCell(field,value,cell){
   if(isFraction(field))return percent(n,d);
   if(unit==='ns'){
     const magnitude=n<0n?-n:n;
-    if(magnitude>=1000000000n*d){d*=1000000000n;unit='s'}
+    if(field.key==='duration.mean'){d*=1000000n;unit='ms'}
+    else if(magnitude>=1000000000n*d){d*=1000000000n;unit='s'}
     else if(magnitude>=1000000n*d){d*=1000000n;unit='ms'}
     else {d*=1000n;unit='µs'}
   }

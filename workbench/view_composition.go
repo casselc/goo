@@ -251,7 +251,7 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 	}
 	if facet != nil && comparison != nil {
 		if comparison.Kind.Name != "query-count-comparison" || comparison.BaselineQuery == nil {
-			return errors.New("facets can accompany only fresh fixed-query count comparisons")
+			return errors.New("facets can accompany only fresh fixed-query ordinary comparisons")
 		}
 		// The facet reads selected-window values, but its common narrowing intent
 		// must be admitted by both independently checked operand definitions.

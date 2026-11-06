@@ -35,3 +35,9 @@ capture writes, immutable held facts and no overflow. Exact scope facts are open
 through the summary before visibility checks; that gesture adds no source read.
 Current maintained frames are refreshed. Reviewed raw stores and actor output are
 pruned after compact receipts are retained.
+
+The 341 regression passes against the same final reviewed Go 1.27.3 binary in
+27.9 seconds (33.1 seconds including the runner). All three 9/5 count pairs,
+source-free staging/Save/export/open and adjacent-window rebasing remain valid;
+the three maintained frames are refreshed. This bounded regression does not run
+another actor campaign; the 339 actor result above remains historical.

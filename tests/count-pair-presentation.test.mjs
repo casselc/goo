@@ -28,3 +28,15 @@ test('passive role labels copy bounded literal names and reject accessors withou
  for(const value of [null,[],['one'],['one','two','three'],['','two'],['one','bad\nlabel'],['a'.repeat(121),'two']])assert.throws(()=>comparisonRoleLabels(value));
  let reads=0;const accessor=['one','two'];Object.defineProperty(accessor,0,{get(){reads++;return 'bad'}});assert.throws(()=>comparisonRoleLabels(accessor));assert.equal(reads,0);
 });
+test('mean summary shares independent operand facts and exact supplied support without offering category means',()=>dom(()=>{
+ const input=fixture('9007199254740993','3');
+ for(const [index,side]of [input.comparison.baseline,input.comparison.selection].entries()){
+  side.scope.signal='spans';side.scope.selector.signal='spans';side.scope.selector.summary='span-duration';
+  side.fields.push({key:'duration.mean',label:'Mean duration',type:'rational',unit:'ns',aggregation:{family:'duration',kind:'mean',method:'exact-rational'}});
+  side.rows[0].values['duration.mean']=index?'0':'9007199254740993/2';side.rows[0].cells={'duration.mean':{state:'derived',support:{total:side.rows[0].values.count,valid:side.rows[0].values.count,missing:'0',empty:'0',invalid:'0'}}};
+ }
+ input.comparison.changes['duration.mean']={state:'derived',value:'-9007199254740993/2',unit:'ns'};
+ const host=new Element('main');host.connected=true;const calls=[];const shown=V.countPair(host,{...input,value:'duration.mean',groups:{supplied:true},onDisplay:value=>calls.push(value)});
+ assert.equal(shown.root.attributes.get('aria-label'),'Mean duration comparison');assert.deepEqual(shown.summary.display.fields,['duration.mean']);assert.equal(shown.groups,null);assert.equal(shown.nodes.chrome.controls.hidden,true);assert.equal(shown.nodes.chrome.operands.firstChild.children[1].textContent,'9007199254740993 duration contributors');assert.equal(shown.nodes.chrome.operands.lastChild.children[1].textContent,'3 duration contributors');
+ shown.viewSelect.value='groups';shown.viewSelect.onchange();assert.deepEqual(calls,[]);assert.equal(shown.viewSelect.value,'summary');
+}));

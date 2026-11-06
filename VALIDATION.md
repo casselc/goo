@@ -1,5 +1,68 @@
 # Validation record
 
+## Previous-window mean-duration summary — 341
+
+Go 1.27.3 full suite: **2,212 passing test events**, no failures, 26 expected
+skips. Frontend: **1,152 pass**, no failures/skips (final editor-refresh build).
+OpenAPI: 100 operations, 668 schemas; 436 response fixtures, 161 admitted requests
+and 28 mux refusals pass, including fresh mean declaration positive/negative
+controls. The first restricted full runs could not open local test listeners;
+these results are from the completed runs with local listener access.
+
+The separate Hegel gate passes 70 generated unequal-weight cases plus an explicit
+huge-contributor case, with no skips. An independent `math/big` oracle checks exact
+sums/counts and rational differences beyond 2^53, observed zero, no-data,
+diagnostics and missing authority. Go persistence tests cover JSON/YAML and saved
+view round trips, typed environment policies, and unsupported captured/group mean
+refusal. No aggregation endpoint or dependency was added.
+
+Native setup also exposed two UI owner gaps: changing the aggregate measure left
+the comparison editor's old controls alive, and ordinary selected-facet drilldown
+was not marked for retained-parent control renewal on Back. These use the existing
+bounded owner paths now; the source audit also renews retained synchronous window
+and composition leases, facet/breakdown/record-kind controls and retires pending
+display inspection on child departure. The browser regression checks the fresh
+editor, source-free Clear selection and an editable UTC window after Back. The harness also normalizes only the
+intentional local snapshot IDs/revisions before comparing rendered source facts.
+
+The single Go server is rebuilt; the four changed served modules match source
+byte-for-byte. The final live run has passed three real OTLP pairs: selected
+3 spans/sum 9 ms/mean 3 ms versus previous 5 spans/sum 10 ms/mean 2 ms,
+then the saved/reopened definition with fresh reads, then 2 measured-zero spans
+versus an empty previous window. The exact first difference is 1 ms. Only two
+selected inspection rows are returned; they do not determine the aggregate.
+Save/YAML/reopen preserve definitions without telemetry reads or stored observations. Supporting
+records retain the exact selected query; Back, Clear selection and window staging
+perform no replacement reads. Actual desktop/narrow/zero-data frames pass design
+review. The final 15-step/7-source observed ledger passes the reused Quint model
+and independent rational/query/receipt checks in 29.79 seconds; six negative
+controls include an unfinished prefix. A separate earlier observed fixture replay passed in
+28.01 seconds. The initial 60-second compile-plus-replay wrapper expired without
+a verdict; the gate now allows a bounded 120 seconds.
+
+The full final native journey passes in 2.1 minutes with no page errors, including
+late held-response cancellation. Its UI scope records 12 source attempts including
+the cancelled read. The separate 35.231-second Bombadil campaign exits zero with
+421 snapshots across phases 0–5: pair independently verified, fresh window staged,
+2 source requests, 1 comparison, 0 writes, immutable held observations and no
+horizontal overflow. Positive terminal observations are checked separately from
+process exit. Driver visual audit finds 421 JPEGs across three image hashes;
+the dominant 413 terminal images correctly show the fresh Configured/staged
+comparison, matching phase 5. Root reviewed the retained terminal sample. This
+run does not reproduce the stale driver-image limitation documented in earlier
+campaigns; maintained chart frames remain independent Playwright captures.
+The existing 321 previous-window count journey also passes in 33.1 seconds on
+the same reviewed binary, with its maintained frames regenerated.
+
+Current executable storyboard and maintained frames:
+[341 mean comparison](docs/journeys/341-mean-comparison.md). Architecture and design
+reviews record the bounded scope and the retained-parent follow-up; the active
+roadmap now prioritizes ownership consolidation before large-facet performance.
+Reviewed raw 341 campaign/report/store output was reduced from 19 MB to 416 KB;
+compact receipts, final model replay input/log, visual audit and one terminal
+sample remain. Genuine lab data, views, volumes and all 51 stale pending entries
+are preserved.
+
 ## Typed trace-wide environment scope — 340
 
 [Contract/diagram](docs/TRACE_SEARCH.md) · [journey](docs/journeys/340-typed-trace-search.md) · [architecture](docs/reviews/TYPED_TRACE_SEARCH_ARCHITECTURE_340.md) · [design](docs/reviews/TYPED_TRACE_SEARCH_DESIGN_340.md).
