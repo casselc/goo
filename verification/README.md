@@ -1,5 +1,24 @@
 # Semantic properties and model conformance
 
+## Service-context authored templates (356)
+
+Forty generated cases pass actual widget-question admission through JavaScript,
+strict Go template expansion and JavaScript response admission. Independent
+expectations preserve the destination's full typed scope, grouping and measures;
+specimen scope, missing bindings and changed presentation cannot supply authority.
+
+```sh
+go -C verification test -run '^Test(HegelServiceTemplates356|QuintServiceTemplateProtocol356)$' -count=1 .
+```
+
+The protocol smoke invokes the real generated Quint wrapper before the native
+campaign. It accepts completion and rejects implicit or unstaged reads. The
+observed checker `TestQuintServiceTemplatesObserved356` uses
+`GOO_SERVICE_TEMPLATES_356_REPORT` for actual inspect/apply/run/return facts,
+separate whole-query/source membership admission and corruption controls. Native
+execution status is recorded in [validation](../VALIDATION.md); the
+[contract](../docs/SERVICE_TEMPLATES.md) distinguishes configuration reuse from reads.
+
 ## Independent widget recovery (354)
 
 Forty Hegel state/swarm schedules drive the actual mounted dashboard owner with

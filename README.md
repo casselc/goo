@@ -25,6 +25,8 @@ view’s own selector before explicit Start.
 parent relationship under the same policy, with capture and source-free reopen.
 [Recover a failed service widget](docs/WIDGET_RECOVERY.md) by retrying its original
 fixed question while keeping successful sibling results and source clocks.
+[Use a saved template](docs/SERVICE_TEMPLATES.md) from a completed service widget.
+Inspect and Apply reuse presentation in its exact scope; Run reads explicitly.
 
 [Source-read failures](docs/SOURCE_REFUSALS.md) show a concise reason and safe
 technical details. Retry stays explicit; available paired observations retain

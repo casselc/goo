@@ -1,5 +1,68 @@
 # Validation record
 
+## Service-context authored templates — 356
+
+Completed ordinary grouped record widgets now offer Use saved template. The
+service browser retains its return owner and stages the detached whole widget
+question through the existing investigation/population path. The existing saved
+catalogue opens visibly and receives focus; Inspect expands configuration and
+Apply changes presentation locally. Explicit Run acquires the destination.
+Specimen service, namespace, policy, window, grouping and baseline cannot become
+destination authority. Entry waits for pending overview reads so departure does
+not discard the return owner.
+
+All 1,212 UI tests pass in 15.947 seconds, zero skips. New mounted and pure cases
+cover typed destination admission, completed/no-data states, unsupported profiles,
+mutation isolation, delegated staging, hidden/retired controls and pending reads.
+Forty generated actual JavaScript → strict Go expansion → JavaScript admission
+cases pass in 11.49 seconds. Independent whole-query expectations cover five
+environment policies, ordinary/HTTP/database profiles, grouping, measures, missing
+bindings, changed presentation and caller isolation. A real generated-wrapper
+Quint smoke passes in 5.72 seconds, accepting completion and rejecting implicit
+or unstaged reads. The combined semantic gate takes 17.230 seconds, zero skips.
+
+The genuine ClickHouse journey passes in 85.958 seconds, covering current/effective named and effective
+empty/unreported populations of 3/5/2/1 spans, with independently queried raw IDs
+and duration sums. Quoted service/namespace literals and all fixed query fields
+survive a mean-table/record-list template whose actual specimen uses a different
+service, environment, window and grouping. Genuine logs provide a second observed
+parent widget. Back preserves article/pre identities, values, questions, clocks
+and bases. UI Save/reopen of the applied destination configuration reads no
+telemetry. Wrong signal/profile, mismatched interval and missing destination
+baseline refuse Apply; the specimen baseline is not fetched. Superseded genuine
+expansions and retired Apply callbacks cannot publish or read telemetry.
+
+The native harness was corrected to use a supported 10-second specimen interval,
+inspect actual staged composition configuration before results exist, and compare
+responsive DOM while ignoring only empty style attributes. Nonempty styles,
+node identities, question and receipt checks remain. The actor's Run selector now
+uses the button's accessible name rather than assuming its longer label is visible
+text. No production change or increased timeout was needed for these harness fixes.
+
+The 35.177-second Bombadil campaign passes with 301 snapshots and all ten phases,
+including positive visible return to the service, exact five-span destination and
+one explicit Run read. Final required observed replay passes in 18.94 seconds
+within the unchanged 50-second budget: four real cases accepted and six corrupted
+reports rejected, zero skips. The model covers the six observed lifecycle
+boundaries; native assertions separately establish compatibility refusals,
+Save/reopen and stale metadata behavior. Main browser accounting is 109 API
+requests, 32 source-endpoint requests, eight expansions, one configuration save
+and four overview plans. Setup/specimen/oracle reads and the separate actor are
+outside that browser total. Actual desktop/narrow frames pass design review.
+The audited terminal actor image shows returned service identity/policy; retained
+widget values below that viewport are established by DOM/receipt assertions.
+
+Reviewed diagnostic bulk is reduced from 115 MiB to 6.4 MiB, retaining compact
+replay inputs/outcomes, actual fixtures/configurations, compressed traces and an
+audited terminal sample. Existing lab stores/volumes and all 51 pre-existing stale
+Redis pending entries are preserved.
+
+The Go 1.27.3 server image builds and runs healthy, with all six changed served
+UI modules matching reviewed source. No product Go/API schema changed; unchanged
+full Go/API suites were not rerun in this UI cut. See
+[contract](docs/SERVICE_TEMPLATES.md) and
+[executable storyboard](docs/journeys/356-service-templates.md).
+
 ## Independent service-widget recovery — 354
 
 Failed supported service widgets now retry their original frozen fixed question

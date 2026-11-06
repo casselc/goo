@@ -11,7 +11,6 @@ mock.module('../../ui/evidence-scope.mjs',{exports:{element:()=>node('p','receip
 mock.module('../../ui/evidence-summary.mjs',{exports:{}});
 mock.module('../../ui/native-presentation.mjs',{exports:{instrumentLabel:title=>title,nativeSummary:()=>[]}});
 mock.module('../../ui/workspace.mjs',{exports:{recordStep:structuredClone,measurementStep:structuredClone,stepLink:()=> '#step=checked',questionLink:()=> '#question=checked'}});
-mock.module('../../ui/view-template-handoff.mjs',{exports:{eligible:()=>false}});
 mock.module('../../ui/service-timeline.mjs',{exports:{mount(host,_input,results,options){host.append(node('div','timeline'));return {results,options}}}});
 let activeRequests;
 mock.module('../../ui/queries.mjs',{exports:{postJSON:(url,question,signal)=>new Promise((resolve,reject)=>activeRequests.push({url,question,signal,resolve,reject}))}});

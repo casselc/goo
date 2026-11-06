@@ -3,7 +3,7 @@ import * as RecordEnvironment from './record-environment.mjs';
 import * as Exploration from './exploration.mjs';
 import * as UI from './components.mjs';
 import * as Workspace from './workspace.mjs';
-import {stagedView} from './view-template-handoff.mjs';
+import {stagedView,templateQuestion} from './view-template-handoff.mjs';
 const global=globalThis;
 function visitTitle(question){return question?RecordEnvironment.questionLabel(question)+' · '+question.signal:'New question'}
 function mount(host,{lazy=false}={}){
@@ -17,7 +17,7 @@ function mount(host,{lazy=false}={}){
   function visit(){const entry=entries[index];let live=true;return {releaseReturn:()=>{live=false;if(entry){entry.retainedReturn=false;update()}},current:()=>live&&!!entry&&entries[index]===entry,suspend:()=>{if(!live||entries[index]!==entry)return false;leave();return true}}}
   back.onclick=()=>{if(!bar.hidden&&UI.actionVisible(back)&&!back.disabled)select(index-1)};forward.onclick=()=>{if(!bar.hidden&&UI.actionVisible(forward)&&!forward.disabled)select(index+1)};
   const openQuestion=(q,fields=[],options={})=>create(q,fields,options);
-  global.addEventListener('goo:open-population',e=>{let view;if(e.detail.view!==undefined){try{view=stagedView(e.detail.view,e.detail.question)}catch{return}}openQuestion(e.detail.question,[],{baseline:e.detail.baseline,...(e.detail.rest?{stage:true,rest:e.detail.rest}:{}),...(view?{stage:true,view}:{})})});
+  global.addEventListener('goo:open-population',e=>{try{const templates=e.detail.templates===true,question=templates?templateQuestion(e.detail.question):e.detail.question,view=e.detail.view===undefined?null:stagedView(e.detail.view,question);openQuestion(question,[],{baseline:e.detail.baseline,...(e.detail.rest?{stage:true,rest:e.detail.rest}:{}),...(view?{stage:true,view}:{}),...(templates?{stage:true,templates:true}:{})})}catch{}});
   global.addEventListener('goo:open-question',e=>openQuestion(e.detail));
   document.addEventListener('click',event=>{if(event.defaultPrevented)return;const link=event.target.closest?.('a[href]');if(!link||event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||link.target)return;const url=new URL(link.href,location.href);if(url.origin!==location.origin||url.pathname!==location.pathname||!/^#(?:step|question)=/.test(url.hash))return;try{const value=Workspace.readQuestionLink(url.hash);if(!value)return;event.preventDefault();openQuestion(value.question,[],{stage:true});history.pushState(null,'',url.hash)}catch{}});
   global.addEventListener('goo:question-state',event=>{update();host.dataset.questionPhase=event.detail.phase});

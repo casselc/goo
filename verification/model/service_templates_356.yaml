@@ -1,0 +1,11 @@
+spec: service_templates_356.qnt
+module: service_templates_356
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  service_context: {expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'}
+  use_template: {expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'}
+  inspect_template: {expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'}
+  stage_template: {expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'}
+  run_population: {expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'}
+  return_service: {expect: 'reads == {{.obs.reads}} and coherent == {{.obs.coherent}}'}

@@ -1,3 +1,4 @@
+import {recordAggregates} from './record-aggregate-protocol.mjs';
 import * as Composition from './view-composition.mjs';
 /* Checked configuration handoff only. No source data, witnesses or navigation. */
 import {validateRecordQuestion} from './question-protocol.mjs';
@@ -38,6 +39,15 @@ export function templateFor(profile='ordinary',{baseline=false}={}){if(typeof ba
 export function bindingForComposition(value,composition){const next=binding(value);delete next.baseline;if(Composition.comparison(composition))next.baseline='destination';return binding(next);}
 function boundComposition(source,baselineCapture){const comparison=Composition.comparison(source.composition),next=structuredClone(source.composition);if(comparison){if(typeof baselineCapture!=='string'||!/^[a-f0-9]{64}$/.test(baselineCapture))throw Error('Choose an explicit destination baseline capture before inspecting this template.');Composition.comparison(next).baselineCapture=baselineCapture;}else if(baselineCapture!==undefined)throw Error('A destination baseline is only allowed for comparison templates.');return next;}
 export function authoredRequest(source,question,baselineCapture){templateView(source);validateRecordQuestion(question);if(source.queries[0].signal!==question.signal)throw Error('Template and destination must use the same signal.');const timeline=Composition.timeline(source.composition);if(timeline){if(source.queries[0].bucketMs!==question.bucketMs)throw Error('Template timeline requires '+intervalLabel(source.queries[0].bucketMs)+' intervals; configure the destination interval width and Run explicitly.');Timeline.reuse(timeline,source.queries[0],question);}const composition=boundComposition(source,baselineCapture),destination={...structuredClone(source),queries:[{...structuredClone(question),offset:0}],composition};templateView(destination);return {source:structuredClone(source),query:structuredClone(question),...(Composition.comparison(source.composition)?{baselineCapture}:{})};}
+// Service evidence supplies the entire destination; templates supply presentation only.
+export function templateQuestion(question){
+ validateRecordQuestion(question);if((question.offset??0)!==0||question.groupBy?.length!==1||question.numeric||question.numericHistogram||question.reportedEdge||question.groupTimeSeries)throw Error('Saved templates require one ordinary page-zero record grouping.');
+ return structuredClone(question);
+}
+export function templateDestination(widget,data){
+ const q=widget?.query;if(widget?.state!=='supported'||widget.measurement||!q||!['observed','no_data'].includes(data?.state))throw Error('Choose a supported ordinary record widget with a completed read.');
+ const destination=templateQuestion(q);recordAggregates(q,data);return destination;
+}
 export function eligible(widget){const q=widget?.query,preset=presets[widget?.family];return !!preset&&widget?.state==='supported'&&widget.key==='dimension'&&q?.signal==='spans'&&q.groupBy?.length===1&&q.groupBy[0].kind==='attribute'&&q.groupBy[0].key===preset.group&&!widget.measurement&&!q.numericHistogram&&!q.groupTimeSeries;}
 export function customizeLabel(widget){return presets[widget?.family]?.label||'view';}
 export function request(widget){if(!eligible(widget))throw Error('Customize requires a supported HTTP route or database operation widget.');validateRecordQuestion(widget.query);return {template:presets[widget.family].id,version:1,widget:structuredClone(widget)};}

@@ -1,5 +1,13 @@
 # Known issues and gaps
 
+356 connects service widgets to existing authored-template reuse; source, full
+UI, generated, native/model and focused browser checks pass. It stages the
+whole ordinary grouped record question, without native/specialized coercion or
+specimen scope inheritance. Existing compatibility and explicit destination
+baseline requirements remain authoritative. See [contract](SERVICE_TEMPLATES.md).
+The existing catalogue's repeated labels and nearby authoring controls remain a
+bounded presentation follow-up for the selected 358 consolidation, not a new queue.
+
 354 implements independent failed-widget recovery; UI, generated, real-source,
 observed-model and focused browser checks pass. Retry retains the original fixed question and healthy sibling
 receipts under the shared two-read budget. Unsupported prerequisites and local

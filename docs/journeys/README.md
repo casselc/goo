@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Journey356](356-service-templates.md) applies an authored template from service
+evidence without borrowing specimen scope. Configuration inspection/Apply and
+Save/reopen read no telemetry; explicit Run and retained Back are checked under
+four environment policies.
+
 [Journey354](354-widget-recovery.md) exercises independent failed-widget recovery
 with real source refusals, independent native/record retries, held-response
 retirement and a positively completed browser campaign.

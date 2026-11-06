@@ -8,6 +8,11 @@ independent registry provenance; see [service identity](SERVICE_IDENTITY.md#decl
 **Service list** and **Distributed view** share that discovery evidence. Switching
 views does not query telemetry or tick the time window.
 
+Completed ordinary grouped record widgets offer **Use saved template** under
+Widget actions. It stages the whole fixed question in the existing template
+catalogue. Inspect/Apply reuse configuration; Run reads explicitly and Back
+retains service observations. See [service templates](SERVICE_TEMPLATES.md).
+
 ## One planner, existing evaluators
 
 `POST /dashboards/plan` is a pure Go planning operation. Supplied observed signals,

@@ -1768,3 +1768,23 @@ reread. See [contract](WIDGET_RECOVERY.md) for the lifecycle diagram.
 The application wires workspace departure to the inventory owner's existing
 `suspend` hook, as entity-tab departure already does. This retires pending work;
 completed service views keep their existing retained navigation behavior.
+
+## Service-context authored templates — 356
+
+The dashboard admits a completed ordinary record widget through the shared
+template destination validator. The service browser preserves the original
+overview and delegates its detached complete question through the investigation
+trail. Exploration forces staging and opens the existing population workspace
+with a fixed window. This path does not invoke population planning or read data.
+
+The population owner opens its existing catalogue disclosures and reads saved
+configuration metadata. Existing authored-template expansion checks destination
+signal, profile, grouping, measures, interval and explicit baseline binding.
+The saved question remains a specimen; it cannot supply destination predicates,
+environment, clock or baseline. Apply changes local presentation; the existing Run
+action executes the staged population. Retained Back restores the service owner.
+
+Template entry waits for all overview reads to settle, because departing a pending
+overview retires its owner. Existing destination/inspection revisions and visible
+action checks refuse stale adoption. No new query, display or catalogue engine is
+introduced. See [contract and flow diagram](SERVICE_TEMPLATES.md).
