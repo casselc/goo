@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Journey350](350-package-scope.md) turns a typed Activity population into a reusable
+definition, previews its fixed window, saves/reopens it, stages a fresh lookback
+without telemetry and explicitly runs it. It checks complete profiles, retired
+callbacks, saved-record authoring and observed lifecycle/model negatives.
+
 [Journey349](349-service-inventory.md) follows a discovered service into its
 operation inventory despite 1,050 unrelated pairs, then exact records, retained
 Activity Back and selected-service capture/reopen. It also checks typed scope,

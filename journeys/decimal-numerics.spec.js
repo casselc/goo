@@ -806,7 +806,7 @@ for (const signal of ['spans', 'logs']) test('180 ' + signal + ' exact decimal f
   response = page.waitForResponse(r => isResponse('explore', r), {
     timeout: 45000
   });
-  await page.locator('#packageUse').click();
+  await require('./support/explore').stageRecordPackage(page);await page.locator('#exploreRun').click();
   const reused = await json(await response);
   assertResult(reused, f.records);
   expect(reused.question.numeric).toEqual(binding);

@@ -72,6 +72,19 @@ for wire in ('exploration.TraceSearchWitness','exploration.TraceSearchWitnessInp
  if wire in schemas:
   schemas[wire]['properties']['fieldValues']['minItems']=2
   schemas[wire]['description']='Representative matching span with qualified field evidence, including presence and values for both deployment.environment.name and deployment.environment regardless of condition fields. Go admission independently checks the requested environment policy against this evidence.'
+# Reusable record packages preserve the same checked environment in configuration.
+for wire in ('exploration.PackageSource','exploration.PackageSourceInput'):
+ shape=schemas[wire];target='identity.EnvironmentSelectorInput' if wire.endswith('Input') else 'identity.EnvironmentSelector'
+ shape['additionalProperties']=False
+ shape['required']=list(dict.fromkeys([*[key for key in shape.get('required',[]) if key!='environment'],'adapter','signal']))
+ shape['properties']['adapter']={'type':'string','const':'clickhouse.otel/v1'}
+ shape['properties']['signal']={'type':'string','enum':['logs','spans']}
+ shape['properties']['environment']={'type':'string','minLength':1,'maxLength':128,'pattern':'^[^\\u0000]*$','description':'Exact current-key-only name; at most 128 UTF-8 bytes, enforced by Go.'}
+ shape['properties']['environmentSelector']={'$ref':'#/components/schemas/'+target}
+ shape['oneOf']=[{'required':['environment'],'not':{'required':['environmentSelector']},'properties':{'environment':{'type':'string','minLength':1}}},{'required':['environmentSelector'],'not':{'required':['environment']}}]
+ shape['description']='Checked reusable record source. Choose exactly one scalar current-only environment name or an explicit current-only/effective named, empty or unreported selector. Null scope fields and both arms, including an empty scalar beside a selector, are refused. JSON and YAML retain policy; planning fixes bounds independently of stored relative lookback. No source read is implied by validation or staging.'
+schemas['exploration.TelemetryPackageInput']['properties']['source']=ref('exploration.PackageSourceInput')
+schemas['exploration.TelemetryPackageInput']['required']=list(dict.fromkeys([*schemas['exploration.TelemetryPackageInput'].get('required',[]),'source']))
 # Service discovery preserves the same checked environment, with a stricter
 # non-null wire union so an explicit null cannot disappear into a legacy name.
 for wire in ('exploration.InventoryQuestion','exploration.InventoryQuestionInput'):

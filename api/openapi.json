@@ -16119,59 +16119,124 @@
       "exploration.PackageSource": {
         "properties": {
           "adapter": {
-            "type": "string"
+            "type": "string",
+            "const": "clickhouse.otel/v1"
           },
           "environment": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[^\\u0000]*$",
+            "description": "Exact current-key-only name; at most 128 UTF-8 bytes, enforced by Go."
+          },
+          "environmentSelector": {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
           },
           "signal": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "logs",
+              "spans"
+            ]
           }
         },
         "required": [
           "adapter",
-          "signal",
-          "environment"
+          "signal"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.PackageSource"
+        "x-go-type": "github.com/casselc/goo/exploration.PackageSource",
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "not": {
+              "required": [
+                "environmentSelector"
+              ]
+            },
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "not": {
+              "required": [
+                "environment"
+              ]
+            }
+          }
+        ],
+        "description": "Checked reusable record source. Choose exactly one scalar current-only environment name or an explicit current-only/effective named, empty or unreported selector. Null scope fields and both arms, including an empty scalar beside a selector, are refused. JSON and YAML retain policy; planning fixes bounds independently of stored relative lookback. No source read is implied by validation or staging."
       },
       "exploration.PackageSourceInput": {
         "additionalProperties": false,
         "properties": {
           "adapter": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": "string",
+            "const": "clickhouse.otel/v1"
           },
           "environment": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[^\\u0000]*$",
+            "description": "Exact current-key-only name; at most 128 UTF-8 bytes, enforced by Go."
+          },
+          "environmentSelector": {
+            "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
           },
           "signal": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
+            "type": "string",
+            "enum": [
+              "logs",
+              "spans"
             ]
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.PackageSource"
+        "x-go-type": "github.com/casselc/goo/exploration.PackageSource",
+        "required": [
+          "adapter",
+          "signal"
+        ],
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "not": {
+              "required": [
+                "environmentSelector"
+              ]
+            },
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "not": {
+              "required": [
+                "environment"
+              ]
+            }
+          }
+        ],
+        "description": "Checked reusable record source. Choose exactly one scalar current-only environment name or an explicit current-only/effective named, empty or unreported selector. Null scope fields and both arms, including an empty scalar beside a selector, are refused. JSON and YAML retain policy; planning fixes bounds independently of stored relative lookback. No source read is implied by validation or staging."
       },
       "exploration.Plan": {
         "properties": {
@@ -18798,14 +18863,7 @@
             ]
           },
           "source": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/exploration.PackageSourceInput"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/exploration.PackageSourceInput"
           },
           "spanStatus": {
             "anyOf": [
@@ -18876,7 +18934,10 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.TelemetryPackage"
+        "x-go-type": "github.com/casselc/goo/exploration.TelemetryPackage",
+        "required": [
+          "source"
+        ]
       },
       "exploration.TimePoint": {
         "properties": {

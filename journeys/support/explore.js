@@ -19,3 +19,14 @@ module.exports.chooseGrouping=chooseGrouping;
 // Open only the active fixed-question preservation disclosure; other capture surfaces keep their own controls.
 async function openPreserve(page,container=page){const panel=container.locator('.question-preserve').filter({visible:true});if(!await panel.evaluate(e=>e.open))await panel.locator(':scope > summary').click()}
 module.exports.openPreserve=openPreserve;
+
+// Record definitions stage a fixed question. The caller owns the subsequent explicit Run.
+async function stageRecordPackage(page,button=page.locator('#packageUse')){
+ const {expect}=require('@playwright/test'),attempts=[],observe=r=>{const path=new URL(r.url()).pathname;if(r.method()==='POST'&&path.startsWith('/api/')&&path!=='/api/telemetry-packages/plan')attempts.push(path)};
+ const text=(await button.textContent()).trim();expect(text).toMatch(/^Stage /);const planned=text==='Stage fixed question in Explore'?null:page.waitForResponse(r=>r.request().method()==='POST'&&new URL(r.url()).pathname==='/api/telemetry-packages/plan');page.on('request',observe);
+ try{await button.click();if(planned)expect((await planned).ok()).toBe(true);await expect(page.locator('#exploreStatus')).toContainText('Fixed question staged.');await expect(page.locator('#explorePackageScope')).toBeVisible();await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));expect(attempts).toEqual([])}finally{page.off('request',observe)}
+}
+module.exports.stageRecordPackage=stageRecordPackage;
+
+async function openRecordPackage(page){const panel=page.locator('summary').filter({hasText:/^Reusable question package$/}).locator('..');if(!await panel.evaluate(e=>e.open))await panel.locator(':scope > summary').click()}
+module.exports.openRecordPackage=openRecordPackage;

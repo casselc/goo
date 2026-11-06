@@ -8,17 +8,19 @@ const discovery = extract(({document}) => {
   let malformed=false;
   const read=(id:string)=>{const s=el(id)?.textContent||'';if(!s)return null;try{return JSON.parse(s)}catch{malformed=true;return null}};
   const canonical=(value:any):string=>JSON.stringify(value,(key,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
-  const definition=(q:any)=>canonical({signal:q?.signal,environment:q?.environment,where:q?.where||null,groupBy:q?.groupBy||[]});
+  const definition=(q:any)=>{if(!q)return canonical(null);const value={...q};for(const key of ['fromMs','toMs','limit','offset'])delete value[key];if(!value.groupBy?.length)delete value.groupBy;return canonical(value)};
   const packageActive=el('packageAuthoring')?.hidden===false&&el('packageEditor')?.hidden===false;
   const question=read('exploreExplain')?.question,context=read('surroundingExplain'),traceEvidence=read('exploreContextExplain'),plan=packageActive?read('packagePlan'):null,previewText=packageActive?(el('packagePreviewResult')?.querySelector('pre')?.textContent||''):'';
   let preview:any=null;try{if(previewText)preview=JSON.parse(previewText)}catch{malformed=true}
-  let intent:any=null,draft:any=null;try{intent=JSON.parse(document.documentElement.dataset.gooDiscoveryIntent||'null');draft=JSON.parse(document.documentElement.dataset.gooDiscoveryDraft||'null')}catch{malformed=true}
-  const rawCount=el('exploreCount')?.querySelector('span')?.textContent||'',groups=[...document.querySelectorAll<HTMLElement>('#distributionContent .distribution-row')];
+  let intent:any=null,draft:any=null,stagedIntent:any=null;try{intent=JSON.parse(document.documentElement.dataset.gooDiscoveryIntent||'null');draft=JSON.parse(document.documentElement.dataset.gooDiscoveryDraft||'null');stagedIntent=JSON.parse(document.documentElement.dataset.gooDiscoveryStaged||'null')}catch{malformed=true}
+  const rawCount=el('exploreCount')?.querySelector('span')?.textContent||'',chart=document.querySelector<HTMLElement&{snapshot:any}>('#distributionContent .scoped-breakdown goo-chart'),snapshot=chart?.snapshot,groups=snapshot?.rows||[];
   let population=true,buckets=true;
-  if(groups.length){if(!/^\d+$/.test(rawCount))population=false;else{let sum=0n;for(const g of groups){const text=g.querySelector(':scope > span')?.textContent||'',match=text.match(/% · (\d+)$/);if(!match)population=false;else sum+=BigInt(match[1]);}population=population&&sum===BigInt(rawCount)}}
+  if(question?.groupBy?.length===1&&['trace_id','duration_bucket'].includes(question.groupBy[0].key)){
+    try{population=!!snapshot&&canonical(snapshot.scope.selector)===canonical(question)&&/^\d+$/.test(rawCount)&&groups.every((row:any)=>typeof row.values.category==='string'&&/^\d+$/.test(row.values.count))&&groups.reduce((sum:bigint,row:any)=>sum+BigInt(row.values.count),0n)===BigInt(rawCount)}catch{population=false}
+  }
   if(question?.groupBy?.[0]?.key==='duration_bucket'){
     const labels=['[0,1) ms','[1,5) ms','[5,10) ms','[10,50) ms','[50,100) ms','[100,500) ms','[500,1000) ms','[1000,+inf) ms'];
-    let previous=-1;for(const row of groups){try{const value=JSON.parse(row.querySelector('.distribution-label')?.textContent||'null'),index=labels.indexOf(value);if(index<=previous||index<0)buckets=false;previous=index}catch{buckets=false}}
+    let previous=-1;for(const row of groups){const index=labels.indexOf(row.values.category);if(index<=previous||index<0)buckets=false;previous=index}buckets=buckets&&!!snapshot;
   }
   let contextBounded=true,anchorProvenance=true;
   if(context){try{const {origin,anchor,anchorQuestion,anchorBasis,context:c}=context,q=c.question,ms=Number(BigInt(anchor.timestamp_ns)/1000000n),radius=Number((el('surroundingRadius') as HTMLSelectElement).value),p=q.where;
@@ -31,11 +33,11 @@ const discovery = extract(({document}) => {
   const packagePreserved=!plan||!draft||definition(plan.question)===definition(draft);
   const previewSeparate=!preview||!!plan&&canonical(preview.question)===canonical(plan.question)&&typeof preview.basis==='string'&&preview.basis.length>0;
   const reused=document.documentElement.dataset.gooDiscoveryReuse==='true';
-  const reusePreserved=!reused||!question||!draft||definition(question)===definition(draft);
+  const reusePreserved=!reused||!question||!draft||definition(question)===definition(draft)&&!!stagedIntent&&canonical(question)===canonical(stagedIntent);const stagedReady=!!stagedIntent&&!question&&(el('exploreStatus')?.textContent||'').includes('Fixed question staged.')&&!(el('exploreRun') as HTMLButtonElement)?.disabled&&!(el('explorePackageScope') as HTMLElement)?.hidden;
   const visible=(id:string)=>el(id)?.hidden===false;
   const packageInvalidated=!visible('packageAuthoring')||!!plan||['packagePreview','packageSave','packageUse'].every(id=>(el(id) as HTMLButtonElement)?.disabled);
-  return {version:'goo.discovery.v1',stage:document.documentElement.dataset.gooDiscoveryStage||'initial',ready:!!el('exploreRun'),busy:(el('exploreRun') as HTMLButtonElement)?.disabled,
-    question,hasRecords:!!document.querySelector('#exploreRows .record-row'),population,buckets,contextBounded,anchorProvenance,quickAnd,packagePreserved,previewSeparate,reusePreserved,packageInvalidated,malformed,
+  return {version:'goo.discovery.v1',stage:document.documentElement.dataset.gooDiscoveryStage||'initial',ready:!!el('exploreRun')||!!document.querySelector('.stream-entry'),builderReady:!!el('exploreRun'),busy:(el('exploreRun') as HTMLButtonElement)?.disabled,
+    stagedReady,stagedIntent,question,hasRecords:!!document.querySelector('#exploreRows .record-row'),population,buckets,contextBounded,anchorProvenance,quickAnd,packagePreserved,previewSeparate,reusePreserved,packageInvalidated,malformed,
     trace:visible('exploreContext'),nearby:visible('surroundingContext'),traceReady:visible('exploreContext')&&!el('exploreContextSummary')?.textContent?.startsWith('Reading')&&!!document.querySelector('#exploreTrace .waterfall-row'),contextReady:visible('surroundingContext')&&!!context,
     selected:document.querySelectorAll('#exploreTrace .waterfall-row[aria-pressed="true"]').length,traceMore:!(el('exploreTraceMore') as HTMLButtonElement)?.disabled,nearbyMore:!(el('surroundingNext') as HTMLButtonElement)?.disabled,
     draftReady:visible('packageDraftSetup')&&visible('packageEditor'),planReady:!!plan,previewReady:!!preview,route:document.querySelector('[data-workspace][aria-current="page"]')?.getAttribute('data-workspace'),
@@ -48,6 +50,7 @@ export const orderedDurationPartition = always(()=>discovery.current.buckets);
 export const boundedTimeContext = always(()=>discovery.current.contextBounded&&discovery.current.anchorProvenance);
 export const explicitAndSearch = always(()=>discovery.current.quickAnd);
 export const reusableDefinition = always(()=>discovery.current.packagePreserved&&discovery.current.reusePreserved);
+export const stageDoesNotClaimEvidence=always(()=>discovery.current.stage!=='reuse_staged'||discovery.current.stagedReady);
 export const independentPreview = always(()=>discovery.current.previewSeparate);
 export const invalidDraftDisablesActions = always(()=>discovery.current.packageInvalidated);
 export const oneInspector = always(()=>!(discovery.current.trace&&discovery.current.nearby)&&discovery.current.selected<=1);
@@ -59,28 +62,30 @@ const act=registerCustomAction('goo.discovery',async(document,window,command:str
   const stage=()=>{if(next)document.documentElement.dataset.gooDiscoveryStage=next};
   const clearIntent=()=>{delete document.documentElement.dataset.gooDiscoveryIntent;delete document.documentElement.dataset.gooDiscoveryReuse};
   const read=(id:string)=>{try{return JSON.parse(el(id)?.textContent||'null')}catch{return null}};
-  if(command==='start'){const env=new URLSearchParams(window.location.hash.slice(1)).get('environment');if(env)set('exploreEnvironment',env);set('minutes','5');set('exploreSignal','spans');click('exploreRun');}
+  if(command==='builder'){const initialEnvironment=new URLSearchParams(window.location.hash.slice(1)).get('environment');if(initialEnvironment)document.documentElement.dataset.gooDiscoveryEnvironment=initialEnvironment;const menu=document.querySelector<HTMLDetailsElement>('.stream-entry .entry-investigate-options');if(!menu)throw Error('Missing Activity investigation menu');menu.open=true;const build=[...menu.querySelectorAll<HTMLButtonElement>('button')].find(b=>b.textContent==='Build fixed question');if(!build)throw Error('Missing Build fixed question action');build.click()}
+  if(command==='start'){const env=document.documentElement.dataset.gooDiscoveryEnvironment||new URLSearchParams(window.location.hash.slice(1)).get('environment');if(env)set('exploreEnvironment',env);set('minutes','5');set('exploreSignal','spans');click('exploreRun');}
   if(command==='query'){clearIntent();click('exploreRun')}
   if(command==='reset'){clearIntent();{const panel=el('filterComposer') as HTMLDetailsElement;if(panel)panel.open=true;[...document.querySelectorAll<HTMLButtonElement>('#exploreFilterEditor button')].find(b=>b.textContent==='Clear filters')?.click()};set('discoveryService','');set('discoveryMessage','');set('discoverySeverity','');set('discoveryDuration','');(el('discoveryErrors') as HTMLInputElement).checked=false;set('exploreGroup','');click('exploreRun')}
   if(command==='logs'||command==='spans'){clearIntent();set('exploreSignal',command);click('exploreRun')}
   if(command==='quick'){
-    const signal=(el('exploreSignal') as HTMLSelectElement).value,raw=document.querySelector('#exploreRows .raw-record pre')?.textContent||'{}';let row:any={};try{row=JSON.parse(raw)}catch{}
+    const signal=(el('exploreSignal') as HTMLSelectElement).value,summary=document.querySelector<HTMLElement&{record:any}>('#exploreRows .record-row goo-record-summary'),row:any=summary?.record||{};
     clearIntent();{const panel=el('filterComposer') as HTMLDetailsElement;if(panel)panel.open=true;[...document.querySelectorAll<HTMLButtonElement>('#exploreFilterEditor button')].find(b=>b.textContent==='Clear filters')?.click()};set('discoveryService',signal==='logs'?row.ServiceName||'':'');set('discoveryMessage',signal==='logs'?(row.Body||'').slice(0,24):'');set('discoverySeverity',signal==='logs'?row.SeverityText||'':'');set('discoveryDuration',signal==='spans'?'0':'');(el('discoveryErrors') as HTMLInputElement).checked=false;
     const predicates:any[]=[],add=(key:string,op:string,value:string)=>predicates.push({field:{kind:'column',key},op,value});
     if(signal==='spans')add('duration_ns','gte','0');else{if(row.ServiceName)add('service','eq',row.ServiceName);if(row.Body)add('body','contains',row.Body.slice(0,24));if(row.SeverityText)add('severity','eq',row.SeverityText)}
     document.documentElement.dataset.gooDiscoveryIntent=JSON.stringify({signal,predicates});click('exploreRun');
   }
   if(command==='traces'||command==='buckets'){clearIntent();const name=command==='traces'?'Find matching traces':'Span latency distribution';[...document.querySelectorAll<HTMLButtonElement>('#discoverySuggestions button')].find(b=>b.textContent===name)?.click()}
-  if(command==='trace'){document.querySelector<HTMLButtonElement>('#distributionContent button[aria-label^="Open matching trace"]:not(:disabled)')?.click()}
+  if(command==='trace'){const region=document.querySelector('#distributionContent .scoped-breakdown');region?.querySelector<HTMLElement>('.scope-view-bar')?.click();[...region?.querySelectorAll<HTMLButtonElement>('button')||[]].find(button=>button.textContent==='Open selected trace'&&!button.disabled)?.click()}
   if(command==='tracePage')click('exploreTraceMore');if(command==='select')document.querySelector<HTMLButtonElement>('#exploreTrace .waterfall-row')?.click();if(command==='closeTrace')click('exploreContextClose');
   if(command==='nearby')document.querySelector<HTMLButtonElement>('#exploreRows button[aria-label^="Surrounding logs for"]')?.click();
   if(command==='nearbyPage')click('surroundingNext');if(command==='radius')set('surroundingRadius',(el('surroundingRadius') as HTMLSelectElement).value==='30000'?'60000':'30000');
   if(command==='reanchor'){const anchor=read('surroundingExplain')?.anchor;const rows=[...document.querySelectorAll<HTMLElement>('#surroundingRows .record-row')];const row=rows.find(r=>r.textContent?.includes('No valid reported trace ID')&&!r.classList.contains('log-anchor'))||rows.find(r=>!r.classList.contains('log-anchor'));row?.querySelector<HTMLButtonElement>('button[aria-label^="Surrounding logs for"]')?.click()}
   if(command==='closeNearby')click('surroundingClose');
-  if(command==='draft'){clearIntent();document.documentElement.dataset.gooDiscoveryDraft=JSON.stringify(read('exploreExplain')?.question);click('exploreCreatePackage')}
+  if(command==='draft'){clearIntent();document.documentElement.dataset.gooDiscoveryDraft=JSON.stringify(read('exploreExplain')?.question);const summary=[...document.querySelectorAll<HTMLElement>('summary')].find(x=>x.textContent==='Reusable question package');if(!summary)throw Error('Missing reusable question package disclosure');(summary.parentElement as HTMLDetailsElement).open=true;click('exploreCreatePackage')}
   if(command==='build'){set('packageName','bombadil-discovery-preview');set('packageTitle','Discovery exploratory preview');click('packageBuild')}
   if(command==='preview')click('packagePreview');
-  if(command==='use'){clearIntent();document.documentElement.dataset.gooDiscoveryReuse='true';click('packageUse')}
+  if(command==='use'){clearIntent();document.documentElement.dataset.gooDiscoveryReuse='true';delete document.documentElement.dataset.gooDiscoveryStaged;window.addEventListener('goo:apply-telemetry-package',(event:any)=>{document.documentElement.dataset.gooDiscoveryStaged=JSON.stringify(event.detail.question)},{once:true});click('packageUse')}
+  if(command==='runReuse')click('exploreRun');
   if(command==='edit'){const input=el('packageYAML') as HTMLTextAreaElement;input.value+='\n# exploratory draft edit\n';input.dispatchEvent(new Event('input',{bubbles:true}))}
   if(command==='validate')click('packageValidate');
   if(command==='explore'){clearIntent();document.querySelector<HTMLButtonElement>('[data-workspace="explore"]')?.click()}
@@ -90,7 +95,8 @@ export const exploreDiscovery = actions(()=>{
   const s=discovery.current;if(!s.ready||s.busy)return ['Wait'];
   // Prefix guarantees the new workflows are reached before free exploration.
   switch(s.stage){
-    case 'initial':return [act('start','loaded')];
+    case 'initial':return [act('builder','builder')];
+    case 'builder':return s.builderReady?[act('start','loaded')]:['Wait'];
     case 'loaded':return s.question?[act('quick','searched')]:['Wait'];
     case 'searched':return s.question?[act('traces','trace_groups')]:['Wait'];
     case 'trace_groups':return s.question?.groupBy?.[0]?.key==='trace_id'?[act('trace','trace_open')]:['Wait'];
@@ -100,7 +106,10 @@ export const exploreDiscovery = actions(()=>{
     case 'buckets':return s.question?.groupBy?.[0]?.key==='duration_bucket'?[act('draft','draft')]:['Wait'];
     case 'draft':return s.draftReady?[act('build','built')]:['Wait'];
     case 'built':return s.planReady?[act('preview','previewed')]:['Wait'];
-    case 'previewed':return s.previewReady?[act('use','reused')]:['Wait'];
+    case 'previewed':return s.previewReady?[act('use','reuse_staging')]:['Wait'];
+    case 'reuse_staging':return s.stagedReady?[act('noop','reuse_staged')]:['Wait'];
+    case 'reuse_staged':return [act('runReuse','reusing')];
+    case 'reusing':return s.route==='explore'&&s.question?[act('noop','reused')]:['Wait'];
     case 'reused':return s.route==='explore'&&s.question?[act('logs','logs_loaded')]:['Wait'];
     case 'logs_loaded':return s.question?.signal==='logs'?[act('quick','logs_searched')]:['Wait'];
     case 'logs_searched':return s.question?.signal==='logs'?[act('nearby','around')]:['Wait'];

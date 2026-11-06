@@ -8,6 +8,9 @@ import (
 	"fmt"
 	"io"
 	"regexp"
+	"slices"
+
+	"github.com/casselc/goo/identity"
 	"strings"
 	"unicode/utf8"
 
@@ -40,10 +43,29 @@ type TelemetryPackage struct {
 	LookbackMinutes  int                   `json:"lookbackMinutes" yaml:"lookbackMinutes"`
 	Views            []string              `json:"views" yaml:"views"`
 }
+
+// UnmarshalJSON rejects lossy Unicode before definition fields can be repaired
+// into another predicate, profile or revision. Nested source admission stays strict.
+func (p *TelemetryPackage) UnmarshalJSON(data []byte) error {
+	if !identity.WellFormedJSON(data) {
+		return fmt.Errorf("invalid telemetry package Unicode")
+	}
+	type wire TelemetryPackage
+	var value wire
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&value); err != nil {
+		return err
+	}
+	*p = TelemetryPackage(value)
+	return nil
+}
+
 type PackageSource struct {
-	Adapter     string `json:"adapter" yaml:"adapter"`
-	Signal      string `json:"signal" yaml:"signal"`
-	Environment string `json:"environment" yaml:"environment"`
+	Adapter             string                        `json:"adapter" yaml:"adapter"`
+	Signal              string                        `json:"signal" yaml:"signal"`
+	Environment         string                        `json:"environment,omitempty" yaml:"environment,omitempty"`
+	EnvironmentSelector *identity.EnvironmentSelector `json:"environmentSelector,omitempty" yaml:"environmentSelector,omitempty"`
 }
 type AnnotationTarget struct {
 	Name string `json:"name"`
@@ -65,8 +87,146 @@ type PackagePlan struct {
 	Warnings    []string               `json:"warnings"`
 }
 
+// PackageSource uses the same checked environment meanings as record questions.
+// Wire presence is exclusive: an explicit empty scalar alongside a selector is
+// not accepted as a second spelling of the selected scope.
+func (s *PackageSource) UnmarshalJSON(data []byte) error {
+	if !identity.WellFormedJSON(data) {
+		return fmt.Errorf("invalid package source Unicode")
+	}
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return err
+	}
+	for key := range fields {
+		if key != "adapter" && key != "signal" && key != "environment" && key != "environmentSelector" {
+			return fmt.Errorf("unknown package source field %q", key)
+		}
+	}
+	_, scalar := fields["environment"]
+	_, typed := fields["environmentSelector"]
+	if scalar == typed {
+		return fmt.Errorf("package source requires exactly one environment or environmentSelector")
+	}
+	for _, key := range []string{"environment", "environmentSelector"} {
+		if raw, ok := fields[key]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+			return fmt.Errorf("%s must be omitted or non-null", key)
+		}
+	}
+	type wire PackageSource
+	var value wire
+	normalized, err := json.Marshal(fields)
+	if err != nil {
+		return err
+	}
+	decoder := json.NewDecoder(bytes.NewReader(normalized))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&value); err != nil {
+		return err
+	}
+	candidate := PackageSource(value)
+	if _, err := (Query{Environment: candidate.Environment, EnvironmentSelector: candidate.EnvironmentSelector}).EnvironmentSelection(); err != nil {
+		return err
+	}
+	*s = candidate
+	return nil
+}
+func validatePackageYAMLNode(n *yaml.Node, depth int) error {
+	if depth > 16 || n.Kind == yaml.AliasNode || n.Tag == "!!merge" {
+		return fmt.Errorf("YAML aliases, merges and excessive depth unsupported")
+	}
+	for _, child := range n.Content {
+		if err := validatePackageYAMLNode(child, depth+1); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func (s *PackageSource) UnmarshalYAML(n *yaml.Node) error {
+	if n.Kind != yaml.MappingNode {
+		return fmt.Errorf("package source requires a mapping")
+	}
+	if err := validatePackageYAMLNode(n, 0); err != nil {
+		return err
+	}
+	// Binary/custom scalar tags could decode to invalid Go strings which
+	// json.Marshal would repair before the shared selector codec sees them.
+	var tags func(*yaml.Node) error
+	tags = func(node *yaml.Node) error {
+		if node.Kind == yaml.ScalarNode && node.Tag != "!!str" && node.Tag != "!!null" && node.Tag != "!!bool" && node.Tag != "!!int" && node.Tag != "!!float" {
+			return fmt.Errorf("unsupported package source YAML scalar tag")
+		}
+		for _, child := range node.Content {
+			if err := tags(child); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+	if err := tags(n); err != nil {
+		return err
+	}
+	var fields map[string]any
+	if err := n.Decode(&fields); err != nil {
+		return err
+	}
+	data, err := json.Marshal(fields)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(data, s)
+}
+func (p TelemetryPackage) rawQuestion(from, to int64) Query {
+	return Query{EnvironmentSelector: p.Source.EnvironmentSelector, NumericHistogram: p.NumericHistogram, ReportedEdge: p.ReportedEdge, Numeric: p.Numeric, GroupTimeSeries: p.GroupTimeSeries, SpanStatus: p.SpanStatus, BucketMS: p.BucketMS, Summary: p.Summary, Signal: p.Source.Signal, Environment: p.Source.Environment, FromMS: from, ToMS: to, Where: p.Where, GroupBy: p.GroupBy, Limit: 100, Offset: 0}
+}
+
+// Question detaches every mutable definition field without a JSON round trip
+// that could repair an invalid caller string into a different identity.
 func (p TelemetryPackage) Question(from, to int64) Query {
-	return Query{NumericHistogram: p.NumericHistogram, ReportedEdge: p.ReportedEdge, Numeric: p.Numeric, GroupTimeSeries: p.GroupTimeSeries, SpanStatus: p.SpanStatus, BucketMS: p.BucketMS, Summary: p.Summary, Signal: p.Source.Signal, Environment: p.Source.Environment, FromMS: from, ToMS: to, Where: p.Where, GroupBy: p.GroupBy, Limit: 100, Offset: 0}
+	q := p.rawQuestion(from, to)
+	q.EnvironmentSelector = copyEnvironmentSelector(q.EnvironmentSelector)
+	q.GroupBy = slices.Clone(q.GroupBy)
+	if q.Numeric != nil {
+		q.Numeric = new(*q.Numeric)
+	}
+	if q.NumericHistogram != nil {
+		q.NumericHistogram = new(*q.NumericHistogram)
+	}
+	if q.ReportedEdge != nil {
+		q.ReportedEdge = new(*q.ReportedEdge)
+		q.ReportedEdge.Parent.Namespace = q.ReportedEdge.Parent.Namespace.Clone()
+		q.ReportedEdge.Child.Namespace = q.ReportedEdge.Child.Namespace.Clone()
+		q.ReportedEdge.DiscoveryNamespace = q.ReportedEdge.DiscoveryNamespace.Clone()
+	}
+	seen := map[*Predicate]*Predicate{}
+	var clone func(*Predicate) *Predicate
+	clone = func(in *Predicate) *Predicate {
+		if in == nil {
+			return nil
+		}
+		if out, ok := seen[in]; ok {
+			return out
+		}
+		out := new(*in)
+		seen[in] = out
+		if in.Field != nil {
+			out.Field = new(*in.Field)
+		}
+		if in.Numeric != nil {
+			out.Numeric = new(*in.Numeric)
+		}
+		out.All = slices.Clone(in.All)
+		out.Any = slices.Clone(in.Any)
+		for i := range in.All {
+			out.All[i] = *clone(&in.All[i])
+		}
+		for i := range in.Any {
+			out.Any[i] = *clone(&in.Any[i])
+		}
+		return out
+	}
+	q.Where = clone(q.Where)
+	return q
 }
 func (p TelemetryPackage) Validate() error {
 	if p.APIVersion != PackageVersion || !packageName.MatchString(p.Name) || p.Title == "" || len(p.Title) > 160 || !utf8.ValidString(p.Title) || strings.ContainsRune(p.Title, 0) || len(p.Description) > 2048 || !utf8.ValidString(p.Description) || strings.ContainsRune(p.Description, 0) {
@@ -75,7 +235,7 @@ func (p TelemetryPackage) Validate() error {
 	if p.Source.Adapter != "clickhouse.otel/v1" || p.Measure != "captured-record-count" || p.LookbackMinutes < 1 || p.LookbackMinutes > 120 {
 		return fmt.Errorf("require supported OTel adapter, captured-record-count and lookback 1..120 minutes")
 	}
-	if e := p.Question(0, int64(p.LookbackMinutes)*60000).Validate(); e != nil {
+	if e := p.rawQuestion(0, int64(p.LookbackMinutes)*60000).Validate(); e != nil {
 		return e
 	}
 	if len(p.Views) == 0 || len(p.Views) > 3 {
@@ -102,21 +262,10 @@ func ReadTelemetryPackage(text string) (TelemetryPackage, error) {
 	if e := yaml.Unmarshal([]byte(text), &root); e != nil {
 		return p, e
 	}
-	var check func(*yaml.Node, int) error
-	check = func(n *yaml.Node, depth int) error {
-		if depth > 16 || n.Kind == yaml.AliasNode || n.Tag == "!!merge" {
-			return fmt.Errorf("YAML aliases, merges and excessive depth unsupported")
-		}
-		for _, child := range n.Content {
-			if e := check(child, depth+1); e != nil {
-				return e
-			}
-		}
-		return nil
-	}
-	if e := check(&root, 0); e != nil {
+	if e := validatePackageYAMLNode(&root, 0); e != nil {
 		return p, e
 	}
+
 	d := yaml.NewDecoder(strings.NewReader(text))
 	d.KnownFields(true)
 	if e := d.Decode(&p); e != nil {
@@ -127,21 +276,32 @@ func ReadTelemetryPackage(text string) (TelemetryPackage, error) {
 	}
 	return p, p.Validate()
 }
-func (p TelemetryPackage) Revision() (string, error) {
-	if e := p.Validate(); e != nil {
-		return "", e
+
+// snapshotTelemetryPackage validates before encoding, then freezes one exact
+// checked definition for hashing, publication and independent plan outputs.
+func snapshotTelemetryPackage(p TelemetryPackage) (TelemetryPackage, []byte, error) {
+	if err := p.Validate(); err != nil {
+		return TelemetryPackage{}, nil, err
 	}
-	data, e := json.Marshal(p)
-	if e != nil {
-		return "", e
+	data, err := json.Marshal(p)
+	if err != nil {
+		return TelemetryPackage{}, nil, err
 	}
+	frozen, err := DecodePackageJSON(data)
+	return frozen, data, err
+}
+func packageRevision(data []byte) string {
 	sum := sha256.Sum256(data)
-	return hex.EncodeToString(sum[:]), nil
+	return hex.EncodeToString(sum[:])
+}
+func (p TelemetryPackage) Revision() (string, error) {
+	_, data, err := snapshotTelemetryPackage(p)
+	if err != nil {
+		return "", err
+	}
+	return packageRevision(data), nil
 }
 func DraftTelemetryPackage(q Query, name, title string, minutes int) (TelemetryPackage, error) {
-	if q.EnvironmentSelector != nil {
-		return TelemetryPackage{}, fmt.Errorf("reusable packages do not support environmentSelector yet")
-	}
 	if e := q.Validate(); e != nil {
 		return TelemetryPackage{}, e
 	}
@@ -149,17 +309,19 @@ func DraftTelemetryPackage(q Query, name, title string, minutes int) (TelemetryP
 	b, _ := json.Marshal(q)
 	var clone Query
 	json.Unmarshal(b, &clone)
-	p := TelemetryPackage{NumericHistogram: clone.NumericHistogram, ReportedEdge: clone.ReportedEdge, Numeric: clone.Numeric, GroupTimeSeries: q.GroupTimeSeries, SpanStatus: q.SpanStatus, BucketMS: q.BucketMS, Summary: q.Summary, APIVersion: PackageVersion, Name: name, Title: title, Source: PackageSource{"clickhouse.otel/v1", q.Signal, q.Environment}, Where: clone.Where, GroupBy: clone.GroupBy, Measure: "captured-record-count", LookbackMinutes: minutes, Views: []string{"records", "trace-context"}}
+	p := TelemetryPackage{NumericHistogram: clone.NumericHistogram, ReportedEdge: clone.ReportedEdge, Numeric: clone.Numeric, GroupTimeSeries: q.GroupTimeSeries, SpanStatus: q.SpanStatus, BucketMS: q.BucketMS, Summary: q.Summary, APIVersion: PackageVersion, Name: name, Title: title, Source: PackageSource{Adapter: "clickhouse.otel/v1", Signal: clone.Signal, Environment: clone.Environment, EnvironmentSelector: clone.EnvironmentSelector}, Where: clone.Where, GroupBy: clone.GroupBy, Measure: "captured-record-count", LookbackMinutes: minutes, Views: []string{"records", "trace-context"}}
 	if len(p.GroupBy) == 1 {
 		p.Views = []string{"records", "distribution", "trace-context"}
 	}
 	return p, p.Validate()
 }
 func PlanTelemetryPackage(p TelemetryPackage, from, to int64, target *AnnotationTarget) (*PackagePlan, error) {
-	revision, e := p.Revision()
+	frozen, encoded, e := snapshotTelemetryPackage(p)
 	if e != nil {
 		return nil, e
 	}
+	p = frozen
+	revision := packageRevision(encoded)
 	q := p.Question(from, to)
 	plan, e := Compile(q)
 	if e != nil {
@@ -220,6 +382,14 @@ func PlanTelemetryPackage(p TelemetryPackage, from, to int64, target *Annotation
 		handoff.Notes = append(handoff.Notes, "Reported-edge queries require standard trace/span/parent-span IDs and original service resource identity. Parent ownership is resolved across records; no single-function annotation expresses this relationship.")
 	}
 	if target != nil {
+		selection, err := q.EnvironmentSelection()
+		if err != nil {
+			return nil, err
+		}
+		if !selection.CurrentOnly() || selection.Scope().Mode != "named" {
+			return nil, fmt.Errorf("Go annotation templates require a current-key-only named environment; use this telemetry package directly without an annotation target")
+		}
+
 		if p.ReportedEdge != nil {
 			return nil, fmt.Errorf("reported-edge relationships cannot be generated as a single-function annotation; retain the reusable telemetry package")
 		}
@@ -227,13 +397,13 @@ func PlanTelemetryPackage(p TelemetryPackage, from, to int64, target *Annotation
 			return nil, fmt.Errorf("annotation requires stable operation name and supported role")
 		}
 		handoff.GoExample = fmt.Sprintf("package example\n\nimport \"context\"\n\n//goo:operation name:%s role:%s\nfunc ObservedOperation(ctx context.Context) (err error) {\n\t// Implement the operation and explicitly attach required attributes.\n\treturn nil\n}\n", target.Name, target.Role)
-		handoff.Notes = append(handoff.Notes, "Go example is an opt-in template, not a patch or equivalent source binding. Choose the real function, preserve attributes, validate/weave with goo, and review duplicate instrumentation before changing package selectors. Existing telemetry is unchanged.")
+		handoff.Notes = append(handoff.Notes, "Go example is an opt-in template, not a patch or equivalent source binding. It does not encode the package environment, namespace or predicates. Choose the real function, preserve attributes, validate/weave with goo, and review duplicate instrumentation before changing package selectors. Existing telemetry is unchanged.")
 	}
 	measures, e := q.RecordMeasures()
 	if e != nil {
 		return nil, e
 	}
-	return &PackagePlan{MeasurePlan: measures, Definition: p, Revision: revision, YAML: string(text), Question: q, Plan: plan, Handoff: handoff, Warnings: []string{"Definition revision identifies configuration, not captured evidence. Applying it performs a fresh live read.", "Counts are captured records, including retries and exporter duplicates; sampling/completeness remain unknown. No business outcome or SLO is inferred.", "Supported record measures include counts, span durations, recorded status and bounded split time charts. Native metrics, lifecycle rules, arbitrary numeric expressions and Databricks lowering are separate contracts."}}, nil
+	return &PackagePlan{MeasurePlan: measures, Definition: p, Revision: revision, YAML: string(text), Question: q, Plan: plan, Handoff: handoff, Warnings: []string{"Definition revision identifies configuration, not captured evidence. Staging it reads no telemetry; explicit Run performs a fresh live read.", "Counts are captured records, including retries and exporter duplicates; sampling/completeness remain unknown. No business outcome or SLO is inferred.", "Supported record measures include counts, span durations, recorded status, explicit numeric bindings and bounded numeric histograms and split time charts. Native metrics, lifecycle rules, arbitrary numeric expressions and Databricks lowering are separate contracts."}}, nil
 }
 
 // DecodePackageJSON is used for stored definitions with strict field validation.

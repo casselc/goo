@@ -1,7 +1,6 @@
 package exploration
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -31,14 +30,11 @@ type SavedPackage struct {
 }
 
 func (s PackageStore) Save(p TelemetryPackage) (*SavedPackage, error) {
-	id, e := p.Revision()
+	_, data, e := snapshotTelemetryPackage(p)
 	if e != nil {
 		return nil, e
 	}
-	data, e := json.Marshal(p)
-	if e != nil {
-		return nil, e
-	}
+	id := packageRevision(data)
 	if len(data) > PackageBytes {
 		return nil, fmt.Errorf("definition exceeds 32 KiB")
 	}

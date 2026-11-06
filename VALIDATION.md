@@ -1,5 +1,94 @@
 # Validation record
 
+## Typed scope in reusable packages — 350
+
+The existing record-package source now retains scalar current-only or typed
+current-only/effective named, empty and unreported scope through draft, JSON/YAML,
+Question, planning, revision hashing and immutable storage. Package source wire
+fields form an exclusive presence union, including refusal of a blank scalar
+beside a selector. Existing duration/status/numeric/histogram/grouped-time profiles
+and complete predicates remain part of that same model; delivery resets to 100/0.
+Question and returned plans detach nested caller-owned data without repairing
+invalid Unicode. Plan/store hashing uses the same validated frozen bytes.
+
+The complete Go suite passes. Focused tests cover source parsing, shared nested
+selector admission, canonical revisions, mutation isolation and HTTP metadata-only
+boundaries. Full-package and local telemetry HTTP predecode guards reject lossy
+Unicode before it can change predicate/title/YAML identity. The HTTP module keeps
+the shared bounded receive/EOF machinery and strictly decodes original DTOs after
+its raw guard; global record-query/HTTP behavior is unchanged. Existing refusal
+tests now assert typed package preservation, and frozen responses describe Stage
+plus explicit Run and all supported record profiles.
+
+OpenAPI generation/check passes: 100 operations, 436 fixture responses, 161 admitted
+requests and 28 mux refusals, including strict package-source union negatives.
+Forty actual-UI → Go cases pass in 4.31 seconds, retaining whole profiles,
+predicates, clocks and hashes through JSON/YAML/store and rejecting 17 poisoned
+variants per case, including relative lookback/definition disagreement. The
+existing 100-case package state/swarm check also passes (2.02 seconds); together
+the verification run takes 6.353 seconds, zero skips. The final full UI source
+passes all 1,188 tests (22.12 seconds after the provenance-copy correction), zero skips.
+
+Review subsequently found two bounded admission gaps: malformed consumed views/
+handoff arrays could fail after partial staging, and a returned lookback plus
+matching changed bounds could evade revision-only admission. The final guards
+check consumed shape before adoption and compare known immutable definitions.
+Library controls check current visible selection before and after metadata reads.
+Saved-record authoring now also permits typed questions, binding callbacks to the
+immutable page/revision and retiring them on suspension/disposal. Source review
+accepts these boundaries.
+
+The final genuine 350 journey passes in 78.532 seconds (81.356 runner), including
+its required Quint replay (21.95 seconds, zero skips), five observed lifecycle steps
+and all nine rejecting controls. Four real selector populations read 3 current-only,
+5 effective named, 3 effective empty and 2 unreported spans. The selected profile
+retains duration sum 70000000ns/count 5, two recorded errors, grouping and split
+time series. The original fixed preview is 60 seconds; the saved two-minute
+lookback resolves a later end and an earlier start, as expected for its wider
+window. Run reads the exact staged bounds without advancing them.
+
+Fixed Stage makes no metadata request or telemetry read. Saved/imported Stage
+makes one pure plan request and no telemetry read. Late actual preview responses
+cannot republish after YAML withdrawal; the same old Preview function also stays
+inert after identical YAML is revalidated and the current Preview button is enabled.
+Local content/hash and source counters remain unchanged. The secondary real
+capture rereads six physical queries; creating/building a typed package from that
+saved page makes zero additional source calls and leaves the capture bytes intact.
+The final primary browser records 33 API requests and nine ordinary source attempts,
+plus its explicit capture. Physical proxy accounting includes independent API-matrix/preflight and focused
+actor reads; it is separate from those primary browser counters. Browser errors: 0.
+
+Actual desktop/narrow review accepts all four current frames. Review caught static
+package provenance saying “staged” after Run; its note is now phase-neutral, shows
+a 12-character revision with the full value in its tooltip, and leaves the phase
+to the existing status display. The image builds/runs healthy and six served
+modules/OpenAPI match reviewed bytes. These are scrolled task views, not proof of
+fresh Activity-entry density.
+
+The grouped-series regression passes in 37.5 seconds (40 runner), with its existing
+required model passing in 19.15 seconds, zero skips. The original 124-record,
+four-series and 2500000000ns duration oracles remain unchanged. Other known package
+journeys now use the current Stage → explicit Run test helper; they are not all
+claimed to have been replayed. The older broad discovery smoke test exposed retired
+entry/renderer/keyboard assumptions before its package branch; its bounded current-
+component maintenance is checked separately below. The final focused package
+Bombadil campaign passes in 30.170 seconds with 455 snapshots and all eight phases.
+Its positive completion requires visible Applied status, enabled Run, no visible
+loading marker, the full checked profile, two explicit source reads and one pure
+metadata request. Staging itself adds no read; capture bytes remain unchanged.
+Actor JPEG freshness is audited separately from DOM/wire completion; the four
+current Playwright frames provide the accepted visual evidence.
+
+The bounded final broad Discovery regression stops after 26.9 seconds at its
+older surrounding-context concurrency gate: the request is not held by that
+route predicate, so the UI already reports 108 captured logs while the test waits
+for Reading. Its later package branch, Quint replay and Bombadil campaign are
+not reached and are not claimed green. The dedicated 350 journey above verifies
+the new behavior; this historical test-harness repair remains separate.
+
+See the [contract](docs/TYPED_PACKAGE_SCOPES.md) and
+[architecture review](docs/reviews/PACKAGE_SCOPE_ARCHITECTURE_350.md).
+
 ## Selected-service operation inventory — 349
 
 The service overview now sends an exact optional service selector before the

@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/identity"
 	"net/http"
 	"os"
 	"time"
@@ -23,7 +26,20 @@ func registerTelemetryPackages(mux *http.ServeMux, dir string) {
 	send := httpjson.Write
 	fail := func(w http.ResponseWriter, code int, e error) { send(w, code, map[string]string{"error": e.Error()}) }
 	decode := func(w http.ResponseWriter, r *http.Request, v any) bool {
-		if e := httpjson.Decode(w, r, v, 64<<10, "require one JSON object"); e != nil {
+		var raw json.RawMessage
+		if e := httpjson.Decode(w, r, &raw, 64<<10, "require one JSON object"); e != nil {
+			fail(w, 400, e)
+			return false
+		}
+		// Preserve original question/definition/YAML identity before encoding/json
+		// can repair invalid Unicode in any of this module's request variants.
+		if !identity.WellFormedJSON(raw) {
+			fail(w, 400, fmt.Errorf("invalid telemetry package request Unicode"))
+			return false
+		}
+		decoder := json.NewDecoder(bytes.NewReader(raw))
+		decoder.DisallowUnknownFields()
+		if e := decoder.Decode(v); e != nil {
 			fail(w, 400, e)
 			return false
 		}

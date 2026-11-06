@@ -13,6 +13,10 @@ overview explicitly and return to the same paused rows.
 service before grouping limits; unrelated services cannot exhaust its budget.
 Saving inventory explicitly rereads that service's original scope.
 
+[Reusable question packages](docs/TYPED_PACKAGE_SCOPES.md) retain environment
+policy, filters and existing measure profiles, including from saved evidence.
+Stage opens a fixed question in Explore; Run explicitly reads it.
+
 [Source-read failures](docs/SOURCE_REFUSALS.md) show a concise reason and safe
 technical details. Retry stays explicit; available paired observations retain
 their counts and receipts while a refused side remains unknown.

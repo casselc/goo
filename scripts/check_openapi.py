@@ -20,6 +20,26 @@ def validator(spec, schema):
     return Draft202012Validator({'allOf': [schema], 'components': spec['components']})
 
 
+def check_package_scopes(spec):
+    scopes=[{'version':'goo/environment-selector/v1','policy':policy,'scope':{'mode':mode,**({'value':"prod-'雪"} if mode=='named' else {})}} for policy,mode in [('current-only','named'),('effective','named'),('effective','empty'),('effective','unreported')]]
+    base={'adapter':'clickhouse.otel/v1','signal':'spans'}
+    for wire in ('exploration.PackageSource','exploration.PackageSourceInput'):
+        check=validator(spec,{'$ref':'#/components/schemas/'+wire})
+        check.validate({**base,'environment':'prod'})
+        for invalid in ({'environment':'prod'},{**base,'signal':'metrics','environment':'prod'},{**base,'adapter':'other','environment':'prod'},{**base,'environment':'bad\x00'}):
+            assert not check.is_valid(invalid), 'unsupported package record source accepted'
+        for selector in scopes:
+            selected={**base,'environmentSelector':selector}
+            check.validate(selected)
+            for invalid in ({**selected,'environment':''},{**selected,'environment':'prod'},{**selected,'environment':None},{**selected,'unknown':True}):
+                assert not check.is_valid(invalid), 'ambiguous package scope accepted'
+        for invalid in (base,{**base,'environment':''},{**base,'environment':None},{**base,'environmentSelector':None},{**base,'environment':'prod','environmentSelector':None},{**base,'environmentSelector':{**scopes[0],'scope':{'mode':'empty'}}},{**base,'environmentSelector':{**scopes[1],'scope':{'mode':'empty','value':'prod'}}}):
+            assert not check.is_valid(invalid), 'invalid package selector union accepted'
+    definition=validator(spec,{'$ref':'#/components/schemas/exploration.TelemetryPackageInput'})
+    assert not definition.is_valid({'source':None}), 'null package source accepted'
+    assert not definition.is_valid({}), 'missing package source accepted'
+
+
 def check_typed_trace_search(spec):
     base={'version':'goo/trace-search/v1','fromMs':1000,'toMs':61000,'limit':10,'conditions':[{'field':{'kind':'column','key':'service'},'op':'eq','value':'api'}]}
     scopes=[{'version':'goo/environment-selector/v1','policy':policy,'scope':{'mode':mode,**({'value':'prod'} if mode=='named' else {})}} for policy,mode in [('current-only','named'),('effective','named'),('effective','empty'),('effective','unreported')]]
@@ -894,6 +914,7 @@ def check_record_step_selector(spec):
 
 
 def check(spec):
+    check_package_scopes(spec)
     check_typed_trace_search(spec)
     check_record_step_selector(spec)
     validate_spec(spec)

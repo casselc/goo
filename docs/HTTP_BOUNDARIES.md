@@ -335,8 +335,8 @@ family limits remain authoritative in code/tests; this table groups related rout
 | POST `/captures/live` | Read fresh evidence against a saved baseline and hold expiring drafts, or freeze a held draft into immutable capture files without a reread | 16 KiB; read branch 55s context; draft budget separate |
 | GET `/recipes`, POST `/recipes` | Return templates / plan supplied question; no telemetry | POST 16 KiB |
 | POST `/dashboards/plan` | Plan from supplied inventory/declarations; no telemetry | 256 KiB |
-| POST `/telemetry-packages/draft`, `/numeric-plan`, `/plan` | Build/validate/compile reusable definitions; no telemetry | 64 KiB |
-| POST `/telemetry-packages`; GET collection or `/{revision}` | Publish or read reusable definition files | POST 64 KiB; store bounds |
+| POST `/telemetry-packages/draft`, `/numeric-plan`, `/plan` | Build/validate/compile reusable definitions; no telemetry | 64 KiB; module-local raw Unicode guard before strict DTO decode; package source has a closed environment union |
+| POST `/telemetry-packages`; GET collection or `/{revision}` | Publish or read reusable definition files; no telemetry | POST 64 KiB with the same local raw guard; store bounds and validated frozen-byte hashing |
 | POST `/population/plan` | Plan typed population transformation; no telemetry | 128 KiB workbench decoder |
 | GET/POST `/annotations`, `/exploration-views`, `/deployments`, `/documents`, plus GET `/{id}` | Read/publish authored context; document creation checks references and can verify pinned XTDB review citations | POST 128 KiB; citation checks 30s each |
 | POST `/captures/comparisons`; GET `/captures/comparisons/{id}/receipt` | Recompute/save comparison context from saved captures; no telemetry reread | POST 128 KiB |

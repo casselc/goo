@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -90,8 +91,15 @@ func TestSelectorCompatibilityAndRefusals250(t *testing.T) {
 	}
 	a.Signal = "logs"
 	a.ReportedEdge = nil
-	if _, err := DraftTelemetryPackage(a, "sdk", "SDK", 1); err == nil {
-		t.Fatal("package dropped scope")
+	p, err := DraftTelemetryPackage(a, "sdk", "SDK", 1)
+	if err != nil {
+		t.Fatal("typed package scope refused", err)
+	}
+	want := a
+	want.Offset = 0
+	want.Limit = 100
+	if !reflect.DeepEqual(p.Question(a.FromMS, a.ToMS), want) {
+		t.Fatal("package changed typed policy, profile or predicates")
 	}
 }
 func TestSelectorTailMembershipAndSnapshots250(t *testing.T) {

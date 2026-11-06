@@ -8970,14 +8970,23 @@
       "environment": {
         "type": "string"
       },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "signal": {
         "type": "string"
       }
     },
     "required": [
       "adapter",
-      "signal",
-      "environment"
+      "signal"
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.PackageSource"
@@ -8999,6 +9008,23 @@
         "anyOf": [
           {
             "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"

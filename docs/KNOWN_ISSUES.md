@@ -1,5 +1,21 @@
 # Known issues and gaps
 
+350 carries typed environment policy through existing record-package authoring,
+JSON/YAML, immutable storage and explicit reuse, including from saved records.
+All package handoffs stage before Run. Original previews keep fixed bounds;
+saved/imported definitions resolve their lookback when explicitly staged. This
+does not add a new grammar, WYSIWYG editor, native-stream composition or Databricks
+lowering. Typed reported-edge queries remain explicitly unsupported by their
+existing compiler boundary; effective scopes cannot generate a code-local Go
+template. See [package scopes](TYPED_PACKAGE_SCOPES.md) and
+[validation](../VALIDATION.md).
+
+The older broad Discovery browser regression currently stops at its surrounding-
+context request gate, before its package branch/model/actor. Its route predicate
+does not hold the read and the test misses the loading phase. The dedicated 350
+package journey/model/actor pass; this older harness is not claimed green. See
+[validation](../VALIDATION.md).
+
 349 scopes operation inventory and its capture to the selected service before
 grouping. Whole-environment inventory and an individually oversized service still
 refuse more than 1,000 pairs; no partial result is admitted. This is observed span

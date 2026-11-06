@@ -358,7 +358,7 @@ test('182 real log patterns retain full-population counts, exact trends and immu
   expect(state.reads).toBe(6);
   state.event('reuse-save');
   const freshResponse = page.waitForResponse(response => isResponse('explore', response), {timeout: 45000});
-  await page.locator('#packageUse').click();
+  await require('./support/explore').stageRecordPackage(page);await page.locator('#exploreRun').click();
   const reused = await json(await freshResponse);
   assertResult(reused, f.records);
   expect(reused.question.groupBy).toEqual([patternField]);
