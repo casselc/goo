@@ -98,7 +98,7 @@ func TestReadDeadlineCannotExtendParent(t *testing.T) {
 		})
 		w := httptest.NewRecorder()
 		handler(w, httptest.NewRequest("POST", "/read", strings.NewReader(`{"Value":1}`)).WithContext(parent))
-		if w.Code != 502 || !strings.Contains(w.Body.String(), context.DeadlineExceeded.Error()) {
+		if w.Code != 502 || !strings.Contains(w.Body.String(), `"kind":"timeout"`) {
 			t.Fatal("source deadline failure changed", w.Code, w.Body.String())
 		}
 	})

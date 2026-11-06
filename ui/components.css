@@ -331,3 +331,6 @@ goo-categorical-facet.categorical-facet-paired .categorical-facet-row[hidden]{di
 .count-pair-facts dl{font-size:11px;overflow-wrap:anywhere}.count-pair-facts dt{font-weight:600}.count-pair-facts dd{margin:0 0 4px}
 @media(pointer:coarse){.count-pair-facts>summary,.count-pair-presentation>label>select{min-height:44px}}
 .count-pair-notice.evidence-note{padding:0;border:0;background:transparent}
+
+/* Source refusals retain terse reasons and passive, explicitly disclosed detail. */
+.source-refusal{display:block;min-width:0}.source-refusal-details{margin:4px 0;font-size:12px}.source-refusal-details>summary{cursor:pointer}.source-refusal-details p{margin:4px 0;overflow-wrap:anywhere}

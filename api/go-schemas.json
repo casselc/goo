@@ -1380,6 +1380,9 @@
   "ServiceDiscovery": {
     "$ref": "#/components/schemas/exploration.ServiceDiscovery"
   },
+  "SourceReadFailure": {
+    "$ref": "#/components/schemas/sourcefailure.Response"
+  },
   "TailIntent": {
     "anyOf": [
       {
@@ -24467,6 +24470,38 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/scopedview.Support"
+  },
+  "sourcefailure.Refusal": {
+    "properties": {
+      "detail": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind",
+      "detail"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/internal/sourcefailure.Refusal"
+  },
+  "sourcefailure.Response": {
+    "properties": {
+      "error": {
+        "type": "string"
+      },
+      "refusal": {
+        "$ref": "#/components/schemas/sourcefailure.Refusal"
+      }
+    },
+    "required": [
+      "error",
+      "refusal"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/internal/sourcefailure.Response"
   },
   "subjectfacts.Definition": {
     "properties": {

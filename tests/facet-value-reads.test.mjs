@@ -73,3 +73,9 @@ test('read identity binds original policies, full predicates, grouping, limits a
  for(const change of [s=>s.baseline.limit++,s=>s.baseline.where.value='different',s=>s.baseline.groupBy=[{kind:'column',key:'scope'}],s=>s.baseline.environmentSelector.policy='current-only',s=>s.selected.toMs++]){const next=structuredClone(original);change(next);assert.notEqual(Reads.identity(next,field),key)}
  assert.notEqual(Reads.identity(original,{kind:'resource',key:field.key}),key);assert.throws(()=>Reads.identity({selected:question(),baseline:null},{kind:'column',key:'duration_ns'}));
 });
+
+test('typed source refusal remains unknown on the failed side; explicit retry preserves exact healthy receipt and scopes',async()=>{
+ const f=fixture(),before=structuredClone(f.now),pending=f.loader(field);requests[0].resolve(response(requests[0],'POST','9007199254740993'));requests[1].resolve({ok:false,status:502,data:{error:'Source read exceeded a limit.',refusal:{kind:'budget',detail:'The source response exceeded a bounded read or grouping limit. Try a narrower scope.'}}});await pending;
+ const partial=structuredClone(f.states.at(-1));assert.equal(partial.baseline.state,'error');assert.equal(partial.baseline.refusal.kind,'budget');assert.equal(partial.baseline.total,undefined);assert.equal(partial.baseline.items,undefined);assert.equal(partial.values.total,'9007199254740993');assert.deepEqual(f.now,before);assert.equal(requests.length,2);
+ const retry=f.owner.retry('baseline');assert.equal(requests.length,3);assert.deepEqual(requests[2].question,requests[1].question);assert.deepEqual(f.states.at(-1).values,partial.values);requests[2].resolve(response(requests[2],'DELETE','3'));await retry;assert.deepEqual(f.states.at(-1).values,partial.values);assert.equal(f.states.at(-1).baseline.state,'ready');await f.owner.retry('baseline');assert.equal(requests.length,3);f.owner.dispose();
+});

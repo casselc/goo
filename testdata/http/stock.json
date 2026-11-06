@@ -27,7 +27,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"invalid cumulative stock observation\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "stock-monotonic-refused",
@@ -41,7 +41,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"invalid cumulative stock observation\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "stock-unknown-field",

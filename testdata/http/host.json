@@ -85,7 +85,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "host-plan-no-candidates",

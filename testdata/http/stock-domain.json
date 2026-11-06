@@ -27,7 +27,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"stock domain requires a nonnegative integer below 2^53\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "stock-domain-fractional",
@@ -41,7 +41,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"stock domain requires a nonnegative integer below 2^53\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "stock-domain-unsafe",
@@ -55,7 +55,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"stock domain requires a nonnegative integer below 2^53\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "stock-domain-wrong-kind",

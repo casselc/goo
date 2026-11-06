@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/internal/sourcefailure"
 	"math/big"
 	"strconv"
 	"time"
@@ -72,7 +73,7 @@ func countedValuesUint(text string, positive bool) (uint64, error) {
 
 // FetchCountedValues makes exactly two bounded aggregate reads. Clocks identify
 // separate observations, not a transactional population snapshot.
-func (s Source) FetchCountedValues(ctx context.Context, q Query) (*CountedValuesResult, error) {
+func (s Source) FetchCountedValues(ctx context.Context, q Query) (result *CountedValuesResult, resultErr error) {
 	if e := ValidateCountedValuesQuery(q); e != nil {
 		return nil, e
 	}
@@ -89,6 +90,7 @@ func (s Source) FetchCountedValues(ctx context.Context, q Query) (*CountedValues
 	if e != nil {
 		return nil, e
 	}
+	defer func() { resultErr = sourcefailure.Protocol(resultErr) }()
 	if e := ctx.Err(); e != nil {
 		return nil, e
 	}
@@ -116,7 +118,7 @@ func (s Source) FetchCountedValues(ctx context.Context, q Query) (*CountedValues
 	}
 	groupRead := CountedValuesRead{ReadAt: time.Now().UTC().Format(time.RFC3339Nano), Basis: countedValuesHash(rawGroups)}
 	if len(rawGroups) > 1000 {
-		return nil, fmt.Errorf("more than 1000 groups; narrow query; no partial grouping totals")
+		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("more than 1000 groups; narrow query; no partial grouping totals"))
 	}
 	groups := make([]CountedValue, 0, len(rawGroups))
 	seen := map[string]bool{}

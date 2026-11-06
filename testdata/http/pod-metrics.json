@@ -85,7 +85,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "pod-metric-plan-no-candidates",
@@ -269,7 +269,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"pod metric source returned a different resource identity\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "escaped-schema",
@@ -283,7 +283,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"pod metric source returned a different resource identity\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "source-row-sentinel",
@@ -297,7 +297,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"source exceeds 10000 rows; no partial measurement\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     }
   ]
 }

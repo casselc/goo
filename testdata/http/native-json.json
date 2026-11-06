@@ -499,7 +499,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "/metric-discovery/empty",
@@ -625,7 +625,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "/metric-discovery/exact-limit",
@@ -640,7 +640,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "/metric-discovery/over-limit-trailing",
@@ -686,7 +686,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "/metric-discovery/empty-object",
@@ -742,7 +742,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "/measurements/empty",
@@ -868,7 +868,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "/measurements/exact-limit",
@@ -883,7 +883,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "/measurements/over-limit-trailing",
@@ -929,7 +929,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"bounded measurement source HTTP 503 / payload limit\"}\n"
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
     },
     {
       "name": "/measurements/empty-object",

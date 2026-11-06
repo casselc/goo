@@ -12,10 +12,17 @@ comparisons while retiring old snapshot-bound callbacks and pending work. Local
 rebinding of an uncustomized distribution is limited to ordinary single-field
 profiles; specialized pattern, histogram and grouped-time owners are not
 implicitly generalized. Dirty definition navigation guards remain unchanged.
-See [return contract](PARENT_RETURN.md) and [validation](../VALIDATION.md). Source
-read refusals may still expose verbose transport details; a concise failure reason
-with an explicit retry action is a later refinement, without changing budgets or
-turning unavailable reads into no-data.
+See [return contract](PARENT_RETURN.md) and [validation](../VALIDATION.md).
+
+344 replaces raw runtime error prose on the fourteen shared source-read routes
+with typed reasons and fixed safe boundary detail. Ordinary exploration, pages,
+fixed baselines and counted facets retain existing ownership and explicit read/
+retry gestures; unknown remains unknown. This does not classify arbitrary upstream
+exception text or generalize recovery UI to every specialized signal surface.
+400/409/429 admission failures and the pure comparison body cap remain separate.
+Code gates, live fault/recovery and desktop/narrow screenshot acceptance pass;
+see [validation](../VALIDATION.md). See
+[source refusals](SOURCE_REFUSALS.md).
 
 341 adds fresh previous-window mean-duration summaries for ordinary span-duration
 queries. Captured mean baselines, per-category means and percentile comparison
@@ -50,7 +57,7 @@ Five existing unique roles can coexist without removing a valid timeline. The
 selected-only initial acquisition is superseded by 338 above. See
 [contract](PAIRED_FACETS.md) and final [validation](../VALIDATION.md).
 
-Bombadil driver JPEGs in reviewed 337–340 campaigns can repeat stale loading or
+Bombadil driver JPEGs in reviewed 337–340 and 344 regression campaigns can repeat stale loading or
 staged frames while independent DOM/API checks reach a verified applied state.
 Those captures do not prove terminal appearance. Maintained visual frames use
 Playwright; per-campaign audits and compact results are in

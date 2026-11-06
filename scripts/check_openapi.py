@@ -710,6 +710,26 @@ def check_declarative_facets(spec):
             assert not vc.is_valid(bad),'invalid facet composition admitted'
 
 
+def check_source_refusals(spec):
+    check=validator(spec,{'$ref':'#/components/schemas/SourceReadFailure'})
+    reasons={'cancelled':'Source read cancelled.','timeout':'Source read timed out.','budget':'Source read exceeded a limit.','malformed':'Source response rejected.','unavailable':'Source unavailable.'}
+    for kind,reason in reasons.items():
+        good={'error':reason,'refusal':{'kind':kind,'detail':'Safe source-boundary detail.'}}
+        check.validate(good)
+        for bad in [
+            {'error':reason},
+            {'error':'https://private.invalid/?token=fixture','refusal':good['refusal']},
+            {'error':reason,'refusal':{'kind':'unknown','detail':'Safe detail.'}},
+            {'error':reason,'refusal':{'kind':kind,'detail':'x'*257}},
+            {'error':reason,'refusal':{'kind':kind,'detail':'bad\ncontrol'}},
+            {'error':reason,'refusal':{**good['refusal'],'retry':'never'}},
+        ]:
+            assert not check.is_valid(bad),'invalid source refusal admitted'
+    for path in ('/explore','/explore/page','/explore/counted-values','/record-aggregates'):
+        operation=spec['paths'][path]['post']
+        assert operation['responses']['502']['content']['application/json']['schema']['$ref'].endswith('/SourceReadFailure')
+        assert operation['responses']['400']['content']['application/json']['schema']['$ref'].endswith('/Error')
+
 def check_fixed_query_count_views(spec):
     scope={'kind':'record-query','signal':'logs'}
     q={'signal':'logs','environment':'prod','fromMs':1000,'toMs':61000,'limit':100,'offset':0,'groupBy':[{'kind':'column','key':'service'}]}
@@ -883,6 +903,7 @@ def check(spec):
     check_timeline_composition(spec)
     check_record_only_compositions(spec)
     check_declarative_facets(spec)
+    check_source_refusals(spec)
     check_fixed_query_count_views(spec)
     check_comparison_template_bindings(spec)
     check_record_span_waterfall(spec)

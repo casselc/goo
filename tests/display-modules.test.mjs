@@ -39,7 +39,13 @@ test('display entry imports a closed passive graph without publishing namespaces
   // Common paired narrowing shares the existing pure categorical AST builder, never an app owner.
   // Operand role names add one shared pure bounded-label validator, with no owner or IO.
   assert.ok(visited.has(new URL('../ui/comparison-role-labels.mjs', import.meta.url).href));
-  assert.equal(visited.size, 54);
+  // Source refusal presentation adds only its closed diagnostic contract and
+  // passive status/details renderer. Acquisition and retry owners stay excluded.
+  for(const name of ['source-refusal','source-refusal-view'])assert.ok(visited.has(new URL('../ui/'+name+'.mjs',import.meta.url).href));
+  assert.deepEqual(Object.keys(await import('../ui/source-refusal.mjs')).sort(),['SourceReadError','failure','reasons','refusal','responseError']);
+  assert.deepEqual(Object.keys(await import('../ui/source-refusal-view.mjs')),['renderRefusal']);
+  for(const name of ['queries','filter-values','facet-value-reads','population-workspace','exploration'])assert.equal(visited.has(new URL('../ui/'+name+'.mjs',import.meta.url).href),false);
+  assert.equal(visited.size, 56);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

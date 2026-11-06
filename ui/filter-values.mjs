@@ -1,3 +1,4 @@
+import * as SourceRefusal from './source-refusal.mjs';
 import * as RecordEnvironment from './record-environment.mjs';
 /* App-owned explicit breakdown reads. The editor remains a supplied-data renderer. */
 import * as FilterEditor from './filter-editor.mjs';
@@ -22,7 +23,7 @@ function result(request,data){
 function mount(editor,{current,pause=()=>{}}){let generation=0,controller=null,bound=null,disposed=false;
   const identity=()=>{try{const q=current();return q?protocol().identity(query(q,bound?.field||{kind:'column',key:'service'})):null}catch{return null}};
   function invalidate(){generation++;controller?.abort();controller=null;bound=null;editor.setCountedValues()}
-  async function load(field){pause();invalidate();if(disposed)return;let request;try{request=query(current(),field)}catch(e){editor.setCountedValues({state:'error',field,error:e.message});return}bound={field:structuredClone(field),key:protocol().identity(request)};const own=++generation;controller=new AbortController();editor.setCountedValues({state:'loading',field});try{const response=await Queries.postJSON('/api/explore/counted-values',request,controller.signal),data=response.data;if(own!==generation||disposed)return;if(identity()!==bound.key){invalidate();return}if(!response.ok)throw Error(data.error||'Counted values unavailable');editor.setCountedValues(result(request,data))}catch(e){if(own===generation&&!disposed&&e.name!=='AbortError'){if(bound&&identity()!==bound.key){invalidate();return}editor.setCountedValues({state:'error',field,error:e.message})}}}
+  async function load(field){pause();invalidate();if(disposed)return;let request;try{request=query(current(),field)}catch(e){editor.setCountedValues({state:'error',field,...SourceRefusal.failure(e)});return}bound={field:structuredClone(field),key:protocol().identity(request)};const own=++generation;controller=new AbortController();editor.setCountedValues({state:'loading',field});try{const response=await Queries.postJSON('/api/explore/counted-values',request,controller.signal),data=response.data;if(own!==generation||disposed)return;if(identity()!==bound.key){invalidate();return}if(!response.ok)throw SourceRefusal.responseError(response,'Counted values unavailable');editor.setCountedValues(result(request,data))}catch(e){if(own===generation&&!disposed&&e.name!=='AbortError'){if(bound&&identity()!==bound.key){invalidate();return}editor.setCountedValues({state:'error',field,...SourceRefusal.failure(e)})}}}
   editor.setValueLoader(load);
   return {invalidate,sync(){if(bound&&identity()!==bound.key)invalidate()},dispose(){disposed=true;invalidate();editor.setValueLoader(null)}};
  }

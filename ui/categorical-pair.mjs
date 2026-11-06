@@ -1,10 +1,12 @@
+import {refusal} from './source-refusal.mjs';
 /* Exact supplied grouping partitions. No source reads or upstream completeness claim. */
 const MAX=18446744073709551615n;
 const uint=value=>typeof value==='string'&&/^(0|[1-9][0-9]*)$/.test(value)&&value.length<=20&&BigInt(value)<=MAX;
 export const valueKey=value=>value===null?'0':'1'+value;
 export function countedState(value,field){
  const data=value||{state:'unloaded'};
- if(!data||typeof data!=='object'||Array.isArray(data)||Object.keys(data).some(key=>!['state','field','items','total','readAt','basis','reads','label','error'].includes(key))||!['unloaded','loading','error','ready'].includes(data.state))throw Error('Supply a facet state.');
+ if(!data||typeof data!=='object'||Array.isArray(data)||Object.keys(data).some(key=>!['state','field','items','total','readAt','basis','reads','label','error','refusal'].includes(key))||!['unloaded','loading','error','ready'].includes(data.state))throw Error('Supply a facet state.');
+ if(data.refusal!==undefined){if(data.state!=='error')throw Error('Source refusal requires an unavailable facet state.');refusal(data.refusal);}
  if(data.state==='ready'){
   if(data.field?.kind!==field.kind||data.field?.key!==field.key||!Array.isArray(data.items)||data.items.length>1000||!uint(data.total)||!Number.isFinite(Date.parse(data.readAt))||typeof data.basis!=='string'||!data.basis)throw Error('Supply matching bounded counted facet values.');
   let sum=0n;const seen=new Set();

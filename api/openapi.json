@@ -3951,11 +3951,11 @@
             }
           },
           "502": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/SourceReadFailure"
                 }
               }
             }
@@ -4038,11 +4038,11 @@
             }
           },
           "502": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/SourceReadFailure"
                 }
               }
             }
@@ -4125,11 +4125,11 @@
             }
           },
           "502": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/SourceReadFailure"
                 }
               }
             }
@@ -4212,11 +4212,11 @@
             }
           },
           "502": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/SourceReadFailure"
                 }
               }
             }
@@ -4299,11 +4299,11 @@
             }
           },
           "502": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/SourceReadFailure"
                 }
               }
             }
@@ -4386,11 +4386,11 @@
             }
           },
           "502": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/SourceReadFailure"
                 }
               }
             }
@@ -4520,11 +4520,11 @@
             }
           },
           "502": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/SourceReadFailure"
                 }
               }
             }
@@ -4607,11 +4607,11 @@
             }
           },
           "502": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/SourceReadFailure"
                 }
               }
             }
@@ -5039,11 +5039,11 @@
             }
           },
           "502": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/SourceReadFailure"
                 }
               }
             }
@@ -5126,11 +5126,11 @@
             }
           },
           "502": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/SourceReadFailure"
                 }
               }
             }
@@ -5354,11 +5354,11 @@
             }
           },
           "502": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/SourceReadFailure"
                 }
               }
             }
@@ -5441,11 +5441,11 @@
             }
           },
           "502": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/SourceReadFailure"
                 }
               }
             }
@@ -5916,11 +5916,11 @@
             }
           },
           "502": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/SourceReadFailure"
                 }
               }
             }
@@ -6332,11 +6332,11 @@
             }
           },
           "502": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/SourceReadFailure"
                 }
               }
             }
@@ -7880,6 +7880,9 @@
       },
       "ServiceDiscovery": {
         "$ref": "#/components/schemas/exploration.ServiceDiscovery"
+      },
+      "SourceReadFailure": {
+        "$ref": "#/components/schemas/sourcefailure.Response"
       },
       "TailIntent": {
         "anyOf": [
@@ -41327,6 +41330,124 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/scopedview.Support"
+      },
+      "sourcefailure.Refusal": {
+        "properties": {
+          "detail": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[^\\u0000-\\u001f\\u007f-\\u009f]+$",
+            "description": "Safe fixed source-boundary explanation; Go and browser additionally limit UTF-8 encoding to 256 bytes. Never the raw transport URL, credentials, SQL or cause message."
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "cancelled",
+              "timeout",
+              "budget",
+              "malformed",
+              "unavailable"
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "detail"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/internal/sourcefailure.Refusal",
+        "additionalProperties": false
+      },
+      "sourcefailure.Response": {
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "refusal": {
+            "$ref": "#/components/schemas/sourcefailure.Refusal"
+          }
+        },
+        "required": [
+          "error",
+          "refusal"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/internal/sourcefailure.Response",
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "properties": {
+              "error": {
+                "const": "Source read cancelled."
+              },
+              "refusal": {
+                "properties": {
+                  "kind": {
+                    "const": "cancelled"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "error": {
+                "const": "Source read timed out."
+              },
+              "refusal": {
+                "properties": {
+                  "kind": {
+                    "const": "timeout"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "error": {
+                "const": "Source read exceeded a limit."
+              },
+              "refusal": {
+                "properties": {
+                  "kind": {
+                    "const": "budget"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "error": {
+                "const": "Source response rejected."
+              },
+              "refusal": {
+                "properties": {
+                  "kind": {
+                    "const": "malformed"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "error": {
+                "const": "Source unavailable."
+              },
+              "refusal": {
+                "properties": {
+                  "kind": {
+                    "const": "unavailable"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "description": "Typed source execution refusal after valid request admission. No measurement result or partial source payload is admitted. Retry remains an explicit current-owner action; category makes no permanence prediction."
       },
       "subjectfacts.Definition": {
         "properties": {

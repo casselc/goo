@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/casselc/goo/internal/httpjson"
+	"github.com/casselc/goo/internal/sourcefailure"
 )
 
 // Effect describes a family's request lifetime, not authentication or rollback.
@@ -57,7 +58,7 @@ func ReadHandler[Q, R any](policy Policy, validate func(Q) error, read func(cont
 		defer cancel()
 		result, err := read(ctx, question)
 		if err != nil {
-			fail(502, err)
+			httpjson.Write(w, 502, sourcefailure.Describe(err))
 			return
 		}
 		httpjson.Write(w, 200, result)

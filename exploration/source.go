@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/internal/sourcefailure"
 	"math/big"
 	"net/http"
 	"net/url"
@@ -68,7 +69,7 @@ func encodeParameter(value string) string {
 func (s Source) read(ctx context.Context, sql string, params map[string]string) ([]json.RawMessage, error) {
 	endpoint, e := url.Parse(s.Endpoint)
 	if e != nil {
-		return nil, e
+		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, e)
 	}
 	v := endpoint.Query()
 	v.Set("readonly", "1")
@@ -89,18 +90,18 @@ func (s Source) read(ctx context.Context, sql string, params map[string]string) 
 	}
 	resp, e := sourcehttp.Post(ctx, client, endpoint.String(), s.User, s.Password, sql)
 	if e != nil {
-		return nil, e
+		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, e)
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("exploration source HTTP %d", resp.StatusCode)
+		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, fmt.Errorf("exploration source HTTP %d", resp.StatusCode))
 	}
 	b, oversize, e := sourcehttp.ReadBounded(resp.Body, 8<<20)
 	if e != nil {
-		return nil, e
+		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, e)
 	}
 	if oversize {
-		return nil, fmt.Errorf("source exceeds 8 MiB")
+		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("source exceeds 8 MiB"))
 	}
 	rows := []json.RawMessage{}
 	for line := range bytes.Lines(b) {
@@ -110,11 +111,11 @@ func (s Source) read(ctx context.Context, sql string, params map[string]string) 
 		}
 		var object map[string]json.RawMessage
 		if json.Unmarshal(line, &object) != nil || object == nil {
-			return nil, fmt.Errorf("invalid source row")
+			return nil, sourcefailure.Wrap(sourcefailure.Malformed, fmt.Errorf("invalid source row"))
 		}
 		rows = append(rows, append(json.RawMessage(nil), line...))
 		if len(rows) > 1001 {
-			return nil, fmt.Errorf("source row budget exceeded")
+			return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("source row budget exceeded"))
 		}
 	}
 	return rows, nil
@@ -130,7 +131,7 @@ func (s Source) fetch(ctx context.Context, q Query, rowLimit int) (*Result, erro
 	return s.fetchProfile(ctx, q, rowLimit, false)
 }
 
-func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnly bool) (*Result, error) {
+func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnly bool) (result *Result, resultErr error) {
 	if err := q.Validate(); err != nil {
 		return nil, err
 	}
@@ -172,6 +173,7 @@ func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnl
 		plan.Rows = originalPlan.Rows
 		plan.Parameters = originalPlan.Parameters
 	}
+	defer func() { resultErr = sourcefailure.Protocol(resultErr) }()
 	r := &Result{Question: question, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), Rows: []json.RawMessage{}, Groups: []json.RawMessage{}, Fields: []Field{}, Plan: plan, Warnings: []string{"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.", "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.", "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."}}
 	if pageOnly {
 		r.Warnings = []string{"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.", "The matching count and bounded record page are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; the count never derives from this page.", "Aggregates, timelines and field discovery were not acquired by this page read. Existing charts retain their own basis and read clock.", "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."}
@@ -224,7 +226,7 @@ func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnl
 		return nil, e
 	}
 	if len(rows) > rowLimit+1 {
-		return nil, fmt.Errorf("source exceeded page budget")
+		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("source exceeded page budget"))
 	}
 	if e = validateSelectedRows(q, rows); e != nil {
 		return nil, e
@@ -266,7 +268,7 @@ func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnl
 			return nil, e
 		}
 		if len(r.Groups) > 1000 {
-			return nil, fmt.Errorf("more than 1000 groups; narrow query; no partial grouping totals")
+			return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("more than 1000 groups; narrow query; no partial grouping totals"))
 		}
 	}
 	if plan.Groups != "" {
@@ -285,7 +287,7 @@ func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnl
 			return nil, e
 		}
 		if len(fields) > 129 {
-			return nil, fmt.Errorf("source exceeded discovery budget")
+			return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("source exceeded discovery budget"))
 		}
 		if r.Count == "0" && len(fields) > 0 {
 			r.State = "changed_between_reads"

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/internal/sourcefailure"
 	"time"
 	"unicode/utf8"
 )
@@ -51,7 +52,7 @@ func ValidateRecordAggregatesQuery(q Query) error {
 
 // FetchRecordAggregates executes only full-population aggregate reads. It never
 // inspects records or discovers fields, and cannot substitute for saved evidence.
-func (s Source) FetchRecordAggregates(ctx context.Context, q Query) (*RecordAggregatesResult, error) {
+func (s Source) FetchRecordAggregates(ctx context.Context, q Query) (result *RecordAggregatesResult, resultErr error) {
 	if e := ValidateRecordAggregatesQuery(q); e != nil {
 		return nil, e
 	}
@@ -67,6 +68,7 @@ func (s Source) FetchRecordAggregates(ctx context.Context, q Query) (*RecordAggr
 	if e != nil {
 		return nil, e
 	}
+	defer func() { resultErr = sourcefailure.Protocol(resultErr) }()
 	read := func(sql string) ([]json.RawMessage, CountedValuesRead, error) {
 		if e := ctx.Err(); e != nil {
 			return nil, CountedValuesRead{}, e
@@ -113,7 +115,7 @@ func (s Source) FetchRecordAggregates(ctx context.Context, q Query) (*RecordAggr
 	}
 	r.Reads.Groups = groupRead
 	if len(groups) > 1000 {
-		return nil, fmt.Errorf("more than 1000 groups; narrow query; no partial grouping totals")
+		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("more than 1000 groups; narrow query; no partial grouping totals"))
 	}
 	for _, raw := range groups {
 		var g map[string]json.RawMessage

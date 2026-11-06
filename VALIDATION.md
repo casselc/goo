@@ -1,5 +1,56 @@
 # Validation record
 
+## Source-read refusals and explicit recovery — 344
+
+The shared Go read boundary now emits a closed five-category refusal for runtime
+HTTP 502 responses, using fixed safe explanations rather than raw transport or
+SQL errors. Query validation/admission keeps its existing status and response.
+The frontend renders the canonical reason with a collapsed technical disclosure;
+existing owners retain retry, scope, read-clock and departure authority.
+
+Go 1.27.3 full root checks pass **2,250 test events**, zero failures and 26 expected
+opt-in/helper skips. Full frontend checks pass **1,163 tests**, zero failures or
+skips. Sixty Hegel cases pass with no skips, exercising wrapping, context/network
+precedence, cause identity and private-detail exclusion. The implementation uses
+standard-library `errors.AsType` internally without adding public type machinery.
+OpenAPI checks pass for 100 operations, 436 fixture responses, 161 admitted
+requests and 28 mux refusals, with closed-category/canonical-title negative cases.
+The generated schema covers the fourteen routes using the shared read handler.
+
+The first full Go run found forty outdated runtime-502 bodies across ten golden
+fixture families; only those response bodies were updated. The first frontend
+run found the passive module graph's old count; the graph now explicitly admits
+the two new no-IO modules. Final complete reruns pass. The Go image builds, and
+ten affected served UI assets plus OpenAPI match reviewed source byte for byte.
+The genuine OTLP/ClickHouse recovery journey passes in 17.6 seconds (19.5 seconds
+runner): fourteen source API attempts, one supplied comparison and zero browser
+errors. A real 1,001-group response produces a budget refusal; explicit baseline
+retry adds one read and recovers five records while the selected nine-record chart
+and authority remain unchanged. A separate upstream 503 leaves selected category
+counts 6/3 known and baseline cells unknown; single-side retry adds one read.
+An aborted owner ignores its late upstream refusal and requires explicit two-side
+reacquisition. Filtering/Back adds zero reads and restores exact held state with
+connected, visible, center-hit focus. Fifty-two physical upstream SQL calls include
+the three scoped faults; they are distinct from source API attempts.
+
+Three initial journey stops corrected test assumptions, without production edits:
+canonical submitted query defaults, chart authority field locations and taking the
+Back comparison snapshot after the deliberate staged choice. Final assertions
+check exact submitted scope, complete chart snapshots, real counts and receipts.
+Design accepts four current desktop/narrow frames. The existing paired-facet regression passes in 2.5 minutes, including fresh
+observed Go/Quint replay in 17.99 seconds with zero skips. Its 35-second actor
+records 581 snapshots through phases 0–7, six source requests, two value lookups,
+two comparisons, four verified transitions, no writes, immutable parent facts
+and no overflow. Independent agent and root image audit finds all 581 JPEGs
+identical, showing initial saved-view Loading despite positive terminal DOM/API
+receipts. Those captures do not establish final appearance; current Playwright
+frames supply visual acceptance. This repeats the documented driver capture
+limitation and does not justify claiming a fresh terminal actor image.
+
+Reviewed raw run bulk is pruned after compact summaries, model replay inputs,
+image-audit receipt and current frames are retained. Genuine lab data, saved views,
+volumes and the 51 pre-existing stale stream entries remain intact.
+
 ## Large facets: one-pass Find and distinguishable values — 343
 
 Final frontend checks pass **1,158 tests** with no failures/skips (20.47 seconds).

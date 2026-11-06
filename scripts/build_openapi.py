@@ -308,6 +308,16 @@ schemas['exploration.KeptRepairRequestInput']['properties']['cursor'].update(max
 
 schemas['KeptSearchError']={'type':'object','required':['error','repairAvailable'],'properties':{'error':{'type':'string'},'repairAvailable':{'type':'boolean','description':'True only when explicit index repair may address discovery failure; false for capacity and cursor refusals.'}},'additionalProperties':False}
 schemas['Error'] = {'type': 'object', 'required': ['error'], 'properties': {'error': {'type': 'string'}, 'hint': {'type': 'string'}}, 'additionalProperties': True}
+source_reasons={'cancelled':'Source read cancelled.','timeout':'Source read timed out.','budget':'Source read exceeded a limit.','malformed':'Source response rejected.','unavailable':'Source unavailable.'}
+source_refusal=schemas['sourcefailure.Refusal'];source_refusal['additionalProperties']=False
+source_refusal['properties']['kind']['enum']=list(source_reasons)
+source_refusal['properties']['detail'].update(minLength=1,maxLength=256,pattern='^[^\\u0000-\\u001f\\u007f-\\u009f]+$',description='Safe fixed source-boundary explanation; Go and browser additionally limit UTF-8 encoding to 256 bytes. Never the raw transport URL, credentials, SQL or cause message.')
+source_failure=schemas['sourcefailure.Response'];source_failure['additionalProperties']=False
+source_failure['oneOf']=[{'properties':{'error':{'const':reason},'refusal':{'properties':{'kind':{'const':kind}}}}} for kind,reason in source_reasons.items()]
+source_failure['description']='Typed source execution refusal after valid request admission. No measurement result or partial source payload is admitted. Retry remains an explicit current-owner action; category makes no permanence prediction.'
+source_refusal_paths=set()
+for source_path in ('internal/recordhttp/routes.go','internal/nativehttp/routes.go'):
+ source_refusal_paths.update(re.findall(r'registerRead\(mux,\s*"([^"]+)"', (ROOT/source_path).read_text()))
 schemas['Cancellation'] = {'type': 'object', 'required': ['state'], 'properties': {'state': {'const': 'cancellation-requested'}}}
 # Canonical supplied display snapshots: exact field maps, with exhaustive
 # ranked-group and interval projections owned by the Go source data path.
@@ -935,6 +945,8 @@ for (method,path),(file,block) in sorted(route_source.items()):
    if p.get('name')=='kind':p['schema']={'type':'string','enum':['','explore','inventory','comparison','explanation','measurement']}
  for status in map(str,sorted(n for n in codes if n>=400)):
   op['responses'][status]={'description':'Existing route refusal. Semantic validation and effect ordering remain in the owner.','content':{'application/json':{'schema':ref('Error')}}}
+ if method=='post' and path in source_refusal_paths:
+  op['responses']['502']={'description':'Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.','content':{'application/json':{'schema':ref('SourceReadFailure')}}}
  if method=='get' and path=='/kept-observations/search':op['responses']['503']['content']['application/json']['schema']=ref('KeptSearchError')
  if method=='get' and path in ('/http-package','/operation-packages','/operations','/counter-rates','/histograms'):
   op['responses']['503']['content']['application/json']['schema']=ref('RuntimeCapabilityRefusal')
