@@ -118,3 +118,20 @@ This terminal image agrees with the independent DOM/API verdict. The earlier
 339 capture limitation above is historical, rather than a claim about this run.
 The bounded model helper now allows 120 seconds for cold compilation and replay;
 its validation requirements and source budget are unchanged.
+
+
+## Source-refusal regression (344)
+
+The unchanged journey passed against the reviewed 344 server in **2.5 minutes**.
+The observed Quint ledger passed in **17.99 seconds**, with no skips. The native
+logs/spans counts, fixed predicates, partial-side retry, pending-owner retirement
+and stale-control rejection remain covered. The current 35.135-second Bombadil
+campaign produced 581 DOM snapshots through phase 7: source 6, lookups 2,
+comparisons 2, writes 0, verified 4, immutable true and no overflow.
+
+Driver-image validation is separate: all 581 JPEGs repeat the initial loading
+frame and disagree with the settled DOM state. This campaign's driver captures
+are stale; they are not visual evidence. The reviewed terminal sample and explicit
+audit are retained with compact logical receipts. Maintained Playwright frames
+were regenerated from the current server. No rerun was required for that known
+driver-capture limitation.

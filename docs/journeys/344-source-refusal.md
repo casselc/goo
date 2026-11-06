@@ -84,6 +84,17 @@ the user's POST selection, because that legitimate staged intent survives Back.
 
 Compact source questions, fault provenance, counts, receipts and runtime identity
 are retained under `artifacts/source-refusal344/`. These are local verification
-artifacts rather than product captures. The existing 338 paired-facet browser,
-Bombadil and observed Quint regression is being checked separately before this
-milestone closes.
+artifacts rather than product captures. The existing 338 paired-facet regression also passed in **2.5 minutes**, including
+its independently observed Quint ledger check (**17.99 seconds**, no skips).
+Its Bombadil campaign completed in 35.135 seconds: 581 snapshots, phases 0–7,
+source 6, lookups 2, comparisons 2, writes 0, verified 4, immutable true and no
+overflow. These establish logical campaign results.
+
+The independent driver-image audit found **581 identical JPEGs**, all showing
+initial “Loading saved exploration view…”, although DOM observations reached the
+settled applied child. Those stale driver captures do **not** validate terminal
+appearance. One labelled sample and the audit remain; current maintained
+Playwright frames establish appearance. Raw campaign/report bulk was pruned after
+review, preserving model input/log, compact run/campaign summaries and replay
+inputs. Genuine lab telemetry, views and all 51 pre-existing pending stream entries
+were preserved.
