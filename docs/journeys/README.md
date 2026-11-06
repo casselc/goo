@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey352](352-service-continuations.md) checks typed distributed continuations
+and saved rolling Activity views from service context. Execution status and
+actual frames are recorded in that storyboard.
+
 [Journey350](350-package-scope.md) turns a typed Activity population into a reusable
 definition, previews its fixed window, saves/reopens it, stages a fresh lookback
 without telemetry and explicitly runs it. It checks complete profiles, retired

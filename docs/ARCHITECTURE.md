@@ -1721,3 +1721,14 @@ performs explicit control removal before fixed-pair inclusion. Source acquisitio
 freezes returned question metadata and diagnoses terminal count/page contradictions.
 No new executor, data model coercion or public wire type is needed. The finite
 [November roadmap](ROADMAP_2026_11_02.md) is the active execution queue.
+
+## Typed service continuations — 352
+
+Distributed wider-child links reuse shared record environment fields and the
+record question validator. The admitted discovery owner supplies policy, bounds
+and qualified child namespace; link construction performs no source read. Typed
+exact reported-edge actions remain explicit unavailable capabilities until the
+353 compiler extension. The service browser mounts the existing Activity-view
+library using only environment fields, independently of scalar native-metric
+support. Saved selectors and rolling windows remain their own configuration.
+See [continuation contract](TYPED_SERVICE_CONTINUATIONS.md).

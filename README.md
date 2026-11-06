@@ -17,6 +17,11 @@ Saving inventory explicitly rereads that service's original scope.
 policy, filters and existing measure profiles, including from saved evidence.
 Stage opens a fixed question in Explore; Run explicitly reads it.
 
+[Service continuations](docs/TYPED_SERVICE_CONTINUATIONS.md) retain the selected
+environment policy and fixed window in wider child records. Service workspaces
+also expose saved rolling Activity views under that policy; opening stages the
+view’s own selector before explicit Start.
+
 [Source-read failures](docs/SOURCE_REFUSALS.md) show a concise reason and safe
 technical details. Retry stays explicit; available paired observations retain
 their counts and receipts while a refused side remains unknown.

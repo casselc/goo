@@ -1,5 +1,93 @@
 # Validation record
 
+## Typed service continuation and saved-view reuse — 352
+
+Distributed wider-child questions preserve the checked environment representation,
+exact child service/namespace and original fixed bounds through the ordinary
+record validator. All typed exact edges are refused before link construction;
+scalar exact-edge profiles remain supported. Existing discovery response admission
+checks policy, namespace and bounds before rendering. No source budget or Go
+compiler behavior changes in this milestone.
+
+Service workspaces mount the existing Activity library with environment fields
+only, independently of native metric capability. Returned configurations retain
+their own selectors and rolling behavior; listing or opening does not inject a
+service, namespace or fixed window. Scoped copy makes that distinction explicit.
+The library's existing foreign-policy admission and disposal cancellation remain
+in force. Focused mounted tests cover all four typed policies, unchanged saved
+filters, metadata-only disclosure, foreign-policy refusal and retired responses.
+
+The final full UI suite passes all 1,193 tests in 20.328 seconds with zero skips.
+The first sandboxed run could not open the existing real HTTP cancellation test's
+loopback listener (EPERM); the permitted full rerun passes. The final run includes
+the shared-table markup and scoped receipt wrapping described below.
+
+Forty Hegel cases pass in 3.603 seconds, zero skips. Actual browser helpers cross
+into Go validation/compiler admission, while an independent raw-resource oracle
+checks policy precedence, namespace presence, exact child service and half-open
+window membership. Saved configurations retain their independent predicates.
+An initial generated failure was a stale prose expectation after concise copy
+changed; the corrected check asserts refusal/no returned exact edge and retains
+the independent backend refusal oracle.
+
+The Go 1.27.3 server image builds and runs healthy. All four changed embedded
+assets match the reviewed source bytes. Only the Goo service was recreated;
+existing lab volumes, captures and pending stream entries are preserved. This
+UI milestone uses the existing compiler and API contracts.
+
+Initial native execution exposed two exact test DTO defaults: the editor adds an
+empty grouping array and log tail transport omits the default logs signal. Tests
+now compare those specific defaults without discarding unknown fields or scope.
+The current-only case then verified wider count 3 versus one linked child and an
+independently filtered saved worker view.
+
+The next run measured a real narrow overflow: the receipt paragraph was 290px wide
+with 500px scroll content; the contained table was not the page overflow source.
+Its full identifier now reuses the shared wrapping style, and relationship rows
+use the existing compact stacked-table component so identities and actions remain
+together. Final native/frame acceptance is complete.
+
+The final Playwright main journey passes in 64.315 seconds with required observed
+Quint replay in 23.65 seconds, zero skips. Four actual policies return wider
+populations of 3/5/3/2 spans while each selected reported relationship counts one.
+Raw span IDs match independent ClickHouse predicates. Missing and present-empty
+namespace links remain distinct. Saved Activity views target a different worker
+service/namespace/release and explicitly read 1/2/1/1 matching logs. Reopening,
+distributed display, wider staging, library disclosure, opening a view and retained
+Services/Explore returns acquire no telemetry. Main accounting is 89 browser API
+requests and 32 source attempts; public fixture captures and independent SQL
+oracles are separate. Browser errors: zero.
+
+The existing service-browser lifecycle accepts four observed case projections.
+Independent admission checks full questions, raw row membership/IDs, independent
+clocks, unchanged saved selectors and ten ordered raw-request boundaries. Ten
+mutants are rejected: policy, bounds, predicate/profile/count, oracle IDs, foreign
+library policy, injected fixed Start fields and missing/extra passive operations.
+This is finite lifecycle/source-contract validation, not a complete transport or
+causal model.
+
+The separately executed focused Bombadil campaign passes in 35.221 seconds with
+540 snapshots across all eleven phases. Completion requires visible loaded service
+detail, paused tail, the exact saved selector, two actual effective worker records,
+one tail read, unchanged passive counters and no forbidden writes. Its seven
+source operations are separate from main accounting. The initial actor failure
+selected a hidden duplicate Start button; actual DOM diagnostics confirmed the
+view was already correctly staged. Visible-control selection fixes that harness;
+no application route change was needed. The accepted final actor JPEG shows the
+actual retained service workspace.
+
+Source/design review and four current desktop/narrow frames pass. A targeted
+layout audit confirms document widths 1280/390 and pairwise non-overlapping cell
+rectangles in all three stacked rows. The narrow frame was captured after two
+animation frames from the same genuine capture. The verification package's roughly
+2m20s setup compilation is separate from the unchanged 50-second model budget.
+Only reviewed raw browser bulk was pruned; compact actual inputs/replays/outcomes,
+current frames, lab stores/volumes and all 51 existing pending entries remain.
+
+See [contract](docs/TYPED_SERVICE_CONTINUATIONS.md),
+[storyboard](docs/journeys/352-service-continuations.md) and
+[design review](docs/reviews/SERVICE_CONTINUATIONS_DESIGN_352.md).
+
 ## Typed scope in reusable packages — 350
 
 The existing record-package source now retains scalar current-only or typed
