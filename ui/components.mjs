@@ -24,8 +24,9 @@ const global = globalThis;
   class GooFacetList extends global.HTMLElement{
    static get observedAttributes(){return ['query']}
    get query(){return this.getAttribute('query')||''}set query(value){this.setAttribute('query',value??'')}
-   connectedCallback(){if(!this.hasAttribute('role'))this.setAttribute('role','group');if(Object.hasOwn(this,'query')){const value=this.query;delete this.query;this.query=value}this.refresh()}
-   attributeChangedCallback(){if(this.isConnected)this.refresh()}
+   connectedCallback(){if(!this.hasAttribute('role'))this.setAttribute('role','group');if(Object.hasOwn(this,'query')){const value=this.query;delete this.query;this.filter(value)}else this.refresh()}
+   attributeChangedCallback(){if(this.isConnected&&!this._filtering)this.refresh()}
+   filter(value){this._filtering=true;try{this.query=value}finally{this._filtering=false}return this.refresh()}
    refresh(){const q=this.query.toLocaleLowerCase(),rows=[...this.querySelectorAll(':scope > [data-facet-item]')];for(const row of rows)row.hidden=!(row.getAttribute('data-facet-text')||'').toLocaleLowerCase().includes(q);return {visible:rows.filter(row=>!row.hidden).length,total:rows.length}}
   }
   if(!global.customElements.get('goo-facet-list'))global.customElements.define('goo-facet-list',GooFacetList);

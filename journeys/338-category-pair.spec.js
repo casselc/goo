@@ -120,7 +120,7 @@ test('338 compare category populations across both fresh fixed windows',async({p
   }
   runs.push({signal,environment,originalSaved,original,initialValues,baselineOnly,excluded,excludedValues,included,child,saved,encoded,reopened,supplemental});
  }
- await fs.writeFile(path.join(dir,'ledger.json'),JSON.stringify(ledger,null,2));await verifyWithGo(dir,'TestQuintCategoryPairObservedBrowserLedger338',{GOO_CATEGORY_PAIR_LEDGER:path.join(dir,'ledger.json')});
+ await fs.writeFile(path.join(dir,'ledger.json'),JSON.stringify(ledger,null,2));await verifyWithGo(dir,'TestQuintCategoryPairObservedBrowserLedger338',{GOO_CATEGORY_PAIR_LEDGER:path.join(dir,'ledger.json')},{timeoutSeconds:120});
  if(process.env.GOO_CATEGORY_PAIR_BOMBADIL==='1'){
   const actorDir=path.join(dir,'bombadil-'+token),actor=await startBombadil({dir:actorDir,url:base+'/#exploration-view='+actorView.id,specification:'verification/bombadil/category-pair.ts',seconds:35,width:1280,height:1000});
   try{const {run,states}=await actor.finish({snapshot:{name:'state',version:'goo.categoryPair338'}}),final=states.at(-1);expect(states.some(s=>s.phase===7&&s.verified===4)).toBe(true);expect(final).toMatchObject({phase:7,verified:4,source:6,lookups:2,compares:2,writes:0,immutable:true,overflow:false});await fs.writeFile(path.join(dir,'campaign-summary.json'),JSON.stringify({seconds:35,snapshots:states.length,phases:[...new Set(states.map(s=>s.phase))],run,final},null,2))}finally{await actor.stop()}

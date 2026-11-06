@@ -376,15 +376,19 @@ verify native markup and keyboard behavior, not screen-reader output.
 `data-facet-item`, with `data-facet-text` as literal searchable text and optional
 `data-facet-key` as an opaque identity. `query` / `.query` applies a local,
 case-insensitive substring search by toggling those rows' `hidden` property.
-`refresh()` returns `{visible,total}` and reapplies the search after caller row
-patches. There is no mutation observer. Supply native buttons/links, including
+`filter(query)` reflects the query and returns `{visible,total}` from one synchronous
+pass over the current rows, including detached elements. Use it when an input
+handler also needs match counts. `refresh()` returns the same counts and reapplies
+the existing search after caller row patches. There is no mutation observer. Supply native buttons/links, including
 controlled `aria-pressed` where selection is meaningful; the component neither
 selects values nor emits query intent. Native click handlers belong to adapters.
 Counts, measures, units, bar widths, rank and labels remain supplied exactly;
 local search never recalculates any of them. Use `.distribution-row`, label,
 track and fill classes for the shared compact bar presentation. Search controls
 and full-population explanatory status stay with the caller. Reconnects and
-searches retain row/action nodes. App adapters should show an explicit local
+searches retain row/action nodes. Counted categorical facet previews show both
+the prefix and suffix within 160 Unicode code points; title, accessible names,
+search text and emitted values retain the exact full value. App adapters should show an explicit local
 no-match state, distinct from absence of source records.
 
 `goo-field-value` (attributes.mjs) accepts JSON `value` attributes or detached

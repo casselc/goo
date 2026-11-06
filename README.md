@@ -53,6 +53,9 @@ Fresh fixed comparisons can keep a [categorical facet](docs/PAIRED_FACETS.md):
 read [both window category populations](docs/CATEGORY_PAIRS.md), choose
 Include/Exclude, then stage **Filter both windows**. Run reads the narrowed pair;
 Back restores its original observations.
+[Find loaded facet values](docs/LARGE_FACETS.md) searches full literals locally;
+long labels show both prefix and identifier suffix. Counts and scoped actions
+retain the complete loaded values and independent read receipts.
 The [compact scope disclosure](docs/POPULATION_CHROME.md) keeps exact windows and
 policies available without duplicating them above the data; opening it reads nothing.
 

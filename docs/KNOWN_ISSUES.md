@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+343 removes duplicate local facet filtering and makes long-label suffixes visible.
+The 2,000-value paired fixture still renders roughly 32,000 elements; lower
+synchronous search work is not a claim that initial mount cost is solved.
+Sampled 384/2,048-byte labels are not maximum string guarantees. Facet value
+responses and the comparison endpoint's independent 1 MiB cohort-body cap have
+different budgets. See [large facets](LARGE_FACETS.md).
+
 342 consolidates ordinary retained-parent control renewal, preserving held
 comparisons while retiring old snapshot-bound callbacks and pending work. Local
 rebinding of an uncustomized distribution is limited to ordinary single-field

@@ -11,6 +11,8 @@ export function model(value){
  const d=declaration(value.declaration,value.declaration?.scope?.signal),data=countedState(value.values,d.field);
  return {...structuredClone(value),declaration:d,values:data,...(Object.hasOwn(value,'baseline')?{baseline:countedState(value.baseline,d.field)}:{})};
 }
+// Keep both the field prefix and terminal identifier visible; exact text stays supplied.
+export function loadedValuePreview(text){const points=Array.from(text);return points.length>160?points.slice(0,104).join('')+'…'+points.slice(-55).join(''):text;}
 export function loadedMatchesText({visible,total},maximum=1000){if(!Number.isInteger(visible)||!Number.isInteger(total)||visible<0||visible>total||total>maximum||![1000,2000].includes(maximum))throw Error('Supply bounded local facet match counts.');return visible+' of '+total+' loaded values';}
 class CategoricalFacet extends (global.HTMLElement||class{}){
  static get observedAttributes(){return ['data']}
@@ -52,13 +54,13 @@ class CategoricalFacet extends (global.HTMLElement||class{}){
   if(paired){const columns=node('div',undefined,'categorical-facet-pair-columns'),counts=node('div',undefined,'categorical-facet-pair-counts');columns.setAttribute('aria-hidden','true');columns.append(node('span'));counts.append(node('span','Selected'),node('span',baselineLabel));columns.append(counts,node('span'));this.append(columns);}
   this.append(list);
   const items=paired?pairedValues.rows:v.items;
-  for(const item of items){const row=node('div',undefined,'categorical-facet-row'),text=label(item.value),value=node('span',text.length>160?text.slice(0,157)+'…':text,'categorical-facet-value'),controls=node('div',undefined,'categorical-facet-row-actions');value.title=text;row.dataset.facetItem='';row.dataset.facetText=text;row.dataset.facetValueKey=valueKey(item.value);
+  for(const item of items){const row=node('div',undefined,'categorical-facet-row'),text=label(item.value),value=node('span',loadedValuePreview(text),'categorical-facet-value'),controls=node('div',undefined,'categorical-facet-row-actions');value.title=text;row.dataset.facetItem='';row.dataset.facetText=text;row.dataset.facetValueKey=valueKey(item.value);
    if(paired){const counts=node('div',undefined,'categorical-facet-pair-counts');for(const [side,key,sideLabel]of [['selection','selected','Selected'],['baseline','baseline',baselineLabel]]){const supplied=item[key],count=cell(counts,supplied.count,side,{max:pairedValues.max,text:supplied.count??'—',geometry:pairedValues.complete});count.dataset.count=supplied.count??'unknown';count.dataset.presence=supplied.state;count.setAttribute('role','group');count.setAttribute('aria-label',sideLabel+' count for '+text);count.title=supplied.state==='absent'?'Absent from this returned grouping; upstream coverage unknown.':supplied.state==='unknown'?sideLabel+' values unavailable.':'Count in this returned grouping; upstream coverage unknown.';count.prepend(node('small',sideLabel,'categorical-facet-side-label'));}row.append(value,counts,controls);}
    else {controls.append(node('span',item.count,'categorical-facet-value-count'));row.append(value,controls);}
    for(const mode of ['include','exclude']){const button=node('button',mode==='include'?'Include':'Exclude');button.type='button';button.setAttribute('aria-label',(mode==='include'?'Include ':'Exclude ')+name+' '+text);const reason=selectionReason(item.value,d.scope.signal,d.field);button.disabled=!!data.disabled||!!reason;if(reason)button.title=reason;button.onclick=()=>{if(!button.disabled)emit('goo:facet-stage',{value:item.value,mode})};controls.append(button)}
    list.append(row);
   }
-  const find=()=>{list.query=search.value;const projected=list.refresh?.()||{visible:items.length,total:items.length};matches.textContent=loadedMatchesText(projected,paired?2000:1000)};
+  const find=()=>{const projected=list.filter(search.value);matches.textContent=loadedMatchesText(projected,paired?2000:1000)};
   search.oninput=()=>{this._find=search.value;find()};find();restoreFocus();
 
  }

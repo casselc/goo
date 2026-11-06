@@ -101,3 +101,20 @@ terminal image, repeat a configured/staged child despite the applied 0/2 DOM/API
 snapshot. It is an intermediate staged image, not a loading image or terminal
 visual proof. Current Playwright frames provide the visual record. Reviewed raw
 output is pruned; compact current receipts and one audited sample remain.
+
+The 343 regression passes the complete logs/spans journey in 2.8 minutes, with
+observed model replay in 15.41 seconds and zero skips. The 21-step ledger retains
+11 record reads plus four value lookups, five comparisons, one Save and one YAML
+encode. Both signals keep 107/13 → 0/2 → 32/8 → 27/4, reopen at 27/4 and return
+three supporting records. All failed-side, pending-owner and local zero-read
+supplements pass; the five maintained frames are refreshed.
+
+Its new 35-second campaign exits successfully after 42.028 seconds wall time:
+91 snapshots through phases 0–7, four verified transitions, six source requests
+including two lookups, two comparisons, no writes, immutable parent facts and no
+overflow. Six unique JPEG hashes occur; 79 images repeat the correct settled
+terminal state, an applied 0/2 child whose facet values remain explicitly unloaded.
+This terminal image agrees with the independent DOM/API verdict. The earlier
+339 capture limitation above is historical, rather than a claim about this run.
+The bounded model helper now allows 120 seconds for cold compilation and replay;
+its validation requirements and source budget are unchanged.

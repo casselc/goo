@@ -1,5 +1,80 @@
 # Validation record
 
+## Large facets: one-pass Find and distinguishable values — 343
+
+Final frontend checks pass **1,158 tests** with no failures/skips (20.47 seconds).
+Go 1.27.3/Hegel passes forty generated schedules in 3.29 seconds, exercising the
+registered production `goo-facet-list` against an independent Go matching/count
+oracle after connected/detached insertion, removal and text mutation. Repeating
+the same query returns fresh counts in one pass and retains row identity. Focused
+preview tests cover Unicode codepoint boundaries and distinct terminal identifiers.
+No source API or wire format changed; the existing Go server builds and its three
+changed JS modules, public `/ui-components` HTML and unchanged component CSS match
+source byte-for-byte.
+
+The corrected supplied-component benchmark passes eight styled cases on both
+binaries: 1,000/2,000 values, 384/2,048-byte labels and desktop/narrow viewports.
+Each run asserts HTTP 200, gallery identity, CSSOM and computed grid/font rules;
+setup is identical. All local interactions make zero API calls, preserve focus,
+caret, counts and receipt state. Input refresh passes drop **2 → 1**, and initial
+refresh calls **3 → 2**. DOM size remains **6,015 / 32,025 elements**.
+
+Paired supplied-case median synchronous input work (milliseconds):
+
+| Labels / viewport | Baseline | Final |
+| --- | ---: | ---: |
+| 384 bytes / desktop | 18.20 | 7.55 |
+| 384 bytes / narrow | 13.40 | 9.20 |
+| 2,048 bytes / desktop | 20.30 | 8.85 |
+| 2,048 bytes / narrow | 16.95 | 8.75 |
+
+All eight synchronous medians improve, but paint-opportunity medians improve in
+four cases and worsen in four. One synchronous p95 worsens. These small diagnostic
+runs support less repeated work, not a general two-times latency or mount claim.
+Two requestAnimationFrame callbacks measure a paint opportunity, not a compositor
+hardware timestamp or portable device SLO.
+
+The real OTel baseline passes all four ordinary app cases (1,000 single values;
+2,000 paired values; desktop/narrow), with twelve source HTTP attempts, one
+1,574-byte comparison request and exact 384-byte literal Save/Back checks. It uses
+one aggregate service group, isolating the independent cohort facet. Its v1
+input-sync/refresh probe ran before the target handler: those fields are invalid
+and excluded. Valid render/DOM/focus and instrumented integration paint observations
+remain; tracing/snapshot overhead may affect those timings. Final v2 wraps the
+installed handler directly. Final real-data validation passes all four cases in 4.0 minutes, with twelve
+source requests and no page errors. The corrected v2 handler probe records
+exactly one refresh for each of 20 single/26 paired input samples per viewport.
+Full 384-byte literal compilation/Save/Back, focus/caret, no local IO and receipt
+preservation pass. Actual desktop and task-visible narrow suffix frames pass
+design review.
+
+Paired final ready-render synchronous observations are 947.8 ms desktop and
+1,296.9 ms narrow, versus baseline 1,184.6/1,114.3 ms; initial rendering is not
+uniformly faster. Instrumented paired paint-opportunity medians are
+382.0/432.55 ms versus 405.0/478.3 ms, with the tracing caveat above. No isolated
+CPU before/after claim uses invalid v1 input data. The existing 338 paired-facet regression also passes in 2.8 minutes; its model
+gate passes in 15.41 seconds with no skips. Its configured 35-second Bombadil
+campaign exits zero after 42.028 seconds, with 91 snapshots across phases 0–7,
+6 source attempts (including two value lookups), 2 comparisons and 0 writes.
+Four independent pair checks pass; observations remain immutable with no
+horizontal overflow. The terminal sample genuinely shows the applied child
+(0 selected / 2 previous) with facet values awaiting explicit Read; 79 repeated
+terminal JPEGs match that settled phase. Root reviewed the sample rather than
+inferring appearance from exit status. Existing 338 maintained frames are refreshed.
+Only its model helper allowance changes to a bounded 120 seconds; source budgets
+and production protocol remain unchanged.
+
+The first supplied benchmark mistakenly loaded `/components.html` (a deliberate
+404), then imported component modules without gallery styles. Its timing/layout
+results are explicitly invalid and excluded; only structural DOM/scan observations
+remain usable. Corrected styled receipts replace the before/after comparison.
+The roughly 32,000-node paired mount remains a measured follow-up; no paging,
+virtualizer or claimed maximum label size was introduced. Reviewed artifacts are
+reduced to about 308 KiB for 343 and 256 KiB for the reused 338 campaign, retaining
+styled baseline/final metrics, actual replay inputs, explicitly invalid provenance,
+model/campaign logs and the reviewed terminal sample. All genuine lab telemetry,
+views, volumes and 51 stale pending entries remain intact.
+
 ## Retained-parent ownership consolidation — 342
 
 The final frozen frontend suite passes **1,155 tests**, with no failures or skips

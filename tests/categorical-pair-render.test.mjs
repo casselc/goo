@@ -10,6 +10,7 @@ class Element{
  setAttribute(key,value){this.attributes[key]=String(value)}getAttribute(key){return this.attributes[key]??null}
  matches(selector){if(selector.startsWith('.'))return this.className.split(' ').includes(selector.slice(1));if(selector==='[aria-label]')return this.getAttribute('aria-label')!==null;return this.tagName===selector}
  querySelectorAll(selector){return this.children.flatMap(child=>[...(child.matches(selector)?[child]:[]),...child.querySelectorAll(selector)])}querySelector(selector){return this.querySelectorAll(selector)[0]||null}
+ filter(query){this.query=String(query??'');const rows=this.children.filter(child=>Object.hasOwn(child.dataset,'facetItem'));for(const row of rows)row.hidden=!(row.dataset.facetText||'').toLocaleLowerCase().includes(this.query.toLocaleLowerCase());return {visible:rows.filter(row=>!row.hidden).length,total:rows.length};}
  addEventListener(type,handler){this.listeners.set(type,handler)}dispatchEvent(event){this.listeners.get(event.type)?.(event);return true}focus(){globalThis.document.activeElement=this}
 }
 const node=(tag,text,className)=>{const element=new Element(tag);element.textContent=text;if(className)element.className=className;return element};
