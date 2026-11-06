@@ -1748,3 +1748,23 @@ boundaries. Those child fields cannot re-prove parent uniqueness from a bounded
 page; capture reopening preserves the original relationship evidence without a
 source lookup. The UI uses the existing exact link, staged question and counted
 lookup paths with the complete typed profile. See [contract](REPORTED_EDGES.md).
+
+## Independent service-widget recovery — 354
+
+The mounted dashboard owns one queue shared by initial reads and explicit retries,
+with at most two active requests. Planner definitions are cloned and frozen;
+each attempt receives a detached body for the same fixed question. Retry replaces
+one keyed result slot, preserving successful sibling result references, DOM,
+disclosures and source clocks. Overview status and the derived timeline update
+locally without source reads.
+
+A host-local owner and combined abort signal fence old controls and late results.
+The parent service browser tracks pending retries even after initial loading
+returns, so leaving or replacing a pending overview retires its work. Typed
+source failures offer Retry; local admission failures and unsupported questions
+do not. Recovery does not publish captures: Capture remains a separate explicit
+reread. See [contract](WIDGET_RECOVERY.md) for the lifecycle diagram.
+
+The application wires workspace departure to the inventory owner's existing
+`suspend` hook, as entity-tab departure already does. This retires pending work;
+completed service views keep their existing retained navigation behavior.

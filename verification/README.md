@@ -1,5 +1,26 @@
 # Semantic properties and model conformance
 
+## Independent widget recovery (354)
+
+Forty Hegel state/swarm schedules drive the actual mounted dashboard owner with
+an independent attempt/slot oracle. They check frozen questions, the shared
+two-request budget, healthy DOM/result/clock preservation, failed-slot replacement,
+unsupported capabilities and retired callbacks/late responses.
+
+```sh
+go -C verification test -run '^TestHegelWidgetRecovery354$' -count=1 .
+GOO_WIDGET_RECOVERY_BOMBADIL=1 GOO_VERIFY_WIDGET_RECOVERY=1 bash scripts/run_journeys.sh journeys/354-widget-recovery.spec.js
+```
+
+The native journey requires `GOO_GENERIC_BINARY` pointing to the reviewed Go
+binary. Its observed report is supplied through `GOO_WIDGET_RECOVERY_354_REPORT`
+to `TestQuintWidgetRecoveryObserved354`. The small Quint model covers the selected
+failed slot's retry/retirement lifecycle; it does not model the entire scheduler.
+Six admission poisons and two protocol negatives complement actual source,
+response, sibling-receipt and replacement-service assertions in the journey.
+See [contract](../docs/WIDGET_RECOVERY.md) and
+[storyboard](../docs/journeys/354-widget-recovery.md) for current acceptance status.
+
 ## Typed trace-wide search (340)
 
 Existing 90 intersection and 70 contextual cases now include explicit resource

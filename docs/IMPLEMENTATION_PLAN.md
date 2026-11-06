@@ -1,9 +1,11 @@
 # Implementation plan
 
 > Active execution order: [November 5 whole-product roadmap](ROADMAP_2026_11_05.md).
-> The 351 checkpoint selects the finite 352 breadth, 353 depth and 354 recovery
-> consolidation sequence; 352 and 353 are delivered, with 354 next. Delivery notes below are retained history, not parallel
-> active queues.
+> The 351 sequence closes with 354 widget recovery. The 355 whole-product checkpoint
+> selects 356 service-context authored templates, 357 a researched current RPC
+> profile, and 358 evidence-first fixed-question presentation. These next three
+> items are proposed, not delivered. Delivery notes below are retained history,
+> not parallel active queues.
 
 
 

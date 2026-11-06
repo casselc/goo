@@ -1,0 +1,13 @@
+spec: widget_recovery_354.qnt
+module: widget_recovery_354
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  start: {expect: 'coherent == {{.obs.coherent}}'}
+  source_failed: {expect: 'coherent == {{.obs.coherent}}'}
+  retry: {expect: 'coherent == {{.obs.coherent}}'}
+  succeed: {expect: 'coherent == {{.obs.coherent}}'}
+  retire: {expect: 'coherent == {{.obs.coherent}}'}
+  late: {expect: 'coherent == {{.obs.coherent}}'}
+  refused: {expect: 'coherent == {{.obs.coherent}}'}
+  finish: {expect: 'coherent == {{.obs.coherent}}'}

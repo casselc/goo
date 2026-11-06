@@ -143,6 +143,7 @@ globalThis.addEventListener('goo:measurements-tab',()=>exploreMode(true));
 globalThis.addEventListener('goo:navigate-explore',()=>exploreMode(false));
 for(const id of ['exploreRecordsMode','exploreMeasurementsMode'])el(id).onkeydown=e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const measures=e.key==='End'||(e.key!=='Home'&&id==='exploreRecordsMode');exploreMode(measures);el(measures?'exploreMeasurementsMode':'exploreRecordsMode').focus()}};
 const liveInventory=Inventory.mount(el('serviceInventory'));
+globalThis.addEventListener('goo:workspace',event=>{if(event.detail.route!=='services')liveInventory.suspend()});
 // Destination staging and return remain owned by their original adapters.
 function openObservedService(intent,{current,onBack}){
  if(!current())return false;

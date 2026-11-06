@@ -1,5 +1,60 @@
 # Validation record
 
+## Independent service-widget recovery — 354
+
+Failed supported service widgets now retry their original frozen fixed question
+under the same two-request budget as initial loading. Keyed result replacement
+preserves healthy sibling DOM, disclosures, result references, source clocks and
+bases. Overview/profile/timeline updates use existing results without acquisition.
+Typed source failures offer explicit Retry; invalid local results, client errors
+and unsupported prerequisites do not. Recovery does not publish captures or infer
+service health.
+
+All 1,204 UI tests pass in 19.937 seconds, zero skips, including actual mounted
+dashboard and parent-owner cases. Forty Hegel state/swarm schedules pass in 6.39
+seconds against the mounted owner with an independent attempt/slot oracle. A
+shrinking diagnostic found an oracle error: retirement legitimately clears queued
+busy indicators. The oracle now snapshots after synchronous retirement cleanup
+and still rejects subsequent late DOM/result changes. No product fix was needed
+for that diagnostic.
+
+The genuine ClickHouse journey passes in 120.694 seconds with both a scalar record-widget failure
+and a typed current-only native gauge failure. A forwarding proxy plants actual
+upstream 503s; successful responses come from the real source. Each explicit Retry
+adds exactly one matching request, with no overview replan or healthy sibling
+reads. Healthy source clocks/bases are checked against actual successful responses,
+not just compared as possibly absent fields. The fixture has three spans/two logs/
+gauge 42; the replacement service has two spans/one log/gauge 7.
+
+Native workspace departure exposed a real application wiring gap: direct owner
+suspension worked, but switching to Explore did not call it. The application now
+invokes the existing inventory suspension hook on workspace departure. The final
+journey observes the actual pending request abort (`net::ERR_ABORTED`), then proves
+that releasing its held successful response and calling the retired Retry cannot
+change the replacement service or acquire more telemetry. Completed service views
+retain existing navigation behavior.
+
+The 35-second focused Bombadil campaign reaches visible positive recovery in 497
+observed snapshots. Exact count/duration, unchanged sibling receipts/DOM, one
+explicit retry and inert old callbacks are required. Final required Quint replay
+passes in 25.31 seconds within its unchanged 50-second budget: three actual
+sequences accepted, six admission corruptions and two protocol negatives rejected,
+zero skips. The model covers the selected failed-slot lifecycle; Hegel separately
+checks queue interleavings. Direct typecheck initially missed qntgo's invalid
+empty-parameter wrapper import; using the existing `INITIAL=0` binding convention
+fixes that setup, and the final combined browser/model run passes.
+
+Main browser accounting is 56 API requests, 33 source-endpoint attempts and four
+overview plans. The proxy's 86 SQL calls include setup and the separate actor;
+these are not asserted as a physical storage-read budget. Genuine desktop/narrow
+frames pass design review. The Go 1.27.3 server image builds and runs healthy;
+all three changed served UI assets match reviewed source. No Go product/API schema
+changed, so those unchanged suites were not rerun in this UI cut. Lab volumes,
+captures and all 51 pre-existing stale Redis pending entries remain preserved.
+See [contract](docs/WIDGET_RECOVERY.md),
+[storyboard](docs/journeys/354-widget-recovery.md) and
+[355 roadmap reconciliation](docs/reviews/ROADMAP_RECONCILIATION_355.md).
+
 ## Exact typed reported edges — 353
 
 One checked environment predicate now applies to parent ownership and child

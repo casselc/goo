@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+354 implements independent failed-widget recovery; UI, generated, real-source,
+observed-model and focused browser checks pass. Retry retains the original fixed question and healthy sibling
+receipts under the shared two-read budget. Unsupported prerequisites and local
+admission failures are not retryable. Recovery does not save or refresh captures.
+See [contract](WIDGET_RECOVERY.md).
+
 353 implements exact reported-edge questions under all checked record environment
 policies. Full Go/UI/API, generated real-SQL oracles, native/model, focused browser
 and actual-frame checks pass. Parent ownership is resolved before child

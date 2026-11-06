@@ -23,6 +23,8 @@ also expose saved rolling Activity views under that policy; opening stages the
 view’s own selector before explicit Start.
 [Reported-edge investigation](docs/REPORTED_EDGES.md) follows an exact observed
 parent relationship under the same policy, with capture and source-free reopen.
+[Recover a failed service widget](docs/WIDGET_RECOVERY.md) by retrying its original
+fixed question while keeping successful sibling results and source clocks.
 
 [Source-read failures](docs/SOURCE_REFUSALS.md) show a concise reason and safe
 technical details. Retry stays explicit; available paired observations retain
@@ -629,7 +631,7 @@ scope/data/quality, charts/tables/lists/waterfalls and scope-bound controls, a b
 chart with a restricted Plotly adapter, and shared declarative/visual authoring.
 Complete-only widgets and explicit uncertainty semantics are core requirements;
 all current widgets/screens must be expressible. The app is prerelease, with no
-legacy-format or API compatibility floor. [The next sequence](docs/ROADMAP_2026_10_30.md) separates proposed work from
+legacy-format or API compatibility floor. [The active roadmap](docs/ROADMAP_2026_11_05.md) separates proposed work from
 implemented capabilities; the supporting reports include pinned research sources.
 
 Single-group count breakdowns now share a [scoped display contract](docs/SCOPED_VIEW_PILOT.md):

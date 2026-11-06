@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Journey354](354-widget-recovery.md) exercises independent failed-widget recovery
+with real source refusals, independent native/record retries, held-response
+retirement and a positively completed browser campaign.
+
 [Journey353](353-reported-edge.md) follows exact reported parent relationships
 under typed policies through records, capture/reopen and retained Services. It
 contrasts an independent parent-ownership oracle with wider child populations.
