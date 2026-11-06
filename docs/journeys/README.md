@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Journey358](358-fixed-question-presentation.md) compares actual fixed-question
+charts before/after read/Edit consolidation, checks private draft guards, explicit
+Run/cancel/return and preserves full profiles, source budgets and saved bytes.
+Its matched desktop/narrow frames document both the gain and below-fold limit.
+
 [Journey357](357-current-rpc.md) follows pinned current RPC observations, optional
 method groups, independent native seconds, exact widget recovery and retained
 supporting-record return. Older RPC records and milliseconds remain distinct.

@@ -1395,11 +1395,13 @@ td details {
  .dashboard-native-table>table>tbody>tr>td>*{grid-column:2;min-width:0;max-width:100%}
 }
 
-/* Activity continuation: scope and one Run action before optional authoring. */
-.activity-analysis:not(.analysis-editing) > .query-workbench,
-.activity-analysis:not(.analysis-editing) > .recent-entry-hint,
-.activity-analysis:not(.analysis-editing) > .exploration-scope > label,
-.activity-analysis:not(.analysis-editing) > .exploration-scope > :is(.recent-activity-run,[id$=exploreFreshWindow],[id$=exploreShareQuestion],[id$=exploreAddStep],[id$=exploreTail]){display:none}
+/* Fixed questions share one read/Edit presentation; rolling entry stays separate. */
+.fixed-question > :is(h2,p:first-of-type){display:none}
+.fixed-question:not(.fixed-editing) > .recent-entry-hint,
+.fixed-question:not(.fixed-editing) > .exploration-scope > :is(.recent-activity-run,[id$=exploreFreshWindow],[id$=exploreTail]){display:none}
+.fixed-question > .question-state{margin-block:6px;padding-block:6px}
+.fixed-question > .query-workbench{margin-block:12px}
+.fixed-definition-scope{margin-bottom:8px}
 
 /* One inspectable applied scope beside the staged population selection. */
 .population-scope-context{font-size:12px;margin:6px 0;overflow-wrap:anywhere}

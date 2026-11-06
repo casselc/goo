@@ -8,6 +8,6 @@ export const pausedReturn=always(()=>s.current.stage!==3||s.current.phase==='pau
 export const contained=always(()=>!s.current.overflow);
 export const completes=eventually(()=>s.current.stage===3).within(20,'seconds');
 const stage=registerCustomAction('goo.stageActivityAnalysis',async(document)=>{(document.querySelector('.entry-investigate-options')as HTMLDetailsElement).open=true;Array.from(document.querySelectorAll<HTMLButtonElement>('.stream-entry-toolbar button')).find(b=>b.textContent==='Analyze this scope/window')!.click();document.documentElement.dataset.analysisStage='1'});
-const edit=registerCustomAction('goo.discloseAnalysis',async(document)=>{Array.from(document.querySelectorAll<HTMLButtonElement>('button')).find(b=>b.textContent==='Edit analysis')!.click();document.documentElement.dataset.analysisStage='2'});
+const edit=registerCustomAction('goo.discloseAnalysis',async(document)=>{Array.from(document.querySelectorAll<HTMLButtonElement>('button')).find(b=>b.textContent==='Edit question')!.click();document.documentElement.dataset.analysisStage='2'});
 const back=registerCustomAction('goo.returnHeldActivity',async(document)=>{Array.from(document.querySelectorAll<HTMLButtonElement>('button')).find(b=>b.textContent==='Return to paused activity')!.click();document.documentElement.dataset.analysisStage='3'});
 export const choices=actions(()=>s.current.stage===0&&s.current.ready?[stage()]:s.current.stage===1?[edit()]:s.current.stage===2?[back()]:['Wait']);

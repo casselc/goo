@@ -129,10 +129,12 @@ record-context actions. Unknown trace schema does not silently become empty.
 [Typed reported pod phase](POD_STATES.md) is now supported through its separate
 exact receiver and categorical observation contract. [Reported container
 readiness](CONTAINER_READINESS.md) has a separate exact container-ID profile.
-Restarts, requests/limits, CPU, node pressure, ownership facts,
-resource changes and workload rollups still need explicit receiver, identity,
-temporality, calculation and coverage contracts. Discovery alone grants no
-native authority and does not infer health from client spans.
+[Container resources](CONTAINER_RESOURCES.md) now supports reported CPU/memory
+usage and requests/limits through its explicit receiver, identity, calculation
+and coverage contracts, including bounded observation history and automatic
+usage defaults. Restarts, CPU-time/throttling, node pressure, verified ownership,
+configuration history and workload totals remain separate work. Discovery alone
+grants no native authority and does not infer health from client spans.
 
 [Reported workload context](KUBERNETES_WORKLOAD_CONTEXT.md) now exposes the
 independent six-kind resource pairs already retained by discovery. One local

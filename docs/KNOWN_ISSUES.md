@@ -1,5 +1,20 @@
 # Known issues and gaps
 
+358 implements fixed-question read/Edit presentation over the existing owners.
+UI, mounted-widget, generated, native/model, positive actor and Activity-handoff
+checks pass. Dirty/invalid drafts remain visible; hidden callbacks are admitted
+before private-widget mutation. Selected plots move up 431px desktop/890px narrow
+in matched frames, but still begin below the fold. The stale final Bombadil JPEG
+is a driver diagnostic; genuine Playwright frames establish appearance. See
+[contract](FIXED_QUESTION_PRESENTATION.md) and [validation](../VALIDATION.md).
+
+The adopted [359 reconciliation](reviews/ROADMAP_RECONCILIATION_359.md) selects
+source-free captured span-page waterfalls, then retained-page comparison and
+current RPC capability parity. These remain proposed: captured inspection still
+needs its local entry, and curated measurement discovery still treats the current
+RPC duration instrument as generic. Existing pod/container defaults are delivered;
+broader receiver coverage and verified workload ownership remain separate.
+
 357 implements the pinned current RPC profile. Go/UI/API, generated/read-only SQL,
 native/model and focused actor checks pass. Current records require Server
 kind and nonempty `rpc.system.name`, with optional method groups retained.
@@ -12,8 +27,9 @@ UI, generated, native/model and focused browser checks pass. It stages the
 whole ordinary grouped record question, without native/specialized coercion or
 specimen scope inheritance. Existing compatibility and explicit destination
 baseline requirements remain authoritative. See [contract](SERVICE_TEMPLATES.md).
-The existing catalogue's repeated labels and nearby authoring controls remain a
-bounded presentation follow-up for the selected 358 consolidation, not a new queue.
+358 moves fixed-question authoring behind Edit and below results. The existing
+template catalogue still repeats some labels; this is a retained design observation,
+not a separate maintenance queue or a claim that 358 redesigned that catalogue.
 
 354 implements independent failed-widget recovery; UI, generated, real-source,
 observed-model and focused browser checks pass. Retry retains the original fixed question and healthy sibling

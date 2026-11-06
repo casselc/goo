@@ -9,7 +9,7 @@ keep different things; saving a definition does not freeze displayed telemetry.
 | View definition | All configured queries, components and presentation | Save configuration without reading; reopen requires Run |
 | Evidence | An independent bounded capture and its receipt | Opens the existing capture form; confirmation performs a new read |
 
-In a fixed Activity analysis, Preserve is available without opening Edit analysis.
+In a fixed Activity analysis, Preserve is available without opening Edit question.
 Share question and Add question to investigation use the current checked fixed
 intent. Capture evidence uses the applied clean question and the existing capture
 confirmation form. The reusable measurement/question package editor remains under

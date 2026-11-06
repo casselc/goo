@@ -15,8 +15,10 @@ refining the held observation before a fixed reread. Neither claims the later
 query will reproduce the held page or preserve that observation.
 
 The fixed continuation shows the signal, environment, selector and UTC window,
-with **Run analysis** and **Edit analysis**. Editing disclosure makes no source
-request. Successful execution changes the primary action to **Rerun fixed window**.
+with **Run analysis** and **Edit question**. Editing disclosure makes no source
+request. The shared [read/Edit presentation](FIXED_QUESTION_PRESENTATION.md) keeps
+results before authoring and dirty or invalid drafts visible. Successful execution
+changes the primary action to **Rerun fixed window**.
 Shared fixed-question links use neutral staged-question wording rather than
 claiming an investigation from Activity is a restored shared question.
 

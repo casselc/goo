@@ -1811,3 +1811,24 @@ protocol outcomes or a shared span/metric denominator. Existing query evaluation
 widget recovery, template reuse and supporting-record navigation remain the owners
 of execution and presentation. See [contract](CURRENT_RPC_PROFILE_357.md) and
 [pinned research](CURRENT_RPC_CONVENTION_357.md).
+
+## Fixed-question read/Edit presentation — 358
+
+`ui/fixed-question-editor.mjs` is an application presentation helper over the
+existing `QuestionSession.Session` snapshot. It owns only expansion and local
+action leases; it performs no reads, question construction or clock resolution.
+Untouched stage and applied results collapse authoring. Dirty/invalid edits and
+failed/cancelled requests keep controls accessible. The workbench moves once at
+construction, after the existing record panel; controls and listeners persist.
+
+Closed Run clones the actual session's whole checked requested/applied question.
+Open editing retains the existing raw-control validation, `inputs`/`withFilters`,
+fixed bounds and comparison-baseline authority. Separate editor-current guards
+refuse hidden/covered/retired authoring callbacks without disabling current root
+Run/Cancel. The filter and numeric widgets receive the same `canMutate` admission
+before user callbacks change their internal draft or refresh controls; a guarded
+parent notification alone cannot prevent those earlier private mutations.
+Programmatic set/populate remains available for owner restoration.
+Existing population coverage, task return, specialized renderers and
+SavedRecords ownership remain authoritative. See
+[interaction and data-flow contract](FIXED_QUESTION_PRESENTATION.md).

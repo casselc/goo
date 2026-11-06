@@ -1,0 +1,19 @@
+spec: fixed_question_358.qnt
+module: fixed_question_358
+constants: {INITIAL: '1'}
+invariants: [safety]
+actions:
+  edit_clean: {expect: 'reads == {{.obs.reads}} and opened == {{.obs.opened}} and coherent == {{.obs.coherent}}'}
+  hide_clean: {expect: 'reads == {{.obs.reads}} and opened == {{.obs.opened}} and coherent == {{.obs.coherent}}'}
+  edit_invalid: {expect: 'reads == {{.obs.reads}} and opened == {{.obs.opened}} and coherent == {{.obs.coherent}}'}
+  invalid_run_blocked: {expect: 'reads == {{.obs.reads}} and opened == {{.obs.opened}} and coherent == {{.obs.coherent}}'}
+  draft_return: {expect: 'reads == {{.obs.reads}} and opened == {{.obs.opened}} and coherent == {{.obs.coherent}}'}
+  valid_fix: {expect: 'reads == {{.obs.reads}} and opened == {{.obs.opened}} and coherent == {{.obs.coherent}}'}
+  run_valid: {expect: 'reads == {{.obs.reads}} and opened == {{.obs.opened}} and coherent == {{.obs.coherent}}'}
+  edit_before_cancel: {expect: 'reads == {{.obs.reads}} and opened == {{.obs.opened}} and coherent == {{.obs.coherent}}'}
+  cancel_read: {expect: 'reads == {{.obs.reads}} and opened == {{.obs.opened}} and coherent == {{.obs.coherent}}'}
+  cancel_reading: {expect: 'reads == {{.obs.reads}} and opened == {{.obs.opened}} and coherent == {{.obs.coherent}}'}
+  late_result: {expect: 'reads == {{.obs.reads}} and opened == {{.obs.opened}} and coherent == {{.obs.coherent}}'}
+  run_recover: {expect: 'reads == {{.obs.reads}} and opened == {{.obs.opened}} and coherent == {{.obs.coherent}}'}
+  inspect: {expect: 'reads == {{.obs.reads}} and opened == {{.obs.opened}} and coherent == {{.obs.coherent}}'}
+  applied_return: {expect: 'reads == {{.obs.reads}} and opened == {{.obs.opened}} and coherent == {{.obs.coherent}}'}

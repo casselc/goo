@@ -3979,3 +3979,21 @@ source execution. Run `go -C verification test -run '^TestHegelActivityWindowCom
 The [native journey](../docs/journeys/333-activity-window-comparison.md) supplies
 ordinary OTLP populations and retained Activity behavior; its actor requires the
 expected model snapshots and its own verified completion through shared admission.
+
+## Fixed-question presentation — 358
+
+`TestHegelFixedQuestionEditor358` runs forty schedules through the actual local
+presentation helper and question Session, with independent phase/read/lease/raw
+draft and receipt checks. `TestQuintFixedQuestionProtocol358` exercises the actual
+generated wrapper before browser work. `TestQuintFixedQuestionObserved358` requires
+`GOO_FIXED_QUESTION_358_REPORT` pointing to the final genuine journey summary;
+without it, that explicit observed test skips rather than claiming validation.
+The required native gate sets it and passes with zero skips.
+
+The observed adapter admits fourteen real facts and six corrupted-report controls,
+then validates the display/read protocol against `model/fixed_question_358.yaml`.
+Whole-query/data/draft admission and viewport geometry remain separate claims.
+`bombadil/fixed-question358.ts` requires visible positive completion and two exact
+reads; retained screenshot-driver output is not a substitute for actual result
+frames. See [validation](../VALIDATION.md) and the
+[storyboard](../docs/journeys/358-fixed-question-presentation.md).

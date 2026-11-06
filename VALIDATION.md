@@ -1,5 +1,101 @@
 # Validation record
 
+## Fixed-question reading and editing — 358
+
+Fixed questions now show checked scope and explicit Run, then their existing
+results before authoring. Edit changes presentation only. Actual dirty/invalid
+controls and failed/cancelled requests stay visible; a successful explicit read
+returns to reading. Closed Run clones the whole staged/applied session question.
+Filter and numeric widgets check current mutation admission before changing their
+private state, including direct invocation of saved hidden handlers.
+
+The final full UI regression passes 1,220 tests in 19.475 seconds, zero skips.
+Three additional mounted-widget tests pass in 31ms after their small DOM harness
+was completed. They cover denied private-tree/render/focus changes, loader refusal,
+read-only/disabled numeric handlers, ordinary editing and programmatic restoration.
+Four actual presentation-helper/Session tests are included in the full suite.
+
+Forty generated Hegel state/swarm schedules pass in 4.10 seconds, zero skips,
+using the production presentation helper and actual question Session with an
+independent oracle. They draw from six query profiles and five environment policies,
+raw invalid drafts, reads, cancel/stale completions, retained receipt objects and
+hidden/covered/detached/old callbacks. A generated reported-edge fixture initially
+omitted required namespace selectors; correcting that invalid test input required
+no product change. The actual generated Quint wrapper accepts the complete path
+and rejects implicit Edit reads and hidden invalid drafts in 9.05 seconds.
+
+The genuine combined browser journey passes in 76.715 seconds. Eight matching
+spans retain effective current/legacy environment precedence, exact service and
+namespace predicates, 180ms duration sum and two recorded Errors. Two conflicting
+current labels remain excluded. Each of four fresh-document cases reads exactly
+once. The same original stored capture, saved package bytes, whole checked scope,
+bounds and specialized duration/status/grouped-time or numeric histogram profile
+are preserved across the old and new builds.
+
+| Actual selected chart | Viewport | Before Y | After Y | Upward change |
+| --- | --- | ---: | ---: | ---: |
+| Package grouped-time | 1280×1000 | 1602.375 | 1171.281 | 431.094px |
+| Package grouped-time | 390×844 | 2543.719 | 1653.531 | 890.188px |
+| Numeric histogram | 1280×1000 | 1771.328 | 1340.234 | 431.094px |
+| Numeric histogram | 390×844 | 2718.938 | 1828.750 | 890.188px |
+
+Measurements use identical actual-chart selectors at scroll zero, with normal
+entry scroll recorded separately. Closed-details controls are excluded. Rendered
+authoring controls fall from ten to zero; viewport-intersecting controls fall from
+ten desktop/three narrow to zero. All selected charts still start below the fold;
+no universal above-fold or latency improvement is claimed. Design accepts all
+eight original before/after frames.
+
+Fourteen observed protocol facts check keyboard Edit, clean Hide, raw invalid
+return, blocked invalid Run, valid Run, genuine request cancellation, late-result
+refusal, recovery, source inspection and held applied return. Source-read deltas
+are `[0,0,0,0,0,0,1,0,1,0,0,1,0,0]`. Direct hidden Clear filters leaves the actual
+editor unchanged. Hidden form events are blocked; closed Run retains its checked
+question even if external test code changes DOM values. The test restores those
+external writes before editing. Raw numeric requests and Go response echoes are
+compared at their respective boundaries, including Go's inert empty environment
+default; no meaningful scope/profile field is dropped.
+
+Required observed Quint replay passes in 13.75 seconds (Go package 13.767), zero
+skips: the actual fourteen-fact protocol is accepted and six corrupted reports
+are refused. Adapter admission independently checks scope, records, private-draft
+facts and old-action invariance; the model covers the observed display/read
+protocol, not viewport geometry or full DOM behavior.
+
+The focused Bombadil campaign passes in 35.154 seconds with 596 snapshots and all
+eleven stages. Positive completion requires applied/closed presentation, a heading
+in the viewport, two completed exact-question reads with the eight-record result,
+180ms sum and two Errors, no other telemetry and no writes. Its last driver JPEG
+shows an earlier running/editing frame, so it is retained only as a driver
+screenshot diagnostic, not final-result evidence. The genuine matched Playwright
+frames establish appearance; the admitted observations establish actor completion.
+
+The existing Activity-to-fixed-analysis journey also passes in 6.4 seconds,
+including staged zero-read Edit/Hide, original completed bounds, explicit logs and
+empty spans reads and source-free paused return. Its two current frames are
+regenerated. Affected Activity/package/shared-question tests, actor labels and
+user docs use the shared Edit wording. The longer 284/350 journeys were updated,
+not rerun here; the existing broad Discovery harness limitation remains recorded.
+
+The final Go 1.27.3 image is
+`sha256:e3241bfc477f37d78e9cd9fb6ab65030f7168f917fd55164e8421393f85c0b6e`;
+extracted binary SHA256 is
+`fd6b5484b6de23c44fc43be8aa7a90485f5d3f69e9050a7155a9f26cf6882fbb`.
+Health is 200 and all five changed served UI modules/styles match reviewed source
+bytes. No backend wire shape or Go engine changed; 357's full main Go/API checks
+were not repeated. Reviewed 358 raw diagnostics shrink from 45MiB to 3.8MiB, retaining compact
+receipts/replay inputs and current frames. Existing lab volumes and all 51 stale
+pending entries remain.
+See [contract](docs/FIXED_QUESTION_PRESENTATION.md),
+[storyboard](docs/journeys/358-fixed-question-presentation.md) and
+[design acceptance](docs/reviews/FIXED_QUESTION_DESIGN_358.md).
+
+The 359 architecture, design/product and planning reviews inspect source, existing
+research and current frames; they run no new vendor survey or product campaign.
+Their adopted roadmap proposes 360–362, not validated or delivered features. Stale
+README/Kubernetes guidance is corrected against implemented resource contracts.
+See [reconciliation](docs/reviews/ROADMAP_RECONCILIATION_359.md).
+
 ## Pinned current RPC observations — 357
 
 The current RPC profile is pinned to official OTel semantic conventions v1.45.0,

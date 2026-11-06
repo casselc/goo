@@ -86,8 +86,8 @@ remain distinct. The question and step envelope must agree on checked policy and
 exact fixed bounds; matching name text alone is insufficient.
 
 Use **Share question** or **Add question to investigation** after a typed Activity
-observation becomes a fixed question. In Activity analysis, open **Edit analysis**
-to reveal these controls. Sharing produces a versioned question link.
+observation becomes a fixed question. **Preserve** exposes these choices without
+opening the authoring controls. Sharing produces a versioned question link.
 Adding stages a card in the existing investigation editor; Save revision publishes
 it. Same-tab draft recovery preserves the step and its selector. Neither operation
 captures records or reads telemetry. Opening a question link or card stages its

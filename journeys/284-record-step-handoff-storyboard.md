@@ -7,7 +7,7 @@ OTLP. An effective named Activity scope isolates the legacy-only canary.
 1. Open the saved Activity scope, Start explicitly, then Analyze the completed
    observation window. Analysis stages the exact policy, predicate and fixed UTC
    bounds. Run reads that fixed question.
-2. Open Edit analysis and share the question. Its bounded step link preserves the selector and exact
+2. Open Edit question and share the question. Its bounded step link preserves the selector and exact
    fixed question. Reopening the link clears results and stages Run.
 
 ![Shared typed question](../docs/journeys/screenshots/284-shared-typed-question.png)

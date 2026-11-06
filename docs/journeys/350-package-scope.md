@@ -4,7 +4,7 @@ The final reviewed 350 journey passed in **78.532s** (**81.356s** runner), inclu
 
 This journey uses genuine OTLP spans and ClickHouse. Its primary population contains three current-key and two legacy-only spans in one named effective environment, with a literal attribute value containing punctuation and Unicode. Four conflicting-current spans must remain excluded. Separate empty-environment and unreported-environment populations contain three and two spans. The namespace, service, literal predicate and source profile travel together.
 
-The user discovers and previews the named environment, stages it in Activity, adds exact service/namespace/attribute filters, starts and pauses spans, and analyzes the completed window. Through **Edit analysis → Measures and chart**, the user enables duration, recorded status, a one-second chart and a service breakdown. A completed record query supplies the package through the existing **Reusable question package** disclosure.
+The user discovers and previews the named environment, stages it in Activity, adds exact service/namespace/attribute filters, starts and pauses spans, and analyzes the completed window. Through **Edit question → Measures and chart**, the user enables duration, recorded status, a one-second chart and a service breakdown. A completed record query supplies the package through the existing **Reusable question package** disclosure.
 
 Building and validating JSON/YAML plans perform no telemetry reads. **Preview** explicitly reads the original fixed question. A second genuine preview response is held after the source completes; editing the YAML withdraws that intent, and the late response must not publish. Invalid selector unions must fail before source access.
 

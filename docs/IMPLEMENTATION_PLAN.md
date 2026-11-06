@@ -3,9 +3,12 @@
 > Active execution order: [November 5 whole-product roadmap](ROADMAP_2026_11_05.md).
 > The 351 sequence closes with 354 widget recovery. The 355 whole-product checkpoint
 > selects 356 service-context authored templates and 357 a pinned current RPC
-> profile (both delivered), followed by 358 evidence-first fixed-question presentation.
-> 358 remains proposed, not delivered. Delivery notes below are retained history,
-> not parallel active queues.
+> profile, followed by 358 evidence-first fixed-question presentation (all delivered).
+> The 359 whole-product checkpoint is complete. Its adopted next sequence is
+> 360 captured span-page waterfalls (breadth), 361 retained-page comparison
+> (depth), then 362 current RPC capability parity (consolidation). These are
+> proposed; 360 is next. Delivery notes below are retained history, not parallel
+> active queues.
 
 
 

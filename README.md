@@ -244,6 +244,11 @@ service, declared behavior or reusable definition already selected. Examples
 include HTTP, database, messaging and native-metric workflows alongside the
 optional reservation lab.
 
+Fixed questions put results before authoring. Use **Edit question** to reveal the
+same filters and measures without reading data or changing the fixed window.
+Dirty or invalid drafts stay visible until an explicit valid Run. See
+[read/Edit behavior](docs/FIXED_QUESTION_PRESENTATION.md).
+
 ## Core capabilities and boundaries
 
 | Surface | Available now | Boundary |
@@ -266,9 +271,12 @@ client dependencies, and separate messaging consumer/producer views. Discover a 
 duration and literal route/method/database/destination populations, then narrow the scope and
 open a trace. All spans remains available; native metrics retain separate units,
 streams and intervals. Pool observations, host CPU/memory and the first Go runtime
-observations are described below. Additional bindings, database-server/broker health,
-complete USE calculations and Kubernetes remain staged follow-on work. Discovery does not
-invent missing health signals.
+observations are described below. Pod memory/phase, reported container readiness,
+container CPU/memory resources and reported workload context are also available,
+preserving exact resource identity and independent evidence. Broader receiver
+coverage, verified ownership, workload rollups, database-server/broker health and
+complete USE calculations remain separate work. Discovery does not invent missing
+health signals.
 See the executed [HTTP](journeys/187-http-server-dashboard-storyboard.md),
 [older RPC](journeys/188-rpc-server-dashboard-storyboard.md),
 [current RPC](docs/journeys/357-current-rpc.md),
