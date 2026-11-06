@@ -13,6 +13,8 @@ actions:
     expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
   return:
     expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
+  refresh_parent:
+    expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
   fresh_run:
     expect: 'coherent == {{.obs.coherent}} and sources == {{.obs.sources}} and plans == {{.obs.plans}}'
   filter_held:

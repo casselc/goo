@@ -47,3 +47,10 @@ test('fresh mean duration declarations reuse exact fixed span questions and refu
  assert.throws(()=>P.createQuery(q,{...baseline,summary:undefined},'duration.mean'));
  for(const display of [{value:'duration.mean',view:'summary'},{value:'duration.mean',view:'',order:''}])assert.doesNotThrow(()=>P.validate({...value,display},q));
 });
+test('fresh-pair explanation intent retains both whole typed questions and selected measure profiles without reads',()=>{
+ const {freshPairExplanationRequest}=require('../ui/population-workspace.mjs'),fields=[{kind:'attribute',key:'cohort'},{kind:'resource',key:'service.namespace'}];
+ for(const value of ['count','duration.mean']){
+  const q={...query(),fromMs:120000,toMs:180000,limit:2,environment:'',environmentSelector:{version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'named',value:'prod'}},summary:'span-duration',where:{all:[{field:{kind:'resource',key:'service.namespace'},op:'eq',value:'team'},{field:{kind:'attribute',key:'tenant'},op:'eq',value:''}]}},baseline={...P.previousQuery(q),limit:77,where:{field:{kind:'attribute',key:'release'},op:'missing'}},declaration=P.createQuery(q,baseline,value),before=structuredClone({q,baseline,declaration,fields}),intent=freshPairExplanationRequest(q,declaration,fields);
+  assert.deepEqual(intent,{version:'goo/explanation/v1',baseline,selection:q,fields});assert.deepEqual({q,baseline,declaration,fields},before);intent.baseline.where.op='exists';intent.selection.where.all[0].value='changed';intent.fields[0].key='changed';assert.deepEqual({q,baseline,declaration,fields},before);assert.throws(()=>freshPairExplanationRequest(q,P.create(q,'a'.repeat(64)),fields));assert.throws(()=>freshPairExplanationRequest(q,declaration,[]));assert.throws(()=>freshPairExplanationRequest(q,declaration,Array(7).fill(fields[0])));
+ }
+});

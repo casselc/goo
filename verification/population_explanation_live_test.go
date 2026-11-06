@@ -900,6 +900,7 @@ type peLiveOwnership struct {
 	Environment        string
 	Records            []peLiveRecord
 	Parent             exploration.Result
+	RefreshedParent    exploration.Result
 	HeldRun, Fresh     peLiveRun
 	HeldFilter, Filter peLiveFilter
 	Result             exploration.Result
@@ -961,11 +962,23 @@ func TestQuintPopulationExplanationOwnershipLedger(t *testing.T) {
 			t.Fatal(e)
 		}
 		before, _ := json.Marshal(l)
+		mutateEvent := func(action string, sources bool) {
+			for i := range l.Events {
+				if l.Events[i].Action == action {
+					if sources {
+						l.Events[i].SourceOps++
+					} else {
+						l.Events[i].PurePlans++
+					}
+					return
+				}
+			}
+		}
 		switch mutation {
 		case 0:
-			l.Events[3].SourceOps++
+			mutateEvent("cancel", true)
 		case 1:
-			l.Events[7].PurePlans++
+			mutateEvent("filter-return", false)
 		case 2:
 			l.Fresh.Request.Baseline.Where = l.Fresh.Request.Selection.Where
 		case 3:
@@ -982,22 +995,42 @@ func TestQuintPopulationExplanationOwnershipLedger(t *testing.T) {
 		case 8:
 			l.Fresh.Result.ResultToken = l.HeldRun.Result.ResultToken
 		case 9:
-			l.Events[9].SourceOps++
+			mutateEvent("stage-side", true)
 		case 10:
-			l.Events[1].PurePlans++
+			mutateEvent("fields", false)
+		case 11:
+			l.RefreshedParent = exploration.Result{}
+		case 12:
+			l.RefreshedParent.Question.ToMS++
+		case 13:
+			l.RefreshedParent.CapturedAt = l.Parent.CapturedAt
+		case 14:
+			for i := range l.Events {
+				if l.Events[i].Action == "refresh-parent" {
+					l.Events[i].SourceOps--
+					break
+				}
+			}
 		}
 		after, _ := json.Marshal(l)
 		if mutation >= 0 && string(before) == string(after) {
 			t.Fatalf("ownership control %d made no change", mutation)
 		}
 		parent := l.Version == 1 && peLiveSource(l.Parent, l.Environment, l.Records)
+		initialClock, initialClockErr := time.Parse(time.RFC3339Nano, l.Parent.CapturedAt)
+		refreshClock, refreshClockErr := time.Parse(time.RFC3339Nano, l.RefreshedParent.CapturedAt)
+		refreshed := parent && peLiveSource(l.RefreshedParent, l.Environment, l.Records) && nhLiveSameQuery(l.RefreshedParent.Question, l.Parent.Question) && l.RefreshedParent.Count == l.Parent.Count && initialClockErr == nil && refreshClockErr == nil && refreshClock.After(initialClock)
 		held := peLiveResult(l.HeldRun.Request, l.HeldRun.Result, l.Environment, l.Records) && peLivePartition(l.Parent.Question, l.HeldRun.Request, l.Records)
-		fresh := peLiveResult(l.Fresh.Request, l.Fresh.Result, l.Environment, l.Records) && reflect.DeepEqual(l.Fresh.Request, l.HeldRun.Request) && peLiveHex(l.Fresh.Result.ResultToken) && l.Fresh.Result.ResultToken != l.HeldRun.Result.ResultToken && l.Fresh.Result.Basis != l.HeldRun.Result.Basis
+		fresh := refreshed && peLiveResult(l.Fresh.Request, l.Fresh.Result, l.Environment, l.Records) && reflect.DeepEqual(l.Fresh.Request, l.HeldRun.Request) && peLiveHex(l.Fresh.Result.ResultToken) && l.Fresh.Result.ResultToken != l.HeldRun.Result.ResultToken && l.Fresh.Result.Basis != l.HeldRun.Result.Basis
 		heldFilter := peLiveFilterScope(l.HeldFilter, l.Fresh.Request, l.Environment, l.Records)
 		filter := peLiveFilterScope(l.Filter, l.Fresh.Request, l.Environment, l.Records) && reflect.DeepEqual(l.Filter.Request, l.HeldFilter.Request) && nhLiveSameQuery(l.Filter.Response.Question, l.HeldFilter.Response.Question)
 		result := filter && peLiveSource(l.Result, l.Environment, l.Records) && nhLiveSameQuery(l.Result.Question, l.Filter.Response.Question)
-		checks := map[string]bool{"parent": parent, "fields": parent, "run-held": held, "cancel": held, "return": held, "fresh-run": fresh, "filter-held": heldFilter, "filter-return": heldFilter, "filter-fresh": filter, "stage-side": filter, "run-side": result}
-		if len(l.Events) != 11 {
+		checks := map[string]bool{"parent": parent, "fields": parent, "run-held": held, "cancel": held, "return": held, "refresh-parent": refreshed, "fresh-run": fresh, "filter-held": heldFilter, "filter-return": heldFilter, "filter-fresh": filter, "stage-side": filter, "run-side": result}
+		if len(l.Events) != 12 {
+			return false
+		}
+		last := l.Events[len(l.Events)-1]
+		if last.Action != "run-side" || last.SourceOps != 5 || last.PurePlans != 4 {
 			return false
 		}
 		sink := &qobs.MemorySink{}
@@ -1026,7 +1059,7 @@ func TestQuintPopulationExplanationOwnershipLedger(t *testing.T) {
 	if !check(-1) {
 		t.Fatal("actual explanation ownership ledger rejected")
 	}
-	for i := 0; i < 11; i++ {
+	for i := 0; i < 15; i++ {
 		if check(i) {
 			t.Fatalf("explanation ownership mutation accepted: %d", i)
 		}

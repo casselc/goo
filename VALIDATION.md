@@ -1,5 +1,103 @@
 # Validation record
 
+## Explain fresh comparison populations in place — 348
+
+Applied fresh count and mean comparisons now reuse the existing explanation
+owner and Go planner. Both original questions/profiles remain in the request;
+the existing backend derives count-only acquisition. Mean comparisons explicitly
+explain population counts/shares, not the cause of mean latency changes.
+
+Checked side plans stage a records-only child with the original operand profile,
+window, typed environment and whole predicate plus the selected field delta.
+The client checks the complete canonical planned question before adoption. Back
+remounts a fresh owner with the held observed result/token, fields, inputs,
+pagination, disclosures, staged plan and semantic opener; no reread is implied.
+Observed Save promotes the existing server-held token rather than client counts.
+Default global explanation navigation remains available outside this host.
+
+All **1,173 frontend tests** pass with zero failures/skips (37.31 seconds). New
+mounted tests cover exact side staging, mutation isolation, 20-ranked/40-field
+pagination and disclosure restoration, token-only Save, rejected weaker predicates
+and disposed pending responses. The final small label/settled-plan refinements
+have complete-suite coverage. Forty generated cases pass through the actual UI
+request/side planners and Go (14.780 seconds), including five environment
+representations, original count/mean profiles, asymmetric predicates, independent
+windows/limits, twelve missing/empty/literal side intents per case and same-name
+policy-weakening negatives. No production Go engine or API schema changed.
+
+The Go server builds, and eight served modules/styles/OpenAPI match reviewed
+source byte for byte. The first native run observed valid partial/complete results
+and an exact side plan, then found that the document-level investigation delegate
+ignored `defaultPrevented` and replaced the locally staged child with a global
+visit. The shared delegate now respects consumed clicks; focused mounted checks
+confirm both consumed-local and normal-global navigation. The complete frontend
+suite passes after the correction. Unreached harness setup also uses the actual
+capture-store path and an explicit service-grouping gesture for mean entry.
+
+The genuine native journey passes in 39.9 seconds (42.2-second runner), with
+21 source API attempts, 47 API requests, 80 physical upstream calls and no browser
+errors. Activity contributes 100 inspected rows while the compared populations
+remain 107/13. A real baseline-field upstream 503 withholds cohort comparison
+rows while the healthy service field/counts remain useful; explicit full Run
+recovers complete fields. Missing and empty cohort values each remain 1/1.
+The baseline-only gamma category stages the exact previous-window query and
+reads three supporting records. Back performs no read, retains the complete
+explanation/pair and restores visible center-hit semantic focus; its old link
+cannot act. Observed-token Save and reopen add no source read, and the stored
+capture bytes remain unchanged. Cancelling a held request rejects its late result.
+
+The separate fresh mean fixture uses the existing Activity grouping/mean controls.
+It retains exact means 403000000/107 and 19000000/13 ns and their read receipts,
+then explicitly explains 107/13 population counts. Its one-field explanation
+performs four physical count/group queries without duration/quantile aggregation;
+each two-field count explanation performs six. Five current frames pass source,
+design and root visual review.
+
+The existing population-explanation regression initially stopped before explanation
+because its old ordinal histogram key no longer matched canonical snapshot keys.
+The test now derives the actual [8,16) row from its admitted histogram and uses
+the same Space/Shift+ArrowRight/Enter gesture for [8,32), preserving the original
+160/160 oracle. No product compatibility shim or model-budget change was added.
+The observed explanation ledger passes alone in 78.93 seconds and again with
+fresh native data in 64.07 seconds, zero skips, including all 21 unchanged negative
+controls. The original 50-second helper stopped during negative replay; only this
+observed gate now uses a bounded 120 seconds. No application/source budget changed.
+
+The actor initially exposed an obsolete button-search scope: its reuse control is
+in the capture toolbar, not inside the evidence body. It now clicks the actual
+visible, correctly labelled toolbar button. The actor-only rerun passes in 60.175
+seconds with 1,004 snapshots through complete: two source operations, one promotion,
+one pure plan, six ready fields, fixed evidence, preserved scope and a real capture
+ID. The wrapper requires this observed completion rather than process exit alone.
+Agent/root image audit finds four hashes across 1,004 images (975 dominant). The
+terminal viewport correctly displays the original frozen 160/160 observation;
+the completed fresh editor is below it. This is partial visual coverage, not a
+contradictory loading image or proof of the unseen fresh editor. Current Playwright
+frames provide the new feature's visual acceptance.
+
+The old ownership scenario also assumed root numeric actions resumed after route
+return. Current scope revocation requires an explicit same-question parent Run;
+recovery wording now states that. The existing model gains a required refreshed-
+parent action/result with the same full question and independently checked records,
+a strictly later timestamp, twelve complete events, five source operations and
+four pure plans. All eleven old rejecting controls remain, with four added refresh
+proof controls. Late pure-filter retirement is exercised by real disclosure close/
+reopen without another source read. QNT typecheck and verification-module compile
+pass. The final ownership-only native scenario passes in 55.0 seconds (57.6-second
+runner), including its actual twelve-event replay in 30.79 seconds with zero skips
+and all fifteen rejecting controls. Its existing 50-second allowance is unchanged.
+The refreshed parent has the same whole question/count (320), a later source clock,
+and independently admitted records; the final side contains twenty records.
+
+Validation is composed from the passing new 348 journey, the existing first
+scenario's completed native assertions and 64.07-second model replay, its corrected
+actor-only positive run, and the final ownership-only native/model run. The earlier
+combined attempts failed; they are not described as a passing combined run. Future
+VERIFY runs invoke both recorded-ledger checks. Reviewed raw run bulk is removed
+after compact fixtures, observed/ownership replay inputs, verdict logs, actor
+summary/audit/sample and current frames are retained. Genuine lab captures, views,
+volumes and all 51 pre-existing pending stream entries remain untouched.
+
 ## Measured facet publication consolidation — 346
 
 The baseline uses the deployed 345 Go binary at `537c879`, genuine OTLP/ClickHouse

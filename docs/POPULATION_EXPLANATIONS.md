@@ -171,3 +171,14 @@ save/reuse, cardinality and ownership checks, native/model replay with 32 reject
 controls, a completed 60-second Bombadil campaign and legacy journeys 174/176 pass.
 Final artifact review and push are recorded in VALIDATION.md; no additional commit
 ID is implied here.
+
+
+## Current numeric-view return contract
+
+Leaving the root fixed-question workspace retires its numeric range actions. On
+return, Run the same fixed question explicitly before selecting a fresh range;
+this is a new source read, not an automatic reuse of the old action lease. Closing
+and reopening only the explanation disclosure can retire a pending field plan
+while retaining the already observed explanation. Fresh fixed comparisons have
+a distinct retained-child flow with source-free Back; see
+[fresh-pair explanations](FRESH_PAIR_EXPLANATIONS.md).

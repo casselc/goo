@@ -1,5 +1,15 @@
 # Known issues and gaps
 
+348 connects fresh fixed-query count/mean pairs to the existing count/share
+explanation engine. It explains population composition, not latency attribution;
+Run rereads both full scopes and retains separate clocks. Side follow-up stages
+only that original operand plus the checked predicate. Back restores the observed
+explanation; Save promotes its token without a source reread. Captured/temporary
+pair generalization and automatic causal discovery remain outside this entry.
+Semantic, native, ownership/model and actual-frame checks pass; see
+[validation](../VALIDATION.md) and
+[fresh-pair explanations](FRESH_PAIR_EXPLANATIONS.md).
+
 346 reduces duplicate counted-facet publication through synchronous atomic data/
 interaction adoption and an owner-local unchanged-state guard. It preserves the
 independent partial/ready observations and their receipts. This does not solve
