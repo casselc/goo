@@ -14,14 +14,22 @@ export function model(value){
 }
 // Keep both the field prefix and terminal identifier visible; exact text stays supplied.
 export function loadedValuePreview(text){const points=Array.from(text);return points.length>160?points.slice(0,104).join('')+'…'+points.slice(-55).join(''):text;}
+const adopt=value=>{try{return model(value)}catch{return null}};
 export function loadedMatchesText({visible,total},maximum=1000){if(!Number.isInteger(visible)||!Number.isInteger(total)||visible<0||visible>total||total>maximum||![1000,2000].includes(maximum))throw Error('Supply bounded local facet match counts.');return visible+' of '+total+' loaded values';}
 class CategoricalFacet extends (global.HTMLElement||class{}){
  static get observedAttributes(){return ['data']}
- set data(value){try{this._data=model(value)}catch{this._data=null}if(this.isConnected)this.render()}
+ set data(value){this._data=adopt(value);if(this.isConnected)this.render()}
  get data(){if(this._data!==undefined)return structuredClone(this._data);try{const raw=this.getAttribute('data');return raw&&raw.length<=8*1024*1024?model(JSON.parse(raw)):null}catch{return null}}
  set interaction(value){this._interaction=value;if(this.isConnected)this.render()}
  get interaction(){return this._interaction}
- connectedCallback(){for(const key of ['data','interaction'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];this[key]=value}this.render()}
+ publish(value){
+  let data=null,interaction=null;
+  try{if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).some(key=>!['data','interaction'].includes(key))||!Object.hasOwn(value,'data')||!Object.hasOwn(value,'interaction'))throw Error('Supply data and interaction together.');
+   const supplied=value.interaction;if(supplied!=null&&(typeof supplied!=='object'||Array.isArray(supplied)||supplied.current!==undefined&&typeof supplied.current!=='function'))throw Error('Supply a current-owner callback.');data=model(value.data);interaction=supplied;
+  }catch{}
+  this._data=data;this._interaction=interaction;if(this.isConnected)this.render();
+ }
+ connectedCallback(){for(const key of ['data','interaction'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];if(key==='data')this._data=adopt(value);else this._interaction=value}this.render()}
  attributeChangedCallback(){this._data=undefined;if(this.isConnected)this.render()}
  render(){
   const active=global.document?.activeElement,focus=this.contains(active)?active.getAttribute('aria-label'):null;

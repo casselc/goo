@@ -135,3 +135,20 @@ are stale; they are not visual evidence. The reviewed terminal sample and explic
 audit are retained with compact logical receipts. Maintained Playwright frames
 were regenerated from the current server. No rerun was required for that known
 driver-capture limitation.
+
+
+## Facet-publication regression (346)
+
+The unchanged journey passed against the reviewed 346 server in 3.8 minutes
+(3.9-minute runner). The actual observed Quint check passed in 19.66 seconds with
+no skips. Partial values, failed-side-only retry, exact held receipts, child/Back,
+pending-owner retirement and stale-control rejection remain covered.
+
+The 35.187-second Bombadil campaign reached phase 7 in 544 DOM snapshots: source
+6, lookups 2, comparisons 2, writes 0, verified 4, immutable true and no overflow.
+Its driver-image audit is separate: 544 JPEGs have four unique hashes, with 535
+repeating the terminal frame. That frame shows an applied child but a pending
+fixed-baseline read with disabled controls; the actual final DOM reports the pair
+ready. The capture is stale at acquisition and cannot establish settled visual
+state. One labelled sample/audit and compact logical receipts remain; maintained
+Playwright frames were regenerated.

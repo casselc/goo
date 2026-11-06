@@ -1,5 +1,13 @@
 # Known issues and gaps
 
+346 reduces duplicate counted-facet publication through synchronous atomic data/
+interaction adoption and an owner-local unchanged-state guard. It preserves the
+independent partial/ready observations and their receipts. This does not solve
+the roughly 32,000-element paired tree or alter admission/byte limits. Code/source
+review, matched native checks, generated properties and actual-frame acceptance
+pass. Back builds once instead of five times, but wall time is not uniformly
+lower. See [validation](../VALIDATION.md) and [publication](FACET_PUBLICATION.md).
+
 345 extends the shared refusal display to trace search, trace expansion and
 linked/surrounding logs. Trace retry preserves the failed offset and, after
 success, continues into the existing linked-log read; log recovery alone does
@@ -66,7 +74,7 @@ Five existing unique roles can coexist without removing a valid timeline. The
 selected-only initial acquisition is superseded by 338 above. See
 [contract](PAIRED_FACETS.md) and final [validation](../VALIDATION.md).
 
-Bombadil driver JPEGs in reviewed 337–340 and 344–345 regression campaigns can repeat stale loading or
+Bombadil driver JPEGs in reviewed 337–340 and 344–346 regression campaigns can repeat stale loading or
 staged frames while independent DOM/API checks reach a verified applied state.
 Those captures do not prove terminal appearance. Maintained visual frames use
 Playwright; per-campaign audits and compact results are in

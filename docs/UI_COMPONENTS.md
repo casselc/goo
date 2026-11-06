@@ -1785,6 +1785,15 @@ attribute support detached SPA updates and server-rendered HTML. See
 [compact controls/current-versus-origin context](COMPACT_CANVAS.md).
 
 
+The facet also exposes synchronous `.publish({data, interaction})` for an atomic
+application update. It validates/detaches data and installs both values before one
+connected render; detached publication renders on connection. `interaction` may
+be null/undefined or an object with an optional `current` function. Invalid atomic
+publication withdraws both values. Existing independent `.data`/`.interaction`
+assignments remain synchronous; pre-upgrade properties and SSR attributes adopt
+with one connection build. This passive method acquires no source data and
+confers no source authority. See [facet publication](FACET_PUBLICATION.md).
+
 The facet's controlled property/attribute is `data`:
 `{declaration, values, baseline?, baselineLabel?, disabled?, hasStaged?, basisLabel?}`. The optional literal
 `basisLabel` is nonblank, at most 120 UTF-8 bytes, well-formed text without control

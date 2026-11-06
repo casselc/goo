@@ -47,6 +47,8 @@ window and checked filters; Run reads fresh data and Back restores the compariso
 ([journey](docs/journeys/334-comparison-record-drill.md)).
 [Retained-parent controls](docs/PARENT_RETURN.md) renew locally on Back while
 keeping questions, observations and receipts; departed actions remain retired.
+[Counted facet publication](docs/FACET_PUBLICATION.md) updates supplied data and
+interaction together, avoiding duplicate list builds while keeping reads explicit.
 [Saved-view restoration](docs/SAVED_VIEW_RESTORATION.md) joins browser history
 notifications without replacing local work. Opening stages configuration; Run
 reads telemetry, and a failed opening offers an explicit retry.

@@ -1,5 +1,94 @@
 # Validation record
 
+## Measured facet publication consolidation — 346
+
+The baseline uses the deployed 345 Go binary at `537c879`, genuine OTLP/ClickHouse
+populations, served-source hashes and styled CSSOM checks. Ordinary facets contain
+1,000 categories; paired facets contain a disjoint 2,000-value union. At both
+1280px and 390px, retained Back performs five connected ready builds with identical
+model signatures: reconnect, interaction and three data assignments. It cumulatively
+constructs 5,000/10,000 rows despite zero source/comparison requests. Ordinary
+ready publication already builds once; paired partial 1,000-row and ready 2,000-row
+publications each build once. Staging builds once. Those independent observations
+are not targets for coalescing. Baseline passes in 1.6 minutes (1.7-minute runner),
+eighteen source API attempts, two comparisons and no browser errors.
+
+`goo-categorical-facet.publish({data, interaction})` now adopts both inputs
+synchronously, validates/detaches the model and renders once when connected.
+Invalid publication withdraws both. Pre-upgrade properties hydrate in one build;
+independent setters and JSON attributes retain synchronous semantics. The owner
+uses a per-visit exact declaration/root/disabled/staged guard; new owners always
+publish, and pending-to-unloaded changes create fresh roots. No claimed basis,
+global cache, deferred update queue, virtualizer or source-budget change is added.
+
+All **1,169 frontend tests** pass with zero failures/skips (18.60 seconds).
+Forty Hegel schedules pass against actual registered production facet/list
+components (3.939 seconds), checking whole model/interaction adoption, exact large
+counts and literals, detached publication, mutation isolation, invalid withdrawal,
+retired callbacks and same-read Find/disclosure behavior. The minimal DOM fixture
+does not establish native paint or arbitrary caret preservation. The Go server
+uses the existing Go 1.27.3 toolchain; no production Go code or schema changes.
+
+The embedded Go server builds; changed component/owner, acquisition helper,
+component JS/CSS and unchanged OpenAPI match reviewed source byte for byte. The
+matched final native journey passes in 3.2 minutes: all four Back operations build
+once, with eighteen source attempts, two comparisons and no browser errors. Each
+ordinary source publication still builds 1,000 ready rows once; each paired
+publication still builds 1,000 partial and 2,000 complete rows once. Stage builds
+once. Child staging no longer constructs a redundant ready parent list.
+
+| Back operation | Ready builds, baseline → final | Rows built, baseline → final | Render CPU ms, baseline → final | Wall through paint opportunity ms, baseline → final |
+| --- | --- | --- | --- | --- |
+| Desktop ordinary | 5 → 1 | 5,000 → 1,000 | 477.7 → 77.6 | 2,154.7 → 1,742.4 |
+| Desktop paired | 5 → 1 | 10,000 → 2,000 | 1,590.8 → 428.1 | 5,723.0 → 11,157.9 |
+| Narrow ordinary | 5 → 1 | 5,000 → 1,000 | 490.8 → 87.6 | 1,905.4 → 1,761.2 |
+| Narrow paired | 5 → 1 | 10,000 → 2,000 | 2,059.5 → 407.9 | 6,921.8 → 6,452.8 |
+
+These are individual operation samples, not medians, percentiles or a uniform
+end-to-end speedup. Render CPU excludes nested setter CPU to avoid double counting;
+wall includes scheduling, browser/driver work and two paint opportunities. In
+particular desktop paired wall increased despite lower measured render CPU. The
+final integration run includes additional semantic checks outside measured
+operations, so its whole-test duration is not compared with the baseline duration.
+The roughly 32,000-element paired tree remains unchanged.
+
+Final-only checks establish visible/unobstructed Back focus, same Find text and
+closed read-detail state, usable terminal caret and exact receipts. They capture
+an actual callback immediately before departure and prove it cannot act after
+Back. The baseline callback was captured before staging and was already retired
+by that stage; it is not used as equivalent evidence of pre-departure retirement.
+Arbitrary mid-string caret/selection preservation is an existing unmodified limit.
+Four current final frames accompany the four baseline frames; design and root
+review accept the displayed exact counts/labels and current controls.
+
+A bounded report-admission helper is wired into future final journey runs. It
+recomputes builds from observed records, admits all four one-build Back/stage
+operations and preserves independent ordinary/paired source publications. Agent
+and root post-run checks accept the actual final receipt and reject a consistent
+negative containing a second connected 2,000-row Back build. This is post-run
+receipt admission, not another browser campaign or a CPU-time threshold.
+
+The existing paired-facet regression passes in 3.8 minutes (3.9-minute runner),
+including fresh observed Go/Quint replay in 19.66 seconds with zero skips. Partial
+sides, failed-side retry, pending owner retirement and exact retained observations
+remain checked for logs and spans. The 35.187-second actor reaches phases 0–7
+with 544 snapshots, six source requests, two value lookups, two comparisons, four
+verified transitions, no writes, immutable parent facts and no overflow.
+
+Independent agent/root image audit finds four JPEG hashes across 544 captures,
+535 sharing the dominant image. The terminal capture shows the applied child
+still reading its fixed baseline, despite the positive completed pair receipt.
+That image is not settled visual evidence; current Playwright frames establish
+appearance. The labelled terminal sample and explicit audit remain with compact
+logical/model inputs. Reviewed raw bulk and disposable binaries are pruned;
+genuine lab data, saved views, volumes and 51 pre-existing pending stream entries
+remain intact.
+
+The 347 architecture/design/planning checkpoint reconciles completed work and
+selects the next finite breadth/depth/consolidation sequence in the roadmap:
+fresh comparison explanations, service-scoped operation inventory/capture and
+typed-scope package authoring. Those features are proposals, not part of 346.
+
 ## Trace and log-context recovery — 345
 
 Four existing application adapters now preserve and render the shared source-read
