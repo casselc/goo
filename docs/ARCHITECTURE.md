@@ -1918,3 +1918,27 @@ No new source query, HTTP endpoint, UI component, convention registry or numeric
 The raw-row span witness, exact binding/stream/temporality/environment rules and
 native evaluation/custody paths remain independent authorities. See
 [contract and read/plan/Run diagram](RPC_CAPABILITY_PARITY.md).
+
+## Saved native interval context — 364
+
+Implementation, UI, generated, real native/observed-model and positive actor checks
+pass, including the shared kept-context regression. See validation for exact bounds.
+The saved capture protocol now checks measurement question versus receipt question
+before adoption. `ui/saved-native-record-context.mjs` retains a detached frozen
+receipt/result copy and admits only an actual held counter/histogram stream and
+export interval. It recomputes the detail's whole record question using the
+unchanged native-context planner; caller inputs are neither frozen nor mutated.
+
+Creation-time capture/render/action leases fence context anchors. Suspension
+retires old callbacks, and resume rebinds current connected anchors, including
+lazy interval content, without remounting captured DOM. Captures retains route,
+receipt and return authority. Its exact saved source differs from the live
+Measurements navigation owner; both keep their existing scope boundaries.
+
+The app's retained-record staging helper reuses ResourceReturn for kept and saved-
+native origins, with optional citation/notice presentation. The saved child stages
+an existing fixed question; only explicit Run reads records. Return suspends child
+work and restores the held saved capture/interval/focus/scroll without a metric or
+store read. Saving/sharing the child alone does not persist its native citation.
+No new HTTP endpoint, source query, kernel, wire format or global navigation owner.
+See [contract and data-flow diagram](SAVED_NATIVE_RECORD_CONTEXT.md).

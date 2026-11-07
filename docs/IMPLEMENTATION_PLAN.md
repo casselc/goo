@@ -4,9 +4,11 @@
 > the adopted [363 reconciliation](reviews/ROADMAP_RECONCILIATION_363.md).
 > The 359 sequence—360 captured span pages, 361 retained-page comparison and 362
 > current RPC capability parity—is delivered with its own recorded acceptance.
-> Next: 364 saved native interval → supporting records (breadth), 365 one captured-
-> record review task (depth, strict contract-first gate), then 366 measured compact
-> paired evidence headers (consolidation). None is implemented by this plan.
+> [364 saved native interval → supporting records](SAVED_NATIVE_RECORD_CONTEXT.md)
+> is delivered with UI/generated/native/model/actor and shared kept-context
+> regression checks. Next: 365 one captured-record review task (depth, strict contract-
+> first gate), then 366 measured compact paired evidence headers (consolidation).
+> Those later outcomes remain proposed, not implemented by this plan.
 > If 365's bounded target/revision/file-publication contract cannot close, defer it
 > explicitly and advance 366. Review the whole product again after this sequence.
 > Delivery notes below are retained history, not parallel active queues.

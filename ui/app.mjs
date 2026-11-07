@@ -167,18 +167,26 @@ const definitionTabs=ResourceTabs.mount([
 for(const event of ['goo:draft-telemetry-package','goo:preview-telemetry-package'])globalThis.addEventListener(event,()=>{appWorkspace.navigate('definitions');definitionTabs.select('records')});
 TelemetryPackages.mount(el('telemetryPackages'));
 globalThis.addEventListener('goo:navigate-explore',()=>appWorkspace.navigate('explore'));
-const keptContextReturn=ResourceReturn.mount(document.querySelector('[data-workspace-panel="explore"]'),{className:'kept-context-return'});let keptContextLease=null;
-function clearKeptContextReturn(){keptContextLease?.visit.releaseReturn();keptContextLease=null;keptContextReturn.clear()}
-function syncKeptContextReturn(){if(keptContextLease&&(!keptContextLease.current()||appWorkspace.current()!=='explore'))clearKeptContextReturn()}
-globalThis.addEventListener('goo:question-state',syncKeptContextReturn);globalThis.addEventListener('goo:workspace',syncKeptContextReturn);globalThis.addEventListener('goo:explore-mode',event=>{if(event.detail.measurements)clearKeptContextReturn();else syncKeptContextReturn()});
-Captures.mount({restoreKeptRoute:()=>appWorkspace.navigate('investigations',{writeHash:false}),openKeptView:(view,source)=>{
+const retainedContextReturn=ResourceReturn.mount(document.querySelector('[data-workspace-panel="explore"]'),{className:'retained-context-return'});let retainedContextLease=null;
+function clearRetainedContextReturn(){retainedContextLease?.release?.();retainedContextLease?.visit.releaseReturn();retainedContextLease=null;retainedContextReturn.clear()}
+function syncRetainedContextReturn(){if(retainedContextLease&&(!retainedContextLease.current()||appWorkspace.current()!=='explore'))clearRetainedContextReturn()}
+globalThis.addEventListener('goo:question-state',syncRetainedContextReturn);globalThis.addEventListener('goo:workspace',syncRetainedContextReturn);globalThis.addEventListener('goo:explore-mode',event=>{if(event.detail.measurements)clearRetainedContextReturn();else syncRetainedContextReturn()});
+function openRetainedRecords(question,source,{view,title,backLabel,citation,notice,scope=source.question,writeHash=false}){
  if(!source.current())return false;
- activityEntry?.enterFixed();
- liveExploration.openQuestion(view.queries[0],[],{stage:true,view,retainedReturn:true});
- const visit=liveExploration.visit();keptContextLease={visit,current:()=>source.current()&&visit.current()};
- keptContextReturn.show({title:'Kept observation',question:source.question,backLabel:'Back to kept observation',onBack:()=>{if(!source.current()||!visit.current())return;visit.suspend();visit.releaseReturn();keptContextLease=null;source.onBack()}});
- return true;
-},openRecordQuestion:q=>{appWorkspace.navigate('explore');liveExploration.openQuestion(q,[],{stage:true})},openLive:page=>{if(page.measurement){globalThis.dispatchEvent(new CustomEvent('goo:open-measurement',{detail:{yaml:JSON.stringify(page.measurement.question.definition)}}))}else if(page.explore){appWorkspace.navigate('explore');liveExploration.openQuestion(page.receipt.question.explore,page.explore.fields,{stage:true})}else{appWorkspace.navigate('services');liveInventory.openQuestion(page.receipt.question.inventory)}}});
+ const hash=writeHash?Workspace.questionLink(question):null;
+ clearRetainedContextReturn();nativeRecordNavigation.clear();activityEntry?.enterFixed();
+ appWorkspace.navigate('explore',{writeHash:false});exploreMode(false);
+ liveExploration.openQuestion(question,[],{stage:true,...(view?{view}:{}),retainedReturn:true});
+ const visit=liveExploration.visit();retainedContextLease={visit,release:source.release,current:()=>source.current()&&visit.current()};
+ retainedContextReturn.show({title,question:scope,backLabel,citation,notice,onBack:()=>{if(!source.current()||!visit.current())return;visit.suspend();visit.releaseReturn();retainedContextLease=null;source.onBack()}});
+ if(hash)history.pushState(null,'',hash);return true;
+}
+Captures.mount({restoreKeptRoute:()=>appWorkspace.navigate('investigations',{writeHash:false}),openKeptView:(view,source)=>openRetainedRecords(view.queries[0],source,{view,title:'Kept observation',backLabel:'Back to kept observation'}),onOpenNativeContext:(detail,source)=>openRetainedRecords(detail.question,source,{
+ title:'From saved native interval · '+source.receipt.id.slice(0,12),backLabel:'Return to saved measurement',writeHash:true,
+ scope:{...source.question,fromNS:detail.fromNS,toNS:detail.toNS},
+ citation:{receipt:source.receipt,measurement:source.measurement.question,stream:detail.stream,fromNS:detail.fromNS,toNS:detail.toNS,basis:detail.basis,readAt:detail.readAt},
+ notice:'Saved metric evidence stays unchanged. Run reads fresh contextual records; shared time and resource identity do not establish contribution or cause. Saving or sharing the record question alone does not preserve this native citation.'
+}),openRecordQuestion:q=>{appWorkspace.navigate('explore');liveExploration.openQuestion(q,[],{stage:true})},openLive:page=>{if(page.measurement){globalThis.dispatchEvent(new CustomEvent('goo:open-measurement',{detail:{yaml:JSON.stringify(page.measurement.question.definition)}}))}else if(page.explore){appWorkspace.navigate('explore');liveExploration.openQuestion(page.receipt.question.explore,page.explore.fields,{stage:true})}else{appWorkspace.navigate('services');liveInventory.openQuestion(page.receipt.question.inventory)}}});
 globalThis.addEventListener('goo:show-general-capture',()=>{el('savedOperationEvidence').hidden=true});
 globalThis.addEventListener('goo:navigate-investigations',()=>appWorkspace.navigate('investigations',{writeHash:false}));
 Documents.mount(el('investigationDocuments'));

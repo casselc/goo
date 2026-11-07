@@ -1,5 +1,15 @@
 # Known issues and gaps
 
+364 connects saved counter/histogram export intervals to explicit fresh record
+context, with exact bounds/identity and a return to unchanged captured evidence.
+UI, generated ownership, genuine native/recorded-fact model replay and positive
+actor checks pass; the reused kept-context path also passes its existing real
+regression. This is contextual time/resource matching, not contributing requests,
+exemplars or causality. Captured origin and fresh record clocks remain separate;
+saving the child question alone does not persist a native citation. Current
+frames are task-positioned and do not establish above-the-fold density.
+See [contract](SAVED_NATIVE_RECORD_CONTEXT.md) and [validation](../VALIDATION.md).
+
 362 aligns current RPC duration recognition across Services and Measurements,
 with bounded conditional-attribute coverage and unchanged execution/binding
 authorities. Main Go/UI, Hegel, native/model and positive actor checks pass,

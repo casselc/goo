@@ -1,0 +1,15 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {Saved,page,detail,fixture} from './support/saved-native-context-364.mjs';
+test('stored interval admission preserves exact question and rejects foreign exports and policies',()=>{
+ const p=page(),d=detail(p),before=structuredClone(p),checked=Saved.admit(p,d);assert.deepEqual(checked,d);assert(Object.isFrozen(checked.question.where));assert.deepEqual(p,before);assert(!Object.isFrozen(p.measurement));
+ for(const change of [x=>x.fromNS=String(BigInt(x.fromNS)+1n),x=>x.stream.attributes.foreign='value',x=>x.question.where.all.pop(),x=>x.measurement.fromMs++,x=>x.basis={source:'foreign'},x=>x.readAt='other',x=>x.grain='point-context']){const bad=structuredClone(d);change(bad);assert.throws(()=>Saved.admit(p,bad))}
+ const bad=structuredClone(p);bad.receipt.question.measurement.toMs++;assert.throws(()=>Saved.admit(bad,d));
+ for(const kind of ['gauge','stock']){const bad=structuredClone(p);bad.measurement.question.definition.kind=kind;bad.receipt.question.measurement=structuredClone(bad.measurement.question);assert.throws(()=>Saved.admit(bad,{...d,measurement:bad.measurement.question}))}
+});
+test('retained source survives departure while old and lazy callbacks retire without rerender',()=>{
+ const f=fixture(),p=page();assert.equal(f.owner.show(p),true);const mount=f.render();mount.detail=structuredClone(detail(p));const anchor=mount.anchor(),old=anchor.onclick;assert.equal(old(),true);const source=f.opened[0][1],held=f.opened[0][0];assert.equal(source.current(),true);assert(Object.isFrozen(source.receipt));assert(Object.isFrozen(held.question));p.measurement.counters.series[0].stream.attributes.foreign='mutated';assert.equal(source.measurement.counters.series[0].stream.attributes.foreign,undefined);
+ const lazy=mount.anchor(),oldLazy=lazy.onclick,dom=f.host.children,selected=f.host.selectedKey;f.owner.suspend();assert.equal(source.current(),true);assert.equal(old(),false);assert.equal(oldLazy(),false);assert.equal(f.owner.resume(),true);assert.equal(f.render(),mount);assert.equal(f.host.children,dom);assert.equal(f.host.selectedKey,selected);assert.equal(old(),false);assert.equal(oldLazy(),false);assert.equal(anchor.onclick(),true);assert.equal(lazy.onclick(),true);assert.equal(f.opened.length,3);
+ const current=anchor.onclick;f.active(false);assert.equal(current(),false);f.active(true);anchor.hidden=true;assert.equal(current(),false);anchor.hidden=false;f.owner.show(page());assert.equal(source.current(),false);assert.equal(current(),false);f.owner.dispose();assert.equal(f.owner.resume(),false);assert.equal(f.owner.show(page()),false);
+});
+test('invalid detail never delegates and show freezes only its detached copy',()=>{const f=fixture(),p=page();f.owner.show(p);const m=f.render();m.detail=detail(p);m.detail.toNS=String(BigInt(m.detail.toNS)-1n);assert.equal(m.anchor().onclick(),false);assert.equal(f.opened.length,0);p.receipt.id='b'.repeat(64);assert.notEqual(m.result.question,p.measurement.question);assert.notEqual(m.result,p.measurement);});

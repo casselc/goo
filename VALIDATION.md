@@ -1,5 +1,96 @@
 # Validation record
 
+## Saved native interval context — 364
+
+Saved counter/histogram export intervals now stage the existing exact record
+context question. Only explicit Run reads fresh records. The saved parent keeps
+its immutable receipt, native question, exact stream/export interval, basis and
+read/custody clocks. Return restores its original DOM, selected interval, opener
+and hash without metric reevaluation or a capture-store GET. Contextual shared
+time/resource identity does not establish contribution or cause. A child query
+alone does not persist the native citation.
+
+The new bounded saved adapter clones/freezes the retained parent without freezing
+caller inputs. It recomputes the existing planner against an actual held stream
+and export interval. Creation-time action leases cover lazily built links and
+suspend/resume; resume rebinds actions without rebuilding the saved view. The
+capture owner and existing child visit fence return, replacement, cancellation
+and late callbacks. The existing resource-return presenter carries optional saved
+provenance; the kept-observation and saved-native routes share the application
+handoff. Stored measurement questions are checked against their receipt before
+adoption. No Go planner, source query, HTTP endpoint, kernel or capture format
+was added.
+
+The UI suite passes **1,239 tests in 19.622 seconds, zero skips**. Focused capture
+checks found and fixed an unrelated catalog GET on native return; they prove no
+GET/rerender, exact focus, retirement before replacement completes and recovery
+after failed refresh. A final focused return-presenter check verifies direct
+summary-first markup with optional native citation. Architecture independently
+accepts the source. Main Go/API suites were not repeated for UI-only production
+changes; the Go 1.27.3 server was rebuilt and deployed, health 200 and all six
+changed embedded UI assets byte-identical to source. Reviewed binary SHA-256:
+`ff6acd31809f353b33ea6b77cb16722687dc7097c264daec697171dc1b042e89`.
+
+Forty Hegel actual-owner schedules pass in **3.94 seconds**, including immutable
+admission, suspend/resume, retained DOM/source, hidden/stale/ABA/disposed actions,
+forged question/stream/bounds/clocks and independent nanosecond membership. The
+actual generated wrapper of the existing population drilldown model accepts the
+positive path and rejects two controls in **5.38 seconds**; combined package
+9.332 seconds, zero skips. Initial fixture corrections fix two Go compile typos
+and normalize only Go's inert empty scalar environment beside a typed selector;
+actual UI context still matches the whole canonical expected question.
+
+The corrected genuine native journey passes in **58.811 seconds** (runner
+60.728). Both cases pass ten recorded boundaries: a current-only counter finds
+11 spans, and an effective-policy histogram finds 12 logs. Independent raw input
+and bounded ClickHouse queries check exact half-open submillisecond endpoints and
+reported service/namespace/instance/environment membership. Success, real upstream
+503 refusal and held completed-source responses each make their explicit record
+read; Stage/Return and retired actions make none. Returning during each held
+request increases the browser abort counter 0→1, rejects late publication and
+preserves the original capture bytes, DOM, selected interval and focus. Its first
+attempt stopped after a correct return because a test helper waited for a removed
+child status element; the corrected helper records actual absent status and all
+remaining question phases, without weakening late-publication checks.
+
+The native run's initial observed checker passed in 5.46s. Final audit then found
+its model replay used a fixed expected trace after Go admission. The strengthened
+**offline observed replay passes in 9.67 seconds** (package 9.700), zero skips,
+using each recorded fact's action and actual cumulative source counter. Two real
+case projections pass; four cloned counter/order mutations are rejected directly
+by Quint, bypassing Go admission. Six additional Go mutations reject changed
+questions, captured bytes and retained origins. The combined pending-stage/Run
+fact is projected as logical Stage at its recorded before-counter and Read at its
+after-counter; no intermediate snapshot is claimed. The existing model checks
+source/depth, while raw membership, exact questions, custody and UI ownership
+remain independently admitted. Compact actual steps and model summaries are kept.
+No product or browser change was needed for this proof correction.
+
+The focused actor completes visibly in **35.156 seconds**, **492 snapshots /
+7 stages**: one explicit contextual record read, zero native/store reads or
+writes, exact full question and 12 log IDs, then the same saved histogram DOM,
+selected interval and focused link. Genuine desktop/narrow frames show the
+origin citation, fresh records and restored interval. Design accepts the bounded
+interaction; the frames are task-positioned and do not prove compact or
+above-the-fold layout. Root also reviewed the original terminal actor JPEG.
+
+Because the app helper also serves kept observations, the existing 328 regression
+was run against the **same reviewed binary**: **18.5 seconds** (runner 20.4).
+Its stage/Run/Back, exact namespace and pending cancellation checks pass. The
+journey now accepts the standard reviewed-binary override, avoiding a duplicate
+build; six genuine 327/328 frames were refreshed. No additional actor/model was
+run for that existing regression.
+
+Reviewed owned 364 raw images shrink from 35MB to about 656KB while all four
+actual capture files/catalog metadata, final/compact-first-failure summaries,
+replay inputs/results, compressed actor trace and terminal sample remain. Final
+projection artifacts add only compact steps/summaries. The lab, volumes and 51
+pre-existing stale pending entries are preserved. See [contract and diagram](docs/SAVED_NATIVE_RECORD_CONTEXT.md),
+[architecture](docs/reviews/SAVED_NATIVE_CONTEXT_ARCHITECTURE_364.md),
+[design](docs/reviews/SAVED_NATIVE_CONTEXT_DESIGN_364.md) and
+[storyboard](docs/journeys/364-saved-native-context.md).
+
+
 ## Whole-product checkpoint — 363
 
 Independent architecture and design/product reviews reassess the complete product

@@ -1,5 +1,12 @@
 # User journeys and storyboards
 
+[Journey364](364-saved-native-context.md) follows a saved current-only counter and
+effective-policy histogram interval into exact logs/spans context. Stage reads
+nothing; explicit Run acquires fresh records, and Return restores the same saved
+DOM, interval, receipt, clocks and focus without metric/store reads. Refused and
+late child reads, old actions and exact boundary membership are checked. Native/recorded-fact model replay, positive actor and genuine-frame checks pass,
+with the shared kept-context regression covering the reused return path.
+
 [Journey362](362-current-rpc-capability.md) follows the same current RPC duration
 instrument from Services into Measurements. It checks the pinned candidate,
 bounded missing/empty/`_OTHER` method coverage, explicit package planning and

@@ -305,6 +305,10 @@ membership and matching resource identity; Run reads records explicitly and Back
 restores the held metric view. It provides context rather than a causal or
 exemplar relationship. [Journey 192](journeys/192-native-record-context-storyboard.md)
 shows the flow and its broader trace-expansion boundary.
+[Saved native intervals](docs/SAVED_NATIVE_RECORD_CONTEXT.md) now use the same
+context question with an immutable capture citation. **Return to saved measurement**
+restores the held result and selection without a metric or store read. UI,
+generated ownership, native/recorded-fact replay and positive actor checks pass.
 
 Error triage acceptance is complete: ET1 `982b9e9`, ET2 `0c4ab38`, real OTel
 179 spans/logs, ownership, native/model checks and a 55-second actor pass. Actual
@@ -594,10 +598,11 @@ explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-eva
 
 The [active roadmap](docs/ROADMAP_2026_11_05.md) adopts the
 [363 whole-product reconciliation](docs/reviews/ROADMAP_RECONCILIATION_363.md):
-saved native interval → supporting records, then one captured-record review task
-only after its target/revision contract closes, followed by measured compact
-comparison headers. These are proposed deliveries; an unclosed review-task gate
-does not block the known layout improvement.
+364 saved native interval → supporting records is delivered with native/model,
+actor and shared kept-context regression checks. Next is one captured-record
+review task only after its
+contract closes, then measured compact comparison headers. An unclosed review-task
+gate does not block that known layout improvement.
 
 Go library entry points: `subjectfacts` provides portable prepared-fact aggregation
 and offline ClickHouse/Databricks compilation; `measurements` binds/evaluates native

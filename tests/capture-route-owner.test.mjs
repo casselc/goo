@@ -10,8 +10,9 @@ const reads=[],shown=[],inspected=[],painted=[];
 const passive={mount:()=>({suspend(){},showSaved(page){painted.push(page.receipt.id)}})};
 for(const name of ['distributions','inventory'])mock.module('../ui/'+name+'.mjs',{exports:passive});
 const savedResumes=[];let savedPorts;mock.module('../ui/saved-records.mjs',{exports:{mount(_host,options){savedPorts=options;return {...passive.mount(),resume(){if(options.active())savedResumes.push({busy:el('generalCaptureWorkspace').getAttribute('aria-busy'),location:options.getPageLocation()})}}}}});
+const nativeRenders=[],nativeResumes=[];let nativePorts;mock.module('../ui/saved-native-record-context.mjs',{exports:{mount(_host,options){nativePorts=options;let suspended=false;return {show(page){suspended=false;nativeRenders.push(page)},suspend(){suspended=true},resume(){if(suspended&&options.active()){suspended=false;nativeResumes.push(true)}}}}}});
 for(const name of ['record-environment','explanation','measurements'])mock.module('../ui/'+name+'.mjs',{exports:{}});
-mock.module('../ui/evidence-scope.mjs',{exports:{record:page=>page,element:()=>new El()}});
+mock.module('../ui/evidence-scope.mjs',{exports:{record:page=>page,measurement:page=>page,element:()=>new El()}});
 mock.module('../ui/components.mjs',{exports:{node:()=>new El(),disclosure:()=>new El()}});
 mock.module('../ui/kept-saved.mjs',{exports:{library(){},mount:()=>({show(v){shown.push(v.id)},inspect(i){if(Number.isInteger(i)&&i>=0&&i<3){inspected.push(i);return true}return false}})}});
 mock.module('../ui/kept-client.mjs',{exports:{client:{open(id,{signal}){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b});reads.push({id,signal,resolve:()=>resolve({id,members:[{},{},{}]}),reject:()=>reject(Error('offline'))});return promise}}}});
@@ -26,7 +27,7 @@ const a='a'.repeat(64),b='b'.repeat(64);
 const page=id=>({receipt:{id,title:id,capturedAt:'2026-01-01T00:00:00Z',question:{inventory:{fromMs:0,toMs:1,environment:'prod'}}},inventory:{count:1,state:'ready',basis:'stored'}});
 const route=id=>{location.hash='#capture='+id;emit('popstate');emit('hashchange')};
 test('capture acquisition belongs to route visit, joins notifications, retires before abort and retries explicitly',async()=>{
- const owner=mount({});route(a);assert.equal(pending.length,1);const first=pending[0];
+ const nativeRequests=[];const owner=mount({restoreKeptRoute:()=>emit('goo:workspace',{route:'investigations'}),onOpenNativeContext:(detail,source)=>{nativeRequests.push({detail,source});location.hash='#question=child';emit('hashchange');emit('goo:workspace',{route:'explore'});return true}});route(a);assert.equal(pending.length,1);const first=pending[0];
  route(b);assert(first.signal.aborted);first.resolve(page(a));await tick();assert.notEqual(location.hash,'#capture='+a);assert.notEqual(el('captureGeneralID').value,a);
  pending[1].resolve(page(b));await tick();assert.equal(el('captureGeneralID').value,b);const status=el('captureSavedStatus').textContent,paintCount=painted.length;
  emit('hashchange');emit('popstate');assert.equal(pending.length,2);assert.equal(el('captureSavedStatus').textContent,status);assert.equal(painted.length,paintCount,'passive route must preserve evidence DOM');
@@ -57,5 +58,14 @@ test('capture acquisition belongs to route visit, joins notifications, retires b
  const resumed=savedResumes.length,failed=savedPorts.onOpenStoredPage({id:b,cursor:nextCursor,offset:0});pending.at(-1).reject(Error('stored side offline'));assert.equal(await failed,false);assert.equal(savedResumes.length,resumed+1);assert.deepEqual(savedResumes.at(-1),{busy:'false',location:null},'recover held page after clearing busy without admitting failed target');assert.equal(el('captureGeneralID').value,a);assert.equal(location.hash,'#capture='+a);
  const requests=pending.length;assert.equal(savedPorts.onOpenStoredPage({id:a,cursor:1,offset:100}),false);assert.equal(savedPorts.onOpenStoredPage({id:a,cursor,offset:-1}),false);assert.equal(pending.length,requests);
  location.hash='#explore';emit('hashchange');emit('goo:save-capture',{question:{kind:'explore',explore:spanPage(b,0).explore.question},title:'new stored spans'});pending.at(-1).resolve({items:[]});await tick();el('captureDraftInvestigation').value='';const saved=el('captureDraftConfirm').onclick();pending.at(-1).resolve(spanPage(b,0));await saved;assert.deepEqual(savedPorts.getPageLocation(),{id:b,cursor:'',offset:0},'successful capture creation establishes its loaded first-page location');
+
+ // Saved native return preserves the existing capture view across child staging.
+ const nativePage=id=>({receipt:{id,title:'native',capturedAt:'2026-11-07T00:00:01Z',question:{kind:'measurement',measurement:{definition:{kind:'counter',environment:'prod'},fromMs:1000,toMs:61000}}},measurement:{question:{definition:{kind:'counter',environment:'prod'},fromMs:1000,toMs:61000},count:'2',basis:'stored',readAt:'2026-11-07T00:00:00Z'}});
+ const nativeOpen=owner.open(a);pending.at(-1).resolve(nativePage(a));await nativeOpen;const opener=new El(),parent=nativeRenders.at(-1),source={current:()=>true,receipt:parent.receipt,measurement:parent.measurement,opener},beforeReads=pending.length,beforeRenders=nativeRenders.length,beforeResume=nativeResumes.length;
+ opener.closest=()=>null;
+ assert.equal(nativePorts.onOpenContext({question:{signal:'logs'}},source),true);const heldNative=nativeRequests.at(-1).source;assert.equal(heldNative.current(),true);assert.equal(heldNative.onBack(),true);assert.equal(location.hash,'#capture='+a);assert.equal(pending.length,beforeReads,'native Return must not reacquire capture or telemetry');assert.equal(nativeRenders.length,beforeRenders,'native Return preserves the existing render');assert.equal(nativeResumes.length,beforeResume+1);assert.equal(document.activeElement,opener);assert.equal(heldNative.onBack(),false,'completed Return retires its callback');
+ assert.equal(nativePorts.onOpenContext({question:{signal:'spans'}},source),true);const retiredNative=nativeRequests.at(-1).source,replacement=owner.open(b);assert.equal(retiredNative.current(),false,'a new capture request retires the old native origin before response');assert.equal(retiredNative.onBack(),false);pending.at(-1).resolve(nativePage(b));await replacement;
+ const resumes=nativeResumes.length,failedNativeRefresh=el('captureGeneralRefresh').onclick();pending.at(-1).reject(Error('native refresh offline'));await failedNativeRefresh;assert.equal(nativeResumes.length,resumes+1,'failed refresh restores the eligible frozen native controls');
+
 
 });

@@ -4092,3 +4092,44 @@ delta/cumulative streams, optional method labels and wrong-shape controls;
 observed gate with `GOO_GENERIC_BINARY` set to the reviewed binary. See
 [contract](../docs/RPC_CAPABILITY_PARITY.md) and [validation](../VALIDATION.md) for
 execution status, exact generated commands and bounded claims.
+
+## Saved native interval context — 364
+
+UI/generated, real native/recorded-fact model replay and positive actor checks
+pass, including current-frame acceptance and the shared kept-context regression.
+`TestHegelSavedNativeContext364` drives forty schedules through the actual mounted
+saved-source owner with a passive measurement-render port, checking exact retained
+stream/export admission, suspension/resume/ABA leases and caller immutability.
+Independent integer interval expectations check exact submillisecond bounds and
+typed scope. These owner tests do not establish real route/DOM/focus behavior.
+
+```sh
+go -C verification test -run '^Test(HegelSavedNativeContext364|QuintSavedNativeContextProtocol364)$' -count=1 .
+```
+
+`TestQuintSavedNativeContextProtocol364` exercises the actual existing
+`population_drilldown` wrapper with a complete path and two rejecting controls.
+The required observed checker is `TestQuintSavedNativeContextObserved364`, using
+`GOO_SAVED_NATIVE_CONTEXT_364_REPORT` pointing to the genuine final summary.
+Without that report the explicit observed test skips. Two ten-fact protocols
+cover current-only counter and effective histogram origins: successful, refused
+and cancelled record reads retain their own source effects; Stage/Return and old
+callbacks acquire neither native telemetry nor stored captures. Exact questions,
+raw record membership, held DOM/receipt/clocks and complete capture bytes receive
+independent adapter admission rather than being inferred from the lifecycle model.
+
+Final observed replay derives action labels and cumulative source counters from
+actual recorded facts. The combined pending-stage/Run macrostep uses its recorded
+before/after counters as a logical split, not an intermediate snapshot. Model
+source/depth checks accept two actual case projections and reject four cloned
+counter/order mutants directly; custody, questions and membership remain separate
+Go/browser checks. The early smoke trace remains a declared model fixture. Final
+offline replay is 9.67s, zero skips; compact actual steps/model summaries are saved.
+
+`bombadil/saved-native-context364.ts` requires positive visible exact saved-parent
+return, one contextual record read and zero native/store reads or writes.
+`GOO_SAVED_NATIVE_CONTEXT_BOMBADIL=1` and `GOO_VERIFY_QUINT=1` enable the actor and
+required observed gate in the genuine
+[journey](../docs/journeys/364-saved-native-context.md), using the reviewed
+`GOO_GENERIC_BINARY`. See [contract](../docs/SAVED_NATIVE_RECORD_CONTEXT.md) and
+[validation](../VALIDATION.md) for current execution status and bounded claims.
