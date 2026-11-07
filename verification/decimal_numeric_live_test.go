@@ -356,7 +356,7 @@ func decLiveSource(result exploration.Result, environment string, records []decL
 }
 
 func decLiveCohort(result exploration.Result) (exploration.Cohort, error) {
-	c := exploration.Cohort{Question: result.Question, Basis: result.Basis, State: result.State, Count: result.Count, Numeric: result.Numeric, NumericHistogram: result.NumericHistogram, Groups: []exploration.ValueCount{}}
+	c := exploration.Cohort{CapturedAt: result.CapturedAt, Question: result.Question, Basis: result.Basis, State: result.State, Count: result.Count, Numeric: result.Numeric, NumericHistogram: result.NumericHistogram, Groups: []exploration.ValueCount{}}
 	if len(result.Question.GroupBy) != 1 {
 		return c, fmt.Errorf("one grouped field required")
 	}
@@ -469,16 +469,16 @@ type decLiveCustody struct {
 	SHA256, ReceiptID, CopiedAt, Source string
 }
 type decLiveLedger struct {
-	Custody                                                                                        decLiveCustody
-	StoredBytes                                                                                    int
-	StoredSHA                                                                                      string
-	Version                                                                                        int
-	Environment, Signal                                                                            string
-	Records                                                                                        []decLiveRecord
-	Q, Initial, ParentQuery                                                                        exploration.Query
-	Binding                                                                                        exploration.NumericBinding
-	Filtered, Negative, ResourceFilter, Result, Selected, Rest, ParentAgain, Reused, LastBinResult exploration.Result
-	Coverage                                                                                       []struct {
+	Custody                                                                                                           decLiveCustody
+	StoredBytes                                                                                                       int
+	StoredSHA                                                                                                         string
+	Version                                                                                                           int
+	Environment, Signal                                                                                               string
+	Records                                                                                                           []decLiveRecord
+	Q, Initial, ParentQuery                                                                                           exploration.Query
+	Binding                                                                                                           exploration.NumericBinding
+	Filtered, Negative, ResourceFilter, Result, Selected, Rest, ParentAgain, ParentReactivated, Reused, LastBinResult exploration.Result
+	Coverage                                                                                                          []struct {
 		Operator string
 		Result   exploration.Result
 	}
@@ -489,9 +489,10 @@ type decLiveLedger struct {
 		Request        exploration.ComparisonRequest
 		Response       exploration.CohortComparison
 	}
-	Signed [][]struct{ Value, Exact, Text string }
-	View   struct {
-		Points             []struct{ Key, From, To, Value, Label string }
+	Signed            [][]struct{ Value, Exact, Text string }
+	HistogramSnapshot json.RawMessage
+	View              struct {
+		Points             []struct{ Key, Value, Label string }
 		FromLabel, ToLabel string
 		Interactive        bool
 	}
@@ -621,7 +622,7 @@ func decLiveSemantic(l decLiveLedger) bool {
 	parent := l.Q
 	parent.Numeric = &l.Binding
 	parent.NumericHistogram = &exploration.NumericHistogramSpec{Binning: "powers-of-two"}
-	if !nhLiveSameQuery(parent, l.ParentQuery) || !nhLiveSameQuery(l.Result.Question, parent) || !nhLiveSameQuery(l.ParentAgain.Question, parent) {
+	if !nhLiveSameQuery(parent, l.ParentQuery) || !nhLiveSameQuery(l.Result.Question, parent) || !nhLiveSameQuery(l.ParentAgain.Question, parent) || !nhLiveSameQuery(l.ParentReactivated.Question, parent) {
 		return false
 	}
 	initial := l.Q
@@ -655,7 +656,7 @@ func decLiveSemantic(l decLiveLedger) bool {
 			return false
 		}
 	}
-	for _, result := range []exploration.Result{l.Filtered, l.Negative, l.ResourceFilter, l.Result, l.Selected, l.Rest, l.Partition.Selected, l.Partition.Rest, l.ParentAgain, l.Reused, l.LastBinResult} {
+	for _, result := range []exploration.Result{l.Filtered, l.Negative, l.ResourceFilter, l.Result, l.ParentReactivated, l.Selected, l.Rest, l.Partition.Selected, l.Partition.Rest, l.ParentAgain, l.Reused, l.LastBinResult} {
 		if !decLiveSource(result, l.Environment, l.Records) {
 			return false
 		}
@@ -691,20 +692,18 @@ func decLiveSemantic(l decLiveLedger) bool {
 			expected := new(big.Rat).SetFrac(ncLiveInt(numerator), denominator)
 			cell := l.Signed[i][side]
 			actual, ok := new(big.Rat).SetString(cell.Value)
-			if !ok || actual.Cmp(expected) != 0 || cell.Exact != cell.Value+" USD (exact)" || cell.Text == "" {
+			if !ok || actual.Cmp(expected) != 0 || cell.Exact != cell.Value+" USD · numeric "+metric+" · "+func() string {
+				if metric == "mean" {
+					return "exact-rational"
+				}
+				return "exact"
+			}()+" · derived · "+s.Valid+"/"+s.Count+" valid · missing "+s.Missing+" · empty "+s.Empty+" · invalid "+s.Invalid || cell.Text == "" {
 				return false
 			}
 		}
 	}
-	if l.Result.NumericHistogram == nil || len(l.View.Points) != 128 || !l.View.Interactive {
+	if !decLiveHistogramSnapshot(l) {
 		return false
-	}
-	for i, p := range l.View.Points {
-		b := l.Result.NumericHistogram.Bins[i]
-		label := "[" + decText(b.From, 2) + ", " + decText(b.To, 2) + ") USD · " + b.Count + " records"
-		if p.Key != strconv.Itoa(i) || p.From != b.From || p.To != b.To || p.Value != b.Count || p.Label != label {
-			return false
-		}
 	}
 	if !decLivePackage(l) {
 		return false
@@ -771,14 +770,78 @@ func decLivePackage(l decLiveLedger) bool {
 	reused := l.ParentQuery
 	reused.FromMS = l.Reused.Question.FromMS
 	reused.ToMS = l.Reused.Question.ToMS
-	return nhLiveSameQuery(reused, l.Reused.Question) && reused.ToMS-reused.FromMS == 300000 && reused.ToMS >= l.ParentQuery.ToMS && reflect.DeepEqual(l.Reused.Numeric, l.Result.Numeric) && reflect.DeepEqual(l.Reused.NumericHistogram, l.Result.NumericHistogram)
+	return nhLiveSameQuery(reused, l.Reused.Question) && reused.FromMS == l.ParentQuery.FromMS && reused.ToMS == l.ParentQuery.ToMS && reflect.DeepEqual(l.Reused.Numeric, l.Result.Numeric) && reflect.DeepEqual(l.Reused.NumericHistogram, l.Result.NumericHistogram)
 }
+
+// The display may trim zero bins; the dataset retains all exact geometry.
+func decLiveHistogramSnapshot(l decLiveLedger) bool {
+	var v struct {
+		Version, Revision, Shape, Origin string
+		Scope                            struct {
+			ID, Generation, Signal string
+			Selector               exploration.Query
+		}
+		Rows []struct {
+			Key, State string
+			Values     struct{ From, To, Count string }
+		}
+		Completeness struct {
+			Basis, Revision, ScopeID string
+			Aspects                  []string
+		}
+		Histogram struct {
+			Kind, Binning, Closure string
+			Binding                exploration.NumericBinding
+			Support                struct{ Total, Valid, Missing, Empty, Invalid string }
+		}
+	}
+	if json.Unmarshal(l.HistogramSnapshot, &v) != nil || l.Result.NumericHistogram == nil || l.Result.Numeric == nil || len(v.Rows) != 128 || v.Version != "goo.dataset/1" || v.Shape != "histogram" || v.Origin != "source-read" || v.Revision != l.Result.Basis || v.Scope.Generation != v.Revision || v.Scope.Signal != l.Signal || !nhLiveSameQuery(v.Scope.Selector, l.ParentQuery) || v.Completeness.Basis != "captured-query" || v.Completeness.Revision != v.Revision || v.Completeness.ScopeID != v.Scope.ID || len(v.Completeness.Aspects) != 1 || v.Completeness.Aspects[0] != "bins" || v.Histogram.Kind != "numeric" || v.Histogram.Binning != "powers-of-two" || v.Histogram.Closure != "left-closed-right-open" || v.Histogram.Binding != l.Binding || !l.View.Interactive {
+		return false
+	}
+	n := l.Result.Numeric
+	s := v.Histogram.Support
+	if s.Total != n.Count || s.Valid != n.Valid || s.Missing != n.Missing || s.Empty != n.Empty || s.Invalid != n.Invalid {
+		return false
+	}
+	for i, row := range v.Rows {
+		b := l.Result.NumericHistogram.Bins[i]
+		state := "observed"
+		if b.Count == "0" {
+			state = "no_data"
+		}
+		lo := new(big.Rat).SetFrac(ncLiveInt(b.From), big.NewInt(100)).RatString()
+		hi := new(big.Rat).SetFrac(ncLiveInt(b.To), big.NewInt(100)).RatString()
+		if row.Key != "bin:"+strconv.Itoa(i) || row.Values.From != lo || row.Values.To != hi || row.Values.Count != b.Count || row.State != state {
+			return false
+		}
+	}
+	// Check each visible point against its actual key, not its position in the
+	// trimmed display; labels retain exact scaled coefficients and scope wording.
+	seen := map[int]bool{}
+	for _, p := range l.View.Points {
+		if !strings.HasPrefix(p.Key, "bin:") {
+			return false
+		}
+		i, e := strconv.Atoi(strings.TrimPrefix(p.Key, "bin:"))
+		if e != nil || i < 0 || i >= 128 || seen[i] {
+			return false
+		}
+		seen[i] = true
+		b := l.Result.NumericHistogram.Bins[i]
+		label := "[" + strings.TrimSuffix(strings.TrimRight(decText(b.From, 2), "0"), ".") + ", " + strings.TrimSuffix(strings.TrimRight(decText(b.To, 2), "0"), ".") + ") USD · " + b.Count + " captured records"
+		if p.Value != b.Count || p.Label != label {
+			return false
+		}
+	}
+	return len(seen) > 0
+}
+
 func decLiveRequests(l decLiveLedger) bool {
 	expected := []exploration.Result{l.Filtered, l.Negative, l.ResourceFilter}
 	for _, item := range l.Coverage {
 		expected = append(expected, item.Result)
 	}
-	expected = append(expected, l.Result, l.Selected)
+	expected = append(expected, l.Result, l.Selected, l.ParentReactivated)
 	explores, plans, reads, writes, protocols := 0, 0, 0, 0, 0
 	captureSeen := false
 	comparisonResults := []exploration.Result{l.Partition.Selected, l.Partition.Rest}
@@ -862,11 +925,11 @@ func decLiveRequests(l decLiveLedger) bool {
 			return false
 		}
 	}
-	return reads == 14 && explores == 13 && plans == 2 && protocols == 1 && writes == 1 && captureSeen
+	return reads == 15 && explores == 14 && plans == 2 && protocols == 1 && writes == 1 && captureSeen
 }
 func decLiveReplay(t *testing.T, l decLiveLedger) bool {
 	t.Helper()
-	if len(l.Events) != 21 {
+	if len(l.Events) != 23 {
 		return false
 	}
 	sink := &qobs.MemorySink{}
@@ -974,11 +1037,11 @@ func TestQuintDecimalNumericLiveLedger(t *testing.T) {
 		case 24:
 			l.Events[12].Reads++
 		case 25:
-			l.Events[15].Reads++
+			l.Events[17].Reads++
 		case 26:
-			l.Events[18].Reads++
+			l.Events[20].Reads++
 		case 27:
-			l.Events[20].Writes++
+			l.Events[22].Writes++
 		case 28:
 			l.Events[0], l.Events[1] = l.Events[1], l.Events[0]
 		case 29:

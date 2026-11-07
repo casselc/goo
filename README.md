@@ -615,7 +615,11 @@ for Run and return to held groups without rereading.
 [Native histogram display reuse](docs/NATIVE_HISTOGRAM_VIEW_REUSE.md) saves
 Histogram/Table configuration separately from measurement calculation and evidence.
 Apply preserves the current question; Run and export selection remain explicit.
-Next is checked typed distribution continuation. Whole-product reviews and proposed work are distinct from
+[Typed distribution continuation](docs/TYPED_DISTRIBUTION_CONTINUATION.md) now
+checks the exact selection intent, stages the complete child question and waits
+for Run. Back retains the parent without rereading and visibly pauses selection
+until an explicit parent Run. Next is contextual native-view discovery.
+Whole-product reviews and proposed work are distinct from
 [validated delivery](VALIDATION.md).
 
 Go library entry points: `subjectfacts` provides portable prepared-fact aggregation

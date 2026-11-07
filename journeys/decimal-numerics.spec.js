@@ -427,7 +427,7 @@ async function execute(page, records) {
 }
 async function brush(page) {
   const section = page.locator('#numericSummary .numeric-distribution'),
-    bar = section.locator('button[data-key="72"]');
+    bar = section.locator('button[data-key="bin:72"]');
   await bar.focus();
   await page.keyboard.press('Escape');
   await page.keyboard.press('Space');
@@ -630,7 +630,7 @@ for (const signal of ['spans', 'logs']) test('180 ' + signal + ' exact decimal f
   const selectedPlan = page.waitForResponse(r => isResponse('numeric-histograms/selection', r)),
     selectedRead = page.waitForResponse(r => isResponse('explore', r));
   await section.getByRole('button', {
-    name: 'Run selected population',
+    name: 'Inspect selected population',
     exact: true
   }).click();
   const selectionResponse = await selectedPlan,
@@ -638,7 +638,11 @@ for (const signal of ['spans', 'logs']) test('180 ' + signal + ' exact decimal f
       request: selectionResponse.request().postDataJSON(),
       response: await json(selectionResponse)
     },
-    selected = await json(await selectedRead);
+    stagedReads = state.reads;
+  await expect(page.locator('#exploration')).toHaveAttribute('data-question-phase','draft');
+  expect(stagedReads).toBe(beforeParent + 1);
+  await page.locator('#exploreRun').click();
+  const selected = await json(await selectedRead);
   assertResult(selected, f.records);
   expect(selection.response.fromBin).toBe(72);
   expect(selection.response.toBin).toBe(74);
@@ -666,11 +670,17 @@ for (const signal of ['spans', 'logs']) test('180 ' + signal + ' exact decimal f
     name: 'Back to question',
     exact: true
   }).click();
+  expect({ reads: state.reads, plans: state.plans }).toEqual(beforeBack);
+  state.event('held-back');
+  const reactivate = page.waitForResponse(r => isResponse('explore', r));
+  await page.locator('#exploreRun').click();
+  const parentReactivated = await json(await reactivate);
+  state.event('parent-reactivation');
   const compareBrush = await brush(page);
   expect({
     reads: state.reads,
     plans: state.plans
-  }).toEqual(beforeBack);
+  }).toEqual({ reads: beforeBack.reads + 1, plans: beforeBack.plans });
   state.event('back-and-brush');
   const partitionResponse = page.waitForResponse(r => isResponse('numeric-histograms/selection', r));
   await compareBrush.getByRole('button', {
@@ -682,7 +692,7 @@ for (const signal of ['spans', 'logs']) test('180 ' + signal + ' exact decimal f
   expect(plan.toBin).toBe(74);
   expect(plan.numericComparison.selection.numeric).toEqual(binding);
   expect(plan.numericComparison.baseline.numeric).toEqual(binding);
-  expect(state.reads).toBe(beforeBack.reads);
+  expect(state.reads).toBe(beforeBack.reads + 1);
   state.event('comparison-stage');
   const sourceResults = [];
   const collect = async response => {
@@ -705,25 +715,28 @@ for (const signal of ['spans', 'logs']) test('180 ' + signal + ' exact decimal f
   assertResult(partition.rest, f.records);
   assertPair(partition, f.records);
   state.event('comparison-run');
-  const comparison = page.locator('.population-breakdown .numeric-comparison');
-  await expect(comparison).toHaveAttribute('data-numeric-state', 'comparable');
-  const signed = await comparison.locator('.signed-comparison tbody>tr').evaluateAll(rows => rows.map(row => [...row.querySelectorAll('.signed-comparison-cell')].map(cell => ({
-    value: cell.dataset.value,
-    exact: cell.querySelector('.comparison-value')?.getAttribute('title'),
-    text: cell.querySelector('.comparison-value')?.textContent
-  }))));
+  const comparison = page.locator('.population-breakdown goo-measure-comparison');
+  await expect.poll(() => comparison.evaluate(e => e.comparison?.state)).toBe('observed');
+  const signed = await comparison.evaluate(e => ['mean','sum','min','max'].map(metric => {
+    const row=e.querySelector('tr[data-field="numeric.'+metric+'"]');
+    return ['baseline','selection'].map(side => {const cell=row.querySelector('td[data-side="'+side+'"]');return {
+      value:e.comparison[side].rows[0].values['numeric.'+metric],
+      exact:cell.querySelector('.measure-exact p')?.textContent,
+      text:cell.querySelector('.measure-value')?.textContent
+    }});
+  }));
   expect(signed).toHaveLength(4);
   for (const [index, metric] of ['mean', 'sum', 'min', 'max'].entries()) for (const [side, summary] of [partition.rest.numeric, partition.selected.numeric].entries()) {
     const expected = expectedHuman(summary, metric, 2);
     const [n, d = '1'] = signed[index][side].value.split('/');
     expect(rational(BigInt(n), BigInt(d))).toBe(expected);
-    expect(signed[index][side].exact).toBe(signed[index][side].value + ' USD (exact)');
+    expect(signed[index][side].exact).toContain(signed[index][side].value + ' USD');
   }
   await page.setViewportSize({
     width: 390,
     height: 2200
   });
-  const metricFigure = comparison.locator('goo-metric-comparison');
+  const metricFigure = comparison;
   await metricFigure.evaluate(element => {
     element.scrollIntoView({
       block: 'start'
@@ -731,20 +744,20 @@ for (const signal of ['spans', 'logs']) test('180 ' + signal + ' exact decimal f
     window.scrollBy(0, -120);
   });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  const mobileRows = await metricFigure.locator('tbody > tr').evaluateAll(rows => rows.map(row => {
-    const figure = row.closest('figure').getBoundingClientRect();
-    const axis = row.querySelector('.comparison-row-axis');
+  const mobileRows = await metricFigure.locator('tbody > tr[data-field^="numeric."]').evaluateAll(rows => rows.map(row => {
+    const figure = row.closest('goo-measure-comparison').getBoundingClientRect();
+    const axis = row.querySelector('.measure-axis-label');
     return {
       axis: axis.textContent,
       axisFits: axis.scrollWidth <= axis.clientWidth + 1 && axis.scrollHeight <= axis.clientHeight + 1,
-      cells: [...row.querySelectorAll('.signed-comparison-cell')].map(cell => {
+      cells: [...row.querySelectorAll('td[data-side=baseline],td[data-side=selection]')].map(cell => {
         const bounds = cell.getBoundingClientRect(),
-          text = cell.querySelector('.comparison-value');
+          text = cell.querySelector('.measure-value');
         return {
           inside: bounds.left >= figure.left - 1 && bounds.right <= figure.right + 1 && bounds.top >= figure.top - 1 && bounds.bottom <= figure.bottom + 1,
           inViewport: bounds.left >= 0 && bounds.right <= innerWidth + 1 && bounds.top >= 80 && bounds.bottom <= innerHeight,
           noClip: text.scrollWidth <= text.clientWidth + 1 && text.scrollHeight <= text.clientHeight + 1,
-          exact: text.title,
+          exact: cell.querySelector('.measure-exact p').textContent,
           text: text.textContent
         };
       })
@@ -760,8 +773,7 @@ for (const signal of ['spans', 'logs']) test('180 ' + signal + ' exact decimal f
       expect(cell.noClip).toBe(true);
     }
   }
-  expect(mobileRows[1].axis).toContain('10719.3');
-  expect(mobileRows[1].axis).not.toContain('1071930/100');
+  expect(mobileRows[1].axis).toBe('Shared scale');
   await metricFigure.screenshot({
     path: 'docs/journeys/screenshots/180b-' + signal + '-decimal-comparison.png'
   });
@@ -923,12 +935,14 @@ for (const signal of ['spans', 'logs']) test('180 ' + signal + ' exact decimal f
     parentQuery,
     result,
     view,
+    histogramSnapshot: result.histogramDataset,
     selection,
     selected,
     rest,
     partition,
     signed,
     mobileRows,
+    parentReactivated,
     parentAgain,
     saved,
     reopened,
@@ -972,7 +986,11 @@ test('180 Bombadil explores an exact decimal population and a retained numeric r
     seconds: 55
   });
   try {
-    await actor.finish();
+    const campaign=await actor.finish({snapshot:{name:'state',version:'goo.decimalNumerics372Actor/1'}});
+    const complete=campaign.states.find(s=>s.phase==='complete');
+    expect(complete,'Positive exact decimal comparison completion').toBeTruthy();
+    expect(complete).toMatchObject({reads:5,plans:2,protocols:1,selected:true,comparable:true,exactMean:true});
+    await fs.writeFile(path.join(directory,'campaign-summary.json'),JSON.stringify({observations:campaign.states.length,phases:[...new Set(campaign.states.map(s=>s.phase))],complete,run:campaign.run},null,2));
   } finally {
     await actor.stop();
   }

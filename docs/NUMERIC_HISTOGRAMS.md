@@ -97,8 +97,11 @@ Executable journey: [numeric-histogram.spec.js](../journeys/numeric-histogram.sp
 3. Space, Shift+arrow and Enter select adjacent bins above JavaScript's safe
    integer limit. The selected range/count stays exact; this gesture performs
    neither a source read nor a planner request.
-4. Run selected population asks Go to derive checked predicates, then opens the
-   selected population. Stage count comparison with rest instead stages the
+4. **Inspect selected population** asks Go to derive checked predicates, then
+   stages the complete selected question without reading telemetry. Explicitly
+   **Run question** to read it. [Typed continuation](TYPED_DISTRIBUTION_CONTINUATION.md)
+   retains environment policy, parent scope and exact range intent.
+   Stage count comparison with rest instead stages the
    existing population workspace. Run there reads selected and rest independently;
    their counts partition the parent, including nonvalid values in the rest.
    Back retains the captured display without reads; Run the parent explicitly

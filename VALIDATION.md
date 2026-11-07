@@ -1,5 +1,93 @@
 # Validation record
 
+## Typed distribution continuation — 372
+
+The obsolete typed-policy refusal is removed at the existing checked distribution
+producer. Numeric selection now plans metadata, stages the complete fixed child,
+and waits for explicit Run through the existing investigation trail. Producers
+capture actual result/operation ownership; hidden, inert, disabled, stale or
+replaced actions cannot plan or navigate. The trail validates before leaving the
+parent. Generic typed time/duration transforms share focused preservation checks.
+No new backend, evaluator, source format, endpoint or dependency is introduced.
+
+Reply admission preserves the complete parent scope, numeric binding, unchanged
+parent predicate and exact configured selected/rest predicate trees. Comparisons
+allow only Go's prescribed profile/grouping projections. Existing exact coefficient
+formatting checks intent; Go remains the sole range/membership evaluator. Back
+keeps held evidence without reads and requires explicit parent Run before another
+selection. Screenshot review exposed stale Planning/enabled controls after Back;
+numeric UI suspension now occurs synchronously at initial proof retirement.
+
+The final frontend suite passes **1,294 tests**, zero skips, in **23.230s**.
+Nine final focused tests pass: numeric owner **124.10ms**, trail **13.18ms**,
+producer/generic **219.78ms**. They include changed numeric thresholds, duplicated
+remainder arms, same-data ABA, actual production owner closures, hidden/inert/
+disabled actions, hidden pending completion, pre-navigation validation, synchronous
+three-button pause and late completion that cannot re-enable controls.
+Forty Hegel cases pass **5.92s** (package **5.936s**) with **11 mutants per case**:
+actual Go plan → JavaScript admission and whole-question link roundtrip → Go
+compile/membership, with independent exact int64 boundary values. Go 1.27.3 remains
+pinned; production Go/API contracts are unchanged, so no runtime/dependency upgrade
+or new full-Go/OpenAPI regression run is claimed for this UI consolidation.
+
+The final rebuilt service is healthy; all five changed UI assets and the unchanged
+embedded OpenAPI match source bytes. The genuine journey plus actor passes in
+about **1.1 minutes**. Two real OTLP/ClickHouse fixtures exercise span attributes
+with int64 values above 2^53 under effective environment policy, and log resource
+values with decimal64 scale two under current-only policy. Independent raw IDs
+and exact bin arithmetic agree: **14 → 6 spans**, **13 → 5 logs**. Wrong namespace,
+wrong environment and malformed/missing/empty values remain distinguishable.
+
+Seventeen actual boundaries separate metadata planning from telemetry: brushing,
+Stage, Back and stale callbacks add zero source/SQL reads; each explicit Run adds
+one acquisition/three independent SQL reads. A separate reactivation/pending child
+case returns after a successful real 200, aborts publication and rejects its late
+release. Held DOM, complete snapshot and actual snapshot revision remain equal;
+revision is independently checked against the parent's response basis. An initial
+ledger decoder assumed a nonexistent sourceBasis field; it was corrected to the
+actual captured revision without changing the recorded report.
+
+Bombadil passes **45.109s**, **785 observations/eight phases**, with positive exact
+child records/question, held parent, Run focus, precise pause guidance and all
+three selection controls disabled. Budget: **two reads, one plan, zero writes**.
+An initial actor selected a hidden same-label control; scoping it to the actual
+numeric section fixed the driver, without an application change.
+
+Required observed replay passes **7.27s**, zero skips, for both cases and all 17
+facts. Independent coefficient/membership/scope/held-state admission precedes
+projection into the existing drilldown model. Read-on-stage, return-before-stage
+and lost-predicate controls fail. This is genuine recorded-fact validation, not a
+fabricated success script or an exhaustive concurrency/completeness claim.
+
+Affected browser regressions pass: numeric **2/2, 46.9s**; decimal **3/3, 3.0m**;
+shared histogram 269 plus actor **58.7s**. The decimal actor completes across
+**881 observations/12 phases**, with five explicit reads/two plans/one comparison
+protocol. The histogram actor completes across **580 observations/nine phases**,
+with three reads/one plan and the same revision under a distinct read clock.
+Historical helpers now open the actual editor, use canonical comparison fields
+and observe full 128-bin snapshots instead of removed DOM components. Original
+integer/decimal arithmetic, mobile geometry and capture/reuse checks remain.
+Refreshed original frames and the new storyboard are reviewed. Actual reports and
+compressed actor traces are retained; repeated diagnostics are pruned.
+
+Both existing decimal replays also pass with zero skips: spans **36.04s**, logs
+**33.35s**, each with **23 actual events and 38 rejected mutations**. Source,
+scope, request/result, full 400-record capture, comparison and package checks all
+pass independently before model projection. Read-only copies of actual retained
+capture files supply custody sidecars: **605,406 bytes spans**, **465,584 bytes
+logs**, with real hashes and copy clocks; original reports remain unchanged.
+Older oracle assumptions were updated for canonical rational display/128-bin
+snapshots, read-clock-inclusive comparison hashes and package reuse into the
+unchanged current fixed window. Back remains zero-read; parent reactivation is a
+separately observed explicit acquisition. The source/frame reviews are accepted.
+
+The completed 370–372 sequence is reconciled into contextual native-view discovery,
+exponential-histogram readiness and narrow grouped-row identity/actions; see the
+[checkpoint plan](docs/reviews/ROADMAP_RECONCILIATION_372.md).
+See [contract](docs/TYPED_DISTRIBUTION_CONTINUATION.md),
+[storyboard](journeys/372-typed-distribution-population-storyboard.md) and
+[architecture review](docs/reviews/TYPED_DISTRIBUTION_CONTINUATION_ARCHITECTURE_372.md).
+
 ## Native histogram display reuse — 371
 
 The closed native configuration arm saves Histogram/Table presentation for one

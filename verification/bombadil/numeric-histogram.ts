@@ -18,16 +18,17 @@ const act=registerCustomAction('goo.histogram269',async(document,window,phase:st
  const section=()=>document.querySelector('.numeric-distribution')!;
  const chart=()=>section()?.querySelector('goo-chart') as any;
  const run=()=>{const button=document.querySelector<HTMLButtonElement>('#exploreRun');check(!!button&&!button.disabled,'Explicit Run required');button!.click()};
- const open=()=>[...section().querySelectorAll<HTMLButtonElement>('button')].find(b=>b.textContent==='Run selected population')!;
+ const open=()=>[...section().querySelectorAll<HTMLButtonElement>('button')].find(b=>b.textContent==='Inspect selected population')!;
  if(phase==='source'){
   attrs.histogram269='source';store.__gooHistogram269={};const native=window.fetch.bind(window);
   window.fetch=(input,init)=>{const method=init?.method||(typeof input==='object'&&'method' in input?input.method:'GET');if(method.toUpperCase()==='POST'){
    const path=new URL(typeof input==='string'?input:input instanceof URL?input.href:input.url,window.location.href).pathname;
-   if(path==='/api/explore'){attrs.histogram269Reads=String(Number(attrs.histogram269Reads||0)+1);if(!['source','rerun','execute'].includes(attrs.histogram269||''))attrs.histogram269Bad='true'}
+   if(path==='/api/explore'){attrs.histogram269Reads=String(Number(attrs.histogram269Reads||0)+1);if(!['source','rerun','child'].includes(attrs.histogram269||''))attrs.histogram269Bad='true'}
    else if(path==='/api/numeric-histograms/selection'){attrs.histogram269Plans=String(Number(attrs.histogram269Plans||0)+1);if(attrs.histogram269!=='execute')attrs.histogram269Bad='true'}
    else if(!path.startsWith('/api/queries/'))attrs.histogram269Bad='true';
   }return native(input,init)};run();return;
  }
+ if(phase==='child'){attrs.histogram269='child';run();return}
  const saved=store.__gooHistogram269,modulePath='/view-model.mjs',views=await import(modulePath);check(!!saved,'Actual source execution required');
  const snapshot=()=>chart()?.snapshot;
  const geometry=()=>{const s=snapshot();check(s?.shape==='histogram'&&s.rows.length===128&&s.rows[127].key==='bin:127'&&s.rows[127].values.from==='4611686018427387904'&&s.rows[127].values.to==='9223372036854775808','Exact full signed histogram geometry and max+1 sentinel required');check(Object.isFrozen(s)&&Object.isFrozen(s.rows),'Public snapshot must be immutable');return s};
@@ -50,5 +51,6 @@ export const follow=actions(()=>{const s=state.current;
  if(s.phase==='rerun'&&s.applied&&s.reads===2&&s.bins>0)return[act('stale')];
  if(s.phase==='stale')return[act('current')];
  if(s.phase==='current')return[act('execute')];
- if(s.phase==='execute'&&s.applied&&s.reads===3&&s.plans===1&&s.bins>0)return[act('complete')];
+ if(s.phase==='execute'&&s.ready&&s.reads===2&&s.plans===1)return[act('child')];
+ if(s.phase==='child'&&s.applied&&s.reads===3&&s.plans===1&&s.bins>0)return[act('complete')];
  return['Wait'];});

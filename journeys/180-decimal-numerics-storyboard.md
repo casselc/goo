@@ -14,23 +14,25 @@ Running the predicate uses the full fixed population. Switching to a resource at
 
 Run the complete question. It contains 400 records and displays a 100-record inspection page, while source aggregates report **160 valid, 10 missing, 10 empty and 220 invalid** values. Min/max remain exact even when their internal coefficients exceed 2^53.
 
-Use the keyboard to select **[1.28, 5.12) USD**. The chart labels human amounts; its immutable bin keys and bounds remain coefficient metadata. Selection itself performs no request. **Run selected population** explicitly plans and reads the selected 30 records, preserving the original time window. The complementary rest still includes malformed and absent values.
+Use the keyboard to select **[1.28, 5.12) USD**. The chart labels human amounts; its immutable bin keys and bounds remain coefficient metadata. Selection itself performs no request. **Inspect selected population** plans and stages the selected question without reading telemetry. **Run question** explicitly reads its 30 records, preserving the original time window. The complementary rest still includes malformed and absent values. Back returns to held evidence without reading; explicitly Run the parent again before making another active range selection.
 
 Actual frames: [spans](../docs/journeys/screenshots/180a-spans-decimal-range.png), [logs](../docs/journeys/screenshots/180a-logs-decimal-range.png).
 
 ## 3. Compare the range with the rest
 
-Return to the retained parent question and reselect the same range without a source read. **Stage numeric comparison with rest** is a pure planning operation. Run the staged view explicitly to read both populations.
+Return to the retained parent question without a source read. Run that fixed parent explicitly to reactivate selection, then reselect the same range locally. **Stage numeric comparison with rest** is a pure planning operation. Run the staged view explicitly to read both populations.
 
-The shared signed display uses human units and exact rational tooltips, with separate coverage. The selected mean is exactly 983/300 USD; its displayed value may round for readability. Finite axis endpoints use decimal text. A service present on only one side has unavailable arithmetic rather than an invented zero.
+The common comparison table uses human units and expandable exact rational details, with separate coverage. The selected mean is exactly 983/300 USD; its displayed value may round for readability. Shared scales retain exact endpoint tooltips. A service present on only one side has unavailable arithmetic rather than an invented zero.
 
-Actual compact mobile frames: [spans](../docs/journeys/screenshots/180b-spans-decimal-comparison.png), [logs](../docs/journeys/screenshots/180b-logs-decimal-comparison.png). The acceptance test verifies that all four metric rows, both values and complete range captions fit without clipping or sticky-header overlap.
+Actual compact mobile frames: [spans](../docs/journeys/screenshots/180b-spans-decimal-comparison.png), [logs](../docs/journeys/screenshots/180b-logs-decimal-comparison.png). The acceptance test verifies that all four numeric rows and both operand values fit without clipping or sticky-header overlap.
 
 ## 4. Preserve evidence and reuse intent
 
 Capture the complete fixed question through the named capture action. It rereads the source; the capture records its own custody and source facts. Reloading that capture reads stored evidence only.
 
-Build and save a reusable YAML question containing `type: decimal64` and `scale: 2`. Reuse runs a fresh window explicitly; it does not mutate the saved capture. The source ledger verifies the same binding, coverage, exact summaries and bins.
+Build and save a reusable YAML question containing `type: decimal64` and `scale: 2`. Reuse stages into the current fixed question and preserves its exact window;
+Run explicitly reads that question. The package retains its declared lookback
+for fresh use. The saved capture remains unchanged. The source ledger verifies the same binding, coverage, exact summaries and bins.
 
 ## 5. Check boundaries rather than rounding them away
 

@@ -1,5 +1,27 @@
 # Semantic properties and model conformance
 
+## Typed distribution continuation (372)
+
+`TestHegelTypedDistributionContinuation372` runs actual Go numeric selection
+plans through JavaScript reply admission and question-link roundtrips, then Go
+compile/membership checks against an independent exact int64 boundary corpus.
+Forty cases include eleven synchronized response mutants, including changed
+scope, numeric thresholds and duplicated remainder support arms. UI admission
+checks the requested wire intent; Go remains the evaluator.
+
+The three `tests/typed-distribution*-372.test.mjs` files exercise actual numeric
+owners and trail behavior, plus extracted production producer/owner closures.
+They check hidden/inert/disabled actions, same-result ABA, synchronous visible
+pause, late replies, whole typed staging and source-free held return.
+
+`GOO_TYPED_DISTRIBUTION_372_REPORT=/absolute/path/summary.json go test
+-run TestQuintTypedDistributionObserved372 -count=1 -v .` consumes the genuine
+journey report. Independent scope/coefficient/membership and held-state admission
+precedes actual history/stage/read/back projection into the existing model.
+Metadata planning is counted separately from source acquisitions. Required replay
+rejects read-on-stage, reordered return and lost-predicate controls; it does not
+fabricate a successful interaction script.
+
 ## Native histogram configuration reuse (371)
 
 `TestHegelNativeHistogramReuse371` compares actual Go immutable-store/reuse and
@@ -1936,9 +1958,10 @@ scale 1/9 and integer/resource regressions, saved YAML and fresh reuse. The full
 raw-file SHA256/byte count/receipt/copy clocks are checked alongside the typed
 capture identity and immutable reopened evidence.
 
-The generic `numeric_authoring` model replays this observed twenty-one-action
+The generic `numeric_authoring` model replays this observed twenty-three-action
 workflow: source-free authoring and invalid-input repair, four coverage filters,
-parent/range reads, pure brush/Back/planner actions, explicit comparison reads,
+parent/range reads, pure brush/Back/planner actions, explicit parent reactivation
+and comparison reads,
 capture/reopen and package reuse. Capture's action contains the separately named
 parent reread and capture reread. Independent source/arithmetic corruption is
 rejected before Quint; lifecycle mutations preserving source facts are replayed.

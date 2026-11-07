@@ -12,7 +12,7 @@ isolated Go application. No source response or source witness is mocked.
 | Select the final signed bin with the keyboard | One record in [2^62, 2^63) | Endpoints are stable bin keys and exact geometry; max+1 is not a valid input value |
 | Open Exact values | All 128 bins retain exact bounds and counts | Equal ordinal bar widths represent counts, not numeric density |
 | Rerun the same fixed population, then replay old actions | Same content revision/new read clock; no planner or source request from old callbacks | Host execution ownership is separate from immutable contents |
-| Select current maximum bin and Run selected population | One source-free plan, then one explicit child read | Go omits the illegal max+1 predicate threshold while retaining the valid-value guard |
+| Select current maximum bin, Inspect selected population, then Run question | One source-free plan stages the child; only explicit Run reads it | Go omits the illegal max+1 predicate threshold while retaining the valid-value guard |
 | Inspect the child | One visible nonzero tail bin, with all 128 bins still supplied | Outer zero-bin trimming changes presentation, not measurement geometry |
 | Open Saved data | The original distribution is read-only, including on mobile | Source capture and runtime proof remain distinct from serialized data |
 | Read invalid-only and absent populations | Valid 0/total 3 differs from valid 0/total 0 | Empty bins never imply an empty or healthy captured population |

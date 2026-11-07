@@ -31,6 +31,10 @@ actions:
     expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}}'
   selected_run:
     expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}}'
+  held_back:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}}'
+  parent_reactivation:
+    expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}}'
   back_and_brush:
     expect: 'coherent == {{.obs.coherent}} and reads == {{.obs.reads}} and plans == {{.obs.plans}} and protocols == {{.obs.protocols}} and writes == {{.obs.writes}}'
   comparison_stage:

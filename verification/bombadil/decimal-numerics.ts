@@ -9,11 +9,12 @@ const state = extract(({
     parent = root.dataset.decimalParent ? JSON.parse(root.dataset.decimalParent) : null,
     children = root.dataset.decimalChildren ? JSON.parse(root.dataset.decimalChildren) : [],
     plan = root.dataset.decimalPlan ? JSON.parse(root.dataset.decimalPlan) : null,
-    comparison = document.querySelector('.population-breakdown .numeric-comparison'),
-    mean = comparison === null || comparison === void 0 || (_comparison$querySele = comparison.querySelectorAll('.signed-comparison tbody>tr')[0]) === null || _comparison$querySele === void 0 || (_comparison$querySele = _comparison$querySele.querySelectorAll('.signed-comparison-cell')[1]) === null || _comparison$querySele === void 0 ? void 0 : _comparison$querySele.getAttribute('data-value'),
+    comparison = document.querySelector('.population-breakdown goo-measure-comparison'),
+    mean = comparison?.comparison?.selection?.rows?.[0]?.values?.['numeric.mean'],
     parts = mean === null || mean === void 0 ? void 0 : mean.split('/'),
     exactMean = !!parts && BigInt(parts[0]) * 300n === 983n * BigInt(parts[1] || '1');
   return {
+    version: 'goo.decimalNumerics372Actor/1',
     phase: root.dataset.decimalPhase || 'initial',
     reads: Number(root.dataset.decimalReads || 0),
     plans: Number(root.dataset.decimalPlans || 0),
@@ -35,18 +36,18 @@ const state = extract(({
     parentVisible: !!document.querySelector('#numericSummary .numeric-distribution'),
     selectionVisible: !!document.querySelector('#numericSummary .numeric-distribution-selection'),
     runPair: [...document.querySelectorAll('.population-run')].some(b => b.getClientRects().length > 0 && !b.disabled),
-    comparable: (comparison === null || comparison === void 0 ? void 0 : comparison.getAttribute('data-numeric-state')) === 'comparable',
+    comparable: comparison?.comparison?.state === 'observed' && comparison.comparison.changes?.['numeric.mean']?.state === 'derived',
     exactMean
   };
 });
 export const complete = eventually(() => state.current.phase === 'complete').within(45, 'seconds');
-export const bounded = always(() => state.current.reads <= 4 && state.current.plans <= 2 && state.current.protocols <= 1);
+export const bounded = always(() => state.current.reads <= 5 && state.current.plans <= 2 && state.current.protocols <= 1);
 export const stageIsLocal = always(() => !['initial', 'initialized'].includes(state.current.phase) || state.current.reads === 0);
 export const firstBrushIsLocal = always(() => state.current.phase !== 'brushing' || state.current.reads === 1 && state.current.plans === 0);
-export const retainedBrushIsLocal = always(() => !['back', 'brushing-again', 'comparison-staging'].includes(state.current.phase) || state.current.reads === 2);
+export const retainedBrushIsLocal = always(() => state.current.phase === 'back' ? state.current.reads === 2 : !['brushing-again','comparison-staging'].includes(state.current.phase) || state.current.reads === 3);
 export const fullSourceCoefficients = always(() => !state.current.parent || state.current.parentCount === '400' && state.current.rows === 100 && state.current.valid === '160' && state.current.wireScale === 2 && state.current.bins === 128 && state.current.binSum === '160' && state.current.maximum === '9223372036854775807');
 export const exactRange = always(() => state.current.range);
-export const actualTerminal = always(() => state.current.phase !== 'complete' || state.current.reads === 4 && state.current.plans === 2 && state.current.protocols === 1 && state.current.selected && state.current.comparable && state.current.exactMean);
+export const actualTerminal = always(() => state.current.phase !== 'complete' || state.current.reads === 5 && state.current.plans === 2 && state.current.protocols === 1 && state.current.selected && state.current.comparable && state.current.exactMean);
 const step = registerCustomAction('goo.decimalNumerics', async (document, window, phase) => {
   const root = document.documentElement,
     click = (host, text) => [...host.querySelectorAll('button')].find(b => b.textContent === text && !b.hidden).click();
@@ -76,7 +77,7 @@ const step = registerCustomAction('goo.decimalNumerics', async (document, window
   }
   if (phase === 'parent-reading') document.getElementById('exploreRun').click();
   if (phase === 'brushing' || phase === 'brushing-again') {
-    const bar = document.querySelector('#numericSummary .numeric-distribution button[data-key="72"]');
+    const bar = document.querySelector('#numericSummary .numeric-distribution button[data-key="bin:72"]');
     bar.focus();
     for (const [key, shiftKey] of [['Escape', false], [' ', false], ['ArrowRight', true], ['Enter', false]]) (document.activeElement || bar).dispatchEvent(new window.KeyboardEvent('keydown', {
       key,
@@ -85,7 +86,8 @@ const step = registerCustomAction('goo.decimalNumerics', async (document, window
       cancelable: true
     }));
   }
-  if (phase === 'selected-reading') click(document.querySelector('#numericSummary .numeric-distribution'), 'Run selected population');
+  if (phase === 'selected-staging') click(document.querySelector('#numericSummary .numeric-distribution'), 'Inspect selected population');
+  if (phase === 'selected-reading' || phase === 'parent-reactivating') document.getElementById('exploreRun').click();
   if (phase === 'back') click(document, 'Back to question');
   if (phase === 'comparison-staging') click(document.querySelector('#numericSummary .numeric-distribution'), 'Stage numeric comparison with rest');
   if (phase === 'comparison-reading') document.querySelector('.population-run').click();
@@ -96,9 +98,11 @@ export const explore = actions(() => {
   if (s.phase === 'initial') return s.staged && s.type === 'decimal64' && s.scale === '2' ? [step('initialized')] : ['Wait'];
   if (s.phase === 'initialized') return [step('parent-reading')];
   if (s.phase === 'parent-reading') return s.parent && s.applied ? [step('brushing')] : ['Wait'];
-  if (s.phase === 'brushing') return s.selectionVisible ? [step('selected-reading')] : ['Wait'];
+  if (s.phase === 'brushing') return s.selectionVisible ? [step('selected-staging')] : ['Wait'];
+  if (s.phase === 'selected-staging') return s.staged && s.plans === 1 && s.reads === 1 ? [step('selected-reading')] : ['Wait'];
   if (s.phase === 'selected-reading') return s.selected && s.applied ? [step('back')] : ['Wait'];
-  if (s.phase === 'back') return s.parentVisible ? [step('brushing-again')] : ['Wait'];
+  if (s.phase === 'back') return s.parentVisible ? [step('parent-reactivating')] : ['Wait'];
+  if (s.phase === 'parent-reactivating') return s.applied && s.reads === 3 ? [step('brushing-again')] : ['Wait'];
   if (s.phase === 'brushing-again') return s.selectionVisible ? [step('comparison-staging')] : ['Wait'];
   if (s.phase === 'comparison-staging') return s.runPair ? [step('comparison-reading')] : ['Wait'];
   if (s.phase === 'comparison-reading') return s.comparable && s.exactMean ? [step('complete')] : ['Wait'];

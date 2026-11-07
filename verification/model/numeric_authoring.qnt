@@ -21,12 +21,14 @@ module numeric_authoring {
  action parent_run=all{phase==11,phase'=12,reads'=8,plans'=0,protocols'=0,writes'=0,coherent'=true}
  action brush=all{phase==12,phase'=13,reads'=8,plans'=0,protocols'=0,writes'=0,coherent'=true}
  action selected_run=all{phase==13,phase'=14,reads'=9,plans'=1,protocols'=0,writes'=0,coherent'=true}
- action back_and_brush=all{phase==14,phase'=15,reads'=9,plans'=1,protocols'=0,writes'=0,coherent'=true}
- action comparison_stage=all{phase==15,phase'=16,reads'=9,plans'=2,protocols'=0,writes'=0,coherent'=true}
- action comparison_run=all{phase==16,phase'=17,reads'=11,plans'=2,protocols'=1,writes'=0,coherent'=true}
- action capture=all{phase==17,phase'=18,reads'=13,plans'=2,protocols'=1,writes'=0,coherent'=true}
- action reopen=all{phase==18,phase'=19,reads'=13,plans'=2,protocols'=1,writes'=0,coherent'=true}
- action package_save=all{phase==19,phase'=20,reads'=13,plans'=2,protocols'=1,writes'=1,coherent'=true}
- action package_use=all{phase==20,phase'=21,reads'=14,plans'=2,protocols'=1,writes'=1,coherent'=true}
+ action held_back=all{phase==14,phase'=15,reads'=9,plans'=1,protocols'=0,writes'=0,coherent'=true}
+ action parent_reactivation=all{phase==15,phase'=16,reads'=10,plans'=1,protocols'=0,writes'=0,coherent'=true}
+ action back_and_brush=all{phase==16,phase'=17,reads'=10,plans'=1,protocols'=0,writes'=0,coherent'=true}
+ action comparison_stage=all{phase==17,phase'=18,reads'=10,plans'=2,protocols'=0,writes'=0,coherent'=true}
+ action comparison_run=all{phase==18,phase'=19,reads'=12,plans'=2,protocols'=1,writes'=0,coherent'=true}
+ action capture=all{phase==19,phase'=20,reads'=14,plans'=2,protocols'=1,writes'=0,coherent'=true}
+ action reopen=all{phase==20,phase'=21,reads'=14,plans'=2,protocols'=1,writes'=0,coherent'=true}
+ action package_save=all{phase==21,phase'=22,reads'=14,plans'=2,protocols'=1,writes'=1,coherent'=true}
+ action package_use=all{phase==22,phase'=23,reads'=15,plans'=2,protocols'=1,writes'=1,coherent'=true}
  val safety=coherent and reads>=0 and plans>=0 and protocols>=0 and writes>=0
 }
