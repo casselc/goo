@@ -1855,3 +1855,44 @@ The existing explicit fresh trace reader remains available with contextual fresh
 read labels, including dynamically rendered trace-group actions. No new source
 executor, record kind, capture format or relationship inference is introduced.
 See [contract and data-flow diagram](CAPTURED_SPAN_PAGES.md).
+
+## Retained span-page comparison — 361
+
+Implementation, native/model and positive actor checks pass. Current genuine
+frames and their layout limitations are recorded in [validation](../VALIDATION.md).
+`SavedRecords` supplies only verified stored `RecordPage` associations to the
+local retained-comparison owner. The existing Go `CompareTracePages`, JS parity
+model and passive `goo-trace-comparison` remain the calculation/display contract.
+Each operand is a whole supplied page, including mixed traces and duplicate
+occurrences; page row count is separate from full query and retained counts.
+
+The owner retains one baseline and an independently frozen applied pair. Current
+capture/page navigation changes the candidate, not those operands. Replace/Clear
+retire the pair and old callbacks; Compare explicitly adopts a new pair. Each
+side keeps its own receipt, original/page-adjusted question, policy/window, basis,
+source/custody clocks, offset/limit, supplied count and retention facts. The shared
+elapsed scale uses each whole page's earliest valid supplied start, not 360's
+per-trace origin or a synchronized wall clock.
+
+`Captures` provides root-verified actual `{id,cursor}` locations from loaded visits.
+Opening either operand delegates to that existing stored-page owner; reconstructing
+a cursor from offset or opening page one cannot substitute for the selected page.
+Local stored inspection reuses 360, while Return reveals the unchanged pair with
+no read. Store GETs are distinct from telemetry acquisition. No new endpoint,
+query, capture format, persistent comparison artifact or global reference store.
+
+```mermaid
+flowchart LR
+  S[Verified capture ID and opaque page cursor] --> P[Immutable supplied span page]
+  P -->|Explicit Pin| B[Held baseline]
+  P --> C[Current candidate]
+  B -->|Explicit Compare| A[Frozen applied pair]
+  C -->|Explicit Compare| A
+  A --> V[Existing supplied-page comparison]
+  A -->|Open exact side through capture owner| I[360 local stored inspection]
+  I -->|Return: no read| V
+```
+
+See [contract](RETAINED_PAGE_COMPARISON.md) for independent provenance, conservative
+one-sided/unknown semantics and ownership boundaries. Fresh trace expansion stays
+an explicit separate source operation.

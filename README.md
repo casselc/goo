@@ -79,6 +79,13 @@ Saved span pages offer [Table or Span waterfall](docs/CAPTURED_SPAN_PAGES.md)
 without rereading telemetry. Inspect uses the exact stored occurrence; **Expand
 trace (fresh read)** deliberately acquires separate context. A saved page remains
 a bounded fragment, not a complete trace.
+[Retained span-page comparison](docs/RETAINED_PAGE_COMPARISON.md) pins a whole
+stored page as baseline and explicitly compares it with another stored page.
+Each side keeps its receipt, window, clock and page limits; opening that exact
+side uses its verified opaque cursor, and **Return to comparison** restores the
+held pair locally. Store GETs remain separate from telemetry reads. Milestone
+361 passes native/model and positive actor checks; current frames and layout
+limitations are recorded in [validation](VALIDATION.md).
 
 Temporary and saved count comparisons use [one supplied-pair presentation](docs/COUNT_PAIR_PRESENTATION.md),
 with a Summary/Groups choice and explicit operand windows and read clocks.

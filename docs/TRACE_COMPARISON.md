@@ -2,11 +2,13 @@
 
 `exploration.CompareTracePages(baselineRows, selectionRows, baselineTruncated, selectionTruncated)` is the normative Go projection. `compare(...)` from `trace-page-comparison.mjs` mirrors it for supplied-data display. Both accept at most 1,000 observations per page. They perform no source reads, HTTP requests, persistence or capture mutation. The shared fixtures in `tests/fixtures/trace-page-comparison.json` check the complete Go/JavaScript result.
 
+The shared display calls its immutable operands **Baseline** and **Selected**. These roles do not follow whichever capture is currently open.
+
 The version is `goo/trace-page-comparison/v1`. Each side includes the existing `goo/trace-page-breakdown/v1` analysis, its timing extent, and reported trace classification. All durations and signed differences are exact integer nanosecond strings. Missing numeric properties and explicit nulls mean unavailable, while `"0"` means known zero.
 
 ## What aligns
 
-Groups use exact nullable `(service, operation)` tuples. Missing/null labels, present empty labels and literal display-placeholder text remain distinct. Ordering puts missing labels first, then uses UTF-8 byte order for service and operation. Groups present on only one supplied page remain one-sided; absence on a page says nothing about the full trace or another source window.
+Groups use exact nullable `(service, operation)` tuples from raw reported service and operation labels, without namespace qualification. Missing/null labels, present empty labels and literal display-placeholder text remain distinct. Ordering puts missing labels first, then uses UTF-8 byte order for service and operation. Groups present on only one supplied page remain one-sided; absence on a page says nothing about the full trace or another source window.
 
 Group sums include supplied observations without deduplicating IDs. Inclusive and outside-observed-children differences are computed only when the corresponding group metric is known for every row on both sides. An absent group never contributes an invented zero duration. Unknown group members withhold that metric's difference, while another fully known metric can remain comparable. Summed spans can overlap and are not wall-clock trace latency, CPU time, self time or a critical path.
 

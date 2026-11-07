@@ -4019,3 +4019,37 @@ retains its 101-row limit; use a full COUNT and bounded page query rather than
 raising that limit or counting a returned page as a population total. See
 [validation](../VALIDATION.md) and the
 [storyboard](../docs/journeys/360-captured-span-waterfall.md).
+
+## Retained span-page comparison — 361
+
+Full UI, Hegel, native/observed-model and positive actor checks pass; see the
+validation record for exact timings, current frames and bounded layout claims.
+`TestHegelRetainedComparison361` drives forty schedules through the actual local
+comparison owner with mocked passive ports. An independent raw Go oracle checks
+supplied-page timing, grouping and original-row alignment against the existing
+Go/JS comparison kernel. The fixture checks frozen operands versus current
+candidate, replacement/clear, exact stored side locations, retained return and
+retired actions without telemetry. Mocked ports do not prove browser focus or
+actual stored-page acquisition.
+
+```sh
+go -C verification test -run '^Test(HegelRetainedComparison361|QuintRetainedPageComparisonProtocol361)$' -count=1 .
+```
+
+`TestQuintRetainedPageComparisonProtocol361` runs the generated wrapper before
+browser work. Required observed replay uses
+`TestQuintRetainedPageComparisonObserved361` with
+`GOO_RETAINED_PAGE_COMPARISON_361_REPORT` pointing to the genuine final summary.
+Without that explicit report the observed test skips, rather than establishing
+acceptance. Its adapter admits eighteen actual visit facts and six corrupted
+reports, separating stored-page GETs from zero telemetry reads and retaining
+independent receipts, raw rows, clocks, opaque cursors and capture bytes.
+
+`bombadil/retained-page-comparison361.ts` must reach positive visible completion;
+process exit alone is insufficient. The genuine journey compares a final 20-row
+stored page with a separate 100-row page, reopens each exact side for 360's local
+Inspect and returns to the unchanged applied pair. Current capture/page changes
+cannot silently recompute it. These whole pages are not complete traces. See
+[contract](../docs/RETAINED_PAGE_COMPARISON.md),
+[storyboard](../docs/journeys/361-retained-page-comparison.md) and
+[validation](../VALIDATION.md) for execution status and bounded claims.

@@ -1610,3 +1610,11 @@ td details {
 .tail-match-selection>button{min-height:32px;padding:4px 8px;font-size:12px}
 .tail-match-selection-reason{font-size:11px;color:var(--muted)}
 @media(pointer:coarse){.tail-match-selection>button{min-height:44px}}
+
+/* Retained page comparisons show independent clocks and page grains. */
+.saved-page-comparison{margin-block:10px}
+.saved-page-comparison>details>section>section{min-width:0;margin-block:10px}
+.saved-page-comparison-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:6px 14px;margin-block:8px}
+.saved-page-comparison-facts>div{min-width:0}
+.saved-page-comparison-facts dt{font-size:11px;color:var(--muted)}
+.saved-page-comparison-facts dd{margin:2px 0;font-size:12px;overflow-wrap:anywhere}

@@ -1,5 +1,12 @@
 # User journeys and storyboards
 
+[Journey361](361-retained-page-comparison.md) compares two whole verified stored
+span pages with independent receipts and page limits. Its 20/100-row fixture
+checks explicit baseline/selection, exact opaque-cursor side reopening, local
+Inspect and Return, candidate navigation, replacement/clear and retired actions.
+Telemetry is refused after setup; store GETs are counted separately. Native/model and positive actor checks pass. Current provenance/inspection and
+actor timing frames, plus the tall-provenance layout limitation, are documented.
+
 [Journey360](360-captured-span-waterfall.md) reopens scalar/typed captures with
 telemetry refused, switches stored pages between Table and Span waterfall, inspects
 exact duplicate-ID occurrences, changes fields and pages, then separately expands

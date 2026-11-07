@@ -1,5 +1,74 @@
 # Validation record
 
+## Retained span-page comparison — 361
+
+Saved span pages can now be pinned as a baseline and explicitly compared using
+our existing Go/JavaScript supplied-page model and passive display. Each operand
+is the whole verified stored page, with independent immutable receipt/question,
+policy/window, source basis/read clock, custody clock and retention counts. The
+applied pair stays frozen while another page becomes the current candidate.
+Side opening retains the actual opaque cursor and reuses local occurrence
+inspection; Return to comparison changes only presentation. No telemetry endpoint,
+query, comparison kernel or capture format was added.
+
+The final UI suite passes **1,234 tests in 12.401 seconds, zero skips**. A focused
+capture-owner case verifies that a failed side opening resumes the eligible held
+page after clearing busy state while the failed target remains inadmissible.
+Architecture independently accepted this recovery path. Full main Go/API suites
+were not repeated for this UI-only production change.
+
+Forty Hegel schedules pass in **7.91 seconds** (package 7.921, zero skips), exercising
+the actual saved owner/admission and retained-comparison controller. Go/JavaScript
+results are checked against the existing independent comparison oracle, including
+mixed/duplicate/missing/invalid timing, immutable metadata, operand replacement,
+ABA/late actions and suspension. The actual generated Quint wrapper accepts its
+complete path and rejects two controls in **5.73 seconds**. The first Hegel run
+exposed fixture module-mock import order; installing the harness before dynamically
+importing the actual owner fixes that fixture, with no product change.
+
+The final Go 1.27.3 image was rebuilt and deployed: `/health` returns 200 and all
+six changed embedded assets match source bytes. Reviewed binary SHA-256:
+`f368ac76d9d0ed0d8f91a1cac662cf6075688435138d56fd5e12891ed69c89b6`.
+The full UI suite needs its local HTTP test server outside the loopback sandbox;
+the sandboxed attempt failed that server test, and the complete allowed rerun
+passed.
+
+The genuine native journey passes in **70.213 seconds** (runner 72.390). Its scalar
+capture has 120 matching/retained rows and the effective-policy capture 135;
+comparison operands are exactly 20 rows at offset 100 and 100 rows at offset 0.
+All **18 actual checkpoints** retain zero telemetry/source SQL after the deliberate
+unavailable-source probe. Ten stored-page GETs are separate from telemetry. The
+journey verifies checkout 10→35 ms (+25 inclusive, +17 outside observed children),
+SQL 4→12 ms (+8), repeated-label ambiguity, duplicate identities, one-sided
+unavailable work, exact original-cursor side inspection, candidate paging,
+replacement/clear and stale callbacks across a recreated pair. All capture bytes
+remain unchanged.
+
+Required observed Quint replay passes in **15.22 seconds** (package 15.251), zero
+skips, accepting all eighteen facts and rejecting six corrupted reports. The
+focused Bombadil actor completes visibly in **35.689 seconds**, with **574
+snapshots / 12 stages**, zero telemetry reads or writes, three stored-page GETs
+and three catalog GETs. Its terminal frame shows the actual gateway timing card,
+not merely the comparison container. Initial, candidate and replacement pairs
+are checked through public canonical data and DOM identity, respecting the
+custom element's copying public getter.
+
+The three genuine Playwright frames cover desktop/narrow provenance and exact
+local inspection; the unchanged actor terminal JPEG establishes visible paired
+bars, repeated-label ambiguity and one-sided unavailable values. Design accepts
+the desktop chart and readable narrow provenance. **Layout debt remains:** the
+stacked provenance cards place timing bars below the fold, especially on narrow
+screens; a compact paired header with disclosed details belongs in the planned
+whole-product review. No narrow chart appearance claim is made. Reviewed owned
+diagnostic bulk is pruned while preserving replay inputs, model results, actor
+trace/current terminal frame and both capture files. The lab's 51 pre-existing
+stale pending entries and volumes are preserved.
+
+See [contract and diagram](docs/RETAINED_PAGE_COMPARISON.md),
+[storyboard](docs/journeys/361-retained-page-comparison.md), and
+[verification commands](verification/README.md).
+
+
 ## Captured span-page waterfalls — 360
 
 Saved span evidence now offers Table/Span waterfall over the same checked current

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {test,mock} from 'node:test';
-class El {constructor(){this.hidden=false;this.dataset={};this.value='';this.children=[];this.previousElementSibling={};} append(...v){this.children.push(...v)} after(){} before(){} setAttribute(k,v){this[k]=v} getAttribute(k){return this[k]} addEventListener(){} closest(){return this} replaceChildren(...v){this.children=v} getClientRects(){return [1]} get firstChild(){return this.children[0]} showModal(){this.open=true} close(){this.open=false} focus(){} }
+class El {constructor(){this.hidden=false;this.dataset={};this.value='';this.children=[];this.previousElementSibling={};} append(...v){this.children.push(...v)} after(){} before(){} setAttribute(k,v){this[k]=v} getAttribute(k){return this[k]} addEventListener(){} closest(){return this} replaceChildren(...v){this.children=v} getClientRects(){return [1]} get firstChild(){return this.children[0]} showModal(){this.open=true} close(){this.open=false} focus(){document.activeElement=this} scrollIntoView(){this.scrolled=true} get isConnected(){return true} }
 const elements=new Map(),el=id=>{if(!elements.has(id))elements.set(id,new El());return elements.get(id)};
 globalThis.document={getElementById:el,querySelector:()=>null,hidden:false};
 globalThis.location={hash:''};globalThis.history={replaceState(_a,_b,hash){location.hash=hash}};
@@ -8,8 +8,10 @@ const events=new EventTarget();globalThis.addEventListener=events.addEventListen
 const emit=(type,detail)=>events.dispatchEvent(new CustomEvent(type,{detail,cancelable:true}));
 const reads=[],shown=[],inspected=[],painted=[];
 const passive={mount:()=>({suspend(){},showSaved(page){painted.push(page.receipt.id)}})};
-for(const name of ['distributions','inventory','saved-records'])mock.module('../ui/'+name+'.mjs',{exports:passive});
-for(const name of ['record-environment','evidence-scope','explanation','measurements'])mock.module('../ui/'+name+'.mjs',{exports:{}});
+for(const name of ['distributions','inventory'])mock.module('../ui/'+name+'.mjs',{exports:passive});
+const savedResumes=[];let savedPorts;mock.module('../ui/saved-records.mjs',{exports:{mount(_host,options){savedPorts=options;return {...passive.mount(),resume(){if(options.active())savedResumes.push({busy:el('generalCaptureWorkspace').getAttribute('aria-busy'),location:options.getPageLocation()})}}}}});
+for(const name of ['record-environment','explanation','measurements'])mock.module('../ui/'+name+'.mjs',{exports:{}});
+mock.module('../ui/evidence-scope.mjs',{exports:{record:page=>page,element:()=>new El()}});
 mock.module('../ui/components.mjs',{exports:{node:()=>new El(),disclosure:()=>new El()}});
 mock.module('../ui/kept-saved.mjs',{exports:{library(){},mount:()=>({show(v){shown.push(v.id)},inspect(i){if(Number.isInteger(i)&&i>=0&&i<3){inspected.push(i);return true}return false}})}});
 mock.module('../ui/kept-client.mjs',{exports:{client:{open(id,{signal}){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b});reads.push({id,signal,resolve:()=>resolve({id,members:[{},{},{}]}),reject:()=>reject(Error('offline'))});return promise}}}});
@@ -43,5 +45,17 @@ test('capture acquisition belongs to route visit, joins notifications, retires b
  await startDraft('older');el('captureDraftInvestigation').value='target';const olderSave=el('captureDraftConfirm').onclick(),olderPost=pending.at(-1);await startDraft('newer');const newerStatus=el('captureDraftStatus').textContent;olderPost.resolve(page(a));await olderSave;assert.equal(el('captureDialog').open,true,'older completion must not close newer dialog');assert.equal(el('captureDraftTitle').value,'newer');assert.equal(el('captureDraftStatus').textContent,newerStatus);assert.equal(attached.length,5,'superseded draft still completes requested attachment');
  const failedSave=el('captureDraftConfirm').onclick(),failedPost=pending.at(-1);location.hash='#explore';emit('hashchange');failedPost.reject(Error('save offline'));await failedSave;assert.equal(el('captureDialog').open,true);assert.equal(el('captureDraftConfirm').disabled,false);assert.equal(el('captureDraftInvestigation').disabled,false);assert.match(el('captureDraftStatus').textContent,/save offline/);assert.equal(location.hash,'#explore');
  const oldestRetry=el('captureDraftConfirm').onclick(),retryPost=pending.at(-1);await startDraft('latest');const latestStatus=el('captureDraftStatus').textContent;retryPost.reject(Error('stale failure'));await oldestRetry;assert.equal(el('captureDialog').open,true);assert.equal(el('captureDraftTitle').value,'latest');assert.equal(el('captureDraftStatus').textContent,latestStatus);assert.equal(el('captureDraftConfirm').disabled,false);
+ // Retained operands must capture the loaded visit's opaque cursor, including a
+ // later page. Their side-open action must not silently reopen page zero.
+ const spanPage=(id,offset)=>{const q={signal:'spans',environment:'prod',fromMs:1000,toMs:61000,limit:100,offset:0};return {receipt:{id,title:'stored spans',capturedAt:'2026-01-01T00:00:00Z',question:{kind:'explore',explore:q}},explore:{question:{...q,offset},rows:[],count:'120',basis:'stored',state:'observed'},retainedRecords:120};};
+ const cursor='opaque / page+one=',nextCursor='different opaque page';location.hash='#capture='+a;
+ const baseline=owner.open(a,cursor);assert.equal(savedPorts.getPageLocation(),null,'pending visits cannot supply an operand cursor');pending.at(-1).resolve(spanPage(a,100));await baseline;
+ const held=savedPorts.getPageLocation();assert.deepEqual(held,{id:a,cursor,offset:100});assert(Object.isFrozen(held));
+ const selected=savedPorts.onOpenStoredPage({id:b,cursor:nextCursor,offset:0});assert.equal(savedPorts.getPageLocation(),null);assert.equal(new URL(pending.at(-1).url,'http://local').searchParams.get('cursor'),nextCursor);pending.at(-1).resolve(spanPage(b,0));await selected;
+ assert.deepEqual(savedPorts.getPageLocation(),{id:b,cursor:nextCursor,offset:0});assert.equal(document.activeElement,el('savedsavedRecordKind'));assert.equal(el('savedsavedRecordKind').scrolled,true);
+ const back=savedPorts.onOpenStoredPage(held),outside=new El();outside.focus();assert.equal(new URL(pending.at(-1).url,'http://local').pathname,'/api/captures/'+a);assert.equal(new URL(pending.at(-1).url,'http://local').searchParams.get('cursor'),cursor);pending.at(-1).resolve(spanPage(a,100));await back;assert.deepEqual(savedPorts.getPageLocation(),held);assert.equal(document.activeElement,outside,'completed side opening must not steal newer focus');
+ const resumed=savedResumes.length,failed=savedPorts.onOpenStoredPage({id:b,cursor:nextCursor,offset:0});pending.at(-1).reject(Error('stored side offline'));assert.equal(await failed,false);assert.equal(savedResumes.length,resumed+1);assert.deepEqual(savedResumes.at(-1),{busy:'false',location:null},'recover held page after clearing busy without admitting failed target');assert.equal(el('captureGeneralID').value,a);assert.equal(location.hash,'#capture='+a);
+ const requests=pending.length;assert.equal(savedPorts.onOpenStoredPage({id:a,cursor:1,offset:100}),false);assert.equal(savedPorts.onOpenStoredPage({id:a,cursor,offset:-1}),false);assert.equal(pending.length,requests);
+ location.hash='#explore';emit('hashchange');emit('goo:save-capture',{question:{kind:'explore',explore:spanPage(b,0).explore.question},title:'new stored spans'});pending.at(-1).resolve({items:[]});await tick();el('captureDraftInvestigation').value='';const saved=el('captureDraftConfirm').onclick();pending.at(-1).resolve(spanPage(b,0));await saved;assert.deepEqual(savedPorts.getPageLocation(),{id:b,cursor:'',offset:0},'successful capture creation establishes its loaded first-page location');
 
 });

@@ -11,7 +11,8 @@ import {fromExploration as recordPageFromExploration} from './record-page.mjs';
 const source=createSourceAdapter({id:'goo.explore'}),stored=createSourceAdapter({id:'goo.verified-saved-explore'});
 const slots=Object.freeze({viewDataset:'ranked',timeDataset:'time-series',summaryDataset:'summary',histogramDataset:'histogram'});
 const record=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
-const recordPages=new WeakMap();
+const recordPages=new WeakMap(),storedRecordPages=new WeakMap();
+function freezeStoredMetadata(value){if(value&&typeof value==='object'){for(const child of Object.values(value))freezeStoredMetadata(child);Object.freeze(value)}return value;}
 function questionKey(question,paging=false){
   validateRecordQuestion(question);validatePredicate(question.where,question.signal);
   const copy=structuredClone(question);if(paging){delete copy.offset;delete copy.limit}return identity(copy);
@@ -51,6 +52,14 @@ export function getRecordPage(data){
  return page&&data.recordPage===page&&data.rows===page.rows&&data.question===page.question&&data.basis===page.basis&&data.capturedAt===page.capturedAt&&data.state===page.quality.state?page:null;
 }
 
+// Stored-page association belongs to the exact admitted capture wrapper. A fresh
+// record page plus claimed receipt fields is not retained evidence authority.
+export function getStoredRecordPage(captured){
+ const held=storedRecordPages.get(captured);
+ if(!held||captured.explore!==held.explore||captured.receipt!==held.receipt||captured.explore.count!==held.count||captured.retainedRecords!==held.retainedRecords||captured.recordsLimited!==held.recordsLimited||getRecordPage(captured.explore)!==held.page)return null;
+ return held.page;
+}
+
 export function adoptExploration(data,requestedQuestion){return admit(data,requestedQuestion,source)}
 
 // /explore/page reads only a fresh count and bounded rows. Its wrapper is not a
@@ -76,7 +85,10 @@ export function adoptStoredExplore(page){
   // SavedProtocol historically checked selector pages only. All stored pages
   // must match their immutable receipt, including named-environment pages.
   checkedRecord(expected,page.explore.question);
-  return {...page,explore:admit(page.explore,expected,stored,{paging:true})};
+  const result={...page,receipt:freezeStoredMetadata(structuredClone(page.receipt)),explore:admit(page.explore,expected,stored,{paging:true})};
+ const supplied=getRecordPage(result.explore);
+ if(supplied&&typeof result.explore.count==='string'&&/^(0|[1-9][0-9]{0,19})$/.test(result.explore.count)&&BigInt(result.explore.count)<=18446744073709551615n&&Number.isSafeInteger(result.retainedRecords)&&result.retainedRecords>=0&&result.retainedRecords<=1000&&typeof result.recordsLimited==='boolean')storedRecordPages.set(result,Object.freeze({page:supplied,explore:result.explore,receipt:result.receipt,count:result.explore.count,retainedRecords:result.retainedRecords,recordsLimited:result.recordsLimited}));
+ return result;
 }
 
 export function importComparisonResult(data,requested){

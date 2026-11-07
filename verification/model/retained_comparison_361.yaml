@@ -1,0 +1,23 @@
+spec: retained_comparison_361.qnt
+module: retained_comparison_361
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  open_reference: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  pin_reference: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  open_selection: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  compare_pages: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  open_baseline_side: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  inspect_return_baseline: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  open_selection_side: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  inspect_return_selection: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  candidate_page: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  replace_baseline: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  clear_reference: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  open_reference_aba: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  pin_reference_aba: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  open_selection_aba: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  compare_aba: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  old_action_aba: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  open_baseline_aba: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}
+  inspect_return_aba: {expect: 'stores == {{.obs.stores}} and source == {{.obs.source}} and paired == {{.obs.paired}} and coherent == {{.obs.coherent}}'}

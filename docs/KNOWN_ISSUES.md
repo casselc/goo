@@ -1,5 +1,14 @@
 # Known issues and gaps
 
+361 adds explicit comparison of two whole verified stored span pages, independent
+frozen operands, exact opaque-cursor side opening and local inspection/return.
+UI, Hegel, actual native/model and positive actor checks pass with zero telemetry
+reads after setup. Stacked provenance remains too tall: timing bars start below
+the fold, especially on narrow screens. A compact paired header with disclosed
+facts is a concrete whole-product review item, not delivered polish. Current
+narrow frames establish provenance readability, not narrow chart appearance.
+See [contract](RETAINED_PAGE_COMPARISON.md) and [validation](../VALIDATION.md).
+
 360 adds Table/Span waterfall to checked captured span pages with local exact-
 occurrence inspection and zero telemetry reads. Field preferences, keyboard focus,
 selection guards, stored paging and retired callbacks are verified. Full UI,
@@ -17,8 +26,8 @@ is a driver diagnostic; genuine Playwright frames establish appearance. See
 
 The adopted [359 reconciliation](reviews/ROADMAP_RECONCILIATION_359.md) selects
 source-free captured span-page waterfalls, then retained-page comparison and
-current RPC capability parity. 360's captured inspection entry is delivered. Retained-page comparison and RPC
-capability parity remain proposed; curated measurement discovery still treats the
+current RPC capability parity. 360's captured inspection and 361's retained-page comparison are delivered. RPC
+capability parity is next; curated measurement discovery still treats the
 current RPC duration instrument as generic. Existing pod/container defaults are delivered;
 broader receiver coverage and verified workload ownership remain separate.
 
