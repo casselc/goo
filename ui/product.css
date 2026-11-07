@@ -1613,7 +1613,18 @@ td details {
 
 /* Retained page comparisons show independent clocks and page grains. */
 .saved-page-comparison{margin-block:10px}
-.saved-page-comparison>details>section>section{min-width:0;margin-block:10px}
+.saved-page-comparison-result{padding:8px 0;margin:0;border:0;background:none;border-radius:0;box-shadow:none}
+.saved-page-comparison-sides{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px;margin-block:8px}
+.saved-page-comparison-sides>section{display:grid;grid-template-columns:minmax(0,max-content) minmax(0,1fr);align-items:center;gap:0 8px;min-width:0;padding:4px 0 8px;margin:0;border:0;background:none;border-radius:0;box-shadow:none}
+.saved-page-comparison-sides h4{grid-column:1/-1;margin:0 0 4px}
+.saved-page-comparison-sides p{grid-column:1/-1;margin:3px 0;font-size:12px;overflow-wrap:anywhere}
+.saved-page-comparison-sides>section>button{margin:2px 0;min-height:32px;padding:4px 8px;font-size:12px;white-space:normal}
+.saved-page-comparison-sides>section>details{min-width:0;margin:0;padding:0;border:0;background:none}
+.saved-page-comparison-sides>section>details>summary{min-height:32px;box-sizing:border-box;padding:6px 0;font-size:12px}
+.saved-page-comparison-sides>section>details[open]{grid-column:1/-1}
+@media(pointer:coarse){.saved-page-comparison-sides>section>button,.saved-page-comparison-sides>section>details>summary{min-height:44px}}
+.saved-page-comparison-window{font-variant-numeric:tabular-nums}
+@media(max-width:600px){.saved-page-comparison-sides{grid-template-columns:minmax(0,1fr);gap:12px}}
 .saved-page-comparison-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:6px 14px;margin-block:8px}
 .saved-page-comparison-facts>div{min-width:0}
 .saved-page-comparison-facts dt{font-size:11px;color:var(--muted)}

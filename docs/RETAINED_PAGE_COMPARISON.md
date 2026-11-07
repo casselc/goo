@@ -4,6 +4,12 @@ Milestone 361 connects the existing supplied-page comparison to verified saved
 evidence. Actual execution and frame acceptance are recorded in
 [validation](../VALIDATION.md).
 
+[366's compact evidence headers](COMPACT_PAIRED_EVIDENCE.md) now keep each side's
+policy, UTC window, supplied page counts and uncertainty visible above timings.
+Source/custody clocks, full counts and receipts remain independently available
+under each side's Scope and receipt disclosure. This changes presentation, with
+matched desktop/narrow acceptance, while preserving the comparison grain below.
+
 Choose **Pin stored page as baseline** on a captured span page, open another stored page,
 then explicitly compare it with the baseline. Each operand is the whole supplied
 page, including mixed traces and duplicate observations. No implicit trace filter

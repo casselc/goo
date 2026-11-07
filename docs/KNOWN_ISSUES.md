@@ -1,5 +1,14 @@
 # Known issues and gaps
 
+366's compact retained-comparison headers pass matched desktop/narrow acceptance:
+the first positive timing bar is visible on fresh Compare at 464/759 px. All seven
+per-side provenance facts remain available by keyboard, without extra API calls.
+Later groups remain below the fold; this does not fix every fixed-question layout.
+See [contract](COMPACT_PAIRED_EVIDENCE.md) and [validation](../VALIDATION.md).
+The adopted [367–369 sequence](reviews/ROADMAP_RECONCILIATION_366.md) addresses
+current RPC view reuse, native service interval context, then measured facet
+responsiveness. No new labeling platform or storage migration is selected.
+
 365's bounded task/decision/manifest store, API, contextual captured-record review
 and pinned JSONL export are delivered with Go/UI/generated/native/model/actor
 acceptance. Pinned branches mean selected historical assertions, not current/global
@@ -8,8 +17,7 @@ local and unverified. This is not a complete training-set registry or automatic
 labeling system. Exact task IDs are used for reuse; no task catalog, authenticated
 reviewer assignment or multi-user consensus is implemented. The test report
 serialization mismatch found during acceptance is fixed with stored-byte/export
-authority; see [validation](../VALIDATION.md). Next is 366's compact paired evidence
-headers. See [feature contract](CAPTURE_RECORD_REVIEW.md).
+authority; see [validation](../VALIDATION.md). See [feature contract](CAPTURE_RECORD_REVIEW.md).
 
 364 connects saved counter/histogram export intervals to explicit fresh record
 context, with exact bounds/identity and a return to unchanged captured evidence.
@@ -1397,11 +1405,11 @@ trace/log inspection. Other table migrations remain incremental.
 Native histogram P95 remains a bucket range; this is not a new scalar percentile
 or a P90 evaluator. Light-DOM app styles must stay scoped to their owning view.
 
-A bounded log SSE tail is now implemented; see [limits](LIVE_LOG_TAIL.md).
-Durable replay/ingestion cursors, trace tails and live gauges/histograms
-remain planned. Summary property updates currently rerender inner
-DOM and reset disclosures; log-tail row patches, bounded retention and explicit gaps now live in the app
-adapter. Snapshot value components still reset disclosure state on data updates.
+Bounded log/span SSE tails are implemented in [Activity](LIVE_ACTIVITY.md);
+fixed-question log tail limits are described [separately](LIVE_LOG_TAIL.md).
+Durable replay/ingestion cursors and live gauge/histogram tails remain planned.
+Tail row patches, bounded retention and explicit gaps live in the application
+adapter; passive display components do not subscribe.
 
 ## Rolling comparison scope
 
@@ -1409,7 +1417,7 @@ Live baseline comparison displays record counts for saved span/log questions
 with windows of at most two hours, plus duration and recorded status when the
 saved span question requests them. Native counters also support exact-stream live rate comparison; gauges and
 histograms retain fixed comparison flow. Count-only captures are not silently enriched or reread as a new definition. Refresh uses bounded polling;
-only log tail currently uses SSE. Live snapshots expire after two minutes and
+log/span tails use SSE. Live snapshots expire after two minutes and
 are process-local until explicitly frozen. Production authentication/session
 isolation and durable live workspaces remain future work. See LIVE_COMPARISON.md.
 

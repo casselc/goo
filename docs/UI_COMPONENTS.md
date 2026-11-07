@@ -997,10 +997,9 @@ the existing inspector and coordinates page and full-query highlights.
 
 ### Supplied trace-page comparison
 
-`<goo-trace-comparison>` is a passive display of two bounded supplied pages. Load
-`components.mjs`, `comparison-visual.mjs`, `trace-page-breakdown.js`,
-`trace-page-breakdown-view.js`, `trace-page-comparison.js`, `attributes.mjs`, and
-`trace-comparison-view.js`, with `trace-comparison-view.css`. Set `.data` to
+`<goo-trace-comparison>` is a passive display of two bounded supplied pages.
+Import `trace-comparison-view.mjs`; its ES-module imports provide its display
+dependencies. Load `components.css` and `trace-comparison-view.css`. Set `.data` to
 `{baseline:{rows,truncated},selection:{rows,truncated}}`; each side accepts at most
 1,000 rows. A JSON `data` attribute supports server rendering up to 64 KiB;
 pre-definition properties and detached SPA updates are supported. Values are cloned.
@@ -1010,6 +1009,11 @@ pages. Unique reported service/operation labels with matching reported span kind
 can align observations; this does not identify the same invocation. Repeated
 labels show page aggregates without ordinal row pairing. Unknown or absent work
 is never zero-filled. Twenty groups appear initially, with local Show more.
+The short shared-scale and partial-page notices precede timings; detailed
+interpretation is a closed local disclosure after the groups. The saved-page
+adapter composes [compact independent headers](COMPACT_PAIRED_EVIDENCE.md) and
+per-side scope/receipt disclosures without changing this component's input or
+acquisition behavior.
 `goo-trace-comparison-pair` emits original `{groupIndex,baselineIndex,selectionIndex}`
 for an explicit local pair inspection. The component itself only displays supplied
 qualified attribute differences through `goo-field-value`; it never fetches,

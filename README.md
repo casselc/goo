@@ -84,8 +84,10 @@ stored page as baseline and explicitly compares it with another stored page.
 Each side keeps its receipt, window, clock and page limits; opening that exact
 side uses its verified opaque cursor, and **Return to comparison** restores the
 held pair locally. Store GETs remain separate from telemetry reads. Milestone
-361 passes native/model and positive actor checks; current frames and layout
-limitations are recorded in [validation](VALIDATION.md).
+361 passes native/model and positive actor checks.
+[366 compact headers](docs/COMPACT_PAIRED_EVIDENCE.md) bring the first positive
+timing bars into view on desktop/narrow while keeping independent scope/receipts
+in disclosures; [validation](VALIDATION.md) records matched measurements.
 
 Temporary and saved count comparisons use [one supplied-pair presentation](docs/COUNT_PAIR_PRESENTATION.md),
 with a Summary/Groups choice and explicit operand windows and read clocks.
@@ -604,7 +606,10 @@ actor and shared kept-context regression checks. The
 occurrence resolver: declare or reuse a categorical task, append explicit review
 revisions, and download a historical pinned JSONL manifest. Native browser/model/actor acceptance
 passes; [validation](VALIDATION.md) records checks and limits.
-Next is 366: compact paired comparison headers, with measured desktop/narrow layouts.
+366's compact comparison headers are delivered with matched desktop/narrow
+measurements. The [366 reconciliation](docs/reviews/ROADMAP_RECONCILIATION_366.md)
+selects reusable current RPC service views, native service interval context, and
+a measured large-facet interaction budget as the next finite sequence.
 
 Go library entry points: `subjectfacts` provides portable prepared-fact aggregation
 and offline ClickHouse/Databricks compilation; `measurements` binds/evaluates native

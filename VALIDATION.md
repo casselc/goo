@@ -1,5 +1,62 @@
 # Validation record
 
+## Compact paired evidence headers — 366
+
+The retained comparison now presents compact independent Baseline/Selected
+headers before timing groups. Exact environment policies, UTC windows, supplied
+page counts/offsets and partial/unknown states remain visible; seven detailed
+facts and original receipts remain independently readable in each side's closed
+Scope and receipt disclosure. The passive comparison keeps its shared-scale and
+partial notice before timings, with full interpretation afterward. Source/owner
+reviews accept the unchanged kernel, input, side-opening and retained-return
+boundaries. Final matched browser/actor/model acceptance passes.
+
+Baseline measurements use genuine OTLP captures: 20 retained baseline-page rows
+at offset 100, compared with 100 selected rows at offset zero. The first positive
+timing bar begins at **1,254.328 px** on 1280×1000 and **2,023.094 px** on 390×844.
+After replay uses the same capture bytes, IDs, source oracle and evidence clocks.
+Opening both scope/receipt disclosures by keyboard must preserve their seven
+human-readable facts and raw metadata and add zero API calls. Final acceptance
+requires the first positive bar fully within each fresh-entry viewport; there is
+no test scroll before that measurement.
+
+| Fresh Compare viewport | First positive bar before | After | Upward movement |
+| --- | ---: | ---: | ---: |
+| 1280 × 1000 | 1254.328 px | 464.234 px | 790.094 px |
+| 390 × 844 | 2023.094 px | 759.078 px | 1264.016 px |
+
+Both final bars are fully visible vertically/horizontally and neither viewport
+has horizontal overflow. Chart entry begins at 201.750/436.891 px respectively.
+Later groups, including the gateway group, still require scrolling; this does not
+claim that every group fits above the fold.
+
+The genuine matched journey passes in 77.617s (runner 80.324s), reusing all eighteen
+actual lifecycle facts: exact side/cursor opening, inspection/return, pending and
+ABA stale-action refusal, frozen operands and metadata. It makes zero telemetry
+reads, ten stored-page GETs and 26 browser API calls. The upstream sees only the
+intentional unavailable-source probe during replay. All original capture bytes
+and receipts remain unchanged; the setup CLI reindexes two verified files.
+Required observed-model replay passes in 15.99s, zero skips, including its rejecting
+controls. The existing 35-second actor reaches positive visible completion across
+588 snapshots/12 stages with zero source calls/writes and exact gateway/attribute/
+side-open/return assertions. The four matched entry frames were captured before
+any test scroll and reviewed at original resolution.
+
+The full UI suite passes **1,251 tests**, zero skips, in 16.954s. The main Go suite
+passes with Go 1.27.3 (`go test -p 2 ./...`; cmd/goo 9.513s; unchanged packages may
+be cached). The rebuilt single-Go image is healthy and all four changed display
+assets match the checkout byte-for-byte. The existing comparison arithmetic,
+recorded lifecycle model and actor are reused; no new timing model is needed.
+
+Replay setup initially tripped the catalog's copied-file mtime verification.
+The supported Go catalog-rebuild command reindexes verified content, followed by
+exact capture-byte assertions; no file-verification guard was relaxed. The first
+layout attempt then failed the narrow positive-bar visibility gate, so redundant
+banner/card spacing was removed and side actions compacted. The gate remains
+unchanged. See [contract](docs/COMPACT_PAIRED_EVIDENCE.md) and
+[executable storyboard](docs/journeys/366-paired-headers.md).
+
+
 ## Captured-record review — 365 full workflow
 
 Production implementation now includes immutable categorical task/decision/manifest

@@ -1,18 +1,15 @@
 # Implementation plan
 
 > Active execution order: [November 5 roadmap](ROADMAP_2026_11_05.md), updated by
-> the adopted [363 reconciliation](reviews/ROADMAP_RECONCILIATION_363.md).
-> The 359 sequence—360 captured span pages, 361 retained-page comparison and 362
-> current RPC capability parity—is delivered with its own recorded acceptance.
-> [364 saved native interval → supporting records](SAVED_NATIVE_RECORD_CONTEXT.md)
-> is delivered with UI/generated/native/model/actor and shared kept-context
-> regression checks. [365's readiness foundation](CAPTURE_RECORD_REVIEW_GATE.md)
-> is delivered: the Go resolver and private bounded-publication demonstrations
-> pass focused/generated checks; the main Go suite also passes.
-> The full one-task review store/API/contextual UI and pinned JSONL exporter are
-> delivered with UI, Go, generated/model and native/actor acceptance. See [feature contract](CAPTURE_RECORD_REVIEW.md)
-> and [actual validation](../VALIDATION.md). Then 366 measured compact paired
-> evidence headers. Review the whole product again after this sequence.
+> the adopted [366 reconciliation](reviews/ROADMAP_RECONCILIATION_366.md).
+> The 363 sequence is complete: 364 saved native interval context, 365 captured
+> record review/pinned export, and 366 measured compact paired evidence headers.
+> Each has Go/UI/native/model/actor validation appropriate to its changed authority.
+> Next: **367 reusable current RPC service views → 368 exact native service
+> interval supporting-records/Return → 369 measured large-facet interaction budget**.
+> 369 adds rendering changes only if a genuine task budget is exceeded; otherwise
+> close the measurement without implementing a generic virtualizer. Preserve the
+> finite breadth/depth/consolidation cadence and review again after this sequence.
 > Delivery notes below are retained history, not parallel active queues.
 
 

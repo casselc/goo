@@ -20,3 +20,8 @@ goo-trace-comparison .trace-pair>button{margin:.2rem 0 0;padding:.2rem .45rem;mi
  goo-trace-comparison .trace-pair-attributes thead{display:none}
  goo-trace-comparison .trace-pair-attributes td::before{content:attr(data-label);display:block;font-size:.7rem;color:var(--muted,#98a8bf)}
 }
+
+goo-trace-comparison .trace-comparison-notice{margin:.25rem 0;font-size:.75rem;line-height:1.35;color:var(--muted,#98a8bf)}
+goo-trace-comparison details[data-comparison-interpretation]{margin-top:.4rem;font-size:.75rem}
+goo-trace-comparison>details{margin-top:0;padding-top:4px;border-top:0}
+goo-trace-comparison>details>summary{margin-bottom:4px}
