@@ -1699,6 +1699,35 @@ def check_unsupported_metric_discovery(spec, path):
     print('Actual unsupported/supported discovery wire results valid; six rejecting controls pass')
 
 
+def check_histogram_exemplar_observations(spec, path):
+    observed = json.loads(Path(path).read_text())
+    native = spec['paths']['/measurements']['post']
+    response = validator(spec, native['responses']['200']['content']['application/json']['schema'])
+    for name in ('parent', 'reactivatedParent'):
+        validator(spec, native['requestBody']['content']['application/json']['schema']).validate(observed[name]['request'])
+        response.validate(observed[name]['response'])
+    records = spec['paths']['/explore']['post']
+    validator(spec, records['requestBody']['content']['application/json']['schema']).validate(observed['child']['request'])
+    validator(spec, records['responses']['200']['content']['application/json']['schema']).validate(observed['child']['response'])
+    actual = observed['parent']['response']
+    report = actual['histogramExemplars']
+    assert report['valueEncoding'] == 'source-float64' and report['originalValueType'] == 'unknown'
+    assert sorted(export['total'] for export in report['exports']) == ['0', '6']
+    primary = next(index for index, export in enumerate(report['exports']) if export['total'] == '6')
+    controls = []
+    for key, value in (('version', 'unknown'), ('originalValueType', 'int64'), ('limited', 'false')):
+        mutant = copy.deepcopy(actual)
+        mutant['histogramExemplars'][key] = value
+        controls.append(mutant)
+    for key, value in (('total', ''), ('state', 'unavailable'), ('items', report['exports'][primary]['items'] * 6)):
+        mutant = copy.deepcopy(actual)
+        mutant['histogramExemplars']['exports'][primary][key] = value
+        controls.append(mutant)
+    for mutant in controls:
+        assert not response.is_valid(mutant), 'Reported exemplar wire mutant accepted'
+    print('Actual native exemplar and scoped span wire results valid; six rejecting controls pass')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--observations')
@@ -1722,12 +1751,15 @@ if __name__ == '__main__':
     parser.add_argument('--container-discovery-observations')
     parser.add_argument('--native-histogram-view-observations')
     parser.add_argument('--unsupported-metric-discovery-observations')
+    parser.add_argument('--histogram-exemplar-observations')
     parser.add_argument('--native-histogram-time-view-observations')
     parser.add_argument('--native-histogram-comparison-observations')
     parser.add_argument('--native-histogram-evidence-observations')
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.histogram_exemplar_observations:
+        check_histogram_exemplar_observations(spec,args.histogram_exemplar_observations)
     if args.unsupported_metric_discovery_observations:
         check_unsupported_metric_discovery(spec,args.unsupported_metric_discovery_observations)
     if args.native_histogram_comparison_observations:

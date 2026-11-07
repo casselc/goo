@@ -1,5 +1,39 @@
 # Semantic properties and model conformance
 
+## Reported histogram exemplar references (377)
+
+The source probe is offline by default. Explicit `--run` posts uniquely scoped
+ordinary OTLP to the existing collector and retains original input, schema,
+image and raw histogram/trace rows without modifying configuration or resetting data.
+
+```sh
+python3 scripts/probe_histogram_exemplars_377.py
+node verification/check_histogram_exemplar_probe_377.mjs artifacts/histogram-exemplars377/report.json
+```
+
+The public Go planner is `exploration.PlanHistogramExemplarContext(result,
+stream, exportEndNS, ordinal)`; it replays the result, checks every raw row for
+association and returns a detached scoped query. Browser projection has matching
+generated parity cases. The actual journey reuses the existing navigation model:
+
+```sh
+GOO_HISTOGRAM_EXEMPLAR_377_REPORT=/workspace/goo/artifacts/histogram-exemplar-journey377/summary.json \
+go test . -run '^TestQuintHistogramExemplarObserved377$' -count=1 -v
+```
+
+Run that command from this verification module with Quint available. It requires
+a successful actual report; model read-budget mutants and independent trace/
+namespace/export association mutants are judged separately. From the repository
+root, the API checker also accepts `--histogram-exemplar-observations
+artifacts/histogram-exemplar-journey377/summary.json` for actual wire validation.
+
+The independent checker never invokes Goo's adapter or planner. It checks source
+ID/time/order/stream association, stored Float64 bits and scope decoys, and rejects
+three mutated reports. Exact reported references survive; original scalar type,
+large-integer precision and filtered-attribute types do not. Product and runtime
+checks are recorded separately in [validation](../VALIDATION.md) and the
+[contract](../docs/HISTOGRAM_EXEMPLAR_REFERENCES.md).
+
 ## Unsupported exponential discovery (376)
 
 `TestHegelUnsupportedMetricDiscovery376` drives the actual `Source.Discover`

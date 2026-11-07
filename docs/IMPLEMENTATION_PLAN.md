@@ -21,8 +21,10 @@
 > triage fit, native DOM and current leases.
 > **376 observed unsupported metric discovery is delivered**, with explicit
 > optional-source availability and no exponential execution authority.
-> **Current: 377 exemplar readiness/one reported trace link if closed**, then
-> 378 native failure/recovery consolidation.
+> **377 reported histogram exemplar trace context is delivered**, with bounded
+> source metadata, exact staged scope, explicit Run and paused held Back.
+> **Current: 378 native failure/recovery consolidation**, then the finite-sequence
+> whole-product checkpoint.
 > See the [checkpoint reconciliation](reviews/ROADMAP_RECONCILIATION_375.md).
 > Do not turn blocked native grammar or broker research into a new executor,
 > compatibility layer or unbounded product platform.

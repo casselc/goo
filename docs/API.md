@@ -60,6 +60,17 @@ remains usable. Probe/query errors fail the request rather than implying absence
 Counts refer to exported points; exponential instruments remain unsupported and
 carry no executable definition. See [discovery contract](UNSUPPORTED_METRIC_DISCOVERY.md).
 
+## Reported histogram exemplars
+
+Native histogram responses may include `histogramExemplars`: bounded source export
+metadata with stable captured-row association, explicit unavailable/omitted states
+and stored Float64 values of unknown original type. This does not change numeric
+histogram counts, infer causal bucket membership or provide complete trace data.
+Missing metadata is unknown rather than a known-empty list. The same acquisition
+projects reference essentials from standard exporter columns; source byte limits
+still apply to the full response input. See the
+[reference contract](HISTOGRAM_EXEMPLAR_REFERENCES.md).
+
 ## What the schemas promise
 
 All supported Go request and response envelopes have typed shapes. Nested

@@ -771,6 +771,14 @@ The [D1 comparison acceptance audit](D1_ACCEPTANCE.md) maps the adopted context,
 count-series, action-group and inspection components to real consumers and their
 source-free display contracts. Native metric semantics remain in separate adapters.
 
+[Reported histogram exemplars](HISTOGRAM_EXEMPLAR_REFERENCES.md) reuse the native
+export inspector, UTC timestamp presentation and stacked `goo-table` cells. The
+application projection admits one export and supplies bounded rows; components
+never read telemetry or infer bucket contribution. Source-owned trace anchors
+stage through the retained native-navigation owner and require an unchanged whole
+request/result question. Saved/service renderers remain read-only where their
+existing owner admits only interval relations.
+
 [Native instrument discovery](NATIVE_INSTRUMENT_DISCOVERY.md) reuses `goo-table`
 for compact supplied metadata and native disclosures for hints. Its application
 adapter owns local paging and delegates Build to the measurement owner; no new

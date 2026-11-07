@@ -10,6 +10,31 @@ from go_http_routes import route_sources
 ROOT = Path(__file__).resolve().parents[1]
 ref = lambda name: {'$ref': '#/components/schemas/' + name}
 schemas = json.loads((ROOT / 'api/go-schemas.json').read_text())
+# Reported exemplars are bounded source metadata, independent from numeric bins.
+exemplars = schemas['measurements.HistogramExemplarReport']
+for key, value in {'version': 'goo/histogram-exemplar-references/1', 'valueEncoding': 'source-float64', 'originalValueType': 'unknown'}.items():
+ exemplars['properties'][key] = {'const': value}
+exemplars['properties']['exports'] = {'type': 'array', 'maxItems': 10000, 'items': ref('measurements.HistogramExemplarExport')}
+exemplars['properties']['omittedExports'].update(minimum=0, maximum=10000)
+exemplars['description'] = 'Reported source export references, not bucket contribution, causality or complete traces. Maximum 64 KiB encoded metadata; omissions are unavailable, never known empty. Original scalar type is unknown and stored Float64 can lose integer precision.'
+export = schemas['measurements.HistogramExemplarExport']
+export['properties']['sourceRow'].update(minimum=0, maximum=9999)
+export['properties']['state'] = {'enum': ['available', 'unavailable']}
+export['properties']['temporality'] = {'enum': ['delta', 'cumulative']}
+export['properties']['items'] = {'type': 'array', 'maxItems': 32, 'items': ref('measurements.HistogramExemplarReference')}
+export['properties']['diagnostics'] = {'type': 'array', 'items': {'enum': ['metadata-not-retained', 'metadata-invalid', 'no-recorded-value', 'sample-limit']}}
+for key in ('total', 'omitted'):
+ export['properties'][key] = {'type': 'string', 'pattern': '^(?:0|[1-9][0-9]*)?$', 'maxLength': 20, 'description': 'Canonical source count; empty means unknown when metadata is unavailable.'}
+export['allOf'] = [{'if': {'properties': {'state': {'const': 'available'}}, 'required': ['state']}, 'then': {'properties': {key: {'minLength': 1} for key in ('total', 'omitted')}}, 'else': {'properties': {'items': {'maxItems': 0}}}}]
+reference = schemas['measurements.HistogramExemplarReference']
+reference['properties']['index'].update(minimum=0, maximum=31)
+reference['properties']['timeNS'] = {'type': 'string', 'pattern': '^(0|[1-9][0-9]*)$', 'maxLength': 19}
+for key in ('traceId', 'spanId', 'storedValue'):
+ reference['properties'][key].update(maxLength=128)
+reference['description'] = 'Stored source reference text; invalid IDs remain visible but cannot authorize trace navigation. Span ID is a hint, never a whole-trace filter. Sample time does not widen the original question.'
+for shape in (exemplars, export, reference):
+ shape['additionalProperties'] = False
+schemas['measurements.Result']['properties']['histogramExemplars'] = ref('measurements.HistogramExemplarReport')
 diagnostic = schemas['measurements.DiscoveryDiagnostic']
 diagnostic['additionalProperties'] = False
 diagnostic['properties']['kind'] = {'const': 'exponential-histogram'}

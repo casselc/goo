@@ -61,7 +61,7 @@ func Compile(q Question) (Plan, error) {
 	case "counter", "stock":
 		fields += ", toString(Value) AS value, AggregationTemporality AS temporality, IsMonotonic AS monotonic"
 	case "histogram":
-		fields += ", AggregationTemporality AS temporality, toString(Count) AS count, arrayMap(c -> toString(c),BucketCounts) AS bucket_counts, ExplicitBounds AS bounds"
+		fields += ", AggregationTemporality AS temporality, toString(Count) AS count, arrayMap(c -> toString(c),BucketCounts) AS bucket_counts, ExplicitBounds AS bounds" + ", toString(length(`Exemplars.TraceId`)) AS exemplar_total, toString(length(`Exemplars.SpanId`)) AS exemplar_span_total, toString(length(`Exemplars.TimeUnix`)) AS exemplar_time_total, toString(length(`Exemplars.Value`)) AS exemplar_value_total, toString(length(`Exemplars.FilteredAttributes`)) AS exemplar_attribute_total, arrayMap(t -> toString(toUnixTimestamp64Nano(t)),arraySlice(`Exemplars.TimeUnix`,1,32)) AS exemplar_times, arrayMap(v -> toString(v),arraySlice(`Exemplars.Value`,1,32)) AS exemplar_values, arraySlice(`Exemplars.TraceId`,1,32) AS exemplar_trace_ids, arraySlice(`Exemplars.SpanId`,1,32) AS exemplar_span_ids"
 	case "lifecycle":
 		table = "otel_logs"
 		timeColumn = "Timestamp"
@@ -508,6 +508,9 @@ func Evaluate(q Question, rows []json.RawMessage, at time.Time) (*Result, error)
 	}
 	if e != nil {
 		return nil, e
+	}
+	if d.Kind == "histogram" {
+		r.HistogramExemplars = projectHistogramExemplars(copied)
 	}
 	if d.HistogramBucketMS != nil {
 		r.HistogramTime, e = metrics.BucketHistograms(r.Histograms, ns(*d.HistogramBucketMS))

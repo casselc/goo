@@ -78,7 +78,7 @@ func ValidateResult(r *Result) error {
 		}
 		return nil
 	}
-	if r.Lifecycle == nil || r.States != nil || r.Gauges != nil || r.Counters != nil || r.Histograms != nil || r.Stocks != nil || len(r.Events) != len(r.Rows) {
+	if r.HistogramExemplars != nil || r.Lifecycle == nil || r.States != nil || r.Gauges != nil || r.Counters != nil || r.Histograms != nil || r.Stocks != nil || len(r.Events) != len(r.Rows) {
 		return fmt.Errorf("invalid lifecycle evidence envelope")
 	}
 	expected, e := r.Lifecycle.Receipt.Policy.Prepare(r.Events)

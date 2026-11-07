@@ -1,5 +1,112 @@
 # Validation record
 
+## Reported histogram exemplar references — 377
+
+The source-readiness gate closes for reported trace references, with explicit
+scalar limits. The offline-default probe uses the existing Collector Contrib
+0.123.0 / pinned commit `bef0a5cfb993608bbcce1eb5859c37295ac8eed2`, without
+configuration/schema changes or resets. Three explicit histogram points contain
+seven exemplars across qualified stream identities; six belong to the primary
+point and one to its identity decoy. Four actual trace rows include two services
+in the chosen environment/namespace and two same-ID scope decoys. Valid metrics
+and traces return 200. Separate malformed trace-ID and short span-ID requests
+return 400 and produce no observed rows. All original OTLP and raw observations
+remain in `artifacts/histogram-exemplars377`.
+
+The independent Node verifier (which never calls Goo's adapter or planner) checks
+all five parallel array cardinalities/order, exact ID pairing and nanosecond
+timestamps, resource/scope schemas, typed filtered-attribute projection and stored
+Float64 bits. It rejects three corrupted trace/time/array-association reports.
+The large integer 9007199254740993 stores as 9007199254740992; integer/double zero
+share stored bits. Missing IDs become all-zero strings, while trace-only references
+retain a valid trace and zero span ID. Original scalar type/presence and filtered
+attribute types cannot be inferred. The closed subset authorizes only a reported
+reference, not bucket contribution, causality or complete trace capture.
+
+The product adapter and public selector pass focused checks in **0.159s**. The
+report retains at most 32 references per export and 64 KiB overall, preferring
+recent captured exports while keeping original source-row indices. All raw rows,
+including budget-omitted exports, participate in uniqueness admission. Invalid
+optional metadata becomes unavailable without changing numeric histogram results;
+missing counts stay unknown, not zero. Public selections return detached maps and
+slices through standard `maps.Clone` / `slices.Clone` APIs. Source payload remains
+bounded at 8 MiB with no metric-row truncation to fit metadata.
+
+The Go context planner's focused tests pass in **0.098s**, including actual
+report-budget ambiguity, unavailable metadata, invalid IDs and replay mutation.
+**40 Hegel cases** drive actual Evaluate → public Go/browser planner parity with
+independent exact-nanosecond and namespace membership, passing in **3.25s**
+(package 3.260s), zero skips. Span IDs are hints only; a valid trace ID can act
+without a valid span ID. A sample time outside the question never widens it.
+No new navigation state machine is needed.
+
+The full Go suite passes under **Go 1.27.3**. The full frontend run passes
+**1,324 tests**, zero skips, in **17.502s**, covering raw association/ordinal
+mutation, copied scope, malformed scalar metadata, unknown/empty states, private
+render projection, live source-question echo and retired/hidden/inert/paused
+links. A review found modified-click guards after the ordinary-click branch;
+new reference actions now guard first for click and auxiliary click. Fresh
+modified clicks keep native behavior, while retired gestures prevent defaults
+and propagation. Rendering checks the export once, with fresh admission on click.
+
+OpenAPI is regenerated with **112 operations and 720 schemas**. The standard
+checker passes 476 fixture responses, 186 admitted requests and 28 mux refusals,
+including rejecting controls and SSE checks. Report versions, Float64 uncertainty,
+unknown counts and bounded item/state shapes are explicit.
+
+Actual native response and scoped span request/response schemas also pass the API
+checker, with six focused controls rejecting false version/type/state/count/limit
+claims. Two content-only data-first changes are covered by a later **14-test**
+focused pass (316ms), including the new disclosure-order check.
+
+The final rebuilt-image journey and positive actor pass in **54.4s** (56.7s
+total). Image `7f2d0351…` serves health, all three changed UI assets and the
+1,446,594-byte OpenAPI exactly matching checkout. It reuses the retained source
+probe without additional ingestion or lab resets. Source metadata is matched to
+the actual primary export; the empty-exemplar export stays distinct from unknown
+metadata. Trace-only references stage without inventing a span filter.
+
+Eleven actual native boundaries record **three source acquisitions and five SQL
+queries**, zero writes: two explicit measurement Runs and one scoped child Run.
+A raw four-span oracle independently selects only known-root and known-peer,
+excluding same-ID environment/namespace decoys. Exact original nanosecond bounds
+and namespace survive while service/instance/metric predicates are absent. Back
+retains the same report/table DOM, source row/end, text, scroll and focused opener
+without I/O; controls remain visibly paused until explicit parent Run. Old
+callbacks cannot read. The actor separately records **775 observations across
+seven phases, 45.224s**, two source acquisitions and zero writes, with observed
+held-return verification and positive completion. The proxy's **nine total SQL
+requests** include the actor's four, rather than implying nine native-only calls.
+
+The actual parent response is **10,356 bytes**. Its exemplar report serialized as
+UTF-8 JSON is **2,374 bytes** (this is a projection size, not a general wire-cost
+bound). At 390px the exemplar table measures **259/259px scroll/client**, zero
+horizontal offset. First sample data ranges and the Inspect action are strictly
+inside the actual inspector scroll region; action bottom 326.844px is within
+region bottom 335.844px. The row border/padding extends one pixel beyond it, so
+whole-row-border fit is not claimed. Native headers retain `scope=col` and Chrome
+AX diagnostics are retained; no universal screen-reader certification is inferred.
+
+Actual frame review caught a preface-only inspector and then a 12px-clipped
+action. Count/Float64 uncertainty now precede the data; full source, cumulative and
+scope explanations sit after the table in a closed disclosure. Earlier test-only
+return-control, namespace-substring and hidden-cached-panel selectors were fixed
+without weakening product membership or completion checks. Original diagnostic
+reports and prior accepted observations remain compact alongside the final raw
+report/AX, compressed trace and positive frame; final artifact footprint is about
+**2.56MB**.
+
+Required recorded-fact replay passes without skips in **4.26s** (package
+4.274s). All eleven observed boundaries project into the existing
+`population_drilldown` model; no new state machine or successful synthetic trace
+is introduced. Independent admission rejects changed trace, namespace and source
+row associations. The model separately rejects an extra source acquisition during
+staging. See the
+[contract](docs/HISTOGRAM_EXEMPLAR_REFERENCES.md),
+[source gate](docs/reviews/EXEMPLAR_SOURCE_READINESS_377.md),
+[architecture](docs/reviews/HISTOGRAM_EXEMPLAR_ARCHITECTURE_377.md) and
+[design](docs/reviews/HISTOGRAM_EXEMPLAR_DESIGN_377.md).
+
 ## Observed unsupported exponential instruments — 376
 
 Implementation extends metric discovery with distinct `exponential-histogram`

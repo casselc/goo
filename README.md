@@ -629,8 +629,11 @@ controls together on narrow screens through the existing table components.
 [Metric discovery](docs/UNSUPPORTED_METRIC_DISCOVERY.md) now shows observed
 exponential instruments with exported-point counts and an unsupported status,
 without making them executable. Optional-source absence is explicit.
-Next is explicit-histogram exemplar readiness and one exact reported trace link
-if source fidelity closes.
+[Reported histogram exemplars](docs/HISTOGRAM_EXEMPLAR_REFERENCES.md) now stage
+scoped trace questions from selected exports. Explicit Run reads spans; Back
+retains the native result. Stored Float64 values keep their original-type limit
+visible, and source references do not imply causality or complete traces.
+Next is native Measurements source-failure and recovery consolidation.
 Whole-product reviews and proposed work are distinct from
 [validated delivery](VALIDATION.md).
 

@@ -27142,6 +27142,450 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.DiscoveryResult"
       },
+      "measurements.HistogramExemplarExport": {
+        "properties": {
+          "diagnostics": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "metadata-not-retained",
+                "metadata-invalid",
+                "no-recorded-value",
+                "sample-limit"
+              ]
+            }
+          },
+          "endNS": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "$ref": "#/components/schemas/measurements.HistogramExemplarReference"
+            }
+          },
+          "omitted": {
+            "type": "string",
+            "pattern": "^(?:0|[1-9][0-9]*)?$",
+            "maxLength": 20,
+            "description": "Canonical source count; empty means unknown when metadata is unavailable."
+          },
+          "sourceRow": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9999
+          },
+          "startNS": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "available",
+              "unavailable"
+            ]
+          },
+          "stream": {
+            "$ref": "#/components/schemas/metrics.Stream"
+          },
+          "temporality": {
+            "enum": [
+              "delta",
+              "cumulative"
+            ]
+          },
+          "total": {
+            "type": "string",
+            "pattern": "^(?:0|[1-9][0-9]*)?$",
+            "maxLength": 20,
+            "description": "Canonical source count; empty means unknown when metadata is unavailable."
+          }
+        },
+        "required": [
+          "sourceRow",
+          "stream",
+          "startNS",
+          "endNS",
+          "temporality",
+          "state",
+          "items",
+          "total",
+          "omitted",
+          "diagnostics"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HistogramExemplarExport",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "available"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "total": {
+                  "minLength": 1
+                },
+                "omitted": {
+                  "minLength": 1
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "items": {
+                  "maxItems": 0
+                }
+              }
+            }
+          }
+        ],
+        "additionalProperties": false
+      },
+      "measurements.HistogramExemplarExportInput": {
+        "additionalProperties": false,
+        "properties": {
+          "diagnostics": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "endNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "items": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/measurements.HistogramExemplarReferenceInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "omitted": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sourceRow": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "startNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/metrics.StreamInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "temporality": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HistogramExemplarExport"
+      },
+      "measurements.HistogramExemplarReference": {
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 31
+          },
+          "spanId": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "storedValue": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "timeNS": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 19
+          },
+          "traceId": {
+            "type": "string",
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "index",
+          "timeNS",
+          "traceId",
+          "spanId",
+          "storedValue"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HistogramExemplarReference",
+        "description": "Stored source reference text; invalid IDs remain visible but cannot authorize trace navigation. Span ID is a hint, never a whole-trace filter. Sample time does not widen the original question.",
+        "additionalProperties": false
+      },
+      "measurements.HistogramExemplarReferenceInput": {
+        "additionalProperties": false,
+        "properties": {
+          "index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "spanId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "storedValue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "timeNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "traceId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HistogramExemplarReference"
+      },
+      "measurements.HistogramExemplarReport": {
+        "properties": {
+          "exports": {
+            "type": "array",
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/measurements.HistogramExemplarExport"
+            }
+          },
+          "limited": {
+            "type": "boolean"
+          },
+          "omittedExports": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000
+          },
+          "originalValueType": {
+            "const": "unknown"
+          },
+          "valueEncoding": {
+            "const": "source-float64"
+          },
+          "version": {
+            "const": "goo/histogram-exemplar-references/1"
+          }
+        },
+        "required": [
+          "version",
+          "valueEncoding",
+          "originalValueType",
+          "exports",
+          "limited",
+          "omittedExports"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HistogramExemplarReport",
+        "description": "Reported source export references, not bucket contribution, causality or complete traces. Maximum 64 KiB encoded metadata; omissions are unavailable, never known empty. Original scalar type is unknown and stored Float64 can lose integer precision.",
+        "additionalProperties": false
+      },
+      "measurements.HistogramExemplarReportInput": {
+        "additionalProperties": false,
+        "properties": {
+          "exports": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/measurements.HistogramExemplarExportInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "limited": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "omittedExports": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "originalValueType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "valueEncoding": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.HistogramExemplarReport"
+      },
       "measurements.HistogramTimeViewSelector": {
         "properties": {
           "bucketIndex": {
@@ -30327,6 +30771,9 @@
               }
             ]
           },
+          "histogramExemplars": {
+            "$ref": "#/components/schemas/measurements.HistogramExemplarReport"
+          },
           "histogramTime": {
             "anyOf": [
               {
@@ -30548,6 +30995,23 @@
                 "anyOf": [
                   {
                     "$ref": "#/components/schemas/metrics.GaugeResultInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "histogramExemplars": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/measurements.HistogramExemplarReportInput"
                   },
                   {
                     "type": "null"

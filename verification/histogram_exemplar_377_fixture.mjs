@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {plan} from '../ui/native-exemplar-context.mjs';
+const input=JSON.parse(fs.readFileSync(0,'utf8')),before=JSON.stringify(input);
+globalThis.fetch=()=>{throw Error('Reported exemplar projection must not acquire telemetry')};
+const context=plan(input.result,input.stream,input.endNS,input.ordinal);
+assert.deepEqual(context,input.expected);assert.equal(JSON.stringify(input),before);
+for(const ordinal of [-1,32,999])assert.throws(()=>plan(input.result,input.stream,input.endNS,ordinal));
+assert.throws(()=>plan(input.result,{...input.stream,resource:{...input.stream.resource,'service.instance.id':'wrong-export-stream'}},input.endNS,input.ordinal));
+assert.throws(()=>plan(input.result,input.stream,String(BigInt(input.endNS)+1n),input.ordinal));
+process.stdout.write(JSON.stringify(context));

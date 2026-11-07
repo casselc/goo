@@ -101,22 +101,23 @@ type Plan struct {
 	Revision   string            `json:"revision"`
 }
 type Result struct {
-	States        *metrics.StateResult         `json:"states,omitempty"`
-	Stocks        *metrics.StockResult         `json:"stocks,omitempty"`
-	HistogramTime *metrics.HistogramTimeResult `json:"histogramTime,omitempty"`
-	Events        []lifecycle.Event            `json:"events,omitempty"`
-	Question      Question                     `json:"question"`
-	Plan          Plan                         `json:"plan"`
-	ReadAt        string                       `json:"readAt"`
-	Basis         string                       `json:"basis"`
-	Count         string                       `json:"count"`
-	State         string                       `json:"state"`
-	Warnings      []string                     `json:"warnings"`
-	Rows          []json.RawMessage            `json:"rows"`
-	Gauges        *metrics.GaugeResult         `json:"gauges,omitempty"`
-	Counters      *metrics.CounterResult       `json:"counters,omitempty"`
-	Histograms    *metrics.HistogramResult     `json:"histograms,omitempty"`
-	Lifecycle     *lifecycle.Prepared          `json:"lifecycle,omitempty"`
+	HistogramExemplars *HistogramExemplarReport     `json:"histogramExemplars,omitempty"`
+	States             *metrics.StateResult         `json:"states,omitempty"`
+	Stocks             *metrics.StockResult         `json:"stocks,omitempty"`
+	HistogramTime      *metrics.HistogramTimeResult `json:"histogramTime,omitempty"`
+	Events             []lifecycle.Event            `json:"events,omitempty"`
+	Question           Question                     `json:"question"`
+	Plan               Plan                         `json:"plan"`
+	ReadAt             string                       `json:"readAt"`
+	Basis              string                       `json:"basis"`
+	Count              string                       `json:"count"`
+	State              string                       `json:"state"`
+	Warnings           []string                     `json:"warnings"`
+	Rows               []json.RawMessage            `json:"rows"`
+	Gauges             *metrics.GaugeResult         `json:"gauges,omitempty"`
+	Counters           *metrics.CounterResult       `json:"counters,omitempty"`
+	Histograms         *metrics.HistogramResult     `json:"histograms,omitempty"`
+	Lifecycle          *lifecycle.Prepared          `json:"lifecycle,omitempty"`
 }
 
 // Hash is the legacy JSON digest used by source, deduplication and replay

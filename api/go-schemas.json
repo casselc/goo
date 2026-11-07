@@ -16149,6 +16149,405 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.DiscoveryResult"
   },
+  "measurements.HistogramExemplarExport": {
+    "properties": {
+      "diagnostics": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "endNS": {
+        "type": "string"
+      },
+      "items": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.HistogramExemplarReference"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "omitted": {
+        "type": "string"
+      },
+      "sourceRow": {
+        "type": "integer"
+      },
+      "startNS": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      },
+      "stream": {
+        "$ref": "#/components/schemas/metrics.Stream"
+      },
+      "temporality": {
+        "type": "string"
+      },
+      "total": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "sourceRow",
+      "stream",
+      "startNS",
+      "endNS",
+      "temporality",
+      "state",
+      "items",
+      "total",
+      "omitted",
+      "diagnostics"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HistogramExemplarExport"
+  },
+  "measurements.HistogramExemplarExportInput": {
+    "additionalProperties": false,
+    "properties": {
+      "diagnostics": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "endNS": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "items": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/measurements.HistogramExemplarReferenceInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "omitted": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "sourceRow": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "startNS": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "state": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "stream": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/metrics.StreamInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "temporality": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "total": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HistogramExemplarExport"
+  },
+  "measurements.HistogramExemplarReference": {
+    "properties": {
+      "index": {
+        "type": "integer"
+      },
+      "spanId": {
+        "type": "string"
+      },
+      "storedValue": {
+        "type": "string"
+      },
+      "timeNS": {
+        "type": "string"
+      },
+      "traceId": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "index",
+      "timeNS",
+      "traceId",
+      "spanId",
+      "storedValue"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HistogramExemplarReference"
+  },
+  "measurements.HistogramExemplarReferenceInput": {
+    "additionalProperties": false,
+    "properties": {
+      "index": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "spanId": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "storedValue": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "timeNS": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "traceId": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HistogramExemplarReference"
+  },
+  "measurements.HistogramExemplarReport": {
+    "properties": {
+      "exports": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.HistogramExemplarExport"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "limited": {
+        "type": "boolean"
+      },
+      "omittedExports": {
+        "type": "integer"
+      },
+      "originalValueType": {
+        "type": "string"
+      },
+      "valueEncoding": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "valueEncoding",
+      "originalValueType",
+      "exports",
+      "limited",
+      "omittedExports"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HistogramExemplarReport"
+  },
+  "measurements.HistogramExemplarReportInput": {
+    "additionalProperties": false,
+    "properties": {
+      "exports": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/measurements.HistogramExemplarExportInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "limited": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "omittedExports": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "originalValueType": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "valueEncoding": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.HistogramExemplarReport"
+  },
   "measurements.HistogramTimeViewSelector": {
     "properties": {
       "bucketIndex": {
@@ -18725,6 +19124,16 @@
           }
         ]
       },
+      "histogramExemplars": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.HistogramExemplarReport"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "histogramTime": {
         "anyOf": [
           {
@@ -18891,6 +19300,23 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/metrics.GaugeResultInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "histogramExemplars": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/measurements.HistogramExemplarReportInput"
               },
               {
                 "type": "null"
