@@ -17,10 +17,10 @@ test('343 supplied large-facet mount and local Find diagnostic',async({page,requ
  for(const viewport of [{width:1280,height:1000},{width:390,height:844}]){
   await page.setViewportSize(viewport);await page.goto('about:blank');const response=await page.goto(base+'/ui-components',{waitUntil:'load'});expect(response.status()).toBe(200);await expect(page).toHaveTitle('goo · UI components');await page.waitForFunction(()=>[...document.styleSheets].some(sheet=>sheet.href?.endsWith('/components.css')&&sheet.cssRules.length>0));
   for(const labelBytes of [384,2048])for(const size of [1000,2000]){
-   const before=calls.length,result=await runLargeFacetBenchmark(page,{size,labelBytes,iterations:4});
-   expect(result.styleFingerprint.display).toBe('grid');expect(result.styleFingerprint.rowDisplay).toBe('grid');expect(result.styleFingerprint.fontSize).toBe('12px');expect(result.rowCount).toBe(size);expect(result.exactSuffixIdentity).toBe(true);expect(result.missingDistinctFromEmpty).toBe(true);expect(result.receiptStable).toBe(true);
-   if(size===2000){expect(result.selectedCounts).toEqual(['1','0']);expect(result.previousOnlyCounts).toEqual(['0','2']);}
-   for(const sample of result.observations){expect(sample.focused).toBe(true);expect(sample.caret).toBe(sample.query.length);expect(sample.visible).toBe(sample.query===''?size:sample.query==='not-an-observed-category'?0:1);expect(sample.matches).toBe(sample.visible+' of '+size+' loaded values');if(phase==='final')expect(sample.refreshPasses).toBe(1);else expect(sample.refreshPasses).toBeGreaterThan(0);}
+   const before=calls.length,result=await runLargeFacetBenchmark(page,{size,labelBytes,iterations:4,bounded:phase==='final'});
+   expect(result.styleFingerprint.display).toBe('grid');expect(result.styleFingerprint.rowDisplay).toBe('grid');expect(result.styleFingerprint.fontSize).toBe('12px');expect(result.rowCount).toBe(phase==='final'?100:size);expect(result.exactSuffixIdentity).toBe(true);expect(result.missingDistinctFromEmpty).toBe(true);expect(result.receiptStable).toBe(true);
+   if(size===2000){expect(result.selectedCounts).toEqual(['1','0']);expect(result.previousOnlyCounts).toEqual(['0','2']);expect(result.selectedScales).toEqual(['2','2']);expect(result.selectedWidths).toEqual(['50%','0%']);}
+   for(const sample of result.observations){expect(sample.focused).toBe(true);expect(sample.caret).toBe(sample.query.length);const fullMatches=sample.query===''?size:sample.query==='not-an-observed-category'?0:1;expect(sample.visible).toBe(phase==='final'?Math.min(100,fullMatches):fullMatches);expect(sample.matches).toBe(fullMatches+' of '+size+' loaded values');if(phase==='final')expect(sample.refreshPasses).toBe(0);else expect(sample.refreshPasses).toBeGreaterThan(0);}
    expect(calls.length).toBe(before);cases.push({...result,sourceReads:0});
   }
  }

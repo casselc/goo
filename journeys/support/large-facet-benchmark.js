@@ -1,9 +1,9 @@
 /* Supplied-component diagnostic, not a substitute for the live OTel journey.
  * The caller owns browser scheduling and observes network traffic independently.
  */
-async function runLargeFacetBenchmark(page,{size=1000,labelBytes=384,iterations=4}={}){
+async function runLargeFacetBenchmark(page,{size=1000,labelBytes=384,iterations=4,bounded=false}={}){
  if(![1000,2000].includes(size)||![384,2048].includes(labelBytes)||!Number.isInteger(iterations)||iterations<1||iterations>10)throw Error('Choose a bounded large-facet diagnostic.');
- return page.evaluate(async({size,labelBytes,iterations})=>{
+ return page.evaluate(async({size,labelBytes,iterations,bounded})=>{
   const {create}=await import('/facet-declaration.mjs');await import('/categorical-facet.mjs');
   const field={kind:'attribute',key:'benchmark.category'},q={signal:'logs',environment:'benchmark',fromMs:1000,toMs:2000,limit:1,offset:0,groupBy:[{kind:'column',key:'service'}]},paired=size===2000;
   const label=(side,index)=>{const suffix=' terminal-'+side+'-'+String(index).padStart(4,'0');return 'A common category prefix '.padEnd(labelBytes-suffix.length,'x')+suffix;};
@@ -21,10 +21,11 @@ async function runLargeFacetBenchmark(page,{size=1000,labelBytes=384,iterations=
     search.focus({preventScroll:true});search.value=query;search.setSelectionRange(query.length,query.length);const before=refreshCalls,start=performance.now();search.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'insertText',data:query}));const syncMs=performance.now()-start;await paint();
     observations.push({iteration,query,syncMs,paintMs:performance.now()-start,refreshPasses:refreshCalls-before,matches:element.querySelector('[aria-label="Loaded facet matches"]').textContent,visible:element.querySelectorAll('[data-facet-item]:not([hidden])').length,focused:document.activeElement===search,caret:search.selectionStart});
    }
-   const target=label('selected',997),selected=element.querySelector('[data-facet-value-key="'+CSS.escape('1'+target)+'"]'),baseline=paired?element.querySelector('[data-facet-value-key="'+CSS.escape('1'+label('previous',997))+'"]'):null;
+   const inspect=value=>{search.value=value===null?'Missing key':value===''?'Present empty string':'terminal-'+(value.includes('terminal-previous-')?'previous':'selected')+'-0997';search.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'insertText',data:search.value}));const row=element.querySelector('[data-facet-value-key="'+CSS.escape(value===null?'0':'1'+value)+'"]');return row?{text:row.dataset.facetText,counts:[...row.querySelectorAll('[data-count]')].map(cell=>cell.dataset.count),scales:[...row.querySelectorAll('[data-scale-max]')].map(cell=>cell.dataset.scaleMax),widths:[...row.querySelectorAll('.comparison-bar-fill')].map(cell=>cell.style.width)}:null};
+   const target=label('selected',997),selected=inspect(target),baseline=paired?inspect(label('previous',997)):null,missing=inspect(null),empty=inspect('');search.value='';search.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'deleteContentBackward'}));
    const supplied=element.data;
-   return {kind:'supplied-component',size,labelBytes,paired,iterations,styleFingerprint:{display:getComputedStyle(element).display,fontSize:getComputedStyle(element).fontSize,rowDisplay:getComputedStyle(element.querySelector('[data-facet-item]')).display},viewport:{width:innerWidth,height:innerHeight},componentWidth:element.getBoundingClientRect().width,mountSyncMs,mountPaintMs,mountRefreshCalls,domElements,rowCount,observations,exactSuffixIdentity:!!selected&&selected.dataset.facetText===JSON.stringify(target),missingDistinctFromEmpty:!!element.querySelector('[data-facet-value-key="0"]')&&!!element.querySelector('[data-facet-value-key="1"]'),selectedCounts:paired&&selected?[...selected.querySelectorAll('[data-count]')].map(cell=>cell.dataset.count):null,previousOnlyCounts:baseline?[...baseline.querySelectorAll('[data-count]')].map(cell=>cell.dataset.count):null,receiptStable:receiptBefore===JSON.stringify([supplied.values.reads,supplied.baseline?.reads]),syntheticInput:true};
+   return {kind:'supplied-component',size,labelBytes,paired,iterations,bounded,styleFingerprint:{display:getComputedStyle(element).display,fontSize:getComputedStyle(element).fontSize,rowDisplay:getComputedStyle(element.querySelector('[data-facet-item]')).display},viewport:{width:innerWidth,height:innerHeight},componentWidth:element.getBoundingClientRect().width,mountSyncMs,mountPaintMs,mountRefreshCalls,domElements,rowCount,observations,exactSuffixIdentity:!!selected&&selected.text===JSON.stringify(target),missingDistinctFromEmpty:missing?.text==='Missing key'&&empty?.text==='Present empty string',selectedCounts:paired?selected?.counts:null,previousOnlyCounts:baseline?.counts||null,selectedScales:selected?.scales||null,selectedWidths:selected?.widths||null,receiptStable:receiptBefore===JSON.stringify([supplied.values.reads,supplied.baseline?.reads]),syntheticInput:true};
   }finally{prototype.refresh=originalRefresh;host.remove();}
- },{size,labelBytes,iterations});
+ },{size,labelBytes,iterations,bounded});
 }
 module.exports={runLargeFacetBenchmark};

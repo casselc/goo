@@ -1,5 +1,9 @@
 # Publishing counted facets
 
+369 keeps this atomic publication contract and bounds mounted categorical rows
+to 100 matches. Full-model search/counts/scales and exact read receipts remain
+authoritative; see [current measurements](LARGE_FACET_INTERACTIONS.md).
+
 A counted facet displays supplied observations; its application owner decides
 when values may be read and which current interaction may stage a selection.
 Publishing data and interaction together avoids rebuilding the same large list

@@ -1,10 +1,11 @@
 import {mock} from 'node:test';
+import {actionVisible} from '../../ui/dom-visibility.mjs';
 class Element {
  constructor(tag='div',text=''){this.tagName=tag;this.textContent=text;this.children=[];this.dataset={};this.hidden=false;this.isConnected=true;this.value='';this.classList={add(){},toggle(){}};}
  append(...nodes){this.children.push(...nodes)} replaceChildren(...nodes){this.children=nodes} contains(node){return this===node||this.children.some(child=>child?.contains?.(node))} remove(){} setAttribute(k,v){this[k]=v} getAttribute(k){return this[k]} addEventListener(){} getClientRects(){return this.isConnected&&!this.hidden?[1]:[]} querySelector(){return null} querySelectorAll(){return []} closest(){return null} focus(){document.activeElement=this}
 }
 const node=(tag,text)=>new Element(tag,text);
-mock.module('../../ui/components.mjs',{exports:{node,disclosure:node,stats(){},actions(){},inspector(){},durationMS(){},latencyModel(){},latency(){},parseAttribute(){}}});
+mock.module('../../ui/components.mjs',{exports:{node,actionVisible,disclosure:node,stats(){},actions(){},inspector(){},durationMS(){},latencyModel(){},latency(){},parseAttribute(){}}});
 const events=new EventTarget();
 globalThis.location={hash:'',href:'http://example.test/'};
 globalThis.document={hidden:false,activeElement:null};

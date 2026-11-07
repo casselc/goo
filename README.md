@@ -150,7 +150,7 @@ these views through the same saved-view catalog.
 to an explicitly chosen Goo server.
 [Record paging](docs/RECORD_PAGE_PROFILE.md) retains any held aggregate and timeline.
 
-[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_05.md) ·
+[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_07.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
 [Go/frontend library review and proposal](docs/LIBRARY_REFACTOR_PLAN_2026_10_28.md)
 
@@ -605,19 +605,14 @@ For supplied native observations, `measurements.Evaluate(question, rows, at)` is
 storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
 
-The [active roadmap](docs/ROADMAP_2026_11_05.md) adopts the
-[363 whole-product reconciliation](docs/reviews/ROADMAP_RECONCILIATION_363.md):
-364 saved native interval → supporting records is delivered with native/model,
-actor and shared kept-context regression checks. The
-[365 captured-record review](docs/CAPTURE_RECORD_REVIEW.md) builds on the accepted
-occurrence resolver: declare or reuse a categorical task, append explicit review
-revisions, and download a historical pinned JSONL manifest. Native browser/model/actor acceptance
-passes; [validation](VALIDATION.md) records checks and limits.
-366's compact comparison headers are delivered with matched desktop/narrow
-measurements. The [366 reconciliation](docs/reviews/ROADMAP_RECONCILIATION_366.md)
-selects the next finite sequence: 367 reusable current RPC views is delivered;
-368 native service interval context and 369 measured large-facet interaction
-budgets remain next.
+The [active roadmap](docs/ROADMAP_2026_11_07.md) closes the 367–369 sequence:
+current RPC view reuse, service native interval context, and measured bounded
+facets are delivered. [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most
+100 matches while Find, totals and comparison scales use the complete admitted
+set. Same-read selection/caret and exact child scope survive Return. The next
+cut is typed error-triage follow-through; native histogram view reuse has a bounded
+readiness gate. Whole-product reviews and proposed work are distinct from
+[validated delivery](VALIDATION.md).
 
 Go library entry points: `subjectfacts` provides portable prepared-fact aggregation
 and offline ClickHouse/Databricks compilation; `measurements` binds/evaluates native
@@ -681,7 +676,7 @@ scope/data/quality, charts/tables/lists/waterfalls and scope-bound controls, a b
 chart with a restricted Plotly adapter, and shared declarative/visual authoring.
 Complete-only widgets and explicit uncertainty semantics are core requirements;
 all current widgets/screens must be expressible. The app is prerelease, with no
-legacy-format or API compatibility floor. [The active roadmap](docs/ROADMAP_2026_11_05.md) separates proposed work from
+legacy-format or API compatibility floor. [The active roadmap](docs/ROADMAP_2026_11_07.md) separates proposed work from
 implemented capabilities; the supporting reports include pinned research sources.
 
 Single-group count breakdowns now share a [scoped display contract](docs/SCOPED_VIEW_PILOT.md):

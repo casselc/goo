@@ -1,5 +1,70 @@
 # Validation record
 
+## Measured bounded facet interaction — 369
+
+A genuine trace-disabled baseline over ordinary 1,000-value and disjoint paired
+2,000-value facets found repeated clear-to-full-set stalls: paired desktop
+620.6/1,087.8 ms and narrow 883.9/896.6 ms. Paired trees mounted 32,025 elements;
+selection took 461.6/489.5 ms. Budgets were recorded before the final decision.
+Exploratory runs with default Playwright DOM tracing are excluded because tracing
+can delay the measured frame opportunities. The benchmark explicitly disables
+tracing, records source hashes, and separates render CPU, actual event-to-second-
+RAF opportunity, and driver/source wall time. This is a shared-host pilot, not a
+compositor presentation timestamp or universal device guarantee.
+
+The supplied categorical component now mounts at most 100 matching rows while
+Find, matching totals, complete literal identities, paired maxima/counts and read
+receipts use the whole admitted model. Local page/Find preserve the input node;
+same-read publication/Back retain query, page and caret. New read identity resets
+that state. Row and pager generations reject old callbacks even when reattached;
+inactive, hidden, inert or detached pager actions cannot mutate the held view.
+No source pagination, endpoint, grammar format or generic virtualizer is added.
+
+Both final genuine runs pass all four task budgets. The current repeat passes in
+**45.5s** (runner 48.3s). Search p95 ordinary/paired is **72.9/65.4 ms desktop**
+and **35.1/64.0 ms narrow**; selection max is 69.1/135.4 and 37.2/107.9 ms.
+Paired ready mount is 176.9/132.2 ms and Return 166.9/102.0 ms. Mounted elements
+are 619 ordinary and **1,629 paired**, with 100 rows. The earlier final run also
+passes (46.3s; runner 48.6s), with paired p95 111.6/65.2 ms. Both are retained as
+variation, without choosing the fastest sample.
+
+The native journey checks all 60 pages/56 page advances against an independent
+complete-key oracle and full comparison scales; 44 repeated search samples cover
+missing, empty, off-page suffix, zero and clear. Exact Include/Exclude scopes on
+both complete operands, eight child/Back sequences, visible keyboard focus,
+receipt stability and caret position 3 all pass. Baseline caret jumped to 22.
+All local API counters stay unchanged, including metadata and capture-store GETs.
+The complete setup performs 18 explicit source acquisitions and two comparisons;
+these include existing linked-population setup, not local interactions.
+
+The full UI suite passes **1,269 tests**, zero skips, in **18.032s**. Six new
+component tests pass in 4.063s, with independent BigInt full-union scale/membership
+and twelve deterministic thirty-step page/Find schedules. Seven existing paired
+render tests pass in 0.030s. Updated test DOMs model recursive connection,
+visibility and text selection; the first full suite exposed a missing named
+visibility export in a saved-view mock, corrected without a production fallback.
+Go 1.27.3 `go test -p 2 ./...` passes (cmd/goo 7.742s; unchanged packages cached).
+The existing Hegel atomic-publication property passes **40 cases in 4.02s**
+(package 4.034s), zero skips. Its independent oracle now derives mounted matches
+from the complete supplied partition instead of assuming all rows remain mounted;
+full-data integrity and current/retired owner assertions remain.
+
+Adapted supplied-component 343 and genuine publication 346 regressions both pass
+in 45.1s (supplied 9.3s); actual publication still builds once per stage/Back and
+preserves source budgets. The genuine 343 large-facet baseline-only literal
+Save/Return regression also passes in about 1.3 minutes. Its historical `rowCount`
+field denotes complete loaded values; observed render rows record mounted bounds.
+No new source/model authority or unrelated campaign replay is introduced for this
+display change. The rebuilt Go image is healthy and its facet JS/CSS match source.
+
+Architecture/design source review, six current search/paging originals and actual
+native tasks accept the bounded result. Frames are task-positioned, not proof of
+whole-workspace above-fold density. Existing nested read disclaimers and long
+literal wrapping remain broader product concerns. See [contract](docs/LARGE_FACET_INTERACTIONS.md),
+[storyboard](docs/journeys/369-facet-interactions.md), and the reconciled
+[November 7 roadmap](docs/ROADMAP_2026_11_07.md). Next is 370 typed error-triage
+follow-through; the 367–369 finite sequence is complete.
+
 ## Service native interval context — 368
 
 The service histogram's held exact-stream renderer now exposes the existing

@@ -15,8 +15,8 @@ explicitly applies that query to current children.
 ```mermaid
 flowchart LR
     R[Explicit Read values] --> D[Loaded values and independent receipts]
-    D --> F[Local Find: one row-filter pass]
-    F --> V[Visible matches of all loaded values]
+    D --> F[Local Find over all supplied values]
+    F --> V[At most 100 mounted matches]
     D --> I[Include or Exclude exact literal]
     I --> S[Stage scope]
     S --> X[Explicit Run]
@@ -35,10 +35,10 @@ from aggregate chart size. Separate supplied-component cases exercise 384- and
 The comparison endpoint's independent 1 MiB request limit concerns its cohort
 payload, so a large facet does not necessarily imply a large comparison request.
 
-The paired fixture still creates roughly 32,000 elements. This cut removes
-duplicate filtering and improves visible identity; it does not claim to solve
-initial mount cost. A follow-up should measure full renders per logical source
-publication, stage and Back operation before choosing batching or bounded row
-rendering. See [validation](../VALIDATION.md), the
+The original paired fixture created roughly 32,000 elements. 346 removed duplicate
+publication; 369 measured current interaction and selected local pages of 100
+matches while preserving whole-model Find, counts, pair scales and receipts.
+Current measurement and acceptance status are in
+[large-facet interactions](LARGE_FACET_INTERACTIONS.md). See [validation](../VALIDATION.md), the
 [architecture review](reviews/LARGE_FACETS_ARCHITECTURE_343.md), and the
 [interaction review](reviews/LARGE_FACETS_DESIGN_343.md).

@@ -1,19 +1,16 @@
 # Implementation plan
 
-> Active execution order: [November 5 roadmap](ROADMAP_2026_11_05.md), updated by
-> the adopted [366 reconciliation](reviews/ROADMAP_RECONCILIATION_366.md).
-> The 363 sequence is complete: 364 saved native interval context, 365 captured
-> record review/pinned export, and 366 measured compact paired evidence headers.
-> Each has Go/UI/native/model/actor validation appropriate to its changed authority.
-> **367 reusable current RPC service views is delivered**, including the actual
-> typed-query echo regression and native/model/actor acceptance.
-> **368 exact native service interval supporting-records/Return is delivered**,
-> with held-owner admission, explicit Run, actual child cancellation and validated
-> native/model/actor Return.
-> Next: **369 measured large-facet interaction budget**.
-> 369 adds rendering changes only if a genuine task budget is exceeded; otherwise
-> close the measurement without implementing a generic virtualizer. Preserve the
-> finite breadth/depth/consolidation cadence and review again after this sequence.
+> Active execution order: [November 7 roadmap](ROADMAP_2026_11_07.md), reconciled
+> against whole-product architecture/design reviews after the completed 367–369
+> breadth/depth/consolidation sequence.
+> 367 reusable current RPC views, 368 exact service native interval context,
+> and 369 measured local facet pages are delivered with appropriate native and
+> generated validation. Full populations, exact scopes and independent clocks
+> remain authoritative across bounded presentation.
+> **Current: 370 typed error-triage follow-through.** Next is the bounded native
+> histogram view-reuse contract gate, then checked typed continuation admission.
+> Do not turn blocked native grammar or broker research into a new executor,
+> compatibility layer or unbounded product platform.
 > Delivery notes below are retained history, not parallel active queues.
 
 

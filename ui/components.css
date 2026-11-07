@@ -297,6 +297,7 @@ goo-categorical-facet .categorical-facet-receipts{min-width:0;padding:0;margin:0
 goo-categorical-facet .categorical-facet-receipts>summary{cursor:pointer;min-height:32px;display:flex;align-items:center;gap:4px;white-space:nowrap}
 goo-categorical-facet .categorical-facet-receipts[open]{grid-column:1/-1}
 goo-categorical-facet .categorical-facet-receipts p{font-size:11px;margin:4px 0;overflow-wrap:anywhere}
+goo-categorical-facet .categorical-facet-pages{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 8px;margin:4px 0;font-size:11px;min-width:0}
 goo-categorical-facet>.categorical-facet-values{display:block;min-width:0;max-height:18rem;overflow:auto}
 goo-categorical-facet .categorical-facet-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;min-width:0;margin:0;padding:2px 0;border-top:1px solid var(--border,#303b4b)}
 goo-categorical-facet .categorical-facet-row-actions{flex-wrap:wrap;justify-content:flex-end}

@@ -1,6 +1,6 @@
 import {renderRefusal} from './source-refusal-view.mjs';
 /* Passive supplied counted-values surface. The application owns reads and scope. */
-import {node} from './components.mjs';
+import {node,actionVisible} from './components.mjs';
 import {declaration,selectionReason} from './facet-declaration.mjs';
 import {countedState,projection,valueKey} from './categorical-pair.mjs';
 import {cell} from './comparison-visual.mjs';
@@ -34,12 +34,13 @@ class CategoricalFacet extends (global.HTMLElement||class{}){
  render(){
   const active=global.document?.activeElement,focus=this.contains(active)?active.getAttribute('aria-label'):null;
   if(focus)this._pendingFocus=focus;else if(active&&active!==global.document?.body&&!this.contains(active))this._pendingFocus=null;
+  const previousSearch=this.querySelector('[aria-label="Search loaded facet values"]');if(previousSearch)this._caret={start:previousSearch.selectionStart,end:previousSearch.selectionEnd,direction:previousSearch.selectionDirection};
   const previousDetails=this.querySelector('.categorical-facet-receipts')?.open,epoch=this._epoch=(this._epoch||0)+1,data=this.data;
   this.replaceChildren();this.classList.add('filter-counted-values');
   if(!data){this._find='';this._searchKey=null;this._pendingFocus=null;this.dataset.state='unavailable';this.append(node('p','Facet unavailable.'));return}
   const d=data.declaration,v=data.values,paired=Object.hasOwn(data,'baseline'),baseline=data.baseline,pairedValues=paired?projection(v,baseline,d.field):null,loading=v.state==='loading'||baseline?.state==='loading',ready=paired?[v,baseline].some(side=>side.state==='ready'):v.state==='ready';
   const searchKey=JSON.stringify([d.scope.signal,d.field.kind,d.field.key,v.basis||null,v.readAt||null,...(paired?[baseline.basis||null,baseline.readAt||null]:[])]),sameRead=this._searchKey===searchKey;
-  if(!sameRead)this._find='';this._searchKey=searchKey;const name=d.field.kind+':'+d.field.key,baselineLabel=data.baselineLabel||'Fixed baseline';this.dataset.state=paired?(pairedValues.complete?'ready':[v,baseline].some(side=>side.state==='ready')?'partial':loading?'loading':[v,baseline].some(side=>side.state==='error')?'error':'unloaded'):v.state;
+  if(!sameRead){this._find='';this._page=0;this._caret=null;}this._searchKey=searchKey;const name=d.field.kind+':'+d.field.key,baselineLabel=data.baselineLabel||'Fixed baseline';this.dataset.state=paired?(pairedValues.complete?'ready':[v,baseline].some(side=>side.state==='ready')?'partial':loading?'loading':[v,baseline].some(side=>side.state==='error')?'error':'unloaded'):v.state;
   this.classList.toggle('categorical-facet-paired',paired);
   const current=()=>epoch===this._epoch&&this.isConnected&&!data.disabled&&this._interaction?.current?.()!==false,emit=(type,detail={})=>{if(current())this.dispatchEvent(new CustomEvent(type,{bubbles:true,detail}))};
   const heading=node('header',undefined,'categorical-facet-header'),actions=node('div',undefined,'categorical-facet-actions'),read=node('button','Read values'),clear=node('button','Clear staged');
@@ -61,16 +62,21 @@ class CategoricalFacet extends (global.HTMLElement||class{}){
   }
   tools.append(search,matches,details);this.append(tools);
   if(paired){const columns=node('div',undefined,'categorical-facet-pair-columns'),counts=node('div',undefined,'categorical-facet-pair-counts');columns.setAttribute('aria-hidden','true');columns.append(node('span'));counts.append(node('span','Selected'),node('span',baselineLabel));columns.append(counts,node('span'));this.append(columns);}
-  this.append(list);
-  const items=paired?pairedValues.rows:v.items;
-  for(const item of items){const row=node('div',undefined,'categorical-facet-row'),text=label(item.value),value=node('span',loadedValuePreview(text),'categorical-facet-value'),controls=node('div',undefined,'categorical-facet-row-actions');value.title=text;row.dataset.facetItem='';row.dataset.facetText=text;row.dataset.facetValueKey=valueKey(item.value);
+  const pager=node('nav',undefined,'categorical-facet-pages'),previous=node('button','Previous values'),next=node('button','Next values'),range=node('span');pager.setAttribute('aria-label','Loaded facet pages');previous.type=next.type='button';previous.setAttribute('aria-label','Previous facet page');next.setAttribute('aria-label','Next facet page');range.setAttribute('aria-label','Shown facet values');range.setAttribute('aria-live','polite');pager.append(previous,range,next);this.append(pager,list);
+  const items=paired?pairedValues.rows:v.items,searchable=items.map(item=>({item,text:label(item.value).toLocaleLowerCase()}));let rowGeneration=0;
+  const drawRows=()=>{const generation=++rowGeneration,query=search.value.toLocaleLowerCase(),matched=searchable.filter(entry=>entry.text.includes(query));this._page=Math.max(0,Math.min(this._page||0,Math.max(0,Math.ceil(matched.length/100)-1)));const start=this._page*100;list.replaceChildren();list.scrollTop=0;matches.textContent=loadedMatchesText({visible:matched.length,total:items.length},paired?2000:1000);range.textContent=matched.length?'Showing '+(start+1)+'–'+Math.min(start+100,matched.length)+' of '+matched.length+' matches':'Showing 0 of 0 matches';previous.hidden=next.hidden=matched.length<=100;previous.disabled=start===0;next.disabled=start+100>=matched.length;
+  for(const {item} of matched.slice(start,start+100)){const row=node('div',undefined,'categorical-facet-row'),text=label(item.value),value=node('span',loadedValuePreview(text),'categorical-facet-value'),controls=node('div',undefined,'categorical-facet-row-actions');value.title=text;row.dataset.facetItem='';row.dataset.facetText=text;row.dataset.facetValueKey=valueKey(item.value);
    if(paired){const counts=node('div',undefined,'categorical-facet-pair-counts');for(const [side,key,sideLabel]of [['selection','selected','Selected'],['baseline','baseline',baselineLabel]]){const supplied=item[key],count=cell(counts,supplied.count,side,{max:pairedValues.max,text:supplied.count??'—',geometry:pairedValues.complete});count.dataset.count=supplied.count??'unknown';count.dataset.presence=supplied.state;count.setAttribute('role','group');count.setAttribute('aria-label',sideLabel+' count for '+text);count.title=supplied.state==='absent'?'Absent from this returned grouping; upstream coverage unknown.':supplied.state==='unknown'?sideLabel+' values unavailable.':'Count in this returned grouping; upstream coverage unknown.';count.prepend(node('small',sideLabel,'categorical-facet-side-label'));}row.append(value,counts,controls);}
    else {controls.append(node('span',item.count,'categorical-facet-value-count'));row.append(value,controls);}
-   for(const mode of ['include','exclude']){const button=node('button',mode==='include'?'Include':'Exclude');button.type='button';button.setAttribute('aria-label',(mode==='include'?'Include ':'Exclude ')+name+' '+text);const reason=selectionReason(item.value,d.scope.signal,d.field);button.disabled=!!data.disabled||!!reason;if(reason)button.title=reason;button.onclick=()=>{if(!button.disabled)emit('goo:facet-stage',{value:item.value,mode})};controls.append(button)}
+   for(const mode of ['include','exclude']){const button=node('button',mode==='include'?'Include':'Exclude');button.type='button';button.setAttribute('aria-label',(mode==='include'?'Include ':'Exclude ')+name+' '+text);const reason=selectionReason(item.value,d.scope.signal,d.field);button.disabled=!!data.disabled||!!reason;if(reason)button.title=reason;button.onclick=()=>{if(generation===rowGeneration&&button.isConnected&&!button.disabled)emit('goo:facet-stage',{value:item.value,mode})};controls.append(button)}
    list.append(row);
   }
-  const find=()=>{const projected=list.filter(search.value);matches.textContent=loadedMatchesText(projected,paired?2000:1000)};
-  search.oninput=()=>{this._find=search.value;find()};find();restoreFocus();
+  for(const [button,change]of [[previous,-1],[next,1]])button.onclick=()=>{if(!localCurrent()||generation!==rowGeneration||!button.isConnected||button.disabled||button.hidden||!actionVisible(button)||button.closest?.('[inert]'))return;this._page+=change;drawRows();(button.disabled?(change>0?previous:next):button).focus({preventScroll:true})};
+  };
+  const localCurrent=()=>epoch===this._epoch&&this.isConnected&&search.isConnected&&this._interaction?.current?.()!==false;
+  search.oninput=()=>{if(!localCurrent())return;this._find=search.value;this._page=0;drawRows()};
+  search.onblur=()=>{if(localCurrent())this._caret={start:search.selectionStart,end:search.selectionEnd,direction:search.selectionDirection}};
+  drawRows();restoreFocus();if(this._caret&&sameRead)search.setSelectionRange?.(this._caret.start,this._caret.end,this._caret.direction);
 
  }
 }

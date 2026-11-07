@@ -1,7 +1,9 @@
 // Minimal mounted DOM adapted from categorical-pair-render.test.mjs. Production
-// CategoricalFacet and registered GooFacetList own all rendering and filtering.
+// CategoricalFacet owns bounded loaded-value paging/filtering; the registered
+// GooFacetList remains the passive row container.
 class Element {
- constructor(tag='section'){this.tagName=tag;this.children=[];this.attributes={};this.dataset={};this.style={setProperty(k,v){this[k]=v}};this.isConnected=false;this.listeners=new Map();this.className='';this._text='';this.classList={add:n=>{if(!this.className.split(' ').includes(n))this.className+=' '+n},toggle:(n,on)=>{this.className=this.className.split(' ').filter(x=>x&&x!==n).join(' ');if(on)this.classList.add(n)}};}
+ constructor(tag='section'){this.tagName=tag;this.children=[];this.attributes={};this.dataset={};this.style={setProperty(k,v){this[k]=v}};this._connected=false;this.listeners=new Map();this.className='';this._text='';this.classList={add:n=>{if(!this.className.split(' ').includes(n))this.className+=' '+n},toggle:(n,on)=>{this.className=this.className.split(' ').filter(x=>x&&x!==n).join(' ');if(on)this.classList.add(n)}};}
+ get isConnected(){return this._connected}set isConnected(value){this._connected=value;for(const child of this.children)child.isConnected=value}
  set textContent(v){this._text=v??''}get textContent(){return this._text+this.children.map(c=>c.textContent).join('')}
  append(...children){for(const c of children){c.parentElement=this;c.isConnected=this.isConnected;this.children.push(c);if(c.isConnected)c.connectedCallback?.()}}
  prepend(...children){for(const c of children.reverse()){c.parentElement=this;c.isConnected=this.isConnected;this.children.unshift(c)}}
@@ -9,8 +11,11 @@ class Element {
  contains(e){return e===this||this.children.some(c=>c.contains(e))}
  setAttribute(k,v){const old=this.getAttribute(k);this.attributes[k]=String(v);if(this.isConnected&&this.constructor.observedAttributes?.includes(k))this.attributeChangedCallback?.(k,old,String(v))}
  getAttribute(k){if(k.startsWith('data-')){const name=k.slice(5).replace(/-([a-z])/g,(_,c)=>c.toUpperCase());if(Object.hasOwn(this.dataset,name))return String(this.dataset[name])}return this.attributes[k]??null}hasAttribute(k){return this.getAttribute(k)!==null}
- matches(s){if(s.startsWith('.'))return this.className.split(' ').includes(s.slice(1));if(s==='[aria-label]')return this.hasAttribute('aria-label');return this.tagName===s}
+ matches(s){if(s.startsWith('.'))return this.className.split(' ').includes(s.slice(1));if(s==='[aria-label]')return this.hasAttribute('aria-label');const labelled=s.match(/^\[aria-label="(.*)"\]$/);if(labelled)return this.getAttribute('aria-label')===labelled[1];return this.tagName===s}
  querySelectorAll(s){if(s===':scope > [data-facet-item]')return this.children.filter(c=>Object.hasOwn(c.dataset,'facetItem'));return this.children.flatMap(c=>[...(c.matches(s)?[c]:[]),...c.querySelectorAll(s)])}querySelector(s){return this.querySelectorAll(s)[0]||null}
+ closest(selector){for(let e=this;e;e=e.parentElement){if(selector==='[inert]'&&e.inert)return e;if(selector==='[hidden], [aria-hidden="true"]'&&(e.hidden||e.getAttribute('aria-hidden')==='true'))return e;if(selector==='details:not([open])'&&e.tagName==='details'&&!e.open)return e}return null}
+ getClientRects(){return this.hidden?[]:[{}]}
+ setSelectionRange(start,end,direction){this.selectionStart=start;this.selectionEnd=end;this.selectionDirection=direction}
  addEventListener(t,h){this.listeners.set(t,h)}dispatchEvent(e){this.listeners.get(e.type)?.(e);return true}focus(){globalThis.document.activeElement=this}
 }
 const registry=new Map();globalThis.HTMLElement=Element;globalThis.customElements={get:k=>registry.get(k),define:(k,v)=>registry.set(k,v)};

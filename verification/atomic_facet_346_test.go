@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os/exec"
 	"reflect"
+	"strings"
 	"testing"
 
 	"hegel.dev/go/hegel"
@@ -42,15 +43,16 @@ func TestHegelAtomicFacetPublication346(t *testing.T) {
 			Values   values
 			Disabled bool
 		}
+		type row struct {
+			Key    string
+			Hidden bool
+			Count  string
+		}
 		type snapshot struct {
 			Data             json.RawMessage
 			Find             *string
 			Focused, Details bool
-			Rows             []struct {
-				Key    string
-				Hidden bool
-				Count  string
-			}
+			Rows             []row
 		}
 		type event struct {
 			Type   string
@@ -91,6 +93,10 @@ func TestHegelAtomicFacetPublication346(t *testing.T) {
 			var x, y any
 			return json.Unmarshal(a, &x) == nil && json.Unmarshal(b, &y) == nil && reflect.DeepEqual(x, y)
 		}
+		// Model the accepted local Find independently from the DOM input value.
+		// The fixture assigns "terminal" even for an inactive owner: its raw
+		// input changes, but the refused callback must not adopt that query.
+		adoptedFind := ""
 		for turn, step := range result.History {
 			if step.Turn != turn || step.Same != (turn > 0 && (input.Seed+turn)%2 == 0) || step.Connected != ((input.Seed+turn)%3 != 0) || step.Allowed != ((input.Seed+turn)%4 != 0) {
 				tc.Fatal("schedule not executed", turn)
@@ -137,23 +143,42 @@ func TestHegelAtomicFacetPublication346(t *testing.T) {
 					return
 				}
 			}
-			wantFind := ""
-			if step.Same {
-				wantFind = "terminal"
+			if !step.Same {
+				adoptedFind = ""
 			}
+			wantFind := adoptedFind
 			if step.After.Find == nil || *step.After.Find != wantFind || step.After.Details != step.Same || turn > 0 && !step.After.Focused {
 				tc.Fatal("same-read Find/disclosure or mounted focus changed", turn, step.After)
 				return
 			}
-			if len(step.After.Rows) != 3 {
-				tc.Fatal("publication lost literal partition", turn)
+			// Derive visible membership and exact counts from the complete supplied
+			// partition, not from a rendered slice or the component's matcher.
+			wantRows := []row{}
+			for _, item := range expected.Values.Items {
+				label, key := "Missing key", "0"
+				if item.Value != nil {
+					key = "1" + *item.Value
+					if *item.Value == "" {
+						label = "Present empty string"
+					} else {
+						encoded, err := json.Marshal(*item.Value)
+						if err != nil {
+							tc.Fatal(err)
+							return
+						}
+						label = string(encoded)
+					}
+				}
+				if strings.Contains(strings.ToLower(label), strings.ToLower(wantFind)) {
+					wantRows = append(wantRows, row{Key: key, Count: item.Count})
+				}
+			}
+			if !reflect.DeepEqual(step.After.Rows, wantRows) {
+				tc.Fatal("mounted Find projection changed literal membership or exact counts", turn, step.After.Rows, wantRows)
 				return
 			}
-			for i, row := range step.After.Rows {
-				if row.Count != expected.Values.Items[i].Count {
-					tc.Fatal("render rounded an exact supplied count", turn, row.Count)
-					return
-				}
+			if step.Allowed {
+				adoptedFind = "terminal"
 			}
 		}
 	}, options(40)...)

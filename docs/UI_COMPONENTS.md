@@ -391,6 +391,17 @@ the prefix and suffix within 160 Unicode code points; title, accessible names,
 search text and emitted values retain the exact full value. App adapters should show an explicit local
 no-match state, distinct from absence of source records.
 
+The supplied `goo-categorical-facet` uses its complete admitted value model for
+Find, matching totals and paired comparison scales, then mounts at most 100
+matching rows. Its local Previous/Next controls and shown range do not page a
+source query. Find retains its input node while replacing rows; same-read
+publication retains query, page and text selection. A changed read resets that
+local state. Row and pager generations retire old callbacks, including detached
+or reattached nodes. This bounded renderer does not change the caller-authored
+`goo-facet-list` shell's general filtering contract. See
+[large-facet measurements](LARGE_FACET_INTERACTIONS.md) for the measured decision
+and validation status.
+
 `goo-field-value` (attributes.mjs) accepts JSON `value` attributes or detached
 `.value` properties. It renders text with a type label, preserving empty strings,
 null, false, zero and exact integer strings. `state` / `.state` distinguishes

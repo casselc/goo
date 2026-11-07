@@ -1,13 +1,24 @@
 # Known issues and gaps
 
+369 delivers measured local pages of 100 matching categorical values. Full-model
+Find/counts/scales, exact identities, receipts and same-read page/caret remain
+authoritative. Go/UI1269, Hegel40 and real 1k/2k desktop/narrow tasks pass;
+search p95 is 35–73 ms on the final repeat, with shared-host/pilot limits.
+This does not promise universal latency or whole-workspace above-fold density.
+Typed error-triage and distribution continuations still contain scalar-only
+barriers; the [active roadmap](ROADMAP_2026_11_07.md) selects checked follow-through
+next. Native authorable views remain a separate readiness gate, and broker
+health still requires a pinned real instrument contract. See
+[facet contract](LARGE_FACET_INTERACTIONS.md) and [validation](../VALIDATION.md).
+
 368 delivers exact held service histogram interval context with explicit fresh
 record Run and Return to the same service selection. Go/UI1263, Hegel40, real
 12-log oracle, observed model/mutants and positive actor acceptance pass. Service
 origin is tab-held evidence, not an immutable capture; context does not establish
 contribution or causality. Gauge/stock lookaround, aggregate buckets and broad
 resource joins are excluded. See [contract](SERVICE_NATIVE_RECORD_CONTEXT.md) and
-[validation](../VALIDATION.md). Next is 369: measure genuine large-facet task
-budgets before selecting any rendering change.
+[validation](../VALIDATION.md). 369 closes that measured task with bounded local pages; 370 typed error-triage
+follow-through is next.
 
 367 delivers reusable current RPC service views with whole destination scope,
 optional method groups and explicit Run. The real span-only journey also exposed
@@ -17,7 +28,7 @@ Hegel40, actual native/model and positive actor checks pass. Current RPC require
 Server plus nonempty current `rpc.system.name`; legacy-only metadata and Client
 populations are incompatible. Native templates remain separate. See
 [contract](CURRENT_RPC_VIEW_TEMPLATE.md) and [validation](../VALIDATION.md).
-368 is delivered below the same service workflow; 369 is the current consolidation item.
+368 and 369 are delivered; 370 is the current breadth item.
 
 366's compact retained-comparison headers pass matched desktop/narrow acceptance:
 the first positive timing bar is visible on fresh Compare at 464/759 px. All seven
@@ -323,7 +334,7 @@ window for fresh fixed queries against a frozen baseline. Generic saved-view
 restoration ownership remains the separate consolidation follow-up.
 
 The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
-[active roadmap](ROADMAP_2026_11_05.md) replace the older parallel feature queues.
+[active roadmap](ROADMAP_2026_11_07.md) replace the older parallel feature queues.
 312 delivers the selected corrections: shared selection-command readiness/leases,
 explicit facet-to-comparison promotion, bounded facet lookup lifetime, terminal
 record-page diagnostics and detached returned query metadata. 313 hides the dormant root editor while retaining its state, removes redundant
