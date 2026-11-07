@@ -1,5 +1,21 @@
 # Semantic properties and model conformance
 
+## Native-view discovery (373)
+
+`TestHegelNativeHistogramCatalog373` checks actual Go catalog pages against
+independently sorted candidate IDs, then JavaScript page/reuse admission and
+unchanged destination questions. `TestNativeHistogramWireCases373` and the Node
+wire test consume `testdata/protocol/native-histogram-view-questions-373.json`.
+Its 59 cases record runtime and schema expectations separately; millisecond/NS
+enclosure remains runtime semantics. The API checker consumes the same bank.
+
+The discovery/page tests exercise actual mounted metadata owners, stale row and
+request leases, concurrent Inspect, partial/cursor constraints and compatibility.
+`GOO_NATIVE_VIEW_LIBRARY_373_REPORT=/absolute/path/summary.json go test
+-run TestQuintNativeViewLibraryObserved373 -count=1 -v .` validates actual recorded
+facts. Independent metadata/provenance/scope/bin admission precedes the existing
+model's acquisition-budget check; no synthetic navigation/completion is inferred.
+
 ## Typed distribution continuation (372)
 
 `TestHegelTypedDistributionContinuation372` runs actual Go numeric selection

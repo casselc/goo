@@ -1,0 +1,1847 @@
+{
+  "version": "goo.native-histogram-question-cases/1",
+  "cases": [
+    {
+      "name": "complete scalar question",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "attributes explicit null",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "attributes": null
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "namespace explicit null",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "namespace": null
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "exactStream explicit null",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "exactStream": null
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "empty attributes",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "attributes": {}
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "null optional environment selector",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          },
+          "environmentSelector": null
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "namespace {\"mode\": \"missing\"}",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "namespace": {
+              "mode": "missing"
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "namespace {\"mode\": \"value\"}",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "namespace": {
+              "mode": "value"
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "namespace {\"mode\": \"value\", \"value\": \"\"}",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "namespace": {
+              "mode": "value",
+              "value": ""
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "namespace {\"mode\": \"value\", \"value\": \"team-\u96ea\"}",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "namespace": {
+              "mode": "value",
+              "value": "team-\u96ea"
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "Unicode names and source identity",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Duration \u96ea",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker-\u96ea"
+            ],
+            "scope": "otel.\u96ea",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "empty version",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "missing version",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "null version",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": null,
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "empty schemaURL",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "missing schemaURL",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "null schemaURL",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": null,
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "missing scope",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "null scope",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": null,
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "missing metric",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "null metric",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": null,
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "missing unit",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "null unit",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": null
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "missing services",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "null services",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": null,
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "paired exact native bounds",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000,
+        "fromNS": "1000000001",
+        "toNS": "4999999999"
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "only lower",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000,
+        "fromNS": "1000000000"
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "only upper",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000,
+        "toNS": "5000000000"
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "null pair",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000,
+        "fromNS": null,
+        "toNS": null
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "empty pair",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000,
+        "fromNS": "",
+        "toNS": ""
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "noncanonical pair",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000,
+        "fromNS": "01000000000",
+        "toNS": "5000000000"
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "nonenclosing pair",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000,
+        "fromNS": "999999999",
+        "toNS": "5000000000"
+      },
+      "runtimeValid": false,
+      "schemaValid": true
+    },
+    {
+      "name": "missing required definition",
+      "question": {
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "null required definition",
+      "question": {
+        "definition": null,
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "missing required fromMs",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "null required fromMs",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": null,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "missing required toMs",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "null required toMs",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": null
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "forbidden resource None",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "resource": null
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "forbidden resource {'kind': 'host', 'id': 'host-a'}",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "resource": {
+              "kind": "host",
+              "id": "host-a"
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "forbidden histogram bucket None",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          },
+          "histogramBucketMs": null
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "forbidden histogram bucket 1000",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          },
+          "histogramBucketMs": 1000
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "unknown question authority",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000,
+        "basis": "donor"
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "unknown source authority",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "records": []
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "lone surrogate scope",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.\ud800",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "lone surrogate services",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker\ud800"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "typed environment current-only named",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          },
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "typed environment effective named",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          },
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "typed environment effective empty",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          },
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "empty"
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "typed environment effective unreported",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s"
+          },
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "unreported"
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "complete exact stream",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "exactStream": {
+              "resource": {
+                "service.name": "worker",
+                "service.instance.id": "i-1",
+                "deployment.environment.name": "prod"
+              },
+              "scope": "otel.test",
+              "version": "1",
+              "schemaURL": "",
+              "name": "work.duration",
+              "unit": "s",
+              "attributes": {}
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "exact stream missing scope",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "exactStream": {
+              "resource": {
+                "service.name": "worker",
+                "service.instance.id": "i-1",
+                "deployment.environment.name": "prod"
+              },
+              "version": "1",
+              "schemaURL": "",
+              "name": "work.duration",
+              "unit": "s",
+              "attributes": {}
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "exact stream null scope",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "exactStream": {
+              "resource": {
+                "service.name": "worker",
+                "service.instance.id": "i-1",
+                "deployment.environment.name": "prod"
+              },
+              "scope": null,
+              "version": "1",
+              "schemaURL": "",
+              "name": "work.duration",
+              "unit": "s",
+              "attributes": {}
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "exact stream missing version",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "exactStream": {
+              "resource": {
+                "service.name": "worker",
+                "service.instance.id": "i-1",
+                "deployment.environment.name": "prod"
+              },
+              "scope": "otel.test",
+              "schemaURL": "",
+              "name": "work.duration",
+              "unit": "s",
+              "attributes": {}
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "exact stream null version",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "exactStream": {
+              "resource": {
+                "service.name": "worker",
+                "service.instance.id": "i-1",
+                "deployment.environment.name": "prod"
+              },
+              "scope": "otel.test",
+              "version": null,
+              "schemaURL": "",
+              "name": "work.duration",
+              "unit": "s",
+              "attributes": {}
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "exact stream missing schemaURL",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "exactStream": {
+              "resource": {
+                "service.name": "worker",
+                "service.instance.id": "i-1",
+                "deployment.environment.name": "prod"
+              },
+              "scope": "otel.test",
+              "version": "1",
+              "name": "work.duration",
+              "unit": "s",
+              "attributes": {}
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "exact stream null schemaURL",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "exactStream": {
+              "resource": {
+                "service.name": "worker",
+                "service.instance.id": "i-1",
+                "deployment.environment.name": "prod"
+              },
+              "scope": "otel.test",
+              "version": "1",
+              "schemaURL": null,
+              "name": "work.duration",
+              "unit": "s",
+              "attributes": {}
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": false,
+      "schemaValid": false
+    },
+    {
+      "name": "exact stream optional resourceSchemaURL empty",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "exactStream": {
+              "resource": {
+                "service.name": "worker",
+                "service.instance.id": "i-1",
+                "deployment.environment.name": "prod"
+              },
+              "scope": "otel.test",
+              "version": "1",
+              "schemaURL": "",
+              "name": "work.duration",
+              "unit": "s",
+              "attributes": {},
+              "resourceSchemaURL": ""
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    },
+    {
+      "name": "exact stream optional resourceSchemaURL null",
+      "question": {
+        "definition": {
+          "apiVersion": "goo/measurement-package/v1alpha1",
+          "name": "work-duration",
+          "title": "Work duration",
+          "kind": "histogram",
+          "environment": "prod",
+          "lookbackMinutes": 5,
+          "maxGapMs": 60000,
+          "grain": "per-stream",
+          "source": {
+            "services": [
+              "worker"
+            ],
+            "scope": "otel.test",
+            "version": "1",
+            "schemaURL": "",
+            "metric": "work.duration",
+            "unit": "s",
+            "exactStream": {
+              "resource": {
+                "service.name": "worker",
+                "service.instance.id": "i-1",
+                "deployment.environment.name": "prod"
+              },
+              "scope": "otel.test",
+              "version": "1",
+              "schemaURL": "",
+              "name": "work.duration",
+              "unit": "s",
+              "attributes": {},
+              "resourceSchemaURL": null
+            }
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 5000
+      },
+      "runtimeValid": true,
+      "schemaValid": true
+    }
+  ]
+}

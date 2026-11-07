@@ -1,5 +1,13 @@
 # Known issues and gaps
 
+373 delivers contextual native-view discovery with explicit bounded Browse/More,
+loaded-page Find and verified Inspect/Apply through the shared definition rows.
+Damaged metadata stays partial; units do not convert; the destination question
+and explicit Run/export selection stay unchanged. No catalog snapshot or recency
+is inferred. Go/UI1303, Hegel16, 59 finite input cases, actual native/actor/model
+checks pass. See [contract](NATIVE_VIEW_DISCOVERY.md) and
+[validation](../VALIDATION.md). Current is 374 exponential-histogram readiness.
+
 372 delivers checked typed distribution continuation: exact numeric planner
 intent, whole parent scope, source-free staging and explicit child Run. Back
 keeps the original distribution but visibly pauses its controls until parent Run;
@@ -7,16 +15,16 @@ old callbacks remain retired. Actual attribute-int64/resource-decimal cases and
 positive actor completion pass, with generated scope/threshold/ownership mutants.
 This is tab-held evidence, not an immutable or atomic source snapshot. See
 [contract](TYPED_DISTRIBUTION_CONTINUATION.md) and [validation](../VALIDATION.md).
-The reconciled next item is 373 contextual native-view discovery.
+373 contextual native-view discovery is delivered; the next item is 374 readiness.
 
 371 delivers separate immutable native Histogram/Table display configuration,
 metadata-only Load/Inspect/Apply, whole destination preservation and explicit
 Run/export selection. Real different donor/destination exports, private complete-
 bin authority, unknown refusal, immutable bytes and positive actor completion pass.
-This is an exact-ID, per-stream service histogram pilot with identical units; no
-catalog, conversion, fleet percentile, time-bucket/resource-native arm or upstream
-completeness claim. See [contract](NATIVE_HISTOGRAM_VIEW_REUSE.md) and
-[validation](../VALIDATION.md). 372 typed distribution continuation is also delivered; 373 is current.
+This is a per-stream service histogram pilot with identical units; no conversion,
+fleet percentile, time-bucket/resource-native arm or upstream completeness claim.
+373 adds bounded metadata discovery alongside the exact-ID path. See [contract](NATIVE_HISTOGRAM_VIEW_REUSE.md) and
+[validation](../VALIDATION.md). 372 typed distribution continuation is also delivered; 373 is delivered; 374 is current.
 
 370 delivers typed Activity triage → exact group/service child → explicit Run →
 held Back. Go, 1,276 UI tests, Hegel 40, four genuine typed configurations,
@@ -36,7 +44,7 @@ This does not promise universal latency or whole-workspace above-fold density.
 ownership. 372 closes the sibling distribution-to-population barrier with checked ownership
 and exact selection intent.
 The [active roadmap](ROADMAP_2026_11_07.md) delivers bounded native histogram view reuse
-and selects 373 contextual native-view discovery next. Broader native authoring remains
+and selects 374 exponential-histogram readiness next. Broader native authoring remains
 separately scoped, and broker
 health still requires a pinned real instrument contract. See
 [facet contract](LARGE_FACET_INTERACTIONS.md) and [validation](../VALIDATION.md).
@@ -58,7 +66,7 @@ Hegel40, actual native/model and positive actor checks pass. Current RPC require
 Server plus nonempty current `rpc.system.name`; legacy-only metadata and Client
 populations are incompatible. Native templates remain separate. See
 [contract](CURRENT_RPC_VIEW_TEMPLATE.md) and [validation](../VALIDATION.md).
-368 and 369 are delivered; 370 is delivered; 371 native display reuse is delivered; 372 is delivered; 373 is current.
+368 and 369 are delivered; 370 is delivered; 371 native display reuse is delivered; 372 is delivered; 373 is delivered; 374 is current.
 
 366's compact retained-comparison headers pass matched desktop/narrow acceptance:
 the first positive timing bar is visible on fresh Compare at 464/759 px. All seven

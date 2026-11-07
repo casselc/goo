@@ -160,6 +160,15 @@ for suffix in ('', 'Input'):
  definition_base='measurements.Definition'+suffix
  binding_base='measurements.Binding'+suffix
  question={'allOf':[ref(question_base),{'type':'object','required':['definition','fromMs','toMs'],'properties':{'fromMs':{'type':'integer'},'toMs':{'type':'integer'},'fromNS':{'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':19},'toNS':{'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':19},'definition':{'allOf':[ref(definition_base),{'type':'object','required':['apiVersion','name','title','kind','grain','source','lookbackMinutes','maxGapMs'],'properties':{'kind':{'const':'histogram'},'grain':{'const':'per-stream'},'histogramBucketMs':False,'source':{'allOf':[ref(binding_base),{'type':'object','required':['services','scope','version','schemaURL','metric','unit'],'properties':{'unit':{'enum':['s','ms']},'resource':False}}]}}}]}}}]}
+ # Native wire strings preserve explicit empty identities without altering ordinary admission.
+ text_pattern=r'^[^\uD800-\uDFFF]*$'
+ definition=question['allOf'][1]['properties']['definition']
+ dp=definition['allOf'][1]['properties']
+ dp.update(apiVersion={'const':'goo/measurement-package/v1alpha1'},name={'type':'string','pattern':'^[A-Za-z][A-Za-z0-9_.-]{0,127}$'},title={'type':'string','minLength':1,'maxLength':160,'pattern':text_pattern},lookbackMinutes={'type':'integer','minimum':1,'maximum':120},maxGapMs={'type':'integer','minimum':1,'maximum':600000})
+ source=dp['source']['allOf'][1]
+ for key,limit,minimum in [('scope',256,1),('version',128,0),('schemaURL',1024,0),('metric',256,1)]:source['properties'][key]={'type':'string','minLength':minimum,'maxLength':limit,'pattern':text_pattern}
+ source['properties']['services']={'type':'array','minItems':1,'maxItems':8,'uniqueItems':True,'items':{'type':'string','minLength':1,'maxLength':128,'pattern':text_pattern}}
+ source['properties']['exactStream']={'anyOf':[{'type':'null'},{'type':'object','required':['scope','version','schemaURL'],'properties':{key:{'type':'string','minLength':minimum,'maxLength':limit,'pattern':text_pattern} for key,limit,minimum in [('scope',256,1),('version',128,0),('schemaURL',1024,0)]}}]}
  question['allOf'][1]['dependentRequired']={'fromNS':['toNS'],'toNS':['fromNS']}
  schemas['NativeHistogramViewQuestion'+suffix]=question
  for name in ('workbench.NativeHistogramView'+suffix,'workbench.NativeHistogramViewInput'+suffix,'workbench.NativeHistogramViewReuseRequest'+suffix):
@@ -172,6 +181,21 @@ for suffix in ('', 'Input'):
   if 'id' in props:props['id']={'type':'string','pattern':'^[a-f0-9]{64}$'}
   shape['required']=['id','question'] if 'ReuseRequest' in name else ['version','title','question','declaration']
  if 'workbench.NativeHistogramView'+suffix in schemas:schemas['workbench.NativeHistogramView'+suffix]['description']='Immutable native histogram display configuration. View ID includes question and declaration; changing the display does not change the measurement question or evidence identity. No stream index, export bounds, bins, values, basis or read clock is stored.'
+
+# Discovery scans at most twenty candidate IDs, exposing sanitized metadata only.
+native_list=schemas['workbench.NativeHistogramViewList']
+native_list['additionalProperties']=False
+native_list['required']=['items','partial','diagnostics']
+native_list['properties']['items'].update(maxItems=20)
+native_list['properties']['diagnostics'].update(maxItems=20)
+native_list['properties']['nextCursor']={'type':'string','pattern':'^[a-f0-9]{64}$'}
+native_list['allOf']=[{'if':{'properties':{'partial':{'const':True}},'required':['partial']},'then':{'properties':{'diagnostics':{'minItems':1}}},'else':{'properties':{'diagnostics':{'maxItems':0}}}}]
+native_list['description']='Source-free metadata discovery over at most twenty scanned candidate IDs. Items and diagnostics are disjoint and together at most twenty; corrupt artifacts are unavailable, not silently absent. A present nextCursor requires twenty combined items and diagnostics and is the last scanned candidate only when more candidates exist. Combined counts, ordering, disjoint IDs and cursor relations are checked by Go. Neither a page nor an empty items array establishes a complete catalog.'
+for name in ('workbench.NativeHistogramViewSummary','workbench.NativeHistogramViewListDiagnostic'):
+ shape=schemas[name];shape['additionalProperties']=False;shape['required']=list(shape['properties']);shape['properties']['id']={'type':'string','pattern':'^[a-f0-9]{64}$'}
+ if 'kind' in shape['properties']:
+  shape['properties']['kind']={'enum':['histogram','table']};shape['properties']['unit']={'enum':['s','ms']};shape['properties']['title']={'type':'string','minLength':1,'maxLength':120}
+ else:shape['properties']['reason']={'const':'unavailable-artifact'}
 
 # Shipped and authored configuration-only template expansion share one endpoint.
 for suffix in ('', 'Input'):
@@ -822,7 +846,7 @@ requests = {'/native-histogram-views':'NativeHistogramViewRequest','/native-hist
  '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/numeric-histograms/selection':'NumericHistogramSelectionRequest','/numeric-histograms/comparison-selection':'DistributionSelectionRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
  '/population/explain':'ExplanationRequest','/population/explain/plan':'ExplanationRequest','/population/explain/filter':'ExplanationFilterRequest','/captures':'CaptureRequest','/captures/live':'LiveComparisonRequest','/captures/comparisons':'SaveComparisonRequest','/investigations':'InvestigationRequest','/retained-evidence':'RetainRequest','/retained-evidence/{id}/annotations':'CorrectRequest',
 }
-responses = {('post','/native-histogram-views'):'NativeHistogramView',('get','/native-histogram-views/{id}'):'NativeHistogramView',('post','/native-histogram-views/reuse'):'NativeHistogramView',('post','/view-artifacts/encode'):'ViewArtifactResult',('post','/view-artifacts/decode'):'ViewArtifactResult',('post','/view-templates/expand'):'ViewTemplateExpansion',('get','/kept-observations/search'):'KeptSearchPage',('post','/kept-observations/repair'):'KeptRepairPage',('post','/kept-observations/records'):'KeptRecords',('post','/kept-observations/tail'):'KeptObservations',('get','/kept-observations/{id}'):'KeptResource',('post','/pod-metric-discovery'):'PodMetricDiscovery',('post','/pod-dashboard/plan'):'PodDashboardPlan',('post','/host-discovery'):'HostDiscovery',('post','/pod-discovery'):'PodDiscovery',('post','/host-dashboard/plan'):'HostDashboardPlan',('post','/pool-signals/plan'):'PoolSignalsPlan',('post','/pool-signals/view'):'PoolView',('post','/container-memory/view'):'ContainerMemoryView',('post','/container-cpu/view'):'ContainerCPUView',('post','/container-resources/history'):'ContainerResourceHistory',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
+responses = {('get','/native-histogram-views'):'NativeHistogramViewList',('post','/native-histogram-views'):'NativeHistogramView',('get','/native-histogram-views/{id}'):'NativeHistogramView',('post','/native-histogram-views/reuse'):'NativeHistogramView',('post','/view-artifacts/encode'):'ViewArtifactResult',('post','/view-artifacts/decode'):'ViewArtifactResult',('post','/view-templates/expand'):'ViewTemplateExpansion',('get','/kept-observations/search'):'KeptSearchPage',('post','/kept-observations/repair'):'KeptRepairPage',('post','/kept-observations/records'):'KeptRecords',('post','/kept-observations/tail'):'KeptObservations',('get','/kept-observations/{id}'):'KeptResource',('post','/pod-metric-discovery'):'PodMetricDiscovery',('post','/pod-dashboard/plan'):'PodDashboardPlan',('post','/host-discovery'):'HostDiscovery',('post','/pod-discovery'):'PodDiscovery',('post','/host-dashboard/plan'):'HostDashboardPlan',('post','/pool-signals/plan'):'PoolSignalsPlan',('post','/pool-signals/view'):'PoolView',('post','/container-memory/view'):'ContainerMemoryView',('post','/container-cpu/view'):'ContainerCPUView',('post','/container-resources/history'):'ContainerResourceHistory',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
  ('post','/compare'):'CompareResult',('post','/inventory'):'InventoryResult',('post','/discovery'):'ServiceDiscovery',('post','/explore'):'RecordResult',('post','/explore/page'):'RecordPageResult',('post','/explore/counted-values'):'CountedValuesResult',('post','/record-aggregates'):'RecordAggregatesResult',('post','/trace-search'):'TraceSearchResult',
  ('post','/measurements'):'NativeResult',('post','/metric-discovery'):'MetricDiscoveryResult',('post','/telemetry-packages/draft'):'PackagePlan',('post','/telemetry-packages/plan'):'PackagePlan',('post','/telemetry-packages/numeric-plan'):'NumericPlan',('post','/telemetry-packages'):'SavedPackage',('get','/telemetry-packages/{revision}'):'SavedPackage',
  ('post','/recipes'):'RecipePlan',('post','/dashboards/plan'):'DashboardPlan',('post','/population/plan'):'PopulationPlan',('post','/numeric-histograms/selection'):'NumericHistogramSelection',('post','/numeric-histograms/comparison-selection'):'NumericHistogramSelection',
@@ -987,9 +1011,13 @@ for (method,path),(file,block) in sorted(route_source.items()):
   codes.update((400,404,500))
   if method=='post':codes.add(413)
   op['description']='Source-free native histogram display configuration. Explicit Apply preserves the whole current destination measurement question; Run and actual destination export selection remain separate. No donor observations, rebinning, unit conversion or upstream completeness claim.'
+  if method=='get' and path=='/native-histogram-views':
+   codes.discard(404)
+   op['description']='Source-free bounded metadata discovery. Fixed twenty scanned candidate IDs, ascending ID order; partial diagnostics mark unavailable artifacts. Cursor advances past the last scanned ID only when more candidates exist. Unknown, repeated and empty query parameters are refused. No telemetry or saved-evidence read; exact-ID load remains independently verified.'
+   op['parameters']=[{'name':'after','in':'query','schema':{'type':'string','pattern':'^[a-f0-9]{64}$'},'description':'Optional exclusive candidate ID cursor; unknown, repeated or explicitly empty parameters are refused.'}]
   result=op['responses'][success]['content']['application/json']
-  result['schema']={'allOf':[ref('NativeHistogramView'),{'not':{'required':['id']}}]} if path.endswith('/reuse') else {'allOf':[ref('NativeHistogramView'),{'required':['id']}]}
-  if method=='get':
+  if path!='/native-histogram-views' or method!='get':result['schema']={'allOf':[ref('NativeHistogramView'),{'not':{'required':['id']}}]} if path.endswith('/reuse') else {'allOf':[ref('NativeHistogramView'),{'required':['id']}]}
+  if method=='get' and '{id}' in path:
    codes.update((400,404))
    op['parameters'][0]['schema']={'type':'string','pattern':'^[a-f0-9]{64}$'}
  if path=='/queries/{id}/cancel':codes.update((400,429))

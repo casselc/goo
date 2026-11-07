@@ -3,10 +3,12 @@
 Native histogram display configuration is separate from a measurement definition
 and from captured evidence. In Measurements, select a known export interval,
 open **Selected native bucket counts**, choose Histogram or Table, and **Save
-interval display** with a title. Keep its **Native histogram view ID**.
+interval display** with a title.
+[Browse saved interval displays](NATIVE_VIEW_DISCOVERY.md) to find it again; its
+**Native histogram view ID** also supports direct loading.
 
 For another validated measurement question, open the existing Save/share area,
-load that exact ID and inspect its configuration. **Apply interval display**
+browse the saved displays or load an exact ID and inspect its configuration. **Apply interval display**
 preserves the entire current question and clears its previous result. **Run
 measurement** explicitly reads the destination. Select an actual destination
 export interval to display; applying never selects a donor or latest interval.
@@ -57,7 +59,8 @@ See the generated [OpenAPI specification](../api/openapi.json).
 Current question, generation, visibility and action leases govern metadata
 adoption. Editing the ID, replacing the plan, navigation or cancellation retires
 pending actions. A late successful response cannot replace the current owner.
-There is no catalog, mutable latest pointer, general editor or new evaluator.
+[Bounded metadata discovery](NATIVE_VIEW_DISCOVERY.md) adds explicit Browse/More
+without a mutable latest pointer, general editor or new evaluator.
 
 Validation and actual storyboard frames are recorded in
 [VALIDATION](../VALIDATION.md) and the

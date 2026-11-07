@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 
@@ -31,6 +32,27 @@ func registerNativeHistogramViews(mux *http.ServeMux, dir string) {
 		}
 		return true
 	}
+	mux.HandleFunc("GET /native-histogram-views", func(w http.ResponseWriter, r *http.Request) {
+		values, err := url.ParseQuery(r.URL.RawQuery)
+		if err != nil {
+			fail(w, errors.New("invalid native histogram view cursor query"))
+			return
+		}
+		after := ""
+		for key, items := range values {
+			if key != "after" || len(items) != 1 || !workbench.ID.MatchString(items[0]) {
+				fail(w, errors.New("choose one nonempty canonical after cursor, or omit it"))
+				return
+			}
+			after = items[0]
+		}
+		page, err := store.NativeHistogramViews(after)
+		if err != nil {
+			httpjson.Write(w, http.StatusInternalServerError, map[string]string{"error": "Native histogram view catalog unavailable; direct IDs remain available."})
+			return
+		}
+		httpjson.Write(w, http.StatusOK, page)
+	})
 	mux.HandleFunc("POST /native-histogram-views", func(w http.ResponseWriter, r *http.Request) {
 		if !query(w, r) {
 			return

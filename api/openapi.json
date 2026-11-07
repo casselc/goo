@@ -2244,6 +2244,146 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/native-histogram-views": {
+      "get": {
+        "operationId": "get_native_histogram_views",
+        "summary": "GET /native-histogram-views",
+        "tags": [
+          "native-histogram-views"
+        ],
+        "description": "Source-free bounded metadata discovery. Fixed twenty scanned candidate IDs, ascending ID order; partial diagnostics mark unavailable artifacts. Cursor advances past the last scanned ID only when more candidates exist. Unknown, repeated and empty query parameters are refused. No telemetry or saved-evidence read; exact-ID load remains independently verified.",
+        "x-go-source": "cmd/goo/native_histogram_views_http.go",
+        "x-effects": "saved-evidence-or-definition-read",
+        "parameters": [
+          {
+            "name": "after",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "description": "Optional exclusive candidate ID cursor; unknown, repeated or explicitly empty parameters are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NativeHistogramViewList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      },
+      "post": {
+        "operationId": "post_native_histogram_views",
+        "summary": "POST /native-histogram-views",
+        "tags": [
+          "native-histogram-views"
+        ],
+        "description": "Source-free native histogram display configuration. Explicit Apply preserves the whole current destination measurement question; Run and actual destination export selection remain separate. No donor observations, rebinning, unit conversion or upstream completeness claim.",
+        "x-go-source": "cmd/goo/native_histogram_views_http.go",
+        "x-effects": "file-publication-with-reference-validation",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/NativeHistogramView"
+                    },
+                    {
+                      "required": [
+                        "id"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NativeHistogramViewRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 131072,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/native-histogram-views/{id}": {
       "get": {
         "operationId": "get_native_histogram_views_id",
@@ -5785,92 +5925,6 @@
         "x-schema-coverage": "typed"
       }
     },
-    "/native-histogram-views": {
-      "post": {
-        "operationId": "post_native_histogram_views",
-        "summary": "POST /native-histogram-views",
-        "tags": [
-          "native-histogram-views"
-        ],
-        "description": "Source-free native histogram display configuration. Explicit Apply preserves the whole current destination measurement question; Run and actual destination export selection remain separate. No donor observations, rebinning, unit conversion or upstream completeness claim.",
-        "x-go-source": "cmd/goo/native_histogram_views_http.go",
-        "x-effects": "file-publication-with-reference-validation",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/NativeHistogramView"
-                    },
-                    {
-                      "required": [
-                        "id"
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "413": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NativeHistogramViewRequest"
-              }
-            }
-          }
-        },
-        "x-go-body-limit-bytes": 131072,
-        "x-schema-coverage": "typed"
-      }
-    },
     "/native-histogram-views/reuse": {
       "post": {
         "operationId": "post_native_histogram_views_reuse",
@@ -8801,6 +8855,9 @@
       },
       "NativeHistogramView": {
         "$ref": "#/components/schemas/workbench.NativeHistogramView"
+      },
+      "NativeHistogramViewList": {
+        "$ref": "#/components/schemas/workbench.NativeHistogramViewList"
       },
       "NativeHistogramViewRequest": {
         "anyOf": [
@@ -47505,6 +47562,100 @@
           "declaration"
         ]
       },
+      "workbench.NativeHistogramViewList": {
+        "properties": {
+          "diagnostics": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/workbench.NativeHistogramViewListDiagnostic"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxItems": 20
+          },
+          "items": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/workbench.NativeHistogramViewSummary"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxItems": 20
+          },
+          "nextCursor": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "partial": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items",
+          "partial",
+          "diagnostics"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewList",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "partial": {
+                  "const": true
+                }
+              },
+              "required": [
+                "partial"
+              ]
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "minItems": 1
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "diagnostics": {
+                  "maxItems": 0
+                }
+              }
+            }
+          }
+        ],
+        "description": "Source-free metadata discovery over at most twenty scanned candidate IDs. Items and diagnostics are disjoint and together at most twenty; corrupt artifacts are unavailable, not silently absent. A present nextCursor requires twenty combined items and diagnostics and is the last scanned candidate only when more candidates exist. Combined counts, ordering, disjoint IDs and cursor relations are checked by Go. Neither a page nor an empty items array establishes a complete catalog."
+      },
+      "workbench.NativeHistogramViewListDiagnostic": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "reason": {
+            "const": "unavailable-artifact"
+          }
+        },
+        "required": [
+          "id",
+          "reason"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewListDiagnostic",
+        "additionalProperties": false
+      },
       "workbench.NativeHistogramViewReuseRequestInput": {
         "additionalProperties": false,
         "properties": {
@@ -47594,6 +47745,40 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewSelection"
+      },
+      "workbench.NativeHistogramViewSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "kind": {
+            "enum": [
+              "histogram",
+              "table"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "unit": {
+            "enum": [
+              "s",
+              "ms"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "unit"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewSummary",
+        "additionalProperties": false
       },
       "workbench.RecordViewDeclaration": {
         "properties": {
@@ -50389,10 +50574,104 @@
                                   "ms"
                                 ]
                               },
-                              "resource": false
+                              "resource": false,
+                              "scope": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 256,
+                                "pattern": "^[^\\uD800-\\uDFFF]*$"
+                              },
+                              "version": {
+                                "type": "string",
+                                "minLength": 0,
+                                "maxLength": 128,
+                                "pattern": "^[^\\uD800-\\uDFFF]*$"
+                              },
+                              "schemaURL": {
+                                "type": "string",
+                                "minLength": 0,
+                                "maxLength": 1024,
+                                "pattern": "^[^\\uD800-\\uDFFF]*$"
+                              },
+                              "metric": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 256,
+                                "pattern": "^[^\\uD800-\\uDFFF]*$"
+                              },
+                              "services": {
+                                "type": "array",
+                                "minItems": 1,
+                                "maxItems": 8,
+                                "uniqueItems": true,
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 128,
+                                  "pattern": "^[^\\uD800-\\uDFFF]*$"
+                                }
+                              },
+                              "exactStream": {
+                                "anyOf": [
+                                  {
+                                    "type": "null"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "required": [
+                                      "scope",
+                                      "version",
+                                      "schemaURL"
+                                    ],
+                                    "properties": {
+                                      "scope": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 256,
+                                        "pattern": "^[^\\uD800-\\uDFFF]*$"
+                                      },
+                                      "version": {
+                                        "type": "string",
+                                        "minLength": 0,
+                                        "maxLength": 128,
+                                        "pattern": "^[^\\uD800-\\uDFFF]*$"
+                                      },
+                                      "schemaURL": {
+                                        "type": "string",
+                                        "minLength": 0,
+                                        "maxLength": 1024,
+                                        "pattern": "^[^\\uD800-\\uDFFF]*$"
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
                             }
                           }
                         ]
+                      },
+                      "apiVersion": {
+                        "const": "goo/measurement-package/v1alpha1"
+                      },
+                      "name": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+                      },
+                      "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 160,
+                        "pattern": "^[^\\uD800-\\uDFFF]*$"
+                      },
+                      "lookbackMinutes": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 120
+                      },
+                      "maxGapMs": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 600000
                       }
                     }
                   }
@@ -50486,10 +50765,104 @@
                                   "ms"
                                 ]
                               },
-                              "resource": false
+                              "resource": false,
+                              "scope": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 256,
+                                "pattern": "^[^\\uD800-\\uDFFF]*$"
+                              },
+                              "version": {
+                                "type": "string",
+                                "minLength": 0,
+                                "maxLength": 128,
+                                "pattern": "^[^\\uD800-\\uDFFF]*$"
+                              },
+                              "schemaURL": {
+                                "type": "string",
+                                "minLength": 0,
+                                "maxLength": 1024,
+                                "pattern": "^[^\\uD800-\\uDFFF]*$"
+                              },
+                              "metric": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 256,
+                                "pattern": "^[^\\uD800-\\uDFFF]*$"
+                              },
+                              "services": {
+                                "type": "array",
+                                "minItems": 1,
+                                "maxItems": 8,
+                                "uniqueItems": true,
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 128,
+                                  "pattern": "^[^\\uD800-\\uDFFF]*$"
+                                }
+                              },
+                              "exactStream": {
+                                "anyOf": [
+                                  {
+                                    "type": "null"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "required": [
+                                      "scope",
+                                      "version",
+                                      "schemaURL"
+                                    ],
+                                    "properties": {
+                                      "scope": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 256,
+                                        "pattern": "^[^\\uD800-\\uDFFF]*$"
+                                      },
+                                      "version": {
+                                        "type": "string",
+                                        "minLength": 0,
+                                        "maxLength": 128,
+                                        "pattern": "^[^\\uD800-\\uDFFF]*$"
+                                      },
+                                      "schemaURL": {
+                                        "type": "string",
+                                        "minLength": 0,
+                                        "maxLength": 1024,
+                                        "pattern": "^[^\\uD800-\\uDFFF]*$"
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
                             }
                           }
                         ]
+                      },
+                      "apiVersion": {
+                        "const": "goo/measurement-package/v1alpha1"
+                      },
+                      "name": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+                      },
+                      "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 160,
+                        "pattern": "^[^\\uD800-\\uDFFF]*$"
+                      },
+                      "lookbackMinutes": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 120
+                      },
+                      "maxGapMs": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 600000
                       }
                     }
                   }

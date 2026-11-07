@@ -1110,6 +1110,9 @@
   "NativeHistogramView": {
     "$ref": "#/components/schemas/workbench.NativeHistogramView"
   },
+  "NativeHistogramViewList": {
+    "$ref": "#/components/schemas/workbench.NativeHistogramViewList"
+  },
   "NativeHistogramViewRequest": {
     "anyOf": [
       {
@@ -27781,6 +27784,65 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewInput"
   },
+  "workbench.NativeHistogramViewList": {
+    "properties": {
+      "diagnostics": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/workbench.NativeHistogramViewListDiagnostic"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "items": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/workbench.NativeHistogramViewSummary"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "nextCursor": {
+        "type": "string"
+      },
+      "partial": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "items",
+      "partial",
+      "diagnostics"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewList"
+  },
+  "workbench.NativeHistogramViewListDiagnostic": {
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "reason"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewListDiagnostic"
+  },
   "workbench.NativeHistogramViewReuseRequestInput": {
     "additionalProperties": false,
     "properties": {
@@ -27879,6 +27941,30 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewSelection"
+  },
+  "workbench.NativeHistogramViewSummary": {
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "unit": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "title",
+      "kind",
+      "unit"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewSummary"
   },
   "workbench.RecordViewDeclaration": {
     "properties": {

@@ -1001,6 +1001,28 @@ def check_native_histogram_view_config(spec):
     print('Native histogram view configuration: closed export-only declarations, whole native question, donor-evidence refusal and source-free route contracts pass')
 
 
+def check_native_histogram_view_discovery(spec):
+    op=spec['paths']['/native-histogram-views']['get']
+    assert op['x-schema-coverage']=='typed' and 'source-read' not in op['x-effects']
+    assert set(op['responses'])=={'200','400','500'}
+    assert len(op['parameters'])==1 and op['parameters'][0]['name']=='after'
+    page=validator(spec,op['responses']['200']['content']['application/json']['schema'])
+    item={'id':'a'*64,'title':'Interval table','kind':'table','unit':'s'}
+    complete={'items':[item],'partial':False,'diagnostics':[]}
+    partial={'items':[],'partial':True,'diagnostics':[{'id':'b'*64,'reason':'unavailable-artifact'}]}
+    page.validate(complete);page.validate(partial)
+    for bad in ({**complete,'total':1},{**complete,'items':[{**item,'question':{}}]},{**complete,'items':[{**item,'kind':'bar'}]},{**complete,'items':[{**item,'unit':'By'}]},{**complete,'diagnostics':partial['diagnostics']},{**partial,'diagnostics':[]},{**partial,'nextCursor':''},{**partial,'diagnostics':[{'id':'b'*64,'reason':'open /private/path'}]},{**complete,'items':[item]*21}):
+        assert not page.is_valid(bad), ('native discovery schema accepted malformed metadata',bad)
+    bank=json.loads((ROOT/'testdata/protocol/native-histogram-view-questions-373.json').read_text())
+    assert bank['version']=='goo.native-histogram-question-cases/1'
+    cases=bank['cases'];assert len(cases)>=57
+    question=validator(spec,{'$ref':'#/components/schemas/NativeHistogramViewQuestionInput'})
+    for case in cases:
+        assert isinstance(case['runtimeValid'],bool) and isinstance(case['schemaValid'],bool)
+        assert question.is_valid(case['question'])==case['schemaValid'], ('native question finite schema boundary',case['name'])
+    print(f'Native discovery: bounded closed metadata; {len(cases)} explicit native question schema outcomes checked (runtime enclosure remains Go/JS semantic admission)')
+
+
 def check_current_rpc_template_bindings(spec):
     """Current RPC is an explicit binding, not a legacy alias or method witness."""
     binding = {'version':'goo.template/1','group':'destination','profile':'otel.rpc-server-current'}
@@ -1141,6 +1163,7 @@ def check(spec):
     check_comparison_template_bindings(spec)
     check_current_rpc_template_bindings(spec)
     check_native_histogram_view_config(spec)
+    check_native_histogram_view_discovery(spec)
     check_record_span_waterfall(spec)
     check_document_view_card(spec)
     bank = json.loads((ROOT/'testdata/protocol/environment-selectors.json').read_text())
@@ -1224,7 +1247,7 @@ def check(spec):
         if not isinstance(data, dict) or 'cases' not in data:
             continue
         for case in data['cases']:
-            path, method = case['path'], case['method'].lower()
+            path, method = case['path'].split('?',1)[0], case['method'].lower()
             assert path in spec['paths'], (fixture.name, path)
             if method not in spec['paths'][path]:
                 assert case['status'] == 405, (fixture.name, case['name'])
@@ -1239,7 +1262,17 @@ def check(spec):
             assert media in content, (fixture.name, case['name'], media)
             payload = json.loads(case['response']) if media == 'application/json' else case['response']
             validator(spec, content[media]['schema']).validate(payload)
+            if path=='/native-histogram-views' and method=='get' and case['status']==200:
+                items=[item['id'] for item in payload['items']]
+                diagnostics=[item['id'] for item in payload['diagnostics']]
+                scanned=items+diagnostics
+                assert len(scanned)<=20 and len(set(scanned))==len(scanned)
+                assert items==sorted(items) and diagnostics==sorted(diagnostics)
+                assert payload['partial']==bool(diagnostics)
+                if 'nextCursor' in payload:assert len(scanned)==20 and payload['nextCursor']==max(scanned)
+                assert case['headers']['Cache-Control']=='no-store'
             if path.startswith('/record-reviews/'):
+
                 assert case['headers']['Cache-Control']=='no-store', (fixture.name,case['name'])
             if media == 'application/x-ndjson':
                 assert case['response'].endswith('\n')
@@ -1262,9 +1295,9 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    # Native histogram configuration adds four actual successful responses
-    # and three accepted POST bodies to the prior 467/183/28 fixture baseline.
-    assert responses == 471 and requests == 186 and mux_refusals == 28, (responses, requests, mux_refusals)
+    # Native histogram discovery adds five actual successful GET responses
+    # to the prior 471/186/28 fixture baseline.
+    assert responses == 476 and requests == 186 and mux_refusals == 28, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)

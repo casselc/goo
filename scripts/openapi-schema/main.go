@@ -171,6 +171,7 @@ func main() {
 	root("MeaningPage", workbench.MeaningPage{}, false)
 	root("ExplorationViewResult", workbench.ExplorationView{}, false)
 	root("NativeHistogramView", workbench.NativeHistogramView{}, false)
+	root("NativeHistogramViewList", workbench.NativeHistogramViewList{}, false)
 	root("ExplorationViewList", workbench.ExplorationViewList{}, false)
 	root("DeploymentContext", workbench.DeploymentContext{}, false)
 	root("DocumentList", workbench.DocumentList{}, false)

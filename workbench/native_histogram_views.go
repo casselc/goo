@@ -118,6 +118,26 @@ func nativeQuestionWire(raw json.RawMessage) error {
 	if json.Unmarshal(definition["source"], &source) != nil || source == nil {
 		return errors.New("explicit native histogram service source required")
 	}
+	for _, key := range []string{"version", "schemaURL"} {
+		var value string
+		raw, present := source[key]
+		if !present || bytes.Equal(bytes.TrimSpace(raw), []byte("null")) || json.Unmarshal(raw, &value) != nil {
+			return errors.New("native source version and schemaURL require explicit strings; empty is valid")
+		}
+	}
+	if raw, present := source["exactStream"]; present && !bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		var stream map[string]json.RawMessage
+		if json.Unmarshal(raw, &stream) != nil || stream == nil {
+			return errors.New("invalid exact stream")
+		}
+		for _, key := range []string{"version", "schemaURL"} {
+			var value string
+			raw, present := stream[key]
+			if !present || bytes.Equal(bytes.TrimSpace(raw), []byte("null")) || json.Unmarshal(raw, &value) != nil {
+				return errors.New("exact stream version and schemaURL require explicit strings; empty is valid")
+			}
+		}
+	}
 	if _, present := source["resource"]; present {
 		return errors.New("native histogram view does not accept resource authority")
 	}
@@ -244,4 +264,64 @@ func ReuseNativeHistogramView(source NativeHistogramView, destination measuremen
 		return nil, errors.New("native histogram view reuse requires the exact instrument unit; no conversion")
 	}
 	return detachNativeHistogramView(NativeHistogramView{Version: 1, Title: source.Title, Question: destination, Declaration: source.Declaration})
+}
+
+const NativeHistogramViewPageSize = 20
+const NativeHistogramViewPageMaxBytes = 64 << 10
+
+type NativeHistogramViewSummary struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
+	Kind  string `json:"kind"`
+	Unit  string `json:"unit"`
+}
+type NativeHistogramViewListDiagnostic struct {
+	ID     string `json:"id"`
+	Reason string `json:"reason"`
+}
+type NativeHistogramViewList struct {
+	Items       []NativeHistogramViewSummary        `json:"items"`
+	Partial     bool                                `json:"partial"`
+	Diagnostics []NativeHistogramViewListDiagnostic `json:"diagnostics"`
+	NextCursor  string                              `json:"nextCursor,omitempty"`
+}
+
+// NativeHistogramViews verifies at most one page of candidate artifacts. Cursor
+// order is lexical content ID order, not time or a transactional catalog snapshot.
+func (s Store) NativeHistogramViews(after string) (*NativeHistogramViewList, error) {
+	if after != "" && !ID.MatchString(after) {
+		return nil, errors.New("invalid native histogram view cursor")
+	}
+	ids, err := s.ids("native-histogram-views")
+	if err != nil {
+		return nil, err
+	}
+	page := &NativeHistogramViewList{Items: []NativeHistogramViewSummary{}, Diagnostics: []NativeHistogramViewListDiagnostic{}}
+	scanned, last := 0, ""
+	for _, id := range ids {
+		if id <= after {
+			continue
+		}
+		if scanned == NativeHistogramViewPageSize {
+			page.NextCursor = last
+			break
+		}
+		scanned++
+		last = id
+		view, err := s.LoadNativeHistogramView(id)
+		if err != nil {
+			page.Partial = true
+			page.Diagnostics = append(page.Diagnostics, NativeHistogramViewListDiagnostic{id, "unavailable-artifact"})
+			continue
+		}
+		page.Items = append(page.Items, NativeHistogramViewSummary{id, view.Title, view.Declaration.Kind.Name, view.Question.Definition.Source.Unit})
+	}
+	raw, err := json.Marshal(page)
+	if err != nil {
+		return nil, err
+	}
+	if len(raw) > NativeHistogramViewPageMaxBytes {
+		return nil, errors.New("native histogram metadata page exceeds 64 KiB")
+	}
+	return page, nil
 }

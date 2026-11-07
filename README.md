@@ -618,7 +618,10 @@ Apply preserves the current question; Run and export selection remain explicit.
 [Typed distribution continuation](docs/TYPED_DISTRIBUTION_CONTINUATION.md) now
 checks the exact selection intent, stages the complete child question and waits
 for Run. Back retains the parent without rereading and visibly pauses selection
-until an explicit parent Run. Next is contextual native-view discovery.
+until an explicit parent Run.
+[Browse saved native displays](docs/NATIVE_VIEW_DISCOVERY.md) in Measurements,
+Find loaded metadata and Inspect compatibility before Apply. Next is the bounded
+exponential-histogram readiness gate.
 Whole-product reviews and proposed work are distinct from
 [validated delivery](VALIDATION.md).
 

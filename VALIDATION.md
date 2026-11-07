@@ -1,5 +1,79 @@
 # Validation record
 
+## Contextual native-view discovery — 373
+
+Saved native Histogram/Table configurations can now be browsed inside the existing
+Measurements reuse disclosure. The shared definition row shows title, kind, exact
+unit and compatibility. Browse/More load metadata; Find covers loaded pages only.
+Inspect verifies the immutable ID and summary before enabling Apply. Raw details
+stay closed initially. Apply preserves the complete current question, clears its
+result and waits for explicit Run/export selection. The exact-ID path remains.
+
+The collection GET scans at most **20 candidate IDs** and loads at most 20 bounded
+artifacts per page, with a **64 KiB** response limit and the existing **10,000-entry**
+directory cap. Damaged/missing artifacts produce sanitized diagnostics and partial
+state, advancing the last-scanned cursor. There is no recency, total or catalog
+snapshot claim. Invalid cursor queries return 400; unavailable catalogs return 500
+with the direct-ID path retained. No new index, persistence service or evaluator.
+
+Go 1.27.3 full regression passes: cmd/goo **10.129s**, workbench **1.697s**.
+Focused 371/373 Go checks pass workbench **0.360s**, HTTP **0.025s**. The final
+frontend suite passes **1,303 tests**, zero skips, in **22.489s**. Focused discovery
+and existing owner tests also pass, including Find/reattached-row ABA, pending
+Inspect A→B with late A ignored, and accurate aria-pressed state without replacing
+rows. Independent list/detail/render leases retain current question ownership.
+
+Sixteen Hegel cases pass **1.46s** using actual 43-artifact Go stores, three-page
+candidate oracles, corruption/broken files, summary integrity and actual Go reuse
+through JavaScript admission. The shared finite wire bank passes **59/59** in Go
+and JavaScript. It closes required version/schemaURL string presence and explicit
+null-selector drift without changing the global measurement codec. Schema outcomes
+are recorded separately: the one non-enclosing nanosecond pair is shape-valid but
+runtime-invalid. No duplicate semantic validator is added.
+
+Generated API checks pass **112 operations, 476 actual fixture responses,
+186 accepted requests and 28 mux refusals**, with all 59 recorded schema outcomes.
+Five actual list responses independently satisfy combined scan budget, disjoint
+IDs, ordering, cursor and no-store checks.
+
+The final rebuilt service is healthy and changed UI assets plus OpenAPI match
+source bytes. The genuine discovery journey plus actor passes in about **1.0m**;
+the existing 371 same-path journey also passes **12.6s** using the same binary.
+No unrelated browser suites were repeated.
+
+The main records **14 actual boundaries**. Two pages cover **28 candidate IDs**:
+**19 + 8 verified configurations** and one damaged-file diagnostic, with the exact
+20th-scanned cursor independently checked against raw store filenames. The saved
+source configuration bytes remain unchanged. A milliseconds-only configuration is
+metadata for the incompatibility test; no milliseconds telemetry is claimed. Its
+Apply control is disabled and a real reuse POST returns 400.
+
+Browse/More, loaded Find, Inspect, Apply and stale/hidden callbacks make zero
+telemetry/SQL reads; the explicit destination Run makes one of each. Independent
+raw exported counts/bounds distinguish donor **4** from destination **7**, bins
+**2/3/2** at **0.02/0.2 s**. The actual table retains the complete destination
+question, exact stream and private complete-bin authority. Held list/page/Inspect
+responses cannot adopt after a plan or ID replacement.
+
+Bombadil completes in **45.185s**, **799 observations/10 phases**, with exact
+current destination bins in Table. It makes **three metadata requests total**
+(one catalog GET, one exact GET and one reuse POST), **one telemetry read**,
+**zero writes/captures**. Main explicitly exercises two pages even when the saved
+source happens to appear on the first; the actor requires only pages needed to
+find it. Positive visible completion, not exit alone, is required.
+
+Required observed replay passes **6.19s** (package **6.203s**), zero skips. Independent
+page/cursor/partial/provenance/scope/bin admission checks the original report before
+projecting actual history/read facts into the existing model. The model checks
+acquisition budgets only. Browse/Apply read mutants fail there; cursor, donor
+question and bin mutations fail domain admission. All three original task frames
+and bounded source UX are accepted. Useful reports, real configuration files,
+compressed trace and positive actor frame total about **940 KiB** locally;
+repeated diagnostic frames are pruned.
+See [contract](docs/NATIVE_VIEW_DISCOVERY.md),
+[storyboard](journeys/373-native-view-library-storyboard.md) and
+[design review](docs/reviews/NATIVE_VIEW_DISCOVERY_DESIGN_373.md).
+
 ## Typed distribution continuation — 372
 
 The obsolete typed-policy refusal is removed at the existing checked distribution
