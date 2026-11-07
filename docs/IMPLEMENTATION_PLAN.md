@@ -8,8 +8,11 @@
 > 360 captured span-page waterfalls (breadth), 361 retained-page comparison
 > (depth), then 362 current RPC capability parity (consolidation). 360 and
 > [361 retained span-page comparison](RETAINED_PAGE_COMPARISON.md) are delivered.
-> UI, Hegel, native/model and positive actor checks pass. 362 is next, then the
-> planned whole-product checkpoint, including compact comparison provenance.
+> UI, Hegel, native/model and positive actor checks pass for those two cuts.
+> [362 current RPC capability parity](RPC_CAPABILITY_PARITY.md) is delivered with
+> generated/native/model and positive actor checks, including frozen reopening.
+> The planned whole-product checkpoint is in progress, including compact
+> comparison provenance. No subsequent feature sequence is selected yet.
 > Delivery notes below are retained history, not parallel active queues.
 
 

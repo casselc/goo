@@ -1896,3 +1896,25 @@ flowchart LR
 See [contract](RETAINED_PAGE_COMPARISON.md) for independent provenance, conservative
 one-sided/unknown semantics and ownership boundaries. Fresh trace expansion stays
 an explicit separate source operation.
+
+## Current RPC capability parity — 362
+
+Implementation, main Go/UI, generated, native/observed-model and positive actor
+checks pass. Current frames and bounded layout claims are recorded in validation. `measurements.CurrentRPCDurationShape` shares only exact instrument
+name, Histogram kind and seconds between `PlanInstrument` and the Services
+current-RPC native recognizer. The latter still delegates to its complete
+native-duration binder. The helper grants neither binding eligibility, source
+scope, interval validity nor semantic-convention conformance.
+
+The existing `InstrumentCapabilityPlan` carries profile
+`rpc-server-call-duration`, a candidate title and pinned OTel v1.45.0 rule set.
+`ShapeMatches`, generic `Eligible` and verification `not-run` remain independent.
+The existing bounded stream coverage watches `rpc.system.name`, `rpc.method`,
+`rpc.status_code` and `error.type`; presence is not value validation, and missing
+conditional method metadata does not reject Run. Wrong shapes retain the prior
+generic path where eligible, rather than acquiring aliases or unit conversion.
+
+No new source query, HTTP endpoint, UI component, convention registry or numerical kernel.
+The raw-row span witness, exact binding/stream/temporality/environment rules and
+native evaluation/custody paths remain independent authorities. See
+[contract and read/plan/Run diagram](RPC_CAPABILITY_PARITY.md).

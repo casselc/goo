@@ -1,8 +1,9 @@
 package measurements
 
 import (
+	"slices"
+
 	"github.com/casselc/goo/metrics"
-	"sort"
 )
 
 const CapabilityPlanVersion = "goo/instrument-capability-plan/v1alpha1"
@@ -82,6 +83,10 @@ func observedCoverage(i Instrument, observations []DiscoveryObservation) Instrum
 	case "http.server.request.duration":
 		keys["http.request.method"] = true
 		keys["http.response.status_code"] = true
+	case CurrentRPCDurationMetric:
+		for _, key := range []string{"rpc.system.name", "rpc.method", "rpc.status_code", "error.type"} {
+			keys[key] = true
+		}
 	case "go.memory.used":
 		keys["go.memory.type"] = true
 	case "db.client.connection.count":
@@ -110,12 +115,12 @@ func observedCoverage(i Instrument, observations []DiscoveryObservation) Instrum
 	for k := range keys {
 		names = append(names, k)
 	}
-	sort.Strings(names)
+	slices.Sort(names)
 	ids := []string{}
 	for id := range streams {
 		ids = append(ids, id)
 	}
-	sort.Strings(ids)
+	slices.Sort(ids)
 	out.State = "observed"
 	out.TotalStreams = len(ids)
 	for _, key := range names {
@@ -199,6 +204,24 @@ func PlanInstrument(i Instrument, observations []DiscoveryObservation) Instrumen
 			p.Hints = append(p.Hints, "A supplied observed stream reports a named pool, nonempty instance and nonempty literal state. Execution must use stockDomain=nonnegative-integer; values and freshness still require evaluation. States, pools and instances remain separate; capacity, utilization and pool health are unbound.")
 		} else {
 			p.Hints = append(p.Hints, "Named-pool eligibility is unconfirmed: it requires the pinned cumulative nonmonotonic connection stock binding and one of the first 25 observed streams reporting the same nonempty instance, pool name and nonempty literal state. Missing preview evidence is not absence; the generic binding remains available.")
+		}
+		return p
+	}
+	if i.Metric == CurrentRPCDurationMetric {
+		p.Profile = "rpc-server-call-duration"
+		p.Title = "Current RPC duration candidate"
+		p.RuleSet = CurrentRPCRuleSet
+		p.ShapeMatches = CurrentRPCDurationShape(i)
+		if !p.ShapeMatches {
+			p.Hints = append(p.Hints, "The pinned current RPC duration convention requires a histogram in unit s. Retain the generic binding if eligible; no unit conversion or legacy alias is applied.")
+		}
+		p.Hints = append(p.Hints,
+			"Instrument and schema metadata do not verify convention conformance. No schema migration is inferred.",
+			"Inspect rpc.system.name per exact stream; reported presence does not validate values or establish conformance.",
+			"rpc.method and rpc.status_code are conditional. Missing, empty and _OTHER methods remain distinct literal categories; a missing method does not disable Run.",
+			"error.type is conditional on failure. Reported RPC status, recorded span Error and business outcomes are independent; no universal failure policy or span-to-metric join is inferred.")
+		if p.Eligible && i.Kind == "histogram" {
+			p.Hints = append(p.Hints, "Run evaluates retained histograms per exact stream with original units, temporality and interval coverage. No fleet percentile, request rate or complete-trace latency is inferred.")
 		}
 		return p
 	}

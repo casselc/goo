@@ -1,5 +1,82 @@
 # Validation record
 
+## Current RPC capability parity — 362
+
+Services and Measurements now share the exact name/type/unit check for
+`rpc.server.call.duration`, Histogram, seconds. Measurements supplies the pinned
+OpenTelemetry v1.45.0 candidate description and bounded per-stream presence for
+`rpc.system.name`, `rpc.method`, `rpc.status_code` and `error.type`. Conditional
+methods do not gate generic execution. Missing/empty/`_OTHER` stay distinct;
+metadata eligibility is not producer conformance. Services retains its full
+binding/scope/temporality checks. Generic eligible wrong-unit bindings, older
+instruments and custom metrics remain independent. No schema migration, status
+policy, new API, browser planner or convention registry was added.
+
+The main Go suite passes (`go test -p 2 ./...`), including cmd/goo 8.639s,
+exploration 4.853s and measurements 3.783s; unchanged packages may be cached.
+The final focused RPC discovery/shape cases pass uncached in 0.009s. The full UI
+suite passes **1,234 tests in 15.147 seconds, zero skips**. Source review accepts
+the small shared shape helper, unchanged binding authority and presence semantics.
+The local sorting code uses standard `slices.Sort`; no user-facing type machinery
+or new dependency was introduced.
+
+The Go 1.27.3 image was rebuilt and deployed. `/health` returns 200; the existing
+capability/discovery/service UI assets match source bytes. Reviewed binary SHA-256:
+`82ac520f197537e7bdd670b8f759ef2e80371eddb0f6c2b84efa9590b6e74c9f`.
+Forty generated Hegel cases pass in **2.48 seconds**, checking an independent raw
+identity/presence oracle, whole-stream totals beyond the 25-row preview, duplicate
+records, permutation/detachment, cross-surface shape agreement, unchanged generic
+bindings, unknown evidence and the actual JavaScript presentation adapter. This
+is a pure-planner semantic property check, not a new state/swarm owner. The actual
+generated wrapper for the existing `instrument_presence` Quint model passes its
+positive path and two negative controls in **3.94 seconds**. Combined verification
+package: 6.436 seconds, zero skips.
+The corrected genuine native journey passes in **47.995 seconds** (runner
+49.729). Its first attempt exposed a fixture error: service catalog discovery
+rejects a service filter, so the inventory capture now retains only the typed
+scope and the normal catalog selects the exact service. No product change or
+increased timeout was required. The seven isolated metric identities include
+current delta/cumulative, wrong milliseconds, wrong kind, unsupported temporality,
+older and custom instruments. The existing current-only typed parent uses its
+admitted scalar native-metric boundary; this does not add general typed histogram
+support.
+
+All six actual boundaries pass: stage 0 telemetry reads, Discover +1, Inspect 0,
+Build 0 telemetry/+1 metadata plan, Run +1, retained Services return 0. The service
+widget DOM, results and clocks remain unchanged on return. Four exact delta
+streams retain missing/empty/`_OTHER`/qualified methods, seconds, independent
+identity and recorded count 4 with buckets `[1,2,1]` at bounds `[0.01,0.05]`.
+Full-window coverage remains unknown despite a valid recorded interval.
+
+Natural Capture evidence performs its own explicit read. After telemetry is
+refused, cold frozen reopen preserves the complete captured payload, original
+question, own source-read/custody clocks and file bytes. It adds exactly one
+stored-capture GET, zero telemetry reads and zero upstream SQL attempts
+(source 11→11; SQL 40→40). The two capture stores and the lab's 51 pre-existing
+stale pending entries remain intact.
+
+Required observed checking passes in **1.50 seconds** (package 1.521), zero skips.
+Independent Go admission checks the six facts, raw OTLP identity/coverage and
+histogram values, source budgets, capture hash/clocks and offline reopen, rejecting
+six corrupted reports. The reused actual `instrument_presence` Quint model
+validates discover→inspect; it does not claim to model later execution/custody
+steps. The focused actor completes positively in **35.110 seconds**, **605
+snapshots / 9 stages**. After service startup, its source baseline 9→11 covers
+only explicit Discover and Run; it writes nothing and requires the settled,
+visible timeline and exact question/method/scope/schema.
+
+Four genuine frames cover desktop/narrow capability metadata, explicit execution
+and frozen evidence. Root reviewed the original frozen frame and actual terminal
+actor JPEG: valid retained intervals coexist with honest unknown whole-window
+coverage. Frame/layout acceptance is recorded by design review. Reviewed owned
+diagnostic bulk is pruned while retaining capture stores, compact failure,
+replay inputs/results, compressed actor trace and current terminal frame.
+
+See [contract and diagram](docs/RPC_CAPABILITY_PARITY.md),
+[architecture review](docs/reviews/RPC_CAPABILITY_ARCHITECTURE_362.md) and
+[design review](docs/reviews/RPC_CAPABILITY_DESIGN_362.md).
+
+
 ## Retained span-page comparison — 361
 
 Saved span pages can now be pinned as a baseline and explicitly compared using

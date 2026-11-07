@@ -281,7 +281,11 @@ HTTP, [current and older OTel RPC](docs/CURRENT_RPC_PROFILE_357.md) server-span 
 client dependencies, and separate messaging consumer/producer views. Discover a service, inspect activity, recorded span errors,
 duration and literal route/method/database/destination populations, then narrow the scope and
 open a trace. All spans remains available; native metrics retain separate units,
-streams and intervals. Pool observations, host CPU/memory and the first Go runtime
+streams and intervals. Measurements now describes the same
+[current RPC duration candidate](docs/RPC_CAPABILITY_PARITY.md) using the pinned
+Histogram/seconds shape and bounded attribute coverage. Recognition remains
+separate from generic eligibility and explicit Run. Native/model and positive
+actor checks include captured evidence reopening with telemetry unavailable. Pool observations, host CPU/memory and the first Go runtime
 observations are described below. Pod memory/phase, reported container readiness,
 container CPU/memory resources and reported workload context are also available,
 preserving exact resource identity and independent evidence. Broader receiver

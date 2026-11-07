@@ -1,5 +1,14 @@
 # Known issues and gaps
 
+362 aligns current RPC duration recognition across Services and Measurements,
+with bounded conditional-attribute coverage and unchanged execution/binding
+authorities. Main Go/UI, Hegel, native/model and positive actor checks pass,
+including telemetry-refused frozen reopening. Metadata remains unverified; valid
+intervals do not establish whole-window coverage or producer conformance. The
+existing capability table remains text-heavy and horizontally cropped on narrow
+screens; current frames do not establish a compact first-entry layout.
+See [contract](RPC_CAPABILITY_PARITY.md) and [validation](../VALIDATION.md).
+
 361 adds explicit comparison of two whole verified stored span pages, independent
 frozen operands, exact opaque-cursor side opening and local inspection/return.
 UI, Hegel, actual native/model and positive actor checks pass with zero telemetry
@@ -26,9 +35,8 @@ is a driver diagnostic; genuine Playwright frames establish appearance. See
 
 The adopted [359 reconciliation](reviews/ROADMAP_RECONCILIATION_359.md) selects
 source-free captured span-page waterfalls, then retained-page comparison and
-current RPC capability parity. 360's captured inspection and 361's retained-page comparison are delivered. RPC
-capability parity is next; curated measurement discovery still treats the
-current RPC duration instrument as generic. Existing pod/container defaults are delivered;
+current RPC capability parity. 360's captured inspection, 361's retained-page comparison and 362's current RPC
+capability parity are delivered. The whole-product checkpoint is in progress. Existing pod/container defaults are delivered;
 broader receiver coverage and verified workload ownership remain separate.
 
 357 implements the pinned current RPC profile. Go/UI/API, generated/read-only SQL,

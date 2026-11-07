@@ -784,7 +784,7 @@ func dashboardNativeRPC(scope InventoryQuestion, service string, i measurements.
 // A recognized current duration instrument is a candidate, not proof of all
 // required metric attributes or semantic-convention conformance.
 func dashboardNativeRPCCurrent(scope InventoryQuestion, service string, i measurements.Instrument) bool {
-	if i.Metric != "rpc.server.call.duration" || i.Unit != "s" {
+	if !measurements.CurrentRPCDurationShape(i) {
 		return false
 	}
 	return dashboardNativeDuration(scope, service, i)

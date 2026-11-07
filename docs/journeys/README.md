@@ -1,5 +1,13 @@
 # User journeys and storyboards
 
+[Journey362](362-current-rpc-capability.md) follows the same current RPC duration
+instrument from Services into Measurements. It checks the pinned candidate,
+bounded missing/empty/`_OTHER` method coverage, explicit package planning and
+seconds-based histogram Run and retained service return, plus separate capture
+and telemetry-refused frozen reopening. Metadata inspection adds no read;
+discovery, pure planning, execution and custody have separate ledgers. Native/observed-model, positive actor and current-frame checks pass; execution
+bounds and the corrected catalog fixture are recorded in the storyboard.
+
 [Journey361](361-retained-page-comparison.md) compares two whole verified stored
 span pages with independent receipts and page limits. Its 20/100-row fixture
 checks explicit baseline/selection, exact opaque-cursor side reopening, local

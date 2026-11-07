@@ -4053,3 +4053,42 @@ cannot silently recompute it. These whole pages are not complete traces. See
 [contract](../docs/RETAINED_PAGE_COMPARISON.md),
 [storyboard](../docs/journeys/361-retained-page-comparison.md) and
 [validation](../VALIDATION.md) for execution status and bounded claims.
+
+## Current RPC capability parity — 362
+
+Main Go/UI, generated, native/observed-model and positive actor checks pass. Generated checks
+exercise pure planner semantics; existing mutable discovery/execution owners stay
+unchanged. Independent shape/coverage and cross-surface checks remain separate
+from browser source accounting. `TestHegelRPCCapability362` generates forty
+independent raw shape/coverage and cross-surface planning cases, including input
+and emitted-definition identity; it is not a state/swarm ownership claim.
+
+```sh
+go -C verification test -run '^TestHegelRPCCapability362$' -count=1 .
+```
+
+`measurements.TestCurrentRPCDiscoveryCapability` exercises real discovery-row
+admission for seconds/milliseconds and delta/cumulative metadata. It preserves
+exact bindings and missing/empty/`_OTHER`/reported method coverage, including absent
+preview observations. `TestCurrentRPCShapeDoesNotGrantEligibility` proves a shape
+match alone cannot grant generic execution eligibility and rejects wrong metric,
+kind and unit recognition. These source tests do not establish evaluated values
+or producer conformance.
+
+The required observed checker is `TestQuintCurrentRPCCapabilityObserved362`, using
+`GOO_CURRENT_RPC_CAPABILITY_362_REPORT` pointing to the genuine final summary. Its
+six native facts distinguish stage, discovery, capability inspection, pure package
+planning, explicit Run and retained return. Separate capture and telemetry-refused
+frozen reopening check existing custody without inventing another discovery
+state machine. Capture is an independent source read, not an archive of the
+displayed result. Do not count a metadata-only card opening as a new measurement
+or infer native population from span witnesses.
+
+`bombadil/rpc-capability362.ts` requires positive visible exact histogram completion,
+not process exit alone. The genuine
+[journey](../docs/journeys/362-current-rpc-capability.md) uses separate current
+delta/cumulative streams, optional method labels and wrong-shape controls;
+`GOO_RPC_CAPABILITY_BOMBADIL=1` and `GOO_VERIFY_QUINT=1` enable its actor and required
+observed gate with `GOO_GENERIC_BINARY` set to the reviewed binary. See
+[contract](../docs/RPC_CAPABILITY_PARITY.md) and [validation](../VALIDATION.md) for
+execution status, exact generated commands and bounded claims.
