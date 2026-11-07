@@ -347,6 +347,15 @@ Adapters can append/update native rows while retaining existing nodes and focus;
 reconnect and attribute updates retain all content. The adapter must supply row
 identity, retention and follow/pause behavior for any future streaming surface.
 
+`mobile-layout="stacked"` opts a table into labeled narrow rows while retaining
+native headers and cells. Supply each cell's `data-label` from its actual heading.
+The scoped `goo-chart` table renderer accepts the same passive attribute and
+forwards only `stacked` to its inner `goo-table`; it derives cell labels itself.
+Initial HTML and detached SPA updates are supported. Absent or unrecognized
+values retain the default, with no display-grammar or source-behavior change.
+Grouped-record adapters use this opt-in to keep identity/count/controls together;
+see [grouped row presentation](GROUP_ROW_PRESENTATION.md).
+
 `goo-result-state state="partial"` accepts caller-authored explanation and native
 action children. Supported vocabulary is loading, empty, partial, unavailable,
 stale and unknown. `.state` reflects the attribute, including pre-upgrade SPA

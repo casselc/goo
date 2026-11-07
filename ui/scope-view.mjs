@@ -71,7 +71,7 @@ export function tableFields(snapshot,display){
 }
 function table(host,snapshot,display,rows=displayRows(snapshot,display)){
   const frame=n('goo-table'),table=n('table'),head=n('thead'),row=n('tr'),body=n('tbody');
-  frame.setAttribute('density','compact');
+  frame.setAttribute('density','compact');if(host.getAttribute('mobile-layout')==='stacked')frame.setAttribute('mobile-layout','stacked');
   table.append(n('caption',display.scale==='population'?'Supplied values · shares of '+snapshot.partition.total+' captured records':'Supplied values'));
   const mapped=[display.category,display.value].map(key=>snapshot.fields.find(field=>field.key===key));
   const fields=display.kind==='table'?tableFields(snapshot,display):mapped.every(Boolean)?mapped:snapshot.fields;
@@ -86,7 +86,7 @@ function table(host,snapshot,display,rows=displayRows(snapshot,display)){
     if(display.scale==='population'){const share=populationShare(snapshot,entry.key),cell=n('td',share.ok?share.percent:'Unavailable');if(share.ok){cell.title=share.fraction+' captured records (exact)';cell.dataset.share=share.fraction}tr.append(cell)}
     if(snapshot.shape==='time-series')tr.append(n('td',entry.state==='no_data'?'No data · zero captured records':entry.state==='unknown'?'Unknown coverage':'Observed'));
     if(selectable){const firstField=fields.find(field=>field.key===display.category)||fields[0];
-      const cell=n('td'),button=n('button','Select');button.type='button';button.setAttribute('aria-label','Select '+(snapshot.dimensions?.length?snapshot.dimensions.map(key=>exact(entry.values[key])).join(' / '):firstField.type==='timestamp'?utc(entry.values[firstField.key]):exact(entry.values[firstField.key])));button.onclick=()=>emit(host,'goo-select',selectionIntent(snapshot,entry.key));cell.append(button);tr.append(cell)}body.append(tr);
+      const cell=n('td'),button=n('button','Select');button.type='button';button.setAttribute('aria-label','Select '+(snapshot.dimensions?.length?snapshot.dimensions.map(key=>exact(entry.values[key])).join(' / '):firstField.type==='timestamp'?utc(entry.values[firstField.key]):exact(entry.values[firstField.key])));button.onclick=()=>emit(host,'goo-select',selectionIntent(snapshot,entry.key));cell.append(button);tr.append(cell)}[...tr.children].forEach((cell,index)=>{cell.dataset.label=row.children[index].textContent});body.append(tr);
   }
   table.append(head,body);frame.append(table);return frame;
 }
@@ -207,6 +207,7 @@ class SuppliedElement extends (globalThis.HTMLElement||class {}) {
 }
 
 class Chart extends SuppliedElement {
+  static get observedAttributes(){return [...super.observedAttributes,'mobile-layout']}
   set display(value){this.setInput('display',value)}
   get display(){return this.read('display')}
   clearRange(){this.querySelector('goo-time-bars')?.clearRange();this.querySelector('.scope-time-track')?._rangeGesture?.clear()}

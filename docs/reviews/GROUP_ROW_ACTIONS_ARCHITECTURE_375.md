@@ -1,10 +1,10 @@
 # Group row identity and actions — architecture 375
 
-Status: source inspection and bounded proposal only. No production change or visual acceptance is claimed.
+Status: delivered; source, matched browser frames, accessibility diagnostics and observed replay accepted. See [validation](../../VALIDATION.md).
 
 ## Existing owner and problem
 
-`RecordResults.groups` in `ui/record-results.mjs` owns the native grouped table used by ordinary multi-field grouped results and typed error-triage follow-through. Single-field canonical datasets without extra actions already use `ScopedBreakdown`; that path should remain unchanged.
+`RecordResults.groups` in `ui/record-results.mjs` owns the fallback native grouped table, including scalar/typed error-triage results with explicit actions. Its early branch delegates **any** supplied `viewDataset` without extra actions to `ScopedBreakdown`, including the actual ordinary two-field journey. That separate path is unchanged.
 
 The fallback table already contains a caption, native `table`/`thead`/`tbody`/`tr`/`th`/`td` elements and column headers with `scope=col`. It renders dimensions in declared order, captured count, optional numeric/duration measures, then action anchors. Error-triage supplies **Inspect group** and **Compare within service** from `Exploration.groupActions`. No separate triage table is needed.
 
@@ -42,7 +42,7 @@ Keyboard order remains the existing DOM order, with Inspect before Compare. Focu
 
 ## Bounded verification proposal
 
-Use the existing typed-triage 370 journey and actual grouped-row owner fixtures as the starting point, with one ordinary multi-field grouped result as shared-component coverage. Check:
+Use the existing typed-triage 370 journey and actual grouped-row owner fixtures as the starting point, with one ordinary multi-field grouped result as an unchanged-presenter regression. The genuine ordinary result uses ScopedBreakdown, not the changed fallback. Check:
 
 - At 390px, one actual row simultaneously shows service/type, exact count, Inspect and Compare within the viewport width; no separate horizontal crops or page scrolling to unrelated controls.
 - Literal long labels, missing and present-empty values remain distinguishable; optional numeric/duration labels remain associated with their values. Check desktop columns too.
@@ -51,3 +51,68 @@ Use the existing typed-triage 370 journey and actual grouped-row owner fixtures 
 - The browser accessibility representation retains table, caption, column headings and labeled values; automated markup assertions alone are insufficient evidence for a screen-reader claim.
 
 Keep screenshots and storyboard text current with the accepted layout. No source/query/compiler/backend changes are needed for this proposal.
+
+
+## Independent candidate source verdict
+
+The actual renderer now opts the existing `goo-table` into stacked mobile layout.
+One headings array produces native column headers and every cell's data-label;
+sequential appends preserve numeric mean/coverage, duration and action associations.
+Literal, missing and present-empty values retain their prior formatting. The
+ScopedBreakdown early path is unchanged. No source/query/row-count transformation
+or duplicate action tree was introduced.
+
+The actual action-anchor creation, captured leases, current-group admission and
+suspend/resume code remain unchanged. Reflow adds no authority and does not rebuild
+the held owner on Back. Independent source review finds no material blocker.
+Actual narrow geometry, keyboard focus and browser accessibility/header
+associations still require the planned runtime checks; markup alone does not
+establish assistive-technology support.
+
+Final candidate additions are also source-accepted: only literal strings equal to
+existing missing/empty/exception marker labels are visibly quoted; raw group values
+and href predicates remain unchanged. Narrow action CSS wraps the existing links,
+provides 28-pixel minimum target height and hides only decorative line breaks.
+There is no duplicate action tree, tab-order change or lease change. Actual visual
+and accessibility acceptance remains separate from this source verdict.
+
+
+## Initial presenter correction (superseded by extended scope below)
+
+The genuine baseline confirmed ordinary two-field results contain `viewDataset`
+and no extra actions, so the early ScopedBreakdown branch wins. Its `multi` default
+is the shared table kind; `scope-view.mjs:table` creates a compact goo-table without
+the stacked opt-in. 375 does not change that renderer or claim its ordinary mobile
+presentation improved. The primary scalar/typed triage results supply actions and
+therefore exercise the changed fallback. Supplied fallback measure/label tests are
+component coverage, not evidence that the genuine ordinary route used it.
+
+Keep the actual presenter/AX evidence for each case in validation. Ordinary scope,
+selection and source budgets are regression checks; visual improvement and native
+header/action association claims belong to the actual changed triage path. No
+additional production scope is required by this correction.
+
+## Extended scope after genuine baseline
+
+The actual ordinary presenter did not fit at 390 px: its canonical table measured
+724 px scroll width in a 262 px client region. Triage fallback tables also overflowed
+(605/322 and 595/322); desktop cases fit. The ordinary case therefore cannot be
+reported as an accepted fit regression or removed from acceptance.
+
+Root approved a narrow extension: the passive goo-chart host can opt into the
+existing stacked table layout and forward that presentation attribute to its
+inner goo-table; cell labels derive from actual native headers. ScopedBreakdown
+opts its grouped table into that presentation. This adds no dataset grammar,
+query, source ownership or second row tree. Final source review and actual
+ordinary/triage narrow geometry remain required before acceptance.
+
+The frozen canonical extension is source-accepted. RecordResults opts only its
+existing no-extra-actions ScopedBreakdown path into `mobileLayout:'stacked'`.
+That sets a passive goo-chart attribute, whose existing custom-element attribute
+lifecycle rerenders and forwards only the literal stacked value to the inner
+goo-table. Other callers retain default layout. Every cell label comes from the
+actual rendered native header, including Share, interval state and Selection;
+there is no second label catalogue. Dataset/display grammar, selection intent,
+source proof and callback handlers are unchanged. No MutationObserver/resize
+observer or new owner is introduced. Actual ordinary narrow fit is now a changed-
+path acceptance target alongside triage, not merely an unchanged regression.

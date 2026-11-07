@@ -335,3 +335,11 @@ goo-categorical-facet.categorical-facet-paired .categorical-facet-row[hidden]{di
 
 /* Source refusals retain terse reasons and passive, explicitly disclosed detail. */
 .source-refusal{display:block;min-width:0}.source-refusal-details{margin:4px 0;font-size:12px}.source-refusal-details>summary{cursor:pointer}.source-refusal-details p{margin:4px 0;overflow-wrap:anywhere}
+
+/* Group continuations stay with their exact identity/count in the shared stacked table. */
+@media(max-width:700px){
+ goo-table.record-group-table[mobile-layout=stacked]>table>tbody>tr>td.record-group-actions{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px}
+ goo-table.record-group-table[mobile-layout=stacked]>table>tbody>tr>td.record-group-actions::before{flex-basis:100%}
+ goo-table.record-group-table[mobile-layout=stacked]>table>tbody>tr>td.record-group-actions>br{display:none}
+ goo-table.record-group-table[mobile-layout=stacked]>table>tbody>tr>td.record-group-actions>:is(a,span){box-sizing:border-box;display:inline-flex;align-items:center;min-height:28px;padding:4px 0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+}

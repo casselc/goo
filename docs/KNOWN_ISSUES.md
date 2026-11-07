@@ -1,12 +1,20 @@
 # Known issues and gaps
 
+375 delivers grouped-row fit through both existing presenters. At390px ordinary
+and scalar/typed triage rows retain identity, captured count and selection/actions
+without horizontal pan; desktop widths, raw questions, DOM and leases remain.
+Matched actual geometry, keyboard/Back, Chrome AX diagnostics, actor and replay
+pass. This is bounded corpus/browser evidence, not universal screen-reader or
+all-values-on-one-screen coverage. See [contract](GROUP_ROW_PRESENTATION.md) and
+[validation](../VALIDATION.md). Current is 376 observed unsupported metric discovery.
+
 374 closes exponential-histogram readiness with execution deferred. The real
 13-point source probe preserves counts, offsets, scale, flags, identity and
 nanoseconds, but drops zero thresholds and optional-statistic presence. The
 current native explicit-duration kernel/view cannot preserve general irrational
 bounds and mixed bucket closure. No new exponential adapter is implemented.
 See [decision](EXPONENTIAL_HISTOGRAM_READINESS.md) and
-[validation](../VALIDATION.md). Current is 375 narrow grouped-row identity/actions.
+[validation](../VALIDATION.md). 375 consolidation is delivered; current is 376 discovery.
 
 373 delivers contextual native-view discovery with explicit bounded Browse/More,
 loaded-page Find and verified Inspect/Apply through the shared definition rows.
@@ -14,7 +22,7 @@ Damaged metadata stays partial; units do not convert; the destination question
 and explicit Run/export selection stay unchanged. No catalog snapshot or recency
 is inferred. Go/UI1303, Hegel16, 59 finite input cases, actual native/actor/model
 checks pass. See [contract](NATIVE_VIEW_DISCOVERY.md) and
-[validation](../VALIDATION.md). 374 readiness is closed; current is 375 consolidation.
+[validation](../VALIDATION.md). 374 readiness is closed; 375 consolidation is delivered; current is 376 discovery.
 
 372 delivers checked typed distribution continuation: exact numeric planner
 intent, whole parent scope, source-free staging and explicit child Run. Back
@@ -23,7 +31,7 @@ old callbacks remain retired. Actual attribute-int64/resource-decimal cases and
 positive actor completion pass, with generated scope/threshold/ownership mutants.
 This is tab-held evidence, not an immutable or atomic source snapshot. See
 [contract](TYPED_DISTRIBUTION_CONTINUATION.md) and [validation](../VALIDATION.md).
-373 contextual native-view discovery is delivered; 374 readiness is closed with execution deferred; next is 375 consolidation.
+373 contextual native-view discovery is delivered; 374 readiness is closed with execution deferred; 375 consolidation is delivered; next is 376 discovery.
 
 371 delivers separate immutable native Histogram/Table display configuration,
 metadata-only Load/Inspect/Apply, whole destination preservation and explicit
@@ -32,14 +40,14 @@ bin authority, unknown refusal, immutable bytes and positive actor completion pa
 This is a per-stream service histogram pilot with identical units; no conversion,
 fleet percentile, time-bucket/resource-native arm or upstream completeness claim.
 373 adds bounded metadata discovery alongside the exact-ID path. See [contract](NATIVE_HISTOGRAM_VIEW_REUSE.md) and
-[validation](../VALIDATION.md). 372 typed distribution continuation is also delivered; 373 is delivered; 374 readiness is closed; 375 is current.
+[validation](../VALIDATION.md). 372 typed distribution continuation is also delivered; 373 is delivered; 374 readiness is closed; 375 is delivered; 376 is current.
 
 370 delivers typed Activity triage → exact group/service child → explicit Run →
 held Back. Go, 1,276 UI tests, Hegel 40, four genuine typed configurations,
 independent raw membership, observed model/mutants and positive actor completion
 pass. This is reported-evidence context, not an error rate or issue ontology.
-Narrow group tables retain horizontal inspection; action access is verified,
-not simultaneous column visibility. See [contract](TYPED_ERROR_TRIAGE.md) and
+The original370 narrow checks required horizontal inspection;375 now closes
+that limitation with simultaneous grouped identity/count/action fit. See [contract](TYPED_ERROR_TRIAGE.md) and
 [validation](../VALIDATION.md). 371 now delivers bounded native histogram display reuse;
 ordinary record-template guards remain intact; 372 closes the typed distribution barrier.
 
@@ -52,7 +60,7 @@ This does not promise universal latency or whole-workspace above-fold density.
 ownership. 372 closes the sibling distribution-to-population barrier with checked ownership
 and exact selection intent.
 The [active roadmap](ROADMAP_2026_11_07.md) delivers bounded native histogram view reuse
-and selects 375 narrow grouped-row consolidation next. Broader native authoring remains
+and selects 376 observed unsupported metric discovery next. Broader native authoring remains
 separately scoped, and broker
 health still requires a pinned real instrument contract. See
 [facet contract](LARGE_FACET_INTERACTIONS.md) and [validation](../VALIDATION.md).
@@ -74,7 +82,7 @@ Hegel40, actual native/model and positive actor checks pass. Current RPC require
 Server plus nonempty current `rpc.system.name`; legacy-only metadata and Client
 populations are incompatible. Native templates remain separate. See
 [contract](CURRENT_RPC_VIEW_TEMPLATE.md) and [validation](../VALIDATION.md).
-368 and 369 are delivered; 370 is delivered; 371 native display reuse is delivered; 372 is delivered; 373 is delivered; 374 readiness is closed; 375 is current.
+368 and 369 are delivered; 370 is delivered; 371 native display reuse is delivered; 372 is delivered; 373 is delivered; 374 readiness is closed; 375 is delivered; 376 is current.
 
 366's compact retained-comparison headers pass matched desktop/narrow acceptance:
 the first positive timing bar is visible on fresh Compare at 464/759 px. All seven

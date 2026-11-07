@@ -17,9 +17,11 @@
 > checked Inspect/Apply and whole-question preservation.
 > **374 readiness is closed with exponential execution deferred** under the
 > [source/representation decision](EXPONENTIAL_HISTOGRAM_READINESS.md).
-> **Current: 375 narrow grouped-row identity/actions.** Prepared architecture and
-> design proposals retain existing table markup and leases. See the
-> [checkpoint reconciliation](reviews/ROADMAP_RECONCILIATION_372.md).
+> **375 grouped-row identity/actions are delivered**, with matched ordinary and
+> triage fit, native DOM and current leases.
+> **Current: 376 observed unsupported metric discovery**, then 377 exemplar
+> readiness/one reported trace link if closed, and 378 native failure/recovery.
+> See the [checkpoint reconciliation](reviews/ROADMAP_RECONCILIATION_375.md).
 > Do not turn blocked native grammar or broker research into a new executor,
 > compatibility layer or unbounded product platform.
 > Delivery notes below are retained history, not parallel active queues.

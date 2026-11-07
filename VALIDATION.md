@@ -1,5 +1,76 @@
 # Validation record
 
+## Group identity and actions together — 375
+
+Both grouped-record presenters opt into the existing stacked table layout.
+Action-bearing scalar/typed triage retains the same native table rows, anchors
+and leases; ordinary canonical groups keep their ScopedBreakdown presenter and
+existing local Select control. A passive `goo-chart[mobile-layout=stacked]`
+attribute forwards the opt-in to its inner `goo-table`. Other chart defaults,
+display grammar, source queries and schemas remain unchanged. Per-cell labels
+come from actual native headers. Literal marker lookalikes are quoted only for
+display; raw group values and child questions remain unchanged.
+
+All **1,309 frontend tests** pass, zero skips, in **26.027s**. Focused new and
+related component tests pass **12 tests** across actual chart/adapter/renderer
+paths, covering initial HTML, detached SPA properties, observed attribute updates,
+unknown/default values, optional numeric/duration cells and unavailable states.
+Existing 370 ownership tests also pass, and its actual builder/membership Hegel
+property passes **40 cases, 4.12s** (package **4.142s**), using Go 1.27.3. No
+production Go/API/dependency change is made; no new full-Go/schema run is claimed.
+
+The actual matched baseline uses the preserved reviewed 373 binary (374 changed
+no product code). One real ingestion supplies the identical fixed fixtures,
+questions and windows to both baseline and final runs. Parent groups and evidence
+bases match, including **11 ordinary logs, 10 scalar-triage logs and 13 typed
+triage spans**. The initial source proposal assumed ordinary groups used the
+fallback; live observation correctly identified the canonical chart-table path,
+which needed the explicit passive opt-in too.
+
+Baseline **27.3s**, final genuine journey plus actor **1.9m**, and existing 370
+four-context triage regression **1.2m** pass. Rebuilt assets/OpenAPI match source
+and health is good. At desktop 1280px, table widths remain **896/896**, **964/964**
+and **964/964** scroll/client pixels. At 390px:
+
+| Context | Baseline scroll/client width | Final scroll/client width |
+| --- | --- | --- |
+| Ordinary canonical groups | 724/262 | 262/262 |
+| Scalar triage | 605/322 | 322/322 |
+| Typed triage | 595/322 | 322/322 |
+
+Every supplied row was checked at both widths: all identity/count/control cells
+fit the viewport without clipping or horizontal pan. The chosen complete long
+rows use service **147**, exception type **133** and ordinary literal **154**
+characters; HTML-looking text, missing, empty and marker literals stay distinct.
+Viewport reflow preserves the same row/anchor/Select nodes and snapshots with
+zero reads. Ordinary Select remains its existing local action; no new per-row
+Inspect/Compare was invented there. Triage links have the changed **28px** minimum
+target height; ordinary Select retains its actual **26.5px** control height.
+
+Thirty-nine real boundaries cover layout/local selection, keyboard Tab/Enter,
+explicit staged child Run, service comparison, held Back and retired callbacks.
+The four original task frames are reviewed. Six actual Chrome AX snapshots expose
+native table/columnheader/row/cell roles; DOM scope/column/label associations are
+checked separately. This is bounded browser evidence, not exhaustive assistive-
+technology certification. Tall rows may require vertical scrolling.
+
+The 390px Bombadil campaign completes in **45.206s**, **737 observations/seven
+phases**: exact records/question, held parent/focus, whole row fit, unobstructed
+action center and no pan all true, **two explicit reads/zero writes**. Exit alone
+is insufficient. Baseline/final reports, raw AX evidence and fixture remain intact;
+repeated actor JPEGs are pruned, retaining compressed trace and a verified positive
+frame (final about 5.4 MiB, baseline 2.4 MiB).
+
+Required observed replay passes without skips in **6.66s** (package 6.672s):
+39 recorded facts across three contexts and six actual Chrome AX trees. Independent
+admission rejects moved/clipped action targets and changed child queries; the
+existing model checks navigation/read budgets and rejects an extra stage read.
+The matched baseline and original reports remain unchanged. See
+[contract](docs/GROUP_ROW_PRESENTATION.md),
+[storyboard](journeys/375-grouped-records-storyboard.md),
+[architecture](docs/reviews/GROUP_ROW_ACTIONS_ARCHITECTURE_375.md) and
+[design](docs/reviews/GROUP_ROW_ACTIONS_DESIGN_375.md).
+
 ## Exponential-histogram readiness — 374
 
 The source and representation gate closes with **general execution deferred**.

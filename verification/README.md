@@ -1,5 +1,24 @@
 # Semantic properties and model conformance
 
+## Grouped-row presentation (375)
+
+The real browser journey `journeys/375-grouped-records.spec.js` records matched
+baseline/final fixtures, native table geometry, Chrome AX diagnostics and actual
+navigation. The Bombadil actor requires positive completion. Run the recorded
+ledger check from this module with Quint available:
+
+```sh
+GOO_GROUPED_RECORDS_375_REPORT=../artifacts/grouped-records375/summary.json \
+GOO_GROUPED_RECORDS_375_BASELINE_REPORT=../artifacts/grouped-records375-baseline/summary.json \
+go test -run TestQuintGroupedRecordsObserved375 -count=1 -v
+```
+
+Independent admission checks geometry and exact scopes; the existing population
+model checks recorded navigation and read budgets. Mutants prove moved/clipped
+actions, changed child queries and extra stage reads are rejected. See the
+[storyboard](../journeys/375-grouped-records-storyboard.md) and
+[validation](../VALIDATION.md).
+
 ## Exponential source readiness (374)
 
 `python3 scripts/probe_exponential_histogram_374.py` validates the 13-point fixture

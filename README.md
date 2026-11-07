@@ -624,7 +624,9 @@ Find loaded metadata and Inspect compatibility before Apply. The bounded
 [exponential-histogram readiness gate](docs/EXPONENTIAL_HISTOGRAM_READINESS.md)
 is closed with execution deferred: the pinned source loses zero thresholds and
 optional presence, and the current native representation needs a distinct contract.
-Next is narrow grouped-row identity and actions.
+[Grouped rows](docs/GROUP_ROW_PRESENTATION.md) now keep identity, count and
+controls together on narrow screens through the existing table components.
+Next is explicit discovery of observed unsupported metric families.
 Whole-product reviews and proposed work are distinct from
 [validated delivery](VALIDATION.md).
 
