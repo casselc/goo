@@ -620,8 +620,11 @@ checks the exact selection intent, stages the complete child question and waits
 for Run. Back retains the parent without rereading and visibly pauses selection
 until an explicit parent Run.
 [Browse saved native displays](docs/NATIVE_VIEW_DISCOVERY.md) in Measurements,
-Find loaded metadata and Inspect compatibility before Apply. Next is the bounded
-exponential-histogram readiness gate.
+Find loaded metadata and Inspect compatibility before Apply. The bounded
+[exponential-histogram readiness gate](docs/EXPONENTIAL_HISTOGRAM_READINESS.md)
+is closed with execution deferred: the pinned source loses zero thresholds and
+optional presence, and the current native representation needs a distinct contract.
+Next is narrow grouped-row identity and actions.
 Whole-product reviews and proposed work are distinct from
 [validated delivery](VALIDATION.md).
 

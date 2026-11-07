@@ -1,0 +1,615 @@
+{
+  "version": "goo.exponentialHistogramProbeFixture374/1",
+  "unit": "1",
+  "cases": [
+    {
+      "case": "delta-first",
+      "metric": "delta",
+      "series": "delta",
+      "scale": 0,
+      "positive": {
+        "offset": -2,
+        "bucketCounts": [
+          "1",
+          "2",
+          "0",
+          "1"
+        ]
+      },
+      "negative": {
+        "offset": -3,
+        "bucketCounts": [
+          "2",
+          "0",
+          "1"
+        ]
+      },
+      "zeroCount": "2",
+      "zeroThreshold": "0.125",
+      "count": "9",
+      "timeStep": 1,
+      "startStep": 0,
+      "temporality": 1,
+      "flags": 0,
+      "observations": [
+        {
+          "value": "3/8",
+          "count": "1"
+        },
+        {
+          "value": "3/4",
+          "count": "1"
+        },
+        {
+          "value": "7/8",
+          "count": "1"
+        },
+        {
+          "value": "3",
+          "count": "1"
+        },
+        {
+          "value": "-3/16",
+          "count": "1"
+        },
+        {
+          "value": "-7/32",
+          "count": "1"
+        },
+        {
+          "value": "-3/4",
+          "count": "1"
+        },
+        {
+          "value": "-1/16",
+          "count": "1"
+        },
+        {
+          "value": "1/16",
+          "count": "1"
+        }
+      ]
+    },
+    {
+      "case": "delta-scale-change",
+      "metric": "delta",
+      "series": "delta",
+      "scale": 1,
+      "positive": {
+        "offset": -4,
+        "bucketCounts": [
+          "2",
+          "1",
+          "0"
+        ]
+      },
+      "negative": {
+        "offset": -2,
+        "bucketCounts": [
+          "1",
+          "2"
+        ]
+      },
+      "zeroCount": "1",
+      "zeroThreshold": "0.125",
+      "count": "7",
+      "timeStep": 2,
+      "startStep": 1,
+      "temporality": 1,
+      "flags": 0,
+      "observations": [
+        {
+          "value": "9/32",
+          "count": "1"
+        },
+        {
+          "value": "5/16",
+          "count": "1"
+        },
+        {
+          "value": "3/8",
+          "count": "1"
+        },
+        {
+          "value": "-5/8",
+          "count": "1"
+        },
+        {
+          "value": "-3/4",
+          "count": "1"
+        },
+        {
+          "value": "-7/8",
+          "count": "1"
+        },
+        {
+          "value": "0",
+          "count": "1"
+        }
+      ],
+      "min": "-0.875",
+      "max": "0.375"
+    },
+    {
+      "case": "cumulative-first",
+      "metric": "cumulative",
+      "series": "cumulative",
+      "scale": 2,
+      "positive": {
+        "offset": -8,
+        "bucketCounts": [
+          "1",
+          "0",
+          "2"
+        ]
+      },
+      "negative": {
+        "offset": -4,
+        "bucketCounts": [
+          "0",
+          "2"
+        ]
+      },
+      "zeroCount": "3",
+      "zeroThreshold": "0.125",
+      "count": "8",
+      "timeStep": 1,
+      "startStep": 0,
+      "temporality": 2,
+      "flags": 0,
+      "observations": [
+        {
+          "value": "9/32",
+          "count": "1"
+        },
+        {
+          "value": "3/8",
+          "count": "1"
+        },
+        {
+          "value": "13/32",
+          "count": "1"
+        },
+        {
+          "value": "-5/8",
+          "count": "1"
+        },
+        {
+          "value": "-11/16",
+          "count": "1"
+        },
+        {
+          "value": "-1/16",
+          "count": "1"
+        },
+        {
+          "value": "0",
+          "count": "1"
+        },
+        {
+          "value": "1/16",
+          "count": "1"
+        }
+      ],
+      "min": "-0.6875",
+      "max": "0.40625"
+    },
+    {
+      "case": "cumulative-grow",
+      "metric": "cumulative",
+      "series": "cumulative",
+      "scale": 2,
+      "positive": {
+        "offset": -8,
+        "bucketCounts": [
+          "2",
+          "1",
+          "4"
+        ]
+      },
+      "negative": {
+        "offset": -4,
+        "bucketCounts": [
+          "1",
+          "3"
+        ]
+      },
+      "zeroCount": "4",
+      "zeroThreshold": "0.125",
+      "count": "15",
+      "timeStep": 2,
+      "startStep": 0,
+      "temporality": 2,
+      "flags": 0,
+      "observations": [
+        {
+          "value": "9/32",
+          "count": "1"
+        },
+        {
+          "value": "3/8",
+          "count": "1"
+        },
+        {
+          "value": "13/32",
+          "count": "1"
+        },
+        {
+          "value": "-5/8",
+          "count": "1"
+        },
+        {
+          "value": "-11/16",
+          "count": "1"
+        },
+        {
+          "value": "-1/16",
+          "count": "1"
+        },
+        {
+          "value": "0",
+          "count": "1"
+        },
+        {
+          "value": "1/16",
+          "count": "1"
+        },
+        {
+          "value": "9/32",
+          "count": "1"
+        },
+        {
+          "value": "5/16",
+          "count": "1"
+        },
+        {
+          "value": "3/8",
+          "count": "1"
+        },
+        {
+          "value": "13/32",
+          "count": "1"
+        },
+        {
+          "value": "-9/16",
+          "count": "1"
+        },
+        {
+          "value": "-5/8",
+          "count": "1"
+        },
+        {
+          "value": "1/32",
+          "count": "1"
+        }
+      ],
+      "min": "-0.6875",
+      "max": "0.40625"
+    },
+    {
+      "case": "cumulative-reset",
+      "metric": "cumulative",
+      "series": "cumulative",
+      "scale": 2,
+      "positive": {
+        "offset": -8,
+        "bucketCounts": [
+          "1"
+        ]
+      },
+      "negative": {
+        "offset": -3,
+        "bucketCounts": [
+          "1"
+        ]
+      },
+      "zeroCount": "0",
+      "zeroThreshold": "0.125",
+      "count": "2",
+      "timeStep": 3,
+      "startStep": 2,
+      "temporality": 2,
+      "flags": 0,
+      "observations": [
+        {
+          "value": "9/32",
+          "count": "1"
+        },
+        {
+          "value": "-5/8",
+          "count": "1"
+        }
+      ],
+      "min": "-0.625",
+      "max": "0.28125"
+    },
+    {
+      "case": "coarse-scale",
+      "metric": "coarse",
+      "series": "coarse",
+      "scale": -2,
+      "positive": {
+        "offset": -1,
+        "bucketCounts": [
+          "3",
+          "1"
+        ]
+      },
+      "negative": {
+        "offset": -1,
+        "bucketCounts": [
+          "2"
+        ]
+      },
+      "zeroCount": "1",
+      "zeroThreshold": "0.0078125",
+      "count": "7",
+      "timeStep": 1,
+      "startStep": 0,
+      "temporality": 1,
+      "flags": 0,
+      "observations": [
+        {
+          "value": "1/8",
+          "count": "1"
+        },
+        {
+          "value": "1/4",
+          "count": "1"
+        },
+        {
+          "value": "1/2",
+          "count": "1"
+        },
+        {
+          "value": "2",
+          "count": "1"
+        },
+        {
+          "value": "-1/8",
+          "count": "1"
+        },
+        {
+          "value": "-1/4",
+          "count": "1"
+        },
+        {
+          "value": "0",
+          "count": "1"
+        }
+      ],
+      "min": "-0.25",
+      "max": "2"
+    },
+    {
+      "case": "scale-above-sdk20",
+      "metric": "fine",
+      "series": "fine",
+      "scale": 21,
+      "positive": {
+        "offset": -1,
+        "bucketCounts": [
+          "1"
+        ]
+      },
+      "negative": {
+        "offset": -1,
+        "bucketCounts": [
+          "1"
+        ]
+      },
+      "zeroCount": "0",
+      "zeroThreshold": "0.125",
+      "count": "2",
+      "timeStep": 1,
+      "startStep": 0,
+      "temporality": 1,
+      "flags": 0,
+      "observations": [
+        {
+          "value": "1",
+          "count": "1"
+        },
+        {
+          "value": "-1",
+          "count": "1"
+        }
+      ],
+      "min": "-1",
+      "max": "1"
+    },
+    {
+      "case": "threshold-small",
+      "metric": "threshold",
+      "series": "threshold-small",
+      "scale": 0,
+      "positive": {
+        "offset": 0,
+        "bucketCounts": [
+          "1"
+        ]
+      },
+      "negative": {
+        "offset": 0,
+        "bucketCounts": []
+      },
+      "zeroCount": "2",
+      "zeroThreshold": "0.125",
+      "count": "3",
+      "timeStep": 1,
+      "startStep": 0,
+      "temporality": 1,
+      "flags": 0,
+      "observations": [
+        {
+          "value": "3/2",
+          "count": "1"
+        },
+        {
+          "value": "0",
+          "count": "2"
+        }
+      ],
+      "sum": "1.5",
+      "min": "0",
+      "max": "1.5"
+    },
+    {
+      "case": "threshold-large",
+      "metric": "threshold",
+      "series": "threshold-large",
+      "scale": 0,
+      "positive": {
+        "offset": 0,
+        "bucketCounts": [
+          "1"
+        ]
+      },
+      "negative": {
+        "offset": 0,
+        "bucketCounts": []
+      },
+      "zeroCount": "2",
+      "zeroThreshold": "0.25",
+      "count": "3",
+      "timeStep": 1,
+      "startStep": 0,
+      "temporality": 1,
+      "flags": 0,
+      "observations": [
+        {
+          "value": "3/2",
+          "count": "1"
+        },
+        {
+          "value": "0",
+          "count": "2"
+        }
+      ],
+      "sum": "1.5",
+      "min": "0",
+      "max": "1.5"
+    },
+    {
+      "case": "optional-zero-omitted",
+      "metric": "optional",
+      "series": "optional-omitted",
+      "scale": 0,
+      "positive": {
+        "offset": 0,
+        "bucketCounts": []
+      },
+      "negative": {
+        "offset": 0,
+        "bucketCounts": []
+      },
+      "zeroCount": "1",
+      "zeroThreshold": "0.125",
+      "count": "1",
+      "timeStep": 1,
+      "startStep": 0,
+      "temporality": 1,
+      "flags": 0,
+      "observations": [
+        {
+          "value": "0",
+          "count": "1"
+        }
+      ]
+    },
+    {
+      "case": "optional-zero-recorded",
+      "metric": "optional",
+      "series": "optional-recorded",
+      "scale": 0,
+      "positive": {
+        "offset": 0,
+        "bucketCounts": []
+      },
+      "negative": {
+        "offset": 0,
+        "bucketCounts": []
+      },
+      "zeroCount": "1",
+      "zeroThreshold": "0.125",
+      "count": "1",
+      "timeStep": 1,
+      "startStep": 0,
+      "temporality": 1,
+      "flags": 0,
+      "observations": [
+        {
+          "value": "0",
+          "count": "1"
+        }
+      ],
+      "sum": "0",
+      "min": "0",
+      "max": "0"
+    },
+    {
+      "case": "large-uint64",
+      "metric": "large",
+      "series": "large",
+      "scale": 0,
+      "positive": {
+        "offset": 0,
+        "bucketCounts": [
+          "9007199254740993",
+          "0"
+        ]
+      },
+      "negative": {
+        "offset": -1,
+        "bucketCounts": [
+          "2"
+        ]
+      },
+      "zeroCount": "3",
+      "zeroThreshold": "0.125",
+      "count": "9007199254740998",
+      "timeStep": 1,
+      "startStep": 0,
+      "temporality": 1,
+      "flags": 0,
+      "observations": [
+        {
+          "value": "3/2",
+          "count": "9007199254740993"
+        },
+        {
+          "value": "-3/4",
+          "count": "2"
+        },
+        {
+          "value": "0",
+          "count": "3"
+        }
+      ],
+      "min": "-0.75",
+      "max": "1.5"
+    },
+    {
+      "case": "no-recorded-value",
+      "metric": "unknown",
+      "series": "unknown",
+      "scale": 0,
+      "positive": {
+        "offset": 0,
+        "bucketCounts": []
+      },
+      "negative": {
+        "offset": 0,
+        "bucketCounts": []
+      },
+      "zeroCount": "0",
+      "zeroThreshold": "0.125",
+      "count": "0",
+      "timeStep": 1,
+      "startStep": 0,
+      "temporality": 1,
+      "flags": 1,
+      "observations": []
+    }
+  ]
+}

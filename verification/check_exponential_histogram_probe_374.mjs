@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
+import {verifyExponentialHistogramProbe,checkProbeNegativeControls} from './exponential_histogram_probe_374.mjs';
+const started=performance.now(),reportPath=process.argv[2]??fileURLToPath(new URL('../artifacts/exponential-histogram374/report.json',import.meta.url)),report=JSON.parse(fs.readFileSync(reportPath,'utf8')),raw=fs.readFileSync(path.join(path.dirname(reportPath),'otlp.json'));
+assert.equal(createHash('sha256').update(raw).digest('hex'),report.inputSHA256,'recorded OTLP bytes changed');assert.deepEqual(JSON.parse(raw),report.input,'report input differs from retained OTLP bytes');
+const verdict={...verifyExponentialHistogramProbe(report),negativeControls:checkProbeNegativeControls(report),inputSHA256:report.inputSHA256,durationMs:performance.now()-started};
+process.stdout.write(JSON.stringify(verdict,null,2)+'\n');

@@ -1,5 +1,58 @@
 # Validation record
 
+## Exponential-histogram readiness — 374
+
+The source and representation gate closes with **general execution deferred**.
+Collector Contrib 0.123.0 exporter source is pinned to commit
+`bef0a5cfb993608bbcce1eb5859c37295ac8eed2`, with inspected file hashes and an
+independent official OTLP v1.11.0 module pin. The existing collector configuration
+already names `otel_metrics_exp_histogram`; configuration alone was not treated as
+proof of live ingestion or faithful storage.
+
+The offline fixture check passes using independent Fraction arithmetic over
+compressed rational observations. The actual probe sends **13 valid points** to
+the existing collector; all **13 rows** persist after two polls. It records the
+actual image/version, live DESCRIBE/SHOW CREATE, exact OTLP bytes and raw rows.
+No collector, table schema or product code changes were made. Only uniquely
+scoped test data were appended; existing lab data remain untouched.
+
+The separate verifier passes in **35.33ms** and rejects **seven controls**:
+swapped populations, dropped/duplicated rows, rounded counts, nanosecond changes,
+offset changes and altered point-presence metadata. It checks the retained input
+SHA-256 and exact input equality before inspecting the report. Original
+observations remain `observed-unjudged`; the verdict is a separate artifact.
+
+Actual retained fields include counts/arrays above 2^53 (positive mass
+**9007199254740993**, total **9007199254740998**), signed offsets, scale, flags,
+temporality, string-valued qualified resource/scope identity and all nine timestamp
+digits. Delta scale changes and cumulative growth/reset are observed source
+fields, not implemented interval evaluation.
+
+Two real collisions expose source loss: distinct **0.125/0.25 zero thresholds**
+have identical projected stored payloads, and absent Sum/Min/Max collapse to the
+same non-nullable zeros as reported zero. The pinned source independently explains
+both behaviors. The configuration checksum names the repository bind-mount
+file; it is not an applied-process configuration attestation. Useful raw evidence
+and the independent verdict occupy about **84 KiB** locally.
+
+The current native explicit-duration kernel uses finite nonnegative binary64
+bounds projected as exact rationals. General exponential buckets can require
+irrational endpoints and mixed positive/negative/zero closure. Neither rounding
+nor a table alias closes that boundary. No executable exponential adapter,
+source-to-chart alias or new evaluator is claimed. Go 1.27.3 remains pinned;
+there are no production/runtime/dependency changes to regression-test this round.
+Browser, Hegel and Quint success traces were not fabricated for an unimplemented
+path. The prior product suites are retained; the actual source probe and independent
+negative controls are the relevant checks for this readiness decision.
+
+See [decision and reproduction](docs/EXPONENTIAL_HISTOGRAM_READINESS.md),
+[source review](docs/reviews/EXPONENTIAL_HISTOGRAM_SOURCE_374.md) and
+[representation review](docs/reviews/EXPONENTIAL_HISTOGRAM_REPRESENTATION_374.md).
+The next bounded consolidation has prepared
+[architecture](docs/reviews/GROUP_ROW_ACTIONS_ARCHITECTURE_375.md) and
+[design](docs/reviews/GROUP_ROW_ACTIONS_DESIGN_375.md) proposals; no UI change is
+claimed yet.
+
 ## Contextual native-view discovery — 373
 
 Saved native Histogram/Table configurations can now be browsed inside the existing

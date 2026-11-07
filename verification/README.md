@@ -1,5 +1,20 @@
 # Semantic properties and model conformance
 
+## Exponential source readiness (374)
+
+`python3 scripts/probe_exponential_histogram_374.py` validates the 13-point fixture
+offline using independent Fraction arithmetic. Explicit `--run` inspects the
+existing collector/table, posts uniquely scoped real OTLP data, and retains raw
+input/schema/rows without assigning an execution-support verdict.
+
+`node verification/check_exponential_histogram_probe_374.mjs
+artifacts/exponential-histogram374/report.json` independently verifies exact source
+retention and seven corrupted-report controls. The original observation report
+and OTLP bytes remain unchanged; write the printed verdict separately if retaining
+it. General execution is deferred for documented source loss and native geometry
+limitations. No synthetic browser/model trace is evidence of support; see the
+[readiness decision](../docs/EXPONENTIAL_HISTOGRAM_READINESS.md).
+
 ## Native-view discovery (373)
 
 `TestHegelNativeHistogramCatalog373` checks actual Go catalog pages against

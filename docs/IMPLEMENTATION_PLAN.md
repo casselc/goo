@@ -15,8 +15,10 @@
 > planner-intent admission and visibly paused held return.
 > **373 contextual native-view discovery is delivered**, with bounded metadata,
 > checked Inspect/Apply and whole-question preservation.
-> **Current: 374 exponential-histogram readiness**, then 375 narrow grouped-row
-> identity/actions. See the
+> **374 readiness is closed with exponential execution deferred** under the
+> [source/representation decision](EXPONENTIAL_HISTOGRAM_READINESS.md).
+> **Current: 375 narrow grouped-row identity/actions.** Prepared architecture and
+> design proposals retain existing table markup and leases. See the
 > [checkpoint reconciliation](reviews/ROADMAP_RECONCILIATION_372.md).
 > Do not turn blocked native grammar or broker research into a new executor,
 > compatibility layer or unbounded product platform.
