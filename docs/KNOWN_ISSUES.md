@@ -1,5 +1,14 @@
 # Known issues and gaps
 
+365's readiness gate is accepted, with a production absolute captured-record
+resolver and a private file-publication/reopen proof. The reviewed-label task
+itself remains unimplemented: no task/decision/manifest HTTP family, contextual
+review UI or downloadable export is shipped. Pinned branches mean selected
+historical assertions, not current/global consensus; unknown concurrent branches
+are not claimed absent. See [gate](CAPTURE_RECORD_REVIEW_GATE.md) and
+[validation](../VALIDATION.md). Next is the one bounded task workflow; 366 remains
+the fallback if implementation grows beyond its closed contract.
+
 364 connects saved counter/histogram export intervals to explicit fresh record
 context, with exact bounds/identity and a return to unchanged captured evidence.
 UI, generated ownership, genuine native/recorded-fact model replay and positive

@@ -3,6 +3,9 @@
 > Implemented foundation: [cross-product tags/notes and optional retention of selected
 > saved-capture or exact live-page observations](WORKBENCH_ANNOTATIONS.md). Reviewed
 > training labels, vocabularies and dataset exports below remain proposed.
+> The [365 readiness gate](CAPTURE_RECORD_REVIEW_GATE.md) now proves exact
+> capture-member resolution and a private pinned-branch publication prototype;
+> it does not deliver the reviewed-label UI/API/export workflow.
 
 
 Observation-focused design note, 2026-10-22 UTC. Its delivery sequence applies to

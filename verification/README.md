@@ -4133,3 +4133,35 @@ required observed gate in the genuine
 [journey](../docs/journeys/364-saved-native-context.md), using the reviewed
 `GOO_GENERIC_BINARY`. See [contract](../docs/SAVED_NATIVE_RECORD_CONTEXT.md) and
 [validation](../VALIDATION.md) for current execution status and bounded claims.
+
+## Captured-record review readiness — 365
+
+Focused resolver/private-publication demonstrations and forty generated resolver
+cases pass. The main Go suite also passes; this is readiness validation,
+not a UI/HTTP/export feature or review lifecycle campaign.
+
+```sh
+go test ./exploration -run '^TestResolveCapturedRecordAbsoluteOccurrence365$' -count=1
+go test ./workbench -run '^TestCapturedReviewPublicationReadiness365$' -count=1
+go -C verification test -run '^TestHegelCapturedRecord365$' -count=1 .
+```
+
+The public resolver tests use actual bounded verified capture loading and absolute
+retained occurrence selection. Independent raw rows/indexes/hashes check duplicate
+payloads, second-page mapping, caller mutation isolation, exact large numeric/time
+tokens, counts/limits and corrupt/missing/invalid/out-of-range refusal. No telemetry
+or producer-conformance claim follows from these file fixtures.
+
+`workbench/capture_review_gate_test.go` is a private prototype, not registered
+production task/decision/manifest artifact families. It exercises real file
+publication/load, verifies content-addressed winners, preserves concurrent forks,
+requires explicit known-head resolution, refuses ineligible review states and
+checks pinned old-manifest stability after later withdrawal. It also checks exact
+JSONL-ready numeric tokens and the existing 128 KiB publication refusal bound.
+The selected branch/known-head snapshot does not prove global latest consensus.
+
+No browser screenshots or new model are needed for nonexistent review controls.
+Full review UI/HTTP publication/export will require its own meaningful target,
+revision and actual-journey acceptance after this gate. See
+[contract, Go usage and planned storyboard](../docs/CAPTURE_RECORD_REVIEW_GATE.md)
+and [validation](../VALIDATION.md) for gate status and the unimplemented boundary.

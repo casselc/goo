@@ -1942,3 +1942,29 @@ work and restores the held saved capture/interval/focus/scroll without a metric 
 store read. Saving/sharing the child alone does not persist its native citation.
 No new HTTP endpoint, source query, kernel, wire format or global navigation owner.
 See [contract and data-flow diagram](SAVED_NATIVE_RECORD_CONTEXT.md).
+
+## Captured-record review readiness — 365
+
+The readiness foundation is delivered; the full review feature is not.
+`exploration.CaptureStore.ResolveRecord(CaptureRecordRef{CaptureID, Index})` uses
+existing bounded, content-verified capture loading and a zero-based absolute
+position in the retained logs/spans bank. It returns caller-owned raw JSON,
+SHA-256, receipt, source clock/basis/state and full/retained count metadata.
+Duplicates at different positions remain distinct references even when raw hashes
+match. No telemetry, browser-supplied row or floating-point reconstruction grants
+evidence authority.
+
+`workbench/capture_review_gate_test.go` is a private readiness prototype using the
+existing file publisher/reader. It demonstrates immutable task/decision/manifest
+bytes, concurrent append-only branches, explicit resolution over supplied known
+heads, pinned old-manifest stability and exact-number projection under the 128 KiB
+artifact bound. It verifies a loaded content-addressed winner rather than trusting
+a successful filename collision. It is neither production artifact validation nor
+a consensus/current-head service.
+
+Focused demonstrations and forty generated resolver cases pass; the main Go
+suite also passes. Production task/decision/manifest families, HTTP
+routes, review UI and downloadable export remain unimplemented. The closed next
+contract is explicit pinned branches, not automatic latest labels or global
+consensus. Reuse existing storage without requiring XTDB; ordinary notes/tags do
+not become judgments. See [contract, Go usage and planned storyboard](CAPTURE_RECORD_REVIEW_GATE.md).

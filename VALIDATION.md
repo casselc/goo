@@ -1,5 +1,55 @@
 # Validation record
 
+## Captured-record review readiness — 365 gate
+
+The bounded contract is accepted by independent architecture and design reviews.
+Only `CaptureStore.ResolveRecord(CaptureRecordRef)` is new production capability:
+it verifies the bounded immutable capture, selects an absolute retained occurrence
+of ordinary logs/spans, and returns detached raw JSON, row hash and provenance.
+A page-two row zero resolves as absolute index 100; duplicate payloads keep
+separate occurrence references. No telemetry query, HTTP route, UI control or
+production task/review/export store was added.
+
+The main Go suite passes with Go 1.27.3 (`go test -p 2 ./...`), including cmd/goo
+9.604s, exploration 4.889s and workbench 1.406s; unchanged packages may be cached.
+The focused resolver test covers logs/spans, duplicate positions 0/100, page
+mapping, exact integer tokens above 2^53, detached bytes/receipt, full versus
+retained counts and limits, unsupported capture family, invalid/missing references
+and actual capture corruption. It reads synthetic content-hashed stored fixtures,
+not a claimed new OTLP/browser journey.
+
+The private workbench publication demonstration passes. It uses existing real file
+primitives for task content, concurrent same-parent branches, explicit known-head
+resolution and pinned manifest publication. Uncertain, abstaining, unreviewed,
+disputed and withdrawn decisions are excluded by the demonstrated label policy.
+Later withdrawal does not rewrite the old manifest. The final export proof
+reloads pinned task and decision IDs, verifies their hash/target/task/record join
+and exports the stored label with unchanged raw numeric tokens. Three foreign
+join controls refuse task, target and digest changes. Overflow beyond 128 KiB and
+a forged existing publication winner refuse adoption. Final focused pinned-export
+check: **0.013s**. This is test-only contract evidence, not a production validator,
+annotation service or downloadable exporter. It uses `sync.WaitGroup.Go` for the
+concurrent publication proof; the public resolver uses ordinary structs and
+`bytes.Clone`, without advanced user-facing type machinery.
+
+Forty Hegel cases pass in **0.62s** (package 0.631), zero skips, through actual
+public Load/ResolveRecord with independently formed stored fixture identities.
+They vary raw banks, second-page/last indexes and duplicate payloads, asserting
+exact bytes, occurrence identity, metadata, clone isolation, bounds and corruption
+refusal. No production review lifecycle exists yet, so no model/state/swarm or
+browser acceptance is claimed. UI assets/screenshots remain unchanged. New docs
+include a contract diagram and explicitly planned user storyboard, linking only
+the already-implemented captured inspector; there are no fabricated review frames.
+
+The gate closes selected-branch semantics, not current/latest/global consensus.
+Unknown unselected/concurrent branches are not declared absent; old pinned
+manifests remain historical after later correction. Full public schemas/reference
+validation, verified publication/retry behavior, API/UI and bounded export still
+need implementation under this contract. See [gate and Go example](docs/CAPTURE_RECORD_REVIEW_GATE.md),
+[architecture](docs/reviews/CAPTURE_REVIEW_ARCHITECTURE_365.md) and
+[design](docs/reviews/CAPTURE_REVIEW_DESIGN_365.md).
+
+
 ## Saved native interval context — 364
 
 Saved counter/histogram export intervals now stage the existing exact record

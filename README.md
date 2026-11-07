@@ -599,10 +599,13 @@ explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-eva
 The [active roadmap](docs/ROADMAP_2026_11_05.md) adopts the
 [363 whole-product reconciliation](docs/reviews/ROADMAP_RECONCILIATION_363.md):
 364 saved native interval → supporting records is delivered with native/model,
-actor and shared kept-context regression checks. Next is one captured-record
-review task only after its
-contract closes, then measured compact comparison headers. An unclosed review-task
-gate does not block that known layout improvement.
+actor and shared kept-context regression checks. The
+[365 readiness foundation](docs/CAPTURE_RECORD_REVIEW_GATE.md) now resolves exact
+captured occurrences and demonstrates bounded pinned-review file publication;
+full task-review UI/HTTP/artifacts/export are not implemented. After remaining
+gate checks, build that one bounded task, then measured compact comparison
+headers. If review scope grows beyond the closed contract, defer it and advance
+that known layout improvement.
 
 Go library entry points: `subjectfacts` provides portable prepared-fact aggregation
 and offline ClickHouse/Databricks compilation; `measurements` binds/evaluates native

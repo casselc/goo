@@ -6,11 +6,13 @@
 > current RPC capability parity—is delivered with its own recorded acceptance.
 > [364 saved native interval → supporting records](SAVED_NATIVE_RECORD_CONTEXT.md)
 > is delivered with UI/generated/native/model/actor and shared kept-context
-> regression checks. Next: 365 one captured-record review task (depth, strict contract-
-> first gate), then 366 measured compact paired evidence headers (consolidation).
-> Those later outcomes remain proposed, not implemented by this plan.
-> If 365's bounded target/revision/file-publication contract cannot close, defer it
-> explicitly and advance 366. Review the whole product again after this sequence.
+> regression checks. [365's readiness foundation](CAPTURE_RECORD_REVIEW_GATE.md)
+> is delivered: the Go resolver and private bounded-publication demonstrations
+> pass focused/generated checks; the main Go suite also passes.
+> Full one-task review UI/HTTP/artifact/export delivery is not implemented and is
+> next after gate acceptance. Then 366 measured compact paired evidence headers.
+> If review scope grows beyond the bounded contract, defer it explicitly and
+> advance 366. Review the whole product again after this sequence.
 > Delivery notes below are retained history, not parallel active queues.
 
 
