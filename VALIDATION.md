@@ -1,5 +1,25 @@
 # Validation record
 
+## Whole-product checkpoint — 363
+
+Independent architecture and design/product reviews reassess the complete product
+and prior unfinished plans after the delivered 360–362 sequence. They retire
+already-delivered capture/waterfall/comparison/RPC gaps and preserve actual bounds.
+The adopted reconciliation selects saved native interval context, a contract-gated
+captured-record review task, and measured compact comparison headers. The review
+task may defer rather than block the known layout improvement if its immutable
+target/task/review/export contract cannot remain bounded. Broker backlog needs a
+pinned exporter and identity contract before implementation; broad receiver and
+verified workload totals are not inferred from existing resource views.
+
+This checkpoint changes documentation and execution order only. No production
+code, browser run or external vendor/convention research is claimed. Links and
+whitespace are checked; the previous 362 runtime results remain their own record.
+See [architecture](docs/reviews/WHOLE_PRODUCT_ARCHITECTURE_363.md),
+[design/product](docs/reviews/WHOLE_PRODUCT_DESIGN_363.md) and
+[adopted reconciliation](docs/reviews/ROADMAP_RECONCILIATION_363.md).
+
+
 ## Current RPC capability parity — 362
 
 Services and Measurements now share the exact name/type/unit check for

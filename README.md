@@ -592,8 +592,12 @@ For supplied native observations, `measurements.Evaluate(question, rows, at)` is
 storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
 
-Current priorities and acceptance are in the [2026-10-30 roadmap](docs/ROADMAP_2026_10_30.md),
-reconciled against [six delegated reviews](docs/reviews/INDEPENDENT_REVIEW_SUMMARY_236.md).
+The [active roadmap](docs/ROADMAP_2026_11_05.md) adopts the
+[363 whole-product reconciliation](docs/reviews/ROADMAP_RECONCILIATION_363.md):
+saved native interval → supporting records, then one captured-record review task
+only after its target/revision contract closes, followed by measured compact
+comparison headers. These are proposed deliveries; an unclosed review-task gate
+does not block the known layout improvement.
 
 Go library entry points: `subjectfacts` provides portable prepared-fact aggregation
 and offline ClickHouse/Databricks compilation; `measurements` binds/evaluates native

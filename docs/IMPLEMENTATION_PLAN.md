@@ -1,18 +1,14 @@
 # Implementation plan
 
-> Active execution order: [November 5 whole-product roadmap](ROADMAP_2026_11_05.md).
-> The 351 sequence closes with 354 widget recovery. The 355 whole-product checkpoint
-> selects 356 service-context authored templates and 357 a pinned current RPC
-> profile, followed by 358 evidence-first fixed-question presentation (all delivered).
-> The 359 whole-product checkpoint is complete. Its adopted next sequence is
-> 360 captured span-page waterfalls (breadth), 361 retained-page comparison
-> (depth), then 362 current RPC capability parity (consolidation). 360 and
-> [361 retained span-page comparison](RETAINED_PAGE_COMPARISON.md) are delivered.
-> UI, Hegel, native/model and positive actor checks pass for those two cuts.
-> [362 current RPC capability parity](RPC_CAPABILITY_PARITY.md) is delivered with
-> generated/native/model and positive actor checks, including frozen reopening.
-> The planned whole-product checkpoint is in progress, including compact
-> comparison provenance. No subsequent feature sequence is selected yet.
+> Active execution order: [November 5 roadmap](ROADMAP_2026_11_05.md), updated by
+> the adopted [363 reconciliation](reviews/ROADMAP_RECONCILIATION_363.md).
+> The 359 sequence—360 captured span pages, 361 retained-page comparison and 362
+> current RPC capability parity—is delivered with its own recorded acceptance.
+> Next: 364 saved native interval → supporting records (breadth), 365 one captured-
+> record review task (depth, strict contract-first gate), then 366 measured compact
+> paired evidence headers (consolidation). None is implemented by this plan.
+> If 365's bounded target/revision/file-publication contract cannot close, defer it
+> explicitly and advance 366. Review the whole product again after this sequence.
 > Delivery notes below are retained history, not parallel active queues.
 
 

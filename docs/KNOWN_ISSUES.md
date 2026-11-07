@@ -33,11 +33,16 @@ in matched frames, but still begin below the fold. The stale final Bombadil JPEG
 is a driver diagnostic; genuine Playwright frames establish appearance. See
 [contract](FIXED_QUESTION_PRESENTATION.md) and [validation](../VALIDATION.md).
 
-The adopted [359 reconciliation](reviews/ROADMAP_RECONCILIATION_359.md) selects
-source-free captured span-page waterfalls, then retained-page comparison and
-current RPC capability parity. 360's captured inspection, 361's retained-page comparison and 362's current RPC
-capability parity are delivered. The whole-product checkpoint is in progress. Existing pod/container defaults are delivered;
-broader receiver coverage and verified workload ownership remain separate.
+The 359 sequence's captured inspection, retained-page comparison and current RPC
+capability parity are delivered. The adopted
+[363 reconciliation](reviews/ROADMAP_RECONCILIATION_363.md) selects saved-native
+interval context, a strictly contract-gated captured-record review task, then
+measured compact paired headers. None is delivered by the review. If the new
+capture-member/task/revision/file-publication contract cannot close, defer that
+review task and advance the known layout improvement. Existing pod/container
+defaults are delivered; broader receiver coverage and verified ownership remain
+separate. See the [architecture](reviews/WHOLE_PRODUCT_ARCHITECTURE_363.md) and
+[design](reviews/WHOLE_PRODUCT_DESIGN_363.md) reviews.
 
 357 implements the pinned current RPC profile. Go/UI/API, generated/read-only SQL,
 native/model and focused actor checks pass. Current records require Server
