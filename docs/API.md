@@ -28,6 +28,13 @@ replacement record bytes, evidence hashes or recording clocks. Export is bounded
 NDJSON with original raw numeric tokens. See the [review contract](CAPTURE_RECORD_REVIEW.md)
 for explicit branch semantics, review eligibility and limits.
 
+Current RPC template reuse extends the existing `/view-templates/expand` route
+with preset `otel.rpc-server-current-methods` and profile `otel.rpc-server-current`.
+The server requires an exact service, Server-kind conjunct and nonempty current
+`rpc.system.name`; `rpc.method` remains conditional. Shipped and authored arms
+remain exclusive. Expansion and metadata save/load perform no telemetry read;
+Run retains the complete destination query. See [current RPC reusable views](CURRENT_RPC_VIEW_TEMPLATE.md).
+
 ```mermaid
 flowchart LR
   Browser[Browser or API client] --> Entry[Single Go HTTP server]

@@ -1,5 +1,70 @@
 # Validation record
 
+## Current RPC reusable views — 367
+
+The existing template flow now supports shipped `otel.rpc-server-current-methods`
+and authored `otel.rpc-server-current`. Go/UI/API agree on exact service, Server
+kind and nonempty current `rpc.system.name`; missing/empty/`_OTHER` methods remain
+populations. Expansion retains the whole destination question and supplies only
+presentation/category binding. No new endpoint, renderer or evaluator is added.
+Source architecture/design and original-frame reviews accept the bounded
+integration; genuine native/actor/model acceptance passes.
+
+The main Go suite passes with Go 1.27.3 (`go test -p 2 ./...`; cmd/goo 11.445s,
+workbench 1.580s). Focused backend/template regressions pass in 0.033s and direct
+source-free HTTP tests in 0.023s. Four actual HTTP fixture responses cover shipped
+expansion, save/load and authored expansion; three POST bodies are schema-checked.
+A transport spy rejects any network use during configuration. The OpenAPI checker
+passes 108 operations, 467 actual fixture responses, 183 admitted requests and
+28 mux refusals. New current-RPC enum/profile controls reject unsupported aliases.
+Hegel forty generated scope/role variants pass in 0.30s, zero skips; the reused
+356 Quint protocol wrapper passes in 6.64s (package 6.651s), zero skips. The new
+observed adapter is compiled and projects actual names and source counters into
+that existing model rather than replaying a declared fixed script.
+
+The first genuine native run exposed a product bug before Customize: the
+service dashboard's bespoke strict query comparison rejected Go's inert empty
+scalar environment alongside an otherwise identical typed selector, suppressing
+an actual positive Server/current-system witness. Record matching now reuses
+canonical question identity with environment validation; native measurement
+matching remains strict and separate. All four typed policy forms accept valid
+Go defaults while real policy/window/group/service/predicate/current-key changes,
+conflicting scalars and mixed-row witnesses refuse. The final full UI suite
+passes **1,257 tests**, zero skips, in 14.887s. The rebuilt image is healthy and
+its three changed UI assets plus embedded OpenAPI match the checkout exactly.
+The final genuine journey passes in **60.521s** (runner 63.634s); required observed
+replay passes in **4.85s** (package 4.862s), zero skips. The six actual target
+boundaries project their own names and source counters into the existing 356
+model; direct source/order mutations and changed destination scope are rejected.
+Source Customize, editing/save and target Inspect/Apply are metadata-only.
+Explicit Run acquires exactly six independent raw-oracle IDs totaling 210 ms,
+including missing, empty, `_OTHER`, qualified, dual-RPC-key and legacy-resource
+observations. Client, legacy-only RPC, empty current system, conflicting current
+environment, wrong namespace and out-of-window records remain excluded.
+
+Three actual Go metadata refusals, one visible incompatible Client destination,
+an old Apply callback and a held genuine factory-200 response prove role/refusal
+and owner-generation boundaries. The held service DOM/read receipts and original
+saved definition remain unchanged. The complete journey has 56 browser API calls,
+21 source acquisitions and 64 proxy SQL reads across discovery/service loading;
+those are separate from the six modeled target actions (zero source deltas except
+explicit Run's one). This is not a claim of source-free discovery.
+
+The focused 35-second Bombadil run reaches positive visible completion across
+**602 snapshots/10 phases**. Actual staging records show the List presentation and
+current-RPC binding; the returned service records show visible held method evidence,
+exact target question, six records/210 ms, preserved parent and no forbidden
+publications. It has seven setup source calls and one explicit Run (7 → 8);
+Use/Inspect/Apply/Return add none. Test state snapshots allow the legitimately
+absent composition on an incompatible client and observe List configuration at
+staging, rather than after Return hides that workspace. No budget or semantic
+assertion was relaxed. Three genuine task-positioned desktop/390px frames are
+reviewed; the List lies below the applied chart and is not claimed visible in its
+cropped frame. Lab data, volumes and 51 pre-existing stale pending entries remain.
+See [contract](docs/CURRENT_RPC_VIEW_TEMPLATE.md) and
+[storyboard](docs/journeys/367-current-rpc-template.md).
+
+
 ## Compact paired evidence headers — 366
 
 The retained comparison now presents compact independent Baseline/Selected

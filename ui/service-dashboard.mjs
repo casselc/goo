@@ -1,6 +1,7 @@
 import * as SourceRefusal from './source-refusal.mjs';
 import {renderRefusal} from './source-refusal-view.mjs';
 import * as RecordEnvironment from './record-environment.mjs';
+import {identity as questionIdentity} from './question-session.mjs';
 import * as RecordAggregateProtocol from './record-aggregate-protocol.mjs';
 import './time-bars.mjs';
 /* Dashboard widgets execute existing typed questions; planning never reads telemetry. */
@@ -27,7 +28,7 @@ function state(kind,text,cls){const e=node('goo-result-state',text,cls);e.setAtt
 function question(widget){return widget.query?{kind:'explore',explore:clone(widget.query)}:{kind:'measurement',measurement:clone(widget.measurement)}}
 function step(widget){return widget.query?Workspace.recordStep(widget.query):Workspace.measurementStep(widget.measurement)}
 function sameScope(a,b){const identity=ServiceIdentity;return identity.same(a?.namespace,b?.namespace)&&RecordEnvironment.sameQuestionEnvironment(a,b)&&a?.fromMs===b?.fromMs&&a?.toMs===b?.toMs}
-function matches(widget,data){const q=widget.query||widget.measurement,r=data.question;if(!r)return false;const stable=x=>{if(Array.isArray(x))return x.map(stable);if(x&&typeof x==='object')return Object.fromEntries(Object.keys(x).sort().filter(k=>x[k]!==undefined).map(k=>[k,stable(x[k])]));return x};return JSON.stringify(stable(q))===JSON.stringify(stable(r))}
+function matches(widget,data){const q=widget.query||widget.measurement,r=data.question;if(!r)return false;if(widget.query){try{RecordEnvironment.selection(q);RecordEnvironment.selection(r);return questionIdentity(q)===questionIdentity(r)}catch{return false}}const stable=x=>{if(Array.isArray(x))return x.map(stable);if(x&&typeof x==='object')return Object.fromEntries(Object.keys(x).sort().filter(k=>x[k]!==undefined).map(k=>[k,stable(x[k])]));return x};return JSON.stringify(stable(q))===JSON.stringify(stable(r))}
 // Keep the established service adapter signature and transport object identity.
 function recordAggregates(widget,data){return RecordAggregateProtocol.recordAggregates(widget.query,data);}
 const native=()=>NativePresentation;

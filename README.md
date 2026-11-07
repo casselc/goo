@@ -282,7 +282,10 @@ Dirty or invalid drafts stay visible until an explicit valid Run. See
 HTTP, [current and older OTel RPC](docs/CURRENT_RPC_PROFILE_357.md) server-span views, current-key database
 client dependencies, and separate messaging consumer/producer views. Discover a service, inspect activity, recorded span errors,
 duration and literal route/method/database/destination populations, then narrow the scope and
-open a trace. All spans remains available; native metrics retain separate units,
+open a trace. [Current RPC reusable views](docs/CURRENT_RPC_VIEW_TEMPLATE.md) let a
+service's method presentation be edited/saved and applied to another exact
+compatible service scope, with missing/empty methods retained and Run explicit.
+All spans remains available; native metrics retain separate units,
 streams and intervals. Measurements now describes the same
 [current RPC duration candidate](docs/RPC_CAPABILITY_PARITY.md) using the pinned
 Histogram/seconds shape and bounded attribute coverage. Recognition remains
@@ -608,8 +611,9 @@ revisions, and download a historical pinned JSONL manifest. Native browser/model
 passes; [validation](VALIDATION.md) records checks and limits.
 366's compact comparison headers are delivered with matched desktop/narrow
 measurements. The [366 reconciliation](docs/reviews/ROADMAP_RECONCILIATION_366.md)
-selects reusable current RPC service views, native service interval context, and
-a measured large-facet interaction budget as the next finite sequence.
+selects the next finite sequence: 367 reusable current RPC views is delivered;
+368 native service interval context and 369 measured large-facet interaction
+budgets remain next.
 
 Go library entry points: `subjectfacts` provides portable prepared-fact aggregation
 and offline ClickHouse/Databricks compilation; `measurements` binds/evaluates native

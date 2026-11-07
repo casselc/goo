@@ -8,9 +8,11 @@ import * as Timeline from './timeline-declaration.mjs';
 import * as CapturedCount from './captured-count-comparison.mjs';
 const presets={
  'http-server':{id:'otel.http-server-routes',group:'http.route',label:'HTTP route view'},
- 'db-client':{id:'otel.db-client-operations',group:'db.operation.name',label:'database client view'}
+ 'db-client':{id:'otel.db-client-operations',group:'db.operation.name',label:'database client view'},
+ 'rpc-server-current':{id:'otel.rpc-server-current-methods',group:'rpc.method',label:'current RPC method view'}
 };
-export const profiles=Object.freeze({'ordinary':'Ordinary records','otel.db-client':'OTel database client spans','otel.http-server':'OTel HTTP server spans'});
+export const profiles=Object.freeze({'ordinary':'Ordinary records','otel.db-client':'OTel database client spans','otel.http-server':'OTel HTTP server spans','otel.rpc-server-current':'OTel current RPC server spans'});
+const profileRules={'otel.db-client':{kind:'Client',attribute:'db.system.name'},'otel.http-server':{kind:'Server',attribute:'http.request.method'},'otel.rpc-server-current':{kind:'Server',attribute:'rpc.system.name'}};
 const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 const stable=x=>Array.isArray(x)?x.map(stable):object(x)?Object.fromEntries(Object.keys(x).sort().filter(k=>x[k]!==undefined).map(k=>[k,stable(x[k])])):x;
 const same=(a,b)=>JSON.stringify(stable(a))===JSON.stringify(stable(b));
@@ -19,7 +21,7 @@ export function title(value){if(typeof value!=='string'||!value.trim()||new Text
 function conjuncts(p){if(!p||p.any?.length)return [];return p.all?.length?p.all.flatMap(conjuncts):[p];}
 export function binding(value){closed(value,['version','group','profile','baseline']);if(Object.hasOwn(value,'baseline')&&value.baseline!=='destination')throw Error('Choose the explicit destination baseline binding.');if(value.version!=='goo.template/1'||value.group!=='destination'||typeof value.profile!=='string'||!Object.hasOwn(profiles,value.profile))throw Error('Choose a supported template profile and destination grouping.');return structuredClone(value);}
 export function intervalLabel(width){if(!Number.isInteger(width)||width<=0)return 'Not configured';const unit=width<60000?'second':'minute',value=width<60000?width/1000:width/60000;return value+' '+unit+(value===1?'':'s');}
-export function requirements(profile){if(profile==='otel.db-client')return 'Exact service, Client kind and nonempty current db.system.name.';if(profile==='otel.http-server')return 'Exact service, Server kind and nonempty current http.request.method.';return 'Same signal, one ordinary grouping and requested measure support.';}
+export function requirements(profile){const rule=Object.hasOwn(profileRules,profile)?profileRules[profile]:null;return rule?'Exact service, '+rule.kind+' kind and nonempty current '+rule.attribute+'.'+(profile==='otel.rpc-server-current'?' rpc.method is conditional; missing and empty labels remain populations.':''):'Same signal, one ordinary grouping and requested measure support.';}
 export function templateView(value){
  closed(value,['version','id','title','queries','composition','template']);if(value.version!==1||value.id!==undefined&&(typeof value.id!=='string'||!/^[a-f0-9]{64}$/.test(value.id)))throw Error('Choose a checked view/template revision.');
  if(!object(value)||!value.template||!value.composition||value.queries?.length!==1||['layout','columns','fieldColumns','displays','breakdowns','tail'].some(key=>Object.hasOwn(value,key)))throw Error('Reusable templates require one aggregate-and-records composition.');
@@ -30,7 +32,7 @@ export function templateView(value){
  const profile=value.template.profile;if(profile!=='ordinary'){
   if(q.signal!=='spans')throw Error('This data profile requires spans.');const leaves=conjuncts(q.where),has=(kind,key,op,value)=>leaves.some(p=>p.field?.kind===kind&&p.field.key===key&&p.op===op&&(p.value??'')===value);
   if(!leaves.some(p=>p.field?.kind==='column'&&p.field.key==='service'&&p.op==='eq'&&typeof p.value==='string'&&p.value!==''))throw Error('The data profile requires an exact nonempty service selector.');
-  const db=profile==='otel.db-client';if(!has('column','kind','eq',db?'Client':'Server')||!has('attribute',db?'db.system.name':'http.request.method','ne',''))throw Error('The query must require '+(db?'Client kind and nonempty current db.system.name.':'Server kind and nonempty current http.request.method.'));
+  const rule=profileRules[profile];if(!has('column','kind','eq',rule.kind)||!has('attribute',rule.attribute,'ne',''))throw Error('The query must require '+rule.kind+' kind and nonempty current '+rule.attribute+'.');
  }
  return structuredClone(value);
 }
@@ -50,7 +52,7 @@ export function templateDestination(widget,data){
 }
 export function eligible(widget){const q=widget?.query,preset=presets[widget?.family];return !!preset&&widget?.state==='supported'&&widget.key==='dimension'&&q?.signal==='spans'&&q.groupBy?.length===1&&q.groupBy[0].kind==='attribute'&&q.groupBy[0].key===preset.group&&!widget.measurement&&!q.numericHistogram&&!q.groupTimeSeries;}
 export function customizeLabel(widget){return presets[widget?.family]?.label||'view';}
-export function request(widget){if(!eligible(widget))throw Error('Customize requires a supported HTTP route or database operation widget.');validateRecordQuestion(widget.query);return {template:presets[widget.family].id,version:1,widget:structuredClone(widget)};}
+export function request(widget){if(!eligible(widget))throw Error('Customize requires a supported HTTP route, current RPC method or database operation widget.');validateRecordQuestion(widget.query);return {template:presets[widget.family].id,version:1,widget:structuredClone(widget)};}
 export function stagedView(value,question){
  validateRecordQuestion(question);closed(value,['version','title','queries','layout','columns','displays','composition','template']);
  if(value.version!==1||!Array.isArray(value.queries)||value.queries.length!==1)throw Error('Template changed the current widget question.');

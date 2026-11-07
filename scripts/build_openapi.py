@@ -149,7 +149,7 @@ for suffix in ('', 'Input'):
  request=schemas.get('workbench.ViewTemplateExpansionRequest'+suffix)
  if request:
   request['additionalProperties']=False
-  request['properties']['template']['enum']=['otel.http-server-routes','otel.db-client-operations']
+  request['properties']['template']['enum']=['otel.http-server-routes','otel.db-client-operations','otel.rpc-server-current-methods']
   request['properties']['version']['const']=1
   for field in ('source','query','widget'):request['properties'][field]['type']='object'
   request.pop('required',None)
@@ -162,16 +162,17 @@ for suffix in ('', 'Input'):
  reference=schemas.get('workbench.ViewTemplateReference'+suffix)
  if reference:
   reference['properties']['version']['const']=1
-  reference['properties']['id']['anyOf']=[{'enum':['otel.http-server-routes','otel.db-client-operations']},{'type':'string','pattern':'^[a-f0-9]{64}$'}]
+  reference['properties']['id']['anyOf']=[{'enum':['otel.http-server-routes','otel.db-client-operations','otel.rpc-server-current-methods']},{'type':'string','pattern':'^[a-f0-9]{64}$'}]
   reference['additionalProperties']=False
  binding=schemas.get('workbench.ViewTemplateBinding'+suffix)
  if binding:
   binding['additionalProperties']=False
   binding['properties']['version']['const']='goo.template/1'
   binding['properties']['group']['const']='destination'
-  binding['properties']['profile']['enum']=['ordinary','otel.db-client','otel.http-server']
+  binding['properties']['profile']['enum']=['ordinary','otel.db-client','otel.http-server','otel.rpc-server-current']
   binding['properties']['baseline']['const']='destination'
   binding['required']=['version','group','profile']
+  binding['properties']['profile']['description']='Checked destination role binding. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read.'
 
 # Saved reusable record display declarations contain configuration, never data.
 for suffix in ('', 'Input'):

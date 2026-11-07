@@ -1,0 +1,103 @@
+{
+  "id": "otel.rpc-server-current-methods",
+  "version": 1,
+  "title": "Current RPC server methods",
+  "family": "rpc-server-current",
+  "grain": "server-span-record",
+  "signal": "spans",
+  "group": {
+    "kind": "attribute",
+    "key": "rpc.method"
+  },
+  "serviceField": {
+    "kind": "column",
+    "key": "service"
+  },
+  "required": [
+    {
+      "field": {
+        "kind": "column",
+        "key": "kind"
+      },
+      "op": "eq",
+      "value": "Server"
+    },
+    {
+      "field": {
+        "kind": "attribute",
+        "key": "rpc.system.name"
+      },
+      "op": "ne"
+    }
+  ],
+  "composition": {
+    "version": "goo.composition/1",
+    "kind": {
+      "name": "stack",
+      "version": 1
+    },
+    "children": [
+      {
+        "facet": {
+          "version": "goo.view/1",
+          "scope": {
+            "kind": "record-query",
+            "signal": "spans"
+          },
+          "kind": {
+            "name": "categorical-facet",
+            "version": 1
+          },
+          "field": {
+            "kind": "attribute",
+            "key": "rpc.method"
+          },
+          "display": {
+            "basis": "applied",
+            "title": "Reported RPC methods"
+          }
+        }
+      },
+      {
+        "aggregate": {
+          "version": "goo.view/1",
+          "scope": {
+            "kind": "record-query",
+            "signal": "spans"
+          },
+          "kind": {
+            "name": "bar",
+            "version": 1
+          },
+          "display": {
+            "category": "category",
+            "value": "count",
+            "scale": "population",
+            "order": "value-desc"
+          }
+        }
+      },
+      {
+        "records": {
+          "version": "goo.view/1",
+          "scope": {
+            "kind": "record-query",
+            "signal": "spans"
+          },
+          "kind": {
+            "name": "record-table",
+            "version": 1
+          },
+          "display": {
+            "columns": [
+              "utc",
+              "service",
+              "summary",
+              "context"
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,5 +1,15 @@
 # Known issues and gaps
 
+367 delivers reusable current RPC service views with whole destination scope,
+optional method groups and explicit Run. The real span-only journey also exposed
+and fixed record-query echo matching for typed environment selectors; equivalent
+Go defaults now match while real policy/scope/role differences refuse. Go/UI1257,
+Hegel40, actual native/model and positive actor checks pass. Current RPC requires
+Server plus nonempty current `rpc.system.name`; legacy-only metadata and Client
+populations are incompatible. Native templates remain separate. See
+[contract](CURRENT_RPC_VIEW_TEMPLATE.md) and [validation](../VALIDATION.md).
+Next is 368 exact native service interval supporting-records/Return.
+
 366's compact retained-comparison headers pass matched desktop/narrow acceptance:
 the first positive timing bar is visible on fresh Compare at 464/759 px. All seven
 per-side provenance facts remain available by keyboard, without extra API calls.

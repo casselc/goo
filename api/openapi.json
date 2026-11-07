@@ -49317,8 +49317,10 @@
             "enum": [
               "ordinary",
               "otel.db-client",
-              "otel.http-server"
-            ]
+              "otel.http-server",
+              "otel.rpc-server-current"
+            ],
+            "description": "Checked destination role binding. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read."
           },
           "version": {
             "type": "string",
@@ -49371,8 +49373,10 @@
             "enum": [
               "ordinary",
               "otel.db-client",
-              "otel.http-server"
-            ]
+              "otel.http-server",
+              "otel.rpc-server-current"
+            ],
+            "description": "Checked destination role binding. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read."
           },
           "version": {
             "anyOf": [
@@ -49480,7 +49484,8 @@
             ],
             "enum": [
               "otel.http-server-routes",
-              "otel.db-client-operations"
+              "otel.db-client-operations",
+              "otel.rpc-server-current-methods"
             ]
           },
           "version": {
@@ -49614,7 +49619,8 @@
               {
                 "enum": [
                   "otel.http-server-routes",
-                  "otel.db-client-operations"
+                  "otel.db-client-operations",
+                  "otel.rpc-server-current-methods"
                 ]
               },
               {

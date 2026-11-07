@@ -79,12 +79,13 @@ without implying service health or upstream completeness.
 
 296 adds [authorable view templates](AUTHORABLE_VIEW_TEMPLATES.md) in the existing
 view catalog and a Database client activity preset. The DB preset requires Client
-kind and nonempty current `db.system.name`, grouped by `db.operation.name`. Other
-RPC/messaging/native families, WYSIWYG layout and whole-screen composition remain
+kind and nonempty current `db.system.name`, grouped by `db.operation.name`.
+[Current RPC](CURRENT_RPC_VIEW_TEMPLATE.md) now has its own checked method preset;
+messaging/native templates, WYSIWYG layout and whole-screen composition remain
 separate work. Existing prepared-table prebuilts remain separate;
 this descriptor does not claim to replace their measurement/policy bindings.
 Saved views materialize the expansion; they do not subscribe to later template revisions.
-Eligible ordinary HTTP/DB expansions can retain the explicit reusable-template
+Eligible ordinary HTTP/DB/current-RPC expansions can retain the explicit reusable-template
 binding; numeric HTTP expansions preserve their query without that binding.
 
 279 delivers [records-plus-aggregate composition](RECORD_AGGREGATE_COMPOSITION.md)

@@ -19,6 +19,9 @@ var httpServerRoutesTemplate []byte
 //go:embed templates/db-client-operations.json
 var dbClientOperationsTemplate []byte
 
+//go:embed templates/rpc-server-current-methods.json
+var rpcServerCurrentMethodsTemplate []byte
+
 type ViewTemplateReference struct {
 	ID      string `json:"id"`
 	Version int    `json:"version"`
@@ -133,6 +136,8 @@ func shippedTemplate(id string) (recordViewTemplate, error) {
 		data = httpServerRoutesTemplate
 	case "otel.db-client-operations":
 		data = dbClientOperationsTemplate
+	case "otel.rpc-server-current-methods":
+		data = rpcServerCurrentMethodsTemplate
 	default:
 		return recordViewTemplate{}, errors.New("choose a supported pinned view template")
 	}
@@ -156,8 +161,10 @@ func (b ViewTemplateBinding) validateProfile(q exploration.Query) error {
 		id = "otel.http-server-routes"
 	case "otel.db-client":
 		id = "otel.db-client-operations"
+	case "otel.rpc-server-current":
+		id = "otel.rpc-server-current-methods"
 	default:
-		return errors.New("choose an ordinary, OTel HTTP server or OTel database client profile")
+		return errors.New("choose an ordinary, OTel HTTP server, database client or current RPC server profile")
 	}
 	descriptor, err := shippedTemplate(id)
 	if err != nil {
@@ -274,8 +281,11 @@ func ExpandViewTemplate(in ViewTemplateExpansionRequest) (ViewTemplateExpansion,
 		descriptor.Composition.Children = children
 	}
 	profile := "otel.http-server"
-	if descriptor.Family == "db-client" {
+	switch descriptor.Family {
+	case "db-client":
 		profile = "otel.db-client"
+	case "rpc-server-current":
+		profile = "otel.rpc-server-current"
 	}
 	view := ExplorationView{Version: 1, Title: descriptor.Title, Queries: []exploration.Query{q}, Composition: &descriptor.Composition}
 	binding := &ViewTemplateBinding{Version: "goo.template/1", Group: "destination", Profile: profile}

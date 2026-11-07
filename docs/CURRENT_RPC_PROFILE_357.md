@@ -1,5 +1,10 @@
 # Current RPC observations
 
+[367 reusable current RPC views](CURRENT_RPC_VIEW_TEMPLATE.md) now extends this
+same pinned span profile into Customize, saved presentation reuse and explicit
+Run on another compatible service. It retains conditional method groups and the
+whole destination scope; no additional conformance or native binding is implied.
+
 357 is implemented and validated. The convention is pinned to
 [OpenTelemetry v1.45.0](CURRENT_RPC_CONVENTION_357.md). See the
 [executable storyboard](journeys/357-current-rpc.md) and

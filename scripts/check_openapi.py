@@ -941,6 +941,30 @@ def check_fixed_query_count_views(spec):
         assert not vc.is_valid(template),'fixed query pair admitted as reusable template'
 
 
+def check_current_rpc_template_bindings(spec):
+    """Current RPC is an explicit binding, not a legacy alias or method witness."""
+    binding = {'version':'goo.template/1','group':'destination','profile':'otel.rpc-server-current'}
+    for suffix in ('','Input'):
+        bound = validator(spec, {'$ref':'#/components/schemas/workbench.ViewTemplateBinding'+suffix})
+        bound.validate(binding)
+        for profile in ('otel.rpc-server','otel.messaging-consumer','rpc-server-current'):
+            bad=copy.deepcopy(binding);bad['profile']=profile
+            assert not bound.is_valid(bad), 'unsupported template profile admitted'
+        reference = validator(spec, {'$ref':'#/components/schemas/workbench.ViewTemplateReference'})
+        reference.validate({'id':'otel.rpc-server-current-methods','version':1,'title':'Current RPC methods'})
+        bad={'id':'otel.rpc-server-methods','version':1,'title':'Legacy alias'}
+        assert not reference.is_valid(bad), 'unshipped RPC template alias admitted'
+    request = {'template':'otel.rpc-server-current-methods','version':1,'widget':{
+        'key':'dimension','title':'Current RPC methods','state':'supported',
+        'grain':'server-span-record','family':'rpc-server-current'}}
+    request_check = validator(spec, {'$ref':'#/components/schemas/workbench.ViewTemplateExpansionRequestInput'})
+    request_check.validate(request)
+    bad=copy.deepcopy(request);bad['template']='otel.rpc-server-methods'
+    assert not request_check.is_valid(bad), 'unshipped RPC expansion alias admitted'
+    # Destination role and predicate relationships are independently checked by Go;
+    # the wire profile is not evidence that a returned population conforms.
+
+
 def check_comparison_template_bindings(spec):
     """Binding and request presence never silently inherit a specimen capture."""
     scope = {'kind':'record-query','signal':'spans'}
@@ -1055,6 +1079,7 @@ def check(spec):
     check_source_refusals(spec)
     check_fixed_query_count_views(spec)
     check_comparison_template_bindings(spec)
+    check_current_rpc_template_bindings(spec)
     check_record_span_waterfall(spec)
     check_document_view_card(spec)
     bank = json.loads((ROOT/'testdata/protocol/environment-selectors.json').read_text())
@@ -1178,7 +1203,7 @@ def check(spec):
                     accepted.append((shape, request))
     # Captured-record review adds 13 actual successful responses (one NDJSON)
     # and seven accepted POST bodies to the prior 450/173/28 fixture baseline.
-    assert responses == 463 and requests == 180 and mux_refusals == 28, (responses, requests, mux_refusals)
+    assert responses == 467 and requests == 183 and mux_refusals == 28, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)

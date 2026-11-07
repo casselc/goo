@@ -49,10 +49,11 @@ continues to require its existing exact grouping compatibility.
 | Ordinary records | Same signal, one ordinary nonnumeric grouping, supported count/duration display |
 | OTel database client spans | Spans with exact nonempty service, reported Client kind and nonempty current `db.system.name` |
 | OTel HTTP server spans | Spans with exact nonempty service, reported Server kind and nonempty current `http.request.method` |
+| OTel current RPC server spans | Spans with exact nonempty service, reported Server kind and nonempty current `rpc.system.name`; `rpc.method` is conditional |
 
 Mandatory profile conditions must be explicit conjuncts; appearances beneath OR
 cannot establish them. Selecting a profile validates the current question and does
-not add filters. Recorded spans do not establish database/HTTP health or complete
+not add filters. Recorded spans do not establish database/HTTP/RPC health or complete
 upstream telemetry. Fixed record fields retain their qualified keys; a declaration
 does not prove those attributes were observed.
 
@@ -75,6 +76,12 @@ operations widget, grouped by `db.operation.name`. It shares profile validation 
 expansion with the HTTP preset and authored templates. A supported materialized
 HTTP view with numeric bindings may still open, but cannot opt into this first
 ordinary reusable-template profile.
+
+The [Current RPC server methods](CURRENT_RPC_VIEW_TEMPLATE.md) preset uses the
+existing current-RPC dimension and a method facet. Its `otel.rpc-server-current`
+binding preserves missing, empty and `_OTHER` method groups and requires the
+current `rpc.system.name` witness. Authored reuse binds presentation to the full
+destination scope; legacy-only RPC metadata or Client spans are incompatible.
 
 ## Configuration-only expansion
 
