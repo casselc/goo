@@ -1,0 +1,25 @@
+spec: capture_review_365.qnt
+module: capture_review_365
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  task_ready:
+    expect: 'source == {{.obs.source}} and task == {{.obs.task}} and eligible == {{.obs.eligible}} and pinned == {{.obs.pinned}}'
+  label_reviewed:
+    expect: 'source == {{.obs.source}} and task == {{.obs.task}} and eligible == {{.obs.eligible}} and pinned == {{.obs.pinned}}'
+  label_unreviewed:
+    expect: 'source == {{.obs.source}} and task == {{.obs.task}} and eligible == {{.obs.eligible}} and pinned == {{.obs.pinned}}'
+  uncertain:
+    expect: 'source == {{.obs.source}} and task == {{.obs.task}} and eligible == {{.obs.eligible}} and pinned == {{.obs.pinned}}'
+  abstain:
+    expect: 'source == {{.obs.source}} and task == {{.obs.task}} and eligible == {{.obs.eligible}} and pinned == {{.obs.pinned}}'
+  disputed:
+    expect: 'source == {{.obs.source}} and task == {{.obs.task}} and eligible == {{.obs.eligible}} and pinned == {{.obs.pinned}}'
+  withdrawn:
+    expect: 'source == {{.obs.source}} and task == {{.obs.task}} and eligible == {{.obs.eligible}} and pinned == {{.obs.pinned}}'
+  pin:
+    expect: 'source == {{.obs.source}} and task == {{.obs.task}} and eligible == {{.obs.eligible}} and pinned == {{.obs.pinned}}'
+  export_pinned:
+    expect: 'source == {{.obs.source}} and task == {{.obs.task}} and eligible == {{.obs.eligible}} and pinned == {{.obs.pinned}}'
+  history:
+    expect: 'source == {{.obs.source}} and task == {{.obs.task}} and eligible == {{.obs.eligible}} and pinned == {{.obs.pinned}}'

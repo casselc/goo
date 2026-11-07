@@ -137,8 +137,279 @@
       }
     ]
   },
+  "CaptureReviewDecision": {
+    "$ref": "#/components/schemas/workbench.CaptureReviewDecision"
+  },
+  "CaptureReviewDecisionRequest": {
+    "anyOf": [
+      {
+        "additionalProperties": false,
+        "properties": {
+          "judgment": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.CaptureReviewJudgmentInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "parents": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "requestID": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "review": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "target": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.CaptureRecordRefInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "taskID": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "CaptureReviewManifest": {
+    "$ref": "#/components/schemas/workbench.CaptureReviewManifest"
+  },
+  "CaptureReviewManifestRequest": {
+    "anyOf": [
+      {
+        "additionalProperties": false,
+        "properties": {
+          "historical": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "knownHeads": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "requestID": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "selected": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "taskID": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "CaptureReviewTask": {
+    "$ref": "#/components/schemas/workbench.CaptureReviewTask"
+  },
+  "CaptureReviewTaskRequest": {
+    "anyOf": [
+      {
+        "additionalProperties": false,
+        "properties": {
+          "labels": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/workbench.CaptureReviewLabelInput"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "requestID": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "CaptureSearchPage": {
     "$ref": "#/components/schemas/exploration.CaptureSearchPage"
+  },
+  "CapturedRecord": {
+    "$ref": "#/components/schemas/exploration.CapturedRecord"
   },
   "CapturedWindowDiscovery": {
     "$ref": "#/components/schemas/exploration.CapturedWindowDiscovery"
@@ -3426,6 +3697,49 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.CaptureReceipt"
   },
+  "exploration.CaptureRecordRef": {
+    "properties": {
+      "captureId": {
+        "type": "string"
+      },
+      "index": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "captureId",
+      "index"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.CaptureRecordRef"
+  },
+  "exploration.CaptureRecordRefInput": {
+    "additionalProperties": false,
+    "properties": {
+      "captureId": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "index": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.CaptureRecordRef"
+  },
   "exploration.CaptureSearchPage": {
     "properties": {
       "hasMore": {
@@ -3525,6 +3839,52 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.CaptureSummary"
+  },
+  "exploration.CapturedRecord": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "matchingRecords": {
+        "type": "string"
+      },
+      "observationState": {
+        "type": "string"
+      },
+      "receipt": {
+        "$ref": "#/components/schemas/exploration.CaptureReceipt"
+      },
+      "record": {},
+      "recordDigest": {
+        "type": "string"
+      },
+      "recordsLimited": {
+        "type": "boolean"
+      },
+      "reference": {
+        "$ref": "#/components/schemas/exploration.CaptureRecordRef"
+      },
+      "retainedRecords": {
+        "type": "integer"
+      },
+      "sourceReadAt": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "reference",
+      "receipt",
+      "record",
+      "recordDigest",
+      "sourceReadAt",
+      "basis",
+      "observationState",
+      "matchingRecords",
+      "retainedRecords",
+      "recordsLimited"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.CapturedRecord"
   },
   "exploration.CapturedWindowDiscovery": {
     "properties": {
@@ -25062,6 +25422,359 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.ActivityViewList"
+  },
+  "workbench.CaptureReviewDecision": {
+    "properties": {
+      "evidence": {
+        "$ref": "#/components/schemas/workbench.CaptureReviewEvidence"
+      },
+      "id": {
+        "type": "string"
+      },
+      "judgment": {
+        "$ref": "#/components/schemas/workbench.CaptureReviewJudgment"
+      },
+      "note": {
+        "type": "string"
+      },
+      "origin": {
+        "type": "string"
+      },
+      "parents": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "recordedAt": {
+        "type": "string"
+      },
+      "review": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      },
+      "target": {
+        "$ref": "#/components/schemas/exploration.CaptureRecordRef"
+      },
+      "taskID": {
+        "type": "string"
+      },
+      "version": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "id",
+      "version",
+      "taskID",
+      "target",
+      "parents",
+      "judgment",
+      "review",
+      "state",
+      "note",
+      "evidence",
+      "recordedAt",
+      "origin"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewDecision"
+  },
+  "workbench.CaptureReviewEvidence": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "matchingRecords": {
+        "type": "string"
+      },
+      "observationState": {
+        "type": "string"
+      },
+      "receipt": {
+        "$ref": "#/components/schemas/exploration.CaptureReceipt"
+      },
+      "recordDigest": {
+        "type": "string"
+      },
+      "recordsLimited": {
+        "type": "boolean"
+      },
+      "reference": {
+        "$ref": "#/components/schemas/exploration.CaptureRecordRef"
+      },
+      "retainedRecords": {
+        "type": "integer"
+      },
+      "sourceReadAt": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "reference",
+      "receipt",
+      "recordDigest",
+      "sourceReadAt",
+      "basis",
+      "observationState",
+      "matchingRecords",
+      "retainedRecords",
+      "recordsLimited"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewEvidence"
+  },
+  "workbench.CaptureReviewJudgment": {
+    "properties": {
+      "kind": {
+        "type": "string"
+      },
+      "value": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewJudgment"
+  },
+  "workbench.CaptureReviewJudgmentInput": {
+    "additionalProperties": false,
+    "properties": {
+      "kind": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewJudgment"
+  },
+  "workbench.CaptureReviewLabel": {
+    "properties": {
+      "key": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "key",
+      "title"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewLabel"
+  },
+  "workbench.CaptureReviewLabelInput": {
+    "additionalProperties": false,
+    "properties": {
+      "key": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewLabel"
+  },
+  "workbench.CaptureReviewManifest": {
+    "properties": {
+      "historical": {
+        "type": "boolean"
+      },
+      "id": {
+        "type": "string"
+      },
+      "items": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/workbench.CaptureReviewManifestItem"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "knownHeads": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "mode": {
+        "type": "string"
+      },
+      "origin": {
+        "type": "string"
+      },
+      "recordedAt": {
+        "type": "string"
+      },
+      "revisions": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selected": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "taskID": {
+        "type": "string"
+      },
+      "version": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "id",
+      "version",
+      "taskID",
+      "selected",
+      "knownHeads",
+      "historical",
+      "revisions",
+      "items",
+      "recordedAt",
+      "origin",
+      "mode"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewManifest"
+  },
+  "workbench.CaptureReviewManifestItem": {
+    "properties": {
+      "decisionID": {
+        "type": "string"
+      },
+      "evidence": {
+        "$ref": "#/components/schemas/workbench.CaptureReviewEvidence"
+      },
+      "label": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "decisionID",
+      "label",
+      "evidence"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewManifestItem"
+  },
+  "workbench.CaptureReviewTask": {
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "labels": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/workbench.CaptureReviewLabel"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "name": {
+        "type": "string"
+      },
+      "origin": {
+        "type": "string"
+      },
+      "recordedAt": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "version": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "id",
+      "version",
+      "name",
+      "title",
+      "labels",
+      "recordedAt",
+      "origin"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewTask"
   },
   "workbench.Card": {
     "properties": {

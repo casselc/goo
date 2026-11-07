@@ -1,13 +1,15 @@
 # Known issues and gaps
 
-365's readiness gate is accepted, with a production absolute captured-record
-resolver and a private file-publication/reopen proof. The reviewed-label task
-itself remains unimplemented: no task/decision/manifest HTTP family, contextual
-review UI or downloadable export is shipped. Pinned branches mean selected
-historical assertions, not current/global consensus; unknown concurrent branches
-are not claimed absent. See [gate](CAPTURE_RECORD_REVIEW_GATE.md) and
-[validation](../VALIDATION.md). Next is the one bounded task workflow; 366 remains
-the fallback if implementation grows beyond its closed contract.
+365's bounded task/decision/manifest store, API, contextual captured-record review
+and pinned JSONL export are delivered with Go/UI/generated/native/model/actor
+acceptance. Pinned branches mean selected historical assertions, not current/global
+consensus; unknown concurrent branches are not claimed absent. Attribution is
+local and unverified. This is not a complete training-set registry or automatic
+labeling system. Exact task IDs are used for reuse; no task catalog, authenticated
+reviewer assignment or multi-user consensus is implemented. The test report
+serialization mismatch found during acceptance is fixed with stored-byte/export
+authority; see [validation](../VALIDATION.md). Next is 366's compact paired evidence
+headers. See [feature contract](CAPTURE_RECORD_REVIEW.md).
 
 364 connects saved counter/histogram export intervals to explicit fresh record
 context, with exact bounds/identity and a return to unchanged captured evidence.

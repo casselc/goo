@@ -1,5 +1,11 @@
 # Captured-record review — strict readiness contract 365
 
+> Full feature delivered after the readiness snapshot below. Final source review
+> accepted the production store/API/UI contracts; native fifteen-fact replay,
+> positive actor and genuine frames pass. See [current contract](../CAPTURE_RECORD_REVIEW.md)
+> and [executed validation](../../VALIDATION.md). The gate-only introduction below
+> records the earlier stage; it is not the current implementation status.
+
 **Readiness gate: ACCEPTED for explicit selected-revision branches.** The bounded
 contract and resolver/file-publication demonstrations are accepted. This is
 architecture/foundation readiness, **not delivery of the reviewed labeling feature**.
@@ -203,3 +209,56 @@ MeaningTarget alias was introduced.
 The reviewed UI/HTTP/schema lifecycle and dataset feature remain **not delivered**
 in this milestone. Advancing to 366 is consistent with closing this readiness
 proof; later implementation must not present this gate as completed labeling.
+
+## Full implementation follow-up: source review, runtime pending
+
+The earlier readiness-only status above describes the gate, not the subsequently
+authorized implementation. Production `workbench/capture_review.go` now provides
+bounded immutable task, decision and historical manifest publication/loading and
+raw-record JSONL export. Shared parent-load caches and visited graph walks bound
+DAG work to 64 revisions; selected/known-head joins remain task, absolute target
+and record-digest specific. Export re-resolves immutable capture members and
+preserves raw numeric tokens, with a 4 MiB complete-output limit.
+
+`capture_review_intent.go` fixes a server timestamp through a durable request
+intent before publication. The three `CreateCaptureReview*Once` APIs recover the
+same revision after a lost response; changed kind/input returns the exported
+intent-conflict sentinel. An internal self-digest detects altered intent fields,
+including a syntactically valid replacement clock. This is corruption detection,
+not authentication or a transaction across arbitrary artifacts.
+
+The reviewed HTTP integration has no telemetry dependency. Its bounded strict
+JSON boundary checks Unicode, unknown fields, explicit absolute index presence,
+and omission of value for nonlabel judgments. POST requires a request ID;
+conflicting reuse returns 409. Canonical record paths and verified artifact IDs
+precede resolver access/export naming. Publication uses existing immutable-file
+winner verification. No latest-head lookup, global consensus, authenticated
+reviewer identity, task registry or optional XTDB dependency is implied.
+
+Production backend source is accepted. The focused Go 1.27.3
+`TestCaptureReview` rerun, including intent clock-corruption rejection, passed in
+0.136 seconds. Final independent source review also accepts the integrated
+HTTP and frontend boundaries: explicit judgments have no default label; changed
+judgment/note must be saved as a correction before review; decisions bind the
+resolved absolute occurrence/digest/task; known forks require explicit merging;
+POST retries retain the original request ID and frozen body. Disclosure and
+owner leases retire old actions and late adoption. Historical manifest opening
+remains task-scoped rather than falsely limited to the inspected occurrence.
+
+The actual eight-handler source-free HTTP test passes in 0.028 seconds and emits
+13 successful wire observations, including raw numeric JSONL and stable export
+after withdrawal. Strict refusal and no-store checks cover the same boundary.
+Root reports full Go, 1,249 UI checks, OpenAPI 108 operations and Hegel/Quint smoke
+gates passing. No material source blocker remains. Genuine runtime acceptance
+is still pending and is not inferred from those code gates.
+
+
+## Full-feature runtime acceptance
+
+Root reports final Go/UI/API/generated gates passing, plus the final genuine
+Playwright run (59.8s), fifteen recorded facts admitted to Quint (7.05s) and
+Bombadil positive completion across 594 snapshots. Exact capture occurrence,
+immutable retry identity, known-branch resolution and historical export survive
+zero-telemetry operation. Native bytes and transport report objects have distinct
+validation authorities; report pretty formatting is never hashed as source bytes.
+No additional storage layer, latest-head scan or consensus claim was introduced.

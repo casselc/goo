@@ -1015,5 +1015,100 @@ for path,model in [('/ui-config','UIConfig'),('/example-questions','ExampleQuest
  op['responses']['400']={'description':'Query parameters are unsupported.','content':{'application/json':{'schema':ref('Error')}}}
  if path in ('/example-questions','/prebuilts'):
   op['responses']['503']={'description':'Optional example catalog is unconfigured; no source read.','content':{'application/json':{'schema':ref('RuntimeCapabilityRefusal')}}}
+def capture_review_contract():
+ """Constrain only the reflected captured-record review surface, not other DTOs."""
+ sha={'type':'string','pattern':'^[a-f0-9]{64}$'}
+ slug={'type':'string','minLength':1,'maxLength':64,'pattern':'^[a-z0-9][a-z0-9._:/-]{0,63}$'}
+ title={'type':'string','minLength':1,'maxLength':120,'pattern':r'^(?=.*\S)[^\u0000-\u001f\u007f-\u009f]*$','description':'Nonblank title; Go also enforces 120 UTF-8 bytes and well-formed text.'}
+ note={'type':'string','maxLength':2048,'pattern':r'^[^\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f]*$','description':'At most 2048 UTF-8 bytes, enforced by Go; newline, tab and carriage return are allowed.'}
+ def ids(limit, minimum=0):
+  return {'type':'array','minItems':minimum,'maxItems':limit,'uniqueItems':True,'items':copy.deepcopy(sha)}
+ def object_schema(name, required=None):
+  value=schemas[name]
+  if 'anyOf' in value:
+   value=next(v for v in value['anyOf'] if v.get('type')=='object')
+   schemas[name]=value
+  value['additionalProperties']=False
+  if required is not None:value['required']=required
+  return value
+ for name in ('exploration.CaptureRecordRef','exploration.CaptureRecordRefInput'):
+  value=object_schema(name,['captureId','index'])
+  value['properties'].update(captureId=copy.deepcopy(sha),index={'type':'integer','minimum':0,'maximum':999})
+  value['description']='Exact zero-based absolute occurrence in a verified retained capture bank; reported IDs, displayed page position and row hashes alone are not occurrence identity.'
+ for name in ('workbench.CaptureReviewLabel','workbench.CaptureReviewLabelInput'):
+  value=object_schema(name,['key','title'])
+  value['properties'].update(key=copy.deepcopy(slug),title=copy.deepcopy(title))
+ for name in ('workbench.CaptureReviewJudgment','workbench.CaptureReviewJudgmentInput'):
+  value=object_schema(name,['kind'])
+  value['properties'].update(kind={'type':'string','enum':['label','uncertain','abstain']},value={'type':'string','maxLength':64})
+  nonlabel={'properties':{'kind':{'enum':['uncertain','abstain']}}}
+  nonlabel['not']={'required':['value']}
+  value['oneOf']=[{'required':['value'],'properties':{'kind':{'const':'label'},'value':copy.deepcopy(slug)}},nonlabel]
+ labels={'type':'array','minItems':1,'maxItems':16,'uniqueItems':True,'items':ref('workbench.CaptureReviewLabelInput'),'description':'Distinct bounded label keys; Go validates key uniqueness even when titles differ.'}
+ task=object_schema('CaptureReviewTaskRequest',['requestID','version','name','title','labels'])
+ task['properties'].update(requestID=copy.deepcopy(sha),version={'type':'integer','const':1},name=copy.deepcopy(slug),title=copy.deepcopy(title),labels=labels)
+ decision=object_schema('CaptureReviewDecisionRequest',['requestID','taskID','target','judgment','review','state'])
+ decision['properties'].update(requestID=copy.deepcopy(sha),taskID=copy.deepcopy(sha),target=ref('exploration.CaptureRecordRefInput'),parents={'anyOf':[ids(8),{'type':'null'}]},judgment=ref('workbench.CaptureReviewJudgmentInput'),review={'type':'string','enum':['unreviewed','reviewed','disputed']},state={'type':'string','enum':['active','withdrawn']},note={'anyOf':[copy.deepcopy(note),{'type':'null'}]})
+ decision['allOf']=[{'if':{'required':['state'],'properties':{'state':{'const':'withdrawn'}}},'then':{'required':['parents'],'properties':{'parents':ids(8,1)}}}]
+ manifest=object_schema('CaptureReviewManifestRequest',['requestID','taskID','selected','historical'])
+ manifest['properties'].update(requestID=copy.deepcopy(sha),taskID=copy.deepcopy(sha),selected=ids(32,1),knownHeads={'anyOf':[ids(64),{'type':'null'}]},historical={'type':'boolean','const':True})
+ manifest['description']='Explicit historical pinned-review-branches snapshot, never automatic latest labels or global consensus. Go checks same task/target, selected branch ancestry, one capture, distinct occurrences and total reference/artifact limits.'
+ for name in ('workbench.CaptureReviewTask','workbench.CaptureReviewDecision','workbench.CaptureReviewManifest'):
+  value=object_schema(name)
+  value['properties'].update(id=copy.deepcopy(sha),version={'type':'integer','const':1},recordedAt={'type':'string','format':'date-time'},origin={'type':'string','const':'local-user-unverified'})
+ value=schemas['workbench.CaptureReviewTask']
+ value['properties'].update(name=copy.deepcopy(slug),title=copy.deepcopy(title),labels={**labels,'items':ref('workbench.CaptureReviewLabel')})
+ value=schemas['workbench.CaptureReviewDecision']
+ value['properties'].update(taskID=copy.deepcopy(sha),target=ref('exploration.CaptureRecordRef'),parents={'anyOf':[ids(8),{'type':'null'}]},judgment=ref('workbench.CaptureReviewJudgment'),review={'type':'string','enum':['unreviewed','reviewed','disputed']},state={'type':'string','enum':['active','withdrawn']},note=copy.deepcopy(note))
+ value['allOf']=copy.deepcopy(decision['allOf'])
+ for name in ('workbench.CaptureReviewEvidence','exploration.CapturedRecord'):
+  value=object_schema(name)
+  value['properties'].update(reference=ref('exploration.CaptureRecordRef'),recordDigest=copy.deepcopy(sha),sourceReadAt={'type':'string','format':'date-time'},basis=copy.deepcopy(sha),matchingRecords={'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':20},retainedRecords={'type':'integer','minimum':1,'maximum':1000},recordsLimited={'type':'boolean'})
+  value['description']='Server-resolved immutable capture evidence with original receipt/read clock and full versus retained counts. Hashes identify bytes, not physical events or authenticated provenance.'
+ schemas['exploration.CapturedRecord']['properties']['record']['description']='Exact stored JSON value with original numeric tokens; no float reconstruction or client-authored evidence.'
+ value=object_schema('workbench.CaptureReviewManifestItem')
+ value['properties'].update(decisionID=copy.deepcopy(sha),label=copy.deepcopy(slug))
+ value=schemas['workbench.CaptureReviewManifest']
+ value['properties'].update(taskID=copy.deepcopy(sha),selected=ids(32,1),knownHeads={'anyOf':[ids(64),{'type':'null'}]},historical={'type':'boolean','const':True},revisions=ids(64,1),items={'type':'array','minItems':1,'maxItems':32,'items':ref('workbench.CaptureReviewManifestItem')},mode={'type':'string','const':'pinned-review-branches'})
+ schemas['CaptureReviewError']={'type':'object','required':['error'],'properties':{'error':{'type':'string'}},'additionalProperties':False}
+ schemas['CaptureReviewExportLine']={'type':'object','required':['taskID','decisionID','target','recordDigest','label','record'],'properties':{'taskID':copy.deepcopy(sha),'decisionID':copy.deepcopy(sha),'target':ref('exploration.CaptureRecordRef'),'recordDigest':copy.deepcopy(sha),'label':copy.deepcopy(slug),'record':{}},'additionalProperties':False}
+ operations=[
+  ('post','/record-reviews/tasks','CaptureReviewTaskRequest','CaptureReviewTask'),
+  ('get','/record-reviews/tasks/{id}',None,'CaptureReviewTask'),
+  ('post','/record-reviews/decisions','CaptureReviewDecisionRequest','CaptureReviewDecision'),
+  ('get','/record-reviews/decisions/{id}',None,'CaptureReviewDecision'),
+  ('post','/record-reviews/manifests','CaptureReviewManifestRequest','CaptureReviewManifest'),
+  ('get','/record-reviews/manifests/{id}',None,'CaptureReviewManifest'),
+  ('get','/record-reviews/manifests/{id}/export',None,None),
+  ('get','/record-reviews/records/{captureId}/{index}',None,'CapturedRecord'),
+ ]
+ cache={'description':'Metadata and retained evidence are never cached by this API.','required':True,'schema':{'type':'string','const':'no-store'}}
+ for method,path,request_model,response_model in operations:
+  op=spec['paths'][path][method]
+  op['x-schema-coverage']='typed'
+  op['x-effects']='file-publication-with-reference-validation' if method=='post' else 'saved-evidence-or-definition-read'
+  op['description']='Bounded local captured-record review metadata/evidence. No telemetry queries, implicit population membership, authenticated attribution or global latest-head consensus. No query parameters are supported. Go validates referenced artifacts, ancestry and exact retained occurrences.'
+  op['parameters']=[]
+  for name in re.findall(r'\{([^}]+)\}',path):
+   shape={'type':'string','pattern':'^(0|[1-9][0-9]{0,2})$','maxLength':3} if name=='index' else copy.deepcopy(sha)
+   op['parameters'].append({'name':name,'in':'path','required':True,'schema':shape,'description':'Canonical zero-based absolute retained index 0..999, not a page-local index.' if name=='index' else 'Exact lowercase content ID; not an authorization credential.'})
+  success='201' if method=='post' else '200'
+  op['responses']={success:{'description':'Immutable artifact created or recovered from the same request intent.' if method=='post' else 'Verified stored metadata or exact retained occurrence.','headers':{'Cache-Control':copy.deepcopy(cache)},'content':{'application/json':{'schema':ref(response_model) if response_model else {'type':'string'}}}}}
+  errors={'400':'Invalid fields, bounds, artifact integrity or reference semantics. Export exceeding 4 MiB is a domain refusal.','404':'A referenced immutable artifact or capture is unavailable.','500':'Unexpected local read/publication failure; do not infer that a prior write was absent.'}
+  if request_model:
+   op['requestBody']={'required':True,'content':{'application/json':{'schema':ref(request_model)}}}
+   op['x-go-body-limit-bytes']=131072
+   op['description']+=' POST requires requestID: retrying the same kind and payload with the same key returns the same artifact; changing kind or payload under that key is refused. Publication remains append-only.'
+   errors.update({'409':'The requestID was already reserved for a different artifact kind or input.','413':'The JSON request body exceeds 128 KiB.'})
+  for status,description in errors.items():
+   op['responses'][status]={'description':description,'headers':{'Cache-Control':copy.deepcopy(cache)},'content':{'application/json':{'schema':ref('CaptureReviewError')}}}
+  if path.endswith('/export'):
+   response=op['responses']['200']
+   response['description']='Pinned reviewed categorical examples as newline-delimited JSON, at most 4 MiB. Exact record bytes/numeric tokens are resolved again and checked against the manifest. This is historical branch selection, not current consensus.'
+   response['content']={'application/x-ndjson':{'schema':{'type':'string','maxLength':4194304},'x-ndjson-item-schema':ref('CaptureReviewExportLine')}}
+   response['headers']['Content-Disposition']={'required':True,'schema':{'type':'string','pattern':'^attachment;'},'description':'Download attachment; the filename names the pinned manifest.'}
+   op['x-go-response-limit-bytes']=4194304
+
+capture_review_contract()
 (ROOT/'api/openapi.json').write_text(json.dumps(spec,indent=2,ensure_ascii=False)+'\n')
 print(f'Built OpenAPI: {sum(len(p) for p in spec["paths"].values())} operations, {len(schemas)} schemas')

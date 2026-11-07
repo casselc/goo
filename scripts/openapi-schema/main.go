@@ -140,6 +140,22 @@ func main() {
 	for name, v := range outputs {
 		root(name, v, false)
 	}
+	root("CaptureReviewTaskRequest", struct {
+		workbench.CaptureReviewTaskInput
+		RequestID string `json:"requestID"`
+	}{}, true)
+	root("CaptureReviewDecisionRequest", struct {
+		workbench.CaptureReviewDecisionInput
+		RequestID string `json:"requestID"`
+	}{}, true)
+	root("CaptureReviewManifestRequest", struct {
+		workbench.CaptureReviewManifestInput
+		RequestID string `json:"requestID"`
+	}{}, true)
+	root("CaptureReviewTask", workbench.CaptureReviewTask{}, false)
+	root("CaptureReviewDecision", workbench.CaptureReviewDecision{}, false)
+	root("CaptureReviewManifest", workbench.CaptureReviewManifest{}, false)
+	root("CapturedRecord", exploration.CapturedRecord{}, false)
 
 	root("NativeHistogramSelector", measurements.HistogramViewSelector{}, false)
 	root("NativeHistogramTimeSelector", measurements.HistogramTimeViewSelector{}, false)

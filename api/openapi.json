@@ -2521,6 +2521,565 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/record-reviews/decisions/{id}": {
+      "get": {
+        "operationId": "get_record_reviews_decisions_id",
+        "summary": "GET /record-reviews/decisions/{id}",
+        "tags": [
+          "record-reviews"
+        ],
+        "description": "Bounded local captured-record review metadata/evidence. No telemetry queries, implicit population membership, authenticated attribution or global latest-head consensus. No query parameters are supported. Go validates referenced artifacts, ancestry and exact retained occurrences.",
+        "x-go-source": "cmd/goo/capture_reviews_http.go",
+        "x-effects": "saved-evidence-or-definition-read",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "description": "Exact lowercase content ID; not an authorization credential."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified stored metadata or exact retained occurrence.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewDecision"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, bounds, artifact integrity or reference semantics. Export exceeding 4 MiB is a domain refusal.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A referenced immutable artifact or capture is unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected local read/publication failure; do not infer that a prior write was absent.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
+    "/record-reviews/manifests/{id}": {
+      "get": {
+        "operationId": "get_record_reviews_manifests_id",
+        "summary": "GET /record-reviews/manifests/{id}",
+        "tags": [
+          "record-reviews"
+        ],
+        "description": "Bounded local captured-record review metadata/evidence. No telemetry queries, implicit population membership, authenticated attribution or global latest-head consensus. No query parameters are supported. Go validates referenced artifacts, ancestry and exact retained occurrences.",
+        "x-go-source": "cmd/goo/capture_reviews_http.go",
+        "x-effects": "saved-evidence-or-definition-read",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "description": "Exact lowercase content ID; not an authorization credential."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified stored metadata or exact retained occurrence.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewManifest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, bounds, artifact integrity or reference semantics. Export exceeding 4 MiB is a domain refusal.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A referenced immutable artifact or capture is unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected local read/publication failure; do not infer that a prior write was absent.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
+    "/record-reviews/manifests/{id}/export": {
+      "get": {
+        "operationId": "get_record_reviews_manifests_id_export",
+        "summary": "GET /record-reviews/manifests/{id}/export",
+        "tags": [
+          "record-reviews"
+        ],
+        "description": "Bounded local captured-record review metadata/evidence. No telemetry queries, implicit population membership, authenticated attribution or global latest-head consensus. No query parameters are supported. Go validates referenced artifacts, ancestry and exact retained occurrences.",
+        "x-go-source": "cmd/goo/capture_reviews_http.go",
+        "x-effects": "saved-evidence-or-definition-read",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "description": "Exact lowercase content ID; not an authorization credential."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pinned reviewed categorical examples as newline-delimited JSON, at most 4 MiB. Exact record bytes/numeric tokens are resolved again and checked against the manifest. This is historical branch selection, not current consensus.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              },
+              "Content-Disposition": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "pattern": "^attachment;"
+                },
+                "description": "Download attachment; the filename names the pinned manifest."
+              }
+            },
+            "content": {
+              "application/x-ndjson": {
+                "schema": {
+                  "type": "string",
+                  "maxLength": 4194304
+                },
+                "x-ndjson-item-schema": {
+                  "$ref": "#/components/schemas/CaptureReviewExportLine"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, bounds, artifact integrity or reference semantics. Export exceeding 4 MiB is a domain refusal.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A referenced immutable artifact or capture is unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected local read/publication failure; do not infer that a prior write was absent.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed",
+        "x-go-response-limit-bytes": 4194304
+      }
+    },
+    "/record-reviews/records/{captureId}/{index}": {
+      "get": {
+        "operationId": "get_record_reviews_records_captureId_index",
+        "summary": "GET /record-reviews/records/{captureId}/{index}",
+        "tags": [
+          "record-reviews"
+        ],
+        "description": "Bounded local captured-record review metadata/evidence. No telemetry queries, implicit population membership, authenticated attribution or global latest-head consensus. No query parameters are supported. Go validates referenced artifacts, ancestry and exact retained occurrences.",
+        "x-go-source": "cmd/goo/capture_reviews_http.go",
+        "x-effects": "saved-evidence-or-definition-read",
+        "parameters": [
+          {
+            "name": "captureId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "description": "Exact lowercase content ID; not an authorization credential."
+          },
+          {
+            "name": "index",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]{0,2})$",
+              "maxLength": 3
+            },
+            "description": "Canonical zero-based absolute retained index 0..999, not a page-local index."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified stored metadata or exact retained occurrence.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CapturedRecord"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, bounds, artifact integrity or reference semantics. Export exceeding 4 MiB is a domain refusal.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A referenced immutable artifact or capture is unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected local read/publication failure; do not infer that a prior write was absent.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
+    "/record-reviews/tasks/{id}": {
+      "get": {
+        "operationId": "get_record_reviews_tasks_id",
+        "summary": "GET /record-reviews/tasks/{id}",
+        "tags": [
+          "record-reviews"
+        ],
+        "description": "Bounded local captured-record review metadata/evidence. No telemetry queries, implicit population membership, authenticated attribution or global latest-head consensus. No query parameters are supported. Go validates referenced artifacts, ancestry and exact retained occurrences.",
+        "x-go-source": "cmd/goo/capture_reviews_http.go",
+        "x-effects": "saved-evidence-or-definition-read",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "description": "Exact lowercase content ID; not an authorization credential."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified stored metadata or exact retained occurrence.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewTask"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, bounds, artifact integrity or reference semantics. Export exceeding 4 MiB is a domain refusal.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A referenced immutable artifact or capture is unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected local read/publication failure; do not infer that a prior write was absent.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed"
+      }
+    },
     "/retained-evidence": {
       "get": {
         "operationId": "get_retained_evidence",
@@ -5940,6 +6499,447 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/record-reviews/decisions": {
+      "post": {
+        "operationId": "post_record_reviews_decisions",
+        "summary": "POST /record-reviews/decisions",
+        "tags": [
+          "record-reviews"
+        ],
+        "description": "Bounded local captured-record review metadata/evidence. No telemetry queries, implicit population membership, authenticated attribution or global latest-head consensus. No query parameters are supported. Go validates referenced artifacts, ancestry and exact retained occurrences. POST requires requestID: retrying the same kind and payload with the same key returns the same artifact; changing kind or payload under that key is refused. Publication remains append-only.",
+        "x-go-source": "cmd/goo/capture_reviews_http.go",
+        "x-effects": "file-publication-with-reference-validation",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Immutable artifact created or recovered from the same request intent.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewDecision"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, bounds, artifact integrity or reference semantics. Export exceeding 4 MiB is a domain refusal.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A referenced immutable artifact or capture is unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected local read/publication failure; do not infer that a prior write was absent.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The requestID was already reserved for a different artifact kind or input.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "The JSON request body exceeds 128 KiB.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CaptureReviewDecisionRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 131072
+      }
+    },
+    "/record-reviews/manifests": {
+      "post": {
+        "operationId": "post_record_reviews_manifests",
+        "summary": "POST /record-reviews/manifests",
+        "tags": [
+          "record-reviews"
+        ],
+        "description": "Bounded local captured-record review metadata/evidence. No telemetry queries, implicit population membership, authenticated attribution or global latest-head consensus. No query parameters are supported. Go validates referenced artifacts, ancestry and exact retained occurrences. POST requires requestID: retrying the same kind and payload with the same key returns the same artifact; changing kind or payload under that key is refused. Publication remains append-only.",
+        "x-go-source": "cmd/goo/capture_reviews_http.go",
+        "x-effects": "file-publication-with-reference-validation",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Immutable artifact created or recovered from the same request intent.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewManifest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, bounds, artifact integrity or reference semantics. Export exceeding 4 MiB is a domain refusal.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A referenced immutable artifact or capture is unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected local read/publication failure; do not infer that a prior write was absent.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The requestID was already reserved for a different artifact kind or input.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "The JSON request body exceeds 128 KiB.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CaptureReviewManifestRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 131072
+      }
+    },
+    "/record-reviews/tasks": {
+      "post": {
+        "operationId": "post_record_reviews_tasks",
+        "summary": "POST /record-reviews/tasks",
+        "tags": [
+          "record-reviews"
+        ],
+        "description": "Bounded local captured-record review metadata/evidence. No telemetry queries, implicit population membership, authenticated attribution or global latest-head consensus. No query parameters are supported. Go validates referenced artifacts, ancestry and exact retained occurrences. POST requires requestID: retrying the same kind and payload with the same key returns the same artifact; changing kind or payload under that key is refused. Publication remains append-only.",
+        "x-go-source": "cmd/goo/capture_reviews_http.go",
+        "x-effects": "file-publication-with-reference-validation",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Immutable artifact created or recovered from the same request intent.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewTask"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields, bounds, artifact integrity or reference semantics. Export exceeding 4 MiB is a domain refusal.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A referenced immutable artifact or capture is unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected local read/publication failure; do not infer that a prior write was absent.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The requestID was already reserved for a different artifact kind or input.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "The JSON request body exceeds 128 KiB.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Metadata and retained evidence are never cached by this API.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureReviewError"
+                }
+              }
+            }
+          }
+        },
+        "x-schema-coverage": "typed",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CaptureReviewTaskRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 131072
+      }
+    },
     "/retained-evidence/tail": {
       "post": {
         "operationId": "post_retained_evidence_tail",
@@ -6638,8 +7638,220 @@
           }
         ]
       },
+      "CaptureReviewDecision": {
+        "$ref": "#/components/schemas/workbench.CaptureReviewDecision"
+      },
+      "CaptureReviewDecisionRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "judgment": {
+            "$ref": "#/components/schemas/workbench.CaptureReviewJudgmentInput"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048,
+                "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f-\\u009f]*$",
+                "description": "At most 2048 UTF-8 bytes, enforced by Go; newline, tab and carriage return are allowed."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "parents": {
+            "anyOf": [
+              {
+                "type": "array",
+                "minItems": 0,
+                "maxItems": 8,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "requestID": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "review": {
+            "type": "string",
+            "enum": [
+              "unreviewed",
+              "reviewed",
+              "disputed"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "active",
+              "withdrawn"
+            ]
+          },
+          "target": {
+            "$ref": "#/components/schemas/exploration.CaptureRecordRefInput"
+          },
+          "taskID": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "type": "object",
+        "required": [
+          "requestID",
+          "taskID",
+          "target",
+          "judgment",
+          "review",
+          "state"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "state"
+              ],
+              "properties": {
+                "state": {
+                  "const": "withdrawn"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "parents"
+              ],
+              "properties": {
+                "parents": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 8,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "CaptureReviewManifest": {
+        "$ref": "#/components/schemas/workbench.CaptureReviewManifest"
+      },
+      "CaptureReviewManifestRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "historical": {
+            "type": "boolean",
+            "const": true
+          },
+          "knownHeads": {
+            "anyOf": [
+              {
+                "type": "array",
+                "minItems": 0,
+                "maxItems": 64,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "requestID": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "selected": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "taskID": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "type": "object",
+        "required": [
+          "requestID",
+          "taskID",
+          "selected",
+          "historical"
+        ],
+        "description": "Explicit historical pinned-review-branches snapshot, never automatic latest labels or global consensus. Go checks same task/target, selected branch ancestry, one capture, distinct occurrences and total reference/artifact limits."
+      },
+      "CaptureReviewTask": {
+        "$ref": "#/components/schemas/workbench.CaptureReviewTask"
+      },
+      "CaptureReviewTaskRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "labels": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 16,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/components/schemas/workbench.CaptureReviewLabelInput"
+            },
+            "description": "Distinct bounded label keys; Go validates key uniqueness even when titles differ."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9][a-z0-9._:/-]{0,63}$"
+          },
+          "requestID": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^(?=.*\\S)[^\\u0000-\\u001f\\u007f-\\u009f]*$",
+            "description": "Nonblank title; Go also enforces 120 UTF-8 bytes and well-formed text."
+          },
+          "version": {
+            "type": "integer",
+            "const": 1
+          }
+        },
+        "type": "object",
+        "required": [
+          "requestID",
+          "version",
+          "name",
+          "title",
+          "labels"
+        ]
+      },
       "CaptureSearchPage": {
         "$ref": "#/components/schemas/exploration.CaptureSearchPage"
+      },
+      "CapturedRecord": {
+        "$ref": "#/components/schemas/exploration.CapturedRecord"
       },
       "CapturedWindowDiscovery": {
         "$ref": "#/components/schemas/exploration.CapturedWindowDiscovery"
@@ -9956,6 +11168,48 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.CaptureReceipt"
       },
+      "exploration.CaptureRecordRef": {
+        "properties": {
+          "captureId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "index": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 999
+          }
+        },
+        "required": [
+          "captureId",
+          "index"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.CaptureRecordRef",
+        "additionalProperties": false,
+        "description": "Exact zero-based absolute occurrence in a verified retained capture bank; reported IDs, displayed page position and row hashes alone are not occurrence identity."
+      },
+      "exploration.CaptureRecordRefInput": {
+        "additionalProperties": false,
+        "properties": {
+          "captureId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "index": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 999
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.CaptureRecordRef",
+        "required": [
+          "captureId",
+          "index"
+        ],
+        "description": "Exact zero-based absolute occurrence in a verified retained capture bank; reported IDs, displayed page position and row hashes alone are not occurrence identity."
+      },
       "exploration.CaptureSearchPage": {
         "properties": {
           "hasMore": {
@@ -10087,6 +11341,63 @@
         "x-go-type": "github.com/casselc/goo/exploration.CaptureSummary",
         "description": "Bounded discovery metadata, not a receipt. Legacy environment null means unknown or an explicitly versioned selector. environmentSelector preserves policy/scope; legacy name filters do not match selector captures.",
         "additionalProperties": false
+      },
+      "exploration.CapturedRecord": {
+        "properties": {
+          "basis": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "matchingRecords": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20
+          },
+          "observationState": {
+            "type": "string"
+          },
+          "receipt": {
+            "$ref": "#/components/schemas/exploration.CaptureReceipt"
+          },
+          "record": {
+            "description": "Exact stored JSON value with original numeric tokens; no float reconstruction or client-authored evidence."
+          },
+          "recordDigest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "recordsLimited": {
+            "type": "boolean"
+          },
+          "reference": {
+            "$ref": "#/components/schemas/exploration.CaptureRecordRef"
+          },
+          "retainedRecords": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "sourceReadAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "reference",
+          "receipt",
+          "record",
+          "recordDigest",
+          "sourceReadAt",
+          "basis",
+          "observationState",
+          "matchingRecords",
+          "retainedRecords",
+          "recordsLimited"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.CapturedRecord",
+        "additionalProperties": false,
+        "description": "Server-resolved immutable capture evidence with original receipt/read clock and full versus retained counts. Hashes identify bytes, not physical events or authenticated provenance."
       },
       "exploration.CapturedWindowDiscovery": {
         "properties": {
@@ -42090,6 +43401,509 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ActivityViewList"
       },
+      "workbench.CaptureReviewDecision": {
+        "properties": {
+          "evidence": {
+            "$ref": "#/components/schemas/workbench.CaptureReviewEvidence"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "judgment": {
+            "$ref": "#/components/schemas/workbench.CaptureReviewJudgment"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 2048,
+            "pattern": "^[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f-\\u009f]*$",
+            "description": "At most 2048 UTF-8 bytes, enforced by Go; newline, tab and carriage return are allowed."
+          },
+          "origin": {
+            "type": "string",
+            "const": "local-user-unverified"
+          },
+          "parents": {
+            "anyOf": [
+              {
+                "type": "array",
+                "minItems": 0,
+                "maxItems": 8,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "review": {
+            "type": "string",
+            "enum": [
+              "unreviewed",
+              "reviewed",
+              "disputed"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "active",
+              "withdrawn"
+            ]
+          },
+          "target": {
+            "$ref": "#/components/schemas/exploration.CaptureRecordRef"
+          },
+          "taskID": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "version": {
+            "type": "integer",
+            "const": 1
+          }
+        },
+        "required": [
+          "id",
+          "version",
+          "taskID",
+          "target",
+          "parents",
+          "judgment",
+          "review",
+          "state",
+          "note",
+          "evidence",
+          "recordedAt",
+          "origin"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewDecision",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "state"
+              ],
+              "properties": {
+                "state": {
+                  "const": "withdrawn"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "parents"
+              ],
+              "properties": {
+                "parents": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 8,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "workbench.CaptureReviewEvidence": {
+        "properties": {
+          "basis": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "matchingRecords": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20
+          },
+          "observationState": {
+            "type": "string"
+          },
+          "receipt": {
+            "$ref": "#/components/schemas/exploration.CaptureReceipt"
+          },
+          "recordDigest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "recordsLimited": {
+            "type": "boolean"
+          },
+          "reference": {
+            "$ref": "#/components/schemas/exploration.CaptureRecordRef"
+          },
+          "retainedRecords": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "sourceReadAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "reference",
+          "receipt",
+          "recordDigest",
+          "sourceReadAt",
+          "basis",
+          "observationState",
+          "matchingRecords",
+          "retainedRecords",
+          "recordsLimited"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewEvidence",
+        "additionalProperties": false,
+        "description": "Server-resolved immutable capture evidence with original receipt/read clock and full versus retained counts. Hashes identify bytes, not physical events or authenticated provenance."
+      },
+      "workbench.CaptureReviewJudgment": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "label",
+              "uncertain",
+              "abstain"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 64
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewJudgment",
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "required": [
+              "value"
+            ],
+            "properties": {
+              "kind": {
+                "const": "label"
+              },
+              "value": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[a-z0-9][a-z0-9._:/-]{0,63}$"
+              }
+            }
+          },
+          {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "uncertain",
+                  "abstain"
+                ]
+              }
+            },
+            "not": {
+              "required": [
+                "value"
+              ]
+            }
+          }
+        ]
+      },
+      "workbench.CaptureReviewJudgmentInput": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "label",
+              "uncertain",
+              "abstain"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 64
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewJudgment",
+        "required": [
+          "kind"
+        ],
+        "oneOf": [
+          {
+            "required": [
+              "value"
+            ],
+            "properties": {
+              "kind": {
+                "const": "label"
+              },
+              "value": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[a-z0-9][a-z0-9._:/-]{0,63}$"
+              }
+            }
+          },
+          {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "uncertain",
+                  "abstain"
+                ]
+              }
+            },
+            "not": {
+              "required": [
+                "value"
+              ]
+            }
+          }
+        ]
+      },
+      "workbench.CaptureReviewLabel": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9][a-z0-9._:/-]{0,63}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^(?=.*\\S)[^\\u0000-\\u001f\\u007f-\\u009f]*$",
+            "description": "Nonblank title; Go also enforces 120 UTF-8 bytes and well-formed text."
+          }
+        },
+        "required": [
+          "key",
+          "title"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewLabel",
+        "additionalProperties": false
+      },
+      "workbench.CaptureReviewLabelInput": {
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9][a-z0-9._:/-]{0,63}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^(?=.*\\S)[^\\u0000-\\u001f\\u007f-\\u009f]*$",
+            "description": "Nonblank title; Go also enforces 120 UTF-8 bytes and well-formed text."
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewLabel",
+        "required": [
+          "key",
+          "title"
+        ]
+      },
+      "workbench.CaptureReviewManifest": {
+        "properties": {
+          "historical": {
+            "type": "boolean",
+            "const": true
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "items": {
+              "$ref": "#/components/schemas/workbench.CaptureReviewManifestItem"
+            }
+          },
+          "knownHeads": {
+            "anyOf": [
+              {
+                "type": "array",
+                "minItems": 0,
+                "maxItems": 64,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mode": {
+            "type": "string",
+            "const": "pinned-review-branches"
+          },
+          "origin": {
+            "type": "string",
+            "const": "local-user-unverified"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "revisions": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "selected": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "taskID": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "version": {
+            "type": "integer",
+            "const": 1
+          }
+        },
+        "required": [
+          "id",
+          "version",
+          "taskID",
+          "selected",
+          "knownHeads",
+          "historical",
+          "revisions",
+          "items",
+          "recordedAt",
+          "origin",
+          "mode"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewManifest",
+        "additionalProperties": false
+      },
+      "workbench.CaptureReviewManifestItem": {
+        "properties": {
+          "decisionID": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "evidence": {
+            "$ref": "#/components/schemas/workbench.CaptureReviewEvidence"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9][a-z0-9._:/-]{0,63}$"
+          }
+        },
+        "required": [
+          "decisionID",
+          "label",
+          "evidence"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewManifestItem",
+        "additionalProperties": false
+      },
+      "workbench.CaptureReviewTask": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "labels": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 16,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/components/schemas/workbench.CaptureReviewLabel"
+            },
+            "description": "Distinct bounded label keys; Go validates key uniqueness even when titles differ."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9][a-z0-9._:/-]{0,63}$"
+          },
+          "origin": {
+            "type": "string",
+            "const": "local-user-unverified"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^(?=.*\\S)[^\\u0000-\\u001f\\u007f-\\u009f]*$",
+            "description": "Nonblank title; Go also enforces 120 UTF-8 bytes and well-formed text."
+          },
+          "version": {
+            "type": "integer",
+            "const": 1
+          }
+        },
+        "required": [
+          "id",
+          "version",
+          "name",
+          "title",
+          "labels",
+          "recordedAt",
+          "origin"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.CaptureReviewTask",
+        "additionalProperties": false
+      },
       "workbench.Card": {
         "properties": {
           "caption": {
@@ -48416,6 +50230,54 @@
         },
         "additionalProperties": false,
         "description": "The Go HTTP process is running; no source or ingestion check."
+      },
+      "CaptureReviewError": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CaptureReviewExportLine": {
+        "type": "object",
+        "required": [
+          "taskID",
+          "decisionID",
+          "target",
+          "recordDigest",
+          "label",
+          "record"
+        ],
+        "properties": {
+          "taskID": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "decisionID": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "target": {
+            "$ref": "#/components/schemas/exploration.CaptureRecordRef"
+          },
+          "recordDigest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9][a-z0-9._:/-]{0,63}$"
+          },
+          "record": {}
+        },
+        "additionalProperties": false
       }
     }
   },

@@ -1,5 +1,9 @@
 # Captured-record review: readiness gate 365
 
+> Historical readiness snapshot. The subsequent delivered feature is described
+> in [Review one captured record](CAPTURE_RECORD_REVIEW.md); its runtime acceptance
+> is tracked separately. Statements below describe the gate stage.
+
 **Readiness foundation delivered; full review feature not implemented.** Focused
 resolver/private file-publication demonstrations and forty generated resolver
 cases pass. The main Go suite also passes; [validation](../VALIDATION.md)

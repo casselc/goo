@@ -57,6 +57,7 @@ function surface(target,rows,signal,options){
 
 export function mount(target,rows,signal,origin,basis,options={},context={}){
  const {active=()=>true,attributeOptions=()=>({}),readOnly=false,savedPage=()=>null,primary=()=>null,openTrace,openSurrounding,layouts=new Map(),initialLayout,surrounding=()=>({})}=context;
+ const inspectorOwners=new Map();
  const surround=surrounding(),owner={};mounts.set(target,owner);target.replaceChildren();
  if(!rows.length){const empty=node('goo-result-state','No captured records in this page; absence is not health evidence.');empty.state='empty';target.append(empty);return}
  const records=surface(target,rows,signal,options),{viewport}=records,isPassive=['record-list','record-span-waterfall'].includes(options.recordKind);
@@ -72,7 +73,7 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
   onFacet:originalOptions.onFacet?((...args)=>actions.canRefine()?originalOptions.onFacet(...args):false):undefined,
   onPlot:originalOptions.onPlot?((field,button)=>{if(actions.canPlot())originalOptions.onPlot(field,button)}):undefined
  };
- const panel=node('section'),inspect=UI.inspector(panel,{onClose:()=>{const row=panel.closest('.record-detail-row');if(row)row.hidden=true;for(const button of target.querySelectorAll('[data-inspect-record]'))button.setAttribute('aria-pressed','false')}});
+ const panel=node('section'),inspect=UI.inspector(panel,{onClose:()=>{for(const extension of inspectorOwners.values())extension.suspend?.();const row=panel.closest('.record-detail-row');if(row)row.hidden=true;for(const button of target.querySelectorAll('[data-inspect-record]'))button.setAttribute('aria-pressed','false')}});
  const selection=createSelection(rows.length),selectionState=selection.state,inputs=new Map(),recordSelection=node('section',undefined,'record-selection');
  recordSelection.hidden=true;recordSelection.setAttribute('aria-label','Selected '+signal+' records');
  const layoutHost=node('div',undefined,'record-fields-toolbar');
@@ -121,12 +122,13 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
   const inspectButton=item.timingButton||node('button','Inspect');if(item.timingButton){const label=inspectButton.getAttribute('aria-label')||RecordPresentation.describe(row,signal).message;if(!label.startsWith('Inspect supplied span'))inspectButton.setAttribute('aria-label','Inspect supplied span · '+label);if(!inspectButton.title.startsWith('Inspect supplied span'))inspectButton.title='Inspect supplied span · '+(inspectButton.title||'')}else inspectButton.setAttribute('aria-label','Inspect record');inspectButton.dataset.inspectRecord=String(index);inspectButton.setAttribute('aria-pressed','false');
   inspectButton.onclick=()=>{
    if(!canUseRecord())return;
+   for(const extension of inspectorOwners.values())extension.suspend?.();
    const body=panel.querySelector('.ui-inspector-body'),scroll=body.scrollTop;
    for(const detail of target.querySelectorAll('.record-detail-row'))detail.hidden=true;
    item.detailRow.hidden=false;item.detailCell.append(panel);body.scrollTop=scroll;
    for(const button of target.querySelectorAll('[data-inspect-record]'))button.setAttribute('aria-pressed',String(button===inspectButton));
    const key=String(index),description=RecordPresentation.description(row);
-   if(inspect.has(key)){inspect.show({key,title:signal==='logs'?'Selected log':'Selected span record',description,opener:inspectButton});return}
+   if(inspect.has(key)){inspect.show({key,title:signal==='logs'?'Selected log':'Selected span record',description,opener:inspectButton});inspectorOwners.get(key)?.resume?.();return}
    const content=RecordPresentation.detail(row,signal,actions,rows),scope=node('details');
    scope.append(node('summary','Record scope and evidence basis'),node('p','Retained record inspection. Trace expansion and surrounding logs are separate reads.'),node('pre',JSON.stringify({question:origin,basis},null,2)));content.append(scope);
    const follow=[...cell.querySelectorAll('button')].filter(button=>button!==inspectButton).map(button=>{
@@ -134,6 +136,7 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
     action.onclick=()=>{if(canUseRecord())button.click()};return action;
    });
    if(signal==='spans'&&actions.onTraceSearch){const find=node('button','Find traces with this operation');find.type='button';find.disabled=actions.canTraceSearch?.()===false;find.onclick=()=>{if(!canUseRecord()||actions.canTraceSearch?.()===false||!Visuals.actionVisible(find))return;try{actions.onTraceSearch(TraceSearch.seedFromRow(row),find)}catch(error){find.title=error.message}};follow.push(find)}
+   const extension=options.onInspectRecord?.({content,index,opener:inspectButton,current:()=>canUseRecord()&&inspectButton.getAttribute('aria-pressed')==='true'&&!item.detailRow.hidden&&panel.dataset.key===key});if(extension?.dispose)inspectorOwners.set(key,extension);
    inspect.show({key,title:signal==='logs'?'Selected log':'Selected span record',description,content,actions:follow,opener:inspectButton});
   };
   const input=inputs.get(index);if(!item.timingButton){if(input)input.after(inspectButton);else cell.prepend(inspectButton)}
@@ -148,5 +151,5 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
   columns.update(rows.map((record,index)=>({record,element:records.rowElements[index]})));
  }
  target.prepend(layoutHost,recordSelection);records.finish();target.append(panel);
- return {selectionState,dispose(){if(mounts.get(target)===owner)mounts.delete(target)}};
+ return {selectionState,dispose(){for(const extension of inspectorOwners.values())extension.dispose();inspectorOwners.clear();if(mounts.get(target)===owner)mounts.delete(target)}};
 }

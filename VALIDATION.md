@@ -1,5 +1,82 @@
 # Validation record
 
+## Captured-record review — 365 full workflow
+
+Production implementation now includes immutable categorical task/decision/manifest
+artifacts, eight source-free HTTP operations, contextual captured-record review
+and bounded historical JSONL export. The readiness-only section below records the
+earlier gate and is not the current feature status. Full integration acceptance
+passes; executed results follow here.
+
+The source review accepted bounded ancestry traversal, verified immutable
+publication, separate task/target/digest checks, eligibility and explicit branch
+resolution. Durable request intents preserve the first server clock and artifact
+on retry after a lost response; changed input/kind conflicts, and corrupt intent
+clocks fail integrity validation. Go 1.27.3's typed `errors.AsType` handles HTTP
+error classification; concurrent publication tests use `sync.WaitGroup.Go`.
+
+The contextual UI requires deliberate judgment selection. Changed judgment/notes
+must be saved as a correction before review/dispute/withdrawal. Immutable pending
+write bodies support explicit retry; retired inspectors and closed disclosures
+cannot adopt late responses. Invalid consumed response fields are checked before
+state adoption. The existing raw record inspector remains the entry point.
+
+Initial focused backend tests passed in 0.136s and direct HTTP tests in 0.028s.
+The latter generated thirteen successful wire observations covering all eight
+operations and seven POST bodies. Tests cover retry identity/conflict, missing/null
+absolute index, forbidden nonlabel values, forged/unknown fields, extra JSON,
+query/path validation, missing parents, 128 KiB body refusal, and raw integer tokens
+above 2^53. Later withdrawal leaves the historical export byte-identical.
+The final UI adapter has eleven focused tests passing. The main Go suite passes with
+Go 1.27.3 (`go test -p 2 ./...`; cmd/goo 9.208s, workbench 1.604s; unchanged
+packages may be cached). Hegel's forty generated ten-revision schedules pass in
+3.22s; the new Quint protocol wrapper and two rejecting controls pass in 7.53s,
+package 10.766s, zero skips. The OpenAPI checker passes 108 operations, 463 actual
+responses and 180 admitted requests plus 28 mux refusals. Its thirteen new
+structured review observations cover all eight handlers; parsed export lines are
+checked there, while raw NDJSON framing/headers remain HTTP assertions.
+The final full UI suite passes **1,250 tests**, zero skips, in 16.869s.
+Its streamed-HTTP test requires loopback access; a sandboxed attempt could not
+run that test, and the complete suite passed with the required local access.
+The rebuilt single-Go image is running; health is true and all three changed UI
+assets plus embedded OpenAPI match the checkout byte-for-byte.
+
+The first native workflow and positive actor completed, but observed admission
+correctly rejected hashing pretty-serialized report bytes. The repaired test
+hashes exact rows from the retained capture string and compares downloaded JSONL
+raw records byte-for-byte; transported report objects use `UseNumber` semantic
+comparison. Offline replay of the same actual fifteen facts now passes in 5.93s
+(package 5.944s), including rejecting source/order mutations. This was a harness
+serialization defect, not a production custody change.
+
+Final fresh acceptance passes: Playwright **59.8s**, fifteen actual recorded facts,
+required Quint observed replay **7.05s** (package 7.072s), zero skips, with source
+and order mutations rejected. The fixture ingests 101 identical genuine OTLP logs
+and one ordinary span before capture; zero-based occurrence 100 is reviewed while
+identical occurrence zero remains unlabeled. A committed save loses its response;
+explicit retry sends identical request bytes/key and recovers the same decision.
+The workflow exercises reviewed pin/export, correction, dispute, withdrawal,
+known fork loading, explicit merge/review, second manifest and unchanged original
+manifest/export. Metadata refusals cover unreviewed/uncertain/abstain/disputed/
+withdrawn eligibility, foreign tasks/targets and mixed captures.
+
+Bombadil's 35-second run reaches positive visible completion across **594 snapshots**:
+exact occurrence, reviewed pinned label, withdrawn current revision, exact original
+manifest reopen, matching export and visible download link. It makes exactly five
+review metadata writes, zero other writes and zero source calls; the upstream proxy
+counter remains 7 → 7. Main review facts also make zero telemetry reads. Real
+browser download checks preserve raw JSONL; large OTLP integer/time digits are
+strings in this exporter, while unquoted large JSON number tokens are separately
+covered by direct Go stored-fixture tests. The capture bytes remain unchanged.
+
+The final UI puts Download before compact example/revision summaries and keeps
+raw manifest metadata closed. Genuine desktop/390px frames are task-positioned
+inside the existing inspector; they do not establish a compact fresh-entry layout
+or current/global consensus. See the [storyboard](docs/journeys/365-capture-review.md)
+and [contract](docs/CAPTURE_RECORD_REVIEW.md). The lab traffic generator is restored;
+existing data/volumes, XTDB orphan and 51 stale Redis pending entries are preserved.
+
+
 ## Captured-record review readiness — 365 gate
 
 The bounded contract is accepted by independent architecture and design reviews.

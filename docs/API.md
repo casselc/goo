@@ -8,7 +8,7 @@ The running server must include the current routes and assets; changing the
 checkout alone does not update an existing process. Rebuild an older image, or
 use the supported local code/asset installation and restart procedure.
 
-The spec inventories 88 supported Go operations. One Go process serves the UI,
+The spec inventories 108 supported Go operations. One Go process serves the UI,
 embedded assets, API documentation and observation/storage handlers. Browser
 `/api/*` requests and unprefixed API requests dispatch in process to the same mux,
 query budget, cancellation registry and stores. Compose publishes this one server
@@ -17,6 +17,16 @@ on loopback ports 8088 and 8089; standalone deployments need only one listener.
 not extra observability operations. Automatic HEAD/mux refusal behavior is not a
 separately supported operation. The checked-in spec records ownership and
 [known limits](KNOWN_ISSUES.md); executed coverage remains separately stated.
+
+Captured-record review has a separate bounded metadata surface under
+`/record-reviews`: resolve an absolute stored occurrence, create/load immutable
+tasks and decisions, and create/load/export historical pinned manifests. All
+three POST routes require a 64-character lowercase hexadecimal `requestID`.
+Retrying the same typed input recovers the same artifact; reusing that key for
+another input returns 409. The server resolves evidence; clients cannot submit
+replacement record bytes, evidence hashes or recording clocks. Export is bounded
+NDJSON with original raw numeric tokens. See the [review contract](CAPTURE_RECORD_REVIEW.md)
+for explicit branch semantics, review eligibility and limits.
 
 ```mermaid
 flowchart LR

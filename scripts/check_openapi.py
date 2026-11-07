@@ -20,6 +20,118 @@ def validator(spec, schema):
     return Draft202012Validator({'allOf': [schema], 'components': spec['components']})
 
 
+def check_capture_reviews(spec):
+    """The new review surface is strict metadata/custody, not a telemetry query."""
+    routes=[('post','/record-reviews/tasks'),('get','/record-reviews/tasks/{id}'),
+            ('post','/record-reviews/decisions'),('get','/record-reviews/decisions/{id}'),
+            ('post','/record-reviews/manifests'),('get','/record-reviews/manifests/{id}'),
+            ('get','/record-reviews/manifests/{id}/export'),('get','/record-reviews/records/{captureId}/{index}')]
+    for method,path in routes:
+        op=spec['paths'][path][method]
+        assert op['x-go-source']=='cmd/goo/capture_reviews_http.go'
+        assert op['x-schema-coverage']=='typed' and 'source-read' not in op['x-effects']
+        assert not any(p['in']=='query' for p in op['parameters'])
+        expected={'201','400','404','409','413','500'} if method=='post' else {'200','400','404','500'}
+        assert set(op['responses'])==expected, (method,path,set(op['responses']))
+        for response in op['responses'].values():
+            validator(spec,response['headers']['Cache-Control']['schema']).validate('no-store')
+            assert response['headers']['Cache-Control']['required']
+        if method=='post':assert op['x-go-body-limit-bytes']==131072
+
+    sha='a'*64
+    task={'requestID':sha,'version':1,'name':'failure-shape','title':'Failure shape',
+          'labels':[{'key':'timeout','title':'Timeout'},{'key':'not-timeout','title':'Not timeout'}]}
+    decision={'requestID':sha,'taskID':sha,'target':{'captureId':'b'*64,'index':100},
+              'parents':[],'judgment':{'kind':'label','value':'timeout'},'review':'reviewed','state':'active','note':''}
+    manifest={'requestID':sha,'taskID':sha,'selected':['c'*64],'knownHeads':['d'*64],'historical':True}
+    bodies={}
+    for family,body in [('tasks',task),('decisions',decision),('manifests',manifest)]:
+        shape=spec['paths']['/record-reviews/'+family]['post']['requestBody']['content']['application/json']['schema']
+        check_body=validator(spec,shape);check_body.validate(body);bodies[family]=check_body
+        for key in ('requestID','taskID' if family!='tasks' else 'version'):
+            missing=copy.deepcopy(body);missing.pop(key)
+            for bad in (missing,{**body,key:None}):
+                assert not check_body.is_valid(bad), ('missing/null review field accepted',family,key)
+        for bad in (None,[],{**body,'requestID':'A'*64},{**body,'requestID':'a'*63},
+                    {**body,'record':{'untrusted':True}},{**body,'recordedAt':'2026-11-07T00:00:00Z'}):
+            assert not check_body.is_valid(bad), ('untrusted review envelope accepted',family,bad)
+
+    check=bodies['tasks']
+    maximum={**task,'labels':[{'key':f'label-{i}','title':f'Label {i}'} for i in range(16)]}
+    check.validate(maximum)
+    for fields in ({'version':2},{'name':'Uppercase'},{'title':' '},{'title':'a'*121},
+                   {'labels':None},{'labels':[]},{'labels':task['labels']*2},
+                   {'labels':maximum['labels']+[{'key':'overflow','title':'Overflow'}]},
+                   {'labels':[{'key':'timeout','title':'Timeout','automatic':True}]}):
+        assert not check.is_valid({**task,**fields}), ('invalid review task admitted',fields)
+
+    check=bodies['decisions']
+    for kind in ('uncertain','abstain'):
+        check.validate({**decision,'judgment':{'kind':kind}})
+        for value in ('',None,'timeout'):
+            assert not check.is_valid({**decision,'judgment':{'kind':kind,'value':value}}), 'nonlabel judgment carried a value'
+    check.validate({**decision,'parents':None,'note':None})
+    check.validate({**decision,'state':'withdrawn','parents':['c'*64]})
+    bad_targets=[None,{}, {'captureId':'b'*64}, {'captureId':'b'*64,'index':None},
+                 {'captureId':'b'*64,'index':-1},{'captureId':'b'*64,'index':1000},
+                 {'captureId':'b'*64,'index':True},{'captureId':'b'*64,'index':'100'},
+                 {'captureId':'b'*64,'index':0,'recordDigest':sha}]
+    for target in bad_targets:
+        assert not check.is_valid({**decision,'target':target}), ('untrusted occurrence admitted',target)
+    for fields in ({'judgment':None},{'judgment':{'kind':'label'}},
+                   {'judgment':{'kind':'label','value':None}},
+                   {'judgment':{'kind':'abstain','value':'timeout'}},
+                   {'judgment':{'kind':'automatic','value':'timeout'}},
+                   {'review':'confirmed'},{'state':'deleted'},{'state':'withdrawn','parents':[]},
+                   {'parents':[sha,sha]},{'parents':[f'{i:064x}' for i in range(9)]},
+                   {'note':'a'*2049},{'note':'bad\x00value'}):
+        assert not check.is_valid({**decision,**fields}), ('invalid review decision admitted',fields)
+
+    check=bodies['manifests']
+    check.validate({**manifest,'knownHeads':None})
+    missing_historical=copy.deepcopy(manifest);missing_historical.pop('historical')
+    assert not check.is_valid(missing_historical), 'implicit historical export admitted'
+    for fields in ({'historical':False},{'historical':None},{'historical':'true'},
+                   {'selected':[]},{'selected':None},{'selected':[sha,sha]},
+                   {'selected':[f'{i:064x}' for i in range(33)]},
+                   {'knownHeads':[f'{i:064x}' for i in range(65)]},{'latest':True},
+                   {'items':[{'label':'timeout','record':{}}]}):
+        assert not check.is_valid({**manifest,**fields}), ('implicit/unbounded review manifest admitted',fields)
+
+    op=spec['paths']['/record-reviews/records/{captureId}/{index}']['get']
+    index=validator(spec,next(p['schema'] for p in op['parameters'] if p['name']=='index'))
+    for value in ('0','100','999'):index.validate(value)
+    for value in ('00','01','-1','-0','+0','1.0','1000',' 1'):
+        assert not index.is_valid(value), ('noncanonical stored index admitted',value)
+    export=spec['paths']['/record-reviews/manifests/{id}/export']['get']
+    assert export['x-go-response-limit-bytes']==4194304
+    media=export['responses']['200']['content']['application/x-ndjson']
+    line={'taskID':sha,'decisionID':'b'*64,'target':decision['target'],'recordDigest':'c'*64,'label':'timeout','record':{'integer':18446744073709551615}}
+    check_line=validator(spec,media['x-ndjson-item-schema']);check_line.validate(line)
+    assert not check_line.is_valid({**line,'label':None})
+    assert not check_line.is_valid({**line,'target':{'captureId':'b'*64}})
+    assert not validator(spec,{'$ref':'#/components/schemas/CaptureReviewError'}).is_valid({'error':1})
+    # These are actual parsed Go handler observations, not the older frozen
+    # body/header envelope. Go tests separately check raw NDJSON framing/headers.
+    observations=json.loads((ROOT/'testdata/http/capture-reviews.json').read_text())
+    accepted=[];seen=set()
+    for observation in observations:
+        method,path=observation['method'].lower(),observation['path']
+        seen.add((method,path));operation=spec['paths'][path][method]
+        response=operation['responses'][str(observation['status'])]
+        if path.endswith('/export'):
+            check_line.validate(observation['response'])
+        else:
+            validator(spec,response['content']['application/json']['schema']).validate(observation['response'])
+        if 'requestBody' in operation:
+            shape=operation['requestBody']['content']['application/json']['schema']
+            validator(spec,shape).validate(observation['request'])
+            accepted.append((shape,observation['request']))
+    assert seen==set(routes), 'actual review observations do not cover all eight operations'
+    print(f'Captured-record review: {len(observations)} actual responses and {len(accepted)} requests conform; parsed export lines checked, framing/headers remain Go assertions')
+    return len(observations),accepted
+
+
 def check_package_scopes(spec):
     scopes=[{'version':'goo/environment-selector/v1','policy':policy,'scope':{'mode':mode,**({'value':"prod-'雪"} if mode=='named' else {})}} for policy,mode in [('current-only','named'),('effective','named'),('effective','empty'),('effective','unreported')]]
     base={'adapter':'clickhouse.otel/v1','signal':'spans'}
@@ -928,6 +1040,7 @@ def check_record_step_selector(spec):
 
 
 def check(spec):
+    review_responses,review_accepted=check_capture_reviews(spec)
     check_package_scopes(spec)
     check_typed_reported_edges(spec)
     check_typed_trace_search(spec)
@@ -1018,8 +1131,8 @@ def check(spec):
         assert fields['id'].isdigit()
         shape = spec['paths']['/tail']['post']['x-sse-events'][fields['event']]
         validator(spec, shape).validate(json.loads(fields['data']))
-    responses = requests = mux_refusals = 0
-    accepted = []
+    responses,requests,mux_refusals=review_responses,len(review_accepted),0
+    accepted = list(review_accepted)
     for fixture in sorted((ROOT / 'testdata/http').glob('*.json')):
         data = json.loads(fixture.read_text())
         if not isinstance(data, dict) or 'cases' not in data:
@@ -1040,6 +1153,15 @@ def check(spec):
             assert media in content, (fixture.name, case['name'], media)
             payload = json.loads(case['response']) if media == 'application/json' else case['response']
             validator(spec, content[media]['schema']).validate(payload)
+            if path.startswith('/record-reviews/'):
+                assert case['headers']['Cache-Control']=='no-store', (fixture.name,case['name'])
+            if media == 'application/x-ndjson':
+                assert case['response'].endswith('\n')
+                lines=case['response'].splitlines()
+                assert 1<=len(lines)<=32 and len(case['response'].encode())<=4194304
+                check_line=validator(spec,content[media]['x-ndjson-item-schema'])
+                for line in lines:check_line.validate(json.loads(line))
+                assert case['headers']['Content-Disposition'].startswith('attachment;')
             responses += 1
             if case['status'] < 300 or case['status'] == 502:
                 if 'requestBody' not in op:
@@ -1054,9 +1176,9 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    # The 13-case history envelope adds 12 JSON responses, 5 accepted
-    # requests and one method-mux refusal to previous417/154/27.
-    assert responses == 450 and requests == 173 and mux_refusals == 28, (responses, requests, mux_refusals)
+    # Captured-record review adds 13 actual successful responses (one NDJSON)
+    # and seven accepted POST bodies to the prior 450/173/28 fixture baseline.
+    assert responses == 463 and requests == 180 and mux_refusals == 28, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)

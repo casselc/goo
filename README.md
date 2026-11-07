@@ -600,12 +600,11 @@ The [active roadmap](docs/ROADMAP_2026_11_05.md) adopts the
 [363 whole-product reconciliation](docs/reviews/ROADMAP_RECONCILIATION_363.md):
 364 saved native interval → supporting records is delivered with native/model,
 actor and shared kept-context regression checks. The
-[365 readiness foundation](docs/CAPTURE_RECORD_REVIEW_GATE.md) now resolves exact
-captured occurrences and demonstrates bounded pinned-review file publication;
-full task-review UI/HTTP/artifacts/export are not implemented. After remaining
-gate checks, build that one bounded task, then measured compact comparison
-headers. If review scope grows beyond the closed contract, defer it and advance
-that known layout improvement.
+[365 captured-record review](docs/CAPTURE_RECORD_REVIEW.md) builds on the accepted
+occurrence resolver: declare or reuse a categorical task, append explicit review
+revisions, and download a historical pinned JSONL manifest. Native browser/model/actor acceptance
+passes; [validation](VALIDATION.md) records checks and limits.
+Next is 366: compact paired comparison headers, with measured desktop/narrow layouts.
 
 Go library entry points: `subjectfacts` provides portable prepared-fact aggregation
 and offline ClickHouse/Databricks compilation; `measurements` binds/evaluates native

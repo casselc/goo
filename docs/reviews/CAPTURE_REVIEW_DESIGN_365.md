@@ -1,9 +1,9 @@
 # One captured-record review task — readiness gate365
 
-Status: bounded semantic readiness gate accepted after resolver/publication proofs.
-Only the public ResolveRecord capability is production implementation; full review
-UI, HTTP/storage families and export remain proposed. No runtime/frame acceptance
-is claimed for that future workflow.
+Status: full bounded feature accepted after final source, canonical native/model/actor
+and original-detail actual-frame review. Earlier readiness-only sections remain
+historical; the delivered [user/data contract](../CAPTURE_RECORD_REVIEW.md) supersedes
+the gate snapshot.
 
 ## One user task, inside the current inspector
 
@@ -104,3 +104,63 @@ this is semantic readiness, not a claim that a review product or manifest export
 endpoint exists. Full contextual UI, production review storage/HTTP and actual
 journeys/screenshots remain proposed. The gate is sufficiently bounded to continue
 planned work without a generic metadata framework or new store dependency.
+
+## Authorized full-feature phase — acceptance pending
+
+Root has now authorized the bounded production workflow after the readiness gate:
+Go review storage, HTTP routes, contextual record-inspector UI and pinned manifest
+publication. The gate above remains historical proof, not final feature acceptance.
+Source candidate and genuine desktop/narrow frames are pending.
+
+Recommended contextual ordering is resolved occurrence preview, Task reuse (Load
+task ID; Create task secondary), judgment and note, then **Save judgment** as
+unreviewed. Show current selected revision state before explicit Mark reviewed,
+Dispute or Withdraw actions. Label choices come only from the loaded immutable
+task; there is no universal negative toggle. Keep publication/refusal state distinct
+from editable drafts and preserve drafts when a request fails.
+
+Manifest controls belong in secondary **Pin reviewed example** context. Name the
+result **Pinned historical manifest** or equivalent, never Current truth. Full
+selected revision, observed heads/known ancestry and unknown-branch limits remain
+accessible without a paragraph wall before the record. Loading a task/decision or
+publishing metadata must not read telemetry, silently select another occurrence,
+replace draft work or take ownership after the inspector/selection departs.
+
+## Final full-feature source acceptance
+
+Accepted the frozen UI contract, with runtime/frame acceptance still pending.
+A loaded task now starts at **Choose judgment** and cannot save until the user
+explicitly selects a declared label, Uncertain or Abstain. Review/Dispute/Withdraw
+require an unchanged selected stored revision's judgment/note; edited drafts must
+first be saved as an unreviewed correction, and direct callbacks recheck this.
+Resolve known heads deliberately creates an unreviewed merged judgment. These
+checks close the two source-review footguns: accidental first-label publication
+and silently marking an edited draft reviewed.
+
+The existing captured inspector hosts the contextual disclosure; metadata DTOs
+must match the immutable task/occurrence, and disclosure/action leases retire late
+responses/old handlers. Pending writes retain the original request identity for
+explicit retry rather than silently creating another revision. Source acceptance
+is not a native/runtime pass or visual claim; final actual frames remain pending.
+
+
+## Final full-feature actual acceptance
+
+Viewed the current original-detail365-target-task.png,365-reviewed-occurrence.png
+and365-historical-manifest-390.png after canonical native traffic restoration.
+The target frame identifies stored occurrence101, its exact capture, event UTC,
+original custody/source-read clocks and immutable task reuse inside the existing
+log inspector. The reviewed frame actually shows label timeout · reviewed · active,
+selected decision ID, Save-before-review help and historical-branch warning. The
+narrow manifest frame shows Historical pinned manifest, a usable Download pinned
+JSONL link,1 example/2 pinned revisions and occurrence101; exact JSON stays closed.
+No overflow or material blocked action is apparent in these task-positioned crops.
+
+Accepted bounded UX. Canonical source-refused runtime, positive actor and required
+observed-model checks establish zero telemetry, server raw-member authority,
+publication retry/ownership, judgment states and historical export semantics
+independently of appearance. The manifest is selected historical evidence, not
+latest/global consensus, authenticated attribution or training ground truth.
+The controls still expose exact IDs and the inspector uses internal scrolling;
+these frames establish task readability, not frictionless first-time discovery or
+compact full-product density. No further365 scope or production edit is required.

@@ -9,10 +9,10 @@
 > regression checks. [365's readiness foundation](CAPTURE_RECORD_REVIEW_GATE.md)
 > is delivered: the Go resolver and private bounded-publication demonstrations
 > pass focused/generated checks; the main Go suite also passes.
-> Full one-task review UI/HTTP/artifact/export delivery is not implemented and is
-> next after gate acceptance. Then 366 measured compact paired evidence headers.
-> If review scope grows beyond the bounded contract, defer it explicitly and
-> advance 366. Review the whole product again after this sequence.
+> The full one-task review store/API/contextual UI and pinned JSONL exporter are
+> delivered with UI, Go, generated/model and native/actor acceptance. See [feature contract](CAPTURE_RECORD_REVIEW.md)
+> and [actual validation](../VALIDATION.md). Then 366 measured compact paired
+> evidence headers. Review the whole product again after this sequence.
 > Delivery notes below are retained history, not parallel active queues.
 
 
