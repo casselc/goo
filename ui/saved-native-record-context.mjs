@@ -1,5 +1,5 @@
 import * as Measurements from './measurements.mjs';
-import * as NativeRecordContext from './native-record-context.mjs';
+import {admitHeld} from './native-held-record-context.mjs';
 import {actionVisible} from './visualizations.mjs';
 
 const clone=value=>structuredClone(value);
@@ -10,17 +10,6 @@ function checked(page){
  const receipt=page?.receipt,measurement=page?.measurement;
  if(!/^[a-f0-9]{64}$/.test(receipt?.id)||receipt.question?.kind!=='measurement'||!measurement?.question||!equal(receipt.question.measurement,measurement.question))throw Error('Stored measurement differs from its immutable receipt.');
  return freeze(clone({receipt,measurement}));
-}
-// Admission is against retained exports, never a synthetic time bucket or a caller's stream.
-function admitHeld(held,detail){
- const r=held.measurement,kind=r.question.definition?.kind;
- if(!['counter','histogram'].includes(kind)||!detail||!equal(detail.measurement,r.question)||!equal(detail.basis,r.basis)||detail.readAt!==r.readAt)throw Error('Record context requires the held native export interval.');
- const series=(kind==='counter'?r.counters:r.histograms)?.series;
- const s=series?.find(item=>equal(item.stream,detail.stream));
- if(!s||!Array.isArray(s.intervals)||!s.intervals.some(item=>item.fromNS===detail.fromNS&&item.toNS===detail.toNS))throw Error('Record context requires the held exact stream and export bounds.');
- const plan=NativeRecordContext.plan(r.question,s.stream,detail.question?.signal,detail.fromNS,detail.toNS);
- if(!equal(detail.question,plan.question)||detail.grain!==plan.grain)throw Error('Record context changed the planned record question.');
- return freeze(clone({...plan,measurement:r.question,stream:s.stream,basis:r.basis,readAt:r.readAt}));
 }
 function admit(page,detail){return admitHeld(checked(page),detail)}
 function mount(host,{active=()=>true,onOpenContext=()=>false}={}){

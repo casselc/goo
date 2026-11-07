@@ -1,5 +1,64 @@
 # Validation record
 
+## Service native interval context — 368
+
+The service histogram's held exact-stream renderer now exposes the existing
+Logs/Spans interval actions. A shared pure admission check verifies actual held
+stream/export membership, full measurement question, basis/read clock and the
+recomputed context question. The saved-native adapter reuses that extracted
+check without changing receipt admission. Service generation/result ownership,
+creation-time callback leases, visible opener checks and a pending-overview
+barrier govern departure; ordinary hide/show renews callbacks against ABA.
+The app reuses its retained-record helper and actual child visit for cancellation
+before Back to service. No endpoint, schema, metric predicate inference or new
+planner is introduced. Architecture/design source and actual-frame reviews accept
+this bounded tab-held context flow.
+
+Go 1.27.3 `go test -p 2 ./...` passes (cmd/goo 8.937s, workbench 1.491s; unchanged
+packages cached). The full frontend suite passes **1,263 tests**, zero skips,
+in 17.531s. Six new focused tests cover all four typed policies, missing/empty/
+named namespace, both signals, immutable admission, wrong exports, hidden/stale/
+lazy actions, refusal recovery and held DOM/selection across Return. Forty Hegel
+cases pass in **9.60s** (package 9.614s), zero skips, including independent integer
+membership and actual mounted randomized lease schedules. Existing exact-membership
+and native-context protocol checks pass in 0.04s and 10.07s. Node's sandbox child
+runner emitted only file-level counts; actual suite assertions were run outside
+that sandbox. The first generated harness mixed an experimental warning into its
+JSON stdout; separate diagnostic stderr fixes that test harness failure.
+
+The rebuilt image is healthy; all five changed embedded UI assets match source.
+The genuine service-entry journey passes in about **1.3 minutes** (runner 1.4m).
+Real OTLP histogram evidence supplies one exact export interval; the contextual
+query preserves effective environment policy and exact namespace/instance plus
+nanosecond endpoints. An independent raw SQL and fixture-membership oracle agrees
+on **12 logs**, including legacy environment fallback while excluding conflicting
+current environment, foreign resources and outside endpoints. Selection, Stage,
+Return and saved stale actions read zero telemetry/store/SQL; each explicit Run
+makes one record read. Success, source refusal and a genuine 200 response held
+until after Return preserve the same source DOM, selected interval, basis and
+focused visible opener. Actual abort increases before the late response is
+released; the released response changes no UI/source state.
+
+Required observed replay passes in **5.25s** (package 5.266s), zero skips. It
+projects recorded fact names/cumulative reads into the existing drilldown model;
+source-read and Return-order mutants fail. The pending Stage/Run macro is a logical
+split at actual recorded counters, not a claimed intermediate DOM observation.
+The separate Bombadil campaign passes in **45.145s**, **823 snapshots / 11 phases**,
+with positive visible completion, exact question/12 records, held source, focused
+opener and source budget. Process exit alone is not acceptance.
+
+Three current desktop/narrow originals and the actual actor terminal were
+reviewed. Frames are task-positioned, not proof of compact whole-overview layout;
+the existing table remains a bounded horizontal inspection surface. Owned run
+diagnostics shrink from 47,823,948 to 420,241 bytes after review, retaining actual
+captures/inputs/results/model projections, compressed trace and terminal frame.
+This proves contextual time/resource matching, not contribution, exemplars,
+causality, full traces or an atomic cross-signal snapshot. Native browser coverage
+is one histogram/log flow; both signals/policy variants are covered by generated
+and focused tests. See [contract](docs/SERVICE_NATIVE_RECORD_CONTEXT.md) and
+[storyboard](docs/journeys/368-service-native-context.md). Next is 369's measured
+large-facet interaction budget, followed by the scheduled whole-product checkpoint.
+
 ## Current RPC reusable views — 367
 
 The existing template flow now supports shipped `otel.rpc-server-current-methods`

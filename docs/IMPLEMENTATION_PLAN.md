@@ -7,8 +7,10 @@
 > Each has Go/UI/native/model/actor validation appropriate to its changed authority.
 > **367 reusable current RPC service views is delivered**, including the actual
 > typed-query echo regression and native/model/actor acceptance.
-> Next: **368 exact native service interval supporting-records/Return →
-> 369 measured large-facet interaction budget**.
+> **368 exact native service interval supporting-records/Return is delivered**,
+> with held-owner admission, explicit Run, actual child cancellation and validated
+> native/model/actor Return.
+> Next: **369 measured large-facet interaction budget**.
 > 369 adds rendering changes only if a genuine task budget is exceeded; otherwise
 > close the measurement without implementing a generic virtualizer. Preserve the
 > finite breadth/depth/consolidation cadence and review again after this sequence.

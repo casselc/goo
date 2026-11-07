@@ -285,6 +285,10 @@ duration and literal route/method/database/destination populations, then narrow 
 open a trace. [Current RPC reusable views](docs/CURRENT_RPC_VIEW_TEMPLATE.md) let a
 service's method presentation be edited/saved and applied to another exact
 compatible service scope, with missing/empty methods retained and Run explicit.
+[Service native interval context](docs/SERVICE_NATIVE_RECORD_CONTEXT.md) stages
+logs or spans from an exact histogram export interval for explicit Run, then
+returns to the held service card without rereading metrics. Shared resource/time
+provides context, not contribution or causality.
 All spans remains available; native metrics retain separate units,
 streams and intervals. Measurements now describes the same
 [current RPC duration candidate](docs/RPC_CAPABILITY_PARITY.md) using the pinned

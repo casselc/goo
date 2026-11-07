@@ -1,5 +1,14 @@
 # Known issues and gaps
 
+368 delivers exact held service histogram interval context with explicit fresh
+record Run and Return to the same service selection. Go/UI1263, Hegel40, real
+12-log oracle, observed model/mutants and positive actor acceptance pass. Service
+origin is tab-held evidence, not an immutable capture; context does not establish
+contribution or causality. Gauge/stock lookaround, aggregate buckets and broad
+resource joins are excluded. See [contract](SERVICE_NATIVE_RECORD_CONTEXT.md) and
+[validation](../VALIDATION.md). Next is 369: measure genuine large-facet task
+budgets before selecting any rendering change.
+
 367 delivers reusable current RPC service views with whole destination scope,
 optional method groups and explicit Run. The real span-only journey also exposed
 and fixed record-query echo matching for typed environment selectors; equivalent
@@ -8,7 +17,7 @@ Hegel40, actual native/model and positive actor checks pass. Current RPC require
 Server plus nonempty current `rpc.system.name`; legacy-only metadata and Client
 populations are incompatible. Native templates remain separate. See
 [contract](CURRENT_RPC_VIEW_TEMPLATE.md) and [validation](../VALIDATION.md).
-Next is 368 exact native service interval supporting-records/Return.
+368 is delivered below the same service workflow; 369 is the current consolidation item.
 
 366's compact retained-comparison headers pass matched desktop/narrow acceptance:
 the first positive timing bar is visible on fresh Compare at 464/759 px. All seven

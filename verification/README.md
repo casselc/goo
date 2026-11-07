@@ -1,5 +1,19 @@
 # Semantic properties and model conformance
 
+## Service native interval context (368)
+
+`TestHegelServiceNativeContext368` compares Go plans and JavaScript held-export
+admission for both record signals, exact integer boundaries and reported resource
+identity. Generated mounted-owner schedules exercise retired callbacks, hidden
+controls, renewed leases and replacement without inventing a capture receipt.
+
+`TestQuintServiceNativeContextObserved368` requires the genuine browser report
+through `GOO_SERVICE_NATIVE_CONTEXT_368_REPORT`. It admits actual held intervals,
+raw record IDs, source counters and child cancellation before projecting recorded
+facts into the existing population-drilldown model. Source-read and ordering
+mutants must fail. The optional test is not acceptance without that report;
+execution status belongs in [validation](../VALIDATION.md).
+
 ## Current RPC observations (357)
 
 Forty generated cases compare actual bounded JavaScript witnesses and Go plans

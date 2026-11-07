@@ -181,6 +181,7 @@ function openRetainedRecords(question,source,{view,title,backLabel,citation,noti
  retainedContextReturn.show({title,question:scope,backLabel,citation,notice,onBack:()=>{if(!source.current()||!visit.current())return;visit.suspend();visit.releaseReturn();retainedContextLease=null;source.onBack()}});
  if(hash)history.pushState(null,'',hash);return true;
 }
+globalThis.addEventListener('goo:service-native-record-context',event=>{const {plan,source}=event.detail||{};if(!plan||!source?.current?.())return;event.detail.accepted=openRetainedRecords(plan.question,source,{title:'From service native interval',backLabel:'Back to service',scope:{...plan.measurement,fromNS:plan.fromNS,toNS:plan.toNS},notice:'Coincident resource and time context; metric dimensions are not record filters. Shared time does not establish cause.'})===true});
 Captures.mount({restoreKeptRoute:()=>appWorkspace.navigate('investigations',{writeHash:false}),openKeptView:(view,source)=>openRetainedRecords(view.queries[0],source,{view,title:'Kept observation',backLabel:'Back to kept observation'}),onOpenNativeContext:(detail,source)=>openRetainedRecords(detail.question,source,{
  title:'From saved native interval · '+source.receipt.id.slice(0,12),backLabel:'Return to saved measurement',writeHash:true,
  scope:{...source.question,fromNS:detail.fromNS,toNS:detail.toNS},
