@@ -1,5 +1,28 @@
 # Semantic properties and model conformance
 
+## Unsupported exponential discovery (376)
+
+`TestHegelUnsupportedMetricDiscovery376` drives the actual `Source.Discover`
+transport with independently keyed metadata, varied typed environments/namespaces,
+duplicated points and ordinary supported siblings. It checks exact identity,
+point counts, dimension unions and the absence of exponential execution authority.
+`TestUnsupportedMetricDiscoveryAvailabilityAndCap376` rejects ambiguous probes,
+source failures/cancellation and an over-limit global population.
+
+```sh
+go test -run '^(TestHegelUnsupportedMetricDiscovery376|TestUnsupportedMetricDiscoveryAvailabilityAndCap376)$' -count=1 -v
+```
+
+The API checker accepts `--unsupported-metric-discovery-observations
+artifacts/unsupported-instruments376/summary.json` from the repository root to
+validate actual wire results and six rejecting controls.
+
+The real `journeys/376-unsupported-instruments.spec.js` reuses retained 374/373
+fixtures without ingestion. `GOO_UNSUPPORTED_INSTRUMENTS_BOMBADIL=1` also exercises
+positive visible unsupported-metadata completion. This metadata-only path does
+not fabricate an evaluation trace or imply exponential-kernel support. See the
+[contract](../docs/UNSUPPORTED_METRIC_DISCOVERY.md).
+
 ## Grouped-row presentation (375)
 
 The real browser journey `journeys/375-grouped-records.spec.js` records matched

@@ -19,8 +19,10 @@
 > [source/representation decision](EXPONENTIAL_HISTOGRAM_READINESS.md).
 > **375 grouped-row identity/actions are delivered**, with matched ordinary and
 > triage fit, native DOM and current leases.
-> **Current: 376 observed unsupported metric discovery**, then 377 exemplar
-> readiness/one reported trace link if closed, and 378 native failure/recovery.
+> **376 observed unsupported metric discovery is delivered**, with explicit
+> optional-source availability and no exponential execution authority.
+> **Current: 377 exemplar readiness/one reported trace link if closed**, then
+> 378 native failure/recovery consolidation.
 > See the [checkpoint reconciliation](reviews/ROADMAP_RECONCILIATION_375.md).
 > Do not turn blocked native grammar or broker research into a new executor,
 > compatibility layer or unbounded product platform.

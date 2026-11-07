@@ -154,6 +154,12 @@ func observedCoverage(i Instrument, observations []DiscoveryObservation) Instrum
 // PlanInstrument is pure metadata planning. It does not verify telemetry semantics.
 func PlanInstrument(i Instrument, observations []DiscoveryObservation) InstrumentCapabilityPlan {
 	p := InstrumentCapabilityPlan{Version: CapabilityPlanVersion, Profile: "generic", Title: "Generic metric", Eligible: i.Supported && i.Definition != nil, Verification: "not-run", Reasons: []string{}, Hints: []string{}, Coverage: observedCoverage(i, observations)}
+	if i.Kind == exponentialHistogramKind {
+		p.Eligible = false
+		p.Title = "Observed exponential histogram"
+		p.Reasons = append(p.Reasons, exponentialHistogramUnsupportedReason)
+		return p
+	}
 	if i.Scope == "" {
 		p.Reasons = append(p.Reasons, "Instrumentation scope is omitted.")
 	}

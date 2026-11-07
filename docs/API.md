@@ -51,6 +51,15 @@ flowchart LR
   Spec --> Check
 ```
 
+## Observed metric discovery
+
+`POST /metric-discovery` reads one fixed optional exponential-table presence probe,
+then a globally bounded metadata union for the supplied fixed question. An absent
+optional table adds a typed `diagnostics` entry while ordinary instrument discovery
+remains usable. Probe/query errors fail the request rather than implying absence.
+Counts refer to exported points; exponential instruments remain unsupported and
+carry no executable definition. See [discovery contract](UNSUPPORTED_METRIC_DISCOVERY.md).
+
 ## What the schemas promise
 
 All supported Go request and response envelopes have typed shapes. Nested

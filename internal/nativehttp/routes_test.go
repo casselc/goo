@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync/atomic"
 	"testing"
 
 	"github.com/casselc/goo/exploration"
@@ -88,11 +89,21 @@ func TestNativeCustodyUsesConfiguredDirectoryOnlyForLifecycle(t *testing.T) {
 	row := map[string]any{"body": d.Lifecycle.Accepted, "service": d.Source.Services[0], "resource": map[string]string{"deployment.environment.name": d.Environment}, "attributes": map[string]string{
 		d.Lifecycle.EventID: "fixture-event", d.Lifecycle.EventTime: "150000000000", d.Lifecycle.Subject: "fixture-subject", d.Lifecycle.Tenant: "fixture-tenant", d.Lifecycle.Release: "fixture-release",
 	}}
+	var reads, probes, unions atomic.Int32
 	source := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		reads.Add(1)
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			t.Error(err)
 			return
+		}
+		if string(body) == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
+			probes.Add(1)
+			io.WriteString(w, "{\"result\":1}\n")
+			return
+		}
+		if strings.Contains(string(body), "UNION ALL") {
+			unions.Add(1)
 		}
 		if strings.Contains(string(body), "FROM otel_logs") {
 			json.NewEncoder(w).Encode(row)
@@ -106,8 +117,8 @@ func TestNativeCustodyUsesConfiguredDirectoryOnlyForLifecycle(t *testing.T) {
 	discovery := fmt.Sprintf(`{"environment":%q,"service":%q,"fromMs":100000,"toMs":220000}`, d.Environment, d.Source.Services[0])
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, httptest.NewRequest("POST", "/metric-discovery", strings.NewReader(discovery)))
-	if w.Code != 200 {
-		t.Fatal(w.Code, w.Body.String())
+	if w.Code != 200 || reads.Load() != 2 || probes.Load() != 1 || unions.Load() != 1 {
+		t.Fatal("discovery probe and global source read", w.Code, w.Body.String(), reads.Load(), probes.Load(), unions.Load())
 	}
 	if _, err := os.Stat(dir); !os.IsNotExist(err) {
 		t.Fatal("discovery created lifecycle custody", err)
@@ -136,6 +147,9 @@ func TestNativeCustodyUsesConfiguredDirectoryOnlyForLifecycle(t *testing.T) {
 		} else if !bytes.Equal(original, data) {
 			t.Fatal("repeated read rewrote custody observation")
 		}
+	}
+	if reads.Load() != 4 || probes.Load() != 1 || unions.Load() != 1 {
+		t.Fatal("discovery/lifecycle source budgets", reads.Load(), probes.Load(), unions.Load())
 	}
 	entries, err := os.ReadDir(root)
 	if err != nil || len(entries) != 1 || entries[0].Name() != "configured-custody" {

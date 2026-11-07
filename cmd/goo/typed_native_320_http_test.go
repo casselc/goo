@@ -22,6 +22,9 @@ func TestTypedCounterHistogramDiscoveryValuePackageHTTP320(t *testing.T) {
 	client := &http.Client{Transport: nativeDependencyTransport(func(request *http.Request) (*http.Response, error) {
 		reads++
 		sql, _ := io.ReadAll(request.Body)
+		if strings.HasPrefix(string(sql), "EXISTS TABLE ") {
+			return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader("{\"result\":1}\n"))}, nil
+		}
 		rows := []map[string]any{}
 		if strings.Contains(string(sql), " AS kind, ScopeName") {
 			for _, kind := range []string{"counter", "histogram"} {
@@ -68,7 +71,7 @@ func TestTypedCounterHistogramDiscoveryValuePackageHTTP320(t *testing.T) {
 	}
 	response := post("/metric-discovery", measurements.DiscoveryQuestion{EnvironmentSelector: &selector, Namespace: &identity.Namespace{Mode: "value", Value: "team"}, Service: "api", FromMS: 100000, ToMS: 104000})
 	var discovery measurements.DiscoveryResult
-	if response.Code != 200 || json.Unmarshal(response.Body.Bytes(), &discovery) != nil || len(discovery.Instruments) != 2 || reads != 1 {
+	if response.Code != 200 || json.Unmarshal(response.Body.Bytes(), &discovery) != nil || len(discovery.Instruments) != 2 || reads != 2 {
 		t.Fatal("typed family discovery failed", response.Code, response.Body.String())
 	}
 	for _, instrument := range discovery.Instruments {

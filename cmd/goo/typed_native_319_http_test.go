@@ -22,6 +22,9 @@ func TestTypedNativeGaugeHTTPAndPackage319(t *testing.T) {
 	client := &http.Client{Transport: nativeDependencyTransport(func(r *http.Request) (*http.Response, error) {
 		reads++
 		sql, _ := io.ReadAll(r.Body)
+		if strings.HasPrefix(string(sql), "EXISTS TABLE ") {
+			return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader("{\"result\":1}\n"))}, nil
+		}
 		var row any
 		if strings.Contains(string(sql), " AS kind, ScopeName") {
 			row = map[string]any{"kind": "gauge", "scope": "sdk", "version": "", "schemaURL": "", "metric": "load", "unit": "items", "temporality": 0, "monotonic": false, "dimensions": []string{}, "resource": resource, "attributes": map[string]string{}}
@@ -73,7 +76,7 @@ func TestTypedNativeGaugeHTTPAndPackage319(t *testing.T) {
 			question := measurements.Question{Definition: prototype, FromMS: 100000, ToMS: 160000}
 			response := post("/measurements", question)
 			var result measurements.Result
-			if response.Code != 200 || json.Unmarshal(response.Body.Bytes(), &result) != nil || !reflect.DeepEqual(result.Question, question) || result.Gauges == nil || len(result.Gauges.Series) != 1 || *result.Gauges.Series[0].Samples[0].Value != 456 || reads-before != 2 {
+			if response.Code != 200 || json.Unmarshal(response.Body.Bytes(), &result) != nil || !reflect.DeepEqual(result.Question, question) || result.Gauges == nil || len(result.Gauges.Series) != 1 || *result.Gauges.Series[0].Samples[0].Value != 456 || reads-before != 3 {
 				t.Fatal("typed native values/receipt/budget mismatch", response.Code, response.Body.String())
 			}
 		})

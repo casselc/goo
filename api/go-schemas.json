@@ -15961,6 +15961,22 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.DimensionPresence"
   },
+  "measurements.DiscoveryDiagnostic": {
+    "properties": {
+      "kind": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind",
+      "reason"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.DiscoveryDiagnostic"
+  },
   "measurements.DiscoveryQuestion": {
     "properties": {
       "environment": {
@@ -16087,6 +16103,19 @@
   },
   "measurements.DiscoveryResult": {
     "properties": {
+      "diagnostics": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.DiscoveryDiagnostic"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "instruments": {
         "anyOf": [
           {
@@ -16112,6 +16141,7 @@
     },
     "required": [
       "question",
+      "diagnostics",
       "instruments",
       "records",
       "warning"

@@ -774,7 +774,11 @@ source-free display contracts. Native metric semantics remain in separate adapte
 [Native instrument discovery](NATIVE_INSTRUMENT_DISCOVERY.md) reuses `goo-table`
 for compact supplied metadata and native disclosures for hints. Its application
 adapter owns local paging and delegates Build to the measurement owner; no new
-fetching custom element or component library was introduced.
+fetching custom element or component library was introduced. The catalog opts
+into the existing stacked native-table layout with header-derived cell labels.
+Exported-point counts, unsupported status and source-availability diagnostics
+remain application-supplied metadata; controls cannot make unsupported bindings
+executable. See [376 contract](UNSUPPORTED_METRIC_DISCOVERY.md).
 
 
 Retained content now shares the display-only `GooRetentionPresentation` adapter:

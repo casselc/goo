@@ -63,6 +63,10 @@ func TestNativeMeasurementRegistrationsUseIndependentInjectedSources(t *testing.
 					t.Error("injected authentication/readonly not preserved")
 				}
 				sql, _ := io.ReadAll(r.Body)
+				if string(sql) == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
+					io.WriteString(w, "{\"result\":1}\n")
+					return
+				}
 				if strings.Contains(string(sql), "UNION ALL") {
 					io.WriteString(w, `{"kind":"gauge","scope":"ordinary.runtime","version":"","schemaURL":"","metric":"process.cpu.utilization","unit":"1","temporality":0,"monotonic":false,"dimensions":[]}`+"\n")
 					return
@@ -103,14 +107,14 @@ func TestNativeMeasurementRegistrationsUseIndependentInjectedSources(t *testing.
 				t.Fatal("cross-registration source drift")
 			}
 			r = request("/metric-discovery", measurements.DiscoveryQuestion{Environment: "prod", Service: "api", FromMS: 100000, ToMS: 220000})
-			if r.Code != 200 || reads.Load() != 2 {
+			if r.Code != 200 || reads.Load() != 3 {
 				t.Fatal("native discovery dependency", r.Code, r.Body.String())
 			}
-			if clientCalls.Load() != 2 {
+			if clientCalls.Load() != 3 {
 				t.Fatal("injected client bypassed")
 			}
 			invalid := measurements.Question{Definition: d, FromMS: 220000, ToMS: 100000}
-			if r = request("/measurements", invalid); r.Code != 400 || reads.Load() != 2 {
+			if r = request("/measurements", invalid); r.Code != 400 || reads.Load() != 3 {
 				t.Fatal("invalid question reached source", r.Code)
 			}
 			ctx, cancel := context.WithCancel(context.Background())
@@ -119,7 +123,7 @@ func TestNativeMeasurementRegistrationsUseIndependentInjectedSources(t *testing.
 			cancelled := httptest.NewRecorder()
 			mux.ServeHTTP(cancelled, httptest.NewRequest("POST", "/measurements", strings.NewReader(string(body))).WithContext(ctx))
 			// Cancellation may stop at body receive (400) or source execution (502).
-			if (cancelled.Code != 400 && cancelled.Code != 502) || reads.Load() != 2 {
+			if (cancelled.Code != 400 && cancelled.Code != 502) || reads.Load() != 3 {
 				t.Fatal("cancelled native request reached source", cancelled.Code)
 			}
 			if _, e := os.Stat(filepath.Join(root, "exploration", "custody")); !os.IsNotExist(e) {

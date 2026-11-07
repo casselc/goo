@@ -626,7 +626,11 @@ is closed with execution deferred: the pinned source loses zero thresholds and
 optional presence, and the current native representation needs a distinct contract.
 [Grouped rows](docs/GROUP_ROW_PRESENTATION.md) now keep identity, count and
 controls together on narrow screens through the existing table components.
-Next is explicit discovery of observed unsupported metric families.
+[Metric discovery](docs/UNSUPPORTED_METRIC_DISCOVERY.md) now shows observed
+exponential instruments with exported-point counts and an unsupported status,
+without making them executable. Optional-source absence is explicit.
+Next is explicit-histogram exemplar readiness and one exact reported trace link
+if source fidelity closes.
 Whole-product reviews and proposed work are distinct from
 [validated delivery](VALIDATION.md).
 

@@ -1,5 +1,85 @@
 # Validation record
 
+## Observed unsupported exponential instruments — 376
+
+Implementation extends metric discovery with distinct `exponential-histogram`
+metadata, never a generated executable Definition or eligible capability plan.
+The fixed optional-table presence probe accepts exactly one literal 0/1 result;
+absence produces an explicit diagnostic while supported families remain usable.
+Probe/query errors, cancellation and global overflow fail the request, never
+silently drop a family. All included families share the existing 10,000-point
+cap and exact typed environment/namespace/service/fixed-window predicates.
+
+The final full `go test ./... -count=1` passes under **Go 1.27.3**. Focused adapter
+checks pass in 0.070s, affected 319/320 HTTP checks in 0.021s. The first broad run
+identified three old test fixtures assuming a single discovery SQL call; they
+now independently assert one presence probe plus one union, parameter/readonly
+preservation and the actual overflow refusal rather than weakening budgets.
+No production workaround was introduced for those fixture failures.
+
+New Hegel verification passes **40 cases** (0.03s) over actual Source.Discover
+transport with independent identity tuples, duplicate exported points, dimension
+unions, typed environment/namespace variants, supported explicit siblings and
+exponential non-executability. Sixteen availability/error/cancellation/cap
+boundary cases pass; package 0.052s, zero skips. No exponential evaluator or
+synthetic evaluation/model trace is introduced.
+
+All **1,313 frontend tests** pass with zero skips in **20.978s**. New mounted
+catalog tests cover point labels, stacked native header/cell labels, optional
+source diagnostics, direct/forged unsupported callbacks, retired local pages,
+hidden/inert/disabled controls and usable supported siblings. Existing capability
+presentation now avoids duplicating identical server reasons and retains detached
+copies. Counts are exported points rather than represented histogram observations.
+
+Reflected wire shapes and OpenAPI are regenerated: **112 operations, 714 schemas**.
+The API checker passes **476 fixture responses, 186 admitted requests and 28 mux
+refusals**, including its existing rejecting controls and SSE checks. New output
+constraints require a bounded non-null diagnostics array and refuse executable
+exponential instrument declarations. Actual unsupported and supported discovery wire results also pass the API
+checker; six focused controls reject null/incorrect diagnostics and executable
+exponential bindings.
+
+The final rebuilt-image native journey plus actor passes in **45.8s** (48.0s
+total). Health, all four changed UI assets and the 1,434,842-byte OpenAPI match
+the checkout. No ingestion is performed: retained 374 exponential data and the
+373 supported sibling are reused. An independent raw ClickHouse metadata oracle
+checks **eight identities and thirteen exported points**, including a point whose
+represented count is 9007199254740998 but whose exported-point count is one.
+Every exponential row remains unsupported with no Definition and an ineligible
+plan. Supported sibling Build/Preview performs no telemetry read; explicit Run
+preserves the fixed typed scope, two source exports and seven native observations.
+
+Sixteen recorded workflow facts cover exact scope, local metadata inspection,
+direct unsupported-action invocation and supported continuation. Main performs
+**three source acquisitions** (two discoveries and one measurement) and one
+metadata plan; the actor separately performs one discovery. Together the source
+proxy records **seven SQL requests** (three probe/union pairs and one Run), with
+no hidden local-disclosure queries. No evidence/store writes or lab resets occur.
+The existing fixed-scope handoff is the tested component entry; no new automatic
+exponential-only service-inventory navigation is claimed.
+
+At **390px**, the native catalog viewport measures **288/288px scroll/client**
+with zero horizontal offset. Visual review of actual desktop/narrow frames caught
+a thin expanded metadata column; the scoped mobile first-cell span now keeps the
+selected identity, details, count, support and disabled action readable together.
+Only the selected disclosure is open in the refreshed screenshots. The actual
+Chrome AX tree retains native table/column-header structure; this is bounded
+browser evidence, not universal assistive-technology certification.
+
+Bombadil records **642 observations across six phases, 35.068s**, reaching positive
+visible completion with exact question/counts, actual unsupported and Run controls
+disabled, unchanged manual definition, one discovery and zero plans/measurements/
+writes. Early test-only baseline, nested-button selector and output-path assumptions
+prevented completion and were corrected without weakening product guards. The
+final actor selects the exact unsupported action. Original diagnostic reports,
+raw oracle/AX, compressed final trace and positive frame remain compact at about
+**2.50MB**; repeated actor images were removed after review. No new mathematical
+model or fabricated evaluation trace is used for this metadata-only capability.
+
+See the [contract](docs/UNSUPPORTED_METRIC_DISCOVERY.md),
+[architecture](docs/reviews/UNSUPPORTED_METRIC_DISCOVERY_ARCHITECTURE_376.md) and
+[design](docs/reviews/UNSUPPORTED_METRIC_DISCOVERY_DESIGN_376.md).
+
 ## Group identity and actions together — 375
 
 Both grouped-record presenters opt into the existing stacked table layout.

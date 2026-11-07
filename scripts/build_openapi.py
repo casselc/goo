@@ -10,6 +10,18 @@ from go_http_routes import route_sources
 ROOT = Path(__file__).resolve().parents[1]
 ref = lambda name: {'$ref': '#/components/schemas/' + name}
 schemas = json.loads((ROOT / 'api/go-schemas.json').read_text())
+diagnostic = schemas['measurements.DiscoveryDiagnostic']
+diagnostic['additionalProperties'] = False
+diagnostic['properties']['kind'] = {'const': 'exponential-histogram'}
+diagnostic['properties']['reason'] = {'const': 'optional-table-missing'}
+instrument = schemas['measurements.Instrument']
+instrument.setdefault('allOf', []).append({
+ 'if': {'properties': {'kind': {'const': 'exponential-histogram'}}, 'required': ['kind']},
+ 'then': {'properties': {'supported': {'const': False}, 'capabilityPlan': {'properties': {'eligible': {'const': False}}}}, 'not': {'required': ['definition']}}
+})
+discovery = schemas['measurements.DiscoveryResult']
+discovery['properties']['diagnostics'] = {'type': 'array', 'maxItems': 1, 'items': ref('measurements.DiscoveryDiagnostic'), 'description': 'Empty when the optional exponential table is included; an explicit missing-table diagnostic otherwise. Source errors fail discovery, never imply absence.'}
+discovery['properties']['records']['description'] = 'Retained exported data points across all included families, bounded globally at 10000. Not histogram bucket mass, health or ingestion completeness.'
 for name in ('workbench.ActivityView','workbench.ActivityViewInput'):
  schemas[name]['properties']['baselineCapture']['description']='Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and the same checked environment policy/scope; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity.'
 
@@ -1007,6 +1019,8 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if path in ('/environment-scopes','/environment-scopes/records'): codes.update((400,409,429,502))
  if path.startswith('/retained-evidence') and not path.endswith('/status'): codes.add(503)
  if method=='get' and path in ('/http-package','/operation-packages','/operations','/counter-rates','/histograms'): codes.add(503)
+ if path=='/metric-discovery':
+  op['description']='Explicit bounded metric metadata discovery: one fixed optional exponential-table presence probe, then one globally bounded metadata union. Missing optional table is reported in diagnostics while ordinary families remain usable. Probe/query errors fail the request. Exponential histograms are observed metadata only, unsupported for evaluation, without an executable definition. Counts are exported points, not histogram observations or complete inventory.'
  if path.startswith('/native-histogram-views'):
   codes.update((400,404,500))
   if method=='post':codes.add(413)

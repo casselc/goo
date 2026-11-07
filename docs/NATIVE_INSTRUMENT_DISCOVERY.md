@@ -18,9 +18,13 @@ environment for a fresh two-minute inventory. Press Discover explicitly.
 The compact table shows instrument name, observed kind/unit/count and whether a
 package can be previewed. Up to 25 identities appear per local page. More/Previous
 appear only when needed; paging and Metadata and support disclosures read no
-sources and publish nothing. The shared `goo-table` contains horizontal overflow
-on narrow screens. Unsupported shapes in these inventoried families remain visible. Summary and
-exponential-histogram tables are outside this inventory.
+sources and publish nothing. The shared `goo-table` stacks labeled native cells on narrow screens. Unsupported
+shapes remain visible. Exponential histograms are observed as metadata with
+exported-point counts, a clear unsupported reason and no executable definition.
+An explicit diagnostic distinguishes an absent optional exponential table from a
+successfully read empty window. Summary tables remain outside this inventory.
+See [unsupported discovery](UNSUPPORTED_METRIC_DISCOVERY.md) for the availability
+probe, global bound, fidelity limits and broader service-inventory entry boundary.
 
 Build measurement package sends the existing exact definition to the existing Go
 preview validator. It does not execute or save a measurement. Preview canonicalizes
@@ -76,7 +80,12 @@ and local paging, with Build passed back to the existing measurement owner.
 Discovery cancellation, generation invalidation and namespace/scope handling remain
 in `ui/measurements.js`. No component lifecycle starts a request.
 
-## Executable storyboard
+## Executable storyboards
+
+The current [376 journey](../journeys/376-unsupported-instruments-storyboard.md)
+reuses retained exponential and supported explicit histogram data, checks the
+unsupported boundary and the compact narrow layout, and requires positive actor
+completion. Earlier E1 frames below document the original 130 acceptance.
 
 Journey 130 emits language-neutral OTLP for a manifest-free application: an HTTP
 histogram in seconds, the same name in milliseconds, a custom job counter and a
@@ -100,7 +109,7 @@ The [E1 acceptance audit](E1_ACCEPTANCE.md) accepts bounded native discovery,
 HTTP/messaging metadata profiles and observed stream presence. It distinguishes
 preview eligibility from the existing kernels’ interval/value validation. Verified error/denominator policies and typed
 relations require concrete supporting data; they are not offered by these profiles. Existing
-metric support limits (including unsupported non-monotonic sums and exponential
+metric support limits (including delta non-monotonic sums and exponential
 histograms) are not widened by presentation hints. No automatic dashboard or
 persistent convention declaration is created by this cut.
 

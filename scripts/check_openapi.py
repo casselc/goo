@@ -1663,6 +1663,42 @@ def check_container_discovery_observed(spec, path):
     print('Container readiness discovery API: exact container authority and zero state conform; 2 authority/grain mutations rejected')
 
 
+def check_unsupported_metric_discovery(spec, path):
+    """Validate actual discovery wire results and focused rejecting controls."""
+    report = json.loads(Path(path).read_text())
+    operation = spec['paths']['/metric-discovery']['post']
+    request = validator(spec, operation['requestBody']['content']['application/json']['schema'])
+    response = validator(spec, operation['responses']['200']['content']['application/json']['schema'])
+    for name in ('discovery', 'supportedDiscovery'):
+        observed = report[name]
+        request.validate(observed['request'])
+        response.validate(observed['response'])
+    actual = report['discovery']['response']
+    assert actual['diagnostics'] == [] and actual['records'] == 13
+    assert len(actual['instruments']) == 8
+    for item in actual['instruments']:
+        assert item['kind'] == 'exponential-histogram'
+        assert item['supported'] is False and 'definition' not in item
+        assert item['capabilityPlan']['eligible'] is False
+    mutants = []
+    for diagnostic in (None, [{'kind':'exponential-histogram','reason':'healthy'}],
+                       [{'kind':'histogram','reason':'optional-table-missing'}]):
+        mutant = copy.deepcopy(actual)
+        mutant['diagnostics'] = diagnostic
+        mutants.append(mutant)
+    executable = next(item['definition'] for item in report['supportedDiscovery']['response']['instruments'] if item.get('definition'))
+    for field, value in (('supported', True), ('definition', executable)):
+        mutant = copy.deepcopy(actual)
+        mutant['instruments'][0][field] = value
+        mutants.append(mutant)
+    mutant = copy.deepcopy(actual)
+    mutant['instruments'][0]['capabilityPlan']['eligible'] = True
+    mutants.append(mutant)
+    for mutant in mutants:
+        assert not response.is_valid(mutant), 'Unsupported discovery wire mutant accepted'
+    print('Actual unsupported/supported discovery wire results valid; six rejecting controls pass')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--observations')
@@ -1685,12 +1721,15 @@ if __name__ == '__main__':
     parser.add_argument('--pod-phase-discovery-observations')
     parser.add_argument('--container-discovery-observations')
     parser.add_argument('--native-histogram-view-observations')
+    parser.add_argument('--unsupported-metric-discovery-observations')
     parser.add_argument('--native-histogram-time-view-observations')
     parser.add_argument('--native-histogram-comparison-observations')
     parser.add_argument('--native-histogram-evidence-observations')
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.unsupported_metric_discovery_observations:
+        check_unsupported_metric_discovery(spec,args.unsupported_metric_discovery_observations)
     if args.native_histogram_comparison_observations:
         check_native_histogram_comparison(spec,args.native_histogram_comparison_observations,args.native_histogram_evidence_observations)
     if args.native_histogram_time_view_observations:

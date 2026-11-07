@@ -244,6 +244,10 @@ func TestTypedDiscoveryDetachesBeforeIO319(t *testing.T) {
 	resource := rows319(definition)[1].Resource
 	payload := string(raw(map[string]any{"kind": "gauge", "scope": "sdk", "version": "", "schemaURL": "", "metric": "load", "unit": "items", "temporality": 0, "monotonic": false, "dimensions": []string{}, "resource": resource, "attributes": map[string]string{}})) + "\n"
 	source := Source{Endpoint: "http://source", Client: &http.Client{Transport: environmentTransport319(func(r *http.Request) (*http.Response, error) {
+		body, _ := io.ReadAll(r.Body)
+		if strings.HasPrefix(string(body), "EXISTS TABLE ") {
+			return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader("{\"result\":1}\n"))}, nil
+		}
 		question.EnvironmentSelector.Policy = "current-only"
 		question.Namespace.Value = "changed"
 		return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(payload))}, nil

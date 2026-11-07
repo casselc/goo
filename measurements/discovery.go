@@ -7,6 +7,7 @@ import (
 	"github.com/casselc/goo/identity"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 // DiscoveryQuestion is a bounded inventory of observations, never a completeness claim.
@@ -34,11 +35,21 @@ type Instrument struct {
 	Supported         bool                      `json:"supported"`
 	Definition        *Definition               `json:"definition,omitempty"`
 }
+type DiscoveryDiagnostic struct {
+	Kind   string `json:"kind"`
+	Reason string `json:"reason"`
+}
+
+const exponentialHistogramKind = "exponential-histogram"
+const exponentialHistogramUnsupportedReason = "Exponential histogram evaluation is unavailable: zero-threshold and optional-statistic fidelity and exponential bucket geometry are unsupported by the current source adapter and kernel."
+
+// Diagnostics describe checked source availability, never instrument absence.
 type DiscoveryResult struct {
-	Question    DiscoveryQuestion `json:"question"`
-	Instruments []Instrument      `json:"instruments"`
-	Records     int               `json:"records"`
-	Warning     string            `json:"warning"`
+	Question    DiscoveryQuestion     `json:"question"`
+	Diagnostics []DiscoveryDiagnostic `json:"diagnostics"`
+	Instruments []Instrument          `json:"instruments"`
+	Records     int                   `json:"records"`
+	Warning     string                `json:"warning"`
 }
 
 func (q DiscoveryQuestion) Validate() error {
@@ -49,6 +60,17 @@ func (s Source) Discover(ctx context.Context, q DiscoveryQuestion) (*DiscoveryRe
 	q = q.clone()
 	if e := q.Validate(); e != nil {
 		return nil, e
+	}
+	optionalPresent, err := s.exponentialHistogramTablePresent(ctx)
+	if err != nil {
+		return nil, err
+	}
+	diagnostics := []DiscoveryDiagnostic{}
+	kinds := []string{"gauge", "counter", "histogram"}
+	if optionalPresent {
+		kinds = append(kinds, exponentialHistogramKind)
+	} else {
+		diagnostics = append(diagnostics, DiscoveryDiagnostic{Kind: exponentialHistogramKind, Reason: "optional-table-missing"})
 	}
 	parts := []string{}
 	namespaceSQL := ""
@@ -71,8 +93,8 @@ func (s Source) Discover(ctx context.Context, q DiscoveryQuestion) (*DiscoveryRe
 			params["namespace"] = q.Namespace.Value
 		}
 	}
-	for _, kind := range []string{"gauge", "counter", "histogram"} {
-		table := map[string]string{"gauge": "gauge", "counter": "sum", "histogram": "histogram"}[kind]
+	for _, kind := range kinds {
+		table := map[string]string{"gauge": "gauge", "counter": "sum", "histogram": "histogram", exponentialHistogramKind: "exp_histogram"}[kind]
 		tempo, mono := "0", "false"
 		if kind != "gauge" {
 			tempo = "AggregationTemporality"
@@ -83,16 +105,48 @@ func (s Source) Discover(ctx context.Context, q DiscoveryQuestion) (*DiscoveryRe
 		parts = append(parts, fmt.Sprintf("SELECT '%s' AS kind, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schemaURL, MetricName AS metric, MetricUnit AS unit, %s AS temporality, %s AS monotonic, mapKeys(Attributes) AS dimensions, mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName))) AS resource, Attributes AS attributes, ResourceSchemaUrl AS resourceSchemaURL FROM otel_metrics_%s WHERE TimeUnix>=fromUnixTimestamp64Milli({from:Int64}) AND TimeUnix<fromUnixTimestamp64Milli({to:Int64}) AND ServiceName={service:String} AND %s", kind, tempo, mono, table, environmentSQL)+namespaceSQL)
 	}
 	// A single global limit bounds all families. Exceeding it fails without publishing a partial catalog.
-	sql := "SELECT * FROM (" + parts[0] + " UNION ALL " + parts[1] + " UNION ALL " + parts[2] + ") LIMIT 10001 FORMAT JSONEachRow"
+	sql := "SELECT * FROM (" + strings.Join(parts, " UNION ALL ") + ") LIMIT 10001 FORMAT JSONEachRow"
 	rows, e := s.read(ctx, Plan{SQL: sql, Parameters: params})
 	if e != nil {
 		return nil, e
 	}
-	return discoverRows(q, rows)
+	result, err := discoverRows(q, rows)
+	if err != nil {
+		return nil, err
+	}
+	result.Diagnostics = diagnostics
+	return result, nil
+}
+
+// Probe only the fixed optional exporter table. A source failure or malformed
+// answer is not table absence; a later table race still fails the global read.
+func (s Source) exponentialHistogramTablePresent(ctx context.Context) (bool, error) {
+	rows, err := s.read(ctx, Plan{SQL: "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow"})
+	if err != nil {
+		return false, err
+	}
+	if len(rows) != 1 {
+		return false, fmt.Errorf("invalid optional metric table availability response")
+	}
+	var fields map[string]json.RawMessage
+	if json.Unmarshal(rows[0], &fields) != nil || len(fields) != 1 {
+		return false, fmt.Errorf("invalid optional metric table availability response")
+	}
+	switch strings.TrimSpace(string(fields["result"])) {
+	case "0":
+		return false, nil
+	case "1":
+		return true, nil
+	default:
+		return false, fmt.Errorf("invalid optional metric table availability response")
+	}
 }
 func discoverRows(q DiscoveryQuestion, rows []json.RawMessage) (*DiscoveryResult, error) {
+	if len(rows) > RowLimit {
+		return nil, fmt.Errorf("source exceeds 10000 rows; no partial discovery")
+	}
 	q = q.clone()
-	out := &DiscoveryResult{Question: q, Instruments: []Instrument{}, Records: len(rows), Warning: "Observed metadata only; not a complete instrument or dimension inventory. No fleet aggregation is implied. Empty version/schema values are exact matches. Counter and histogram support is restricted by the measurement kernels."}
+	out := &DiscoveryResult{Question: q, Diagnostics: []DiscoveryDiagnostic{}, Instruments: []Instrument{}, Records: len(rows), Warning: "Observed metadata only; not a complete instrument or dimension inventory. No fleet aggregation is implied. Empty version/schema values are exact matches. Records count exported data points, not represented histogram observations or health. Counter and explicit histogram support is restricted by the measurement kernels; exponential histograms remain observed metadata only."}
 	groups := map[string]*Instrument{}
 	dims := map[string]map[string]bool{}
 	observations := map[string][]DiscoveryObservation{}
@@ -144,7 +198,10 @@ func discoverRows(q DiscoveryQuestion, rows []json.RawMessage) (*DiscoveryResult
 		}
 		sort.Strings(i.Dimensions)
 		i.Supported = i.Scope != "" && i.Unit != "" && (i.Kind == "gauge" || i.Kind == "stock" && i.Temporality == 2 && !i.Monotonic || (i.Temporality == 1 || i.Temporality == 2) && (i.Kind == "histogram" && (i.Unit == "s" || i.Unit == "ms") || i.Kind == "counter" && i.Monotonic))
-		if q.EnvironmentSelector != nil && !typedServiceKind(i.Kind) {
+		if i.Kind == exponentialHistogramKind {
+			i.Supported = false
+			i.UnsupportedReason = exponentialHistogramUnsupportedReason
+		} else if q.EnvironmentSelector != nil && !typedServiceKind(i.Kind) {
 			i.Supported = false
 			i.UnsupportedReason = typedServiceNativeReason
 		}

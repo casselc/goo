@@ -3,9 +3,11 @@ package measurements
 import (
 	"context"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync/atomic"
 	"testing"
 )
 
@@ -31,7 +33,20 @@ func TestDiscoveryExactOptionalIdentity(t *testing.T) {
 	}
 }
 func TestDiscoveryBoundedTransport(t *testing.T) {
+	var reads atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		reads.Add(1)
+		body, _ := io.ReadAll(r.Body)
+		if r.URL.Query().Get("readonly") != "1" {
+			t.Error("source request is not readonly")
+		}
+		if string(body) == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
+			io.WriteString(w, "{\"result\":1}\n")
+			return
+		}
+		if strings.Count(string(body), " UNION ALL ") != 3 || strings.Count(string(body), "LIMIT 10001") != 1 {
+			t.Error("not one global four-family catalog query")
+		}
 		if r.URL.Query().Get("param_service") != "x' OR 1=1" || r.URL.Query().Get("readonly") != "1" {
 			t.Error("typed parameters missing")
 		}
@@ -41,7 +56,7 @@ func TestDiscoveryBoundedTransport(t *testing.T) {
 	}))
 	defer server.Close()
 	_, e := (Source{Endpoint: server.URL}).Discover(context.Background(), DiscoveryQuestion{Environment: "local", Service: "x' OR 1=1", FromMS: 1000, ToMS: 2000})
-	if e == nil {
-		t.Fatal("partial catalog accepted")
+	if e == nil || reads.Load() != 2 {
+		t.Fatal("partial catalog accepted or global read not exercised", e, reads.Load())
 	}
 }

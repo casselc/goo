@@ -5845,7 +5845,7 @@
         "tags": [
           "metric-discovery"
         ],
-        "description": "Current owner: internal/nativehttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "description": "Explicit bounded metric metadata discovery: one fixed optional exponential-table presence probe, then one globally bounded metadata union. Missing optional table is reported in diagnostics while ordinary families remain usable. Probe/query errors fail the request. Exponential histograms are observed metadata only, unsupported for evaluation, without an executable definition. Counts are exported points, not histogram observations or complete inventory.",
         "x-go-source": "internal/nativehttp/routes.go",
         "x-effects": "source-read",
         "parameters": [
@@ -26927,6 +26927,23 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.DimensionPresence"
       },
+      "measurements.DiscoveryDiagnostic": {
+        "properties": {
+          "kind": {
+            "const": "exponential-histogram"
+          },
+          "reason": {
+            "const": "optional-table-missing"
+          }
+        },
+        "required": [
+          "kind",
+          "reason"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.DiscoveryDiagnostic",
+        "additionalProperties": false
+      },
       "measurements.DiscoveryQuestion": {
         "properties": {
           "environment": {
@@ -27083,6 +27100,14 @@
       },
       "measurements.DiscoveryResult": {
         "properties": {
+          "diagnostics": {
+            "type": "array",
+            "maxItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/measurements.DiscoveryDiagnostic"
+            },
+            "description": "Empty when the optional exponential table is included; an explicit missing-table diagnostic otherwise. Source errors fail discovery, never imply absence."
+          },
           "instruments": {
             "anyOf": [
               {
@@ -27100,7 +27125,8 @@
             "$ref": "#/components/schemas/measurements.DiscoveryQuestion"
           },
           "records": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Retained exported data points across all included families, bounded globally at 10000. Not histogram bucket mass, health or ingestion completeness."
           },
           "warning": {
             "type": "string"
@@ -27108,6 +27134,7 @@
         },
         "required": [
           "question",
+          "diagnostics",
           "instruments",
           "records",
           "warning"
@@ -27964,7 +27991,40 @@
           "supported"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/measurements.Instrument"
+        "x-go-type": "github.com/casselc/goo/measurements.Instrument",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "exponential-histogram"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "properties": {
+                "supported": {
+                  "const": false
+                },
+                "capabilityPlan": {
+                  "properties": {
+                    "eligible": {
+                      "const": false
+                    }
+                  }
+                }
+              },
+              "not": {
+                "required": [
+                  "definition"
+                ]
+              }
+            }
+          }
+        ]
       },
       "measurements.InstrumentCapabilityPlan": {
         "properties": {
