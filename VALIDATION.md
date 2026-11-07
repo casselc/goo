@@ -1,5 +1,81 @@
 # Validation record
 
+## Typed error-triage follow-through — 370
+
+Typed Activity triage now exposes the existing Inspect group and Compare within
+service actions while retaining the full checked environment selector, namespace,
+fixed bounds and nested parent predicates. The service/type builders are unchanged.
+The old typed guard also hid an action-time ownership gap: bare group hrefs were
+built once and had no current-click admission. The existing table adapter now
+binds actual group anchors to creation-time leases, active applied session/result/
+generation and exact group membership, plus connected/contained/visible/inert
+checks. Suspension/replacement retires callbacks; Back renews the same anchors
+without repainting evidence or rearming unrelated action-context capabilities.
+The sibling distribution guard remains for 372. No endpoint or grammar changes.
+
+Go 1.27.3 `go test -p 2 ./...` passes (cmd/goo **8.612s**, unchanged packages
+cached). The complete frontend suite passes **1,276 tests**, zero skips, in
+**19.786s**. Seven new actual tests pass in **208.87ms**, covering typed policies,
+nullable service/type values, namespace/nested predicates, ordinary/modifier
+links, hidden/inert/detached/reattached controls, current generation and actual
+production group-action closure guards. Sixteen deterministic thirty-step mounted
+ownership schedules preserve held DOM/focus and source-free staging. Forty Hegel
+cases pass in **3.90s** (package 3.909s), zero skips: actual JavaScript plans are
+validated in Go and checked against independent raw service/type/namespace and
+reported-status membership. Typed selector equality is checked separately from
+actual environment membership in the native/raw oracle.
+
+The rebuilt service is healthy; embedded exploration and record-result assets
+match source. The initial full genuine journey plus actor and observed replay
+passes in about **2.8 minutes**. A final script/model run adds direct detached-
+source refusal and narrow action access, passing in **2.0 minutes** (runner 2.1m).
+Four just-in-time real OTLP fixtures exercise current-only named logs, effective
+named spans, effective empty-environment logs and unreported-environment spans.
+Parent populations are **7/10/10/7**; literal/empty/missing Inspect counts are
+**2/1/1, 3/2/2, 3/2/2, 2/1/1**, and within-service counts **4/7/7/4**. Independent
+fixture membership, raw source ID/time multisets and nullable grouped counts
+agree. Namespace/tenant/priority/denial predicates and current-over-legacy
+precedence exclude wrong-resource and wrong-environment records.
+
+All 65 final recorded boundaries are real observations. Stage, Back, old actions,
+detached source activation and late release add zero telemetry, stream or capture-
+store reads; each explicit Run makes one exploration acquisition (21 total across
+the four scenarios, including the held pending child). An acquisition contains
+independent count/group/page reads, not an atomic SQL snapshot. Back preserves
+the same group-table DOM/text, evidence/query basis and visible focused opener.
+The first case aborts a pending child after an actual successful 200 has arrived;
+releasing that response afterward changes no current UI/source state. A detached
+source click explicitly prevents default and leaves the active child unchanged.
+The narrow current link is genuinely focused/scrolled into view with zero I/O;
+identities and actions occupy separate horizontal positions of the same table.
+
+Required observed replay passes in **13.19s** (package 13.201s), zero skips; the
+initial replay passed in 15.59s. Independent scope/raw/group/held-state admission
+precedes projection of actual fact names and cumulative reads into the existing
+drilldown model. Direct source-read and Return-order mutants fail in the model;
+changed child/held source/raw timestamps/hidden refusal also fail admission.
+No declared fixed-success script or new FSM replaces those observations.
+
+The separate initial Bombadil run passes in **45.151s**, **688 snapshots / 13
+phases**, with positive visible parent/Inspect/Compare/Back completion, exact
+membership, held source/focus, three acquisitions, one stream, zero writes and
+zero capture-store reads. It remains its own accepted fixture/run; it is not
+injected into the later enriched report. Browser-driver activation focuses the
+actual anchor before clicking; Return focus is independently observed.
+
+The first browser attempts corrected test assumptions, not product behavior:
+fixed staging has session phase `draft` with staged status; Go omits empty
+predicate values in JSON. Native transport comparisons now reuse existing
+`QuestionSession.identity`, while independent membership still distinguishes
+empty equality from missing-key predicates. Actor wire defaults likewise retain
+exact field/operator/typed scope. Initial/final actual inputs, outputs and model
+projections are retained; repeated actor screenshots are pruned after original
+review. Architecture/design source and four current originals accept the bounded
+flow, with explicit horizontal-table and task-positioning limitations. See
+[contract](docs/TYPED_ERROR_TRIAGE.md), [storyboard](docs/journeys/370-typed-error-triage.md)
+and [roadmap](docs/ROADMAP_2026_11_07.md). Next is 371's bounded native histogram
+view-reuse contract gate.
+
 ## Measured bounded facet interaction — 369
 
 A genuine trace-disabled baseline over ordinary 1,000-value and disjoint paired

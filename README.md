@@ -609,9 +609,10 @@ The [active roadmap](docs/ROADMAP_2026_11_07.md) closes the 367–369 sequence:
 current RPC view reuse, service native interval context, and measured bounded
 facets are delivered. [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most
 100 matches while Find, totals and comparison scales use the complete admitted
-set. Same-read selection/caret and exact child scope survive Return. The next
-cut is typed error-triage follow-through; native histogram view reuse has a bounded
-readiness gate. Whole-product reviews and proposed work are distinct from
+set. Same-read selection/caret and exact child scope survive Return. [Typed error-triage follow-through](docs/TYPED_ERROR_TRIAGE.md) is also delivered:
+Inspect and within-service comparison preserve the complete typed question, wait
+for Run and return to held groups without rereading. Next is the bounded native
+histogram view-reuse contract gate. Whole-product reviews and proposed work are distinct from
 [validated delivery](VALIDATION.md).
 
 Go library entry points: `subjectfacts` provides portable prepared-fact aggregation

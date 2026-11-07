@@ -1,12 +1,22 @@
 # Known issues and gaps
 
+370 delivers typed Activity triage → exact group/service child → explicit Run →
+held Back. Go, 1,276 UI tests, Hegel 40, four genuine typed configurations,
+independent raw membership, observed model/mutants and positive actor completion
+pass. This is reported-evidence context, not an error rate or issue ontology.
+Narrow group tables retain horizontal inspection; action access is verified,
+not simultaneous column visibility. See [contract](TYPED_ERROR_TRIAGE.md) and
+[validation](../VALIDATION.md). Next is 371 native histogram view-reuse readiness;
+ordinary record-template guards and 372 distribution continuation remain intact.
+
 369 delivers measured local pages of 100 matching categorical values. Full-model
 Find/counts/scales, exact identities, receipts and same-read page/caret remain
 authoritative. Go/UI1269, Hegel40 and real 1k/2k desktop/narrow tasks pass;
 search p95 is 35–73 ms on the final repeat, with shared-host/pilot limits.
 This does not promise universal latency or whole-workspace above-fold density.
-Typed error-triage and distribution continuations still contain scalar-only
-barriers; the [active roadmap](ROADMAP_2026_11_07.md) selects checked follow-through
+370 removes the typed error-triage continuation barrier with current link
+ownership. The sibling distribution-to-population barrier remains in 372.
+The [active roadmap](ROADMAP_2026_11_07.md) selects native histogram view readiness
 next. Native authorable views remain a separate readiness gate, and broker
 health still requires a pinned real instrument contract. See
 [facet contract](LARGE_FACET_INTERACTIONS.md) and [validation](../VALIDATION.md).
@@ -18,7 +28,7 @@ origin is tab-held evidence, not an immutable capture; context does not establis
 contribution or causality. Gauge/stock lookaround, aggregate buckets and broad
 resource joins are excluded. See [contract](SERVICE_NATIVE_RECORD_CONTEXT.md) and
 [validation](../VALIDATION.md). 369 closes that measured task with bounded local pages; 370 typed error-triage
-follow-through is next.
+follow-through is also delivered.
 
 367 delivers reusable current RPC service views with whole destination scope,
 optional method groups and explicit Run. The real span-only journey also exposed
@@ -28,7 +38,7 @@ Hegel40, actual native/model and positive actor checks pass. Current RPC require
 Server plus nonempty current `rpc.system.name`; legacy-only metadata and Client
 populations are incompatible. Native templates remain separate. See
 [contract](CURRENT_RPC_VIEW_TEMPLATE.md) and [validation](../VALIDATION.md).
-368 and 369 are delivered; 370 is the current breadth item.
+368 and 369 are delivered; 370 is delivered; 371 is the current contract gate.
 
 366's compact retained-comparison headers pass matched desktop/narrow acceptance:
 the first positive timing bar is visible on fresh Compare at 464/759 px. All seven

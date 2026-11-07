@@ -1,5 +1,25 @@
 # Semantic properties and model conformance
 
+## Typed error-triage continuation (370)
+
+`TestHegelTypedErrorTriage370` admits actual JavaScript plans through Go and
+checks full typed scope plus independent raw service/type/namespace membership.
+Mounted UI tests separately exercise current group anchors, creation-time leases,
+suspend/resume and hidden or reattached callbacks.
+
+`TestQuintTypedErrorTriageObserved370` consumes the genuine report through
+`GOO_TYPED_ERROR_TRIAGE_370_REPORT`. Independent raw IDs/times, nullable groups,
+complete child predicates, held parent and cancellation admission precede a
+projection of actual fact names/read counters into the existing drilldown model.
+Source-read and ordering mutants must fail; an absent report is not acceptance.
+
+Use the existing `QuestionSession.identity` contract for record-question wire
+equality, with ordinary validation at admission. Go can omit an empty predicate
+value or inert scalar environment: that is distinct from changing the operator,
+field, typed policy or scope. Keep membership oracles independent; canonical
+transport equality does not prove the selected population. See
+[validation](../VALIDATION.md) for actual execution and scope.
+
 ## Service native interval context (368)
 
 `TestHegelServiceNativeContext368` compares Go plans and JavaScript held-export

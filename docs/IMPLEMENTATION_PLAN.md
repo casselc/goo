@@ -7,8 +7,10 @@
 > and 369 measured local facet pages are delivered with appropriate native and
 > generated validation. Full populations, exact scopes and independent clocks
 > remain authoritative across bounded presentation.
-> **Current: 370 typed error-triage follow-through.** Next is the bounded native
-> histogram view-reuse contract gate, then checked typed continuation admission.
+> **370 typed error-triage follow-through is delivered**, including actual
+> typed/group membership, current link ownership and no-read held Back.
+> **Current: 371 bounded native histogram view-reuse contract gate**, then
+> 372 checked typed continuation admission.
 > Do not turn blocked native grammar or broker research into a new executor,
 > compatibility layer or unbounded product platform.
 > Delivery notes below are retained history, not parallel active queues.
