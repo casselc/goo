@@ -9,8 +9,9 @@
 > remain authoritative across bounded presentation.
 > **370 typed error-triage follow-through is delivered**, including actual
 > typed/group membership, current link ownership and no-read held Back.
-> **Current: 371 bounded native histogram view-reuse contract gate**, then
-> 372 checked typed continuation admission.
+> **371 native histogram display reuse is delivered**, with separate immutable
+> configuration, unchanged destination scope and explicit Run/export selection.
+> **Current: 372 checked typed continuation admission.**
 > Do not turn blocked native grammar or broker research into a new executor,
 > compatibility layer or unbounded product platform.
 > Delivery notes below are retained history, not parallel active queues.

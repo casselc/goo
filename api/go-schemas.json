@@ -1107,6 +1107,29 @@
   "NativeHistogramTimeSelector": {
     "$ref": "#/components/schemas/measurements.HistogramTimeViewSelector"
   },
+  "NativeHistogramView": {
+    "$ref": "#/components/schemas/workbench.NativeHistogramView"
+  },
+  "NativeHistogramViewRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/workbench.NativeHistogramViewInputInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "NativeHistogramViewReuseRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/workbench.NativeHistogramViewReuseRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "NativeHistogramWindowSelector": {
     "$ref": "#/components/schemas/measurements.HistogramWindowViewSelector"
   },
@@ -27541,6 +27564,321 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.MeaningWindow"
+  },
+  "workbench.NativeHistogramView": {
+    "properties": {
+      "declaration": {
+        "$ref": "#/components/schemas/workbench.NativeHistogramViewDeclaration"
+      },
+      "id": {
+        "type": "string"
+      },
+      "question": {
+        "$ref": "#/components/schemas/measurements.Question"
+      },
+      "title": {
+        "type": "string"
+      },
+      "version": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "version",
+      "title",
+      "question",
+      "declaration"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramView"
+  },
+  "workbench.NativeHistogramViewDeclaration": {
+    "properties": {
+      "display": {
+        "$ref": "#/components/schemas/workbench.NativeHistogramViewDisplay"
+      },
+      "kind": {
+        "$ref": "#/components/schemas/workbench.ViewKind"
+      },
+      "scope": {
+        "$ref": "#/components/schemas/workbench.NativeHistogramViewScope"
+      },
+      "selection": {
+        "$ref": "#/components/schemas/workbench.NativeHistogramViewSelection"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "scope",
+      "selection",
+      "kind",
+      "display"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewDeclaration"
+  },
+  "workbench.NativeHistogramViewDeclarationInput": {
+    "additionalProperties": false,
+    "properties": {
+      "display": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.NativeHistogramViewDisplayInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "kind": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewKindInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scope": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.NativeHistogramViewScopeInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "selection": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.NativeHistogramViewSelectionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewDeclaration"
+  },
+  "workbench.NativeHistogramViewDisplay": {
+    "properties": {
+      "category": {
+        "type": "string"
+      },
+      "requiresComplete": {
+        "type": "boolean"
+      },
+      "value": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "category",
+      "value",
+      "requiresComplete"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewDisplay"
+  },
+  "workbench.NativeHistogramViewDisplayInput": {
+    "additionalProperties": false,
+    "properties": {
+      "category": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "requiresComplete": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewDisplay"
+  },
+  "workbench.NativeHistogramViewInputInput": {
+    "additionalProperties": false,
+    "properties": {
+      "declaration": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.NativeHistogramViewDeclarationInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "question": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.QuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewInput"
+  },
+  "workbench.NativeHistogramViewReuseRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "question": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.QuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewReuseRequest"
+  },
+  "workbench.NativeHistogramViewScope": {
+    "properties": {
+      "kind": {
+        "type": "string"
+      },
+      "signal": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind",
+      "signal"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewScope"
+  },
+  "workbench.NativeHistogramViewScopeInput": {
+    "additionalProperties": false,
+    "properties": {
+      "kind": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "signal": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewScope"
+  },
+  "workbench.NativeHistogramViewSelection": {
+    "properties": {
+      "kind": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewSelection"
+  },
+  "workbench.NativeHistogramViewSelectionInput": {
+    "additionalProperties": false,
+    "properties": {
+      "kind": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewSelection"
   },
   "workbench.RecordViewDeclaration": {
     "properties": {

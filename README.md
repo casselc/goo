@@ -611,8 +611,11 @@ facets are delivered. [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at m
 100 matches while Find, totals and comparison scales use the complete admitted
 set. Same-read selection/caret and exact child scope survive Return. [Typed error-triage follow-through](docs/TYPED_ERROR_TRIAGE.md) is also delivered:
 Inspect and within-service comparison preserve the complete typed question, wait
-for Run and return to held groups without rereading. Next is the bounded native
-histogram view-reuse contract gate. Whole-product reviews and proposed work are distinct from
+for Run and return to held groups without rereading.
+[Native histogram display reuse](docs/NATIVE_HISTOGRAM_VIEW_REUSE.md) saves
+Histogram/Table configuration separately from measurement calculation and evidence.
+Apply preserves the current question; Run and export selection remain explicit.
+Next is checked typed distribution continuation. Whole-product reviews and proposed work are distinct from
 [validated delivery](VALIDATION.md).
 
 Go library entry points: `subjectfacts` provides portable prepared-fact aggregation
@@ -732,8 +735,9 @@ observation counts, right-closed buckets and exact bounds. [Fixed-time histogram
 buckets](docs/SCOPED_HISTOGRAM_TIME_BUCKETS.md) now share those displays with
 anchored windows, whole-export coverage and clipped final buckets. [Native comparisons](docs/SCOPED_NATIVE_HISTOGRAM_COMPARISONS.md) now use one
 aligned count/share display in the existing capture-comparison flow. This closes
-the current migration slice; [reusable saved-view declarations](docs/VIEW_AUTHORING_CHECKPOINT_274.md)
-are next. Specialized owners remain explicit rather than blocking authoring.
+the histogram migration slice. [Native display configuration](docs/NATIVE_HISTOGRAM_VIEW_REUSE.md)
+now reuses Histogram/Table presentation independently of evidence and calculation.
+Specialized owners remain explicit rather than blocking authoring.
 
 
 ### Saved count timeline — 281

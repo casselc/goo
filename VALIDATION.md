@@ -1,5 +1,72 @@
 # Validation record
 
+## Native histogram display reuse — 371
+
+The closed native configuration arm saves Histogram/Table presentation for one
+explicitly selected evaluated export interval. It uses the existing immutable
+workbench store and histogram projection, without extending ordinary record
+views or changing calculation definitions. Load/Inspect/Apply are metadata only;
+Apply preserves the complete destination question, clears its result and waits
+for Run and an explicit destination interval selection. Complete bins do not
+establish upstream collection completeness. Unknown distributions stay unavailable.
+
+Go 1.27.3 full regression passes after final strict-wire fixes (cmd/goo
+**10.558s**; workbench cached). Focused final Go checks pass workbench **0.021s**,
+HTTP **0.017s**. The full frontend suite passes **1,285 tests**, zero skips, in
+**26.157s**; nine focused tests passed in **82.95ms** combined. Forty Hegel cases
+pass (**2.69s**, package **2.700s**), checking actual Go store/reuse and JavaScript
+projection, whole destination preservation and unchanged SQL/parameters/revision
+when only display changes. New Go helpers use current stdlib maps/slices cloning
+and typed errors.AsType without exposing advanced type machinery to callers.
+
+OpenAPI generation/checking passes **111 operations, 471 fixture responses,
+186 accepted requests and 28 mux refusals**. Seventeen additional actual refusal
+response bodies/statuses conform. Cross-layer review corrected explicit
+resource:null and empty nanosecond-bound admission; native API schemas now reject
+resource-arm presence and require canonical paired nanosecond bounds. Unknown
+configuration fields, donor observations, time-bucket/resource-native shapes and
+wrong exact units remain refused.
+
+The final rebuilt service is healthy and its three changed UI assets and embedded
+OpenAPI match source exactly. The genuine native journey plus actor passes in
+**59.5s**. Independent raw OTel/ClickHouse exports distinguish donor count **4**
+with bounds **0.01/0.1 s** from destination count **7**, bins **2/3/2** and bounds
+**0.02/0.2 s**. The destination retains effective legacy-environment matching,
+namespace, attributes, exact stream and nanosecond bounds. The actual display
+has private complete-bin authority and requires it; an absent export shows the
+visible unavailable message without a chart. Stored configuration bytes and the
+held donor result remain unchanged.
+
+Nine actual boundaries record zero extra source/SQL reads for metadata, display,
+unknown selection, late Load and hidden old Apply. Explicit destination Run adds
+one measurement request/SQL read; a separately canceled real successful Run adds
+one more, and its late response publishes nothing. Three direct live refusals
+(wrong unit, record payload and captured data) return 400. Primary-page totals
+are three measurement requests (including donor/canceled reads), five metadata
+requests and no captures; the actor separately adds one source read.
+
+Bombadil passes in **45.195s**, with **827 states/eight phases** and positive
+visible completion: exact current destination bins in Table, one measurement
+read, two metadata requests, zero writes, safe budgets throughout. Its first
+startup lacked NO_PROXY/no_proxy and failed before attachment; the corrected
+loopback bypass required no product change. A same-hash reopen helper was also
+corrected before the final passing journey. These were harness/environment
+failures, not accepted application outcomes.
+
+Observed replay passes **3.54s** (package **3.550s**), zero skips. Independent
+admission checks immutable bytes, destination identity/bin provenance and actual
+action order. The existing Quint model checks acquisition budgets only, with no
+invented navigation or completion; read-on-Apply, reordered Run/Apply and donor-
+question mutants fail. Source and final original desktop frames are reviewed.
+The actual report/actor trace are kept compact with the two storyboard frames;
+repeated actor screenshots are removed. This remains a bounded explicit-delta
+live fixture, not exhaustive native instrument, concurrency or mobile coverage.
+The full suite and generated properties cover additional native/typed cases.
+See [contract](docs/NATIVE_HISTOGRAM_VIEW_REUSE.md),
+[storyboard](journeys/371-native-histogram-reuse-storyboard.md),
+[architecture review](docs/reviews/NATIVE_HISTOGRAM_REUSE_ARCHITECTURE_371.md) and
+[design review](docs/reviews/NATIVE_HISTOGRAM_REUSE_DESIGN_371.md).
+
 ## Typed error-triage follow-through — 370
 
 Typed Activity triage now exposes the existing Inspect group and Compare within

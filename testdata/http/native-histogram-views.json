@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "create",
+      "method": "POST",
+      "path": "/native-histogram-views",
+      "body": "{\"version\":1,\"title\":\"Native interval view\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"histogram\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"s\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"export-interval\"},\"kind\":{\"name\":\"histogram\",\"version\":1},\"display\":{\"category\":\"bucket\",\"value\":\"observation-count\",\"requiresComplete\":true}}}",
+      "status": 201,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"version\":1,\"id\":\"95fc513f9a36b7283cc922470714f9a97e85af566d2c1bf282ecf1065037ca3d\",\"title\":\"Native interval view\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"histogram\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"s\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"export-interval\"},\"kind\":{\"name\":\"histogram\",\"version\":1},\"display\":{\"category\":\"bucket\",\"value\":\"observation-count\",\"requiresComplete\":true}}}\n"
+    },
+    {
+      "name": "load",
+      "method": "GET",
+      "path": "/native-histogram-views/{id}",
+      "body": "",
+      "status": 200,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"version\":1,\"id\":\"95fc513f9a36b7283cc922470714f9a97e85af566d2c1bf282ecf1065037ca3d\",\"title\":\"Native interval view\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"histogram\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"s\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"export-interval\"},\"kind\":{\"name\":\"histogram\",\"version\":1},\"display\":{\"category\":\"bucket\",\"value\":\"observation-count\",\"requiresComplete\":true}}}\n"
+    },
+    {
+      "name": "create-table",
+      "method": "POST",
+      "path": "/native-histogram-views",
+      "body": "{\"version\":1,\"title\":\"Native interval view\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"histogram\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"s\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"export-interval\"},\"kind\":{\"name\":\"table\",\"version\":1},\"display\":{\"category\":\"bucket\",\"value\":\"observation-count\",\"requiresComplete\":true}}}",
+      "status": 201,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"version\":1,\"id\":\"df07d793126c9c7ef6217f2ea21b789578f667c9fd3ffa8e56dc0c190797a394\",\"title\":\"Native interval view\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"histogram\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"s\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"export-interval\"},\"kind\":{\"name\":\"table\",\"version\":1},\"display\":{\"category\":\"bucket\",\"value\":\"observation-count\",\"requiresComplete\":true}}}\n"
+    },
+    {
+      "name": "reuse",
+      "method": "POST",
+      "path": "/native-histogram-views/reuse",
+      "body": "{\"id\":\"95fc513f9a36b7283cc922470714f9a97e85af566d2c1bf282ecf1065037ca3d\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"histogram\",\"environmentSelector\":{\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"unreported\"}},\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"namespace\":{\"mode\":\"missing\"},\"services\":[\"target-api\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"s\"}},\"fromMs\":70000,\"toMs\":130000}}",
+      "status": 200,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"version\":1,\"title\":\"Native interval view\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"histogram\",\"environmentSelector\":{\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"unreported\"}},\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"namespace\":{\"mode\":\"missing\"},\"services\":[\"target-api\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"s\"}},\"fromMs\":70000,\"toMs\":130000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"export-interval\"},\"kind\":{\"name\":\"histogram\",\"version\":1},\"display\":{\"category\":\"bucket\",\"value\":\"observation-count\",\"requiresComplete\":true}}}\n"
+    }
+  ]
+}

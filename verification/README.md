@@ -1,5 +1,22 @@
 # Semantic properties and model conformance
 
+## Native histogram configuration reuse (371)
+
+`TestHegelNativeHistogramReuse371` compares actual Go immutable-store/reuse and
+JavaScript declaration behavior across whole destination scopes. Display changes
+must leave SQL, parameters and measurement revision unchanged. Strict native
+compatibility and complete-bin uncertainty are checked separately from source
+authority. The focused browser-owner tests live in
+`tests/native-histogram-reuse*-371.test.mjs`.
+
+`GOO_NATIVE_HISTOGRAM_REUSE_371_REPORT=/absolute/path/summary.json go test
+-run TestQuintNativeHistogramReuseObserved371 -count=1 -v .` consumes the actual
+371 journey report. Independent admission checks immutable bytes, destination
+question/bin provenance and observed action order. The existing drilldown model
+checks acquisition budgets only; this projection invents no navigation or
+completion. Read-on-Apply, reordered actions and donor-question mutants must fail.
+Quint is required when this report-driven check is selected.
+
 ## Typed error-triage continuation (370)
 
 `TestHegelTypedErrorTriage370` admits actual JavaScript plans through Go and

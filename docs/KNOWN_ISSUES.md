@@ -1,12 +1,21 @@
 # Known issues and gaps
 
+371 delivers separate immutable native Histogram/Table display configuration,
+metadata-only Load/Inspect/Apply, whole destination preservation and explicit
+Run/export selection. Real different donor/destination exports, private complete-
+bin authority, unknown refusal, immutable bytes and positive actor completion pass.
+This is an exact-ID, per-stream service histogram pilot with identical units; no
+catalog, conversion, fleet percentile, time-bucket/resource-native arm or upstream
+completeness claim. See [contract](NATIVE_HISTOGRAM_VIEW_REUSE.md) and
+[validation](../VALIDATION.md). Current is 372 typed distribution continuation.
+
 370 delivers typed Activity triage → exact group/service child → explicit Run →
 held Back. Go, 1,276 UI tests, Hegel 40, four genuine typed configurations,
 independent raw membership, observed model/mutants and positive actor completion
 pass. This is reported-evidence context, not an error rate or issue ontology.
 Narrow group tables retain horizontal inspection; action access is verified,
 not simultaneous column visibility. See [contract](TYPED_ERROR_TRIAGE.md) and
-[validation](../VALIDATION.md). Next is 371 native histogram view-reuse readiness;
+[validation](../VALIDATION.md). 371 now delivers bounded native histogram display reuse;
 ordinary record-template guards and 372 distribution continuation remain intact.
 
 369 delivers measured local pages of 100 matching categorical values. Full-model
@@ -16,8 +25,9 @@ search p95 is 35–73 ms on the final repeat, with shared-host/pilot limits.
 This does not promise universal latency or whole-workspace above-fold density.
 370 removes the typed error-triage continuation barrier with current link
 ownership. The sibling distribution-to-population barrier remains in 372.
-The [active roadmap](ROADMAP_2026_11_07.md) selects native histogram view readiness
-next. Native authorable views remain a separate readiness gate, and broker
+The [active roadmap](ROADMAP_2026_11_07.md) delivers bounded native histogram view reuse
+and selects 372 checked typed continuation next. Broader native authoring remains
+separately scoped, and broker
 health still requires a pinned real instrument contract. See
 [facet contract](LARGE_FACET_INTERACTIONS.md) and [validation](../VALIDATION.md).
 
@@ -38,7 +48,7 @@ Hegel40, actual native/model and positive actor checks pass. Current RPC require
 Server plus nonempty current `rpc.system.name`; legacy-only metadata and Client
 populations are incompatible. Native templates remain separate. See
 [contract](CURRENT_RPC_VIEW_TEMPLATE.md) and [validation](../VALIDATION.md).
-368 and 369 are delivered; 370 is delivered; 371 is the current contract gate.
+368 and 369 are delivered; 370 is delivered; 371 native display reuse is delivered; 372 is current.
 
 366's compact retained-comparison headers pass matched desktop/narrow acceptance:
 the first positive timing bar is visible on fresh Compare at 464/759 px. All seven

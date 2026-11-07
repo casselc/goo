@@ -941,6 +941,66 @@ def check_fixed_query_count_views(spec):
         assert not vc.is_valid(template),'fixed query pair admitted as reusable template'
 
 
+def check_native_histogram_view_config(spec):
+    """Native display configuration never borrows record or evidence authority."""
+    paths=('/native-histogram-views','/native-histogram-views/{id}','/native-histogram-views/reuse')
+    for path in paths:
+        method='get' if '{id}' in path else 'post'
+        op=spec['paths'][path][method]
+        assert op['x-schema-coverage']=='typed' and 'source-read' not in op['x-effects']
+        assert 'X-Goo-Query-ID' not in [p['name'] for p in op['parameters']]
+    declaration={'version':'goo.view/1','scope':{'kind':'measurement-question','signal':'metrics'},'selection':{'kind':'export-interval'},'kind':{'name':'histogram','version':1},'display':{'category':'bucket','value':'observation-count','requiresComplete':True}}
+    question={'definition':{'apiVersion':'goo/measurement-package/v1alpha1','name':'native-duration','title':'Native duration','kind':'histogram','environmentSelector':{'version':'goo/environment-selector/v1','policy':'effective','scope':{'mode':'named','value':'prod'}},'lookbackMinutes':1,'maxGapMs':60000,'grain':'per-stream','source':{'services':['api'],'scope':'sdk','version':'','schemaURL':'','metric':'duration','unit':'s'}},'fromMs':1000,'toMs':61000}
+    view={'version':1,'title':'Interval distribution','question':question,'declaration':declaration}
+    shape=spec['paths'][paths[0]]['post']['requestBody']['content']['application/json']['schema']
+    create=validator(spec,shape);create.validate(view)
+    saved=validator(spec,spec['paths'][paths[0]]['post']['responses']['201']['content']['application/json']['schema'])
+    unsaved=validator(spec,spec['paths'][paths[2]]['post']['responses']['200']['content']['application/json']['schema'])
+    saved.validate({**view,'id':'a'*64});unsaved.validate(view)
+    assert not saved.is_valid(view), 'saved native view lacks immutable ID'
+    assert not unsaved.is_valid({**view,'id':'a'*64}), 'reuse retained donor identity'
+    table=copy.deepcopy(view);table['declaration']['kind']['name']='table';create.validate(table)
+    milliseconds=copy.deepcopy(view);milliseconds['question']['definition']['source']['unit']='ms';create.validate(milliseconds)
+    reuse=validator(spec,spec['paths'][paths[2]]['post']['requestBody']['content']['application/json']['schema'])
+    reuse.validate({'id':'a'*64,'question':question})
+    for bad in ({'id':'a'*63,'question':question},{'id':'A'*64,'question':question},{'id':'a'*64,'question':question,'source':view},{'id':'a'*64,'question':question,'result':{}},{'question':question}):
+        assert not reuse.is_valid(bad), ('invalid native reuse envelope accepted',bad)
+    mutations=[
+        lambda x:x.update(id='a'*64),lambda x:x.update(basis='b'*64),
+        lambda x:x.update(rows=[]),lambda x:x.update(readAt='2026-11-07T00:00:00Z'),
+        lambda x:x['declaration'].update(stream={'name':'donor'}),
+        lambda x:x['declaration'].update(intervalIndex=0),
+        lambda x:x['declaration']['selection'].update(fromNS='1000000000'),
+        lambda x:x['declaration']['selection'].update(kind='time-bucket'),
+        lambda x:x['declaration']['scope'].update(kind='record-query'),
+        lambda x:x['declaration']['scope'].update(signal='spans'),
+        lambda x:x['declaration']['kind'].update(name='bar'),
+        lambda x:x['declaration']['display'].update(requiresComplete=False),
+        lambda x:x['declaration']['display'].update(value='count'),
+        lambda x:x['declaration']['display'].update(count='10'),
+        lambda x:x['question'].update(fromMs=None),
+        lambda x:x['question'].update(fromNS=None),
+        lambda x:x['question'].update(fromNS='',toNS=''),
+        lambda x:x['question'].update(fromNS='1000000000'),
+        lambda x:x['question']['definition'].update(kind='counter'),
+        lambda x:x['question']['definition'].update(grain='consumer-group'),
+        lambda x:x['question']['definition'].update(histogramBucketMs=1000),
+        lambda x:x['question']['definition'].update(histogramBucketMs=None),
+        lambda x:x['question']['definition']['source'].update(unit='bytes'),
+        lambda x:x['question']['definition']['source'].update(resource={'kind':'host','id':'one'}),
+        lambda x:x['question']['definition']['source'].update(resource=None),
+    ]
+    for mutate in mutations:
+        bad=copy.deepcopy(view);mutate(bad)
+        assert not create.is_valid(bad), ('native declaration/evidence arm accepted',bad)
+    for field in ('version','title','question','declaration'):
+        bad=copy.deepcopy(view);bad.pop(field)
+        assert not create.is_valid(bad), ('native configuration missing required field',field)
+    # Existing ordinary record-template admission remains a separate schema arm.
+    assert not validator(spec,{'$ref':'#/components/schemas/ExplorationView'}).is_valid(view)
+    print('Native histogram view configuration: closed export-only declarations, whole native question, donor-evidence refusal and source-free route contracts pass')
+
+
 def check_current_rpc_template_bindings(spec):
     """Current RPC is an explicit binding, not a legacy alias or method witness."""
     binding = {'version':'goo.template/1','group':'destination','profile':'otel.rpc-server-current'}
@@ -1080,6 +1140,7 @@ def check(spec):
     check_fixed_query_count_views(spec)
     check_comparison_template_bindings(spec)
     check_current_rpc_template_bindings(spec)
+    check_native_histogram_view_config(spec)
     check_record_span_waterfall(spec)
     check_document_view_card(spec)
     bank = json.loads((ROOT/'testdata/protocol/environment-selectors.json').read_text())
@@ -1201,9 +1262,9 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    # Captured-record review adds 13 actual successful responses (one NDJSON)
-    # and seven accepted POST bodies to the prior 450/173/28 fixture baseline.
-    assert responses == 467 and requests == 183 and mux_refusals == 28, (responses, requests, mux_refusals)
+    # Native histogram configuration adds four actual successful responses
+    # and three accepted POST bodies to the prior 467/183/28 fixture baseline.
+    assert responses == 471 and requests == 186 and mux_refusals == 28, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
