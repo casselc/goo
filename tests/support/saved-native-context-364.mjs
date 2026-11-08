@@ -1,7 +1,9 @@
 import {mock} from 'node:test';
 import {readFileSync} from 'node:fs';
 export class Element{
- constructor(){this.isConnected=true;this.hidden=false;this.children=[];this.onclick=null;this.selectedKey='held-selection'}
+ constructor(){this.isConnected=true;this.hidden=false;this.children=[];this.onclick=null;this.dataset={};this.selectedKey='held-selection'}
+ contains(node){return this.children.includes(node)}
+ closest(selector){return selector==='[inert]'&&this.inert?this:null}
  replaceChildren(){for(const c of this.children)c.isConnected=false;this.children=[]}
 }
 export const renders=[];

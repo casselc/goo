@@ -1,5 +1,76 @@
 # Validation record
 
+## Reported exemplars from immutable Saved measurements — 380
+
+Saved histogram captures now follow reported references through the existing
+fixed-question owner. Admission reconstructs the full plan from retained raw
+export and sample ordinal, checks unique held stream identity and the original
+question/basis/read clock, and rejects changed occurrence or ambiguous metadata.
+A Saved-only capability enables navigation without a live source adapter; service
+widgets remain interval-only. Unknown distribution validity does not erase a
+valid retained reported association.
+
+The return citation retains capture receipt, exact stream, source basis/read time,
+export bounds/row occurrence and sample ordinal/time/trace/span. Saved actions
+resume locally on Back without rerendering or replacing frozen metric evidence.
+Old click/auxiliary-click and inactive timeline callbacks cannot change owners.
+
+Checks:
+
+- Focused new/adapted Saved and live regressions: **20 passed**, zero skipped,
+  354.553 ms. Full frontend: **1,344 passed**, zero skipped, **17.385 s**.
+- Full root Go suite passes under Go 1.27.3; command package **8.178 s**.
+  Existing Hegel histogram-exemplar planner property passes in **2.763 s**,
+  including typed environment/namespace and reported-reference variants.
+- API contract remains **112 operations / 721 schemas**. Source-free checks pass
+  476 frozen responses, 186 admitted requests and 28 mux refusals. The actual
+  capture, child success/refusal and held late-success responses plus three exact
+  child requests conform to that contract; no transport format was added.
+- Actual browser journey passes in **46.8 s**. Positive Bombadil completion spans
+  **931 DOM states / 40.068 s**, with exact scope, matching records, held return,
+  focused action and safe read budgets. Desktop and 390 px frames were visually
+  inspected, as was the retained current final actor JPEG; repeated frames were
+  pruned while the compressed trace/report and reproduction limits remain.
+- The actual capture retains two matching histogram exports and six samples on
+  its primary export. A separately read three-export/seven-sample source fixture
+  includes an excluded instrument-identity decoy. Four actual same-trace spans
+  independently establish two matching root/peer spans and excluded environment/
+  namespace decoys. One explicit capture creates immutable custody; follow/return
+  creates no further custody writes and captured file bytes remain unchanged.
+- Staging and Back perform **zero telemetry source/SQL reads and zero capture-store
+  GETs**. Existing recipe/retention-status metadata GETs on staging and one cancel
+  control request on pending Back are classified separately. Ordinary Back,
+  inactive gestures and retired actions add no requests. Success, refusal and an
+  actual late HTTP 200 delivery all preserve the same held capture/DOM; pending
+  Back requests cancellation and prevents late publication.
+- Mandatory recorded-fact Go admission and Quint replay pass in **8.63 s**
+  (package 8.680 s), zero skipped. Eleven measured ownership facts project to 12
+  steps in the existing population model through a measured-counter-only binding.
+  Thirteen semantic/custody/API-call mutations and two independent passive-read/
+  action-order model controls reject. No synthetic coherence flag is recorded.
+
+Environment recovery: this turn began with missing temporary artifact/cache
+symlink targets and stopped ClickHouse/Redis containers. Their existing volumes
+were preserved and the containers restarted. Old histogram points survived, but
+old traces were absent under the configured one-day trace TTL. The existing OTLP
+probe therefore created a fresh unique fixture in
+`artifacts/histogram-exemplars380/report.json`, rather than reconstructing missing
+trace records. Actual trace/histogram requests returned 200; malformed trace/span
+variants returned 400. The independent source verifier confirms three exports,
+seven samples, two scoped spans, Float64 precision loss and three rejected mutants.
+No schema/configuration or retention change was made. The paused demo generator
+was restored after acceptance; ClickHouse/Redis are healthy and the 51 retained
+Redis pending entries remain intact.
+
+Actual journey report:
+`artifacts/saved-exemplars380/d32de947-7594-401c-884d-9cd41eca7377/summary.json`.
+Reviewed image `dcbdbb9b2614…`, binary `/tmp/goo-380-reviewed-goo`: health passes;
+served app (28,651 bytes), measurements (61,138 bytes), held admission (2,426 bytes)
+and Saved owner (3,238 bytes) match source. See [contract](docs/SAVED_HISTOGRAM_EXEMPLARS.md),
+[storyboard](journeys/380-saved-exemplars-storyboard.md) and
+[review](docs/reviews/SAVED_EXEMPLAR_REVIEW_380.md). Next is 381 bounded decoder consolidation.
+
+
 ## Exponential-only services through the normal catalog — 379
 
 Services discovery now probes the optional exponential-histogram table, then

@@ -26,7 +26,7 @@
 > **378 native failure/recovery consolidation is delivered**, including typed
 > refusals, explicit exact-question retry and retired late responses. The
 > whole-product checkpoint adopts **379 broader service discovery (delivered)**,
-> **380 Saved exemplar continuation (next)**, then **381 shared bounded source decoding**.
+> **380 Saved exemplar continuation (delivered)**, then **381 shared bounded source decoding (next)**.
 > See the [checkpoint reconciliation](reviews/ROADMAP_RECONCILIATION_375.md).
 > Do not turn blocked native grammar or broker research into a new executor,
 > compatibility layer or unbounded product platform.

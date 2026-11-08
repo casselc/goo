@@ -74,9 +74,11 @@ flowchart LR
 ```
 
 Navigation is enabled in source-owned live Measurements only when the complete
-requested and returned questions match. Saved/service owners remain read-only
-where their context contract admits only interval relations. Resource-bound and
-time-bucket aggregate trace continuation remain outside this pilot. Returned
+requested and returned questions match. [Saved native captures](SAVED_HISTOGRAM_EXEMPLARS.md)
+also admit checked reported references from their immutable raw exports, with
+local action reactivation on Back. Service owners remain interval-only.
+Resource-bound and
+time-bucket aggregate trace continuation remain outside this pilot. Returned live
 links are visibly paused until an explicit measurement Run; stale ordinary and
 modified/auxiliary clicks cannot reactivate them.
 

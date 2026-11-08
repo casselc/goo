@@ -1,5 +1,12 @@
 # Architecture
 
+[Saved reported-exemplar context](SAVED_HISTOGRAM_EXEMPLARS.md) extends the existing
+immutable Saved owner and fixed-question return. Shared admission reconstructs the
+whole relation from raw retained export/sample identity; a Saved-only capability
+keeps live adapters and service interval owners separate. Existing action leases,
+child cancellation and retained Back preserve captured custody without a new
+navigation or persistence layer.
+
 [Multi-signal service discovery](METRIC_SERVICE_DISCOVERY.md) includes optional
 exponential-histogram exported points without extending the measurement executor.
 A small `internal/optionalmetric` helper shares only the fixed table probe and

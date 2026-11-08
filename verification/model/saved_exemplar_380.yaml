@@ -1,0 +1,11 @@
+# Reuse the existing population model; observe only recorded read counters and
+# depth projected from actual Stage/Back actions. Semantic custody is Go admission.
+spec: population_drilldown.qnt
+module: population_drilldown
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  read: {expect: 'reads == {{.obs.reads}} and depth == {{.obs.depth}}'}
+  stage: {expect: 'reads == {{.obs.reads}} and depth == {{.obs.depth}}'}
+  back: {expect: 'reads == {{.obs.reads}} and depth == {{.obs.depth}}'}
+  history: {expect: 'reads == {{.obs.reads}} and depth == {{.obs.depth}}'}

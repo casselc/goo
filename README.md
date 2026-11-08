@@ -605,7 +605,7 @@ For supplied native observations, `measurements.Evaluate(question, rows, at)` is
 storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
 
-The [active roadmap](docs/ROADMAP_2026_11_08.md) follows the completed 376–379
+The [active roadmap](docs/ROADMAP_2026_11_08.md) follows the completed 376–380
 sequence. Earlier current RPC view reuse, service native interval context, and
 measured bounded facets are also delivered. [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most
 100 matches while Find, totals and comparison scales use the complete admitted
@@ -638,8 +638,11 @@ refusals and retries the exact fixed question explicitly. Old owners and late
 responses stay retired. [Service discovery](docs/METRIC_SERVICE_DISCOVERY.md) also
 finds exponential-only emitters through the normal Services catalog. Compact
 Scope controls select fixed UTC bounds and exact/missing namespaces; instrument
-metadata remains unsupported for exponential evaluation. Next is exemplar
-continuation from Saved native captures.
+metadata remains unsupported for exponential evaluation.
+[Saved exemplar continuation](docs/SAVED_HISTOGRAM_EXEMPLARS.md) now stages a
+reported trace from immutable native exports, preserving capture and sample
+identity. Explicit Run reads fresh spans; Back restores the same held evidence
+without source or capture-store reads. Next is consolidating bounded source decoding.
 Whole-product reviews and proposed work are distinct from
 [validated delivery](VALIDATION.md).
 

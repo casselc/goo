@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+380 extends Saved immutable histogram captures with checked reported-exemplar
+continuation. Full capture/export/sample identity and exact scope survive staging,
+fresh trace Run and same-DOM Back without a source/store reread. Saved links resume
+locally; service widgets intentionally retain interval-only navigation. Exemplar
+association still does not establish causality, complete traces or bucket
+contribution. See [contract](SAVED_HISTOGRAM_EXEMPLARS.md) and [validation](../VALIDATION.md).
+
 379 closes broader service visibility for exponential-only emitters through the
 normal Services catalog. Optional-source absence is an explicit diagnostic; probe
 errors and table races refuse the operation. Compact fixed UTC/namespace controls
@@ -14,7 +21,7 @@ malformed non-lifecycle data now receive their specific closed classifications.
 Successful reads may still have unknown measurement coverage, not healthy status.
 See [contract](NATIVE_MEASUREMENT_RECOVERY.md) and [validation](../VALIDATION.md).
 The [November 8 roadmap](ROADMAP_2026_11_08.md) delivers 379 service visibility, with
-380 Saved exemplar continuation next and 381 bounded decoder consolidation.
+380 Saved exemplar continuation delivered and 381 bounded decoder consolidation next.
 
 377 delivers reported explicit-histogram exemplars in live Measurements: exact
 source-export association, source-free trace staging, explicit scoped Run and

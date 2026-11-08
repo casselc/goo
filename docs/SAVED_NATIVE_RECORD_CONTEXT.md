@@ -1,5 +1,10 @@
 # From a saved native interval to records
 
+[Reported histogram exemplars](SAVED_HISTOGRAM_EXEMPLARS.md) extend this existing
+Saved owner with a separately checked export/sample relation. Interval gestures
+retain the contract below; reported references preserve the original measurement
+window and exact namespace rather than substituting a derived interval.
+
 Milestone 364 adds the existing native interval-context gesture to saved
 counter/histogram evidence. Implementation, UI/generated, genuine native/recorded-fact model replay and
 positive actor checks pass, together with the shared kept-context regression. See [validation](../VALIDATION.md) for execution status.
