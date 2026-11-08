@@ -2,13 +2,14 @@
 
 Implemented extension of [service browsing](SERVICE_BROWSING.md). Services →
 **Discover services** discovers emitting services from spans, logs and
-native metrics in the selected environment/lookback window. This explicit action
+native metrics in the selected environment/window. The compact **Scope** disclosure
+can fix UTC bounds and select all, missing or exact namespace (including empty). This explicit action
 opens the [unified catalog](UNIFIED_SERVICE_CATALOG.md) directly. Open a service
 to inspect its operations and instruments; an empty span inventory does not hide
 services emitting another signal.
 
-The Go `/api/discovery` adapter groups gauge, sum and explicit-histogram exporter
-records by service, then combines those record counts into one `metrics` signal
+The Go `/api/discovery` adapter groups gauge, sum, explicit-histogram
+and optional exponential-histogram exporter records by service, then combines those record counts into one `metrics` signal
 row per service. Values, units, stream identities and histogram observations are
 not combined. For example, two gauge points, one counter point and one histogram
 point with `Count=5000` produce **4 metric data-point records**, not 5000 requests
@@ -38,16 +39,19 @@ retaining the original totals and evidence.
 Reported dependency edges still come only from exact captured trace/parent-span
 identity. Metric-only services create no topology edges. Discovery does not infer
 service health, declared membership, unique streams, throughput, process utilization
-or a complete fleet. Metric summaries and exponential histograms are outside the
-current adapter families, as in the existing native instrument browser. Durable
+or a complete fleet. Metric summaries remain outside the
+current adapter families. Exponential histograms contribute presence only; their
+evaluation remains unsupported under the [readiness decision](EXPONENTIAL_HISTOGRAM_READINESS.md). Durable
 navigation/draft recovery remains future work.
 
 ```mermaid
 flowchart LR
   OTLP[Ordinary OTel resource service and environment] --> Exporter[ClickHouse exporter]
   Exporter --> Spans[Span and log service groups]
-  Exporter --> Points[Gauge / sum / explicit histogram point records]
+  Exporter --> Probe[Checked optional exponential table presence]
+  Probe -->|Present or explicit absence| Points[Gauge / sum / explicit + optional exponential histogram points]
   Spans --> Scope[Same fixed environment and half-open window]
+  Probe -->|Error or malformed| Refusal[No partial catalog]
   Points --> Scope
   Scope --> Catalog[Bounded service/signal catalog]
   Catalog --> Detail[Open service with original bounds]
@@ -70,3 +74,16 @@ See [VALIDATION.md](../VALIDATION.md) for actual runs.
 [Automatic service dashboards](SERVICE_DASHBOARDS.md) now evaluate at most two
 supported discovered instruments per overview. All other instruments stay in
 the discovery inventory; kernels still withhold invalid identity/interval results.
+
+The optional table uses the same strict availability decoder as explicit native
+instrument discovery. A single canonical `0` omits only that family and returns
+`diagnostics: [{kind: "exponential-histogram", reason: "optional-table-missing"}]`.
+A single canonical `1` includes it; `diagnostics` is then an empty array. Probe
+failures, malformed results and a later table/read race fail the whole operation.
+The catalog shows the missing-source diagnostic even when matching ordinary
+services are empty. An empty successfully read window is a separate result.
+
+One global service/signal cap still applies after the union. Reported dependency
+reads remain span-only and separate from metric presence; no common snapshot or
+execution authority is inferred. See the [379 storyboard](../journeys/379-exponential-service-discovery-storyboard.md)
+for the normal catalog-to-unsupported-instrument journey.

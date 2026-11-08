@@ -52,7 +52,9 @@ func TestExplorationAndTailRegistrationsKeepInjectedSources(t *testing.T) {
 				t.Error("injected auth/readonly changed")
 			}
 			sql, _ := io.ReadAll(r.Body)
-			if strings.HasPrefix(string(sql), "SELECT toString(count()) AS count") {
+			if string(sql) == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
+				io.WriteString(w, `{"result":1}`)
+			} else if strings.HasPrefix(string(sql), "SELECT toString(count()) AS count") {
 				io.WriteString(w, "{\"count\":\"0\"}\n")
 			}
 		}))
@@ -80,7 +82,14 @@ func TestExplorationAndTailRegistrationsKeepInjectedSources(t *testing.T) {
 			}
 			w = httptest.NewRecorder()
 			reg.mux.ServeHTTP(w, httptest.NewRequest("POST", route.path, strings.NewReader(route.body)))
-			if w.Code != 200 || w.Header().Get("Cache-Control") != "no-store" || reg.reads.Load() <= before {
+			wantReads := int32(3)
+			if route.path == "/inventory" {
+				wantReads = 1
+			}
+			if route.path == "/discovery" {
+				wantReads = 3
+			}
+			if w.Code != 200 || w.Header().Get("Cache-Control") != "no-store" || reg.reads.Load()-before != wantReads {
 				t.Fatal("injected route failed", route.path, w.Code, w.Body.String())
 			}
 			before = reg.reads.Load()

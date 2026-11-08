@@ -25,8 +25,8 @@
 > source metadata, exact staged scope, explicit Run and paused held Back.
 > **378 native failure/recovery consolidation is delivered**, including typed
 > refusals, explicit exact-question retry and retired late responses. The
-> whole-product checkpoint adopts **379 broader service discovery**, **380 Saved
-> exemplar continuation**, then **381 shared bounded source decoding**.
+> whole-product checkpoint adopts **379 broader service discovery (delivered)**,
+> **380 Saved exemplar continuation (next)**, then **381 shared bounded source decoding**.
 > See the [checkpoint reconciliation](reviews/ROADMAP_RECONCILIATION_375.md).
 > Do not turn blocked native grammar or broker research into a new executor,
 > compatibility layer or unbounded product platform.

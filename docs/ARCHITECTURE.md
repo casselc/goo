@@ -1,5 +1,15 @@
 # Architecture
 
+[Multi-signal service discovery](METRIC_SERVICE_DISCOVERY.md) includes optional
+exponential-histogram exported points without extending the measurement executor.
+A small `internal/optionalmetric` helper shares only the fixed table probe and
+strict single-field availability decoding with native instrument discovery.
+Each source owner keeps its transport, budgets, typed scope and classification.
+The Services source probes, reads one globally bounded signal union, then reads
+span-only relationships; missing optional sources are explicit diagnostics and
+any source error refuses the whole operation. Catalog controls and row actions
+retain generation, evidence and rendered-owner leases across scope edits.
+
 [Saved fixed cohort questions](SAVED_COHORT_QUERIES.md) extend the existing count
 comparison role with a disjoint fixed-query operand. Shared Go/JS validation
 requires an exact ordinary-count context and forbids mixed operand fields.

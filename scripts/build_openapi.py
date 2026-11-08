@@ -47,6 +47,15 @@ instrument.setdefault('allOf', []).append({
 discovery = schemas['measurements.DiscoveryResult']
 discovery['properties']['diagnostics'] = {'type': 'array', 'maxItems': 1, 'items': ref('measurements.DiscoveryDiagnostic'), 'description': 'Empty when the optional exponential table is included; an explicit missing-table diagnostic otherwise. Source errors fail discovery, never imply absence.'}
 discovery['properties']['records']['description'] = 'Retained exported data points across all included families, bounded globally at 10000. Not histogram bucket mass, health or ingestion completeness.'
+
+service_diagnostic = schemas['exploration.ServiceDiscoveryDiagnostic']
+service_diagnostic['additionalProperties'] = False
+service_diagnostic['properties']['kind'] = {'const': 'exponential-histogram'}
+service_diagnostic['properties']['reason'] = {'const': 'optional-table-missing'}
+service_discovery = schemas['exploration.ServiceDiscovery']
+service_discovery['properties']['diagnostics'] = {'type': 'array', 'maxItems': 1, 'items': ref('exploration.ServiceDiscoveryDiagnostic'), 'description': 'Optional-source availability, separate from empty matching data. Source probe/read errors fail the operation.'}
+service_discovery['properties']['signals']['description'] = 'At most 1000 service/signal pairs across all included sources. Metric counts are exported gauge, sum, explicit and optional exponential histogram data-point records, never histogram mass or execution support.'
+
 for name in ('workbench.ActivityView','workbench.ActivityViewInput'):
  schemas[name]['properties']['baselineCapture']['description']='Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and the same checked environment policy/scope; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity.'
 

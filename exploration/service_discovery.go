@@ -6,6 +6,8 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/internal/optionalmetric"
+	"github.com/casselc/goo/internal/sourcefailure"
 	"strconv"
 	"strings"
 	"time"
@@ -27,15 +29,20 @@ type Dependency struct {
 	Count           string  `json:"count"`
 	Kind            string  `json:"kind"`
 }
+type ServiceDiscoveryDiagnostic struct {
+	Kind   string `json:"kind"`
+	Reason string `json:"reason"`
+}
 type ServiceDiscovery struct {
-	Identity     string            `json:"identity,omitempty"`
-	Question     InventoryQuestion `json:"question"`
-	CapturedAt   string            `json:"capturedAt"`
-	Basis        string            `json:"basis"`
-	Signals      []ServiceSignal   `json:"signals"`
-	Dependencies []Dependency      `json:"dependencies"`
-	Plan         Plan              `json:"plan"`
-	Warnings     []string          `json:"warnings"`
+	Diagnostics  []ServiceDiscoveryDiagnostic `json:"diagnostics"`
+	Identity     string                       `json:"identity,omitempty"`
+	Question     InventoryQuestion            `json:"question"`
+	CapturedAt   string                       `json:"capturedAt"`
+	Basis        string                       `json:"basis"`
+	Signals      []ServiceSignal              `json:"signals"`
+	Dependencies []Dependency                 `json:"dependencies"`
+	Plan         Plan                         `json:"plan"`
+	Warnings     []string                     `json:"warnings"`
 }
 
 // ValidateServiceDiscoveryQuestion keeps exact service selection exclusive to
@@ -47,6 +54,9 @@ func ValidateServiceDiscoveryQuestion(q InventoryQuestion) error {
 	return q.Validate()
 }
 func CompileServiceDiscovery(q InventoryQuestion) (Plan, error) {
+	return compileServiceDiscovery(q, true)
+}
+func compileServiceDiscovery(q InventoryQuestion, exponentialPresent bool) (Plan, error) {
 	if e := ValidateServiceDiscoveryQuestion(q); e != nil {
 		return Plan{}, e
 	}
@@ -75,7 +85,11 @@ func CompileServiceDiscovery(q InventoryQuestion) (Plan, error) {
 	if err != nil {
 		return Plan{}, err
 	}
-	for _, family := range []string{"gauge", "sum", "histogram"} {
+	families := []string{"gauge", "sum", "histogram"}
+	if exponentialPresent {
+		families = append(families, "exp_histogram")
+	}
+	for _, family := range families {
 		metricParts = append(metricParts, "SELECT "+namespaceColumn("ResourceAttributes")+" AS namespace, ServiceName AS service, count() AS n, min(toUnixTimestamp64Milli(TimeUnix)) AS first_ms, max(toUnixTimestamp64Milli(TimeUnix)) AS last_ms FROM otel_metrics_"+family+" WHERE TimeUnix>=fromUnixTimestamp64Milli({from:Int64}) AND TimeUnix<fromUnixTimestamp64Milli({to:Int64}) AND "+metricEnvironment+" "+namespaceFilter(q.Namespace, c.params)+" GROUP BY namespace, service")
 	}
 	metrics := "SELECT namespace, service, 'metrics' AS signal, toString(sum(n)) AS count, toString(min(first_ms)) AS first_ms, toString(max(last_ms)) AS last_ms FROM (" + strings.Join(metricParts, " UNION ALL ") + ") GROUP BY namespace, service"
@@ -87,20 +101,37 @@ func CompileServiceDiscovery(q InventoryQuestion) (Plan, error) {
 
 	return Plan{Count: signals, Groups: edges, Parameters: c.params}, nil
 }
-func (s Source) DiscoverServices(ctx context.Context, q InventoryQuestion) (*ServiceDiscovery, error) {
+func (s Source) DiscoverServices(ctx context.Context, q InventoryQuestion) (result *ServiceDiscovery, resultErr error) {
 	q = q.clone()
 	p, e := CompileServiceDiscovery(q)
 	if e != nil {
 		return nil, e
+	}
+	defer func() { resultErr = sourcefailure.Protocol(resultErr) }()
+	probe, e := s.read(ctx, optionalmetric.ExponentialHistogramProbeSQL, nil)
+	if e != nil {
+		return nil, e
+	}
+	present, e := optionalmetric.DecodeExists(probe)
+	if e != nil {
+		return nil, e
+	}
+	diagnostics := []ServiceDiscoveryDiagnostic{}
+	if !present {
+		diagnostics = append(diagnostics, ServiceDiscoveryDiagnostic{Kind: "exponential-histogram", Reason: "optional-table-missing"})
+		p, e = compileServiceDiscovery(q, false)
+		if e != nil {
+			return nil, e
+		}
 	}
 	raw, e := s.read(ctx, p.Count, p.Parameters)
 	if e != nil {
 		return nil, e
 	}
 	if len(raw) > 1000 {
-		return nil, fmt.Errorf("service/signal cardinality exceeds 1000; narrow window")
+		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("service/signal cardinality exceeds 1000; narrow window"))
 	}
-	r := &ServiceDiscovery{Identity: "otel-service-namespace/v1", Question: q, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), Signals: []ServiceSignal{}, Dependencies: []Dependency{}, Plan: p, Warnings: []string{"Event timestamps and counts describe captured spans, logs and native metric data-point records, not ingestion lag, telemetry completeness, service health or declared membership. Metric counts are records across gauge, sum and explicit-histogram tables, not values, unique streams or histogram observation counts.", "Parent links use reported trace/parent-span IDs within the environment and fixed window. Counts are child span records, not unique requests. Unresolved/ambiguous/invalid parents are diagnostics, not inferred edges.", "Signal presence and parent links are separate aggregate reads; no transactional consistency or complete topology is claimed. Metric-only services create no parent links. Summary/exponential-histogram metric families, asynchronous span links and external peer inference are not included."}}
+	r := &ServiceDiscovery{Identity: "otel-service-namespace/v1", Diagnostics: diagnostics, Question: q, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), Signals: []ServiceSignal{}, Dependencies: []Dependency{}, Plan: p, Warnings: []string{"Event timestamps and counts describe captured spans, logs and native metric data-point records, not ingestion lag, telemetry completeness, service health or declared membership. Metric counts are exported points across gauge, sum, explicit-histogram and available exponential-histogram tables, not values, unique streams or histogram observation counts.", "Parent links use reported trace/parent-span IDs within the environment and fixed window. Counts are child span records, not unique requests. Unresolved/ambiguous/invalid parents are diagnostics, not inferred edges.", "Optional source availability, signal presence and parent links are separate reads; no transactional consistency or complete topology is claimed. Metric-only services create no parent links. Summary metric families, asynchronous span links and external peer inference are not included. Missing optional sources are explicit diagnostics, not empty or complete discovery."}}
 	seen := map[[3]string]bool{}
 	for _, v := range raw {
 		var x struct {
@@ -142,7 +173,7 @@ func (s Source) DiscoverServices(ctx context.Context, q InventoryQuestion) (*Ser
 		return nil, e
 	}
 	if len(raw) > 1000 {
-		return nil, fmt.Errorf("dependency cardinality exceeds 1000; narrow window")
+		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("dependency cardinality exceeds 1000; narrow window"))
 	}
 	keys := map[[5]string]bool{}
 	for _, v := range raw {

@@ -7,26 +7,27 @@ remain separate columns, including decimal counts larger than JavaScript's exact
 number range. Missing observations say **Not observed**, not zero or healthy.
 Latest event is the latest captured event among those signals, not ingestion lag.
 
-The catalog displays its fixed half-open UTC window. Search filters service names
+The compact **Scope** disclosure selects recent lookback or fixed UTC bounds and
+all, missing or exact namespace (including reported empty). The catalog displays
+its fixed half-open UTC window. Optional exponential-histogram source absence
+remains a visible diagnostic, separate from no matching data. Search filters service names
 and observed signal names without rereading or changing totals. Reported dependency
 edges and diagnostics are secondary disclosures from the same discovery response.
 They remain trace/parent-span evidence; metric-only services imply no topology.
 
 **Open service** retains the catalog environment and bounds. It reads four
 independent sources: signal activity, service-scoped spans/attributes, native
-instrument metadata and environment-wide span-operation inventory. The service
-view filters that inventory to the selected service and offers operation drilldown,
+instrument metadata and service-scoped span-operation inventory. The service
+view retains the selected service before grouping limits and offers operation drilldown,
 observed-convention questions, native previews and capture/reuse actions. Partial
 source failures remain separate; no combined transactional snapshot is claimed.
 
-The operation inventory is deliberately still the existing environment-wide typed
-kernel, bounded to 1000 service/operation pairs. Its capture action is explicitly
-**Capture environment span inventory** and explains that it rereads all services
-in the original environment/window, including other services. It does not archive
-the catalog or just the displayed service. Service-scoped inventory compilation is
-future work; an environment-wide cardinality failure does not disable successful
-native/attribute sections. Native measurement definitions and record questions
-continue through the existing preview/Explore executors and capture workflows.
+The operation inventory uses the existing typed kernel with exact service
+selection before its 1000 service/operation-pair limit. **Capture service operation
+inventory** explicitly rereads that service in its original scope; it does not
+archive the all-signal catalog. A source failure does not disable successful
+native/attribute sections. Native definitions and record questions continue
+through the existing preview/Explore executors and capture workflows.
 
 Returning from Explore or a native preview restores service detail without a read.
 **Back to service list** restores the catalog and its search locally. Focus returns
@@ -45,7 +46,7 @@ backend measurement/query semantics have not changed.
 
 ```mermaid
 flowchart TD
-  Entry[Services: environment + lookback] --> Discover[One Discover services action]
+  Entry[Services: environment + recent or fixed window + namespace] --> Discover[One Discover services action]
   Discover --> Catalog[One row per service / separate signal counts]
   Catalog --> Search[Local search: original totals and bounds]
   Search --> Service[Open service in original window]

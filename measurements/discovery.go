@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/casselc/goo/identity"
+	"github.com/casselc/goo/internal/optionalmetric"
 	"sort"
 	"strconv"
 	"strings"
@@ -121,25 +122,11 @@ func (s Source) Discover(ctx context.Context, q DiscoveryQuestion) (*DiscoveryRe
 // Probe only the fixed optional exporter table. A source failure or malformed
 // answer is not table absence; a later table race still fails the global read.
 func (s Source) exponentialHistogramTablePresent(ctx context.Context) (bool, error) {
-	rows, err := s.read(ctx, Plan{SQL: "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow"})
+	rows, err := s.read(ctx, Plan{SQL: optionalmetric.ExponentialHistogramProbeSQL})
 	if err != nil {
 		return false, err
 	}
-	if len(rows) != 1 {
-		return false, fmt.Errorf("invalid optional metric table availability response")
-	}
-	var fields map[string]json.RawMessage
-	if json.Unmarshal(rows[0], &fields) != nil || len(fields) != 1 {
-		return false, fmt.Errorf("invalid optional metric table availability response")
-	}
-	switch strings.TrimSpace(string(fields["result"])) {
-	case "0":
-		return false, nil
-	case "1":
-		return true, nil
-	default:
-		return false, fmt.Errorf("invalid optional metric table availability response")
-	}
+	return optionalmetric.DecodeExists(rows)
 }
 func discoverRows(q DiscoveryQuestion, rows []json.RawMessage) (*DiscoveryResult, error) {
 	if len(rows) > RowLimit {

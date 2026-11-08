@@ -1,13 +1,20 @@
 # Known issues and gaps
 
+379 closes broader service visibility for exponential-only emitters through the
+normal Services catalog. Optional-source absence is an explicit diagnostic; probe
+errors and table races refuse the operation. Compact fixed UTC/namespace controls
+retain exact scope and retire old actions. This is presence discovery, with
+exponential evaluation still deferred under the 374 source/representation gate.
+See [service discovery](METRIC_SERVICE_DISCOVERY.md) and [validation](../VALIDATION.md).
+
 378 delivers structured native source refusals and explicit recovery of the exact
 failed question/display intent. Edits, previews, navigation and cancellation retire
 old retries; late responses cannot replace a new owner. Local source limits and
 malformed non-lifecycle data now receive their specific closed classifications.
 Successful reads may still have unknown measurement coverage, not healthy status.
 See [contract](NATIVE_MEASUREMENT_RECOVERY.md) and [validation](../VALIDATION.md).
-The [November 8 roadmap](ROADMAP_2026_11_08.md) adopts 379 service visibility,
-380 Saved exemplar continuation and 381 bounded decoder consolidation.
+The [November 8 roadmap](ROADMAP_2026_11_08.md) delivers 379 service visibility, with
+380 Saved exemplar continuation next and 381 bounded decoder consolidation.
 
 377 delivers reported explicit-histogram exemplars in live Measurements: exact
 source-export association, source-free trace staging, explicit scoped Run and

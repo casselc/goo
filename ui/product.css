@@ -1632,3 +1632,12 @@ td details {
 
 /* Discovery rows use the existing stacked native-table presentation on narrow screens. */
 @media(max-width:700px){.instrument-catalog-table[mobile-layout=stacked]>table{min-width:0}.instrument-catalog-table[mobile-layout=stacked]>table>tbody>tr>td:first-child{grid-column:1/-1}}
+
+/* The service catalog keeps identities stacked without evidence-note card chrome. */
+.service-catalog-table>tbody>tr>td{vertical-align:top}
+.service-catalog-table>tbody>tr>td:first-child{min-width:160px;max-width:320px;overflow-wrap:anywhere}
+.service-catalog-table>tbody>tr>td:first-child>:is(strong,small){display:block}
+.service-catalog-table .service-catalog-namespace{margin-top:3px;color:var(--muted);font-size:11px}
+.service-catalog-table>tbody>tr>td:first-child>p{margin:3px 0 0;color:var(--muted);font-size:11px}
+.service-catalog-table>tbody>tr>td:last-child>button{white-space:nowrap}
+@media(max-width:700px){.service-catalog-viewport[mobile-layout=stacked]>.service-catalog-table>tbody>tr>td:first-child{grid-column:1/-1;min-width:0;max-width:100%}}

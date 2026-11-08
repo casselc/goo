@@ -1,5 +1,61 @@
 # Validation record
 
+## Exponential-only services through the normal catalog — 379
+
+Services discovery now probes the optional exponential-histogram table, then
+reads one globally bounded signal union and independent span relationships.
+Counts are exported points, not metric values or histogram mass. Canonical probe
+absence yields an explicit diagnostic; malformed/duplicate-key probes, source
+errors and table races fail without a partial catalog. Instrument discovery shares
+the small strict availability decoder; exponential evaluation remains unsupported.
+
+Compact Scope controls preserve fixed half-open UTC bounds and all/missing/exact
+namespace identity, including reported empty. Edits abort/retire pending owners.
+Catalog actions bind rendered evidence and scope, including after local search or
+reattached old DOM. The catalog uses the shared compact/stacked native table;
+actual screenshot review caught and corrected identity overlap/header squeezing.
+
+Checks:
+
+- Full root `go test ./... -count=1` passes (Go 1.27.3); focused source tests cover
+  present/absent/probe failure/read race and global-cap refusal. Existing typed
+  environment/namespace and injected HTTP source tests now assert the extra probe.
+- Focused UI/inventory checks: **21 passed**, 287 ms. Final full frontend suite:
+  **1,338 passed**, 17.462 s, zero skipped. Additional coverage includes malformed
+  UTC, exact empty/missing namespace, cancellation, late results and old row actions.
+- Three targeted Hegel properties pass in **0.226 s**: new scoped service discovery,
+  metric-service bounds and the existing unsupported-instrument discovery property.
+- Generated API contract: **112 operations / 721 schemas**. Source-free checks pass
+  **476 frozen responses / 186 admitted requests / 28 mux refusals**. Six actual
+  discovery/instrument/optional-source/ordinary responses also conform, including
+  the closed missing-source diagnostic and structured source refusal.
+- First real browser journey and positive Bombadil DOM campaign pass. Retained
+  Collector exports independently establish **13 exponential points / eight
+  instrument identities**, with no ordinary records for that service. Ordinary
+  retained sibling counts remain distinct from bucket mass. Optional absence,
+  successfully empty data, failed probe and exact missing/empty namespace controls
+  receive separate checks. No telemetry ingestion or capture/package writes occur.
+- Final corrected-build browser journey passes in **58.8 s**; Bombadil records
+  **983 DOM states** over 50.268 s with positive completion, exact scope, observed
+  unsupported metadata, no execution and safe budgets. Desktop and 390 px frames
+  are actual current Playwright paint. The first actor run had stale reading-state
+  paint; the final run's expanded metadata JPEG is visually verified and retained.
+  Repetitive JPEGs are pruned while the compact trace, report and reproduction
+  limitation remain. No new Quint
+  projection is claimed for this discovery-only addition.
+
+Final actual report:
+`artifacts/service-discovery379/525516fc-37d0-406f-a55f-7a3a73239d7e/summary.json`.
+
+Final reviewed image `f8d85826593d…`, extracted binary
+`/tmp/goo-379-reviewed-goo`: health passes; served inventory module (26,972 bytes),
+product CSS (92,491 bytes) and API document (1,447,687 bytes) match source exactly.
+Only the Go app container was rebuilt; telemetry stores, volumes and the XTDB
+orphan remain intact. See [storyboard](journeys/379-exponential-service-discovery-storyboard.md),
+[review](docs/reviews/SERVICE_DISCOVERY_REVIEW_379.md) and
+[contract](docs/METRIC_SERVICE_DISCOVERY.md). Next is 380 Saved exemplar continuation.
+
+
 ## Native measurement refusal and exact recovery — 378
 
 Native source reads now reuse the closed source-failure taxonomy. HTTP failures

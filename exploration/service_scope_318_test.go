@@ -40,7 +40,7 @@ func TestServiceScopeSQLAndNativeBoundary318(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if !strings.Contains(inventory.Groups, predicate) || strings.Count(discovery.Count, predicate) != 5 || !strings.Contains(discovery.Groups, predicate) {
+			if !strings.Contains(inventory.Groups, predicate) || strings.Count(discovery.Count, predicate) != 6 || !strings.Contains(discovery.Groups, predicate) {
 				t.Fatal("record/metric-presence scope lowering diverged")
 			}
 			for _, plan := range []Plan{inventory, discovery} {
@@ -101,7 +101,7 @@ func TestServiceScopeSQLAndNativeBoundary318(t *testing.T) {
 	}
 }
 
-type serviceScopeTransport318 func(*http.Request) (*http.Response, error)
+type serviceScopeTransport318 func(r *http.Request) (*http.Response, error)
 
 func (f serviceScopeTransport318) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
 func TestServiceScopeQuestionOwnership318(t *testing.T) {
@@ -115,7 +115,7 @@ func TestServiceScopeQuestionOwnership318(t *testing.T) {
 				reads++
 				q.EnvironmentSelector.Scope.Value = "changed-during-read"
 				q.Namespace.Value = "changed"
-				return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(""))}, nil
+				return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(serviceProbeResponse379(r)))}, nil
 			})}}
 			var actual InventoryQuestion
 			if discover {
@@ -131,7 +131,7 @@ func TestServiceScopeQuestionOwnership318(t *testing.T) {
 				}
 				actual = result.Question
 			}
-			if !reflect.DeepEqual(actual, want) || reads != map[bool]int{false: 1, true: 2}[discover] {
+			if !reflect.DeepEqual(actual, want) || reads != map[bool]int{false: 1, true: 3}[discover] {
 				t.Fatal("returned scope aliases caller or read budget changed")
 			}
 			q.EnvironmentSelector.Scope.Value = "changed-after-return"

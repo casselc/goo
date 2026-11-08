@@ -62,18 +62,8 @@ read telemetry or make an unsupported binding executable. See the
 
 ## Entry boundary
 
-This delivery extends explicit service metric discovery in Measurements and its
-existing fixed-scope handoff. Broader all-signal service inventory still scans
-gauge, sum and explicit histogram families; an exponential-only service is not
-automatically added there. The browser journey documents its existing handoff
-entry rather than claiming a new inventory-to-service navigation path.
-
-## Actual workflow
-
-The [executable storyboard](../journeys/376-unsupported-instruments-storyboard.md)
-checks eight exponential identities from thirteen retained exported points, then
-builds and explicitly runs a supported histogram sibling in its own fixed scope.
-
-![Observed exponential instruments](journeys/screenshots/376-observed-exponential-instruments.png)
-
-![Selected unsupported instrument at 390 pixels](journeys/screenshots/376-unsupported-instrument-390.png)
+376 extended explicit service metric discovery in Measurements. 379 also includes
+optional exponential points in the broader all-signal service catalog, so an
+exponential-only service can be opened through the normal Services flow. Both
+entry points share strict optional-table availability semantics; neither grants
+exponential evaluation support. See [service discovery](METRIC_SERVICE_DISCOVERY.md).

@@ -135,10 +135,10 @@ func TestInventoryAndDiscoveryDetachNamespaceBeforeIO312(t *testing.T) {
 	for _, discovery := range []bool{false, true} {
 		q := InventoryQuestion{Environment: "prod", FromMS: 1000, ToMS: 2000, Namespace: &identity.Namespace{Mode: "value", Value: "payments"}}
 		calls := 0
-		source := Source{Endpoint: "http://source.invalid", Client: &http.Client{Transport: consistencyTransport312(func(*http.Request) (*http.Response, error) {
+		source := Source{Endpoint: "http://source.invalid", Client: &http.Client{Transport: consistencyTransport312(func(r *http.Request) (*http.Response, error) {
 			calls++
 			q.Namespace.Value = "during-io"
-			return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(""))}, nil
+			return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(serviceProbeResponse379(r)))}, nil
 		})}}
 		var returned InventoryQuestion
 		if discovery {
@@ -155,7 +155,7 @@ func TestInventoryAndDiscoveryDetachNamespaceBeforeIO312(t *testing.T) {
 			returned = result.Question
 		}
 		q.Namespace.Value = "after-return"
-		if returned.Namespace.Value != "payments" || calls != map[bool]int{true: 2, false: 1}[discovery] {
+		if returned.Namespace.Value != "payments" || calls != map[bool]int{true: 3, false: 1}[discovery] {
 			t.Fatal("discovery receipt aliases caller namespace", returned, calls)
 		}
 	}

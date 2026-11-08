@@ -30,6 +30,10 @@ func TestHegelMetricServiceBounds(t *testing.T) {
 		bad := false
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			b, _ := io.ReadAll(r.Body)
+			if string(b) == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
+				fmt.Fprintln(w, `{"result":1}`)
+				return
+			}
 			if strings.Contains(string(b), "WITH captured") {
 				return
 			}

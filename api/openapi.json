@@ -19815,6 +19815,14 @@
               }
             ]
           },
+          "diagnostics": {
+            "type": "array",
+            "maxItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/exploration.ServiceDiscoveryDiagnostic"
+            },
+            "description": "Optional-source availability, separate from empty matching data. Source probe/read errors fail the operation."
+          },
           "identity": {
             "type": "string"
           },
@@ -19835,7 +19843,8 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "At most 1000 service/signal pairs across all included sources. Metric counts are exported gauge, sum, explicit and optional exponential histogram data-point records, never histogram mass or execution support."
           },
           "warnings": {
             "anyOf": [
@@ -19852,6 +19861,7 @@
           }
         },
         "required": [
+          "diagnostics",
           "question",
           "capturedAt",
           "basis",
@@ -19862,6 +19872,23 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ServiceDiscovery"
+      },
+      "exploration.ServiceDiscoveryDiagnostic": {
+        "properties": {
+          "kind": {
+            "const": "exponential-histogram"
+          },
+          "reason": {
+            "const": "optional-table-missing"
+          }
+        },
+        "required": [
+          "kind",
+          "reason"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ServiceDiscoveryDiagnostic",
+        "additionalProperties": false
       },
       "exploration.ServiceSignal": {
         "properties": {

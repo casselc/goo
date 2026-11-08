@@ -19,6 +19,10 @@ func TestServiceDiscoveryScopeAndValidation(t *testing.T) {
 	bad := false
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		b, _ := io.ReadAll(r.Body)
+		if string(b) == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
+			fmt.Fprintln(w, `{"result":1}`)
+			return
+		}
 		if strings.Contains(string(b), "WITH captured") {
 			if bad {
 				fmt.Fprintln(w, `{"child":"worker","parent":null,"kind":"edge","count":"1"}`)
@@ -49,7 +53,7 @@ func TestMetricServiceDiscoveryValidation(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, family := range []string{"gauge", "sum", "histogram"} {
+	for _, family := range []string{"gauge", "sum", "histogram", "exp_histogram"} {
 		if !strings.Contains(plan.Count, "otel_metrics_"+family) {
 			t.Fatal("missing metric family", family)
 		}
@@ -60,6 +64,10 @@ func TestMetricServiceDiscoveryValidation(t *testing.T) {
 	rows := `{"service":"metrics-only","signal":"metrics","count":"18446744073709551615","first_ms":"1000","last_ms":"2999"}`
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		b, _ := io.ReadAll(r.Body)
+		if string(b) == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
+			fmt.Fprintln(w, `{"result":1}`)
+			return
+		}
 		if !strings.Contains(string(b), "WITH captured") {
 			fmt.Fprintln(w, rows)
 		}
