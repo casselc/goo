@@ -131,6 +131,7 @@ The same envelope does not enable typed environments for measurement definitions
 or reusable measurement packages. Those paths continue to refuse unsupported
 scope before execution. Recent-population entry is a separate remaining handoff.
 
-Search intent cards do not support **Run and capture** or captured-evidence
-attachment yet. Preserving qualified search witnesses requires the separate
-383 result contract; a record capture cannot stand in for it.
+Search question cards support **Run and capture** through the typed
+[captured search contract](CAPTURED_TRACE_SEARCH.md). The server rereads the fixed
+request and records its independent basis and custody receipt. Only an exactly
+matching search capture can attach; a record capture cannot stand in for it.

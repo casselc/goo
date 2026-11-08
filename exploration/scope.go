@@ -48,6 +48,21 @@ func (q CaptureQuestion) Scope() (QuestionScope, error) {
 	}
 	s := QuestionScope{Family: q.Kind, Convention: "Unbound; no semantic-convention profile inferred", SchemaMetadata: "Unavailable in this record adapter; original resource/scope constraints remain in selector"}
 	switch q.Kind {
+	case "trace-search":
+		v := q.TraceSearch
+		s.Signal = "spans"
+		s.SourceBinding = "clickhouse.otel-records/v1"
+		s.Grain = "reported-trace"
+		s.Environment = v.Environment
+		s.EnvironmentSelector = copyEnvironmentSelector(v.EnvironmentSelector)
+		s.FromMS, s.ToMS = v.FromMS, v.ToMS
+		for i := range v.Conditions {
+			member, err := (CaptureQuestion{Kind: "explore", Explore: &Query{Signal: "spans", Environment: v.Environment, EnvironmentSelector: copyEnvironmentSelector(v.EnvironmentSelector), FromMS: v.FromMS, ToMS: v.ToMS, Where: detached(&v.Conditions[i]), Limit: 1}}).Scope()
+			if err != nil {
+				return s, err
+			}
+			s.Members = append(s.Members, member)
+		}
 	case "explanation":
 		a, e := (CaptureQuestion{Kind: "explore", Explore: &q.Explanation.Baseline}).Scope()
 		if e != nil {

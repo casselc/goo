@@ -246,7 +246,7 @@ func Register(mux *http.ServeMux, source exploration.Source, dir string, resultS
 					fail(w, 409, fmt.Errorf("observed explanation question differs from supplied question"))
 					return
 				}
-			} else if in.Question.Explanation != nil || in.Question.Explore != nil || in.Question.Measurement != nil || in.Question.Inventory != nil || in.Question.Comparison != nil {
+			} else if in.Question.TraceSearch != nil || in.Question.Explanation != nil || in.Question.Explore != nil || in.Question.Measurement != nil || in.Question.Inventory != nil || in.Question.Comparison != nil {
 				fail(w, 400, fmt.Errorf("partial promotion question is invalid"))
 				return
 			}
@@ -279,7 +279,7 @@ func Register(mux *http.ServeMux, source exploration.Source, dir string, resultS
 				fail(w, 409, fmt.Errorf("refresh cannot change the captured question"))
 				return
 			}
-			if in.Question.Kind == "" && (in.Question.Explanation != nil || in.Question.Explore != nil || in.Question.Inventory != nil || in.Question.Comparison != nil || in.Question.Measurement != nil) {
+			if in.Question.Kind == "" && (in.Question.TraceSearch != nil || in.Question.Explanation != nil || in.Question.Explore != nil || in.Question.Inventory != nil || in.Question.Comparison != nil || in.Question.Measurement != nil) {
 				fail(w, 400, fmt.Errorf("partial refresh question is invalid"))
 				return
 			}

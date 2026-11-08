@@ -100,7 +100,7 @@ func (q CaptureSearchQuery) normalized() (CaptureSearchQuery, error) {
 	if !valid(q.Title, 120) || q.Environment != nil && !valid(*q.Environment, 256) {
 		return q, errors.New("invalid capture title or environment search")
 	}
-	if !slices.Contains([]string{"", "explore", "inventory", "comparison", "explanation", "measurement"}, q.Kind) || !slices.Contains([]string{"", "logs", "spans", "metrics"}, q.Signal) || !slices.Contains([]string{"newest", "oldest"}, q.Order) {
+	if !slices.Contains([]string{"", "explore", "inventory", "comparison", "explanation", "measurement", "trace-search"}, q.Kind) || !slices.Contains([]string{"", "logs", "spans", "metrics"}, q.Signal) || !slices.Contains([]string{"newest", "oldest"}, q.Order) {
 		return q, errors.New("invalid capture kind, signal or capture-time order")
 	}
 	return q, nil

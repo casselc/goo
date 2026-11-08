@@ -100,3 +100,7 @@ See [typed journey](journeys/340-typed-trace-search.md),
 [architecture](reviews/TYPED_TRACE_SEARCH_ARCHITECTURE_340.md),
 [design](reviews/TYPED_TRACE_SEARCH_DESIGN_340.md) and
 [validation](../VALIDATION.md) for actual checks and remaining limitations.
+
+[Capture search evidence](CAPTURED_TRACE_SEARCH.md) preserves an explicit reread,
+full count and bounded qualified witnesses. Reopen works without telemetry;
+following a trace stages a fresh question while Back retains the stored search.

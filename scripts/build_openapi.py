@@ -71,7 +71,7 @@ sp=summary['properties']
 for name in ('id','parent'):sp[name]['pattern']='^[a-f0-9]{64}$'
 sp['title']['maxLength']=120
 sp['capturedAt']['format']='date-time'
-sp['kind']['enum']=['explore','inventory','comparison','explanation','measurement']
+sp['kind']['enum']=['explore','inventory','comparison','explanation','measurement','trace-search']
 sp['measurementKind']['enum']=['gauge','counter','histogram','lifecycle','stock','state']
 sp['signal']['enum']=['','logs','spans','metrics']
 sp['environment']['anyOf'][0]['maxLength']=128
@@ -195,7 +195,34 @@ for suffix in ('', 'Input'):
    branch['properties']['scope']['allOf'].append({'type':'object','required':['fromMs','toMs'],'properties':{'fromMs':{'type':'integer'},'toMs':{'type':'integer'},'environment':{'type':'string'},'environmentSelector':{'type':'object'}}})
    branch['properties'][payload]={'allOf':[ref(target+suffix),{'type':'object','required':['version','fromMs','toMs','conditions','limit'],'properties':{'fromMs':{'type':'integer'},'toMs':{'type':'integer'},'conditions':{'type':'array','minItems':1,'maxItems':4,'items':ref('TraceSearchIntentPredicate'+suffix)},'limit':{'type':'integer','minimum':1,'maximum':100},'environment':{'type':'string'},'environmentSelector':{'type':'object'}}}]}
   step['oneOf'].append(branch)
- step['description']='Exactly one checked authored question payload. Trace-search steps retain the complete fixed request, conditions and limit; saving and reopening are source-free. Search remains explicit; capture/evidence attachment is unsupported for this arm until its result contract is implemented.'
+ step['description']='Exactly one checked authored question payload. Trace-search steps retain the complete fixed request, conditions and limit; saving and reopening are source-free. Search remains explicit. Compatible captured search evidence can be attached after runtime verifies the exact request.'
+
+# Captured search evidence is a distinct checked union arm, not record pages.
+for suffix in ('', 'Input'):
+ request_name='TraceSearchCaptureRequest'+suffix
+ schemas[request_name]=copy.deepcopy(schemas['workbench.Step'+suffix]['oneOf'][2]['properties']['traceSearch'])
+ question=schemas['exploration.CaptureQuestion'+suffix]
+ question['additionalProperties']=False
+ for payload,target in [('explore','exploration.Query'),('inventory','exploration.InventoryQuestion'),('comparison','exploration.ComparisonQuestion'),('measurement','measurements.Question'),('explanation','exploration.ExplanationRequest')]:
+  question['properties'][payload]=ref(target+suffix)
+ question['properties']['traceSearch']=ref(request_name)
+ question.setdefault('allOf',[]).append({
+  'if':{'required':['kind'],'properties':{'kind':{'const':'trace-search'}}},
+  'then':{'required':['traceSearch'],'not':{'anyOf':[{'required':[other]} for other in ('explore','inventory','comparison','measurement','explanation')]}},
+  'else':{'not':{'required':['traceSearch']}}})
+ question['description']='Server-owned fixed capture question. Trace-search capture explicitly rereads its complete request and retains an independent source-read basis; it never archives the prior browser response verbatim.'
+for wire in ('exploration.CapturePage','exploration.SavedCapture'):
+ if wire not in schemas:continue
+ shape=schemas[wire]
+ shape.setdefault('allOf',[]).append({
+  'if':{'required':['traceSearch']},
+  'then':{'not':{'anyOf':[{'required':[other]} for other in ('explore','inventory','comparison','measurement','explanation')]}}})
+ if wire=='exploration.CapturePage':
+  shape['allOf'].append({'if':{'required':['receipt'],'properties':{'receipt':{'required':['question'],'properties':{'question':{'required':['kind'],'properties':{'kind':{'const':'trace-search'}}}}}}},'then':{'required':['traceSearch'],'properties':{'traceSearch':ref('exploration.TraceSearchResult'),'nextCursor':{'const':''},'previousCursor':{'const':''}}}})
+search_result=schemas['exploration.TraceSearchResult']
+search_result['properties']['items'].update(maxItems=100)
+search_result['properties']['matchedTraces'].update(pattern='^(0|[1-9][0-9]*)$',maxLength=20)
+search_result['description']='Full matching reported-trace count with a bounded representative witness list. hasMore describes the list, not telemetry completeness. ReadAt and basis belong to this source read; capture custody time is separate. Runtime checks request, plan, state, qualified witness fields and exact counts.'
 
 summary['description']='Bounded discovery metadata, not a receipt. Legacy environment null means unknown or an explicitly versioned selector. environmentSelector preserves policy/scope; legacy name filters do not match selector captures.'
 summary['properties']['environmentSelector']['description']='Exact versioned policy/scope, separate from legacy current-only environment. Read with version 250 or newer.'
@@ -214,7 +241,7 @@ for suffix in ('', 'Input'):
  view_properties['evidence']={'anyOf':[{'type':'array','maxItems':0},{'type':'null'}]}
  card['allOf']=[{'if':{'properties':{'kind':{'const':'view'}},'required':['kind']},
                  'then':{'required':['reference'],'properties':view_properties}}]
- card['allOf'].append({'if':{'required':['kind','step'],'properties':{'kind':{'const':'question'},'step':{'type':'object','required':['kind'],'properties':{'kind':{'const':'trace-search'}}}}},'then':{'properties':{'evidence':{'anyOf':[{'type':'array','maxItems':0},{'type':'null'}]}}}})
+
 
 # Native display configuration is separate from record views and measurement identity.
 # Compatibility beyond this closed wire shape remains checked by Go without telemetry.

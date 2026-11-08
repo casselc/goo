@@ -11226,6 +11226,16 @@
           },
           "retainedRecords": {
             "type": "integer"
+          },
+          "traceSearch": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.TraceSearchResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -11234,140 +11244,191 @@
           "recordsLimited"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.CapturePage"
+        "x-go-type": "github.com/casselc/goo/exploration.CapturePage",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "traceSearch"
+              ]
+            },
+            "then": {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "explore"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "inventory"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "comparison"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "measurement"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "explanation"
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "receipt"
+              ],
+              "properties": {
+                "receipt": {
+                  "required": [
+                    "question"
+                  ],
+                  "properties": {
+                    "question": {
+                      "required": [
+                        "kind"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "const": "trace-search"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "traceSearch"
+              ],
+              "properties": {
+                "traceSearch": {
+                  "$ref": "#/components/schemas/exploration.TraceSearchResult"
+                },
+                "nextCursor": {
+                  "const": ""
+                },
+                "previousCursor": {
+                  "const": ""
+                }
+              }
+            }
+          }
+        ]
       },
       "exploration.CaptureQuestion": {
         "properties": {
           "comparison": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/exploration.ComparisonQuestion"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/exploration.ComparisonQuestion"
           },
           "explanation": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/exploration.ExplanationRequest"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/exploration.ExplanationRequest"
           },
           "explore": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/exploration.Query"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/exploration.Query"
           },
           "inventory": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/exploration.InventoryQuestion"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/exploration.InventoryQuestion"
           },
           "kind": {
             "type": "string"
           },
           "measurement": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/measurements.Question"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/measurements.Question"
+          },
+          "traceSearch": {
+            "$ref": "#/components/schemas/TraceSearchCaptureRequest"
           }
         },
         "required": [
           "kind"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.CaptureQuestion"
+        "x-go-type": "github.com/casselc/goo/exploration.CaptureQuestion",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "kind"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "trace-search"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "traceSearch"
+              ],
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "explore"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "inventory"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "comparison"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "measurement"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "explanation"
+                    ]
+                  }
+                ]
+              }
+            },
+            "else": {
+              "not": {
+                "required": [
+                  "traceSearch"
+                ]
+              }
+            }
+          }
+        ],
+        "description": "Server-owned fixed capture question. Trace-search capture explicitly rereads its complete request and retains an independent source-read basis; it never archives the prior browser response verbatim."
       },
       "exploration.CaptureQuestionInput": {
         "additionalProperties": false,
         "properties": {
           "comparison": {
-            "anyOf": [
-              {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/exploration.ComparisonQuestionInput"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/exploration.ComparisonQuestionInput"
           },
           "explanation": {
-            "anyOf": [
-              {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/exploration.ExplanationRequestInput"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/exploration.ExplanationRequestInput"
           },
           "explore": {
-            "anyOf": [
-              {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/exploration.QueryInput"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/exploration.QueryInput"
           },
           "inventory": {
-            "anyOf": [
-              {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/exploration.InventoryQuestionInput"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/exploration.InventoryQuestionInput"
           },
           "kind": {
             "anyOf": [
@@ -11380,25 +11441,70 @@
             ]
           },
           "measurement": {
-            "anyOf": [
-              {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/measurements.QuestionInput"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/measurements.QuestionInput"
+          },
+          "traceSearch": {
+            "$ref": "#/components/schemas/TraceSearchCaptureRequestInput"
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.CaptureQuestion"
+        "x-go-type": "github.com/casselc/goo/exploration.CaptureQuestion",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "kind"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "trace-search"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "traceSearch"
+              ],
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "explore"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "inventory"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "comparison"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "measurement"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "explanation"
+                    ]
+                  }
+                ]
+              }
+            },
+            "else": {
+              "not": {
+                "required": [
+                  "traceSearch"
+                ]
+              }
+            }
+          }
+        ],
+        "description": "Server-owned fixed capture question. Trace-search capture explicitly rereads its complete request and retains an independent source-read basis; it never archives the prior browser response verbatim."
       },
       "exploration.CaptureReceipt": {
         "properties": {
@@ -11627,7 +11733,8 @@
               "inventory",
               "comparison",
               "explanation",
-              "measurement"
+              "measurement",
+              "trace-search"
             ]
           },
           "measurementKind": {
@@ -21146,10 +21253,13 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "maxItems": 100
           },
           "matchedTraces": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20
           },
           "plan": {
             "$ref": "#/components/schemas/exploration.TraceSearchPlan"
@@ -21189,7 +21299,8 @@
           "warnings"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchResult"
+        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchResult",
+        "description": "Full matching reported-trace count with a bounded representative witness list. hasMore describes the list, not telemetry completeness. ReadAt and basis belong to this source read; capture custody time is separate. Runtime checks request, plan, state, qualified witness fields and exact counts."
       },
       "exploration.TraceSearchWitness": {
         "properties": {
@@ -44928,45 +45039,6 @@
                 }
               }
             }
-          },
-          {
-            "if": {
-              "required": [
-                "kind",
-                "step"
-              ],
-              "properties": {
-                "kind": {
-                  "const": "question"
-                },
-                "step": {
-                  "type": "object",
-                  "required": [
-                    "kind"
-                  ],
-                  "properties": {
-                    "kind": {
-                      "const": "trace-search"
-                    }
-                  }
-                }
-              }
-            },
-            "then": {
-              "properties": {
-                "evidence": {
-                  "anyOf": [
-                    {
-                      "type": "array",
-                      "maxItems": 0
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                }
-              }
-            }
           }
         ]
       },
@@ -45164,45 +45236,6 @@
                 "step": {
                   "type": "null"
                 },
-                "evidence": {
-                  "anyOf": [
-                    {
-                      "type": "array",
-                      "maxItems": 0
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "required": [
-                "kind",
-                "step"
-              ],
-              "properties": {
-                "kind": {
-                  "const": "question"
-                },
-                "step": {
-                  "type": "object",
-                  "required": [
-                    "kind"
-                  ],
-                  "properties": {
-                    "kind": {
-                      "const": "trace-search"
-                    }
-                  }
-                }
-              }
-            },
-            "then": {
-              "properties": {
                 "evidence": {
                   "anyOf": [
                     {
@@ -49050,7 +49083,7 @@
             }
           }
         ],
-        "description": "Exactly one checked authored question payload. Trace-search steps retain the complete fixed request, conditions and limit; saving and reopening are source-free. Search remains explicit; capture/evidence attachment is unsupported for this arm until its result contract is implemented."
+        "description": "Exactly one checked authored question payload. Trace-search steps retain the complete fixed request, conditions and limit; saving and reopening are source-free. Search remains explicit. Compatible captured search evidence can be attached after runtime verifies the exact request."
       },
       "workbench.StepInput": {
         "additionalProperties": false,
@@ -49351,7 +49384,7 @@
             }
           }
         ],
-        "description": "Exactly one checked authored question payload. Trace-search steps retain the complete fixed request, conditions and limit; saving and reopening are source-free. Search remains explicit; capture/evidence attachment is unsupported for this arm until its result contract is implemented."
+        "description": "Exactly one checked authored question payload. Trace-search steps retain the complete fixed request, conditions and limit; saving and reopening are source-free. Search remains explicit. Compatible captured search evidence can be attached after runtime verifies the exact request."
       },
       "workbench.StepScope": {
         "properties": {
@@ -52038,6 +52071,94 @@
                 }
               }
             ]
+          }
+        ]
+      },
+      "TraceSearchCaptureRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/exploration.TraceSearchRequest"
+          },
+          {
+            "type": "object",
+            "required": [
+              "version",
+              "fromMs",
+              "toMs",
+              "conditions",
+              "limit"
+            ],
+            "properties": {
+              "fromMs": {
+                "type": "integer"
+              },
+              "toMs": {
+                "type": "integer"
+              },
+              "conditions": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 4,
+                "items": {
+                  "$ref": "#/components/schemas/TraceSearchIntentPredicate"
+                }
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "environment": {
+                "type": "string"
+              },
+              "environmentSelector": {
+                "type": "object"
+              }
+            }
+          }
+        ]
+      },
+      "TraceSearchCaptureRequestInput": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/exploration.TraceSearchRequestInput"
+          },
+          {
+            "type": "object",
+            "required": [
+              "version",
+              "fromMs",
+              "toMs",
+              "conditions",
+              "limit"
+            ],
+            "properties": {
+              "fromMs": {
+                "type": "integer"
+              },
+              "toMs": {
+                "type": "integer"
+              },
+              "conditions": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 4,
+                "items": {
+                  "$ref": "#/components/schemas/TraceSearchIntentPredicateInput"
+                }
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "environment": {
+                "type": "string"
+              },
+              "environmentSelector": {
+                "type": "object"
+              }
+            }
           }
         ]
       },

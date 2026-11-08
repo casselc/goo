@@ -14,7 +14,7 @@ fresh results, held parents and immutable evidence distinct.
 
 ## Chosen finite sequence
 
-382 is delivered; the active execution order is **383 → 384**.
+382 and 383 are delivered; the active task is **384**.
 
 ### 382 — breadth: preserve and reuse a trace-search question — delivered
 
@@ -57,7 +57,7 @@ Source anchors: `ui/trace-search.mjs`, `exploration/trace_search.go`,
 `ui/workspace.mjs`. Exact transport names and route additions are implementation
 choices to review within this milestone, not claims of existing API support.
 
-### 383 — depth: capture search evidence and follow its qualified witnesses — next
+### 383 — depth: capture search evidence and follow its qualified witnesses — delivered
 
 User task: “Keep what this search actually found, then follow one trace without
 losing the search evidence that justified it.” Extend the existing immutable
@@ -90,13 +90,20 @@ Acceptance:
   with independent negative controls. Reuse the retained-parent pattern where it
   fits; do not create a global navigation manager.
 
+Delivered contract and actual journey: [captured search evidence](CAPTURED_TRACE_SEARCH.md).
+Generated cross-language admission exposed and closed a disguised-family hole;
+retain that corpus when simplifying family dispatch. Independent condition scopes
+must remain separate, and history restores held evidence rather than rereading it.
+
 Source anchors: `exploration.TraceSearchResult`,
 `exploration/capture_store.go`, `ui/captures.mjs`, `ui/trace-search.mjs` and the
 existing retained fixed-question return in `ui/app.mjs`.
 
-### 384 — consolidate: make fixed-result data the primary content
+### 384 — consolidate: make fixed-result data the primary content — next
 
-The real 380 desktop frame shows a two-span result, but secondary controls,
+The real 380 desktop frame shows a two-span result; the
+[383 fresh-trace frame](journeys/screenshots/383-search-trace-followthrough.png)
+confirms the same problem with four spans. Secondary controls,
 repeated count/summary content, trace examples and deployment context put its
 actual rows below a 1000 px viewport. Treat this as a firm shared-layout task,
 not indefinite polish or another local spacing patch.

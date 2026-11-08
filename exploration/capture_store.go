@@ -42,6 +42,7 @@ type SavedComparison struct {
 	Result      *CohortComparison `json:"result"`
 }
 type CaptureQuestion struct {
+	TraceSearch *TraceSearchRequest    `json:"traceSearch,omitempty"`
 	Explanation *ExplanationRequest    `json:"explanation,omitempty"`
 	Measurement *measurements.Question `json:"measurement,omitempty"`
 	Comparison  *ComparisonQuestion    `json:"comparison,omitempty"`
@@ -51,6 +52,15 @@ type CaptureQuestion struct {
 }
 
 func (q CaptureQuestion) Validate() error {
+	if q.Kind != "trace-search" && q.TraceSearch != nil {
+		return errors.New("unexpected trace-search question")
+	}
+	if q.Kind == "trace-search" {
+		if q.TraceSearch == nil || q.Explanation != nil || q.Measurement != nil || q.Explore != nil || q.Inventory != nil || q.Comparison != nil {
+			return errors.New("exclusive trace-search question required")
+		}
+		return q.TraceSearch.Validate()
+	}
 	if q.Kind != "explanation" && q.Explanation != nil {
 		return errors.New("unexpected explanation question")
 	}
@@ -100,6 +110,7 @@ func (q CaptureQuestion) Validate() error {
 // Normalized removes inspection-page position, never semantic filters or bounds.
 func (q CaptureQuestion) Normalized() CaptureQuestion {
 	q.Explanation = detached(q.Explanation)
+	q.TraceSearch = detached(q.TraceSearch)
 	if q.Inventory != nil {
 		v := q.Inventory.clone()
 		q.Inventory = &v
@@ -141,6 +152,7 @@ type CaptureReceipt struct {
 	Question   CaptureQuestion `json:"question"`
 }
 type SavedCapture struct {
+	TraceSearch *TraceSearchResult   `json:"traceSearch,omitempty"`
 	Explanation *ExplanationResult   `json:"explanation,omitempty"`
 	Measurement *measurements.Result `json:"measurement,omitempty"`
 	Comparison  *SavedComparison     `json:"comparison,omitempty"`
@@ -149,6 +161,7 @@ type SavedCapture struct {
 	Inventory *InventoryResult `json:"inventory,omitempty"`
 }
 type CapturePage struct {
+	TraceSearch     *TraceSearchResult   `json:"traceSearch,omitempty"`
 	Explanation     *ExplanationResult   `json:"explanation,omitempty"`
 	Measurement     *measurements.Result `json:"measurement,omitempty"`
 	Comparison      *SavedComparison     `json:"comparison,omitempty"`
@@ -204,6 +217,16 @@ func (s CaptureStore) Create(ctx context.Context, source Source, title string, q
 		if !reflect.DeepEqual(q, p.Question) {
 			return nil, errors.New("refresh must retain the original question")
 		}
+		if q.Kind == "trace-search" {
+			plan, err := CompileTraceSearch(*q.TraceSearch)
+			if err != nil {
+				return nil, err
+			}
+			if !reflect.DeepEqual(plan, p.TraceSearch.Plan) {
+				return nil, ErrCapturePlanChanged
+			}
+			return s.createTraceSearch(ctx, source, title, q, parent)
+		}
 		if q.Kind == "comparison" {
 			for _, id := range []string{p.Comparison.BaselineID, p.Comparison.SelectionID} {
 				child, e := s.Load(id)
@@ -245,6 +268,9 @@ func (s CaptureStore) Create(ctx context.Context, source Source, title string, q
 			return nil, ErrCapturePlanChanged
 		}
 	}
+	if q.Kind == "trace-search" {
+		return s.createTraceSearch(ctx, source, title, q, parent)
+	}
 	if q.Kind == "comparison" {
 		return s.createComparison(ctx, source, title, q, parent, nil)
 	}
@@ -273,6 +299,15 @@ func validateCapture(c *SavedCapture) error {
 	}
 	if c.Parent != "" && !regexpRevision.MatchString(c.Parent) {
 		return errors.New("invalid capture parent")
+	}
+	if c.Question.Kind == "trace-search" {
+		if c.TraceSearch == nil || c.Explore != nil || c.Inventory != nil || c.Comparison != nil || c.Measurement != nil || c.Explanation != nil || !reflect.DeepEqual(c.Question.TraceSearch, &c.TraceSearch.Request) {
+			return errors.New("invalid trace-search capture envelope")
+		}
+		return ValidateTraceSearchResult(c.TraceSearch)
+	}
+	if c.TraceSearch != nil {
+		return errors.New("unexpected trace-search evidence")
 	}
 	if c.Question.Kind != "explanation" && c.Explanation != nil {
 		return errors.New("unexpected explanation evidence")
@@ -465,7 +500,11 @@ func (c *SavedCapture) Page(cursor string) (*CapturePage, error) {
 	if e != nil {
 		return nil, e
 	}
-	p := &CapturePage{Explanation: c.Explanation, Measurement: c.Measurement, Receipt: c.CaptureReceipt, Inventory: c.Inventory, Comparison: c.Comparison}
+	p := &CapturePage{TraceSearch: c.TraceSearch, Explanation: c.Explanation, Measurement: c.Measurement, Receipt: c.CaptureReceipt, Inventory: c.Inventory, Comparison: c.Comparison}
+	if c.TraceSearch != nil {
+		p.RetainedRecords = len(c.TraceSearch.Items)
+		p.RecordsLimited = c.TraceSearch.HasMore
+	}
 	if c.Measurement != nil {
 		p.RetainedRecords = len(c.Measurement.Rows)
 	}
@@ -607,4 +646,14 @@ func (s CaptureStore) createMeasurement(ctx context.Context, source Source, titl
 	}
 	c := SavedCapture{CaptureReceipt: CaptureReceipt{Version: 1, Parent: parent, Title: title, Question: q, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano)}, Measurement: result}
 	return s.publish(c)
+}
+
+// createTraceSearch performs a fresh fixed-question read; custody is recorded only
+// after the result arrives. It never promotes the earlier browser display.
+func (s CaptureStore) createTraceSearch(ctx context.Context, source Source, title string, q CaptureQuestion, parent string) (*SavedCapture, error) {
+	result, err := source.SearchTraces(ctx, *q.TraceSearch)
+	if err != nil {
+		return nil, err
+	}
+	return s.publish(SavedCapture{CaptureReceipt: CaptureReceipt{Version: 1, Parent: parent, Title: title, Question: q, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano)}, TraceSearch: result})
 }

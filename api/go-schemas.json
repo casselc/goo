@@ -3451,6 +3451,16 @@
       },
       "retainedRecords": {
         "type": "integer"
+      },
+      "traceSearch": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.TraceSearchResult"
+          },
+          {
+            "type": "null"
+          }
+        ]
       }
     },
     "required": [
@@ -3510,6 +3520,16 @@
         "anyOf": [
           {
             "$ref": "#/components/schemas/measurements.Question"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "traceSearch": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.TraceSearchRequest"
           },
           {
             "type": "null"
@@ -3610,6 +3630,23 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/measurements.QuestionInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "traceSearch": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.TraceSearchRequestInput"
               },
               {
                 "type": "null"

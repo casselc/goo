@@ -9,10 +9,10 @@ const global=globalThis;
 function exactBounds(q){return q.fromNS!==undefined||q.toNS!==undefined?{fromNS:q.fromNS,toNS:q.toNS}:{}}
 function questionFromEvidence(receipt){
   if(!/^[a-f0-9]{64}$/.test(receipt?.id))throw Error('An exact capture ID is required.');
-  const q=receipt.question;let step;if(q?.kind==='measurement'&&q.measurement)step=measurementStep(q.measurement);else if(q?.kind==='explore'&&q.explore)step=recordStep(q.explore);else throw Error('This evidence cannot become a reusable question.');
+  const q=receipt.question;let step;if(q?.kind==='measurement'&&q.measurement)step=measurementStep(q.measurement);else if(q?.kind==='explore'&&q.explore)step=recordStep(q.explore);else if(q?.kind==='trace-search'&&q.traceSearch)step=traceSearchStep(q.traceSearch);else throw Error('This evidence cannot become a reusable question.');
   validateStep(step);return {kind:'question',step,evidence:[receipt.id]};
  }
-function captureQuestion(step){validateStep(step);if(step.kind==='trace-search')throw Error('Trace-search evidence capture is not available. Save this question as intent.');return step.kind==='record'?{kind:'explore',explore:structuredClone(step.record)}:{kind:'measurement',measurement:{definition:structuredClone(step.measurement),fromMs:step.scope.fromMs,toMs:step.scope.toMs,...exactBounds(step.scope)}}}
+function captureQuestion(step){validateStep(step);if(step.kind==='trace-search')return {kind:'trace-search',traceSearch:structuredClone(step.traceSearch)};return step.kind==='record'?{kind:'explore',explore:structuredClone(step.record)}:{kind:'measurement',measurement:{definition:structuredClone(step.measurement),fromMs:step.scope.fromMs,toMs:step.scope.toMs,...exactBounds(step.scope)}}}
 // Comparison-only Go zero/omitempty defaults; stored definitions and digests are untouched.
 function nativeDefinitionForComparison(definition){
   const d=structuredClone(definition),source=d.source;delete d.environment;delete d.environmentSelector;
@@ -30,10 +30,10 @@ function nativeDefinitionForComparison(definition){
  }
 function evidenceDifference(step,capture){
   const identify=QuestionSession?.identity||(null);const expected=captureQuestion(step),actual=capture,changes=[];if(expected.kind!==actual.kind)return ['Signal family differs'];
-  const a=expected.explore||expected.measurement,b=actual.explore||actual.measurement;if(!b)return ['Question unavailable'];
+  const a=expected.explore||expected.measurement||expected.traceSearch,b=actual.explore||actual.measurement||actual.traceSearch;if(!b)return ['Question unavailable'];
   if(a.definition? !RecordEnvironment.sameQuestionEnvironment(a.definition,b.definition) : !RecordEnvironment.sameQuestionEnvironment(a,b))changes.push('Environment differs');
   if(a.fromMs!==b.fromMs||a.toMs!==b.toMs||a.fromNS!==b.fromNS||a.toNS!==b.toNS)changes.push('Fixed window differs');
-  function definition(q){if(q.definition)return stable(nativeDefinitionForComparison(q.definition));const d=structuredClone(q);for(const k of ['environment','environmentSelector','fromMs','toMs','offset','limit'])delete d[k];return identify?identify(d):stable(d)}
+  function definition(q){if(q.definition)return stable(nativeDefinitionForComparison(q.definition));const d=structuredClone(q);for(const k of ['environment','environmentSelector','fromMs','toMs','offset',...(expected.kind==='trace-search'?[]:['limit'])])delete d[k];return identify?identify(d):stable(d)}
   function stable(x){if(Array.isArray(x))return '['+x.map(stable).join(',')+']';if(x&&typeof x==='object')return '{'+Object.keys(x).sort().map(k=>JSON.stringify(k)+':'+stable(x[k])).join(',')+'}';return JSON.stringify(x)}
   if(definition(a)!==definition(b))changes.push('Question definition differs');return changes;
  }

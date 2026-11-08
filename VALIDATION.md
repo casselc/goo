@@ -1,5 +1,70 @@
 # Validation record
 
+## Captured trace-search evidence — 383
+
+The existing immutable capture store now has a checked `trace-search`
+question/result arm. Capture explicitly rereads the fixed search and retains its
+independent source clock/basis, plan, state, full count, bounded list, qualified
+witnesses and warnings. Stored reopen is source-free and preserves historical
+plans; refresh refuses current-plan drift. Question evidence links require the
+complete exact request. Shared live/saved presentation and retained fixed-question
+navigation preserve the search citation while a fresh trace reads independently.
+
+Checks completed:
+
+- Full root Go suite passes on Go **1.27.3**: command **10.779 s**, exploration
+  **5.757 s**, workbench **1.941 s**. Targeted custody/wire/witness controls pass.
+  The full suite was rerun with loopback access after sandbox bind refusals.
+- OpenAPI **112 operations / 725 schemas** passes 476 frozen responses,
+  186 admitted requests and 28 mux refusals plus new capture union/null/mixed-arm
+  controls. Two intentional HTTP error-message fixtures changed with the strict
+  shared request boundary; no route was added.
+- Final full frontend **1,357 passed**, zero skipped (**23.851 s**); focused **43 passed** (**1.189 s**).
+  The full run exposed and corrected UTF-8 qualified-field ordering after extraction,
+  an obsolete capture refusal assertion and an isolated owner mock dependency.
+  The regression uses adversarial non-BMP/BMP keys, not locale sorting.
+- Mandatory Hegel properties pass with zero skips: captured evidence **100 examples /
+  1,345 Go/JavaScript wire cases**, **4.65 s**; saved intent **100 examples / 1,404
+  cases**, **1.00 s** (combined package **5.659 s**). Coverage includes rehashed
+  semantic mutants, independent source-oracle membership, bounded counts,
+  uint64/int64 above 2^53, negative fixed-scale decimals, UTF-8 ordering and
+  missing/empty fields. The checks exposed and then verified the fix for search
+  evidence relabeled as an ordinary capture reaching a UI record-family fast path.
+- Real Playwright journey passes **49.8 s** (wrapper **51.6 s**). Bombadil
+  completes **774 states / 40.187 s** with positive exact child request/records and
+  same-parent focused return. Capture and a linked investigation revision publish;
+  source-unavailable reopen, successful/refused/pending child reads and late-response
+  refusal preserve immutable bytes, held DOM, expanded witnesses, receipt and focus.
+  Main counters: four source API calls plus one server-reread capture, two document
+  writes, one offline capture GET, one cancel control. Back makes no source/store
+  read. The separate actor reads fresh spans once and writes no captures/documents.
+- Mandatory actual-fact Quint replay passes **14 facts** in **5.23 s** (package
+  **5.247 s**), zero skips. All **13 semantic mutations and two model controls**
+  reject. Independent raw records, capture digest/physical bytes, read/custody
+  clocks, exact staged scope, child membership, citation, focus and abort are checked.
+  The verifier model uses explicit initial counter constant zero because current
+  quintgo codegen produces an invalid empty-argument import for a constant-free model.
+- Actual API conformance passes **eight responses / seven requests**, including
+  search, capture/reopen, linked documents and successful/refused/held child reads.
+  Final report: `artifacts/captured-trace-search383/c0aa877d-f40a-4cc1-946b-838a5c33d8bc/summary.json`.
+  Actual telemetry covers four spans, shared-span and distinct-service matches,
+  missing qualified values and one untruncated matching trace. Explicit empty
+  values and totals larger than list limits are generated-test coverage, not
+  fabricated live examples. Both Playwright frames and the actor's current focused
+  parent-return JPEG were visually inspected; repetitive actor frames were pruned.
+  The compact trace/report/frame bundle is not a complete reproduction directory.
+
+Reviewed image `eef162cf8539…`, binary `/tmp/goo-383-reviewed-goo`: health passes.
+Served app (29,587 bytes), captures (40,186), trace search (14,825), result boundary
+(6,478), supplied search view (2,750), saved owner (3,475), saved protocol (3,851),
+question protocol (15,781) and API (1,479,946) match source. Only the app container
+was rebuilt; retained stores, volumes, telemetry and the XTDB orphan are preserved.
+
+See [contract](docs/CAPTURED_TRACE_SEARCH.md) and
+[review](docs/reviews/CAPTURED_TRACE_SEARCH_REVIEW_383.md) and
+[storyboard](journeys/383-captured-trace-search-storyboard.md).
+
+
 ## Saved cross-service trace-search intent — 382
 
 Investigation question cards now admit a typed `trace-search` step with the

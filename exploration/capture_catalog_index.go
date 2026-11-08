@@ -128,7 +128,7 @@ func (s CaptureStore) catalogEntry(id string, budget int64) (CaptureSummary, int
 	if r.EnvironmentSelector != nil {
 		validEnvironment = validEnvironment && r.Environment == nil && r.EnvironmentSelector.Validate() == nil
 	}
-	validKind := slices.Contains([]string{"explore", "inventory", "comparison", "explanation", "measurement"}, r.Kind)
+	validKind := slices.Contains([]string{"explore", "inventory", "comparison", "explanation", "measurement", "trace-search"}, r.Kind)
 	validSignal := slices.Contains([]string{"", "logs", "spans", "metrics"}, r.Signal)
 	validMeasurement := r.Kind != "measurement" && r.MeasurementKind == "" || r.Kind == "measurement" && slices.Contains([]string{"gauge", "counter", "histogram", "lifecycle", "stock", "state"}, r.MeasurementKind)
 	if entry.Version != 2 || (r.Parent != "" && !regexpRevision.MatchString(r.Parent)) || r.ID != id || digest != searchHash(entry) || !validCaptureTitle(r.Title) || atError != nil || r.CapturedAt != canonicalCaptureTime(r.CapturedAt) || !validEnvironment || !validKind || !validSignal || !validMeasurement {

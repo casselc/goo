@@ -8,12 +8,12 @@ const active=new WeakMap();
 function mount(parent,{className='',id}={}){
  const node=UI.node,bar=node('div');bar.className='resource-return controls '+className;if(id)bar.id=id;bar.hidden=true;parent.prepend(bar);let revision=0,holdRevision=0,origin=null;
  function clear(){revision++;origin=null;bar.hidden=true;bar.replaceChildren();if(active.get(parent)===owner)active.delete(parent)}
- function show({title,question,backLabel,onBack,citation,notice}){
+ function show({title,question,backLabel,onBack,citation,notice,citationLabel='Retained native origin'}){
   active.get(parent)?.clear();clear();const own=revision,back=node('button',backLabel),label=node('strong',title),scope=node('span','Origin environment: '+originEnvironment(question)),window=node('span'),details=node('details'),summary=node('summary','Origin scope');back.type='button';scope.className='resource-return-environment';window.className='resource-return-window';details.className='resource-return-scope';
   const from=question.fromNS??String(BigInt(question.fromMs)*1000000n),to=question.toNS??String(BigInt(question.toMs)*1000000n);
   window.append('Fixed window: ',EvidenceSummary.timestamp(from),' – ',EvidenceSummary.timestamp(to),' (end excluded)');
   back.onclick=()=>{if(active.get(parent)!==owner||own!==revision||bar.hidden||!actionVisible(back)||back.closest('[inert]'))return;clear();onBack()};details.append(summary,scope,window);
-  if(citation){const retained=node('details'),receipt=node('pre',JSON.stringify(citation,null,2));retained.append(node('summary','Retained native origin'),receipt);details.append(retained)}if(notice)details.append(node('p',notice));
+  if(citation){const retained=node('details'),receipt=node('pre',JSON.stringify(citation,null,2));retained.append(node('summary',citationLabel),receipt);details.append(retained)}if(notice)details.append(node('p',notice));
   bar.append(back,label,details);bar.hidden=false;origin={title,question:structuredClone(question)};active.set(parent,owner);
  }
  function hold(question){

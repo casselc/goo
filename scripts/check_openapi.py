@@ -1174,9 +1174,26 @@ def check_saved_trace_search_steps(spec):
         card={'kind':'question','step':copy.deepcopy(step)}
         card_check.validate(card)
         card['key']='a'*64;card['evidence']=['b'*64]
-        assert list(card_check.iter_errors(card)), 'search intent accepted capture attachment'
+        card_check.validate(card)  # Exact question/evidence compatibility is verified by Go against custody.
     assert step['traceSearch']['conditions'][2]['value']=='9007199254740993'
-    print('Saved trace-search intent: closed typed arm, exact strings and unsupported evidence controls pass')
+    print('Saved trace-search intent: closed typed arm, exact strings and evidence reference shape pass')
+
+def check_captured_trace_search(spec):
+    request={'version':'goo/trace-search/v1','environment':'prod','fromMs':1000,'toMs':2000,
+             'conditions':[{'field':{'kind':'column','key':'service'},'op':'eq','value':'api'}], 'limit':7}
+    question={'kind':'trace-search','traceSearch':request}
+    for suffix in ('','Input'):
+        check=validator(spec,{'$ref':'#/components/schemas/exploration.CaptureQuestion'+suffix})
+        check.validate(question)
+        changes=[lambda x:x.update(traceSearch=None),lambda x:x.pop('traceSearch'),
+                 lambda x:x.update(explore=None),lambda x:x.update(measurement={}),
+                 lambda x:x.update(kind='explore'),lambda x:x['traceSearch'].update(limit=101),
+                 lambda x:x['traceSearch'].update(fromMs=None),lambda x:x['traceSearch'].update(unknown=True),
+                 lambda x:x['traceSearch']['conditions'][0].update(value=None)]
+        for change in changes:
+            bad=copy.deepcopy(question);change(bad)
+            assert list(check.iter_errors(bad)), ('captured search malformed question accepted',suffix,bad)
+    print('Captured trace search: typed request, exclusive payload and null/budget controls pass')
 
 def check(spec):
     review_responses,review_accepted=check_capture_reviews(spec)
@@ -1185,6 +1202,7 @@ def check(spec):
     check_typed_trace_search(spec)
     check_record_step_selector(spec)
     check_saved_trace_search_steps(spec)
+    check_captured_trace_search(spec)
     validate_spec(spec)
     check_activity_scope_views(spec)
     check_view_artifacts(spec)

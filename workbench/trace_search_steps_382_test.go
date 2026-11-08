@@ -74,8 +74,8 @@ func TestTraceSearchStep382RefusesMixedForeignAndUnsupportedIntent(t *testing.T)
 	s := traceSearchStep382("current-only", "named", "prod")
 	called := false
 	_, err := (Store{Dir: t.TempDir()}).CreateDocument(DocumentInput{Title: "Foreign evidence", Cards: []Card{{Kind: "question", Key: strings.Repeat("a", 64), Step: &s, Evidence: []string{strings.Repeat("b", 64)}}}}, "", func(string) error { called = true; return nil })
-	if err == nil || called {
-		t.Fatal("search evidence reached capture resolver", err, called)
+	if err == nil || !called {
+		t.Fatal("search evidence requires compatibility resolver", err, called)
 	}
 }
 
@@ -134,7 +134,7 @@ func TestTraceSearchStep382CanonicalRequestBudget(t *testing.T) {
 	}
 	oversized := largeTraceSearchStep382(1024)
 	encoded, _ = json.Marshal(oversized.TraceSearch)
-	if oversized.TraceSearch.Validate() != nil || len(encoded) <= TraceSearchIntentMaxBytes || oversized.Validate() == nil {
+	if oversized.TraceSearch.Validate() == nil || len(encoded) <= TraceSearchIntentMaxBytes || oversized.Validate() == nil {
 		t.Fatal("request body budget must constrain otherwise supported AST", len(encoded))
 	}
 	escaped := largeTraceSearchStep382(160)

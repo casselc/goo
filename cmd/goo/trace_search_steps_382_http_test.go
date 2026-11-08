@@ -54,8 +54,8 @@ func TestTraceSearchStep382HTTPDocumentIntent(t *testing.T) {
 	}
 	document.Cards[0].Evidence = []string{strings.Repeat("b", 64)}
 	response = call("POST", "/documents", map[string]any{"document": document})
-	if response.Code != 400 || !strings.Contains(response.Body.String(), "intent only") {
-		t.Fatal("search captured evidence accepted", response.Code, response.Body.String())
+	if response.Code != 400 || !strings.Contains(response.Body.String(), "unavailable") {
+		t.Fatal("unavailable search captured evidence accepted", response.Code, response.Body.String())
 	}
 	document.Cards[0].Evidence = nil
 	raw, _ := json.Marshal(map[string]any{"document": document})

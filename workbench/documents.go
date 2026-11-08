@@ -2,6 +2,8 @@ package workbench
 
 import (
 	"errors"
+	"github.com/casselc/goo/exploration"
+	"reflect"
 	"strings"
 	"time"
 )
@@ -40,9 +42,6 @@ func (c Card) Validate() error {
 		}
 		if c.Step == nil || c.Reference != "" || c.Role != "" || c.Text != "" || !text(c.Caption, 160, false, false) {
 			return errors.New("question card requires a step and optional caption")
-		}
-		if c.Step.Kind == "trace-search" && len(c.Evidence) != 0 {
-			return errors.New("trace-search questions preserve intent only; captured search evidence is not supported")
 		}
 		return c.Step.Validate()
 	case "note":
@@ -133,6 +132,15 @@ func (s Store) CreateDocument(in DocumentInput, parent string, checkCapture func
 			}
 		}
 		switch c.Kind {
+		case "question":
+			if c.Step.Kind == "trace-search" && len(c.Evidence) > 0 {
+				if len(checkRetained) != 1 || checkRetained[0] == nil {
+					return nil, errors.New("trace-search evidence resolver required")
+				}
+				if err := checkRetained[0](c); err != nil {
+					return nil, errors.New("linked trace-search evidence differs from question")
+				}
+			}
 		case "retained":
 			if len(checkRetained) != 1 || checkRetained[0] == nil {
 				return nil, errors.New("retained evidence resolver required")
@@ -215,4 +223,13 @@ func (s Store) Documents(after string) (*DocumentList, error) {
 		r.Items = append(r.Items, *d)
 	}
 	return r, nil
+}
+
+// ValidateQuestionCapture binds trace-search evidence to the exact saved request.
+// An ordinary span page cannot stand in for a cross-span search result.
+func ValidateQuestionCapture(step Step, capture *exploration.SavedCapture) error {
+	if step.Validate() != nil || step.Kind != "trace-search" || capture == nil || capture.Question.Kind != "trace-search" || capture.TraceSearch == nil || !reflect.DeepEqual(step.TraceSearch, capture.Question.TraceSearch) || !reflect.DeepEqual(step.TraceSearch, &capture.TraceSearch.Request) {
+		return errors.New("trace-search evidence differs from question")
+	}
+	return exploration.ValidateTraceSearchResult(capture.TraceSearch)
 }

@@ -12,7 +12,7 @@ import (
 
 // TraceSearchIntentMaxBytes matches the existing trace-search request boundary.
 // A saved request must remain searchable without truncation or scope rebinding.
-const TraceSearchIntentMaxBytes = 64 << 10
+const TraceSearchIntentMaxBytes = exploration.TraceSearchRequestMaxBytes
 
 // Step is authored intent, never a result, receipt or inferred shared population.
 type StepScope struct {

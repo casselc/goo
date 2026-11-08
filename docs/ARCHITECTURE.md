@@ -5,7 +5,10 @@ to existing investigation question steps. Strict Go/JavaScript admission retains
 request identity and fixed scope; existing document revisions and fixed-visit
 dispatch own Save/reopen. Standalone Search is staged without an applied record
 result and reads explicitly through the existing executor. Search evidence has no
-pretend record/measurement mapping; capture remains a separate next contract.
+pretend record/measurement mapping. [Captured searches](CAPTURED_TRACE_SEARCH.md)
+use a distinct checked question/result arm in the existing immutable store.
+Publication rereads fixed intent, offline reopen preserves the historical plan,
+and retained-parent navigation keeps evidence while a child trace reads afresh.
 
 [Bounded source decoding](BOUNDED_SOURCE_DECODING.md) shares raw object framing
 above the mechanics-only HTTP helper. Record/native adapters explicitly supply

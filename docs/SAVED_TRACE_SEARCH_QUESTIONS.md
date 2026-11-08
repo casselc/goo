@@ -34,10 +34,11 @@ Edits, navigation, hidden controls and retired rendered cards cannot publish an
 old search or run its stale request. Exact saved revisions remain immutable.
 Metadata and investigation persistence are separate from telemetry reads.
 
-**Run and capture** and evidence attachment are unavailable for search question
-cards in this milestone. Search result and qualified witness capture need their
-own honest result contract, planned in the next roadmap item; an ordinary span
-page is not a substitute.
+**Run and capture** and **Capture search evidence** use the existing server-owned
+capture workflow. Capture explicitly rereads the fixed request and stores its own
+source basis, bounded witnesses and custody receipt. Compatible evidence can be
+attached to the question card; an ordinary span page cannot substitute for a
+search result. See [captured search evidence](CAPTURED_TRACE_SEARCH.md).
 
 ```mermaid
 sequenceDiagram

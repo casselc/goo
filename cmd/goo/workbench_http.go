@@ -335,6 +335,19 @@ func registerWorkbench(mux *http.ServeMux, dir string, connection retentionConne
 			return
 		}
 		result, e := store.CreateDocument(in.Document, in.Parent, func(id string) error { _, e := captures.Load(id); return e }, func(card workbench.Card) error {
+			if card.Kind == "question" && card.Step != nil && card.Step.Kind == "trace-search" {
+				for _, id := range card.Evidence {
+					capture, err := captures.Load(id)
+					if err != nil {
+						return err
+					}
+					if err = workbench.ValidateQuestionCapture(*card.Step, capture); err != nil {
+						return err
+					}
+				}
+				return nil
+			}
+
 			if connection.URL == "" {
 				return fmt.Errorf("optional retention is not configured")
 			}

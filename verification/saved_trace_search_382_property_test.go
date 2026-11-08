@@ -54,7 +54,7 @@ func searchStepWireAdmission382(raw json.RawMessage) bool {
 	return json.Unmarshal(raw, &step) == nil && step.Validate() == nil
 }
 
-const searchStepBatch382 = `import assert from 'node:assert/strict';import fs from 'node:fs';import * as P from '../ui/question-protocol.mjs';const cases=JSON.parse(fs.readFileSync(0,'utf8'));for(const [index,c]of cases.entries()){const before=structuredClone(c.wire);let accepted=false;try{P.validateStep(c.wire);accepted=true}catch{}assert.equal(accepted,c.accepted,'case '+index);assert.deepEqual(c.wire,before,'admission mutated case '+index);if(accepted){const actual=P.readStepLink(P.stepLink(c.wire));assert.deepEqual(actual,c.wire,'link roundtrip '+index);assert.throws(()=>P.captureQuestion(actual),'search intent is not ordinary/native capture '+index)}}process.stdout.write(JSON.stringify({cases:cases.length}));`
+const searchStepBatch382 = `import assert from 'node:assert/strict';import fs from 'node:fs';import * as P from '../ui/question-protocol.mjs';const cases=JSON.parse(fs.readFileSync(0,'utf8'));for(const [index,c]of cases.entries()){const before=structuredClone(c.wire);let accepted=false;try{P.validateStep(c.wire);accepted=true}catch{}assert.equal(accepted,c.accepted,'case '+index);assert.deepEqual(c.wire,before,'admission mutated case '+index);if(accepted){const actual=P.readStepLink(P.stepLink(c.wire));assert.deepEqual(actual,c.wire,'link roundtrip '+index);assert.deepEqual(P.captureQuestion(actual),{kind:'trace-search',traceSearch:actual.traceSearch},'typed capture question '+index)}}process.stdout.write(JSON.stringify({cases:cases.length}));`
 
 func TestHegelSavedTraceSearchStep382(t *testing.T) {
 	var cases []searchStepWire382
@@ -90,8 +90,15 @@ func TestHegelSavedTraceSearchStep382(t *testing.T) {
 		refused.Cards = append([]workbench.Card(nil), input.Cards...)
 		refused.Cards[0].Evidence = []string{strings.Repeat("b", 64)}
 		called := false
-		if _, err = store.CreateDocument(refused, "", func(string) error { called = true; return nil }); err == nil || called {
-			tc.Fatal("search evidence was admitted or resolved before search capture exists")
+		retainedCalled := false
+		if _, err = store.CreateDocument(refused, "", func(string) error { called = true; return nil }, func(card workbench.Card) error {
+			retainedCalled = true
+			if !reflect.DeepEqual(card.Step, &step) {
+				return fmt.Errorf("search question changed")
+			}
+			return nil
+		}); err != nil || !called || !retainedCalled {
+			tc.Fatal("typed search evidence did not use existing capture resolver", err)
 		}
 		cases = append(cases, searchStepWire382{Wire: before, Accepted: true})
 		variants := []func(map[string]any){

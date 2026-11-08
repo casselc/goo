@@ -272,7 +272,7 @@ Dirty or invalid drafts stay visible until an explicit valid Run. See
 | [Recorded error triage](docs/ERROR_TRIAGE.md) | Standard span exception events, reported status, intrinsic log severity, service/type groups and passive exception details | Counts are records, not issues or exception-event totals; recorded evidence is not inferred application failure |
 | [Log patterns](docs/LOG_PATTERNS.md) | Versioned shapes, full-window counts, rare-first sorting, pattern timelines, service/rest and [time comparisons](docs/LOG_PATTERN_TIME_COMPARISONS.md) with exact rates/shares | Short-body profile; unclassified buckets retained, absence refers only to the compared reads |
 | [Services & resources](docs/SERVICE_DASHBOARDS.md) | Service dashboards, [host observations](docs/HOST_RESOURCES.md) and [Kubernetes resource discovery](docs/KUBERNETES_RESOURCES.md) | Reported telemetry and associations do not establish health, verified ownership or complete topology |
-| [Trace search](docs/TRACE_SEARCH.md) | Find reported trace IDs across services in checked named/empty/unreported environment scopes, inspect qualified witnesses, then open waterfalls or compare pages; [save/reopen the search question](docs/SAVED_TRACE_SEARCH_QUESTIONS.md) | Search intent is separate from captured results; same span may satisfy several conditions; reported IDs and bounded witnesses do not establish unique invocations, complete traces or causal paths |
+| [Trace search](docs/TRACE_SEARCH.md) | Find reported trace IDs across services in checked named/empty/unreported environment scopes, inspect qualified witnesses, then open waterfalls or compare pages; [reuse questions](docs/SAVED_TRACE_SEARCH_QUESTIONS.md) and [capture witnesses](docs/CAPTURED_TRACE_SEARCH.md) | Search intent is separate from captured results; same span may satisfy several conditions; reported IDs and bounded witnesses do not establish unique invocations, complete traces or causal paths |
 | [Trace findings](docs/TRACE_FINDINGS.md) | Waterfalls, [observed-page latency breakdowns](docs/TRACE_PAGE_TIMING.md), [local trace-page comparisons](docs/TRACE_COMPARISON.md), bounded examples and preserved anchor diagnostics | Overlapping span sums are not wall time; reported IDs do not establish unique occurrences or complete traces |
 | [Native instruments](docs/NATIVE_INSTRUMENT_DISCOVERY.md) | Supported gauge, counter and histogram plans with unit/reset/temporality semantics | Unsupported instruments, missing identity and incompatible merges stay explicit |
 | [Saved work](docs/INVESTIGATION_DRAFT_RECOVERY.md) | Immutable evidence/revisions, reusable questions and bounded same-tab draft recovery | Browser storage can fail/expire; an unknown save may already have committed |
@@ -647,7 +647,9 @@ without source or capture-store reads.
 framing while keeping each source's limits and failure ownership explicit.
 [Saved trace-search questions](docs/SAVED_TRACE_SEARCH_QUESTIONS.md) now retain
 complete fixed conditions and limits in investigation revisions. Reopening stages
-intent; Search reads explicitly. Next is capturing search results and witnesses.
+intent; Search reads explicitly. [Captured search evidence](docs/CAPTURED_TRACE_SEARCH.md)
+now retains an independent reread and qualified witnesses, reopens without telemetry,
+and stays held while a fresh trace is explored. Next is data-first fixed-result layout.
 Whole-product reviews and proposed work are distinct from
 [validated delivery](VALIDATION.md).
 

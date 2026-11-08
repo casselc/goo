@@ -10,8 +10,9 @@ const reads=[],shown=[],inspected=[],painted=[];
 const passive={mount:()=>({suspend(){},showSaved(page){painted.push(page.receipt.id)}})};
 for(const name of ['distributions','inventory'])mock.module('../ui/'+name+'.mjs',{exports:passive});
 const savedResumes=[];let savedPorts;mock.module('../ui/saved-records.mjs',{exports:{mount(_host,options){savedPorts=options;return {...passive.mount(),resume(){if(options.active())savedResumes.push({busy:el('generalCaptureWorkspace').getAttribute('aria-busy'),location:options.getPageLocation()})}}}}});
+const searchRenders=[],searchResumes=[];let searchPorts;mock.module('../ui/saved-trace-search.mjs',{exports:{mount(_host,options){searchPorts=options;let suspended=false;return {show(page){suspended=false;searchRenders.push(page)},suspend(){suspended=true},resume(){if(suspended&&options.active()){suspended=false;searchResumes.push(true)}}}}}});
 const nativeRenders=[],nativeResumes=[];let nativePorts;mock.module('../ui/saved-native-record-context.mjs',{exports:{mount(_host,options){nativePorts=options;let suspended=false;return {show(page){suspended=false;nativeRenders.push(page)},suspend(){suspended=true},resume(){if(suspended&&options.active()){suspended=false;nativeResumes.push(true)}}}}}});
-for(const name of ['record-environment','explanation','measurements'])mock.module('../ui/'+name+'.mjs',{exports:{}});
+for(const name of ['explanation','measurements'])mock.module('../ui/'+name+'.mjs',{exports:{}});mock.module('../ui/record-environment.mjs',{exports:{label:()=> 'prod'}});
 mock.module('../ui/evidence-scope.mjs',{exports:{record:page=>page,measurement:page=>page,element:()=>new El()}});
 mock.module('../ui/components.mjs',{exports:{node:()=>new El(),disclosure:()=>new El()}});
 mock.module('../ui/kept-saved.mjs',{exports:{library(){},mount:()=>({show(v){shown.push(v.id)},inspect(i){if(Number.isInteger(i)&&i>=0&&i<3){inspected.push(i);return true}return false}})}});
@@ -66,6 +67,8 @@ test('capture acquisition belongs to route visit, joins notifications, retires b
  assert.equal(nativePorts.onOpenContext({question:{signal:'logs'}},source),true);const heldNative=nativeRequests.at(-1).source;assert.equal(heldNative.current(),true);assert.equal(heldNative.onBack(),true);assert.equal(location.hash,'#capture='+a);assert.equal(pending.length,beforeReads,'native Return must not reacquire capture or telemetry');assert.equal(nativeRenders.length,beforeRenders,'native Return preserves the existing render');assert.equal(nativeResumes.length,beforeResume+1);assert.equal(document.activeElement,opener);assert.equal(heldNative.onBack(),false,'completed Return retires its callback');
  assert.equal(nativePorts.onOpenContext({question:{signal:'spans'}},source),true);const retiredNative=nativeRequests.at(-1).source,replacement=owner.open(b);assert.equal(retiredNative.current(),false,'a new capture request retires the old native origin before response');assert.equal(retiredNative.onBack(),false);pending.at(-1).resolve(nativePage(b));await replacement;
  const resumes=nativeResumes.length,failedNativeRefresh=el('captureGeneralRefresh').onclick();pending.at(-1).reject(Error('native refresh offline'));await failedNativeRefresh;assert.equal(nativeResumes.length,resumes+1,'failed refresh restores the eligible frozen native controls');
-
+ // Saved search refresh refusal resumes the exact existing parent without a redraw.
+ const searchPage=id=>({receipt:{id,title:'search',capturedAt:'2026-11-08T00:00:01Z',question:{kind:'trace-search',traceSearch:{environment:'prod',fromMs:1000,toMs:61000}}},traceSearch:{matchedTraces:'12',hasMore:true,items:[{}],basis:'stored',state:'observed'}});
+ const searchOpen=owner.open(a);pending.at(-1).resolve(searchPage(a));await searchOpen;const searchCount=searchRenders.length,resumeCount=searchResumes.length,failedSearchRefresh=el('captureGeneralRefresh').onclick();pending.at(-1).reject(Error('search refresh offline'));await failedSearchRefresh;assert.equal(searchRenders.length,searchCount);assert.equal(searchResumes.length,resumeCount+1);assert.match(el('captureSavedStatus').textContent,/Refresh unavailable/);
 
 });

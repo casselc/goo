@@ -16,7 +16,7 @@ class Element {
 }
 const node=(...args)=>new Element(...args),events=new EventTarget(),documentEvents=new EventTarget();
 globalThis.document={hidden:false,body:node('body'),activeElement:null,addEventListener:documentEvents.addEventListener.bind(documentEvents),removeEventListener:documentEvents.removeEventListener.bind(documentEvents)};
-globalThis.addEventListener=events.addEventListener.bind(events);globalThis.removeEventListener=events.removeEventListener.bind(events);
+globalThis.dispatchEvent=events.dispatchEvent.bind(events);globalThis.addEventListener=events.addEventListener.bind(events);globalThis.removeEventListener=events.removeEventListener.bind(events);
 let requests=[],editors=[],saved=[];
 mock.module('../ui/documents.mjs',{exports:{context:()=>null,stageTraceSearchQuestion:(step,context)=>saved.push({step:structuredClone(step),context})}});
 mock.module('../ui/components.mjs',{exports:{node}});
@@ -86,3 +86,5 @@ test('Saved search edits and departure retire source Save and Search callbacks o
  const f=fixture(Environment.current('prod')),request=Search.buildRequest(f.question,[eq('service','worker')],7);assert(f.owner.openRequest(request));saved=[];const oldSave=button(f.host,'Save search question').onclick,oldRun=button(f.host,'Run trace search').onclick,limit=all(f.host).find(e=>e.attributes['aria-label']==='Trace list limit');limit.value='8';limit.oninput();oldSave();await oldRun();assert.equal(saved.length,0);assert.equal(requests.length,0);button(f.host,'Save search question').onclick();assert.equal(saved[0].step.traceSearch.limit,8);
  const current=button(f.host,'Save search question').onclick;f.owner.invalidate();current();assert.equal(saved.length,1);f.owner.openRequest({...request,toMs:62000});current();assert.equal(saved.length,1);f.owner.dispose();
 });
+
+test('live search capture stages the exact fixed request through the existing explicit capture owner and retires old handlers',()=>{const captured=[],listener=event=>captured.push(structuredClone(event.detail));events.addEventListener('goo:save-capture',listener);try{const f=fixture(Environment.effective({mode:'empty'})),capture=button(f.host,'Capture search evidence'),old=capture.onclick;capture.onclick();assert.equal(requests.length,0);assert.equal(captured.length,1);assert.equal(captured[0].question.kind,'trace-search');assert.deepEqual(captured[0].question.traceSearch,Search.buildRequest(f.question,[{all:[f.question.where,eq('name','work')]}]));editors[0].onChange(eq('service','worker'),null);old();assert.equal(captured.length,1);capture.onclick();assert.equal(captured.length,2);assert.deepEqual(captured[1].question.traceSearch.conditions,[eq('service','worker')]);f.owner.invalidate();capture.onclick();assert.equal(captured.length,2);f.owner.dispose()}finally{events.removeEventListener('goo:save-capture',listener)}});

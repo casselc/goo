@@ -1,0 +1,10 @@
+# Measured counters only. Search membership, exact custody bytes and retained DOM
+# semantics are independently admitted before this replay.
+spec: captured_trace_search_383.qnt
+module: captured_trace_search_383
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  read: {expect: 'reads == {{.obs.reads}} and captures == {{.obs.captures}}'}
+  capture: {expect: 'reads == {{.obs.reads}} and captures == {{.obs.captures}}'}
+  history: {expect: 'reads == {{.obs.reads}} and captures == {{.obs.captures}}'}

@@ -14,6 +14,8 @@ import (
 	"time"
 )
 
+const TraceSearchRequestMaxBytes = 64 << 10
+
 const TraceSearchVersion = "goo/trace-search/v1"
 
 type TraceSearchRequest struct {
@@ -67,6 +69,10 @@ func (r TraceSearchRequest) EnvironmentSelection() (identity.EnvironmentSelectio
 }
 
 func (r TraceSearchRequest) Validate() error {
+	encoded, err := json.Marshal(r)
+	if err != nil || len(encoded) > TraceSearchRequestMaxBytes {
+		return fmt.Errorf("trace search request exceeds 64 KiB")
+	}
 	if r.Version != TraceSearchVersion || len(r.Conditions) < 1 || len(r.Conditions) > 4 || r.Limit < 1 || r.Limit > 100 {
 		return fmt.Errorf("trace search requires v1, one to four conditions and limit 1..100")
 	}

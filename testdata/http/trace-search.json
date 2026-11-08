@@ -27,7 +27,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: unknown field \\\"unexpected\\\"\"}\n"
+      "response": "{\"error\":\"trace-search requires known non-null fields\"}\n"
     },
     {
       "name": "trailing",
@@ -55,7 +55,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"trace search requires v1, one to four conditions and limit 1..100\"}\n"
+      "response": "{\"error\":\"trace-search requires version\"}\n"
     },
     {
       "name": "source unavailable",
