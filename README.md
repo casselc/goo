@@ -150,7 +150,7 @@ these views through the same saved-view catalog.
 to an explicitly chosen Goo server.
 [Record paging](docs/RECORD_PAGE_PROFILE.md) retains any held aggregate and timeline.
 
-[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_08.md) ·
+[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_08_CHECKPOINT_381.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
 [Go/frontend library review and proposal](docs/LIBRARY_REFACTOR_PLAN_2026_10_28.md)
 
@@ -605,7 +605,7 @@ For supplied native observations, `measurements.Evaluate(question, rows, at)` is
 storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
 
-The [active roadmap](docs/ROADMAP_2026_11_08.md) follows the completed 376–380
+The [active roadmap](docs/ROADMAP_2026_11_08_CHECKPOINT_381.md) follows the completed 376–381
 sequence. Earlier current RPC view reuse, service native interval context, and
 measured bounded facets are also delivered. [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most
 100 matches while Find, totals and comparison scales use the complete admitted
@@ -642,7 +642,10 @@ metadata remains unsupported for exponential evaluation.
 [Saved exemplar continuation](docs/SAVED_HISTOGRAM_EXEMPLARS.md) now stages a
 reported trace from immutable native exports, preserving capture and sample
 identity. Explicit Run reads fresh spans; Back restores the same held evidence
-without source or capture-store reads. Next is consolidating bounded source decoding.
+without source or capture-store reads.
+[Bounded source decoding](docs/BOUNDED_SOURCE_DECODING.md) now shares object
+framing while keeping each source's limits and failure ownership explicit.
+Next is preserving and reusing cross-service trace-search questions.
 Whole-product reviews and proposed work are distinct from
 [validated delivery](VALIDATION.md).
 
@@ -708,7 +711,7 @@ scope/data/quality, charts/tables/lists/waterfalls and scope-bound controls, a b
 chart with a restricted Plotly adapter, and shared declarative/visual authoring.
 Complete-only widgets and explicit uncertainty semantics are core requirements;
 all current widgets/screens must be expressible. The app is prerelease, with no
-legacy-format or API compatibility floor. [The active roadmap](docs/ROADMAP_2026_11_08.md) separates proposed work from
+legacy-format or API compatibility floor. [The active roadmap](docs/ROADMAP_2026_11_08_CHECKPOINT_381.md) separates proposed work from
 implemented capabilities; the supporting reports include pinned research sources.
 
 Single-group count breakdowns now share a [scoped display contract](docs/SCOPED_VIEW_PILOT.md):

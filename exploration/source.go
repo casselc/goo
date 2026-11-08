@@ -1,7 +1,6 @@
 package exploration
 
 import (
-	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -17,6 +16,7 @@ import (
 	"time"
 
 	"github.com/casselc/goo/internal/sourcehttp"
+	"github.com/casselc/goo/internal/sourcejson"
 )
 
 type Result struct {
@@ -96,29 +96,19 @@ func (s Source) read(ctx context.Context, sql string, params map[string]string) 
 	if resp.StatusCode != 200 {
 		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, fmt.Errorf("exploration source HTTP %d", resp.StatusCode))
 	}
-	b, oversize, e := sourcehttp.ReadBounded(resp.Body, 8<<20)
-	if e != nil {
+	rows, e := sourcejson.ReadObjects(resp.Body, sourcejson.Policy{MaxBytes: 8 << 20, MaxRows: 1001, BlankLines: sourcejson.SkipBlankLines, TrimRows: true})
+	switch e {
+	case nil:
+		return rows, nil
+	case sourcejson.ErrByteLimit:
+		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("source exceeds 8 MiB"))
+	case sourcejson.ErrRowLimit:
+		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("source row budget exceeded"))
+	case sourcejson.ErrObject:
+		return nil, sourcefailure.Wrap(sourcefailure.Malformed, fmt.Errorf("invalid source row"))
+	default:
 		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, e)
 	}
-	if oversize {
-		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("source exceeds 8 MiB"))
-	}
-	rows := []json.RawMessage{}
-	for line := range bytes.Lines(b) {
-		line = bytes.TrimSpace(line)
-		if len(line) == 0 {
-			continue
-		}
-		var object map[string]json.RawMessage
-		if json.Unmarshal(line, &object) != nil || object == nil {
-			return nil, sourcefailure.Wrap(sourcefailure.Malformed, fmt.Errorf("invalid source row"))
-		}
-		rows = append(rows, append(json.RawMessage(nil), line...))
-		if len(rows) > 1001 {
-			return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("source row budget exceeded"))
-		}
-	}
-	return rows, nil
 }
 func (s Source) Fetch(ctx context.Context, q Query) (*Result, error) { return s.fetch(ctx, q, q.Limit) }
 

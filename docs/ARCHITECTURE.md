@@ -1,5 +1,11 @@
 # Architecture
 
+[Bounded source decoding](BOUNDED_SOURCE_DECODING.md) shares raw object framing
+above the mechanics-only HTTP helper. Record/native adapters explicitly supply
+byte/row and blank/whitespace policies and translate framing failures. SQL, scope,
+status, timeouts, numeric evaluation and custody stay in existing owners. Ordinary
+JSON validation avoids discarded field maps without converting raw numeric tokens.
+
 [Saved reported-exemplar context](SAVED_HISTOGRAM_EXEMPLARS.md) extends the existing
 immutable Saved owner and fixed-question return. Shared admission reconstructs the
 whole relation from raw retained export/sample identity; a Saved-only capability

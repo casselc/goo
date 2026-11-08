@@ -1,5 +1,71 @@
 # Validation record
 
+## Shared bounded source object decoding — 381
+
+Record exploration and native measurements/discovery now share
+`internal/sourcejson.ReadObjects` above mechanics-only `sourcehttp.ReadBounded`.
+Each source explicitly supplies byte/row limits, blank-line handling and retained
+whitespace. SQL, typed parameters, HTTP status, timeout/failure ownership, numeric
+evaluation and lifecycle custody remain in their existing owners. `json.Valid`
+plus object-envelope admission avoids discarded field maps; `bytes.Lines` and
+`bytes.Clone` retain raw tokens and independently owned rows.
+
+The common overflow-before-validation rule is intentional: a malformed 1,002nd
+record row now refuses as budget rather than malformed. Native ordering is
+unchanged. Existing record skip/trim and native reject/preserve policies remain,
+as do 8 MiB bounds and separate 1,001/10,000 row allowances. No partial rows are
+published, and read-error/cancellation causes retain their identity.
+
+Checks:
+
+- Full root Go suite passes on Go 1.27.3: command package **8.321 s**, exploration
+  **4.537 s**, native measurements **4.223 s**, shared helper **0.006 s**. Independent
+  adapter tests cover exact/+1 byte and row bounds, malformed overflow priority,
+  CRLF/blank/Unicode whitespace, high numeric tokens/duplicate keys, object-only
+  syntax, status-before-body, body closing and body-error/cancellation precedence.
+- Four targeted Hegel tests pass in **3.121 s**, zero skipped. The new independent
+  **200-case** framing property compares against a separate split/map-Unmarshal
+  oracle with generated chunking, byte cuts, row allowances and append ownership;
+  existing exemplar/discovery properties exercise ordinary domain behavior.
+- Three local `b.Loop` allocation samples over 1,000 identical 112-byte rows compare
+  the former map-based admission with the shared syntax-only path, including the
+  same bounded buffering and detached copies. Map: **993,123–993,388 B / 10,030–10,031
+  allocations per operation**; shared path: **457,032–457,043 B / 1,030 allocations**.
+  This is about **54% fewer allocated bytes and 90% fewer allocations** on this
+  corpus. Elapsed samples were 2.056–2.234 ms versus 0.443–0.750 ms; host scheduling
+  varies and these are not end-to-end query latency or production capacity claims.
+- API contract remains **112 operations / 721 schemas**. Checks pass 476 frozen
+  responses, 186 admitted requests and 28 mux refusals. All ten actual regression
+  requests and responses also conform; no wire format or public configuration
+  was added.
+- Real request-only source regression passes in **2.7 s**. Four independent bounded
+  read-only queries select an existing gauge point and span with exact typed
+  scope. Ten actual API responses cover both families' success, unavailable and
+  malformed refusals, then exact-question/plan recovery. The upstream proxy saw
+  12 unchanged forwarded SQL reads and four planted faults, all requests retaining
+  read-only/overflow-refusal settings. No successful telemetry response was faked,
+  no fixture was ingested and no custody write was made.
+
+Only the Go app container was rebuilt. Retained ClickHouse/Redis containers were
+restarted after environment restoration without resetting data or volumes; missing
+temporary caches were recreated. Reviewed image `873ad86a5326…`, extracted binary
+`/tmp/goo-381-reviewed-goo`: health passes and served API bytes match source.
+UI components/layout and wire shapes did not change, so no new visual frame,
+Bombadil campaign or Quint projection is claimed for this source refactor.
+Existing UI storyboards remain applicable; the new
+[request-only storyboard](journeys/381-source-decoding-storyboard.md) records the
+actual protocol acceptance.
+
+Actual report and compact test/benchmark logs:
+`artifacts/source-decoding381/826c4234-69e8-40b8-ba23-9f2cf1b5c849/`.
+See [contract](docs/BOUNDED_SOURCE_DECODING.md). The whole-product
+[architecture](docs/reviews/WHOLE_PRODUCT_ARCHITECTURE_381.md),
+[design](docs/reviews/WHOLE_PRODUCT_DESIGN_381.md) and
+[reconciliation](docs/reviews/ROADMAP_RECONCILIATION_381.md) adopt the sole next
+[382–384 queue](docs/ROADMAP_2026_11_08_CHECKPOINT_381.md): reusable trace-search
+intent, captured witnesses, then data-first fixed-result consolidation.
+
+
 ## Reported exemplars from immutable Saved measurements — 380
 
 Saved histogram captures now follow reported references through the existing

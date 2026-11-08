@@ -1,12 +1,12 @@
 package measurements
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/casselc/goo/internal/sourcefailure"
 	"github.com/casselc/goo/internal/sourcehttp"
+	"github.com/casselc/goo/internal/sourcejson"
 	"github.com/casselc/goo/metrics"
 	"math"
 	"math/big"
@@ -195,25 +195,19 @@ func (s Source) read(ctx context.Context, plan Plan) ([]json.RawMessage, error) 
 	if resp.StatusCode != http.StatusOK {
 		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, fmt.Errorf("measurement source HTTP %d", resp.StatusCode))
 	}
-	b, oversize, e := sourcehttp.ReadBounded(resp.Body, 8<<20)
-	if e != nil {
+	rows, e := sourcejson.ReadObjects(resp.Body, sourcejson.Policy{MaxBytes: 8 << 20, MaxRows: RowLimit, BlankLines: sourcejson.RejectBlankLines, TrimRows: false})
+	switch e {
+	case nil:
+		return rows, nil
+	case sourcejson.ErrByteLimit:
+		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("measurement source exceeds 8 MiB"))
+	case sourcejson.ErrRowLimit:
+		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("source exceeds 10000 rows; no partial measurement"))
+	case sourcejson.ErrObject:
+		return nil, sourcefailure.Wrap(sourcefailure.Malformed, fmt.Errorf("invalid measurement source row"))
+	default:
 		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, e)
 	}
-	if oversize {
-		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("measurement source exceeds 8 MiB"))
-	}
-	rows := []json.RawMessage{}
-	for line := range bytes.Lines(b) {
-		if len(rows) >= RowLimit {
-			return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("source exceeds 10000 rows; no partial measurement"))
-		}
-		var object map[string]json.RawMessage
-		if json.Unmarshal(line, &object) != nil || object == nil {
-			return nil, sourcefailure.Wrap(sourcefailure.Malformed, fmt.Errorf("invalid measurement source row"))
-		}
-		rows = append(rows, json.RawMessage(bytes.Clone(bytes.TrimSuffix(line, []byte("\n")))))
-	}
-	return rows, nil
 }
 
 type metricRow struct {
