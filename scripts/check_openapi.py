@@ -1145,12 +1145,46 @@ def check_record_step_selector(spec):
         assert list(check.iter_errors(native)), 'typed native stock step accepted'
 
 
+
+def check_saved_trace_search_steps(spec):
+    selection={'version':'goo/environment-selector/v1','policy':'effective','scope':{'mode':'unreported'}}
+    scope={'environment':'','environmentSelector':selection,'fromMs':0,'toMs':2000}
+    request={'version':'goo/trace-search/v1','environmentSelector':copy.deepcopy(selection),'fromMs':0,'toMs':2000,'conditions':[
+        {'field':{'kind':'column','key':'service'},'op':'eq','value':'api'},
+        {'field':{'kind':'column','key':'service'},'op':'eq','value':'worker'},
+        {'numeric':{'field':{'kind':'attribute','key':'jobs'},'type':'uint64','unit':'1','parse':'canonical-decimal'},'op':'gte','value':'9007199254740993'}], 'limit':7}
+    step={'version':1,'kind':'trace-search','scope':scope,'view':'Traces','traceSearch':request}
+    for suffix in ('','Input'):
+        check=validator(spec,{'$ref':'#/components/schemas/workbench.Step'+suffix})
+        check.validate(step)
+        changes=[lambda x:x.update(record={}),lambda x:x.update(measurement=None),lambda x:x.update(traceSearch=None),
+                 lambda x:x.update(view='Records'),lambda x:x.update(unexpected=True),
+                 lambda x:x['scope'].update(fromNS=''),lambda x:x['scope'].update(fromMs=None),
+                 lambda x:x['scope'].pop('fromMs'),lambda x:x['traceSearch'].update(fromMs=None),
+                 lambda x:x['traceSearch'].pop('fromMs'),lambda x:x['traceSearch'].update(limit=101),
+                 lambda x:x['traceSearch'].update(unsupported=True),
+                 lambda x:x['traceSearch']['conditions'][0]['field'].update(unsupported=True),
+                 lambda x:x['traceSearch']['conditions'][2]['numeric'].update(unsupported=True),
+                 lambda x:x['traceSearch']['conditions'][0].update(value=None),
+                 lambda x:x['traceSearch']['conditions'][2]['numeric'].update(scale=None)]
+        for change in changes:
+            bad=copy.deepcopy(step);change(bad)
+            assert list(check.iter_errors(bad)), ('saved search invalid wire accepted',suffix,bad)
+        card_check=validator(spec,{'$ref':'#/components/schemas/workbench.Card'+suffix})
+        card={'kind':'question','step':copy.deepcopy(step)}
+        card_check.validate(card)
+        card['key']='a'*64;card['evidence']=['b'*64]
+        assert list(card_check.iter_errors(card)), 'search intent accepted capture attachment'
+    assert step['traceSearch']['conditions'][2]['value']=='9007199254740993'
+    print('Saved trace-search intent: closed typed arm, exact strings and unsupported evidence controls pass')
+
 def check(spec):
     review_responses,review_accepted=check_capture_reviews(spec)
     check_package_scopes(spec)
     check_typed_reported_edges(spec)
     check_typed_trace_search(spec)
     check_record_step_selector(spec)
+    check_saved_trace_search_steps(spec)
     validate_spec(spec)
     check_activity_scope_views(spec)
     check_view_artifacts(spec)

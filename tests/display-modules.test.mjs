@@ -45,7 +45,9 @@ test('display entry imports a closed passive graph without publishing namespaces
   assert.deepEqual(Object.keys(await import('../ui/source-refusal.mjs')).sort(),['SourceReadError','failure','reasons','refusal','responseError']);
   assert.deepEqual(Object.keys(await import('../ui/source-refusal-view.mjs')),['renderRefusal']);
   for(const name of ['queries','filter-values','facet-value-reads','population-workspace','exploration'])assert.equal(visited.has(new URL('../ui/'+name+'.mjs',import.meta.url).href),false);
-  assert.equal(visited.size, 56);
+  // Exact numeric admission is now a shared pure module, without pulling app owners into display.
+  assert.ok(visited.has(new URL('../ui/numeric-predicate.mjs',import.meta.url).href));
+  assert.equal(visited.size, 57);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

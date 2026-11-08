@@ -34,13 +34,13 @@ function native(d){
   optional(d,'lifecycle',l=>{object(l,['logicalService','tenants','accepted','terminal','eventID','eventTime','subject','tenant','release','outcome','success','outcomes','deadlineMs','allowanceMs']);for(const key of ['logicalService','accepted','terminal','eventID','eventTime','subject','tenant','release','outcome','success'])text(l[key],128);strings(l.tenants,16,128);strings(l.outcomes,16,128);integer(l.deadlineMs,1,3600000);integer(l.allowanceMs,0,600000)});
  }
 function step(s){
-  object(s,['version','kind','scope','view','record','measurement']);object(s.scope,['environment','environmentSelector','fromMs','toMs','fromNS','toNS']);integer(s.scope.fromMs,0,4102444799999);integer(s.scope.toMs,s.scope.fromMs+1,Math.min(s.scope.fromMs+7200000,4102444799999));
-  if(s.kind==='record'){record(s.record);requireThat(!s.measurement)}else if(s.kind==='measurement'){text(s.scope.environment,128);requireThat(s.scope.environment!=='');native(s.measurement);requireThat(!s.record)}else throw Error('Unsupported question step');
+  object(s,['version','kind','scope','view','record','measurement','traceSearch']);object(s.scope,['environment','environmentSelector','fromMs','toMs','fromNS','toNS']);integer(s.scope.fromMs,0,4102444799999);integer(s.scope.toMs,s.scope.fromMs+1,Math.min(s.scope.fromMs+7200000,s.kind==='trace-search'?4102444800000:4102444799999));
+  if(s.kind==='record'){record(s.record);requireThat(!s.measurement)}else if(s.kind==='measurement'){text(s.scope.environment,128);requireThat(s.scope.environment!=='');native(s.measurement);requireThat(!s.record)}else if(s.kind==='trace-search'){requireThat(!Object.hasOwn(s,'record')&&!Object.hasOwn(s,'measurement'));QuestionProtocol.validateTraceSearchRequest(s.traceSearch)}else throw Error('Unsupported question step');
   const protocol=QuestionProtocol;protocol.validateStep(s);
  }
 function card(c){
   object(c,['kind','review','readBasis','key','evidence','step','role','text','reference','caption']);optional(c,'caption',v=>text(v,160));optional(c,'text',v=>text(v,4000,true));
-  if(c.kind==='question'){requireThat(!c.reference&&!c.role&&!c.text&&!c.review&&!c.readBasis);step(c.step);optional(c,'key',v=>requireThat(v===''||ID.test(v)));optional(c,'evidence',v=>{strings(v,16,64);requireThat(v.every(x=>ID.test(x))&&(!v.length||ID.test(c.key)))})}
+  if(c.kind==='question'){requireThat(!c.reference&&!c.role&&!c.text&&!c.review&&!c.readBasis);step(c.step);if(c.step.kind==='trace-search')requireThat(!c.evidence?.length);optional(c,'key',v=>requireThat(v===''||ID.test(v)));optional(c,'evidence',v=>{strings(v,16,64);requireThat(v.every(x=>ID.test(x))&&(!v.length||ID.test(c.key)))})}
   else {requireThat(!c.step&&!c.key&&(!c.evidence||Array.isArray(c.evidence)&&c.evidence.length===0));if(c.kind==='note'){requireThat(['hypothesis','finding','conclusion','next-step'].includes(c.role)&&typeof c.text==='string'&&c.text.trim()&&!c.reference&&!c.caption&&!c.review&&!c.readBasis)}else{requireThat(['capture','comparison','deployment','retained','view'].includes(c.kind)&&ID.test(c.reference)&&!c.role);if(c.kind==='retained'){requireThat(ID.test(c.review)&&!c.text);optional(c,'readBasis',v=>text(v,16384))}else requireThat(!c.review&&!c.readBasis&&(['comparison','view'].includes(c.kind)||!c.text))}}
  }
 function validateDraft(d){

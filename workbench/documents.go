@@ -41,6 +41,9 @@ func (c Card) Validate() error {
 		if c.Step == nil || c.Reference != "" || c.Role != "" || c.Text != "" || !text(c.Caption, 160, false, false) {
 			return errors.New("question card requires a step and optional caption")
 		}
+		if c.Step.Kind == "trace-search" && len(c.Evidence) != 0 {
+			return errors.New("trace-search questions preserve intent only; captured search evidence is not supported")
+		}
 		return c.Step.Validate()
 	case "note":
 		if c.Reference != "" || c.Caption != "" || !text(c.Text, 4000, true, true) || (c.Role != "hypothesis" && c.Role != "finding" && c.Role != "conclusion" && c.Role != "next-step") {

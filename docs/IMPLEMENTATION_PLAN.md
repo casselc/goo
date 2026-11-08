@@ -2,8 +2,8 @@
 
 > Active execution order: [381 checkpoint roadmap](ROADMAP_2026_11_08_CHECKPOINT_381.md),
 > reconciled from whole-product architecture/design reviews after completed 376–381.
-> **382 reusable trace-search intent → 383 captured search witnesses → 384 data-first
-> fixed-result consolidation** is the sole active finite queue.
+> **382 reusable trace-search intent is delivered. 383 captured search witnesses
+> → 384 data-first fixed-result consolidation** is the sole active queue.
 > 367 reusable current RPC views, 368 exact service native interval context,
 > and 369 measured local facet pages are delivered with appropriate native and
 > generated validation. Full populations, exact scopes and independent clocks

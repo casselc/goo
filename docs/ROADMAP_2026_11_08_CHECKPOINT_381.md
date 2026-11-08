@@ -14,7 +14,12 @@ fresh results, held parents and immutable evidence distinct.
 
 ## Chosen finite sequence
 
-### 382 — breadth: preserve and reuse a trace-search question
+382 is delivered; the active execution order is **383 → 384**.
+
+### 382 — breadth: preserve and reuse a trace-search question — delivered
+
+Implemented through [saved trace-search questions](SAVED_TRACE_SEARCH_QUESTIONS.md),
+with actual checks in [validation](../VALIDATION.md).
 
 User task: “Find traces containing these conditions across services, then keep
 that question for the next incident.” Trace search already exists; the missing
@@ -52,7 +57,7 @@ Source anchors: `ui/trace-search.mjs`, `exploration/trace_search.go`,
 `ui/workspace.mjs`. Exact transport names and route additions are implementation
 choices to review within this milestone, not claims of existing API support.
 
-### 383 — depth: capture search evidence and follow its qualified witnesses
+### 383 — depth: capture search evidence and follow its qualified witnesses — next
 
 User task: “Keep what this search actually found, then follow one trace without
 losing the search evidence that justified it.” Extend the existing immutable

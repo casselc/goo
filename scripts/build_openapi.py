@@ -111,6 +111,7 @@ for wire in ('exploration.TraceSearchRequest','exploration.TraceSearchRequestInp
  shape=schemas[wire];target='identity.EnvironmentSelectorInput' if wire.endswith('Input') else 'identity.EnvironmentSelector'
  shape['required']=[key for key in shape.get('required',[]) if key!='environment']
  shape['properties']['environment']={'type':'string'}
+ shape['additionalProperties']=False
  shape['properties']['version']['const']='goo/trace-search/v1'
  shape['properties']['conditions'].update(minItems=1,maxItems=4)
  shape['properties']['limit'].update(minimum=1,maximum=100)
@@ -163,14 +164,38 @@ for wire in ('measurements.Definition','measurements.DefinitionInput','measureme
  shape['description']='Legacy environment retains current-key-only behavior. Explicit environmentSelector preserves named/empty/unreported policy; typed native evaluation supports service-bound per-stream gauges, monotonic counters and explicit duration histograms. Stock/state/lifecycle/resource-bound families remain unsupported metadata.'
 schemas['exploration.DashboardPlan']['properties']['nativeCapability']['description']='service-per-stream means this policy supports typed gauges, monotonic counters and explicit duration histograms. Other native families and entity bindings remain unavailable. Empty native options do not prove no metric observations.'
 
-# Authored fixed record steps retain the checked environment independently of native definitions.
+# Authored trace-search intent uses a typed request and disallows explicit null
+# throughout that new arm; optional fields are omitted, not coerced to Go zeros.
+for base in ('exploration.Predicate','exploration.Field','exploration.NumericBinding'):
+ for suffix in ('','Input'):
+  schemas[base+suffix]['additionalProperties']=False
+for suffix in ('','Input'):
+ field={'allOf':[ref('exploration.Field'+suffix),{'type':'object','required':['kind','key'],'properties':{'kind':{'type':'string'},'key':{'type':'string'}}}]}
+ numeric={'allOf':[ref('exploration.NumericBinding'+suffix),{'type':'object','required':['field','type','unit','parse'],'properties':{'field':field,'type':{'type':'string'},'unit':{'type':'string'},'parse':{'type':'string'},'scale':{'type':'integer'}}}]}
+ name='TraceSearchIntentPredicate'+suffix
+ schemas[name]={'allOf':[ref('exploration.Predicate'+suffix),{'type':'object','additionalProperties':False,'properties':{'all':{'type':'array','minItems':1,'items':ref(name)},'any':{'type':'array','minItems':1,'items':ref(name)},'field':field,'numeric':numeric,'op':{'type':'string'},'value':{'type':'string'}},'oneOf':[{'required':fields,'not':{'anyOf':[{'required':[other]} for other in ('all','any','field','numeric','op','value') if other not in fields and not (fields in (['field','op'],['numeric','op']) and other=='value')]}} for fields in (['all'],['any'],['field','op'],['numeric','op'])]}]}
+# Authored fixed steps retain checked environment independently of each payload.
+
 for suffix in ('', 'Input'):
  step_scope=schemas['workbench.StepScope'+suffix]
+ step_scope['additionalProperties']=False
  if suffix:step_scope['required']=[key for key in step_scope.get('required',[]) if key!='environment']
  step_scope['oneOf']=[{'required':['environment'],'properties':{'environment':{'type':'string','minLength':1},'environmentSelector':{'type':'null'}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''},'environmentSelector':ref('identity.EnvironmentSelector'+suffix)}}]
- step_scope['description']='Fixed authored scope. Record and admitted native gauge steps preserve checked environment policy and exact bounds. Runtime also verifies equality with the question/definition environment.'
+ step_scope['description']='Fixed authored scope for record, native measurement or trace-search intent. Runtime verifies exact environment policy and bounds against the selected typed payload. Only native measurements admit exact nanosecond scope fields.'
  step=schemas['workbench.Step'+suffix]
- # Definition admission owns typed-gauge restrictions; native scope equality is checked by Go.
+ step['additionalProperties']=False
+ step['properties']['version']={'const':1}
+ step['properties']['kind']={'enum':['record','measurement','trace-search']}
+ step['properties']['scope']=ref('workbench.StepScope'+suffix)
+ step['oneOf']=[]
+ for kind,payload,target,views in [('record','record','exploration.Query',['Records','Distribution']),('measurement','measurement','measurements.Definition',['Overview']),('trace-search','traceSearch','exploration.TraceSearchRequest',['Traces'])]:
+  branch={'required':['version','kind','scope','view',payload], 'properties':{'kind':{'const':kind},'view':{'enum':views},payload:ref(target+suffix)}, 'not':{'anyOf':[{'required':[other]} for other in ('record','measurement','traceSearch') if other!=payload]}}
+  if kind!='measurement':branch['properties']['scope']={'allOf':[ref('workbench.StepScope'+suffix),{'not':{'anyOf':[{'required':['fromNS']},{'required':['toNS']}]}}]}
+  if kind=='trace-search':
+   branch['properties']['scope']['allOf'].append({'type':'object','required':['fromMs','toMs'],'properties':{'fromMs':{'type':'integer'},'toMs':{'type':'integer'},'environment':{'type':'string'},'environmentSelector':{'type':'object'}}})
+   branch['properties'][payload]={'allOf':[ref(target+suffix),{'type':'object','required':['version','fromMs','toMs','conditions','limit'],'properties':{'fromMs':{'type':'integer'},'toMs':{'type':'integer'},'conditions':{'type':'array','minItems':1,'maxItems':4,'items':ref('TraceSearchIntentPredicate'+suffix)},'limit':{'type':'integer','minimum':1,'maximum':100},'environment':{'type':'string'},'environmentSelector':{'type':'object'}}}]}
+  step['oneOf'].append(branch)
+ step['description']='Exactly one checked authored question payload. Trace-search steps retain the complete fixed request, conditions and limit; saving and reopening are source-free. Search remains explicit; capture/evidence attachment is unsupported for this arm until its result contract is implemented.'
 
 summary['description']='Bounded discovery metadata, not a receipt. Legacy environment null means unknown or an explicitly versioned selector. environmentSelector preserves policy/scope; legacy name filters do not match selector captures.'
 summary['properties']['environmentSelector']['description']='Exact versioned policy/scope, separate from legacy current-only environment. Read with version 250 or newer.'
@@ -189,6 +214,7 @@ for suffix in ('', 'Input'):
  view_properties['evidence']={'anyOf':[{'type':'array','maxItems':0},{'type':'null'}]}
  card['allOf']=[{'if':{'properties':{'kind':{'const':'view'}},'required':['kind']},
                  'then':{'required':['reference'],'properties':view_properties}}]
+ card['allOf'].append({'if':{'required':['kind','step'],'properties':{'kind':{'const':'question'},'step':{'type':'object','required':['kind'],'properties':{'kind':{'const':'trace-search'}}}}},'then':{'properties':{'evidence':{'anyOf':[{'type':'array','maxItems':0},{'type':'null'}]}}}})
 
 # Native display configuration is separate from record views and measurement identity.
 # Compatibility beyond this closed wire shape remains checked by Go without telemetry.

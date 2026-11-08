@@ -1,11 +1,19 @@
 # Known issues and gaps
 
+382 adds reusable trace-search question cards through existing investigation
+revisions. Save, exact-revision reload and link reopening retain ordered conditions,
+typed fixed scope, exact numeric strings and list limit without telemetry reads;
+Search stays explicit. Local definition inspection makes no requests. Search
+result/witness capture and evidence attachment remain unavailable until 383. See
+[contract](SAVED_TRACE_SEARCH_QUESTIONS.md). The active queue is 383 witness
+capture/follow-through, then 384 data-first fixed-result consolidation.
+
 381 shares bounded source object framing with explicit family policies, retaining
 SQL, numeric semantics and custody in their existing owners. Record overflow now
 consistently refuses as budget before the extra row is parsed; no partial data is
 published. See [contract](BOUNDED_SOURCE_DECODING.md). The sole active queue is the
 [381 checkpoint roadmap](ROADMAP_2026_11_08_CHECKPOINT_381.md): reusable trace-search
-intent, captured witnesses, then data-first fixed-result consolidation. Milestone
+intent (delivered), captured witnesses (next), then data-first fixed-result consolidation. Milestone
 narratives below retain delivery history; they are not parallel execution queues.
 
 380 extends Saved immutable histogram captures with checked reported-exemplar

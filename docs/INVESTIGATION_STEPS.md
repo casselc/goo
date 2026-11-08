@@ -5,12 +5,17 @@ question steps and frozen evidence references. Add a span/log question from Expl
 or a validated measurement from Measurements with **Add question to investigation**.
 The active investigation receives a draft card; **Save revision** persists it.
 Saving a question does not execute it or freeze a result.
+[Trace-search questions](SAVED_TRACE_SEARCH_QUESTIONS.md) use **Save search question**
+from the existing condition editor and the same investigation revision workflow.
+They retain the complete cross-span condition request and list limit as intent.
 
 Each question uses a versioned envelope with its kind, environment, fixed half-open
 window, typed definition and selected view. Record steps retain the selector AST,
 grouping and numeric binding; measurement steps retain the complete package
 including service selectors, instrumentation scope/version/schema, unit and grain.
-Go validates the union and rejects mismatches between envelope and definition scope.
+Trace-search steps retain ordered independent span conditions, exact numeric
+strings and their original fixed environment/window; their view is Traces.
+Go validates the three-arm union and rejects mixed payloads or scope mismatches.
 It uses the existing bounded record and measurement validators, without weakening
 native stream, temporality, reset or histogram rules.
 
@@ -20,7 +25,8 @@ native stream, temporality, reset or histogram rules.
 | Frozen evidence | Exact capture ID | Retrieves stored evidence without telemetry reads |
 | Note | Hypothesis, finding, conclusion or next step | Displays authored context |
 
-**Reopen question** stages records or validates a measurement through the existing
+**Reopen question** stages records or trace-search conditions, or validates a
+measurement through the existing
 source-free package planner. It clears live results; **Run again** is the explicit
 telemetry read. A planner request may occur during native reopening, but neither
 instrument discovery nor measurement execution happens automatically. Editing a
@@ -38,11 +44,12 @@ time. No transactional snapshot or causal relationship is inferred.
 flowchart LR
     R[Record question and view] --> E[Typed step with fixed scope]
     M[Measurement definition and view] --> E
+    T[Trace-search request and list limit] --> E
     E --> D[Named investigation revision]
     C[Immutable capture reference] --> D
     N[Notes and findings] --> D
     D --> O[Reopen question]
-    O --> S[Staged records or source-free measurement preview]
+    O --> S[Staged records, trace-search conditions or native preview]
     S --> X[Explicit Run again]
     X --> T[Bounded telemetry adapter and existing evaluator]
     T -->|Explicit capture rereads the fixed question| C
@@ -123,3 +130,7 @@ flowchart LR
 The same envelope does not enable typed environments for measurement definitions
 or reusable measurement packages. Those paths continue to refuse unsupported
 scope before execution. Recent-population entry is a separate remaining handoff.
+
+Search intent cards do not support **Run and capture** or captured-evidence
+attachment yet. Preserving qualified search witnesses requires the separate
+383 result contract; a record capture cannot stand in for it.

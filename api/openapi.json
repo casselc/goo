@@ -14225,7 +14225,8 @@
           "key"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.Field"
+        "x-go-type": "github.com/casselc/goo/exploration.Field",
+        "additionalProperties": false
       },
       "exploration.FieldInput": {
         "additionalProperties": false,
@@ -16617,7 +16618,8 @@
           "parse"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.NumericBinding"
+        "x-go-type": "github.com/casselc/goo/exploration.NumericBinding",
+        "additionalProperties": false
       },
       "exploration.NumericBindingInput": {
         "additionalProperties": false,
@@ -18318,7 +18320,8 @@
         },
         "required": [],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.Predicate"
+        "x-go-type": "github.com/casselc/goo/exploration.Predicate",
+        "additionalProperties": false
       },
       "exploration.PredicateInput": {
         "additionalProperties": false,
@@ -20969,6 +20972,7 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.TraceSearchRequest",
+        "additionalProperties": false,
         "oneOf": [
           {
             "required": [
@@ -44924,6 +44928,45 @@
                 }
               }
             }
+          },
+          {
+            "if": {
+              "required": [
+                "kind",
+                "step"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "question"
+                },
+                "step": {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "trace-search"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "evidence": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "maxItems": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
           }
         ]
       },
@@ -45121,6 +45164,45 @@
                 "step": {
                   "type": "null"
                 },
+                "evidence": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "maxItems": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "kind",
+                "step"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "question"
+                },
+                "step": {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "trace-search"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
                 "evidence": {
                   "anyOf": [
                     {
@@ -48694,7 +48776,11 @@
       "workbench.Step": {
         "properties": {
           "kind": {
-            "type": "string"
+            "enum": [
+              "record",
+              "measurement",
+              "trace-search"
+            ]
           },
           "measurement": {
             "anyOf": [
@@ -48719,8 +48805,18 @@
           "scope": {
             "$ref": "#/components/schemas/workbench.StepScope"
           },
+          "traceSearch": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.TraceSearchRequest"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "version": {
-            "type": "integer"
+            "const": 1
           },
           "view": {
             "type": "string"
@@ -48733,19 +48829,237 @@
           "view"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.Step"
+        "x-go-type": "github.com/casselc/goo/workbench.Step",
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "required": [
+              "version",
+              "kind",
+              "scope",
+              "view",
+              "record"
+            ],
+            "properties": {
+              "kind": {
+                "const": "record"
+              },
+              "view": {
+                "enum": [
+                  "Records",
+                  "Distribution"
+                ]
+              },
+              "record": {
+                "$ref": "#/components/schemas/exploration.Query"
+              },
+              "scope": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.StepScope"
+                  },
+                  {
+                    "not": {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "fromNS"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "toNS"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "version",
+              "kind",
+              "scope",
+              "view",
+              "measurement"
+            ],
+            "properties": {
+              "kind": {
+                "const": "measurement"
+              },
+              "view": {
+                "enum": [
+                  "Overview"
+                ]
+              },
+              "measurement": {
+                "$ref": "#/components/schemas/measurements.Definition"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "record"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "version",
+              "kind",
+              "scope",
+              "view",
+              "traceSearch"
+            ],
+            "properties": {
+              "kind": {
+                "const": "trace-search"
+              },
+              "view": {
+                "enum": [
+                  "Traces"
+                ]
+              },
+              "traceSearch": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.TraceSearchRequest"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "version",
+                      "fromMs",
+                      "toMs",
+                      "conditions",
+                      "limit"
+                    ],
+                    "properties": {
+                      "fromMs": {
+                        "type": "integer"
+                      },
+                      "toMs": {
+                        "type": "integer"
+                      },
+                      "conditions": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 4,
+                        "items": {
+                          "$ref": "#/components/schemas/TraceSearchIntentPredicate"
+                        }
+                      },
+                      "limit": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 100
+                      },
+                      "environment": {
+                        "type": "string"
+                      },
+                      "environmentSelector": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                ]
+              },
+              "scope": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.StepScope"
+                  },
+                  {
+                    "not": {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "fromNS"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "toNS"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "fromMs",
+                      "toMs"
+                    ],
+                    "properties": {
+                      "fromMs": {
+                        "type": "integer"
+                      },
+                      "toMs": {
+                        "type": "integer"
+                      },
+                      "environment": {
+                        "type": "string"
+                      },
+                      "environmentSelector": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "record"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "description": "Exactly one checked authored question payload. Trace-search steps retain the complete fixed request, conditions and limit; saving and reopening are source-free. Search remains explicit; capture/evidence attachment is unsupported for this arm until its result contract is implemented."
       },
       "workbench.StepInput": {
         "additionalProperties": false,
         "properties": {
           "kind": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
+            "enum": [
+              "record",
+              "measurement",
+              "trace-search"
             ]
           },
           "measurement": {
@@ -48783,9 +49097,19 @@
             ]
           },
           "scope": {
+            "$ref": "#/components/schemas/workbench.StepScopeInput"
+          },
+          "traceSearch": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/workbench.StepScopeInput"
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.TraceSearchRequestInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
                 "type": "null"
@@ -48793,14 +49117,7 @@
             ]
           },
           "version": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "const": 1
           },
           "view": {
             "anyOf": [
@@ -48814,7 +49131,227 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.Step"
+        "x-go-type": "github.com/casselc/goo/workbench.Step",
+        "oneOf": [
+          {
+            "required": [
+              "version",
+              "kind",
+              "scope",
+              "view",
+              "record"
+            ],
+            "properties": {
+              "kind": {
+                "const": "record"
+              },
+              "view": {
+                "enum": [
+                  "Records",
+                  "Distribution"
+                ]
+              },
+              "record": {
+                "$ref": "#/components/schemas/exploration.QueryInput"
+              },
+              "scope": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.StepScopeInput"
+                  },
+                  {
+                    "not": {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "fromNS"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "toNS"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "version",
+              "kind",
+              "scope",
+              "view",
+              "measurement"
+            ],
+            "properties": {
+              "kind": {
+                "const": "measurement"
+              },
+              "view": {
+                "enum": [
+                  "Overview"
+                ]
+              },
+              "measurement": {
+                "$ref": "#/components/schemas/measurements.DefinitionInput"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "record"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "version",
+              "kind",
+              "scope",
+              "view",
+              "traceSearch"
+            ],
+            "properties": {
+              "kind": {
+                "const": "trace-search"
+              },
+              "view": {
+                "enum": [
+                  "Traces"
+                ]
+              },
+              "traceSearch": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.TraceSearchRequestInput"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "version",
+                      "fromMs",
+                      "toMs",
+                      "conditions",
+                      "limit"
+                    ],
+                    "properties": {
+                      "fromMs": {
+                        "type": "integer"
+                      },
+                      "toMs": {
+                        "type": "integer"
+                      },
+                      "conditions": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 4,
+                        "items": {
+                          "$ref": "#/components/schemas/TraceSearchIntentPredicateInput"
+                        }
+                      },
+                      "limit": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 100
+                      },
+                      "environment": {
+                        "type": "string"
+                      },
+                      "environmentSelector": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                ]
+              },
+              "scope": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.StepScopeInput"
+                  },
+                  {
+                    "not": {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "fromNS"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "toNS"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "fromMs",
+                      "toMs"
+                    ],
+                    "properties": {
+                      "fromMs": {
+                        "type": "integer"
+                      },
+                      "toMs": {
+                        "type": "integer"
+                      },
+                      "environment": {
+                        "type": "string"
+                      },
+                      "environmentSelector": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "record"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "description": "Exactly one checked authored question payload. Trace-search steps retain the complete fixed request, conditions and limit; saving and reopening are source-free. Search remains explicit; capture/evidence attachment is unsupported for this arm until its result contract is implemented."
       },
       "workbench.StepScope": {
         "properties": {
@@ -48851,6 +49388,7 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.StepScope",
+        "additionalProperties": false,
         "oneOf": [
           {
             "required": [
@@ -48880,7 +49418,7 @@
             }
           }
         ],
-        "description": "Fixed authored scope. Record and admitted native gauge steps preserve checked environment policy and exact bounds. Runtime also verifies equality with the question/definition environment."
+        "description": "Fixed authored scope for record, native measurement or trace-search intent. Runtime verifies exact environment policy and bounds against the selected typed payload. Only native measurements admit exact nanosecond scope fields."
       },
       "workbench.StepScopeInput": {
         "additionalProperties": false,
@@ -48985,7 +49523,7 @@
             }
           }
         ],
-        "description": "Fixed authored scope. Record and admitted native gauge steps preserve checked environment policy and exact bounds. Runtime also verifies equality with the question/definition environment."
+        "description": "Fixed authored scope for record, native measurement or trace-search intent. Runtime verifies exact environment policy and bounds against the selected typed payload. Only native measurements admit exact nanosecond scope fields."
       },
       "workbench.TimelineViewDeclaration": {
         "properties": {
@@ -51046,6 +51584,460 @@
                 "service"
               ]
             }
+          }
+        ]
+      },
+      "TraceSearchIntentPredicate": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/exploration.Predicate"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "all": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/components/schemas/TraceSearchIntentPredicate"
+                }
+              },
+              "any": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/components/schemas/TraceSearchIntentPredicate"
+                }
+              },
+              "field": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.Field"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "kind",
+                      "key"
+                    ],
+                    "properties": {
+                      "kind": {
+                        "type": "string"
+                      },
+                      "key": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              },
+              "numeric": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.NumericBinding"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "field",
+                      "type",
+                      "unit",
+                      "parse"
+                    ],
+                    "properties": {
+                      "field": {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/exploration.Field"
+                          },
+                          {
+                            "type": "object",
+                            "required": [
+                              "kind",
+                              "key"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "type": "string"
+                              },
+                              "key": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "unit": {
+                        "type": "string"
+                      },
+                      "parse": {
+                        "type": "string"
+                      },
+                      "scale": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                ]
+              },
+              "op": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "oneOf": [
+              {
+                "required": [
+                  "all"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "any"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "field"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "numeric"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "op"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "any"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "all"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "field"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "numeric"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "op"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "field",
+                  "op"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "all"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "any"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "numeric"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "numeric",
+                  "op"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "all"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "any"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "field"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "TraceSearchIntentPredicateInput": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/exploration.PredicateInput"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "all": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/components/schemas/TraceSearchIntentPredicateInput"
+                }
+              },
+              "any": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/components/schemas/TraceSearchIntentPredicateInput"
+                }
+              },
+              "field": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.FieldInput"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "kind",
+                      "key"
+                    ],
+                    "properties": {
+                      "kind": {
+                        "type": "string"
+                      },
+                      "key": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              },
+              "numeric": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.NumericBindingInput"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "field",
+                      "type",
+                      "unit",
+                      "parse"
+                    ],
+                    "properties": {
+                      "field": {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/exploration.FieldInput"
+                          },
+                          {
+                            "type": "object",
+                            "required": [
+                              "kind",
+                              "key"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "type": "string"
+                              },
+                              "key": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "unit": {
+                        "type": "string"
+                      },
+                      "parse": {
+                        "type": "string"
+                      },
+                      "scale": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                ]
+              },
+              "op": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "oneOf": [
+              {
+                "required": [
+                  "all"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "any"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "field"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "numeric"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "op"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "any"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "all"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "field"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "numeric"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "op"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "field",
+                  "op"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "all"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "any"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "numeric"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "numeric",
+                  "op"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "all"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "any"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "field"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
           }
         ]
       },

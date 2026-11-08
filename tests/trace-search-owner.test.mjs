@@ -7,6 +7,7 @@ class Element {
  append(...children){for(const child of children){child.parentElement=this;this.children.push(child)}}
  replaceChildren(...children){for(const child of this.children)child.parentElement=null;this.children=[];this._text='';this.append(...children)}
  setAttribute(key,value){this.attributes[key]=String(value)} getAttribute(key){return this.attributes[key]}
+ closest(selector){for(let node=this;node;node=node.parentElement)if(selector==='[inert]'&&node.inert)return node;return null}
  contains(node){return node===this||this.children.some(child=>child.contains(node))}
  addEventListener(type,callback){this.listeners.set(type,callback)} removeEventListener(type){this.listeners.delete(type)}
  remove(){this.isConnected=false;if(this.parentElement)this.parentElement.children=this.parentElement.children.filter(child=>child!==this)}
@@ -16,7 +17,8 @@ class Element {
 const node=(...args)=>new Element(...args),events=new EventTarget(),documentEvents=new EventTarget();
 globalThis.document={hidden:false,body:node('body'),activeElement:null,addEventListener:documentEvents.addEventListener.bind(documentEvents),removeEventListener:documentEvents.removeEventListener.bind(documentEvents)};
 globalThis.addEventListener=events.addEventListener.bind(events);globalThis.removeEventListener=events.removeEventListener.bind(events);
-let requests=[],editors=[];
+let requests=[],editors=[],saved=[];
+mock.module('../ui/documents.mjs',{exports:{context:()=>null,stageTraceSearchQuestion:(step,context)=>saved.push({step:structuredClone(step),context})}});
 mock.module('../ui/components.mjs',{exports:{node}});
 mock.module('../ui/attributes.mjs',{exports:{isJSONValue:value=>{try{return JSON.stringify(value)!==undefined}catch{return false}}}});
 mock.module('../ui/evidence-summary.mjs',{exports:{unixNs:()=>null}});
@@ -72,4 +74,15 @@ test('typed trace-search refusal retries the same fixed question explicitly and 
  const f=fixture(Environment.effective({mode:'named',value:'prod'})),run=button(f.host,'Run trace search'),first=run.onclick(),request=structuredClone(requests[0].request);document.activeElement=f.opener;
  requests[0].resolve({ok:false,status:502,data:{error:'Source read timed out.',refusal:{kind:'timeout',detail:'The source read exceeded its time allowance.'}}});await first;const refused=all(f.host).find(node=>node.dataset.sourceRefusalKind==='timeout');assert(refused);assert.equal(refused.children[1].localName,'details');assert.equal(!!refused.children[1].open,false);assert.equal(document.activeElement,f.opener);assert.equal(button(f.host,'Open trace (fresh read)'),undefined);assert.equal(requests.length,1);
  const retry=run.onclick();assert.deepEqual(requests[1].request,request);requests[1].resolve(response(requests[1].request,{[Environment.legacyKey]:'prod'}));await retry;assert(button(f.host,'Open trace (fresh read)'));const next=run.onclick();assert.equal(requests.length,3);button(f.host,'Cancel trace search').onclick();assert.equal(requests[2].signal.aborted,true);requests[2].resolve({ok:false,status:502,data:{error:'Source unavailable.',refusal:{kind:'unavailable',detail:'The source read could not be completed.'}}});await next;assert.equal(all(f.host).filter(node=>node.dataset.sourceRefusalKind).length,0);assert.equal(button(f.host,'Open trace (fresh read)'),undefined);assert.equal(requests.length,3);f.owner.dispose();
+});
+
+test('Saved trace search stages independent of applied records, preserves limit and saves intent without reads',async()=>{
+ const f=fixture(Environment.effective({mode:'unreported'})),request=Search.buildRequest({...f.question,where:undefined},[eq('service','worker'),{field:{kind:'column',key:'duration_ns'},op:'lte',value:'9007199254740993'}],7),oldRun=button(f.host,'Run trace search').onclick,oldSave=button(f.host,'Save search question').onclick;
+ f.setClean(false);assert(f.owner.openRequest(request));assert.equal(requests.length,0);const limit=all(f.host).find(e=>e.attributes['aria-label']==='Trace list limit');assert.equal(limit.value,'7');await oldRun();oldSave();assert.equal(requests.length,0);
+ saved=[];button(f.host,'Save search question').onclick();assert.equal(saved.length,1);assert.deepEqual(saved[0].step.traceSearch,request);assert.equal(requests.length,0);
+ const pending=button(f.host,'Run trace search').onclick();assert.equal(requests.length,1);assert.deepEqual(requests[0].request,request);f.owner.invalidate();requests[0].resolve({ok:false,data:{error:'refused'}});await pending;f.owner.dispose();
+});
+test('Saved search edits and departure retire source Save and Search callbacks on every scope revision',async()=>{
+ const f=fixture(Environment.current('prod')),request=Search.buildRequest(f.question,[eq('service','worker')],7);assert(f.owner.openRequest(request));saved=[];const oldSave=button(f.host,'Save search question').onclick,oldRun=button(f.host,'Run trace search').onclick,limit=all(f.host).find(e=>e.attributes['aria-label']==='Trace list limit');limit.value='8';limit.oninput();oldSave();await oldRun();assert.equal(saved.length,0);assert.equal(requests.length,0);button(f.host,'Save search question').onclick();assert.equal(saved[0].step.traceSearch.limit,8);
+ const current=button(f.host,'Save search question').onclick;f.owner.invalidate();current();assert.equal(saved.length,1);f.owner.openRequest({...request,toMs:62000});current();assert.equal(saved.length,1);f.owner.dispose();
 });

@@ -809,6 +809,2409 @@
       },
       "name": "nullable omitted native options",
       "valid": true
+    },
+    {
+      "name": "trace-search 382 current-only named",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": true,
+      "canonical": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      }
+    },
+    {
+      "name": "trace-search 382 effective named",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": true,
+      "canonical": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      }
+    },
+    {
+      "name": "trace-search 382 effective empty",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "empty"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "empty"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": true,
+      "canonical": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "empty"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "empty"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      }
+    },
+    {
+      "name": "trace-search 382 effective unreported",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "unreported"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "unreported"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": true,
+      "canonical": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "unreported"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "effective",
+            "scope": {
+              "mode": "unreported"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      }
+    },
+    {
+      "name": "trace-search 382 scalar current environment",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37,
+          "environment": "prod"
+        }
+      },
+      "valid": true,
+      "canonical": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "prod",
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37,
+          "environment": "prod"
+        }
+      }
+    },
+    {
+      "name": "trace-search 382 explicit epoch zero scope",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 0,
+          "toMs": 60000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 0,
+          "toMs": 60000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": true,
+      "canonical": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 0,
+          "toMs": 60000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 0,
+          "toMs": 60000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      }
+    },
+    {
+      "name": "trace-search 382 exact decimal and limit",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "decimal64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal",
+                    "scale": 6
+                  },
+                  "op": "gte",
+                  "value": "9007199254.740993"
+                }
+              ]
+            }
+          ],
+          "limit": 100
+        }
+      },
+      "valid": true,
+      "canonical": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "decimal64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal",
+                    "scale": 6
+                  },
+                  "op": "gte",
+                  "value": "9007199254.740993"
+                }
+              ]
+            }
+          ],
+          "limit": 100
+        }
+      }
+    },
+    {
+      "name": "trace-search 382 mixed null record",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        },
+        "record": null
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 mixed measurement",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        },
+        "measurement": {}
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 foreign scope",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "other"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 foreign window",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61001,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 unsupported view",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Records",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 empty native bound",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "fromNS": ""
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 null native bound",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "toNS": null
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 unsupported span field",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "body"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 unknown request field",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37,
+          "result": {}
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 unknown predicate field",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪",
+                  "unexpected": true
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 null predicate value",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": null
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 null scale",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal",
+                    "scale": null
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 omitted epoch bounds",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 invalid limit",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 101
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 null environment with selector",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37,
+          "environment": null
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "trace-search 382 unknown step field",
+      "input": {
+        "version": 1,
+        "kind": "trace-search",
+        "scope": {
+          "environment": "",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000
+        },
+        "view": "Traces",
+        "traceSearch": {
+          "version": "goo/trace-search/v1",
+          "environmentSelector": {
+            "version": "goo/environment-selector/v1",
+            "policy": "current-only",
+            "scope": {
+              "mode": "named",
+              "value": "prod"
+            }
+          },
+          "fromMs": 1000,
+          "toMs": 61000,
+          "conditions": [
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "frontend-雪"
+                },
+                {
+                  "field": {
+                    "kind": "resource",
+                    "key": "service.namespace"
+                  },
+                  "op": "eq"
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "field": {
+                    "kind": "column",
+                    "key": "service"
+                  },
+                  "op": "eq",
+                  "value": "database"
+                },
+                {
+                  "numeric": {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.units"
+                    },
+                    "type": "uint64",
+                    "unit": "{unit}",
+                    "parse": "canonical-decimal"
+                  },
+                  "op": "gte",
+                  "value": "9007199254740993"
+                }
+              ]
+            }
+          ],
+          "limit": 37
+        },
+        "unsupported": true
+      },
+      "valid": false
     }
   ],
   "version": 1

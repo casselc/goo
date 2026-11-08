@@ -28676,6 +28676,16 @@
       "scope": {
         "$ref": "#/components/schemas/workbench.StepScope"
       },
+      "traceSearch": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.TraceSearchRequest"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "version": {
         "type": "integer"
       },
@@ -28743,6 +28753,23 @@
         "anyOf": [
           {
             "$ref": "#/components/schemas/workbench.StepScopeInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "traceSearch": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.TraceSearchRequestInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"

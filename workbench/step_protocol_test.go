@@ -27,7 +27,7 @@ func TestSharedStepProtocolFixtures(t *testing.T) {
 	if e = json.Unmarshal(raw, &f); e != nil {
 		t.Fatal(e)
 	}
-	if f.Version != 1 || len(f.Cases) != 16 {
+	if f.Version != 1 || len(f.Cases) != 39 {
 		t.Fatal("fixture coverage changed")
 	}
 	script := `const fs=require('node:fs'),assert=require('node:assert/strict'),w=require('../ui/question-protocol.mjs'),compat=require('../ui/workspace.mjs'),f=JSON.parse(fs.readFileSync('../testdata/protocol/question-steps.json'));for(const key of Object.keys(w))assert.equal(w[key],compat[key]);console.log(JSON.stringify(f.cases.map(c=>{try{return {valid:true,step:w.readStepLink(w.stepLink(c.input))}}catch{return {valid:false}}})));`

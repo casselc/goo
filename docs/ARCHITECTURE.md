@@ -1,5 +1,12 @@
 # Architecture
 
+[Saved trace-search intent](SAVED_TRACE_SEARCH_QUESTIONS.md) adds a typed third arm
+to existing investigation question steps. Strict Go/JavaScript admission retains
+request identity and fixed scope; existing document revisions and fixed-visit
+dispatch own Save/reopen. Standalone Search is staged without an applied record
+result and reads explicitly through the existing executor. Search evidence has no
+pretend record/measurement mapping; capture remains a separate next contract.
+
 [Bounded source decoding](BOUNDED_SOURCE_DECODING.md) shares raw object framing
 above the mechanics-only HTTP helper. Record/native adapters explicitly supply
 byte/row and blank/whitespace policies and translate framing failures. SQL, scope,

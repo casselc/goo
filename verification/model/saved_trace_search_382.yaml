@@ -1,0 +1,9 @@
+# Existing population model, measured read counter only. Semantic request,
+# persistence and witness admission are checked independently before replay.
+spec: population_drilldown.qnt
+module: population_drilldown
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  read: {expect: 'reads == {{.obs.reads}}'}
+  history: {expect: 'reads == {{.obs.reads}}'}

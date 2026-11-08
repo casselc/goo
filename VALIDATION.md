@@ -1,5 +1,68 @@
 # Validation record
 
+## Saved cross-service trace-search intent — 382
+
+Investigation question cards now admit a typed `trace-search` step with the
+complete `TraceSearchRequest` and `Traces` view. Save/reopen uses the existing
+immutable document revisions, link protocol and fixed-question owner. It retains
+fixed environment policy/window, condition order, qualified fields, exact numeric
+strings and list limit; Search remains explicit. No new executor or recipe registry
+was added, and search capture/evidence attachment remains unavailable until 383.
+
+Wire admission rejects mixed arms, foreign scope, native-only bounds, unknown or
+case-aliased fields, null/missing required fields and malformed Unicode. Parsed
+search objects use JSON last-value semantics rather than Go partial-object merge.
+The 64 KiB canonical request budget matches Search transport; search-only step
+links admit up to 256 KiB encoded while existing record/native limits remain.
+The UI's pure numeric predicate validator was extracted to avoid a validation
+import cycle, with existing protocol exports retained.
+
+Checks completed:
+
+- Focused UI tests **39 passed**, zero skipped (977.807 ms). Full frontend
+  **1,351 passed**, zero skipped (**36.055 s**). The passive import graph adds one
+  pure numeric module, retaining no-I/O/no-owner checks. Saved-card inspection tests
+  also pass (23 tests); final scope-copy checks pass (14 tests). Save/reopen and Search
+  handlers bind current source/draft/render leases; standalone search hides/inerts
+  ordinary record controls without hiding the trace inspector.
+- Full root Go suite passes: command package **16.499 s**, workbench **2.132 s**.
+  Targeted new intent/HTTP tests separately pass with no source reads. Shared
+  Go/JavaScript protocol fixtures grow from 16 to **39** admitted/refused cases.
+- Mandatory independent Hegel-generated property and batched JS worker pass:
+  **100 generated examples / 1,404 wire cases**, **1.41 s** (package 1.434 s), zero
+  skipped. Conditions, typed environment modes, namespaces, exact uint64 strings,
+  immutable document round trips, 64/65-node and request-byte boundaries are checked.
+- OpenAPI **112 operations / 723 schemas** passes 476 frozen responses, 186 admitted
+  requests and 28 mux refusals, plus new closed-step/null/unknown/mixed-arm and
+  unsupported-evidence controls. Schemas retain typed recursive predicates rather
+  than a generic JSON payload. No route was added.
+- Final real browser journey passes in **55.8 s** (59.2 s wrapper). The narrow
+  Bombadil actor completes **661 states / 40.345 s**, with an independently observed
+  exact request and matching result, one explicit source read and zero writes.
+  Saving, local condition inspection, immutable revision reload and staging make
+  no telemetry reads. Main flow makes three explicit source reads and one document
+  write; capture writes remain zero. Actual OpenAPI conformance passes for four
+  responses and three requests.
+- Mandatory recorded-fact Quint replay passes **13 measured facts** in **5.87 s**
+  (package 5.880 s), zero skips. All **14 semantic mutations and two model controls**
+  reject. It checks immutable document bytes/hash, exact scope/conditions/limits,
+  staged links and DOM, compiled plan and independent source witnesses.
+  Final report: `artifacts/saved-trace-search382/70c61ec4-18c9-4544-b5b8-0b9412377a83/summary.json`.
+  Main Playwright screenshots are current and visually checked. The actor's final
+  JPEG remains on “Searching” despite independently completed DOM observations;
+  it is not completion-paint evidence. Its compact bundle records this limitation.
+
+Reviewed image `11e75e15500c…`, binary `/tmp/goo-382-reviewed-goo`: health passes;
+served trace-search (20,284 bytes), question protocol (15,632 bytes), exploration
+(60,967 bytes), documents (49,724 bytes), pure numeric validator (2,552 bytes) and
+API document (1,475,689 bytes) match source. Only the app container was rebuilt;
+retained stores, volumes and telemetry remain intact.
+
+See [contract](docs/SAVED_TRACE_SEARCH_QUESTIONS.md),
+[review](docs/reviews/SAVED_TRACE_SEARCH_REVIEW_382.md) and
+[storyboard](journeys/382-saved-trace-search-storyboard.md).
+
+
 ## Shared bounded source object decoding — 381
 
 Record exploration and native measurements/discovery now share
