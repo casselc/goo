@@ -1,8 +1,8 @@
 # Implementation plan
 
-> Active execution order: [November 7 roadmap](ROADMAP_2026_11_07.md), reconciled
-> against whole-product architecture/design reviews after the completed 367–369
-> breadth/depth/consolidation sequence.
+> Active execution order: [November 8 roadmap](ROADMAP_2026_11_08.md), reconciled
+> against the whole-product architecture/design checkpoint after completed
+> 376–378 breadth/depth/consolidation work.
 > 367 reusable current RPC views, 368 exact service native interval context,
 > and 369 measured local facet pages are delivered with appropriate native and
 > generated validation. Full populations, exact scopes and independent clocks
@@ -23,8 +23,10 @@
 > optional-source availability and no exponential execution authority.
 > **377 reported histogram exemplar trace context is delivered**, with bounded
 > source metadata, exact staged scope, explicit Run and paused held Back.
-> **Current: 378 native failure/recovery consolidation**, then the finite-sequence
-> whole-product checkpoint.
+> **378 native failure/recovery consolidation is delivered**, including typed
+> refusals, explicit exact-question retry and retired late responses. The
+> whole-product checkpoint adopts **379 broader service discovery**, **380 Saved
+> exemplar continuation**, then **381 shared bounded source decoding**.
 > See the [checkpoint reconciliation](reviews/ROADMAP_RECONCILIATION_375.md).
 > Do not turn blocked native grammar or broker research into a new executor,
 > compatibility layer or unbounded product platform.

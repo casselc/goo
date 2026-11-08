@@ -1,11 +1,11 @@
 package measurements
 
 import (
-	"bufio"
 	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/casselc/goo/internal/sourcefailure"
 	"github.com/casselc/goo/internal/sourcehttp"
 	"github.com/casselc/goo/metrics"
 	"math"
@@ -166,12 +166,13 @@ func (s Source) Run(ctx context.Context, q Question, previous *Result) (*Result,
 	if q.Definition.Kind == "lifecycle" {
 		return ObserveLifecycle(q, rows, at, s.CustodyDir, previous)
 	}
-	return Evaluate(q, rows, at)
+	result, err := Evaluate(q, rows, at)
+	return result, sourcefailure.Protocol(err)
 }
 func (s Source) read(ctx context.Context, plan Plan) ([]json.RawMessage, error) {
 	u, e := url.Parse(s.Endpoint)
 	if e != nil {
-		return nil, e
+		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, e)
 	}
 	v := u.Query()
 	for k, x := range plan.Parameters {
@@ -188,27 +189,29 @@ func (s Source) read(ctx context.Context, plan Plan) ([]json.RawMessage, error) 
 	}
 	resp, e := sourcehttp.Post(ctx, client, u.String(), s.User, s.Password, plan.SQL)
 	if e != nil {
-		return nil, e
+		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, e)
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, fmt.Errorf("measurement source HTTP %d", resp.StatusCode))
+	}
 	b, oversize, e := sourcehttp.ReadBounded(resp.Body, 8<<20)
 	if e != nil {
-		return nil, e
+		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, e)
 	}
-	if resp.StatusCode != 200 || oversize {
-		return nil, fmt.Errorf("bounded measurement source HTTP %d / payload limit", resp.StatusCode)
+	if oversize {
+		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("measurement source exceeds 8 MiB"))
 	}
 	rows := []json.RawMessage{}
-	scanner := bufio.NewScanner(bytes.NewReader(b))
-	scanner.Buffer(make([]byte, 4096), 8<<20)
-	for scanner.Scan() {
-		rows = append(rows, append(json.RawMessage(nil), scanner.Bytes()...))
-		if len(rows) > RowLimit {
-			return nil, fmt.Errorf("source exceeds 10000 rows; no partial measurement")
+	for line := range bytes.Lines(b) {
+		if len(rows) >= RowLimit {
+			return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("source exceeds 10000 rows; no partial measurement"))
 		}
-	}
-	if e = scanner.Err(); e != nil {
-		return nil, e
+		var object map[string]json.RawMessage
+		if json.Unmarshal(line, &object) != nil || object == nil {
+			return nil, sourcefailure.Wrap(sourcefailure.Malformed, fmt.Errorf("invalid measurement source row"))
+		}
+		rows = append(rows, json.RawMessage(bytes.Clone(bytes.TrimSuffix(line, []byte("\n")))))
 	}
 	return rows, nil
 }

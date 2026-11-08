@@ -6,6 +6,7 @@ import (
 	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/internal/capturehttp"
 	"github.com/casselc/goo/internal/nativehttp"
+	"github.com/casselc/goo/internal/sourcefailure"
 	"github.com/casselc/goo/measurements"
 	"io"
 	"net/http"
@@ -141,6 +142,9 @@ func TestPodMetricHTTPWireContracts(t *testing.T) {
 		}
 		if reads != want {
 			t.Fatal("wrong pod metric source effects", reads, want)
+		}
+		if c.Name == "source-row-sentinel" {
+			assertNativeSourceRefusal378(t, w, sourcefailure.Budget)
 		}
 		return w
 	}
@@ -407,4 +411,17 @@ func TestPodMetricHTTPPlanAcceptsLargeLegitimateDiscovery(t *testing.T) {
 		t.Fatal(len(raw), w.Code, w.Body.String(), sourceReads)
 	}
 	t.Logf("Accepted %d-byte real retained discovery without source admission", len(raw))
+}
+
+// Refusal vocabulary stays explicit even when frozen wire fixtures are updated.
+func assertNativeSourceRefusal378(t *testing.T, w *httptest.ResponseRecorder, kind sourcefailure.Kind) {
+	t.Helper()
+	reason, detail := "Source response rejected.", "The source returned invalid or unsupported record data. No partial result was admitted."
+	if kind == sourcefailure.Budget {
+		reason, detail = "Source read exceeded a limit.", "The source response exceeded a bounded read or grouping limit. Try a narrower scope."
+	}
+	var response sourcefailure.Response
+	if w.Code != 502 || json.Unmarshal(w.Body.Bytes(), &response) != nil || response.Refusal.Kind != kind || response.Error != reason || response.Refusal.Detail != detail {
+		t.Fatal("native source refusal classification changed", w.Code, w.Body.String())
+	}
 }

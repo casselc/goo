@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/internal/capturehttp"
+	"github.com/casselc/goo/internal/sourcefailure"
 	"github.com/casselc/goo/measurements"
 	"gopkg.in/yaml.v3"
 	"io"
@@ -180,6 +181,9 @@ func TestStockDomainHTTPFrozenContracts(t *testing.T) {
 		}
 		if reads != want {
 			t.Fatal("domain effects", reads, want)
+		}
+		if c.Status == 502 {
+			assertNativeSourceRefusal378(t, w, sourcefailure.Malformed)
 		}
 		return w
 	}

@@ -1,5 +1,14 @@
 # Known issues and gaps
 
+378 delivers structured native source refusals and explicit recovery of the exact
+failed question/display intent. Edits, previews, navigation and cancellation retire
+old retries; late responses cannot replace a new owner. Local source limits and
+malformed non-lifecycle data now receive their specific closed classifications.
+Successful reads may still have unknown measurement coverage, not healthy status.
+See [contract](NATIVE_MEASUREMENT_RECOVERY.md) and [validation](../VALIDATION.md).
+The [November 8 roadmap](ROADMAP_2026_11_08.md) adopts 379 service visibility,
+380 Saved exemplar continuation and 381 bounded decoder consolidation.
+
 377 delivers reported explicit-histogram exemplars in live Measurements: exact
 source-export association, source-free trace staging, explicit scoped Run and
 same-DOM held Back. Namespace and original nanosecond bounds remain; service and
@@ -12,7 +21,7 @@ metric rows. Missing/invalid metadata remains unavailable, not zero/empty.
 Navigation from Saved/service context owners and resource/time-bucket aggregates
 is outside this live pilot; their metadata is read-only. See
 [contract](HISTOGRAM_EXEMPLAR_REFERENCES.md) and [validation](../VALIDATION.md).
-Current is 378 native failure/recovery consolidation.
+Current is 379 broader service discovery.
 
 376 delivers observed exponential-instrument metadata in explicit metric discovery,
 with exported-point counts, an ineligible plan and no executable definition. A
@@ -21,7 +30,7 @@ become absence. One global metadata bound and the original typed scope remain.
 Actual retained data, supported sibling Run, narrow UI and positive actor checks
 pass. Exponential evaluation and broader inventory of exponential-only services
 remain separate gaps. See [contract](UNSUPPORTED_METRIC_DISCOVERY.md) and
-[validation](../VALIDATION.md). Current is 378 native failure/recovery consolidation.
+[validation](../VALIDATION.md). Current is 379 broader service discovery.
 
 375 delivers grouped-row fit through both existing presenters. At390px ordinary
 and scalar/typed triage rows retain identity, captured count and selection/actions
@@ -29,7 +38,7 @@ without horizontal pan; desktop widths, raw questions, DOM and leases remain.
 Matched actual geometry, keyboard/Back, Chrome AX diagnostics, actor and replay
 pass. This is bounded corpus/browser evidence, not universal screen-reader or
 all-values-on-one-screen coverage. See [contract](GROUP_ROW_PRESENTATION.md) and
-[validation](../VALIDATION.md). 376 discovery is delivered; current is 378 native failure/recovery consolidation.
+[validation](../VALIDATION.md). 376 discovery is delivered; current is 379 broader service discovery.
 
 374 closes exponential-histogram readiness with execution deferred. The real
 13-point source probe preserves counts, offsets, scale, flags, identity and
@@ -37,7 +46,7 @@ nanoseconds, but drops zero thresholds and optional-statistic presence. The
 current native explicit-duration kernel/view cannot preserve general irrational
 bounds and mixed bucket closure. No exponential evaluator is implemented; 376 adds discovery-only metadata.
 See [decision](EXPONENTIAL_HISTOGRAM_READINESS.md) and
-[validation](../VALIDATION.md). 375 consolidation is delivered; current is 378 native failure/recovery consolidation.
+[validation](../VALIDATION.md). 375 consolidation is delivered; current is 379 broader service discovery.
 
 373 delivers contextual native-view discovery with explicit bounded Browse/More,
 loaded-page Find and verified Inspect/Apply through the shared definition rows.
@@ -45,7 +54,7 @@ Damaged metadata stays partial; units do not convert; the destination question
 and explicit Run/export selection stay unchanged. No catalog snapshot or recency
 is inferred. Go/UI1303, Hegel16, 59 finite input cases, actual native/actor/model
 checks pass. See [contract](NATIVE_VIEW_DISCOVERY.md) and
-[validation](../VALIDATION.md). 374 readiness is closed; 375 consolidation is delivered; current is 378 native failure/recovery consolidation.
+[validation](../VALIDATION.md). 374 readiness is closed; 375 consolidation is delivered; current is 379 broader service discovery.
 
 372 delivers checked typed distribution continuation: exact numeric planner
 intent, whole parent scope, source-free staging and explicit child Run. Back
@@ -54,7 +63,7 @@ old callbacks remain retired. Actual attribute-int64/resource-decimal cases and
 positive actor completion pass, with generated scope/threshold/ownership mutants.
 This is tab-held evidence, not an immutable or atomic source snapshot. See
 [contract](TYPED_DISTRIBUTION_CONTINUATION.md) and [validation](../VALIDATION.md).
-373 contextual native-view discovery is delivered; 374 readiness is closed with execution deferred; 375 consolidation is delivered; 376 discovery is delivered; next is 378 native failure/recovery consolidation.
+373 contextual native-view discovery is delivered; 374 readiness is closed with execution deferred; 375 consolidation is delivered; 376 discovery is delivered; next is 379 broader service discovery.
 
 371 delivers separate immutable native Histogram/Table display configuration,
 metadata-only Load/Inspect/Apply, whole destination preservation and explicit
@@ -63,7 +72,7 @@ bin authority, unknown refusal, immutable bytes and positive actor completion pa
 This is a per-stream service histogram pilot with identical units; no conversion,
 fleet percentile, time-bucket/resource-native arm or upstream completeness claim.
 373 adds bounded metadata discovery alongside the exact-ID path. See [contract](NATIVE_HISTOGRAM_VIEW_REUSE.md) and
-[validation](../VALIDATION.md). 372 typed distribution continuation is also delivered; 373 is delivered; 374 readiness is closed; 375 is delivered; 376 is delivered; 377 is delivered; 378 is current.
+[validation](../VALIDATION.md). 372 typed distribution continuation is also delivered; 373 is delivered; 374 readiness is closed; 375 is delivered; 376 is delivered; 377 is delivered; 378 is delivered; 379 is current.
 
 370 delivers typed Activity triage → exact group/service child → explicit Run →
 held Back. Go, 1,276 UI tests, Hegel 40, four genuine typed configurations,
@@ -82,8 +91,8 @@ This does not promise universal latency or whole-workspace above-fold density.
 370 removes the typed error-triage continuation barrier with current link
 ownership. 372 closes the sibling distribution-to-population barrier with checked ownership
 and exact selection intent.
-The [active roadmap](ROADMAP_2026_11_07.md) delivers bounded native histogram view reuse
-and selects 378 native Measurements failure/recovery consolidation next. Broader native authoring remains
+The [active roadmap](ROADMAP_2026_11_08.md) delivers bounded native histogram view reuse
+and selects 379 broader service discovery next. Broader native authoring remains
 separately scoped, and broker
 health still requires a pinned real instrument contract. See
 [facet contract](LARGE_FACET_INTERACTIONS.md) and [validation](../VALIDATION.md).
@@ -105,7 +114,7 @@ Hegel40, actual native/model and positive actor checks pass. Current RPC require
 Server plus nonempty current `rpc.system.name`; legacy-only metadata and Client
 populations are incompatible. Native templates remain separate. See
 [contract](CURRENT_RPC_VIEW_TEMPLATE.md) and [validation](../VALIDATION.md).
-368 and 369 are delivered; 370 is delivered; 371 native display reuse is delivered; 372 is delivered; 373 is delivered; 374 readiness is closed; 375 is delivered; 376 is delivered; 377 is delivered; 378 is current.
+368 and 369 are delivered; 370 is delivered; 371 native display reuse is delivered; 372 is delivered; 373 is delivered; 374 readiness is closed; 375 is delivered; 376 is delivered; 377 is delivered; 378 is delivered; 379 is current.
 
 366's compact retained-comparison headers pass matched desktop/narrow acceptance:
 the first positive timing bar is visible on fresh Compare at 464/759 px. All seven
@@ -411,7 +420,7 @@ window for fresh fixed queries against a frozen baseline. Generic saved-view
 restoration ownership remains the separate consolidation follow-up.
 
 The [312 whole-product review](reviews/WHOLE_PRODUCT_PLAN_312.md) and
-[active roadmap](ROADMAP_2026_11_07.md) replace the older parallel feature queues.
+[active roadmap](ROADMAP_2026_11_08.md) replace the older parallel feature queues.
 312 delivers the selected corrections: shared selection-command readiness/leases,
 explicit facet-to-comparison promotion, bounded facet lookup lifetime, terminal
 record-page diagnostics and detached returned query metadata. 313 hides the dormant root editor while retaining its state, removes redundant
@@ -1342,12 +1351,13 @@ revision catalogs have a 256-file bound; persistent custody storage currently ha
 no quota/garbage collection. Source data and custody reads are not transactional.
 
 
-Metric discovery is now implemented for a named service/environment over a
-bounded two-minute observation window. It is not fleet membership discovery or a
-complete instrument inventory. Dimension-value cardinality, exemplar navigation,
-exponential histograms, omitted metric units and missing resource-instance IDs
-remain unsupported by the package workflow. Empty optional scope version/schema
-are accepted as exact identities. See MEASUREMENT_PACKAGES.md.
+Explicit metric discovery supports a named service/environment and bounded fixed
+window, with a fresh two-minute default. It is not fleet membership or complete
+instrument inventory. Unsupported exponential metadata and live Measurements
+exemplar navigation are delivered (376/377); broader exponential-only service
+visibility and Saved exemplar actions remain in 379/380. Metric-package dimension
+value cardinality, omitted units and missing instance identity remain separately
+limited. Empty scope version/schema are exact identities. See MEASUREMENT_PACKAGES.md.
 
 ## Product coherence boundaries
 

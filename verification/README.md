@@ -1,5 +1,26 @@
 # Semantic properties and model conformance
 
+## Native measurement recovery (378)
+
+The actual `journeys/378-native-recovery.spec.js` plants only failed source reads;
+recovery and late-success bodies come from real Go/ClickHouse responses over
+retained OTLP data. `GOO_NATIVE_RECOVERY_BOMBADIL=1` adds the positive actor.
+
+From this verification module, with Quint available:
+
+```sh
+GOO_NATIVE_RECOVERY_378_REPORT=/workspace/goo/artifacts/native-recovery378/summary.json \
+go test . -run '^TestQuintNativeRecoveryObserved378$' -count=1 -v
+```
+
+The existing widget-recovery model judges the two observed failure/retry/success
+cases. Exact scopes, source row/counts, safe envelopes and passive/cancel/late
+budgets are independently admitted; changed-window and extra-read controls must
+fail. No synthetic widget plan or unrecorded retirement steps are projected.
+Actor DOM completion and actual Playwright PNG evidence remain distinct: this
+campaign's Bombadil JPEG stream froze after refusal, so those JPEGs are not
+recovered-paint evidence. See [validation](../VALIDATION.md).
+
 ## Reported histogram exemplar references (377)
 
 The source probe is offline by default. Explicit `--run` posts uniquely scoped

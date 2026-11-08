@@ -1,5 +1,79 @@
 # Validation record
 
+## Native measurement refusal and exact recovery — 378
+
+Native source reads now reuse the closed source-failure taxonomy. HTTP failures
+are unavailable before body decoding; local 8 MiB/10,000-row limits are budget
+refusals; invalid JSON objects and non-lifecycle post-acquisition evaluation errors
+are malformed. Transport/body causes retain cancellation and timeout identity.
+Question compilation remains outside protocol classification, and lifecycle
+custody/storage failures are not relabeled as malformed telemetry. Numeric
+semantics, limits, scope and wire shapes remain unchanged. `bytes.Lines` iterates
+the already bounded response instead of a second Scanner buffer.
+
+Focused Go checks pass **0.230s**, without skips; the final full Go suite passes
+under **Go 1.27.3**. Three older HTTP fixture groups assumed generic unavailable
+for known limits/invalid data. Their tests now explicitly assert the intended
+closed kind/message/detail, and actual Go handlers regenerated the fixtures;
+HTTP statuses and source-read budgets were not weakened.
+
+Six actual-mounted UI recovery cases pass **267.477ms**. All **1,331 frontend
+tests** pass, zero skips, in **16.646s**. Retry captures the exact failed question
+and display intent, with original nanosecond bounds, typed environment, namespace
+and definition. It is the sole primary recovery action, retires on edits/Preview/
+display replacement/navigation/cancel, rejects stale/hidden/inert/disabled/detached
+callbacks, and recovers keyboard focus without stealing it from other controls.
+Late catalog errors cannot overwrite newer source state. The first focused
+success fixture omitted mandatory warnings; fixing that fixture retained the real
+renderer and required no production workaround.
+
+The API checker passes **112 operations, 476 fixture responses, 186 admitted
+requests and 28 mux refusals** with its existing rejecting controls and SSE checks.
+Wire types/spec remain at **720 schemas**, unchanged. Five actual native
+request/response pairs also conform: unavailable/malformed failure and recovery
+pairs, plus the real held-success response. Failed and retried questions match
+exactly, and planted private source prose does not appear in failure envelopes.
+
+The final native journey and positive actor pass **47.4s** (50.5s total), on image
+`c1bd26ea…`. Health, the 60,903-byte Measurements module and 1,446,594-byte OpenAPI
+match checkout exactly. No new telemetry, data resets or unrelated service
+changes are performed. Two original source exports independently contain counts
+6 and 1. Upstream 503 becomes unavailable; a successful-HTTP malformed body becomes
+malformed. Each explicit retry returns real Go/ClickHouse data in the unchanged
+fixed scope. The valid measurement coverage remains **unknown**, rather than
+being relabeled healthy after source access recovers.
+
+Twenty-one native facts record **10 source acquisitions/10 SQL**, six explicit
+metadata plans and zero writes. Passive details and invalid callbacks perform no
+read. Cancellation closes a held source connection and produces no Retry/result.
+A real successful backend response held until after owner withdrawal cannot
+replace the new UI, enable Capture or reactivate its old callback. The actor
+separately records **633 observations across six phases, 35.105s**, two source
+acquisitions and zero writes, with exact-question and visible recovered-data
+completion. The proxy's 12 total SQL requests include those two actor reads.
+
+Recorded replay passes **5.65s** (package 5.673s), zero skips. Sixteen actual
+request/response/passive events from the two recovery cases conform to the
+existing widget-recovery model. Independent admission checks all 21 facts,
+source-row identity, cancellation and late-result budgets. Changed retry windows
+and extra passive reads are rejected; a separate model-coherence control rejects
+the extra read. No new FSM, fabricated widget plan or unobserved late-model steps
+are introduced.
+
+Original Playwright PNGs show the narrow safe refusal/one Retry and actual recovered
+data, and pass bounded design review. Bombadil's JPEGs froze after the inspected
+refusal despite current DOM snapshots reaching completion; they are not positive
+paint evidence. Retention keeps the compressed DOM trace and one verified refusal
+JPEG alongside the genuine Playwright recovery PNG. Compact artifacts occupy about
+**0.58MB**. This testing-tool limitation is distinct from the product's actual
+recovered-data screenshot and DOM/source assertions.
+
+The whole-product architecture/design checkpoint adopts 379 service discovery,
+380 Saved exemplar continuation and 381 bounded decoder consolidation in the
+[November 8 roadmap](docs/ROADMAP_2026_11_08.md). See the
+[recovery contract](docs/NATIVE_MEASUREMENT_RECOVERY.md) and
+[executable storyboard](journeys/378-native-recovery-storyboard.md).
+
 ## Reported histogram exemplar references — 377
 
 The source-readiness gate closes for reported trace references, with explicit
