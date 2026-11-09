@@ -35,8 +35,8 @@ test('returned question, slot scope, shape, basis and clock cannot drift from th
 });
 
 test('verified stored pages check named-environment receipts as well as selectors and ignore only paging',()=>{
-  const q={...question(),limit:20},data=response(q),page={receipt:{id:'b'.repeat(64),capturedAt:'2026-10-30T05:01:00Z',question:{kind:'explore',explore:clone(q)}},explore:data,retainedRecords:300};
-  page.explore.question={...q,limit:100,offset:100};
+  const q={...question(),limit:20},data=response(q),page={receipt:{version:1,title:'Stored record evidence',id:'b'.repeat(64),capturedAt:'2026-10-30T05:01:00Z',question:{kind:'explore',explore:{...clone(q),limit:100}}},explore:data,retainedRecords:300,recordsLimited:false,nextCursor:Buffer.from('b'.repeat(64)+':200').toString('base64url'),previousCursor:Buffer.from('b'.repeat(64)+':0').toString('base64url')};
+  page.explore.question={...q,limit:100,offset:100};page.explore.rows=Array.from({length:100},()=>({timestamp_ns:'1000000000',duration_ns:'0'}));page.explore.hasMore=true;
   const admitted=adoptStoredExplore(page);assert(hasGuarantee(admitted.explore.viewDataset,'groups'));assert.equal(getSnapshotInfo(admitted.explore.viewDataset).sourceId,'goo.verified-saved-explore');
   assert.equal(admitted.explore.summaryDataset.capturedAt,data.capturedAt);assert.notEqual(admitted.explore.summaryDataset.capturedAt,page.receipt.capturedAt);assert.equal(admitted.explore.viewDataset.scope.selector.limit,20);assert.equal(admitted.explore.question.offset,100);
   for(const mutate of [p=>p.explore.question.environment='other',p=>p.explore.question.toMs++,p=>p.explore.question.where={field:{kind:'column',key:'service'},op:'eq',value:'foreign'},p=>p.explore.viewDataset.scope.selector.environment='other',p=>p.receipt.question.kind='measurement']){const changed=clone(page);mutate(changed);assert.throws(()=>adoptStoredExplore(changed));}

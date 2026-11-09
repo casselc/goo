@@ -1,5 +1,70 @@
 # Validation record
 
+## Capture-family admission consolidation — 387
+
+Six finite full capture families share receipt,
+question/result arm and delivery checks before existing semantic validators.
+Receipt-only investigation references remain a distinct capability. Historical
+plans, source/custody/evaluation clocks and nested nullable data are preserved.
+
+Completed checks:
+
+- Full root Go suite passes: cmd **10.455 s**, exploration **6.555 s**,
+  capture HTTP **0.143 s**, measurements **5.839 s**, workbench **2.025 s**.
+  Final request-limit predicate regression and storage/search/trace pages pass
+  exploration **0.071 s**, cmd **0.035 s**, capture HTTP **0.009 s**.
+- Full frontend **1,386 passed**, zero skips (**20.394 s**) on the final held-page
+  ownership change. Final null-empty
+  projection/metadata regressions **28 passed** (**429 ms**), and comparison
+  distribution-intent matrix **23 passed** (**412.7 ms**). Sparse old test
+  receipts were corrected instead of weakening admission. The projection leaves
+  the original null-row DTO unchanged and displays no-data/health-unknown without
+  requests. Optional nested distribution null retains Go's false default, while
+  foreign null family arms are rejected.
+  Failed/new requests no longer replace the accepted stored-page address used by
+  comparisons; mounted refusal/empty-summary checks pass **24 cases**
+  (**376.9 ms**). Requested cursor binding rejects a valid but wrong returned
+  page before adoption (**15 focused checks**, **271.9 ms**).
+- Final Hegel **60 family vectors / 1,960 Go–JavaScript outcomes**, zero skips
+  (**2.284 s**), including the lower trace-request limit control. Existing 383
+  qualified-witness **100 examples / 1,370 outcomes** pass (**6.67 s**); the old
+  generated clone was fixed to carry its published ID before decoding.
+  Existing record/review and NativeView generated regressions also pass.
+- OpenAPI **112 operations / 725 schemas**, **480 frozen responses / 189
+  admitted requests / 28 mux refusals**, with all six exclusive question arms,
+  nullable foreign-arm refusal and separate receipt-only shapes. All six
+  Go-created pages and receipts also conform to the API; internal stored
+  artifacts are validated by Go rather than claimed as a public HTTP schema.
+- [Source review](docs/reviews/CAPTURE_FAMILY_REVIEW_387.md) found comparison
+  distribution-intent and exact trace-page request-limit gaps; both are closed.
+  RawMessage envelope checks avoid recursively materializing up to 24 MiB of
+  arbitrary payload graphs. No universal schema engine or source executor added.
+
+Actual Playwright journey passes (**1.3 min**), with **39 measured facts**:
+all six families reopen offline, 30 file corruptions refuse without source reads,
+18 malformed transport envelopes refuse, and a schema-valid wrong requested page
+refuses without displacing held evidence. Empty captures preserve no-data meaning;
+held explanations save without rereading. Bombadil completes **663 snapshots / six
+phases**, returning to the same parent with the missing witness and focus visible
+(**one explicit child source read, zero store reads/writes**). Final frames were
+visually inspected. The source bank is controlled ordinary OTLP, not a claim of
+instrumented application traffic or ingestion completeness.
+
+Actual wire checks pass **92 genuine responses / 11 requests**. The 18 malformed
+transport controls independently fail schema admission; the wrong-page control is
+schema-valid and fails requested-address binding. See the
+[storyboard](journeys/387-capture-envelope-storyboard.md) and
+[contract](docs/CAPTURE_FAMILY_ADMISSION.md). Independent actual ledger and required Quint replay pass (**7.91 s**, package
+**7.928 s**, zero skips): **39 measured facts → 39 model steps**; **13 semantic
+mutants** and a receipt-reference source-read model control are rejected. The
+ledger independently checks canonical physical artifacts, raw population members,
+nullable witnesses, page addresses and measured read budgets. Its first run found
+a verification-only map reuse error while reconstructing nested question-null
+corruption; decoding into a fresh map fixes that oracle without changing the
+report, product or admission checks. The local packages container was updated
+to the tested image; `/health` returned `{"ok":true}`. Existing dependencies
+and persistent volumes were preserved.
+
 ## Native gauge display reuse — 386
 
 Histogram and gauge display configuration share one

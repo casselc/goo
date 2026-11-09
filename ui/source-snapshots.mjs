@@ -5,7 +5,7 @@ import {createSourceAdapter,asComparison,importSnapshot,getSnapshotInfo,asHistog
 import {identity} from './question-session.mjs';
 import {validateRecordQuestion} from './question-protocol.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
-import {validate as validateSaved,checkedRecord} from './saved-capture-protocol.mjs';
+import {validate as validateSaved} from './saved-capture-protocol.mjs';
 import {fromExploration as recordPageFromExploration} from './record-page.mjs';
 
 const source=createSourceAdapter({id:'goo.explore'}),stored=createSourceAdapter({id:'goo.verified-saved-explore'});
@@ -82,10 +82,9 @@ export function adoptStoredExplore(page){
   validateSaved(page);
   if(page?.receipt?.question?.kind!=='explore'||!record(page.explore))throw Error('A verified stored exploration page is required.');
   const expected=page.receipt.question.explore;
-  // SavedProtocol historically checked selector pages only. All stored pages
-  // must match their immutable receipt, including named-environment pages.
-  checkedRecord(expected,page.explore.question);
-  const result={...page,receipt:freezeStoredMetadata(structuredClone(page.receipt)),explore:admit(page.explore,expected,stored,{paging:true})};
+  // Normalize only the held presentation. The physical stored DTO stays exact.
+  const projection=page.explore.rows===null?{...page.explore,rows:[]}:page.explore;
+  const result={...page,receipt:freezeStoredMetadata(structuredClone(page.receipt)),explore:admit(projection,expected,stored,{paging:true})};
  const supplied=getRecordPage(result.explore);
  if(supplied&&typeof result.explore.count==='string'&&/^(0|[1-9][0-9]{0,19})$/.test(result.explore.count)&&BigInt(result.explore.count)<=18446744073709551615n&&Number.isSafeInteger(result.retainedRecords)&&result.retainedRecords>=0&&result.retainedRecords<=1000&&typeof result.recordsLimited==='boolean')storedRecordPages.set(result,Object.freeze({page:supplied,explore:result.explore,receipt:result.receipt,count:result.explore.count,retainedRecords:result.retainedRecords,recordsLimited:result.recordsLimited}));
  return result;

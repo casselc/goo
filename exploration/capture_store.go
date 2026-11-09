@@ -52,46 +52,21 @@ type CaptureQuestion struct {
 }
 
 func (q CaptureQuestion) Validate() error {
-	if q.Kind != "trace-search" && q.TraceSearch != nil {
-		return errors.New("unexpected trace-search question")
-	}
-	if q.Kind == "trace-search" {
-		if q.TraceSearch == nil || q.Explanation != nil || q.Measurement != nil || q.Explore != nil || q.Inventory != nil || q.Comparison != nil {
-			return errors.New("exclusive trace-search question required")
-		}
-		return q.TraceSearch.Validate()
-	}
-	if q.Kind != "explanation" && q.Explanation != nil {
-		return errors.New("unexpected explanation question")
-	}
-	if q.Kind != "measurement" && q.Measurement != nil {
-		return errors.New("unexpected measurement question")
+	if err := q.validateShape(); err != nil {
+		return err
 	}
 	switch q.Kind {
+	case "trace-search":
+		return q.TraceSearch.Validate()
 	case "explanation":
-		if q.Explanation == nil || q.Measurement != nil || q.Explore != nil || q.Inventory != nil || q.Comparison != nil {
-			return errors.New("exclusive explanation question required")
-		}
 		return q.Explanation.Validate()
 	case "measurement":
-		if q.Measurement == nil || q.Explore != nil || q.Inventory != nil || q.Comparison != nil {
-			return errors.New("exclusive measurement question required")
-		}
 		return q.Measurement.Validate()
 	case "explore":
-		if q.Explore == nil || q.Inventory != nil || q.Comparison != nil {
-			return errors.New("explore question required")
-		}
 		return q.Explore.Validate()
 	case "inventory":
-		if q.Inventory == nil || q.Explore != nil || q.Comparison != nil {
-			return errors.New("inventory question required")
-		}
 		return q.Inventory.Validate()
 	case "comparison":
-		if q.Comparison == nil || q.Explore != nil || q.Inventory != nil {
-			return errors.New("comparison questions required")
-		}
 		a, b := q.Comparison.Baseline, q.Comparison.Selection
 		if q.Comparison.Distribution && (!compatibleNumericBindings(a.Numeric, b.Numeric) || a.NumericHistogram == nil || b.NumericHistogram == nil) {
 			return errors.New("distribution capture requires matching numeric bindings and histogram questions")
@@ -103,7 +78,7 @@ func (q CaptureQuestion) Validate() error {
 		}
 		return nil
 	default:
-		return errors.New("kind must be explore, inventory, comparison or measurement")
+		return errors.New("unsupported capture family")
 	}
 }
 
@@ -291,44 +266,32 @@ func (s CaptureStore) Create(ctx context.Context, source Source, title string, q
 	return s.publish(c)
 }
 func validateCapture(c *SavedCapture) error {
-	if c.Version != 1 || !validCaptureTitle(c.Title) || c.Question.Validate() != nil || !reflect.DeepEqual(c.Question, c.Question.Normalized()) {
-		return errors.New("invalid capture receipt")
+	if err := validateCaptureReceipt(c.CaptureReceipt, false); err != nil {
+		return err
 	}
-	if _, e := time.Parse(time.RFC3339Nano, c.CapturedAt); e != nil {
-		return errors.New("invalid capture time")
-	}
-	if c.Parent != "" && !regexpRevision.MatchString(c.Parent) {
-		return errors.New("invalid capture parent")
+	if err := c.validateShape(); err != nil {
+		return err
 	}
 	if c.Question.Kind == "trace-search" {
-		if c.TraceSearch == nil || c.Explore != nil || c.Inventory != nil || c.Comparison != nil || c.Measurement != nil || c.Explanation != nil || !reflect.DeepEqual(c.Question.TraceSearch, &c.TraceSearch.Request) {
+		if !reflect.DeepEqual(c.Question.TraceSearch, &c.TraceSearch.Request) {
 			return errors.New("invalid trace-search capture envelope")
 		}
 		return ValidateTraceSearchResult(c.TraceSearch)
 	}
-	if c.TraceSearch != nil {
-		return errors.New("unexpected trace-search evidence")
-	}
-	if c.Question.Kind != "explanation" && c.Explanation != nil {
-		return errors.New("unexpected explanation evidence")
-	}
 	if c.Question.Kind == "explanation" {
-		if c.Explanation == nil || c.Measurement != nil || c.Explore != nil || c.Inventory != nil || c.Comparison != nil || c.Explanation.ResultToken != "" || !reflect.DeepEqual(c.Question.Explanation, &c.Explanation.Request) {
+		if c.Explanation.ResultToken != "" || !reflect.DeepEqual(c.Question.Explanation, &c.Explanation.Request) {
 			return errors.New("invalid explanation capture envelope")
 		}
 		return ValidateExplanationResult(c.Explanation)
 	}
 	if c.Question.Kind == "measurement" {
-		if c.Explore != nil || c.Inventory != nil || c.Comparison != nil || c.Measurement == nil || !reflect.DeepEqual(c.Measurement.Question, *c.Question.Measurement) {
+		if !reflect.DeepEqual(c.Measurement.Question, *c.Question.Measurement) {
 			return errors.New("invalid measurement capture envelope")
 		}
 		return measurements.ValidateResult(c.Measurement)
 	}
-	if c.Measurement != nil {
-		return errors.New("unexpected measurement evidence")
-	}
 	if c.Question.Kind == "comparison" {
-		if c.Comparison == nil || c.Explore != nil || c.Inventory != nil || !regexpRevision.MatchString(c.Comparison.BaselineID) || !regexpRevision.MatchString(c.Comparison.SelectionID) {
+		if !regexpRevision.MatchString(c.Comparison.BaselineID) || !regexpRevision.MatchString(c.Comparison.SelectionID) {
 			return errors.New("invalid saved comparison")
 		}
 		pair := c.Comparison
@@ -343,9 +306,6 @@ func validateCapture(c *SavedCapture) error {
 			return errors.New("invalid comparison evidence")
 		}
 		return nil
-	}
-	if c.Comparison != nil {
-		return errors.New("unexpected comparison evidence")
 	}
 	if c.Question.Kind == "explore" {
 		if c.Explore != nil {
@@ -384,13 +344,13 @@ func validateCapture(c *SavedCapture) error {
 				return errors.New("unexpected saved duration summary")
 			}
 		}
-		if c.Explore == nil || c.Inventory != nil || !reflect.DeepEqual(c.Explore.Question, *c.Question.Explore) || len(c.Explore.Rows) > CaptureRowLimit || !regexpRevision.MatchString(c.Explore.Basis) {
+		if !reflect.DeepEqual(c.Explore.Question, *c.Question.Explore) || len(c.Explore.Rows) > CaptureRowLimit || !regexpRevision.MatchString(c.Explore.Basis) {
 			return errors.New("invalid saved exploration")
 		}
 		if err := validateSelectedRows(*c.Question.Explore, c.Explore.Rows); err != nil {
 			return err
 		}
-	} else if c.Inventory == nil || c.Explore != nil || !reflect.DeepEqual(c.Inventory.Question, *c.Question.Inventory) || len(c.Inventory.Rows) > 1000 || !regexpRevision.MatchString(c.Inventory.Basis) {
+	} else if !reflect.DeepEqual(c.Inventory.Question, *c.Question.Inventory) || len(c.Inventory.Rows) > 1000 || !regexpRevision.MatchString(c.Inventory.Basis) {
 		return errors.New("invalid saved inventory")
 	} else if err := validateInventoryServiceRows(*c.Question.Inventory, c.Inventory.Rows); err != nil {
 		return err
@@ -496,6 +456,15 @@ func cursorOffset(id, cursor string) (int, error) {
 	return n, nil
 }
 func (c *SavedCapture) Page(cursor string) (*CapturePage, error) {
+	if c == nil {
+		return nil, errors.New("capture required")
+	}
+	if err := validateCaptureReceipt(c.CaptureReceipt, true); err != nil {
+		return nil, err
+	}
+	if err := c.validateShape(); err != nil {
+		return nil, err
+	}
 	offset, e := cursorOffset(c.ID, cursor)
 	if e != nil {
 		return nil, e
@@ -515,7 +484,7 @@ func (c *SavedCapture) Page(cursor string) (*CapturePage, error) {
 		if offset != 0 {
 			return nil, errors.New("inventory has no record pages")
 		}
-		return p, nil
+		return p, validateCapturePage(*p)
 	}
 	n := len(c.Explore.Rows)
 	if offset >= n && offset != 0 {
@@ -542,7 +511,7 @@ func (c *SavedCapture) Page(cursor string) (*CapturePage, error) {
 	if offset > 0 {
 		p.PreviousCursor = captureCursor(c.ID, offset-CapturePageSize)
 	}
-	return p, nil
+	return p, validateCapturePage(*p)
 }
 
 // Listing uses immutable ID ordering and an exclusive seek cursor. It is not a

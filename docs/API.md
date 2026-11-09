@@ -539,6 +539,22 @@ format is introduced. Opening a trace from a result is a separate explicit
 existing record-context read. See [the semantic contract](TRACE_SEARCH.md).
 
 
+## Capture-family envelopes
+
+Full capture delivery binds receipt, question, selected result and page metadata
+across six families: Explore, inventory, comparison, measurement, explanation
+and trace search. Foreign family keys are forbidden even when null; legitimate
+nullable data inside the selected family remain valid. Capture requests may omit
+the entire question for existing parent-refresh/held-result promotion paths;
+explicit empty, null or mixed questions are rejected.
+
+Only Explore has local record cursors. Requested ID/cursor and returned page
+position agree before adoption; counts and source-retention limits remain separate
+from the 100-row delivery page. Other families keep their own retained counts and
+have no record cursors. The receipt-only `/captures/{id}/receipt` response cannot
+carry a result or page fields and cannot substitute for a full page. See
+[the admission contract](CAPTURE_FAMILY_ADMISSION.md).
+
 ## Native display configuration
 
 `/native-views` provides source-free save/list, exact-ID load and checked reuse

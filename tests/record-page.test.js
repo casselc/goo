@@ -29,9 +29,9 @@ test('missing rows remain unavailable and omitted continuation stays unknown',()
 });
 
 test('stored delivery pages retain their actual bounds and source clock rather than the receipt clock',()=>{
- const raw=response(),original={...raw.question,offset:0};
- const stored=adoptStoredExplore({receipt:{id:'b'.repeat(64),capturedAt:'2026-10-31T06:00:00Z',question:{kind:'explore',explore:original}},explore:raw,retainedRecords:20});
- const page=getRecordPage(stored.explore);assert(page);assert.equal(page.question.offset,4);assert.equal(page.page.offset,4);assert.equal(page.page.limit,2);assert.equal(page.capturedAt,raw.capturedAt);assert.notEqual(page.capturedAt,stored.receipt.capturedAt);assert.equal(page.quality.upstream,'unknown');
+ const raw=response();raw.question={...raw.question,limit:100,offset:100};raw.hasMore=false;const original={...raw.question,offset:0};
+ const stored=adoptStoredExplore({receipt:{version:1,title:'Stored record evidence',id:'b'.repeat(64),capturedAt:'2026-10-31T06:00:00Z',question:{kind:'explore',explore:original}},explore:raw,retainedRecords:101,recordsLimited:true,previousCursor:Buffer.from('b'.repeat(64)+':0').toString('base64url')});
+ const page=getRecordPage(stored.explore);assert(page);assert.equal(page.question.offset,100);assert.equal(page.page.offset,100);assert.equal(page.page.limit,100);assert.equal(page.capturedAt,raw.capturedAt);assert.notEqual(page.capturedAt,stored.receipt.capturedAt);assert.equal(page.quality.upstream,'unknown');
 });
 
 test('record page validation refuses malformed bounds, source metadata and non-JSON mutable payloads',()=>{

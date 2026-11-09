@@ -1,17 +1,27 @@
 # Known issues and gaps
 
 Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
-status and the [active roadmap](ROADMAP_2026_11_09_CHECKPOINT_384.md) for priorities.
+status and the [active roadmap](ROADMAP_2026_11_09_CHECKPOINT_387.md) for priorities.
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
+
+387 delivers [capture-family admission](CAPTURE_FAMILY_ADMISSION.md): six finite
+full capture families, receipt/question/result coherence and delivery bounds are
+checked before family-specific evidence validation. Foreign/null family arms are
+refused; legitimate nested nulls, historical plans and independent clocks remain
+intact. Receipt-only investigation references are separately admitted without
+result or paging authority. The [adopted 387 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_387.md)
+schedules gauge-observation record context (388), counter display reuse (389),
+then native data-first/component consolidation (390). The annotation/review pair
+remains deferred, not a parallel prerequisite queue.
 
 386 delivers [native gauge display reuse](NATIVE_GAUGE_VIEW_REUSE.md) through one
 shared native-view store/API/UI owner. Timeline/Table declarations retain the
 complete destination question and fixed-window freshness. Unknown/no-data marks
 use a separate physically time-aligned rail outside the numeric scale. Service
 per-stream gauges with nonempty exact units are supported; resource, counter,
-stock and state display reuse remain separate. Native screen density is a later
-whole-product follow-up; current frames do not claim a complete above-fold entry.
+stock and state display reuse remain separate. Native screen density is scheduled
+for 390; current frames do not claim a complete above-fold entry.
 
 385 adds the explicit [outgoing HTTP lens](OUTGOING_HTTP.md) over current Client
 span observations, including literal destination/method/port/status groups and
@@ -25,8 +35,9 @@ continuation, Saved-search continuation and stored records, including the full
 narrow waterfall item. Scope/counts, warnings and exact clocks remain available;
 secondary controls no longer precede primary data. The [current capability/gap
 index](CAPABILITY_GUIDE.md) replaces old proposal lists as the product index. The
-[active 384 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_384.md) has delivered 385 outgoing HTTP and
-386 gauge display reuse; next is 387 coherent capture-family admission. Desktop row
+[completed 384 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_384.md) delivered 385 outgoing HTTP,
+386 gauge display reuse and 387 coherent capture-family admission. The current
+queue is linked at the top of this file. Desktop row
 action density remains a measured future opportunity, not another active queue.
 
 383 adds [captured trace-search evidence](CAPTURED_TRACE_SEARCH.md), independent

@@ -197,28 +197,55 @@ for suffix in ('', 'Input'):
   step['oneOf'].append(branch)
  step['description']='Exactly one checked authored question payload. Trace-search steps retain the complete fixed request, conditions and limit; saving and reopening are source-free. Search remains explicit. Compatible captured search evidence can be attached after runtime verifies the exact request.'
 
-# Captured search evidence is a distinct checked union arm, not record pages.
+# Full capture envelopes select exactly one finite family before payload semantics.
+capture_families=[('explore','explore','exploration.Query','exploration.Result'),('inventory','inventory','exploration.InventoryQuestion','exploration.InventoryResult'),('comparison','comparison','exploration.ComparisonQuestion','exploration.SavedComparison'),('measurement','measurement','measurements.Question','measurements.Result'),('explanation','explanation','exploration.ExplanationRequest','exploration.ExplanationResult'),('trace-search','traceSearch',None,'exploration.TraceSearchResult')]
 for suffix in ('', 'Input'):
  request_name='TraceSearchCaptureRequest'+suffix
  schemas[request_name]=copy.deepcopy(schemas['workbench.Step'+suffix]['oneOf'][2]['properties']['traceSearch'])
  question=schemas['exploration.CaptureQuestion'+suffix]
  question['additionalProperties']=False
- for payload,target in [('explore','exploration.Query'),('inventory','exploration.InventoryQuestion'),('comparison','exploration.ComparisonQuestion'),('measurement','measurements.Question'),('explanation','exploration.ExplanationRequest')]:
-  question['properties'][payload]=ref(target+suffix)
- question['properties']['traceSearch']=ref(request_name)
- question.setdefault('allOf',[]).append({
-  'if':{'required':['kind'],'properties':{'kind':{'const':'trace-search'}}},
-  'then':{'required':['traceSearch'],'not':{'anyOf':[{'required':[other]} for other in ('explore','inventory','comparison','measurement','explanation')]}},
-  'else':{'not':{'required':['traceSearch']}}})
- question['description']='Server-owned fixed capture question. Trace-search capture explicitly rereads its complete request and retains an independent source-read basis; it never archives the prior browser response verbatim.'
+ question['required']=['kind']
+ question['properties']['kind']={'enum':[kind for kind,_,_,_ in capture_families]}
+ question.pop('allOf',None)
+ question['oneOf']=[]
+ for kind,arm,target,_ in capture_families:
+  question['properties'][arm]=ref((target+suffix) if target else request_name)
+  question['oneOf'].append({'required':[arm],'properties':{'kind':{'const':kind}},'not':{'anyOf':[{'required':[other]} for _,other,_,_ in capture_families if other!=arm]}})
+ question['description']='Exactly one explicit nonnull capture question arm. Omit the entire question only where the owning refresh/held-promotion request permits it; an empty/null/mixed question is not omission. Nested nullable data retain their family meaning.'
+for name in ('exploration.CaptureReceipt','exploration.CaptureReceiptInput'):
+ if name not in schemas:continue
+ receipt=schemas[name];receipt['additionalProperties']=False
+ receipt['required']=['version','id','title','capturedAt','question']
+ receipt['properties'].update(version={'const':1},id={'type':'string','pattern':'^[a-f0-9]{64}$'},parent={'type':'string','pattern':'^(|[a-f0-9]{64})$'},title={'type':'string','minLength':1,'maxLength':120,'description':'Bounded nonblank UTF-8 title; Go enforces byte/control limits.'},capturedAt={'type':'string','format':'date-time','maxLength':35})
+metadata=schemas['CaptureReceiptMetadata']
+metadata['additionalProperties']=False
+metadata['required']=['receipt','definitionRevision','readAt','summary']
+metadata['properties']['definitionRevision']={'type':'string','pattern':'^(|[a-f0-9]{64})$'}
+metadata['properties']['readAt']={'anyOf':[{'const':''},{'type':'string','format':'date-time','maxLength':35}]}
+metadata['properties']['summary']={'type':'object','additionalProperties':{'type':'string'}}
+metadata['description']='Receipt-only investigation reference. No result arm or paging capability; empty readAt/revision means unavailable metadata, never a fabricated clock or measurement.'
 for wire in ('exploration.CapturePage','exploration.SavedCapture'):
  if wire not in schemas:continue
- shape=schemas[wire]
- shape.setdefault('allOf',[]).append({
-  'if':{'required':['traceSearch']},
-  'then':{'not':{'anyOf':[{'required':[other]} for other in ('explore','inventory','comparison','measurement','explanation')]}}})
- if wire=='exploration.CapturePage':
-  shape['allOf'].append({'if':{'required':['receipt'],'properties':{'receipt':{'required':['question'],'properties':{'question':{'required':['kind'],'properties':{'kind':{'const':'trace-search'}}}}}}},'then':{'required':['traceSearch'],'properties':{'traceSearch':ref('exploration.TraceSearchResult'),'nextCursor':{'const':''},'previousCursor':{'const':''}}}})
+ shape=schemas[wire];shape['additionalProperties']=False;shape.pop('allOf',None);shape['oneOf']=[]
+ page=wire=='exploration.CapturePage'
+ if page:
+  shape['required']=['receipt','retainedRecords','recordsLimited']
+  for cursor in ('nextCursor','previousCursor'):shape['properties'][cursor]={'type':'string','minLength':1,'maxLength':128,'pattern':'^[A-Za-z0-9_-]+$'}
+ else:
+  shape['required']=['version','id','title','capturedAt','question']
+  for key in ('version','id','title','capturedAt','parent'):shape['properties'][key]=copy.deepcopy(schemas['exploration.CaptureReceipt']['properties'][key])
+ for kind,arm,_,target in capture_families:
+  shape['properties'][arm]=ref(target)
+  selector={'required':['question'],'properties':{'question':{'required':['kind'],'properties':{'kind':{'const':kind}}}}}
+  branch={'required':[arm],'properties':({'receipt':selector} if page else selector['properties']),'not':{'anyOf':[{'required':[other]} for _,other,_,_ in capture_families if other!=arm]}}
+  if page:
+   branch['properties']['retainedRecords']={'type':'integer','minimum':0,'maximum':1000 if kind=='explore' else 10000 if kind=='measurement' else 100 if kind=='trace-search' else 0}
+   branch['properties']['recordsLimited']={'type':'boolean'} if kind in ('explore','trace-search') else {'const':False}
+   if kind!='explore':branch['properties'].update(nextCursor=False,previousCursor=False)
+   else:
+    branch['properties']['explore']={'allOf':[ref(target),{'properties':{'question':{'properties':{'offset':{'type':'integer','minimum':0,'maximum':900,'multipleOf':100},'limit':{'const':100}}}}}]}
+  shape['oneOf'].append(branch)
+ shape['description']='Exclusive full capture '+('delivery page' if page else 'stored artifact')+'. Receipt/question/result arms agree before family semantic admission. Metadata-only references are a separate boundary; historical source plans and custody remain family-owned.'
 search_result=schemas['exploration.TraceSearchResult']
 search_result['properties']['items'].update(maxItems=100)
 search_result['properties']['matchedTraces'].update(pattern='^(0|[1-9][0-9]*)$',maxLength=20)

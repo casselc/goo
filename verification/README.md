@@ -1,5 +1,50 @@
 # Semantic properties and model conformance
 
+## Coherent capture admission (387)
+
+Full evidence has six exclusive families: explore, inventory, comparison,
+measurement, explanation and trace search. Presence matters: a foreign arm is
+invalid even when null, and the selected question/result must be non-null.
+Receipt-only investigation references have a separate capability and cannot
+supply evidence or page authority.
+
+From this verification module:
+
+```sh
+GOO_CAPTURE_387_SEEDS=/tmp/goo-387-family-seeds.json \
+  go test . -run '^TestHegelCaptureEnvelope387$' -count=1 -v
+go test . -run '^(TestHegelCapturedTraceSearch383|TestHegelCapturedRecord365|TestHegelCaptureReview365|TestHegelNativeViewReuse386)$' -count=1 -v
+GOO_CAPTURE_ENVELOPE_387_REPORT=/workspace/goo/artifacts/capture-envelope387/summary.json \
+  go test . -run '^TestQuintCaptureEnvelopeObserved387$' -count=1 -v
+```
+
+The property runs ten generated draws across all six families: 60 vectors and
+1,960 JavaScript full-page/reference cases, alongside Go store/page checks.
+Mutants have canonical typed
+hashes; foreign-null insertion deliberately retains the digest an old pointer
+reader would accept. Independent cases cover missing/mixed arms, scope and
+comparison-intent drift, custody clocks, requested trace limits, page delivery
+and metadata authority. Positive controls retain nullable witnesses, literal
+zero, empty rows, exact raw numeric tokens, pagination and historical source
+plans. The optional seed file exports six admitted Go-created pages and their
+internal stored captures for API-schema checks; it is a test artifact.
+
+Final generated envelope replay passed in 2.27s. The required observed replay
+passed in 7.91s, with zero skips: 39 measured read/history steps, one explicit
+fresh trace read and no captures during those steps. Before model replay it
+checks six immutable physical captures, 30 integrity-valid malformed files,
+18 malformed transport responses, a valid page returned for the wrong requested
+cursor, retained location/pin evidence, six metadata-only references and raw
+telemetry membership. All 13 semantic mutants and the reference-read model
+control are rejected. The wrong-page control keeps both DTOs individually valid; request-context
+binding rejects returned page zero for requested page 100.
+
+The observed check requires the actual journey report and installed Quint;
+without the report it skips, which is not runtime acceptance. It reuses the
+measured-counter model from 383 without fabricated coherence flags. Compact
+steps/model summaries are written under `artifacts/verification/`.
+
+
 ## Native gauge display reuse (386)
 
 The shared `NativeView` configuration supports histogram export intervals and

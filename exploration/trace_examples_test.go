@@ -60,7 +60,7 @@ func TestStoredTraceExamplesFollowCapturePage(t *testing.T) {
 	}
 	r := Result{Question: q, State: "observed", Rows: rows}
 	r.TraceExamples = SelectTraceExamples(r)
-	c := SavedCapture{CaptureReceipt: CaptureReceipt{ID: strings.Repeat("a", 64), Question: CaptureQuestion{Kind: "explore", Explore: &q}}, Explore: &r}
+	c := SavedCapture{CaptureReceipt: CaptureReceipt{Version: 1, Title: "Trace examples", CapturedAt: "2026-11-09T00:00:00Z", ID: strings.Repeat("a", 64), Question: CaptureQuestion{Kind: "explore", Explore: &q}}, Explore: &r}
 	first, e := c.Page("")
 	if e != nil {
 		t.Fatal(e)

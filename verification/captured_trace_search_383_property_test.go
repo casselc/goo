@@ -115,6 +115,7 @@ func TestHegelCapturedTraceSearch383(t *testing.T) {
 		if err != nil {
 			tc.Fatal(err)
 		}
+		capture.ID = id // Clones represent a published capture, not an unpublished draft.
 		loaded, err := store.Load(id)
 		if err != nil {
 			tc.Fatal("valid capture refused", err)

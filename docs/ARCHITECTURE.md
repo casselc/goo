@@ -1,5 +1,12 @@
 # Architecture
 
+[Capture-family admission](CAPTURE_FAMILY_ADMISSION.md) checks the finite six-arm
+receipt/question/result envelope before family evidence validators. Go uses bounded
+RawMessage envelope inspection; the browser separates full pages from receipt-only
+references. Historical plans and family refresh semantics stay in their owners.
+Accepted page location belongs to accepted evidence, independent of the newest
+pending/failed visit; returned ID/cursor bind before adoption.
+
 [Native display reuse](NATIVE_GAUGE_VIEW_REUSE.md) shares one `NativeView`
 configuration store/API/UI owner across histogram export intervals and gauge
 retained observations. Closed declarations carry family-specific display meaning;

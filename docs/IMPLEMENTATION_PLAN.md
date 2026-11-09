@@ -1,9 +1,10 @@
 # Implementation plan
 
-> Active execution order: [384 product checkpoint](ROADMAP_2026_11_09_CHECKPOINT_384.md),
-> reconciled after delivered 382 search intent, 383 captured witnesses and 384
-> data-first results. **385 outgoing HTTP and 386 gauge display reuse are delivered**;
-> **387 coherent capture admission** is the remaining active finite queue.
+> Active execution order: [387 product checkpoint](ROADMAP_2026_11_09_CHECKPOINT_387.md),
+> reconciled after delivered outgoing HTTP (385), gauge display reuse (386) and
+> capture-family admission (387). The sole active finite queue is **388 gauge
+> observation record context → 389 counter display reuse → 390 native data-first
+> and component-boundary consolidation**. Earlier delivery notes remain history.
 > 367 reusable current RPC views, 368 exact service native interval context,
 > and 369 measured local facet pages are delivered with appropriate native and
 > generated validation. Full populations, exact scopes and independent clocks

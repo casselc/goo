@@ -7852,26 +7852,29 @@
       "CaptureReceiptMetadata": {
         "properties": {
           "definitionRevision": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^(|[a-f0-9]{64})$"
           },
           "readAt": {
-            "type": "string"
+            "anyOf": [
+              {
+                "const": ""
+              },
+              {
+                "type": "string",
+                "format": "date-time",
+                "maxLength": 35
+              }
+            ]
           },
           "receipt": {
             "$ref": "#/components/schemas/exploration.CaptureReceipt"
           },
           "summary": {
-            "anyOf": [
-              {
-                "additionalProperties": {
-                  "type": "string"
-                },
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
           }
         },
         "required": [
@@ -7880,7 +7883,9 @@
           "readAt",
           "summary"
         ],
-        "type": "object"
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Receipt-only investigation reference. No result arm or paging capability; empty readAt/revision means unavailable metadata, never a fabricated clock or measurement."
       },
       "CaptureRequest": {
         "anyOf": [
@@ -11163,60 +11168,31 @@
       "exploration.CapturePage": {
         "properties": {
           "comparison": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/exploration.SavedComparison"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/exploration.SavedComparison"
           },
           "explanation": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/exploration.ExplanationResult"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/exploration.ExplanationResult"
           },
           "explore": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/exploration.Result"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/exploration.Result"
           },
           "inventory": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/exploration.InventoryResult"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/exploration.InventoryResult"
           },
           "measurement": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/measurements.Result"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/measurements.Result"
           },
           "nextCursor": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
           },
           "previousCursor": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
           },
           "receipt": {
             "$ref": "#/components/schemas/exploration.CaptureReceipt"
@@ -11228,14 +11204,7 @@
             "type": "integer"
           },
           "traceSearch": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/exploration.TraceSearchResult"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/exploration.TraceSearchResult"
           }
         },
         "required": [
@@ -11245,88 +11214,410 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.CapturePage",
-        "allOf": [
+        "additionalProperties": false,
+        "oneOf": [
           {
-            "if": {
-              "required": [
-                "traceSearch"
-              ]
-            },
-            "then": {
-              "not": {
-                "anyOf": [
-                  {
+            "required": [
+              "explore"
+            ],
+            "properties": {
+              "receipt": {
+                "required": [
+                  "question"
+                ],
+                "properties": {
+                  "question": {
                     "required": [
-                      "explore"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "inventory"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "comparison"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "measurement"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "explanation"
-                    ]
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "if": {
-              "required": [
-                "receipt"
-              ],
-              "properties": {
-                "receipt": {
-                  "required": [
-                    "question"
-                  ],
-                  "properties": {
-                    "question": {
-                      "required": [
-                        "kind"
-                      ],
-                      "properties": {
-                        "kind": {
-                          "const": "trace-search"
-                        }
+                      "kind"
+                    ],
+                    "properties": {
+                      "kind": {
+                        "const": "explore"
                       }
                     }
                   }
                 }
+              },
+              "retainedRecords": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000
+              },
+              "recordsLimited": {
+                "type": "boolean"
+              },
+              "explore": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.Result"
+                  },
+                  {
+                    "properties": {
+                      "question": {
+                        "properties": {
+                          "offset": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 900,
+                            "multipleOf": 100
+                          },
+                          "limit": {
+                            "const": 100
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
               }
             },
-            "then": {
-              "required": [
-                "traceSearch"
-              ],
-              "properties": {
-                "traceSearch": {
-                  "$ref": "#/components/schemas/exploration.TraceSearchResult"
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "inventory"
+                  ]
                 },
-                "nextCursor": {
-                  "const": ""
+                {
+                  "required": [
+                    "comparison"
+                  ]
                 },
-                "previousCursor": {
-                  "const": ""
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
                 }
-              }
+              ]
+            }
+          },
+          {
+            "required": [
+              "inventory"
+            ],
+            "properties": {
+              "receipt": {
+                "required": [
+                  "question"
+                ],
+                "properties": {
+                  "question": {
+                    "required": [
+                      "kind"
+                    ],
+                    "properties": {
+                      "kind": {
+                        "const": "inventory"
+                      }
+                    }
+                  }
+                }
+              },
+              "retainedRecords": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 0
+              },
+              "recordsLimited": {
+                "const": false
+              },
+              "nextCursor": false,
+              "previousCursor": false
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "comparison"
+            ],
+            "properties": {
+              "receipt": {
+                "required": [
+                  "question"
+                ],
+                "properties": {
+                  "question": {
+                    "required": [
+                      "kind"
+                    ],
+                    "properties": {
+                      "kind": {
+                        "const": "comparison"
+                      }
+                    }
+                  }
+                }
+              },
+              "retainedRecords": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 0
+              },
+              "recordsLimited": {
+                "const": false
+              },
+              "nextCursor": false,
+              "previousCursor": false
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "inventory"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "measurement"
+            ],
+            "properties": {
+              "receipt": {
+                "required": [
+                  "question"
+                ],
+                "properties": {
+                  "question": {
+                    "required": [
+                      "kind"
+                    ],
+                    "properties": {
+                      "kind": {
+                        "const": "measurement"
+                      }
+                    }
+                  }
+                }
+              },
+              "retainedRecords": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000
+              },
+              "recordsLimited": {
+                "const": false
+              },
+              "nextCursor": false,
+              "previousCursor": false
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "inventory"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "explanation"
+            ],
+            "properties": {
+              "receipt": {
+                "required": [
+                  "question"
+                ],
+                "properties": {
+                  "question": {
+                    "required": [
+                      "kind"
+                    ],
+                    "properties": {
+                      "kind": {
+                        "const": "explanation"
+                      }
+                    }
+                  }
+                }
+              },
+              "retainedRecords": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 0
+              },
+              "recordsLimited": {
+                "const": false
+              },
+              "nextCursor": false,
+              "previousCursor": false
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "inventory"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "traceSearch"
+            ],
+            "properties": {
+              "receipt": {
+                "required": [
+                  "question"
+                ],
+                "properties": {
+                  "question": {
+                    "required": [
+                      "kind"
+                    ],
+                    "properties": {
+                      "kind": {
+                        "const": "trace-search"
+                      }
+                    }
+                  }
+                }
+              },
+              "retainedRecords": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "recordsLimited": {
+                "type": "boolean"
+              },
+              "nextCursor": false,
+              "previousCursor": false
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "inventory"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                }
+              ]
             }
           }
-        ]
+        ],
+        "description": "Exclusive full capture delivery page. Receipt/question/result arms agree before family semantic admission. Metadata-only references are a separate boundary; historical source plans and custody remain family-owned."
       },
       "exploration.CaptureQuestion": {
         "properties": {
@@ -11343,7 +11634,14 @@
             "$ref": "#/components/schemas/exploration.InventoryQuestion"
           },
           "kind": {
-            "type": "string"
+            "enum": [
+              "explore",
+              "inventory",
+              "comparison",
+              "measurement",
+              "explanation",
+              "trace-search"
+            ]
           },
           "measurement": {
             "$ref": "#/components/schemas/measurements.Question"
@@ -11358,62 +11656,243 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.CaptureQuestion",
         "additionalProperties": false,
-        "allOf": [
+        "oneOf": [
           {
-            "if": {
-              "required": [
-                "kind"
-              ],
-              "properties": {
-                "kind": {
-                  "const": "trace-search"
+            "required": [
+              "explore"
+            ],
+            "properties": {
+              "kind": {
+                "const": "explore"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "inventory"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
                 }
+              ]
+            }
+          },
+          {
+            "required": [
+              "inventory"
+            ],
+            "properties": {
+              "kind": {
+                "const": "inventory"
               }
             },
-            "then": {
-              "required": [
-                "traceSearch"
-              ],
-              "not": {
-                "anyOf": [
-                  {
-                    "required": [
-                      "explore"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "inventory"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "comparison"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "measurement"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "explanation"
-                    ]
-                  }
-                ]
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "comparison"
+            ],
+            "properties": {
+              "kind": {
+                "const": "comparison"
               }
             },
-            "else": {
-              "not": {
-                "required": [
-                  "traceSearch"
-                ]
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "inventory"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "measurement"
+            ],
+            "properties": {
+              "kind": {
+                "const": "measurement"
               }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "inventory"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "explanation"
+            ],
+            "properties": {
+              "kind": {
+                "const": "explanation"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "inventory"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "traceSearch"
+            ],
+            "properties": {
+              "kind": {
+                "const": "trace-search"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "inventory"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                }
+              ]
             }
           }
         ],
-        "description": "Server-owned fixed capture question. Trace-search capture explicitly rereads its complete request and retains an independent source-read basis; it never archives the prior browser response verbatim."
+        "description": "Exactly one explicit nonnull capture question arm. Omit the entire question only where the owning refresh/held-promotion request permits it; an empty/null/mixed question is not omission. Nested nullable data retain their family meaning."
       },
       "exploration.CaptureQuestionInput": {
         "additionalProperties": false,
@@ -11431,13 +11910,13 @@
             "$ref": "#/components/schemas/exploration.InventoryQuestionInput"
           },
           "kind": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
+            "enum": [
+              "explore",
+              "inventory",
+              "comparison",
+              "measurement",
+              "explanation",
+              "trace-search"
             ]
           },
           "measurement": {
@@ -11449,82 +11928,273 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.CaptureQuestion",
-        "allOf": [
+        "required": [
+          "kind"
+        ],
+        "oneOf": [
           {
-            "if": {
-              "required": [
-                "kind"
-              ],
-              "properties": {
-                "kind": {
-                  "const": "trace-search"
+            "required": [
+              "explore"
+            ],
+            "properties": {
+              "kind": {
+                "const": "explore"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "inventory"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
                 }
+              ]
+            }
+          },
+          {
+            "required": [
+              "inventory"
+            ],
+            "properties": {
+              "kind": {
+                "const": "inventory"
               }
             },
-            "then": {
-              "required": [
-                "traceSearch"
-              ],
-              "not": {
-                "anyOf": [
-                  {
-                    "required": [
-                      "explore"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "inventory"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "comparison"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "measurement"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "explanation"
-                    ]
-                  }
-                ]
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "comparison"
+            ],
+            "properties": {
+              "kind": {
+                "const": "comparison"
               }
             },
-            "else": {
-              "not": {
-                "required": [
-                  "traceSearch"
-                ]
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "inventory"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "measurement"
+            ],
+            "properties": {
+              "kind": {
+                "const": "measurement"
               }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "inventory"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "explanation"
+            ],
+            "properties": {
+              "kind": {
+                "const": "explanation"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "inventory"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "traceSearch"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "traceSearch"
+            ],
+            "properties": {
+              "kind": {
+                "const": "trace-search"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "explore"
+                  ]
+                },
+                {
+                  "required": [
+                    "inventory"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "measurement"
+                  ]
+                },
+                {
+                  "required": [
+                    "explanation"
+                  ]
+                }
+              ]
             }
           }
         ],
-        "description": "Server-owned fixed capture question. Trace-search capture explicitly rereads its complete request and retains an independent source-read basis; it never archives the prior browser response verbatim."
+        "description": "Exactly one explicit nonnull capture question arm. Omit the entire question only where the owning refresh/held-promotion request permits it; an empty/null/mixed question is not omission. Nested nullable data retain their family meaning."
       },
       "exploration.CaptureReceipt": {
         "properties": {
           "capturedAt": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time",
+            "maxLength": 35
           },
           "id": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
           },
           "parent": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^(|[a-f0-9]{64})$"
           },
           "question": {
             "$ref": "#/components/schemas/exploration.CaptureQuestion"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "description": "Bounded nonblank UTF-8 title; Go enforces byte/control limits."
           },
           "version": {
-            "type": "integer"
+            "const": 1
           }
         },
         "required": [
@@ -11535,40 +12205,24 @@
           "question"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.CaptureReceipt"
+        "x-go-type": "github.com/casselc/goo/exploration.CaptureReceipt",
+        "additionalProperties": false
       },
       "exploration.CaptureReceiptInput": {
         "additionalProperties": false,
         "properties": {
           "capturedAt": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": "string",
+            "format": "date-time",
+            "maxLength": 35
           },
           "id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
           },
           "parent": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": "string",
+            "pattern": "^(|[a-f0-9]{64})$"
           },
           "question": {
             "anyOf": [
@@ -11581,28 +12235,24 @@
             ]
           },
           "title": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "description": "Bounded nonblank UTF-8 title; Go enforces byte/control limits."
           },
           "version": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "const": 1
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.CaptureReceipt"
+        "x-go-type": "github.com/casselc/goo/exploration.CaptureReceipt",
+        "required": [
+          "version",
+          "id",
+          "title",
+          "capturedAt",
+          "question"
+        ]
       },
       "exploration.CaptureRecordRef": {
         "properties": {

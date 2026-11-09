@@ -15,49 +15,6 @@ import (
 	"github.com/casselc/goo/identity"
 )
 
-// UnmarshalJSON preserves an exclusive, closed capture question at the wire
-// boundary. An explicitly supplied null arm is not an omitted arm.
-func (q *CaptureQuestion) UnmarshalJSON(data []byte) error {
-	*q = CaptureQuestion{}
-	if !identity.WellFormedJSON(data) {
-		return errors.New("capture question contains malformed Unicode")
-	}
-	var fields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &fields); err != nil {
-		return err
-	}
-	if fields == nil {
-		return errors.New("capture question requires an object")
-	}
-	for key, raw := range fields {
-		switch key {
-		case "kind", "explore", "inventory", "comparison", "measurement", "explanation", "traceSearch":
-		default:
-			return fmt.Errorf("unknown capture question field %q", key)
-		}
-		if bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-			return fmt.Errorf("capture question %s must be non-null", key)
-		}
-	}
-	normalized, err := json.Marshal(fields)
-	if err != nil {
-		return err
-	}
-	type wire CaptureQuestion
-	var value wire
-	decoder := json.NewDecoder(bytes.NewReader(normalized))
-	decoder.DisallowUnknownFields()
-	if err := decoder.Decode(&value); err != nil {
-		return err
-	}
-	if decoder.Decode(new(any)) != io.EOF {
-		return errors.New("expected one capture question")
-	}
-
-	*q = CaptureQuestion(value)
-	return nil
-}
-
 // ValidateTraceSearchResult checks retained evidence without recompiling its
 // historical plan or reading telemetry. Refresh separately checks current-plan
 // equality. Qualified missing values remain absent, rather than empty strings.

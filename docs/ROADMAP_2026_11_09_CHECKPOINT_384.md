@@ -1,5 +1,10 @@
 # Roadmap after the 384 product checkpoint
 
+> Completed 385–387 queue. The [adopted 387 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_387.md)
+> now owns execution order. This document retains the prior checkpoint and its
+> original acceptance proposals as history; lower “next” labels are superseded.
+
+
 Adopted November 9, 2026 after the 384 runtime and product checkpoint. This
 replaces the completed [381 sequence](ROADMAP_2026_11_08_CHECKPOINT_381.md). The
 [current capability/gap index](CAPABILITY_GUIDE.md) summarizes delivered behavior;

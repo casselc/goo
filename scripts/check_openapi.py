@@ -1209,6 +1209,32 @@ def check_captured_trace_search(spec):
             assert list(check.iter_errors(bad)), ('captured search malformed question accepted',suffix,bad)
     print('Captured trace search: typed request, exclusive payload and null/budget controls pass')
 
+def check_capture_envelopes387(spec):
+    record={'signal':'spans','environment':'prod','fromMs':1000,'toMs':2000,'limit':100,'offset':0}
+    grouped={**record,'groupBy':[{'kind':'column','key':'service'}]}
+    measurement={'definition':{'apiVersion':'goo/measurement-package/v1alpha1','name':'temperature','title':'Temperature','kind':'gauge','environment':'prod','lookbackMinutes':1,'maxGapMs':60000,'grain':'per-stream','source':{'services':['api'],'scope':'sdk','version':'','schemaURL':'','metric':'temperature','unit':'Cel'}},'fromMs':1000,'toMs':2000}
+    families={'explore':('explore',record),'inventory':('inventory',{'environment':'prod','fromMs':1000,'toMs':2000}),'comparison':('comparison',{'baseline':grouped,'selection':grouped}),'measurement':('measurement',measurement),'explanation':('explanation',{'version':'goo/explanation/v1','baseline':record,'selection':record,'fields':[{'kind':'column','key':'name'}]}),'trace-search':('traceSearch',{'version':'goo/trace-search/v1','environment':'prod','fromMs':1000,'toMs':2000,'conditions':[{'field':{'kind':'column','key':'service'},'op':'eq','value':'api'}],'limit':7})}
+    page=validator(spec,{'$ref':'#/components/schemas/exploration.CapturePage'})
+    reference=validator(spec,{'$ref':'#/components/schemas/CaptureReceiptMetadata'})
+    for suffix in ('','Input'):
+        question=validator(spec,{'$ref':'#/components/schemas/exploration.CaptureQuestion'+suffix})
+        for kind,(arm,payload) in families.items():
+            value={'kind':kind,arm:copy.deepcopy(payload)};question.validate(value)
+            for bad in ({},None,{'kind':kind},{**value,arm:None},{**value,'kind':'unsupported'},{**value,'Kind':kind}):
+                assert not question.is_valid(bad),('invalid capture question admitted',suffix,kind,bad)
+            for foreign,_ in families.values():
+                if foreign==arm:continue
+                for extra in (None,{}):assert not question.is_valid({**value,foreign:extra}),('mixed capture question',suffix,kind,foreign)
+            if suffix:continue
+            metadata={'receipt':{'version':1,'id':'a'*64,'title':'Stored evidence','capturedAt':'2026-11-09T00:00:00Z','question':value},'definitionRevision':'','readAt':'','summary':{}}
+            reference.validate(metadata)
+            assert not page.is_valid(metadata), 'metadata acquired full capture capability'
+            for foreign,_ in families.values():
+                assert not reference.is_valid({**metadata,foreign:None}), 'reference admitted a payload arm'
+            assert not reference.is_valid({**metadata,'retainedRecords':0,'recordsLimited':False}), 'reference admitted paging authority'
+    assert len(spec['components']['schemas']['exploration.CapturePage']['oneOf'])==6
+    print('Capture387: six exclusive questions, foreign/null refusal and separate receipt-only capability shapes pass')
+
 def check_http_client_profile385(spec):
     check=validator(spec,{'$ref':'#/components/schemas/exploration.DashboardRequestInput'})
     request={'profile':'http-client','scope':{'environment':'prod','namespace':{'mode':'value','value':''},'fromMs':1000,'toMs':61000},
@@ -1230,6 +1256,7 @@ def check(spec):
     check_record_step_selector(spec)
     check_saved_trace_search_steps(spec)
     check_captured_trace_search(spec)
+    check_capture_envelopes387(spec)
     check_http_client_profile385(spec)
     validate_spec(spec)
     check_activity_scope_views(spec)

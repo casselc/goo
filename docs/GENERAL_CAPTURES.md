@@ -7,6 +7,12 @@ The same inspection components render live and saved records; read-only instance
 have separate DOM identities and hide the query editor. A saved capture can open
 as a live question or produce a reusable package without changing stored evidence.
 
+Six current full families share the [capture admission boundary](CAPTURE_FAMILY_ADMISSION.md):
+Explore, inventory, comparison, measurement, held explanation and trace search.
+Receipt-only references remain metadata; a full page needs its selected result
+and coherent delivery fields. The record/inventory capture behavior below keeps
+its existing source-read policy; held explanations save without a reread.
+
 ## What is frozen
 
 The Go server accepts a typed question, not caller-supplied evidence. Saving
