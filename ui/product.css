@@ -948,6 +948,21 @@ td details {
 #measurementDefinitionSearch {min-width:240px}
 #measureRun,#metricDiscover {background:var(--accent-dark);border-color:#367b6e;color:#d8fff5;font-weight:600}
 #measureScope:empty {display:none}
+.native-measurement-workbench>h2 {font-size:16px;margin:0 0 6px}
+.native-measurement-workbench>.native-question-setup {margin:6px 0;padding-top:6px}
+.native-question-setup>summary {font-size:12px;color:var(--muted)}
+.native-measurement-workbench>#measureActions>.ui-actions {margin:6px 0;gap:8px}
+.native-measurement-workbench>#measureStatus {font-size:12px;line-height:1.4;margin:5px 0;overflow-wrap:anywhere}
+.native-measurement-workbench>#measureScope {font-size:11px;line-height:1.4;margin:5px 0 8px;overflow-wrap:anywhere}
+.native-measurement-workbench>#measureResult {margin-top:8px;min-width:0}
+@media(max-width:600px){
+ #measurementWorkbench.native-measurement-workbench .native-display-save>.controls {flex-direction:row;align-items:center}
+ #measurementWorkbench.native-measurement-workbench .native-display-toolbar>label {flex:none;min-width:0}
+ #measurementWorkbench.native-measurement-workbench .native-stream-tools {flex-direction:row;align-items:end;gap:6px}
+ #measurementWorkbench.native-measurement-workbench .native-stream-tools>label {flex:1 1 110px;min-width:0}
+ #measurementWorkbench.native-measurement-workbench .native-stream-tools>label:first-child {flex-basis:160px}
+ #measurementWorkbench.native-measurement-workbench .native-stream-tools input {min-width:0}
+}
 .inventory-table td:last-child button {margin:3px}
 @media(max-width:600px){#measurementDefinitionSearch{min-width:0;width:100%}}
 
@@ -1690,3 +1705,36 @@ td details {
 #generalCaptureWorkspace:has(#captureExploreEvidence:not([hidden]))>.section-heading .controls{margin:0}
 .saved-record-evidence .saved-span-kind>label{display:flex;align-items:center;gap:8px;margin:0;min-width:0;flex:1}
 .saved-record-evidence .saved-span-kind>label>select{flex:1;min-width:0;margin:0}
+
+/* Native captures retain their receipt/status before supplied data, with full
+   custody and source details in an explicit disclosure. Other families keep
+   their own capture-page layout. */
+#generalCaptureWorkspace[data-native-measurement="true"] {padding:12px}
+#generalCaptureWorkspace[data-native-measurement="true"]>.section-heading {gap:8px;margin-bottom:6px}
+#generalCaptureWorkspace[data-native-measurement="true"]>.section-heading h2 {font-size:16px;line-height:1.4;margin:4px 0;overflow-wrap:anywhere}
+#generalCaptureWorkspace[data-native-measurement="true"]>.section-heading .controls {gap:6px;margin:0}
+#generalCaptureWorkspace[data-native-measurement="true"]>.section-heading button {font-size:12px;line-height:1.4;min-height:32px;padding:5px 8px}
+#generalCaptureWorkspace[data-native-measurement="true"]>#captureSavedStatus {font-size:12px;line-height:1.4;margin:5px 0}
+#generalCaptureWorkspace[data-native-measurement="true"]>#captureFixedScope {font-size:11px;line-height:1.4;margin:5px 0;overflow-wrap:anywhere}
+.native-capture-context {margin:6px 0;padding-top:6px;min-width:0}
+.native-capture-context>summary {font-size:12px}
+.native-question-setup>summary:focus-visible,.native-capture-context>summary:focus-visible {outline:2px solid var(--accent);outline-offset:2px}
+.app-main:has(.saved-workspace:not([hidden])>#generalCaptureWorkspace[data-native-measurement="true"]:not([hidden]))>.workspace-header {padding-block:10px 8px}
+.app-main:has(.saved-workspace:not([hidden])>#generalCaptureWorkspace[data-native-measurement="true"]:not([hidden]))>.workspace-header h1 {font-size:20px;margin:0}
+.app-main:has(.saved-workspace:not([hidden])>#generalCaptureWorkspace[data-native-measurement="true"]:not([hidden]))>.workspace-header p {display:none}
+
+/* Shared return chrome only: each delegate retains its own callbacks, lease,
+   history and focus restoration. */
+.context-return {min-width:0;max-width:100%;font-size:12px;line-height:1.4;padding:6px 8px;margin-bottom:8px;border:1px solid var(--border);border-radius:7px}
+.context-return[hidden] {display:none}
+.context-return>.controls {gap:6px 10px;margin:0}
+.context-return button {min-height:32px;padding:4px 8px;font-size:12px}
+.context-return>details {padding-top:5px;margin:5px 0 0}
+.context-return :is(p,span,strong) {overflow-wrap:anywhere}
+@media(max-width:600px){
+ #generalCaptureWorkspace[data-native-measurement="true"]>.section-heading button {font-size:11px}
+}
+@media(pointer:coarse){
+ #generalCaptureWorkspace[data-native-measurement="true"]>.section-heading button,.context-return button {min-height:44px}
+ .native-question-setup>summary,.native-capture-context>summary {min-height:44px;box-sizing:border-box;align-content:center}
+}

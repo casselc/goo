@@ -1,7 +1,10 @@
 # Roadmap after the 387 checkpoint
 
-Adopted November 9, 2026 after the 387 runtime and whole-product checkpoint.
-This replaces the completed [384 checkpoint queue](ROADMAP_2026_11_09_CHECKPOINT_384.md).
+Completed and superseded by the [390 checkpoint queue](ROADMAP_2026_11_09_CHECKPOINT_390.md).
+The 388 → 389 → 390 sequence below is delivered and retained as planning history.
+
+Originally adopted November 9, 2026 after the 387 runtime and whole-product checkpoint.
+This replaced the completed [384 checkpoint queue](ROADMAP_2026_11_09_CHECKPOINT_384.md).
 The [current capability index](CAPABILITY_GUIDE.md) summarizes delivered behavior;
 [validation](../VALIDATION.md) records actual checks. This is one finite next
 queue, not parallel execution plans.
@@ -10,7 +13,7 @@ Inputs: independent [whole-product design](reviews/WHOLE_PRODUCT_DESIGN_387.md)
 and [architecture](reviews/WHOLE_PRODUCT_ARCHITECTURE_387.md) reviews, the
 [current capability index](CAPABILITY_GUIDE.md), source inspection, and
 [validation](../VALIDATION.md). The reviews and older plans are inputs; this
-adopted queue owns execution order.
+completed queue is historical; the 390 checkpoint owns execution order.
 
 ## Product direction and lessons
 
@@ -27,7 +30,7 @@ capture envelopes without replacing family evidence validation. Receipt-only
 references, nested null data, source clocks and immutable custody stay distinct.
 
 The adopted cadence is **388 breadth (delivered) → 389 facet depth (delivered)
-→ 390 consolidation (next)**. Finish
+→ 390 consolidation (delivered)**. Finish
 one acceptance cut before implementing the next. This prerelease has no legacy
 route, format or API floor requiring aliases or compatibility machinery. Use the
 current Go 1.27.3 runtime and standard-library facilities where they simplify a

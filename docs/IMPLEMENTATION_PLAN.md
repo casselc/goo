@@ -1,13 +1,13 @@
 # Implementation plan
 
-> Active execution order: [387 product checkpoint](ROADMAP_2026_11_09_CHECKPOINT_387.md),
-> reconciled after delivered outgoing HTTP (385), gauge display reuse (386),
-> capture-family admission (387), ordinary Measurements gauge-observation
-> record context (388) and [counter display reuse](NATIVE_COUNTER_VIEW_REUSE.md)
-> (389). The sole remaining scheduled milestone is **390 native data-first and
-> component-boundary consolidation**, then the whole-product checkpoint.
-> Saved/service gauge context remains a separate follow-up. Earlier delivery
-> notes remain history.
+> Active execution order: [390 product checkpoint](ROADMAP_2026_11_09_CHECKPOINT_390.md),
+> reconciled after delivered gauge-observation record context (388), counter
+> display reuse (389) and [data-first native composition](NATIVE_DATA_FIRST.md)
+> (390). The sole finite queue is **391 reusable log-pattern count displays →
+> 392 native HTTP-client duration profiles → 393 proof-gated literal parameter
+> transport audit**, followed by whole-product review. Existing source, custody
+> and return ownership stay authoritative. Saved/service gauge context remains a
+> separate follow-up; earlier delivery notes remain history.
 > 367 reusable current RPC views, 368 exact service native interval context,
 > and 369 measured local facet pages are delivered with appropriate native and
 > generated validation. Full populations, exact scopes and independent clocks

@@ -490,6 +490,10 @@ heatmap matrices now have delivered contracts in the sections below.
 caller-owned native plots, legends, disclosures and actions. Attribute or
 `.data` metadata updates preserve those children and their focus. The app owns
 freshness, refresh and evidence behavior; the frame performs no source reads.
+The optional `density="compact"` attribute keeps compact chrome inside the
+component stylesheet, so application adapters need not style private heading
+elements. Native measurements use this profile while retaining their own layout
+and source/session ownership.
 See [the API](UI_CHART_FRAME.md) and the `/ui-components` example. The standalone
 journey uses synthetic display data and explicitly verifies no telemetry reads.
 

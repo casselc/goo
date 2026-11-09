@@ -21,6 +21,13 @@ Supported states are `observed`, `no_data`, `unknown`, `loading`, `partial`,
 `stale`, `unavailable` and `incompatible`. Unsupported states display as unknown.
 Text is rendered literally, bounded to 4096 characters per chrome field.
 
+Set `density="compact"` for tighter component-owned padding and heading,
+metadata and note spacing. Omit it for the default spacing. This is a passive
+layout attribute, separate from `.data`; metadata updates preserve it and all
+caller-owned children. It works in server HTML and through `setAttribute` on
+detached or attached SPA elements. It does not change the plot's scale, data,
+uncertainty, heading semantics or action authority.
+
 The element supplies `role="figure"` and an accessible label unless authored by
 the caller. Heading levels 2–6 are supported, defaulting to 3. A metadata update
 does not replace, move, query, hide or disable caller children; focused actions

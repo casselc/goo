@@ -6,7 +6,7 @@ import * as EvidenceSummary from './evidence-summary.mjs';
 function originEnvironment(question){const q=question.inventory||question.explore||question,definition=q.definition||question.measurement?.definition;return definition?RecordEnvironment.questionLabel(definition):(q.environmentSelector!=null||q.environment!==undefined?RecordEnvironment.questionLabel(q):'Environment unavailable')}
 const active=new WeakMap();
 function mount(parent,{className='',id}={}){
- const node=UI.node,bar=node('div');bar.className='resource-return controls '+className;if(id)bar.id=id;bar.hidden=true;parent.prepend(bar);let revision=0,holdRevision=0,origin=null;
+ const node=UI.node,bar=node('div');bar.className='context-return resource-return controls '+className;if(id)bar.id=id;bar.hidden=true;parent.prepend(bar);let revision=0,holdRevision=0,origin=null;
  function clear(){revision++;origin=null;bar.hidden=true;bar.replaceChildren();if(active.get(parent)===owner)active.delete(parent)}
  function show({title,question,backLabel,onBack,citation,notice,citationLabel='Retained native origin'}){
   active.get(parent)?.clear();clear();const own=revision,back=node('button',backLabel),label=node('strong',title),scope=node('span','Origin environment: '+originEnvironment(question)),window=node('span'),details=node('details'),summary=node('summary','Origin scope');back.type='button';scope.className='resource-return-environment';window.className='resource-return-window';details.className='resource-return-scope';

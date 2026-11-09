@@ -8,3 +8,12 @@ goo-chart-frame>.chart-frame-header>.chart-frame-note{font-size:12px;color:var(-
 goo-chart-frame .chart-frame-state:is([data-state=stale],[data-state=partial],[data-state=unavailable],[data-state=incompatible]){color:var(--warning,#f5b85d)}
 goo-chart-frame>.chart-frame-header [hidden]{display:none}
 @media(max-width:650px){goo-chart-frame{padding:12px}}
+/* Density changes chrome only. Supplied title/state/unit/window/note and owned
+   chart/action children retain their data and lifecycle. SSR attributes and SPA
+   attribute changes use the same opt-in profile. */
+goo-chart-frame[density=compact]{padding:10px}
+goo-chart-frame[density=compact]>.chart-frame-header{margin-bottom:6px}
+goo-chart-frame[density=compact]>.chart-frame-header>.chart-frame-title{font-size:13px;margin-bottom:4px}
+goo-chart-frame[density=compact]>.chart-frame-header>.chart-frame-meta{font-size:11px;gap:4px 10px;line-height:1.4}
+goo-chart-frame[density=compact]>.chart-frame-header>.chart-frame-note{font-size:11px;line-height:1.4;margin-top:4px}
+@media(max-width:650px){goo-chart-frame[density=compact]{padding:8px}}

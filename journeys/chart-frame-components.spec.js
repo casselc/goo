@@ -16,3 +16,49 @@ test('70 detached properties upgrade without replacing supplied nodes; authored 
  await standalone(page,'<goo-chart-frame id="early" aria-label="Authored comparison"><button id="action">Freeze displayed result</button></goo-chart-frame>');await page.locator('#early').evaluate((el,data)=>el.data=data,data);await register(page);await expect(page.locator('#early h2')).toHaveText('Matching spans');await expect(page.locator('#early')).toHaveAttribute('aria-label','Authored comparison');await expect(page.locator('#early .chart-frame-unit')).toHaveText(data.unit);
  await page.locator('#early').evaluate(el=>{const snapshot=el.data;snapshot.title='mutated';el.remove();document.body.append(el)});await expect(page.locator('#early h2')).toHaveText('Matching spans');await expect(page.locator('#early .chart-frame-header')).toHaveCount(1);await expect(page.locator('#action')).toHaveCount(1);await page.locator('#early').evaluate(el=>{el.setAttribute('state','healthy');el.removeAttribute('unit');el.removeAttribute('window-label')});await expect(page.locator('#early .chart-frame-state')).toHaveText('Coverage unknown');await expect(page.locator('#early .chart-frame-unit')).toBeHidden();await expect(page.locator('#early .chart-frame-window')).toBeHidden();
 });
+
+test('390 compact chart frame density preserves supplied children and focus in server and nested SPA composition',async({page})=>{
+ const errors=[],reads=[],report={version:'goo.compactChartFrame390/1',cases:[]};
+ page.on('pageerror',error=>errors.push(error.message));page.on('request',request=>{if(new URL(request.url()).pathname.startsWith('/api/'))reads.push(request.url())});
+ const applicationCSS=await fs.readFile(path.resolve('ui/product.css'),'utf8'),timelineCSS=await fs.readFile(path.resolve('ui/value-timeline.css'),'utf8');
+ await page.setViewportSize({width:1280,height:1000});
+ await standalone(page,'<style>'+applicationCSS+timelineCSS+'</style><goo-chart-frame id="compactServer" density="compact" heading="Counter interval rate" unit="{item}/s" state="unknown" window-label="Fixed [12:00, 12:05) UTC" note="Unknown intervals remain unavailable; recorded zero is numeric."><div id="compactServerPlot" style="min-height:96px">Supplied example: 0 · unknown interval</div><details id="compactServerDetails"><summary>Supplied details</summary>Independent component fixture, no telemetry.</details><button id="compactServerAction">Inspect supplied value</button></goo-chart-frame><section aria-label="Application composition"><section id="compactEmbed" aria-label="Nested component composition"></section></section><section class="service-browser-detail"><h2>Supplied timeline in a service card</h2><goo-value-timeline id="compactTimeline"></goo-value-timeline></section>');
+ await page.locator('#compactServerDetails').evaluate(element=>element.open=true);
+ await page.locator('#compactServerAction').focus();
+ const longData={...data,title:'Independent component fixture with a long service and instrument title that wraps without losing the supplied state, unit or fixed window',state:'stale'};
+ await page.evaluate(value=>{
+  const frame=document.createElement('goo-chart-frame');frame.id='compactSPA';frame.setAttribute('density','compact');frame.setAttribute('aria-label','Authored nested native display');frame.data=value;
+  const plot=document.createElement('div');plot.id='compactSPAPlot';plot.style.minHeight='96px';plot.textContent='Supplied example: 0 · unknown interval';
+  const action=document.createElement('button');action.id='compactSPAAction';action.textContent='Inspect nested value';
+  frame.append(plot,action);window.compact390Children={serverPlot:document.getElementById('compactServerPlot'),serverAction:document.getElementById('compactServerAction'),spaPlot:plot,spaAction:action};document.getElementById('compactEmbed').append(frame);
+ },longData);
+ await register(page);
+ await page.locator('#compactTimeline').evaluate(element=>element.data={fromNS:'0',toNS:'100',points:[{key:'zero',fromNS:'10',toNS:'10',state:'observed',value:'0',label:'Recorded zero'},{key:'known',fromNS:'50',toNS:'50',state:'observed',value:'2',label:'Known value'},{key:'unknown',fromNS:'70',toNS:'90',state:'unknown',label:'Unavailable interval'}]});
+ await page.addScriptTag({type:'module',url:base+'/value-timeline.mjs'});
+ await expect(page.locator('#compactServerAction')).toBeFocused();
+ await expect(page.locator('#compactServerDetails')).toHaveJSProperty('open',true);
+ await expect(page.locator('#compactSPA h2')).toHaveText(longData.title);
+ await expect(page.locator('#compactSPA')).toHaveAttribute('aria-label','Authored nested native display');
+ const snapshot=()=>page.evaluate(()=>Object.fromEntries(['compactServer','compactSPA'].map(id=>{const frame=document.getElementById(id),header=frame.querySelector('.chart-frame-header'),plot=frame.querySelector('#'+id+'Plot'),style=getComputedStyle(frame),title=getComputedStyle(frame.querySelector('.chart-frame-title'));return[id,{padding:style.paddingLeft,titleSize:title.fontSize,headerHeight:header.getBoundingClientRect().height,frameWidth:frame.getBoundingClientRect().width,plotWidth:plot.getBoundingClientRect().width,plotHeight:plot.getBoundingClientRect().height,state:frame.querySelector('.chart-frame-state').textContent,unit:frame.querySelector('.chart-frame-unit').textContent,window:frame.querySelector('.chart-frame-window').textContent,headers:frame.querySelectorAll('.chart-frame-header').length}]})));
+ for(const width of [1280,390]){
+  await page.setViewportSize({width,height:width===390?844:1000});
+  const before=await snapshot();for(const frame of Object.values(before)){expect(frame.padding).toBe(width===390?'8px':'10px');expect(frame.titleSize).toBe('13px');expect(frame.plotWidth).toBeGreaterThan(0);expect(frame.plotHeight).toBe(96);expect(frame.headers).toBe(1)}
+  expect(before.compactServer.state).toBe('Coverage unknown');expect(before.compactServer.unit).toBe('{item}/s');expect(before.compactSPA.state).toBe('Stale result');expect(before.compactSPA.unit).toBe(data.unit);expect(before.compactSPA.window).toBe(data.window);
+  await page.locator('#compactSPAAction').focus();
+  await page.locator('#compactSPA').evaluate(frame=>frame.removeAttribute('density'));
+  const expanded=await snapshot();expect(expanded.compactSPA.padding).toBe(width===390?'12px':'16px');expect(expanded.compactSPA.titleSize).toBe('14px');
+  await page.locator('#compactSPA').evaluate(frame=>frame.setAttribute('density','compact'));
+  await expect(page.locator('#compactSPAAction')).toBeFocused();
+  const after=await snapshot();expect(after).toEqual(before);
+  expect(await page.evaluate(()=>{const saved=window.compact390Children;return saved.serverPlot===document.getElementById('compactServerPlot')&&saved.serverAction===document.getElementById('compactServerAction')&&saved.spaPlot===document.getElementById('compactSPAPlot')&&saved.spaAction===document.getElementById('compactSPAAction')})).toBe(true);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  const timeline=await page.locator('#compactTimeline').evaluate(element=>{const numeric=element.querySelector('.value-timeline-plot').getBoundingClientRect(),unavailable=element.querySelector('.value-timeline-unavailable-plot').getBoundingClientRect();return{numeric:{left:numeric.left,width:numeric.width},unavailable:{left:unavailable.left,width:unavailable.width},marks:[...element.querySelectorAll('.value-timeline-mark')].map(mark=>{const rect=mark.getBoundingClientRect(),style=getComputedStyle(mark);return{key:mark.dataset.key,fromNS:mark.dataset.fromNs,interval:mark.dataset.interval==='true',unknown:mark.dataset.state==='unknown',value:mark.getAttribute('data-value'),left:rect.left,width:rect.width,margins:[style.marginTop,style.marginRight,style.marginBottom,style.marginLeft]}})}});
+  expect(Math.abs(timeline.numeric.left-timeline.unavailable.left)).toBeLessThanOrEqual(1);expect(Math.abs(timeline.numeric.width-timeline.unavailable.width)).toBeLessThanOrEqual(1);
+  for(const mark of timeline.marks){expect(mark.margins).toEqual(['0px','0px','0px','0px']);const axis=mark.unknown?timeline.unavailable:timeline.numeric,actual=mark.interval?mark.left:mark.left+mark.width/2;expect(Math.abs(actual-(axis.left+axis.width*Number(BigInt(mark.fromNS))/100))).toBeLessThanOrEqual(1)}
+  expect(timeline.marks.find(mark=>mark.key==='zero').value).toBe('0');expect(timeline.marks.find(mark=>mark.unknown).value).toBeNull();
+  report.cases.push({width,compact:after,default:expanded.compactSPA,timeline});
+  await page.screenshot({path:'docs/journeys/screenshots/390-compact-chart-frame'+(width===390?'-390':'')+'.png',fullPage:true});
+ }
+ expect(errors).toEqual([]);expect(reads).toEqual([]);report.errors=errors;report.apiReads=reads;
+ const output=path.resolve('artifacts/native-entry390-components');await fs.mkdir(output,{recursive:true});await fs.writeFile(path.join(output,'summary.json'),JSON.stringify(report,null,2));
+});

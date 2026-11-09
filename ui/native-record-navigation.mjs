@@ -10,7 +10,7 @@ function visibleWithin(opener,host,active){
  }
 function mount(host,{nativeHost,active,stageQuestion,showNative,suspendRecords,holdResourceOrigin=()=>null}={}){
   const node=UI.node,button=node('button','Back to measurement'),summary=node('span','Interval context · trace expansion is broader'),scope=node('details'),body=node('div');
-  host.className='native-record-return';host.setAttribute('aria-label','Native interval context');const controls=node('div');controls.className='controls';controls.append(button,summary);scope.append(node('summary','Context scope · trace expansion is broader'),body);host.append(controls,scope);host.hidden=true;
+  host.className='context-return native-record-return';host.setAttribute('aria-label','Native interval context');const controls=node('div');controls.className='controls';controls.append(button,summary);scope.append(node('summary','Context scope · trace expansion is broader'),body);host.append(controls,scope);host.hidden=true;
   let parent=null,resourceOrigin=null;
   function releaseOrigin(){resourceOrigin?.restore();resourceOrigin=null}
   const valid=()=>!!parent&&parent.opener.isConnected&&nativeHost.contains(parent.opener);

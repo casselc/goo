@@ -1,5 +1,123 @@
 # Validation record
 
+## Data-first native consolidation — 390
+
+Presentation changes preserve existing question, source, display, custody and
+return owners. The independent geometry ledger caught a real service-plot
+coordinate leak after initial browser visibility checks. Fresh browser checks
+pass after the component-owned fix. Independent source/geometry admission,
+required model replay and final image checks also pass.
+
+Completed checks:
+
+- Old-389-binary baseline **1.2 min / 14 entry frames / 27 measured boundaries**
+  passes source and custody admission. First ordinary counter data is offscreen
+  at roughly **1,775 px desktop / 2,609 px narrow**; gauge, unknown-only and saved
+  views have comparable delays. No test scroll was used to bring charts into view.
+- Focused **39 frontend tests passed** (**1.589 s**); full **1,404 individual tests
+  passed**, zero skips (**41.334 s**). Mounted tests cover successful-only setup
+  collapse, source-refusal/fixed-scope visibility, explicit namespace identities,
+  hidden Focus actions, local display choices and authored-title preservation.
+- Compact chart chrome moves to component-owned `density="compact"` CSS rather
+  than application selectors reaching through private header markup. Application
+  return adapters share presentation only; their ownership lifecycles stay separate.
+
+- The standalone compact-density browser check passes (**3.1 s**, **7.6 s**
+  invocation) at 1280 and 390 pixels. Server attributes and detached/nested SPA
+  updates preserve plot/action identity, focus and disclosure state, with zero
+  API reads. These are synthetic display fixtures, not telemetry evidence.
+- Existing generated semantic suites pass: gauge observation **0.80 s**, counter
+  reuse **0.40 s**, saved context **4.86 s**, service context **19.21 s**. The
+  separate baseline-admission decoder initially assumed histogram UInt64 bucket
+  counts were JSON numbers; it now parses the actual canonical string tokens.
+  Independent baseline admission subsequently passes; final admission catches
+  the real composed-style issue described below.
+
+- First final run exposed the narrow mixed-gauge unknown rail just below the
+  viewport. Compact notes and correct native disclosure-marker placement fix
+  repeated chrome without shrinking the 120-pixel numeric plot; **39 focused
+  checks pass** (**1.192 s**).
+- The next run passes all ordinary entries, then exposes narrow Saved chrome.
+  Accepted native evidence now precedes browse/catalog controls in DOM and
+  keyboard order; full provenance follows data. A private passive layout helper
+  preserves existing nodes and restores other families. Pending/refused capture
+  and Kept loads retain the accepted receipt/custody prefix with a separate
+  operation notice. Focused **27 passed** (**706 ms**); final full frontend
+  **1,406 passed**, zero skips (**29.319 s**).
+
+Browser results before the independent alignment follow-up:
+
+- Main journey **1.3 min / 14 entry frames / 27 measured boundaries** passes.
+  The same seven surfaces are measured at 1280×1000 and 390×844: ordinary
+  counter, mixed gauge, unknown-only gauge, empty and refused states, service
+  histogram and saved counter. Whole first data items are visible without a
+  test scroll to the plot. Actual application-driven scroll is recorded.
+- Ordinary counter first-item top moves **1,775 → 649 px desktop** and
+  **2,609 → 581 px narrow**; Saved counter narrow moves **2,205 → 614 px**.
+  Unknown-only data keeps a selectable unavailable rail without a fabricated
+  numeric scale. Active refusal/retry and exact scope remain visible.
+- Actual wire **137 responses / 43 request bodies** conforms. The observed UI
+  page makes **28 source operations / four capture-store reads / zero writes**;
+  the source proxy records **52 SQL requests**, including source work from two
+  explicit setup capture publications outside the page event counter. These are different
+  budgets, not a global zero-write claim.
+- Existing actual journeys pass with the final binary: saved native context
+  **19.0 s**, service native context **19.3 s**, gauge display reuse **13.1 s**,
+  counter display reuse **15.9 s**. Their request, scope, current-owner and
+  no-read held Back assertions remain active; no prior actor rerun is claimed.
+- Final frontend **1,406 passed**, zero skips (**29.319 s**). Embedded-UI and
+  browser-API checks pass (**0.631 s**); browsable API documentation covers
+  **112 operations**. No Go metric evaluator or API schema change is introduced.
+- Bombadil reaches completion across **662 snapshots / five phases**, confirming
+  DOM/source outcomes for actual unknown-only acquisition, selection and context
+  actions with one source read, zero store reads and zero UI writes. Its camera
+  frames were stale and are **excluded from pixel evidence**; a DOM `paint` flag
+  does not establish camera freshness. The root inspected six fresh main
+  Playwright frames and two standalone-component frames instead.
+
+Independent alignment catch and bounded fix:
+
+- The actual ledger admits the baseline but rejects final service histogram
+  geometry: application `.service-browser-detail button` margins shift numeric
+  and unavailable marks by approximately **3.5 px in X/Y**. First-item visibility
+  and axis-box alignment alone did not establish correct marker placement.
+- The value-timeline component now owns **zero margin** for its numeric and
+  unavailable marker buttons. No source, evaluator, timestamp, scale or model
+  tolerance is changed. A nested real-product-CSS regression covers zero, known
+  and unknown marks with no source reads.
+- With the rebuilt binary, the fresh main journey passes **1.3 min / 14 entries /
+  27 boundaries**, retaining the same source/store/SQL budgets. Service context
+  passes again (**13.1 s test / 15.5 s runner**). All **three** current-source
+  component cases pass (**7.6 s**), including the strengthened nested-product-CSS
+  case (**2.2 s**) for real zero, known and unknown marks with no API reads.
+- The fresh Bombadil run completes **719 snapshots / five phases** with DOM/source
+  outcomes. Its camera contains four distinct images, unlike the earlier
+  all-identical 662-snapshot run; that variation is **not** a completed-actor pixel
+  verdict. Actor evidence remains DOM/source-only. Fresh Playwright captures
+  supply the application pixel proof.
+- The earlier full frontend **1,406 / zero skips** and generated semantic results
+  remain applicable; no repeated full suite is claimed for this CSS-only fix.
+
+Final independent and image acceptance:
+
+- Baseline admission passes (**0.03 s**). Final independent admission and required
+  Quint replay pass (**5.31 s**, package **5.355 s**, zero skips), covering all
+  **14 entries / 27 measured facts**, raw source membership, exact marker X/Y,
+  whole-item clipping, capture clocks/bytes and physical SQL. **Six semantic
+  mutants** and an unintended local-read model control are rejected.
+- Final Docker/Compose configuration and trusted-CA build pass. Only the packages
+  container is updated with `--no-deps`; health returns `{"ok":true}`. Seven
+  changed UI/CSS assets match the tested source bytes: measurements, captures,
+  native capture layout, native presentation, product, chart frame and value
+  timeline. Existing data stores, volumes and the XTDB orphan are preserved.
+
+No bounded 390 acceptance gate remains pending. The independent checks, fresh
+Playwright pixels and DOM/source actor outcomes retain their separate meanings.
+
+See the [contract](docs/NATIVE_DATA_FIRST.md),
+[storyboard](journeys/390-native-entry-storyboard.md) and
+[review](docs/reviews/NATIVE_CONSOLIDATION_REVIEW_390.md).
+
 ## Reusable counter interval displays — 389
 
 NativeView adds a counter Timeline/Table arm over

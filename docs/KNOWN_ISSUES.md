@@ -1,9 +1,25 @@
 # Known issues and gaps
 
 Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
-status and the [active roadmap](ROADMAP_2026_11_09_CHECKPOINT_387.md) for priorities.
+status and the [active roadmap](ROADMAP_2026_11_09_CHECKPOINT_390.md) for priorities.
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
+
+390 delivers [data-first native composition](NATIVE_DATA_FIRST.md) across ordinary
+Measurements, service-expanded native data and saved evidence. Successful reads
+collapse authoring; plots/first items precede full identity and provenance.
+Fixed scope, frozen receipt/custody meaning, unknown/stale state and active source
+failures stay visible. Natural entry geometry is measured without a test scroll
+to the plot: ordinary counter first data moves from about 1,775 to 649 px on
+desktop and 2,609 to 581 px on narrow screens; saved counter narrow moves from
+2,205 to 614 px. Source questions, clocks and return ownership are unchanged.
+Compact chart chrome now belongs to the passive component's density profile.
+The [390 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_390.md) schedules checked
+log-pattern count displays (391), native HTTP-client duration profiles (392),
+then an evidence-gated literal source-parameter audit (393). Detailed checks,
+including held-return regressions and model replay, are recorded in
+[validation](../VALIDATION.md); this summary does not substitute for their
+individual outcomes.
 
 389 delivers [counter Timeline/Table display reuse](NATIVE_COUNTER_VIEW_REUSE.md)
 through the shared NativeView store/API and owner. Applicability is per-stream
@@ -14,8 +30,8 @@ integer default or explicit `nonnegative-decimal`. Apply preserves the entire
 destination question, clears prior evidence/selection and waits for Run. Rates,
 resets, epochs and gaps remain evaluator-owned; unavailable values are not zero.
 Resource-bound counters, other grains, stocks and unsupported policies remain
-outside reuse. Native data-first/component consolidation (390) is the sole next
-scheduled milestone, followed by a whole-product checkpoint.
+outside reuse. Native data-first/component consolidation is delivered in 390;
+the current checkpoint owns subsequent priorities.
 
 388 delivers [records around a gauge observation](GAUGE_OBSERVATION_CONTEXT.md)
 in ordinary Measurements. Selecting a reported gauge timestamp stages logs or
@@ -26,8 +42,8 @@ can stage another nearby question independently of paused native source actions.
 Edits, Apply, a new measurement or result replacement retire that capability;
 hidden owners cannot stage. This is time association, not causality or coverage.
 Saved/service gauges, stocks and resource-bound gauges remain outside this cut.
-Counter display reuse (389) is delivered; native data-first/component consolidation
-(390) remains next.
+Counter display reuse (389) and native data-first/component consolidation (390)
+are delivered; further gauge-context adoption remains separate.
 
 387 delivers [capture-family admission](CAPTURE_FAMILY_ADMISSION.md): six finite
 full capture families, receipt/question/result coherence and delivery bounds are

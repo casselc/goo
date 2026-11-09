@@ -1,5 +1,40 @@
 # Semantic properties and model conformance
 
+## Native entry consolidation (390)
+
+The observed check compares the old 389 and current native entry matrices at
+1280×1000 and 390×844. It independently admits raw native rows, exact questions,
+source results, immutable capture bytes and custody clocks before checking
+actual DOM clipping and marker time/value coordinates. Seven surfaces cover
+counter, gauge, unknown-only, no-data, refusal, Saved and service entry. There
+is no harness scrolling. Local controls must preserve supplied evidence and
+perform no source or store reads.
+
+From this verification module:
+
+```sh
+go test . -run '^(TestHegelNativeViewReuse389|TestHegelNativeObservationContext388|TestHegelSavedNativeContext364|TestHegelServiceNativeContext368)$' -count=1 -v
+GOO_NATIVE_ENTRY_390_BASELINE=/workspace/goo/artifacts/native-entry390-baseline/summary.json \
+GOO_NATIVE_ENTRY_390_REPORT=/workspace/goo/artifacts/native-entry390-final/summary.json \
+  go test . -run '^(TestNativeEntryBaseline390|TestQuintNativeEntryObserved390)$' -count=1 -v
+```
+
+The baseline admission passed in 0.03s and final required observed replay in 5.31s
+(package 5.355s), with zero skips. All 14 entry cases and 27 measured facts passed;
+all six semantic mutants and the local-source-read model control were rejected.
+The four existing generated native reuse/context suites also passed once.
+The geometry checks caught a real service host button-margin leak before the
+final pass; both time and numeric marker coordinates are now checked.
+
+The actual reports are required for runtime acceptance; absent reports skip.
+Quint is required when observed replay runs. The measured model covers explicit
+reads, store opens, local controls and completion; independent admission checks
+source/data/geometry rather than manufacturing model coherence flags. Two
+fixture capture publications precede the UI counters. Zero UI writes does not
+mean zero setup publications. The Bombadil actor contributes actual DOM/source
+completion evidence; its repeated initial camera images are not fresh pixel
+proof. The Playwright entry matrix supplies the fresh visual frames.
+
 ## Gauge observation record context (388)
 
 Ordinary Measurements offers logs/spans around one retained per-stream service
