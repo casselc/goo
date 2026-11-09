@@ -24616,6 +24616,9 @@
           }
         ]
       },
+      "format": {
+        "type": "string"
+      },
       "key": {
         "type": "string"
       },
@@ -24654,6 +24657,16 @@
                 "type": "null"
               }
             ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "format": {
+        "anyOf": [
+          {
+            "type": "string"
           },
           {
             "type": "null"
@@ -29623,6 +29636,9 @@
       "order": {
         "type": "string"
       },
+      "profile": {
+        "type": "string"
+      },
       "query": {
         "type": "string"
       },
@@ -29660,6 +29676,16 @@
         ]
       },
       "order": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "profile": {
         "anyOf": [
           {
             "type": "string"

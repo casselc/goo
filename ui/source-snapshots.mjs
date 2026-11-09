@@ -32,6 +32,11 @@ function admit(data,expected,adapter,{paging=false}={}){
     if(value.capturedAt!==data.capturedAt)throw Error('Snapshot clock differs from its exploration response.');
     // A stored record page changes only delivery paging. Its aggregate keeps the
     // independently checked original selector and original source read clock.
+    if(slot==='viewDataset'&&expected.signal==='logs'&&expected.groupBy?.length===1&&expected.groupBy[0].kind==='column'&&expected.groupBy[0].key==='body_pattern_v1'){
+      const known=['observed','no_data'].includes(data.state),counts=Array.isArray(value.rows)&&value.rows.every(row=>typeof row?.values?.count==='string'&&/^(0|[1-9]\d*)$/.test(row.values.count));
+      const coherent=known&&counts&&value.rows.reduce((sum,row)=>sum+BigInt(row.values.count),0n).toString()===data.count;
+      if(!coherent&&(value.partition!==undefined||value.completeness!==undefined||value.quality?.extent==='complete'))throw Error('Inconsistent log-pattern reads cannot attest a complete population.');
+    }
     result[slot]=adapter.adoptSnapshot(value,{question:paging?value.scope.selector:expected});
   }
   // A record page has independent bounded delivery semantics. It never receives

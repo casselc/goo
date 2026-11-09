@@ -58,8 +58,17 @@ func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
 	if d == nil {
 		return nil
 	}
+	pattern := q.Signal == "logs" && len(q.GroupBy) == 1 && q.GroupBy[0] == (Field{Kind: "column", Key: "body_pattern_v1"})
+	if pattern && (q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.Summary != "" || q.SpanStatus || q.GroupTimeSeries) {
+		return nil
+	}
 	for i, f := range q.GroupBy {
-		d.Fields = append(d.Fields, ViewField{Key: categoryField(i), Label: f.Kind + ":" + f.Key, Type: "string", Nullable: true})
+		field := ViewField{Key: categoryField(i), Label: f.Kind + ":" + f.Key, Type: "string", Nullable: true}
+		if pattern {
+			field.Format = "log-pattern-v1"
+			field.Nullable = false
+		}
+		d.Fields = append(d.Fields, field)
 		d.Dimensions = append(d.Dimensions, categoryField(i))
 	}
 	d.Fields = append(d.Fields, ViewField{Key: "count", Label: "Captured records", Type: "number", Unit: "records"})
@@ -82,6 +91,14 @@ func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
 			var v *string
 			if json.Unmarshal(raw, &v) != nil || v != nil && len(*v) > 1024 {
 				return nil
+			}
+			if pattern {
+				if v == nil {
+					return nil
+				}
+				if _, err := DecodeLogPattern(*v); err != nil {
+					return nil
+				}
 			}
 			values[categoryField(i)] = v
 			tuple = append(tuple, v)
@@ -119,7 +136,8 @@ func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
 		}
 		d.Rows = append(d.Rows, ViewRow{Key: key, Values: values, Cells: cells})
 	}
-	if exhaustiveGroups && r.State != "changed_between_reads" {
+	coherent := !pattern || !partitionOverflow && strconv.FormatUint(partitionTotal, 10) == r.Count && (r.State == "observed" || r.State == "no_data")
+	if exhaustiveGroups && r.State != "changed_between_reads" && coherent {
 		attestView(d, "groups")
 		// No wrapped or separately read denominator can authorize population
 		// shares. Exact individual rows remain usable if the sum is too large.

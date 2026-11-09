@@ -1,5 +1,55 @@
 # Validation record
 
+## Reusable log-pattern count displays — 391
+
+Delivered: [count-only pattern Bar/Table views](docs/LOG_PATTERN_DISPLAY_REUSE.md)
+use the existing population authoring/save/reuse workflow. Canonical identities
+remain separate from decoded labels. Find/order changes retain full denominators;
+changed reads cannot acquire shares or drill authority.
+
+Legacy exploration exposed an enabled no-op after pattern Drill → Back → Compare.
+The fix permits source-free staging only from the ordinary host's unchanged
+held question/basis and coherent groups, using a visible, enabled, non-inert
+opener. Both retired-owner gates are checked; acquisition/publication leases stay
+retired and other families retain strict generation checks.
+
+Final checks:
+
+- Full frontend **1,414 passed / zero skips / 25.592 s**; focused guard checks
+  **27 passed / zero skips / 697.43 ms**, including both actual production gates.
+- Go package runs passed: exploration **7.320 s**, workbench **1.834 s**,
+  cmd/goo **8.465 s**, using **Go 1.27.3**. Optional direct ClickHouse tests
+  skipped because `GOO_CLICKHOUSE_TEST_URL` was unset; real-source browser
+  acceptance below is separate positive evidence.
+- **432 shared Go/JavaScript profile vectors** and **32 varied generated
+  complete/changed projection cases** passed. Final required observed
+  Quint/admission passed **5.24 s / package 5.254 s / zero skips**; six semantic
+  mutants and the unintended local-read model control were rejected.
+- The [actual journey/storyboard](journeys/391-log-pattern-display-storyboard.md)
+  passed **48.3 s**: **27 physical OTLP logs, four main source reads, 12 effect
+  boundaries and four snapshots**. Source/destination each have nine patterns
+  over **12 / 15 logs**; local Find shows **3/12 = 25%** and **3/15 = 20%**.
+  Frozen capture bytes remain unchanged. Capture delivery normalizes to the
+  existing **100-row** page policy; display reuse retains destination **limit 5**.
+- The actor completed **652 snapshots / six phases**. Independent admission
+  binds its **nine actual read-only SQL tail requests** to compiled saved queries
+  and its retained snapshot. Browser resource timing is not a source counter;
+  no actor camera-pixel claim is made. Four fresh Playwright frames were reviewed.
+- All **three existing pattern regressions passed** on the final binary,
+  including zero-read comparison staging after Back, immutable capture/reopen,
+  exact fixed preview bounds, stored-definition lookback and cardinality refusal.
+  The held-return case took **42.4 s / 44.6 s runner**; read budgets were unchanged.
+- OpenAPI validation passed **112 operations / 725 schemas**, including the new
+  finite profile/dataset cases. Final wire checks admit **18 genuine responses /
+  seven requests**. The full checker also covers 489 fixtures, 195 requests and
+  28 mux refusals.
+- Managed-CA Docker build passed after a transient registry 502 retry. Image
+  `sha256:06cc97cbe62de3fd179ad85f12a8e9f435a0e1fccf4a28f0a4cfdffdd0215551`
+  passes health; **11 changed UI assets and OpenAPI bytes** match tested source.
+  Only Packages was recreated; persistent stores and the XTDB orphan remain.
+
+Remaining roadmap: **392 HTTP-client duration profiles → 393 parameter audit**.
+
 ## Data-first native consolidation — 390
 
 Presentation changes preserve existing question, source, display, custody and

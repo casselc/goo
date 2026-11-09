@@ -14,9 +14,11 @@ to the plot: ordinary counter first data moves from about 1,775 to 649 px on
 desktop and 2,609 to 581 px on narrow screens; saved counter narrow moves from
 2,205 to 614 px. Source questions, clocks and return ownership are unchanged.
 Compact chart chrome now belongs to the passive component's density profile.
-The [390 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_390.md) schedules checked
-log-pattern count displays (391), native HTTP-client duration profiles (392),
-then an evidence-gated literal source-parameter audit (393). Detailed checks,
+[Checked log-pattern count displays](LOG_PATTERN_DISPLAY_REUSE.md) (391) are
+delivered through the existing population workspace, with actual source,
+held-return, model and image acceptance. The [390 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_390.md) keeps native
+HTTP-client duration profiles (392), then an evidence-gated literal
+source-parameter audit (393) as the remaining finite queue. Detailed checks,
 including held-return regressions and model replay, are recorded in
 [validation](../VALIDATION.md); this summary does not substitute for their
 individual outcomes.

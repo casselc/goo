@@ -37425,6 +37425,33 @@
                 "required": [
                   "dimensions"
                 ],
+                "not": {
+                  "properties": {
+                    "scope": {
+                      "properties": {
+                        "selector": {
+                          "required": [
+                            "signal",
+                            "groupBy"
+                          ],
+                          "properties": {
+                            "signal": {
+                              "const": "logs"
+                            },
+                            "groupBy": {
+                              "const": [
+                                {
+                                  "kind": "column",
+                                  "key": "body_pattern_v1"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
                 "properties": {
                   "dimensions": {
                     "const": [
@@ -37702,6 +37729,33 @@
                 "required": [
                   "dimensions"
                 ],
+                "not": {
+                  "properties": {
+                    "scope": {
+                      "properties": {
+                        "selector": {
+                          "required": [
+                            "signal",
+                            "groupBy"
+                          ],
+                          "properties": {
+                            "signal": {
+                              "const": "logs"
+                            },
+                            "groupBy": {
+                              "const": [
+                                {
+                                  "kind": "column",
+                                  "key": "body_pattern_v1"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
                 "properties": {
                   "dimensions": {
                     "const": [
@@ -38000,6 +38054,331 @@
                                 }
                               },
                               "additionalProperties": false
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "required": [
+                  "dimensions"
+                ],
+                "properties": {
+                  "dimensions": {
+                    "const": [
+                      "category"
+                    ]
+                  },
+                  "scope": {
+                    "properties": {
+                      "signal": {
+                        "const": "logs"
+                      },
+                      "selector": {
+                        "properties": {
+                          "signal": {
+                            "const": "logs"
+                          },
+                          "groupBy": {
+                            "const": [
+                              {
+                                "kind": "column",
+                                "key": "body_pattern_v1"
+                              }
+                            ]
+                          },
+                          "groupTimeSeries": {
+                            "const": false
+                          },
+                          "spanStatus": {
+                            "const": false
+                          },
+                          "summary": {
+                            "const": ""
+                          }
+                        },
+                        "required": [
+                          "signal",
+                          "groupBy"
+                        ],
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "numeric"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "numericHistogram"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "reportedEdge"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "fields": {
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "prefixItems": [
+                      {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/scopedview.Field"
+                          },
+                          {
+                            "required": [
+                              "format"
+                            ],
+                            "properties": {
+                              "key": {
+                                "const": "category"
+                              },
+                              "type": {
+                                "const": "string"
+                              },
+                              "format": {
+                                "const": "log-pattern-v1"
+                              },
+                              "nullable": {
+                                "const": false
+                              }
+                            },
+                            "not": {
+                              "required": [
+                                "aggregation"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/scopedview.Field"
+                          },
+                          {
+                            "properties": {
+                              "key": {
+                                "const": "count"
+                              },
+                              "type": {
+                                "const": "number"
+                              },
+                              "unit": {
+                                "const": "records"
+                              },
+                              "nullable": {
+                                "const": false
+                              }
+                            },
+                            "required": [
+                              "unit"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "rows": {
+                    "items": {
+                      "allOf": [
+                        {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/scopedview.Row"
+                            },
+                            {
+                              "not": {
+                                "required": [
+                                  "state"
+                                ]
+                              },
+                              "properties": {
+                                "key": {
+                                  "pattern": "^category:[a-f0-9]{64}$"
+                                },
+                                "values": {
+                                  "type": "object",
+                                  "required": [
+                                    "category",
+                                    "count"
+                                  ],
+                                  "properties": {
+                                    "category": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "maxLength": 1024,
+                                      "description": "Null is missing; empty string is present empty. Runtime enforces1024 UTF-8 bytes; Schema maxLength counts characters."
+                                    },
+                                    "count": {
+                                      "type": "string",
+                                      "pattern": "^(0|[1-9][0-9]*)$",
+                                      "maxLength": 20,
+                                      "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                    },
+                                    "numeric.mean": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                      "maxLength": 1024,
+                                      "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                    },
+                                    "numeric.sum": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                      "maxLength": 1024,
+                                      "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                    },
+                                    "numeric.min": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                      "maxLength": 1024,
+                                      "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                    },
+                                    "numeric.max": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                      "maxLength": 1024,
+                                      "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                    },
+                                    "duration.mean": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                      "maxLength": 1024,
+                                      "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                    },
+                                    "duration.min": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|[1-9][0-9]*)$",
+                                      "maxLength": 20,
+                                      "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                    },
+                                    "duration.max": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|[1-9][0-9]*)$",
+                                      "maxLength": 20,
+                                      "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                    },
+                                    "duration.p50": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|[1-9][0-9]*)$",
+                                      "maxLength": 20,
+                                      "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                    },
+                                    "duration.p95": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|[1-9][0-9]*)$",
+                                      "maxLength": 20,
+                                      "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                    },
+                                    "duration.p99": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|[1-9][0-9]*)$",
+                                      "maxLength": 20,
+                                      "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                    },
+                                    "status.error": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|[1-9][0-9]*)$",
+                                      "maxLength": 20,
+                                      "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                    },
+                                    "status.ok": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|[1-9][0-9]*)$",
+                                      "maxLength": 20,
+                                      "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                    },
+                                    "status.unset": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|[1-9][0-9]*)$",
+                                      "maxLength": 20,
+                                      "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                    },
+                                    "status.unknown": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|[1-9][0-9]*)$",
+                                      "maxLength": 20,
+                                      "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                    },
+                                    "status.error_fraction": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                                      "maxLength": 1024,
+                                      "description": "Exact Error/count subset fraction in [0,1], not a percentage or ratio of averages. Runtime checks named operands. A zero denominator is unavailable, never a healthy zero."
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "properties": {
+                            "values": {
+                              "properties": {
+                                "category": {
+                                  "type": "string",
+                                  "pattern": "^lp1:(e|o|u|p:[0-9a-fn]*)$"
+                                }
+                              }
                             }
                           }
                         }
@@ -41018,6 +41397,14 @@
               }
             ]
           },
+          "format": {
+            "type": "string",
+            "enum": [
+              "",
+              "log-pattern-v1"
+            ],
+            "description": "Finite supplied category semantics, not a renderer registry. log-pattern-v1 carries canonical lp1 identities; readable labels are derived by the pinned decoder and never replace identity. Runtime requires the matching count-only log-pattern selector."
+          },
           "key": {
             "type": "string",
             "enum": [
@@ -41074,6 +41461,31 @@
         "x-go-type": "github.com/casselc/goo/scopedview.Field",
         "additionalProperties": false,
         "allOf": [
+          {
+            "if": {
+              "required": [
+                "format"
+              ],
+              "properties": {
+                "format": {
+                  "const": "log-pattern-v1"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "key": {
+                  "const": "category"
+                },
+                "type": {
+                  "const": "string"
+                },
+                "nullable": {
+                  "const": false
+                }
+              }
+            }
+          },
           {
             "if": {
               "properties": {
@@ -41794,6 +42206,16 @@
                     "type": "null"
                   }
                 ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "format": {
+            "anyOf": [
+              {
+                "type": "string"
               },
               {
                 "type": "null"
@@ -51975,7 +52397,39 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewDeclaration",
         "additionalProperties": false,
-        "description": "Pinned ordinary single-field count, numeric or duration display. Numeric/duration fields require the corresponding checked parent-query binding/summary; runtime validates that relationship. Scope references a checked parent query; save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported."
+        "description": "Pinned single-field record display: ordinary count/numeric/duration, or count-only log-pattern-count-v1. The log-pattern profile requires logs grouped solely by column:body_pattern_v1, without numeric or duration summaries; runtime checks the parent query. Canonical lp1 identities are distinct from inferred readable labels. Save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported.",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "display"
+              ],
+              "properties": {
+                "display": {
+                  "required": [
+                    "profile"
+                  ],
+                  "properties": {
+                    "profile": {
+                      "const": "log-pattern-count-v1"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "properties": {
+                    "signal": {
+                      "const": "logs"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
       },
       "workbench.ViewDeclarationInput": {
         "additionalProperties": false,
@@ -52024,7 +52478,39 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewDeclaration",
-        "description": "Pinned ordinary single-field count, numeric or duration display. Numeric/duration fields require the corresponding checked parent-query binding/summary; runtime validates that relationship. Scope references a checked parent query; save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported."
+        "description": "Pinned single-field record display: ordinary count/numeric/duration, or count-only log-pattern-count-v1. The log-pattern profile requires logs grouped solely by column:body_pattern_v1, without numeric or duration summaries; runtime checks the parent query. Canonical lp1 identities are distinct from inferred readable labels. Save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported.",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "display"
+              ],
+              "properties": {
+                "display": {
+                  "required": [
+                    "profile"
+                  ],
+                  "properties": {
+                    "profile": {
+                      "const": "log-pattern-count-v1"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "properties": {
+                    "signal": {
+                      "const": "logs"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
       },
       "workbench.ViewDeclarationScope": {
         "properties": {
@@ -52096,6 +52582,14 @@
               "value-asc"
             ]
           },
+          "profile": {
+            "type": "string",
+            "enum": [
+              "",
+              "log-pattern-count-v1"
+            ],
+            "description": "Omitted, empty or null input selects ordinary display semantics. log-pattern-count-v1 is required exactly for the checked log-pattern count query; it never grants completeness, source or drill authority."
+          },
           "query": {
             "type": "string",
             "maxLength": 256,
@@ -52165,6 +52659,25 @@
                 }
               }
             }
+          },
+          {
+            "if": {
+              "required": [
+                "profile"
+              ],
+              "properties": {
+                "profile": {
+                  "const": "log-pattern-count-v1"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "value": {
+                  "const": "count"
+                }
+              }
+            }
           }
         ]
       },
@@ -52198,6 +52711,22 @@
               "value-desc",
               "value-asc"
             ]
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "enum": [
+              "",
+              "log-pattern-count-v1",
+              null
+            ],
+            "description": "Omitted, empty or null input selects ordinary display semantics. log-pattern-count-v1 is required exactly for the checked log-pattern count query; it never grants completeness, source or drill authority."
           },
           "query": {
             "anyOf": [
@@ -52295,6 +52824,25 @@
                     "",
                     "max"
                   ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "profile"
+              ],
+              "properties": {
+                "profile": {
+                  "const": "log-pattern-count-v1"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "value": {
+                  "const": "count"
                 }
               }
             }

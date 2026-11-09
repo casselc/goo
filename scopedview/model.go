@@ -46,6 +46,8 @@ type Scope struct {
 	Selector   json.RawMessage `json:"selector"`
 }
 type Field struct {
+	// Format is bounded presentation semantics; values retain canonical identity.
+	Format      string       `json:"format,omitempty"`
 	Key         string       `json:"key"`
 	Label       string       `json:"label"`
 	Type        string       `json:"type"`

@@ -2,6 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
+import * as LogPatterns from '../ui/log-patterns.mjs';
 import * as QuestionProtocol from '../ui/question-protocol.mjs';
 // Execute the production closures in their real lexical names. Full browser
 // journeys independently exercise the mounted application and physical reads.
@@ -10,7 +11,7 @@ const explorationSource=readFileSync(new URL('../ui/exploration.mjs',import.meta
 const line=name=>distributionSource.split('\n').find(line=>line.trimStart().startsWith('function '+name+'(')).trim();
 function fixture(){return{question:{signal:'spans',environmentSelector:{version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'empty'}},fromMs:1000,toMs:5000,limit:19,offset:0,numeric:{field:{kind:'attribute',key:'size'},type:'int64',unit:'items',parse:'canonical-decimal'},numericHistogram:{binning:'powers-of-two'},where:{field:{kind:'resource',key:'service.namespace'},op:'eq',value:''}}}}
 test('actual distribution producer retires same-data ABA and requires a current visible owner',()=>{
- const data=fixture(),calls=[],env={current:data,populationGeneration:1,distributionGeneration:1,container:{},UI:{actionVisible:element=>env.visible&&!element.hidden},visible:true,numericCanAct:()=>env.active,active:true,openPopulation:(...args)=>{calls.push(args);return true},numericOwner:{suspend(){calls.push('numeric suspended')}},durationOwner:null,timelineView:null,distributionView:null};
+ const data=fixture(),calls=[],env={LogPatterns,canStageHeldPattern:undefined,current:data,populationGeneration:1,distributionGeneration:1,container:{},UI:{actionVisible:element=>env.visible&&!element.hidden},visible:true,numericCanAct:()=>env.active,active:true,openPopulation:(...args)=>{calls.push(args);return true},numericOwner:{suspend(){calls.push('numeric suspended')}},durationOwner:null,timelineView:null,distributionView:null};
  vm.createContext(env);vm.runInContext(line('populationOpen')+'\n'+line('suspendActions'),env);
  const old=env.populationOpen(data),q=data.question,opener={closest(){return this.inert?this:null}};assert.equal(old(q,null,null,opener),true);assert.equal(calls[0][3],data);assert.equal(calls[0][4],opener);
  env.suspendActions();assert.equal(env.populationGeneration,2);assert.equal(calls.pop(),'numeric suspended');env.current=fixture();env.current=data;assert.equal(old(q),false,'same data object after Back cannot revive old producer');
@@ -19,8 +20,8 @@ test('actual distribution producer retires same-data ABA and requires a current 
 test('actual exploration continuation stages cloned whole typed questions only from the current source owner',()=>{
  const sourceLine=explorationSource.split('\n').find(line=>line.includes('openPopulation:(q,baseline,rest,origin,opener)=>'));
  const callback=sourceLine.slice(sourceLine.indexOf('openPopulation:')+'openPopulation:'.length,sourceLine.indexOf(',openTrace:',sourceLine.indexOf('openPopulation:')));
- const data=fixture(),events=[],env={lastResult:data,scopeActionsLive:true,plotReady:()=>env.ready,ready:true,UI:{actionVisible:()=>env.visible},visible:true,container:{},QuestionProtocol,structuredClone,CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}},global:{dispatchEvent:event=>events.push(event)}};
- const open=vm.runInNewContext('('+callback+')',env),opener={};assert.equal(open(data.question,null,null,data,opener),true);assert.equal(events[0].detail.stage,true);assert.deepEqual(events[0].detail.question,data.question);assert.equal(events[0].detail.opener,opener);
+ const data=fixture(),events=[],env={lastResult:data,scopeActionsLive:true,plotReady:()=>env.ready,ready:true,UI:{actionVisible:()=>env.visible},visible:true,container:{isConnected:true,classList:{contains:()=>false}},session:{snapshot:()=>({applied:null})},QuestionProtocol,structuredClone,CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}},global:{dispatchEvent:event=>events.push(event)}};
+ const heldGuard=explorationSource.split('\n').find(line=>line.trimStart().startsWith('function canStageHeldPattern('));const open=vm.runInNewContext(heldGuard+'\n('+callback+')',env),opener={};assert.equal(open(data.question,null,null,data,opener),true);assert.equal(events[0].detail.stage,true);assert.deepEqual(events[0].detail.question,data.question);assert.equal(events[0].detail.opener,opener);
  data.question.where.value='caller mutation';assert.equal(events[0].detail.question.where.value,'');
  for(const change of [()=>env.scopeActionsLive=false,()=>{env.scopeActionsLive=true;env.ready=false},()=>{env.ready=true;env.visible=false},()=>{env.visible=true;env.lastResult=fixture()}]){change();assert.equal(open(data.question,null,null,data),false)}
  assert.equal(events.length,1);
@@ -34,4 +35,15 @@ test('shared typed time and duration transforms preserve the parent policy and n
   assert.deepEqual(base,before);assert.deepEqual(selected.environmentSelector,base.environmentSelector);assert.deepEqual(signal==='spans'?selected.where.all[0]:selected.where,base.where);assert.equal(selected.offset,0);assert.equal(selected.fromMs,1500);assert.equal(selected.toMs,4000);QuestionProtocol.validateRecordQuestion(selected);
   if(signal==='spans'){assert.deepEqual(selected.where.all.slice(1).map(p=>[p.op,p.value]),[['gte','1'],['lte','999999']]);const pair=partition(base,selection);for(const q of [pair.selected,pair.rest]){assert.deepEqual(q.environmentSelector,base.environmentSelector);assert.deepEqual(q.where.all[0],base.where);assert.equal(q.fromMs,base.fromMs);assert.equal(q.toMs,base.toMs);QuestionProtocol.validateRecordQuestion(q)}}
  }
+});
+
+test('actual held-pattern continuation stages without reviving source leases and refuses unavailable openers',async()=>{
+ const {heldPatternMatches}=await import('../ui/exploration.mjs');const data={question:{signal:'logs',environment:'prod',fromMs:1000,toMs:2000,limit:100,offset:0,groupBy:[{kind:'column',key:'body_pattern_v1'}]},basis:'held-source',state:'observed',count:'2',groups:[{g0:'lp1:e',count:'2'}]};
+ const applied={question:structuredClone(data.question),basis:data.basis},events=[],env={lastResult:data,scopeActionsLive:false,plotReady:()=>true,container:{isConnected:true,classList:{contains:()=>false}},UI:{actionVisible:node=>!node.hidden},session:{snapshot:()=>({phase:'applied',applied})},heldPatternMatches,QuestionProtocol,structuredClone,CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}},global:{dispatchEvent:event=>events.push(event)},current:data,populationGeneration:1,distributionGeneration:1,numericCanAct:()=>true,numericOwner:null,durationOwner:null,timelineView:null,distributionView:null,LogPatterns};
+ const sourceLine=explorationSource.split('\n').find(line=>line.includes('openPopulation:(q,baseline,rest,origin,opener)=>')),callback=sourceLine.slice(sourceLine.indexOf('openPopulation:')+'openPopulation:'.length,sourceLine.indexOf(',openTrace:',sourceLine.indexOf('openPopulation:'))),guard=explorationSource.split('\n').find(line=>line.trimStart().startsWith('function canStageHeldPattern('));vm.createContext(env);env.openPopulation=vm.runInContext(guard+'\n('+callback+')',env);vm.runInContext(line('populationOpen')+'\n'+line('suspendActions'),env);const open=env.populationOpen(data);env.suspendActions();
+ const opener={disabled:false,hidden:false,fieldset:false,inert:false,aria:null,matches(){return this.fieldset},closest(){return this.inert?this:null},getAttribute(){return this.aria}};
+ assert.equal(open(data.question,false,null,opener),true);assert.equal(events.length,1);assert.equal(events[0].detail.stage,true);assert.equal(env.scopeActionsLive,false);
+ const permission=env.canStageHeldPattern;env.canStageHeldPattern=undefined;assert.equal(open(data.question,false,null,opener),false);env.canStageHeldPattern=permission;env.current=fixture();assert.equal(open(data.question,false,null,opener),false);env.current=data;env.plotReady=()=>false;assert.equal(open(data.question,false,null,opener),false);env.plotReady=()=>true;data.state='changed_between_reads';assert.equal(open(data.question,false,null,opener),false);data.state='observed';
+ for(const change of [{disabled:true},{fieldset:true},{hidden:true},{inert:true},{aria:'true'}]){const unavailable={...opener,...change};assert.equal(open(data.question,false,null,unavailable),false)}
+ applied.basis='another-read';assert.equal(open(data.question,false,null,opener),false);assert.equal(events.length,1);assert.equal(env.scopeActionsLive,false);
 });

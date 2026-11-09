@@ -29,6 +29,7 @@ type ViewKind struct {
 // ViewDisplay is the bounded ordinary record-measure profile of the public display
 // contract. Empty optional strings mean the renderer's defaults, not new queries.
 type ViewDisplay struct {
+	Profile          string `json:"profile,omitempty"`
 	Category         string `json:"category"`
 	Value            string `json:"value"`
 	Title            string `json:"title,omitempty"`
@@ -42,7 +43,15 @@ func (d ViewDeclaration) Validate(q exploration.Query) error {
 	if d.Version != "goo.view/1" || d.Scope.Kind != "record-query" || d.Scope.Signal != q.Signal || d.Kind.Version != 1 || (d.Kind.Name != "bar" && d.Kind.Name != "table") {
 		return errors.New("require a versioned record-query display and a pinned bar or table kind")
 	}
-	if len(q.GroupBy) != 1 || q.NumericHistogram != nil || q.GroupTimeSeries || q.GroupBy[0].Kind == "column" && (q.GroupBy[0].Key == "body_pattern_v1" || q.GroupBy[0].Key == "duration_bucket") {
+	pattern := len(q.GroupBy) == 1 && q.Signal == "logs" && q.GroupBy[0] == (exploration.Field{Kind: "column", Key: "body_pattern_v1"})
+	if pattern {
+		if d.Display.Profile != "log-pattern-count-v1" || d.Display.Value != "count" || q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.Summary != "" || q.SpanStatus || q.GroupTimeSeries {
+			return errors.New("log-pattern displays require the pinned count-only profile")
+		}
+	} else if d.Display.Profile != "" {
+		return errors.New("display profile does not match this record query")
+	}
+	if len(q.GroupBy) != 1 || q.NumericHistogram != nil || q.GroupTimeSeries || q.GroupBy[0].Kind == "column" && q.GroupBy[0].Key == "duration_bucket" {
 		return errors.New("authored displays require an ordinary single-field record breakdown")
 	}
 	available := d.Display.Value == "count"

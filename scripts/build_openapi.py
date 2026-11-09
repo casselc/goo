@@ -367,7 +367,7 @@ for suffix in ('', 'Input'):
  declaration=schemas['workbench.ViewDeclaration'+suffix]
  declaration['additionalProperties']=False
  declaration['properties']['version']['const']='goo.view/1'
- declaration['description']='Pinned ordinary single-field count, numeric or duration display. Numeric/duration fields require the corresponding checked parent-query binding/summary; runtime validates that relationship. Scope references a checked parent query; save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported.'
+ declaration['description']='Pinned single-field record display: ordinary count/numeric/duration, or count-only log-pattern-count-v1. The log-pattern profile requires logs grouped solely by column:body_pattern_v1, without numeric or duration summaries; runtime checks the parent query. Canonical lp1 identities are distinct from inferred readable labels. Save/reopen stages configuration and Run executes explicitly. Native scopes are unsupported.'
  scope=schemas['workbench.ViewDeclarationScope'+suffix];scope['additionalProperties']=False
  scope['properties']['kind']['const']='record-query';scope['properties']['signal']['enum']=['spans','logs']
  kind=schemas['workbench.ViewKind'+suffix];kind['additionalProperties']=False
@@ -375,7 +375,11 @@ for suffix in ('', 'Input'):
  display=schemas['workbench.ViewDisplay'+suffix];display['additionalProperties']=False
  display['properties']['category']['const']='category';display['properties']['value']['enum']=['count','numeric.mean','numeric.sum','numeric.min','numeric.max','duration.mean','duration.min','duration.max','duration.p50','duration.p95','duration.p99']
  display['properties']['scale']['enum']=['','max','population']
+ display['properties']['profile']['enum']=['','log-pattern-count-v1']+([None] if suffix else [])
+ display['properties']['profile']['description']='Omitted, empty or null input selects ordinary display semantics. log-pattern-count-v1 is required exactly for the checked log-pattern count query; it never grants completeness, source or drill authority.'
  display['allOf']=[{'if':{'required':['value'],'properties':{'value':{'not':{'const':'count'}}}},'then':{'properties':{'scale':{'enum':['','max']}}}}]
+ display['allOf'].append({'if':{'required':['profile'],'properties':{'profile':{'const':'log-pattern-count-v1'}}},'then':{'properties':{'value':{'const':'count'}}}})
+ declaration['allOf']=[{'if':{'required':['display'],'properties':{'display':{'required':['profile'],'properties':{'profile':{'const':'log-pattern-count-v1'}}}}},'then':{'properties':{'scope':{'properties':{'signal':{'const':'logs'}}}}}}]
  display['properties']['order']['enum']=['','source','label','value-desc','value-asc']
  for field,bound in [('query',256),('title',120)]:
   display['properties'][field].update(maxLength=bound,description=f'At most {bound} UTF-8 bytes; runtime enforces the byte limit and rejects control characters.')
@@ -599,7 +603,10 @@ for name in ('id','generation'):view_scope[name]['pattern']='^[a-f0-9]{64}$'
 view_scope['id']['pattern']='^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)|:native-window:(0|[1-9][0-9]*))?$'
 view_scope['signal']['enum']=['logs','spans','metrics'];view_scope['selector']={'oneOf':[ref('exploration.Query'),ref('measurements.HistogramViewSelector'),ref('measurements.HistogramTimeViewSelector'),ref('measurements.HistogramWindowViewSelector')]}
 view_field=schemas['scopedview.Field']['properties'];view_field['key']['enum']=['category','category1','count','fromMs','toMs','from','to']+list(measure_specs);view_field['type']['enum']=['string','number','timestamp','rational','histogram-bound']
+view_field['format']['enum']=['','log-pattern-v1']
+view_field['format']['description']='Finite supplied category semantics, not a renderer registry. log-pattern-v1 carries canonical lp1 identities; readable labels are derived by the pinned decoder and never replace identity. Runtime requires the matching count-only log-pattern selector.'
 schemas['scopedview.Field']['allOf']=[]
+schemas['scopedview.Field']['allOf'].append({'if':{'required':['format'],'properties':{'format':{'const':'log-pattern-v1'}}},'then':{'properties':{'key':{'const':'category'},'type':{'const':'string'},'nullable':{'const':False}}}})
 for key,spec in measure_specs.items():
  unit={'const':'ns'} if spec['family']=='duration' else {'const':'records'} if spec['family']=='span-status' else {'const':'1'} if spec['family']=='ratio' else {'type':'string','minLength':1}
  schemas['scopedview.Field']['allOf'].append({'if':{'properties':{'key':{'const':key}},'required':['key']},'then':{'required':['aggregation','unit','nullable'],'properties':{'nullable':{'const':True},'type':{'const':'number' if spec['family']=='span-status' else 'rational'},'unit':unit,'aggregation':{'type':'object','properties':{k:{'const':v} for k,v in spec.items()}}}}})
@@ -644,10 +651,15 @@ for dims in (['category'],['category','category1']):
  ranked_row={'allOf':[ref('scopedview.Row'),{
   'not':{'required':['state']},
   'properties':{'key':{'pattern':'^category:[a-f0-9]{64}$'},'values':values}}]}
- ranked.append({'required':['dimensions'],'properties':{
+ ranked.append({'required':['dimensions'],'not':{'properties':{'scope':{'properties':{'selector':{'required':['signal','groupBy'],'properties':{'signal':{'const':'logs'},'groupBy':{'const':[{'kind':'column','key':'body_pattern_v1'}]}}}}}}},'properties':{
   'dimensions':{'const':dims},
   'fields':{'minItems':len(fields),'maxItems':len(fields)+15,'prefixItems':fields,'items':{'allOf':[ref('scopedview.Field'),{'properties':{'key':{'enum':list(measure_specs)}}}]}},
   'rows':{'items':ranked_row}}})
+# The finite pattern arm has canonical non-null identities, never ordinary
+# nullable string categories. Runtime decodes lp1 and binds all source facts.
+pattern_field={'allOf':[ref('scopedview.Field'),{'required':['format'],'properties':{'key':{'const':'category'},'type':{'const':'string'},'format':{'const':'log-pattern-v1'},'nullable':{'const':False}},'not':{'required':['aggregation']}}]}
+pattern_selector={'properties':{'signal':{'const':'logs'},'groupBy':{'const':[{'kind':'column','key':'body_pattern_v1'}]},'groupTimeSeries':{'const':False},'spanStatus':{'const':False},'summary':{'const':''}},'required':['signal','groupBy'],'not':{'anyOf':[{'required':[key]} for key in ['numeric','numericHistogram','reportedEdge']]}}
+ranked.append({'required':['dimensions'],'properties':{'dimensions':{'const':['category']},'scope':{'properties':{'signal':{'const':'logs'},'selector':pattern_selector}},'fields':{'minItems':2,'maxItems':2,'prefixItems':[pattern_field,view_field_spec('count','number','records')]},'rows':{'items':{'allOf':[copy.deepcopy(ranked[0]['properties']['rows']['items']),{'properties':{'values':{'properties':{'category':{'type':'string','pattern':'^lp1:(e|o|u|p:[0-9a-fn]*)$'}}}}}]}}}})
 time_values={'type':'object','required':['fromMs','toMs'],'properties':{'fromMs':epoch_ms,'toMs':epoch_ms,'count':{'type':['string','null']},**measure_values},'additionalProperties':False}
 time_states=[{'properties':{'state':{'const':'observed'},'values':{'required':['count'],'properties':{'count':{**exact_count,'pattern':'^[1-9][0-9]*$'}}}}},{'properties':{'state':{'const':'no_data'},'values':{'required':['count'],'properties':{'count':{'const':'0'}}}}},{'properties':{'state':{'const':'unknown'},'values':{'properties':{'count':{'type':'null'}}}}}]
 time_fields=[view_field_spec('fromMs','timestamp','ms'),view_field_spec('toMs','timestamp','ms'),view_field_spec('count','number','records',nullable=True)]

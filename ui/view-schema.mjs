@@ -1,5 +1,5 @@
 import {validateMeasurementIntervalSelector,binary64Rational,nativeRationalCoordinate} from './measurement-scope.mjs';
-import {categoryText} from './view-values.mjs';
+import {categoryText,categoryLabel} from './view-values.mjs';
 import {validateNumericPredicate} from './question-protocol.mjs';
 export {categoryText};
 /* Structural, IO-free dataset schema. Metadata consistency is not authority. Exact values are never replaced by plotting coordinates. */
@@ -62,6 +62,13 @@ export function validateSnapshot(s){
  const fields=new Map();
  if(!Array.isArray(s.fields)||!s.fields.length||s.fields.length>64)reasons.push('Dataset requires 1–64 fields');
  else for(const f of s.fields){if(!record(f)||!text(f.key)||!text(f.label)||!member(f.type,['string','number','timestamp','rational','histogram-bound'])||fields.has(f.key)||f.unit!==undefined&&!text(f.unit)||f.type==='timestamp'&&f.unit!=='ms'||f.nullable!==undefined&&typeof f.nullable!=='boolean')reasons.push('Invalid or duplicate field');else {fields.set(f.key,f);if(f.aggregation!==undefined&&!aggregationValid(f))reasons.push('Invalid aggregation method, family, type or unit')}}
+ const selector=s.scope?.selector,patternSelector=s.scope?.signal==='logs'&&selector?.groupBy?.length===1&&selector.groupBy[0].kind==='column'&&selector.groupBy[0].key==='body_pattern_v1';
+ const pattern=patternSelector&&s.shape==='ranked';
+ if(pattern&&(selector.numeric||selector.numericHistogram||selector.reportedEdge||selector.summary||selector.spanStatus||selector.groupTimeSeries||s.dimensions?.length!==1||s.dimensions[0]!=='category'||fields.get('category')?.format!=='log-pattern-v1'||fields.get('category')?.nullable===true||fields.size!==2||fields.get('count')?.type!=='number'||fields.get('count')?.unit!=='records'||fields.get('count')?.aggregation))reasons.push('Log-pattern datasets require the explicit count-only category format');
+ for(const field of fields.values())if(field.format!=null&&field.format!==''){
+  if(field.format!=='log-pattern-v1'||field.type!=='string'||field.key!=='category'||!pattern||field.nullable===true)reasons.push('Invalid field presentation format');
+  else if(Array.isArray(s.rows))for(const row of s.rows)try{categoryLabel(field,row?.values?.[field.key])}catch{reasons.push('Invalid log-pattern category identity')}
+ }
  if([...fields.values()].some(field=>field.type==='histogram-bound'&&(s.shape!=='histogram'||!['span-duration','otel-explicit'].includes(s.histogram?.kind)||!['from','to'].includes(field.key))))reasons.push('Histogram bounds require declared native or span-duration bin endpoints');
  if(s.dimensions!==undefined&&(!Array.isArray(s.dimensions)||!s.dimensions.length||s.shape!=='ranked'||new Set(s.dimensions).size!==s.dimensions.length||s.dimensions.some(key=>typeof key!=='string'||!fields.has(key)||fields.get(key)?.aggregation!==undefined)))reasons.push('Ranked dimensions must be distinct declared field keys');
  if(!Array.isArray(s.rows)||s.rows.length>10000)reasons.push('Dataset requires at most 10000 supplied rows');
@@ -246,7 +253,7 @@ function comparable(value){
 // no scope, denominator, guarantee, dataset identity or source totals change.
 export function displayRows(snapshot,display){
  const dimensions=snapshot.dimensions?.length?snapshot.dimensions:display.category?[display.category]:[],query=(display.query??'').toLowerCase(),order=display.order??'source',valueKey=display.value??'count';
- const labels=row=>dimensions.map(key=>categoryText(row.values[key])).join(' / ').toLowerCase();
+ const labels=row=>dimensions.map(key=>categoryLabel(snapshot.fields.find(field=>field.key===key),row.values[key])).join(' / ').toLowerCase();
  const byValue=order==='value-asc'||order==='value-desc';
  const rows=snapshot.rows.map((row,index)=>{const value=byValue?measureValue(snapshot,row,valueKey):null,known=value&&member(value.state,['recorded','derived','estimated','no_data'])&&value.exact!==null;return {row,index,label:labels(row),number:known?comparable(value.exact):null}}).filter(item=>!query||item.label.includes(query));
  if(order!=='source')rows.sort((a,b)=>{

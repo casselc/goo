@@ -236,6 +236,7 @@ test('182 real log patterns retain full-population counts, exact trends and immu
   expect(result.groups.some(group => group.g0 === 'lp1:e')).toBe(true);
   expect(result.groups.some(group => group.g0 === 'lp1:o')).toBe(true);
   state.event('patterns-run');
+  await page.locator('#resultDistribution').click();
   const panel = page.locator('.log-pattern-results:visible');
   await expect(panel).toContainText('inferred text shapes, not issues or causes');
   const initialRows = await patternRows(panel);
@@ -333,6 +334,7 @@ test('182 real log patterns retain full-population counts, exact trends and immu
   expect(reopened).toEqual(saved);
   expect(state.reads).toBe(6);
   state.event('reopen');
+  await page.locator('#savedresultDistribution').click();
   const savedPatterns = page.locator('.log-pattern-results:visible');
   assertPatternRows(await patternRows(savedPatterns), saved.explore);
   await page.setViewportSize({width: 390, height: 1800});
@@ -340,6 +342,8 @@ test('182 real log patterns retain full-population counts, exact trends and immu
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await savedPatterns.screenshot({path: 'docs/journeys/screenshots/182b-saved-log-patterns-mobile.png'});
   await page.setViewportSize({width: 1440, height: 1100});
+  await page.locator('#savedresultRecords').click();
+  if(!await page.locator('#savedrecordResultContext').evaluate(e=>e.open))await page.locator('#savedrecordResultContext > summary').click();
   await page.locator('#savedexploreCreatePackage').click();
   await page.locator('#packageName').fill(f.environment);
   await page.locator('#packageTitle').fill('Reusable service log patterns');
@@ -363,7 +367,9 @@ test('182 real log patterns retain full-population counts, exact trends and immu
   assertResult(reused, f.records);
   expect(reused.question.groupBy).toEqual([patternField]);
   expect(reused.question.where).toEqual(original.where);
-  expect(reused.question.toMs - reused.question.fromMs).toBe(180000);
+  expect(reusable.definition.lookbackMinutes).toBe(3);
+  expect([reused.question.fromMs,reused.question.toMs]).toEqual([draft.question.fromMs,draft.question.toMs]);
+  expect([reused.question.fromMs,reused.question.toMs]).toEqual([original.fromMs,original.toMs]);
   expect(await json(await request.get(base + '/api/captures/' + saved.receipt.id))).toEqual(saved);
   state.event('reuse-run');
   await page.getByRole('button', {name: 'Return to paused activity', exact: true}).click();
@@ -386,6 +392,7 @@ test('182 stale pattern links cannot stage hidden or changed fixed scopes', asyn
   const question = {...f.question, groupBy: [patternField], bucketMs: 1000};
   await page.goto(base + '/' + questionLink(question));
   const result = await run(page, f.records);
+  await page.locator('#resultDistribution').click();
   const frequentID = pattern('request id=1000 completed in 0ms');
   const link = page.locator('.log-pattern-results:visible').locator('tr[data-pattern="' + frequentID + '"]').getByRole('link', {name: 'Open pattern logs', exact: true});
   await link.evaluate(element => {window.__oldPatternLink = element});
@@ -404,7 +411,7 @@ test('182 stale pattern links cannot stage hidden or changed fixed scopes', asyn
   await obsolete('hidden-owner', async () => page.goto(base + '/#definitions'));
   expect(observations[0].before.connected).toBe(true);
   await page.goto(base + '/#explore');
-  await obsolete('dirty-owner', async () => page.locator('#exploreEnvironment').fill(f.environment + '-draft'));
+  await obsolete('dirty-owner', async () => {await page.getByRole('button',{name:'Edit question',exact:true}).click();await page.locator('#exploreEnvironment').fill(f.environment + '-draft')});
   expect(state.errors).toEqual([]);
   const directory = path.resolve('artifacts/log-patterns', f.environment);
   await fs.mkdir(directory, {recursive: true});
@@ -439,9 +446,10 @@ test('182 more than one thousand real log patterns fail closed without a top lis
   await page.locator('#exploreRun').click();
   const response = await pending, refusal = {status: response.status(), request: response.request().postDataJSON(), response: await response.json()};
   expect(response.ok()).toBe(false);
-  expect(refusal.response.error).toContain('more than 1000 groups; narrow query; no partial grouping totals');
+  expect(refusal.status).toBe(502);
+  expect(refusal.response).toEqual({error:'Source read exceeded a limit.',refusal:{kind:'budget',detail:'The source response exceeded a bounded read or grouping limit. Try a narrower scope.'}});
   expect(refusal.response.groups).toBeUndefined();
-  await expect(page.locator('#exploreStatus')).toContainText('more than 1000 groups');
+  await expect(page.locator('#exploreStatus')).toContainText('Source read exceeded a limit.');
   expect(await page.locator('.log-pattern-results:visible tr[data-pattern]').count()).toBe(0);
   expect(state.reads).toBe(1);
   expect(state.errors).toEqual([]);

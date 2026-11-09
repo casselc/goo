@@ -618,8 +618,9 @@ The [active roadmap](docs/ROADMAP_2026_11_09_CHECKPOINT_390.md) follows delivere
 (388), [counter display reuse](docs/NATIVE_COUNTER_VIEW_REUSE.md) (389) and
 [data-first native composition](docs/NATIVE_DATA_FIRST.md) (390). Ordinary, service
 and saved native data now lead their entry layouts; source and return ownership
-stay unchanged. The next finite queue is reusable log-pattern count displays
-(391), native HTTP-client duration profiles (392), then a proof-gated literal
+stay unchanged. [Reusable log-pattern count displays](docs/LOG_PATTERN_DISPLAY_REUSE.md) (391)
+are delivered. The remaining finite queue is
+native HTTP-client duration profiles (392), then a proof-gated literal
 source-parameter audit (393). Gauge context starts in ordinary Measurements;
 Saved and service continuation remain deferred. Earlier current RPC view reuse,
 service native interval context and measured bounded facets are also delivered.

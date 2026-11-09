@@ -205,7 +205,7 @@ func (b ViewTemplateBinding) Validate(q exploration.Query, c ViewComposition) er
 	if _, err := exploration.Compile(q); err != nil {
 		return err
 	}
-	if len(q.GroupBy) != 1 || q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.GroupTimeSeries {
+	if len(q.GroupBy) != 1 || q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.GroupTimeSeries || q.GroupBy[0] == (exploration.Field{Kind: "column", Key: "body_pattern_v1"}) {
 		return errors.New("reusable templates require one ordinary nonnumeric grouping")
 	}
 	if err := c.Validate(q); err != nil {

@@ -56,14 +56,21 @@ advanced caller-side type machinery is scheduled.
 
 ## 391 — breadth: reusable log-pattern count displays
 
+Status: [bounded implementation](LOG_PATTERN_DISPLAY_REUSE.md) delivered with
+actual source, held-return, observed-model and image acceptance recorded in
+[validation](../VALIDATION.md). The remaining queue is unchanged: 392 depth,
+then 393 consolidation.
+
 User task: “Keep this useful view of log shapes and apply it to another scoped log
 population without rebuilding its presentation.”
 
 [Log-pattern exploration](LOG_PATTERNS.md) already provides deterministic v1
 normalization, exact counts/shares, unclassified groups, record continuation,
-overall timelines, time comparisons and captures. The concrete gap is portable
-display admission: `workbench/view_declarations.go` and `ui/view-declaration.mjs`
-explicitly exclude `column:body_pattern_v1` from the ordinary Bar/Table grammar.
+overall timelines, time comparisons and captures. The former portable-display
+admission gap in Go and JavaScript is addressed by the finite
+`log-pattern-count-v1` profile and typed `log-pattern-v1` category format.
+Specialized pattern analysis remains available. The agreed scope and acceptance
+criteria follow.
 
 - Add a checked, count-only log-pattern display profile through the existing
   declaration, supplied-data renderer and immutable exploration-view owner.
@@ -83,7 +90,7 @@ explicitly exclude `column:body_pattern_v1` from the ordinary Bar/Table grammar.
   retains all filters, environment policy and fixed bounds; declaration reuse
   performs no telemetry read. Run remains explicit. Existing pattern record and
   comparison continuations retain their own checked scope and held return.
-- Before coding, finalize the smallest explicit display/data-profile contract
+- Use the smallest explicit display/data-profile contract
   across Go, JavaScript and OpenAPI. Keep it distinct from ordinary string
   categories and from numeric/duration measures that this cut does not admit.
 
@@ -94,6 +101,13 @@ destination → inspect/apply → explicit Run. Verify zero source reads on loca
 changes and configuration operations, exact destination identity, unchanged
 captured bytes and current-owner guards. Refresh storyboards, frames, Bombadil
 actions and measured Quint checks with rejecting controls.
+
+Lessons from implementation: vary observable property outputs rather than digits
+that the normalizer erases; keep capture delivery limits distinct from exact
+query-reuse limits; measure actual requests/SQL rather than browser resource
+timing counters. Held return can stage a source-free comparison only through
+an exact current-host predicate; retired acquisition authority stays retired.
+These refine acceptance, not the remaining queue.
 
 Boundary: no new normalization version, clustering engine, arbitrary text
 classifier, template-expansion arm or grouped-pattern time-series grammar. The

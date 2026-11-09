@@ -3,7 +3,8 @@
 > Active execution order: [390 product checkpoint](ROADMAP_2026_11_09_CHECKPOINT_390.md),
 > reconciled after delivered gauge-observation record context (388), counter
 > display reuse (389) and [data-first native composition](NATIVE_DATA_FIRST.md)
-> (390). The sole finite queue is **391 reusable log-pattern count displays →
+> (390). [391 reusable log-pattern count displays](LOG_PATTERN_DISPLAY_REUSE.md)
+> are delivered. The sole remaining finite queue is **
 > 392 native HTTP-client duration profiles → 393 proof-gated literal parameter
 > transport audit**, followed by whole-product review. Existing source, custody
 > and return ownership stay authoritative. Saved/service gauge context remains a

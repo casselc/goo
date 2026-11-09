@@ -1,5 +1,47 @@
 # Semantic properties and model conformance
 
+## Reusable log-pattern count displays (391)
+
+The finite `log-pattern-count-v1` declaration profile accepts only a sole
+`column:body_pattern_v1` log grouping with captured-record counts. Shared Go and
+JavaScript vectors cover profile refusal and ordinary optional-string defaults.
+Generated source projections use an independent byte-scanning identity/label
+oracle, including escaped literals and explicit unclassified groups. Find and
+ordering preserve the full denominator; changed reads and stale owners cannot
+stage a new question.
+
+From this verification module:
+
+```sh
+XDG_CACHE_HOME=/workspace/.cache \
+  go test . -run '^TestHegelLogPatternDisplay(Contract|Projection)391$' -count=1 -v
+GOO_LOG_PATTERN_DISPLAY_391_REPORT=/workspace/goo/artifacts/log-pattern-display391/summary.json \
+  go test . -run '^TestQuintLogPatternDisplayObserved391$' -count=1 -v
+```
+
+The final combined run passed in 4.631s with zero skips: 432 shared contract
+vectors (0.14s), 32 generated complete/changed projection cases (0.24s), and
+required observed Quint replay (4.24s). Actual admission covers 27 physical logs,
+four main API reads and 12 measured facts. All six semantic mutants and the
+local-source-read model control were rejected. The separate actor's nine
+physical SQL requests and full retained snapshot were admitted.
+After the held-pattern staging guard fix, the refreshed actual journey passed
+required observed replay again in 5.24s (package 5.254s), with zero skips and the
+same rejecting controls. The unchanged generated profile/projection passes
+remain applicable.
+
+Observed admission checks actual physical log membership, exact source and
+destination questions, decoded full datasets, immutable capture bytes and
+clocks, configuration content identities, local-read boundaries and positive
+actor completion. The model uses measured request/publication counters and a
+terminal completion step. Capture delivery uses the existing fixed page size;
+destination reuse preserves its own requested limit. Actor resource timing was
+unavailable; its source proof uses the complete physical SQL tail, checked
+against saved questions and typed parameters, plus the full retained snapshot.
+Setup capture/configuration publications are separate
+from the page counters. Required observed replay fails if Quint is unavailable;
+a missing report skips and is not runtime acceptance.
+
 ## Native entry consolidation (390)
 
 The observed check compares the old 389 and current native entry matrices at

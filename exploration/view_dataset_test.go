@@ -360,3 +360,53 @@ func TestViewDatasetCheckedEnvironmentPolicySurvives(t *testing.T) {
 		t.Fatal("invalid checked selector admitted")
 	}
 }
+
+func TestLogPatternDataset391IdentityAndAuthority(t *testing.T) {
+	r := viewFixture()
+	r.Question.Signal = "logs"
+	r.Question.GroupBy = []Field{{Kind: "column", Key: "body_pattern_v1"}}
+	r.Count = "4"
+	ids := []string{ReferenceLogPattern("request 123").Identity, "lp1:e", "lp1:o", "lp1:u"}
+	r.Groups = nil
+	for _, id := range ids {
+		raw, _ := json.Marshal(map[string]string{"g0": id, "count": "1"})
+		r.Groups = append(r.Groups, raw)
+	}
+	d := groupViewDataset(r, true)
+	if d == nil || d.Fields[0].Format != "log-pattern-v1" || d.Fields[0].Nullable || d.Partition == nil || d.Partition.Total != "4" {
+		t.Fatal(d)
+	}
+	for i, id := range ids {
+		if *d.Rows[i].Values["category"] != id {
+			t.Fatal("lost canonical identity")
+		}
+	}
+	r.State = "changed_between_reads"
+	d = groupViewDataset(r, true)
+	if d == nil || d.Completeness != nil || d.Partition != nil || len(d.Rows) != 4 {
+		t.Fatal("changed read acquired authority", d)
+	}
+	r.State = "observed"
+	r.Count = "5"
+	d = groupViewDataset(r, true)
+	if d == nil || d.Completeness != nil || d.Partition != nil {
+		t.Fatal("disagreeing read acquired authority", d)
+	}
+	for _, raw := range []string{`{"g0":null,"count":"1"}`, `{"g0":"lp1:p:31","count":"1"}`, `{"g0":"request ⟪digits⟫","count":"1"}`} {
+		r.Groups = []json.RawMessage{json.RawMessage(raw)}
+		if groupViewDataset(r, true) != nil {
+			t.Fatal("accepted noncanonical pattern", raw)
+		}
+	}
+	r.Groups = nil
+	r.Count = "0"
+	r.State = "no_data"
+	d = groupViewDataset(r, true)
+	if d == nil || d.Completeness == nil || d.Partition == nil || d.Partition.Total != "0" {
+		t.Fatal("empty complete population", d)
+	}
+	r.Question.Numeric = &NumericBinding{}
+	if groupViewDataset(r, true) != nil {
+		t.Fatal("pattern dataset admitted numeric binding")
+	}
+}

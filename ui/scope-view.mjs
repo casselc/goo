@@ -1,7 +1,7 @@
 import {bindIntervalRange} from './interval-range.mjs';
 /* Public passive scoped displays. The host owns scope, requests and selection. */
 import {validateSnapshot, validateDisplay, selectionIntent, scopeIntent, measureValue, supportsSelection, capabilities,displayRows,populationShare,fractionFacts,histogramIntent} from './view-model.mjs';
-import {formatCell,supportText,exactText,categoryText,isFraction,fractionContextText} from './view-values.mjs';
+import {formatCell,supportText,exactText,categoryText,categoryLabel,isFraction,fractionContextText} from './view-values.mjs';
 import {asSnapshot,parseSnapshotJSON} from './snapshots.mjs';
 import {histogramFacts,histogramBoundText,histogramRangeText,histogramCompactRangeText,nativeHistogramCompactRangeText} from './histogram-values.mjs';
 import './chart-frame.mjs';
@@ -86,7 +86,7 @@ function table(host,snapshot,display,rows=displayRows(snapshot,display)){
     if(display.scale==='population'){const share=populationShare(snapshot,entry.key),cell=n('td',share.ok?share.percent:'Unavailable');if(share.ok){cell.title=share.fraction+' captured records (exact)';cell.dataset.share=share.fraction}tr.append(cell)}
     if(snapshot.shape==='time-series')tr.append(n('td',entry.state==='no_data'?'No data · zero captured records':entry.state==='unknown'?'Unknown coverage':'Observed'));
     if(selectable){const firstField=fields.find(field=>field.key===display.category)||fields[0];
-      const cell=n('td'),button=n('button','Select');button.type='button';button.setAttribute('aria-label','Select '+(snapshot.dimensions?.length?snapshot.dimensions.map(key=>exact(entry.values[key])).join(' / '):firstField.type==='timestamp'?utc(entry.values[firstField.key]):exact(entry.values[firstField.key])));button.onclick=()=>emit(host,'goo-select',selectionIntent(snapshot,entry.key));cell.append(button);tr.append(cell)}[...tr.children].forEach((cell,index)=>{cell.dataset.label=row.children[index].textContent});body.append(tr);
+      const cell=n('td'),button=n('button','Select');button.type='button';button.setAttribute('aria-label','Select '+(snapshot.dimensions?.length?snapshot.dimensions.map(key=>categoryLabel(snapshot.fields.find(field=>field.key===key),entry.values[key])).join(' / '):firstField.type==='timestamp'?utc(entry.values[firstField.key]):categoryLabel(firstField,entry.values[firstField.key])));button.onclick=()=>emit(host,'goo-select',selectionIntent(snapshot,entry.key));cell.append(button);tr.append(cell)}[...tr.children].forEach((cell,index)=>{cell.dataset.label=row.children[index].textContent});body.append(tr);
   }
   table.append(head,body);frame.append(table);return frame;
 }
@@ -158,10 +158,10 @@ function bars(host,snapshot,display,rows=displayRows(snapshot,display)){
   if(display.scale==='population')list.append(n('small',snapshot.partition.total+' captured records · full query population','scope-view-coordinate-note'));
   for(const row of rows){
     const value=byKey.get(row.key),share=display.scale==='population'?populationShare(snapshot,row.key):null,cell=row.cells?.[display.value],button=n('button',undefined,'scope-view-bar');button.type='button';button.dataset.key=row.key;button.dataset.cellState=value.state;
-    button.append(n('span',exact(row.values[display.category]),'scope-view-label'),n('span',formatCell(field,row.values[display.value],cell)+(share?.ok?' · '+share.percent:''),'scope-view-value'));
+    button.append(n('span',categoryLabel(snapshot.fields.find(field=>field.key===display.category),row.values[display.category]),'scope-view-label'),n('span',formatCell(field,row.values[display.value],cell)+(share?.ok?' · '+share.percent:''),'scope-view-value'));
     if(value.coordinate!==null){const track=n('span',undefined,'scope-view-track'),fill=n('span',undefined,'scope-view-fill');track.setAttribute('aria-hidden','true');fill.style.width=(share?.ok?share.coordinate:max?value.coordinate/max*100:0)+'%';track.append(fill);button.append(track)}
     button.title=exactText(field,row.values[display.value],cell,fractionFacts(snapshot,row,display.value))+(share?.ok?' · '+share.fraction+' captured records (exact share)':'')+(value.reason?' · '+value.reason:'');
-    button.setAttribute('aria-label','Select '+exact(row.values[display.category])+': '+formatCell(field,row.values[display.value],cell)+(share?.ok?' · '+share.percent+' of captured population':'')+(isFraction(field)?' · '+fractionContextText(fractionFacts(snapshot,row,display.value)):'')+(supportText(cell)?' · '+supportText(cell):''));button.onclick=()=>emit(host,'goo-select',selectionIntent(snapshot,row.key));list.append(button);
+    button.setAttribute('aria-label','Select '+categoryLabel(snapshot.fields.find(field=>field.key===display.category),row.values[display.category])+': '+formatCell(field,row.values[display.value],cell)+(share?.ok?' · '+share.percent+' of captured population':'')+(isFraction(field)?' · '+fractionContextText(fractionFacts(snapshot,row,display.value)):'')+(supportText(cell)?' · '+supportText(cell):''));button.onclick=()=>emit(host,'goo-select',selectionIntent(snapshot,row.key));list.append(button);
   }
   return list;
 }
@@ -256,7 +256,7 @@ class Facet extends SuppliedElement {
       if(field.aggregation||snapshot.dimensions&&!snapshot.dimensions.includes(field.key)){this.refuse(['Choose a group dimension. Aggregate measures are not record filters.']);return}
       const root=n('div',undefined,'scope-view-facet');root.setAttribute('role','group');root.setAttribute('aria-label','Filter '+field.label);root.append(n('span',field.label,'scope-view-facet-label'));
       const values=new Map();for(const row of snapshot.rows){const value=row.values[field.key];if(value!==undefined)values.set(typeof value+':'+String(value),value)}
-      for(const value of values.values()){const button=n('button',field.type==='timestamp'&&value!==null?utc(value):exact(value));button.type='button';if(field.type==='timestamp'&&value!==null)button.title=String(value)+' ms since Unix epoch';button.onclick=()=>emit(this,'goo-scope',scopeIntent(snapshot,field.key,value));root.append(button)}
+      for(const value of values.values()){const button=n('button',field.type==='timestamp'&&value!==null?utc(value):categoryLabel(field,value));button.type='button';if(field.type==='timestamp'&&value!==null)button.title=String(value)+' ms since Unix epoch';button.onclick=()=>emit(this,'goo-scope',scopeIntent(snapshot,field.key,value));root.append(button)}
       if(!values.size)root.append(n('span','No supplied values.'));
       root.append(n('small','From supplied groups · stage a filter','scope-view-facet-note'));this.replaceChildren(root);
     }catch(error){this.refuse([error instanceof SyntaxError?'Invalid snapshot JSON.':error.message||'Unable to display supplied facets.'])}

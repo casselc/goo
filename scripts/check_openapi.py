@@ -227,6 +227,23 @@ def check_view_dataset(spec):
                     'sampling': 'unknown', 'freshness': 'fixed'},
         'completeness': {'basis': 'captured-query', 'revision': revision, 'scopeId': revision, 'aspects': ['groups']}}
     check_view.validate(snapshot)
+    pattern=copy.deepcopy(snapshot)
+    pattern['scope']['signal']='logs'
+    pattern['scope']['selector'].update(signal='logs',groupBy=[{'kind':'column','key':'body_pattern_v1'}])
+    pattern['fields'][0].update(label='column:body_pattern_v1',format='log-pattern-v1')
+    pattern['fields'][0].pop('nullable')
+    pattern['rows'][0]['values']['category']='lp1:p:6f7264657220n'
+    pattern['rows'][1]['values']['category']='lp1:e'
+    check_view.validate(pattern)
+    for change in (
+        lambda x:x['fields'][0].pop('format'),
+        lambda x:x['fields'][0].update(nullable=True),
+        lambda x:x['rows'][0]['values'].update(category=None),
+        lambda x:x['scope']['selector'].update(signal='spans'),
+        lambda x:x['fields'][0].update(format='renderer-extension'),
+    ):
+        bad=copy.deepcopy(pattern);change(bad)
+        assert not check_view.is_valid(bad), 'invalid finite log-pattern dataset shape accepted'
     unknown = copy.deepcopy(snapshot)
     unknown['quality']['extent'] = 'unknown'
     del unknown['completeness']
@@ -745,6 +762,35 @@ def check_view_summary_comparison(spec, ranked):
     bad_empty = copy.deepcopy(no_data)
     bad_empty['changes']['count'].update(state='unavailable', value=None, reason='empty-population')
     assert not check_comparison.is_valid(bad_empty), 'Known empty absolute count difference withheld'
+
+
+def check_log_pattern_display391(spec):
+    """Pattern count intent is finite; labels and runtime authority are not stored."""
+    declaration = {'version':'goo.view/1','scope':{'kind':'record-query','signal':'logs'},
+                   'kind':{'name':'bar','version':1},
+                   'display':{'category':'category','value':'count','profile':'log-pattern-count-v1','scale':'population'}}
+    for suffix in ('','Input'):
+        check = validator(spec, {'$ref':'#/components/schemas/workbench.ViewDeclaration'+suffix})
+        check.validate(declaration)
+        table=copy.deepcopy(declaration);table['kind']['name']='table';check.validate(table)
+        ordinary=copy.deepcopy(declaration);ordinary['display'].pop('profile');check.validate(ordinary)
+        for value in ('',None) if suffix else ('',):
+            default=copy.deepcopy(ordinary);default['display']['profile']=value;check.validate(default)
+        invalid=[]
+        for value in ('log-pattern-v1','ordinary',1,False):
+            bad=copy.deepcopy(declaration);bad['display']['profile']=value;invalid.append(bad)
+        for value in ('numeric.mean','duration.p95'):
+            bad=copy.deepcopy(declaration);bad['display'].update(value=value,scale='max');invalid.append(bad)
+        bad=copy.deepcopy(declaration);bad['scope']['signal']='spans';invalid.append(bad)
+        bad=copy.deepcopy(declaration);bad['display']['categoryLabel']='forged label';invalid.append(bad)
+        for bad in invalid:
+            assert not check.is_valid(bad), 'invalid log-pattern declaration shape accepted'
+    field_check=validator(spec, {'$ref':'#/components/schemas/scopedview.Field'})
+    field={'key':'category','label':'Log pattern','type':'string','format':'log-pattern-v1'}
+    field_check.validate(field)
+    for changes in ({'key':'count'},{'type':'number'},{'format':'arbitrary-renderer'}):
+        bad={**field,**changes}
+        assert not field_check.is_valid(bad), 'invalid pattern field format accepted'
 
 
 def check_document_view_card(spec):
@@ -1313,6 +1359,7 @@ def check(spec):
     check_native_view_discovery(spec)
     check_record_span_waterfall(spec)
     check_document_view_card(spec)
+    check_log_pattern_display391(spec)
     bank = json.loads((ROOT/'testdata/protocol/environment-selectors.json').read_text())
     for path in ('/explore','/tail'):
         body_schema = spec['paths'][path]['post']['requestBody']['content']['application/json']['schema']

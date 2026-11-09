@@ -3,7 +3,7 @@ import './scope-view.mjs';
 import {eligibleKinds,validateSnapshot,groupIntent,intervalIntent,displayRows,fractionFacts} from './view-model.mjs';
 import {node} from './components.mjs';
 import {hint,label as fieldLabel,qualified} from './field-presentation.mjs';
-import {formatCell,supportText,exactText,categoryText,isFraction,fractionContextText} from './view-values.mjs';
+import {formatCell,supportText,exactText,categoryText,categoryLabel,isFraction,fractionContextText} from './view-values.mjs';
 const preferences=new WeakMap();
 const utc=value=>new Date(Number(value)).toISOString();
 
@@ -57,7 +57,7 @@ export function mount(target,snapshot,{onScope,onWindow,onSelect,onInspectTrace,
  const selectionSummary=()=>{
   if(!selected){status.textContent=actionsPaused&&hasActions?pauseNotice:'';return}
   const field=snapshot.fields.find(field=>field.key===measure.value),cell=selected.cells?.[measure.value];
-  const location=temporal?`${utc(selected.values.fromMs)} → ${utc(selected.values.toMs)}`:(dimensions.length?dimensions:['category']).map(key=>categoryText(selected.values[key])).join(' / ');
+  const location=temporal?`${utc(selected.values.fromMs)} → ${utc(selected.values.toMs)}`:(dimensions.length?dimensions:['category']).map(key=>categoryLabel(snapshot.fields.find(field=>field.key===key),selected.values[key])).join(' / ');
   const context=fractionContextText(fractionFacts(snapshot,selected,measure.value))||supportText(cell);
   status.textContent=`${location} · ${field?.aggregation?formatCell(field,selected.values[field.key],cell):selected.values.count+' captured records'}${context?' · '+context:temporal&&selected.state==='no_data'?' · no captured data; health unknown':''}${actionsPaused&&hasActions?' · '+pauseNotice:''}`;
   status.title=field?exactText(field,selected.values[field.key],cell):'';

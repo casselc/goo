@@ -13,7 +13,7 @@ function normalized(view){
  const next=structuredClone(view),question=q=>JSON.parse(identity({...q,limit:q.limit??100,offset:q.offset??0})),empty=(x,key)=>{if(x[key]===undefined||x[key]===null||x[key]===''||Array.isArray(x[key])&&!x[key].length||object(x[key])&&!Object.keys(x[key]).length)delete x[key]};
  next.queries=next.queries.map(question);for(const key of ['layout','columns','fieldColumns','tail','breakdowns','displays','composition','template'])empty(next,key);
  if(next.template&&!next.template.baseline)delete next.template.baseline;if(next.tail&&!next.tail.baseline)delete next.tail.baseline;
- const declaration=d=>{for(const key of ['title','scale','order','query','view'])if(d.display[key]==='')delete d.display[key];if(d.display.requiresComplete===false)delete d.display.requiresComplete;empty(d.display,'fieldColumns')};
+ const declaration=d=>{if(d.display.profile==null||d.display.profile==='')delete d.display.profile;for(const key of ['title','scale','order','query','view'])if(d.display[key]==='')delete d.display[key];if(d.display.requiresComplete===false)delete d.display.requiresComplete;empty(d.display,'fieldColumns')};
  for(const d of Object.values(next.displays||{}))declaration(d);
  for(const child of next.composition?.children||[]){if(child.hidden===false)delete child.hidden;for(const role of ['aggregate','records','timeline','comparison','facet'])if(child[role])declaration(child[role]);if(child.comparison?.baselineQuery)child.comparison.baselineQuery=question(child.comparison.baselineQuery);}
  for(const d of Object.values(next.breakdowns||{})){if(d.distribution===false)delete d.distribution;d.metric??='';d.comparisonMetric??='';if(d.baseline)d.baseline=question(d.baseline);else delete d.baseline;}
