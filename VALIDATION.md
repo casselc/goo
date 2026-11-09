@@ -1,5 +1,80 @@
 # Validation record
 
+## Reusable counter interval displays — 389
+
+NativeView adds a counter Timeline/Table arm over
+evaluated intervals, with exact unit/domain applicability and whole destination
+question replacement. Source evaluation and immutable evidence remain separate
+from display configuration. See the [contract](docs/NATIVE_COUNTER_VIEW_REUSE.md)
+and [review](docs/reviews/COUNTER_VIEW_REVIEW_389.md).
+
+Focused Go checks pass: workbench **0.334 s**, cmd **0.065 s**, including counter
+configuration round trips, byte/hash stability, policy/domain refusals and
+source-free HTTP metadata across both counter domains.
+
+- Final frontend **1,401 individual tests passed**, zero skips (**28.877 s**);
+  focused **45 passed** (**1.162 s**). A loopback-dependent test required the
+  normal outer-executor test lane. Counter-domain, catalog-to-Inspect coherence,
+  honest unknown/zero/exact-rate rendering and prior gauge/interval paths pass.
+- Hegel **32 counter reuse fixtures / 704 JavaScript refusals** pass (**0.59 s**),
+  including physical configuration bytes, full destination compile identity and
+  nested input ownership. Existing gauge/histogram **100 fixtures / 1,800
+  refusals** pass (**1.45 s**); combined package **2.065 s**, zero skips.
+- Independent final source review found no actionable blocker.
+
+- Full root Go suite passes: cmd **10.307 s**, workbench **1.755 s**; exploration,
+  measurements and capture HTTP regressions pass from cache.
+- API reflection **694 wire schemas**; OpenAPI **112 operations / 725 schemas**.
+  **489 frozen responses / 195 admitted requests / 28 mux refusals** conform,
+  including nine new counter metadata responses across both domains. The shared
+  authored-domain schema now admits Go's valid empty integer default; null and
+  catalog-only policy names remain refused, with native-family presence gates.
+
+The first actual journey passed all 11 boundaries, including clearing a real
+prior result/selection on Apply and exact destination-policy execution. Image
+review found counter-derived null cells labelled as unrecorded source data.
+The local presenter now says **Unavailable** for unadmitted calculations and
+**Not supplied** for optional exact-rate absence. Recorded zero and raw evidence
+are unchanged; **19 focused checks passed** (**522.8 ms**, zero skips).
+The reviewed Go 1.27.3 binary is rebuilt.
+
+Final actual acceptance:
+
+- Playwright passes **1.1 min / 11 measured boundaries**. One real destination
+  result and selection are cleared by Apply; the complete destination question
+  remains intact. Main UI telemetry reads are exactly donor, destination before
+  Apply and destination after Apply. Browse/Inspect/Apply remain source-free.
+- Physical settlement checks **17 generated ordinary OTLP sum exports** across
+  donor, destination and decimal banks. The destination has **eight evaluated
+  intervals**, known rates **0 and 3**, plus six unavailable intervals with
+  gap/no-recorded-value/decrease/epoch reasons. A separate actual HTTP decimal
+  measurement verifies exact **1/4** rates; it is not claimed as a second UI flow.
+- Immutable configuration bytes stay identical. Wrong-unit and wrong-domain
+  configurations remain inspectable but cannot Apply. Local Table/Timeline
+  switching and interval selection add no reads. Final labels, four main frames
+  and the actor frame were visually inspected; native frames are deliberately
+  scrolled, not a natural-top layout claim.
+- Bombadil completes **687 snapshots / 11 phases** with one explicit destination
+  read, three metadata operations and zero writes. Exact interval/point content,
+  unknown rail, current owner and selected unavailable interval are observed.
+- Actual wire **28 genuine responses / 12 request bodies** conform (23 HTTP 200,
+  three 201 and two 400). Finished campaign data is losslessly compressed and
+  duplicate screenshot storage consolidated.
+- Independent actual ledger and required Quint pass **11 facts / 11 steps**
+  (**3.97 s**, package **3.977 s**, zero skips). Raw epoch/flag/gap/rational-rate
+  oracles and full native-result replay have separate responsibilities. All five
+  physical SQL reads (three main UI, separate decimal and actor) match the exact
+  typed parameters and read-only mode. **Ten semantic mutants** and an
+  unintended Apply-source-read model control are rejected.
+
+Final image builds and the local packages container is updated without changing
+dependencies or persistent volumes. `/health` returns `{"ok":true}`; all four
+affected embedded UI assets and OpenAPI bytes match the tested source/contract.
+The final image builds, local `/health` returns `{"ok":true}`, and its embedded
+counter UI modules and OpenAPI bytes match the tested source. The application
+container is running with dependencies and persistent volumes preserved.
+See the [storyboard](journeys/389-native-counter-view-storyboard.md).
+
 ## Gauge observation to nearby records — 388
 
 A distinct fixed ±60-second observation-context

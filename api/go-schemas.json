@@ -28467,6 +28467,9 @@
   },
   "workbench.NativeViewSummary": {
     "properties": {
+      "counterDomain": {
+        "type": "string"
+      },
       "family": {
         "type": "string"
       },

@@ -126,6 +126,57 @@ func TestNativeViewsHTTP371(t *testing.T) {
 	call("gauge-unitless", "POST", "/native-views", "", encode(gauge), 400)
 	gaugeReuse.ID = saved.ID
 	call("cross-family-reuse", "POST", "/native-views/reuse", "", encode(gaugeReuse), 400)
+	for _, domain := range []string{"", "nonnegative-decimal"} {
+		counter := in
+		counter.Title = "Native counter " + domain
+		counter.Question.Definition.Kind = "counter"
+		counter.Question.Definition.CounterDomain = domain
+		counter.Question.Definition.Source.Unit = "{request}"
+		counter.Declaration.Selection.Kind = "evaluated-intervals"
+		counter.Declaration.Kind.Name = "timeline"
+		counter.Declaration.Display = workbench.NativeViewDisplay{Category: "time", Value: "counter-rate", RequiresComplete: false}
+		w = call("create-counter-"+domain, "POST", "/native-views", "/native-views", encode(counter), 201)
+		var savedCounter workbench.NativeView
+		if err := json.Unmarshal(w.Body.Bytes(), &savedCounter); err != nil {
+			t.Fatal(err)
+		}
+		call("load-counter-"+domain, "GET", "/native-views/"+savedCounter.ID, "/native-views/{id}", "", 200)
+		destination := counter.Question
+		destination.FromMS, destination.ToMS = 70000, 130000
+		destination.Definition.MaxGapMS = 750
+		destination.Definition.Source.Services = []string{"counter-destination"}
+		reuse := workbench.NativeViewReuseRequest{ID: savedCounter.ID, Question: destination}
+		w = call("reuse-counter-"+domain, "POST", "/native-views/reuse", "/native-views/reuse", encode(reuse), 200)
+		if err := json.Unmarshal(w.Body.Bytes(), &output); err != nil || !reflect.DeepEqual(output.Question, destination) || output.ID != "" {
+			t.Fatal("counter destination changed", err)
+		}
+		counter.Declaration.Kind.Name = "table"
+		call("create-counter-table-"+domain, "POST", "/native-views", "/native-views", encode(counter), 201)
+		reuse.Question.Definition.CounterDomain = "nonnegative-decimal"
+		if domain != "" {
+			reuse.Question.Definition.CounterDomain = ""
+		}
+		call("counter-domain-refusal-"+domain, "POST", "/native-views/reuse", "", encode(reuse), 400)
+		call("counter-null-domain-"+domain, "POST", "/native-views", "", strings.Replace(encode(counter), `"source":{`, `"counterDomain":null,"source":{`, 1), 400)
+		counter.Declaration.Selection.Kind = "retained-observations"
+		call("counter-gauge-selection-"+domain, "POST", "/native-views", "", encode(counter), 400)
+	}
+	w = call("catalog-counter-domains", "GET", "/native-views", "/native-views", "", 200)
+	var catalog workbench.NativeViewList
+	if err := json.Unmarshal(w.Body.Bytes(), &catalog); err != nil {
+		t.Fatal(err)
+	}
+	counterDomains := map[string]int{}
+	for _, item := range catalog.Items {
+		if item.Family == "counter" {
+			counterDomains[item.CounterDomain]++
+		} else if item.CounterDomain != "" {
+			t.Fatal("counter domain leaked to another family")
+		}
+	}
+	if counterDomains["nonnegative-integer"] != 2 || counterDomains["nonnegative-decimal"] != 2 {
+		t.Fatal("counter catalog policy missing", counterDomains)
+	}
 	if reads != 0 {
 		t.Fatal("metadata accessed telemetry", reads)
 	}

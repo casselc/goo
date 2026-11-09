@@ -1,5 +1,12 @@
 # Architecture
 
+[Counter display reuse](NATIVE_COUNTER_VIEW_REUSE.md) extends the same finite
+NativeView owner with evaluated counter intervals. Compatibility includes exact
+unit and integer/decimal domain; catalog domain metadata is checked against the
+loaded definition. Apply replaces the complete donor question with the current
+destination and clears prior display data. Existing counter evaluation owns
+rates, gaps and reset semantics; Timeline/Table consume supplied intervals.
+
 [Gauge observation context](GAUGE_OBSERVATION_CONTEXT.md) is a separate pure
 projection from retained gauge evidence to an ordinary typed record question.
 The planner verifies stream/sample membership and clips a fixed time lookaround

@@ -1008,9 +1008,41 @@ def check_native_view_config(spec):
     for mutate in gauge_mutations:
         bad=copy.deepcopy(gauge);mutate(bad)
         assert not create.is_valid(bad), ('gauge declaration/evidence arm accepted',bad)
+    counter=copy.deepcopy(view)
+    counter['question']['definition'].update(kind='counter')
+    counter['question']['definition']['source']['unit']='{item}'
+    counter['declaration'].update(selection={'kind':'evaluated-intervals'},kind={'name':'timeline','version':1},display={'category':'time','value':'counter-rate','requiresComplete':False})
+    for domain in ('', 'nonnegative-decimal'):
+        for kind in ('timeline', 'table'):
+            value=copy.deepcopy(counter);value['declaration']['kind']['name']=kind
+            value['question']['definition']['counterDomain']=domain
+            create.validate(value);saved.validate({**value,'id':'d'*64});unsaved.validate(value)
+            reuse.validate({'id':'d'*64,'question':value['question']})
+    create.validate(counter)  # Omitted domain is the existing integer evaluator.
+    counter_mutations=[
+        lambda x:x['question']['definition'].update(counterDomain='nonnegative-integer'),
+        lambda x:x['question']['definition'].update(counterDomain=None),
+        lambda x:x['question']['definition'].update(counterDomain='signed'),
+        lambda x:x['question']['definition'].update(grain='consumer-group'),
+        lambda x:x['question']['definition']['source'].update(resource={'kind':'host','id':'h'}),
+        lambda x:x['declaration']['display'].update(requiresComplete=True),
+        lambda x:x['declaration']['display'].pop('requiresComplete'),
+        lambda x:x['declaration']['display'].update(value='recorded-value'),
+        lambda x:x['declaration']['kind'].update(name='histogram'),
+        lambda x:x['declaration']['selection'].update(kind='retained-observations'),
+        lambda x:x['declaration']['selection'].update(kind='export-interval'),
+        lambda x:x['declaration'].update(intervalIndex=0),
+        lambda x:x.update(rows=[],basis='x'),
+    ]
+    for mutate in counter_mutations:
+        bad=copy.deepcopy(counter);mutate(bad)
+        assert not create.is_valid(bad), ('counter display accepted unsupported policy or evidence',bad)
+    for base in (gauge,view):
+        bad=copy.deepcopy(base);bad['question']['definition']['counterDomain']=''
+        assert not create.is_valid(bad), 'counter policy field leaked into another family'
     # Existing ordinary record-template admission remains a separate schema arm.
     assert not validator(spec,{'$ref':'#/components/schemas/ExplorationView'}).is_valid(view)
-    print('Native view configuration: closed histogram/gauge arms, explicit false completeness, whole destination question, donor-evidence refusal and source-free route contracts pass')
+    print('Native view configuration: closed histogram/gauge/counter arms, explicit false completeness, whole destination question, donor-evidence refusal and source-free route contracts pass')
 
 
 def check_native_view_discovery(spec):
@@ -1027,6 +1059,14 @@ def check_native_view_discovery(spec):
     page.validate({**complete,'items':[gauge]})
     for bad in ({**complete,'total':1},{**complete,'items':[{**item,'question':{}}]},{**complete,'items':[{**item,'kind':'bar'}]},{**complete,'items':[{**item,'unit':'By'}]},{**complete,'diagnostics':partial['diagnostics']},{**partial,'diagnostics':[]},{**partial,'nextCursor':''},{**partial,'diagnostics':[{'id':'b'*64,'reason':'open /private/path'}]},{**complete,'items':[item]*21}):
         assert not page.is_valid(bad), ('native discovery schema accepted malformed metadata',bad)
+    counter={'id':'d'*64,'title':'Counter rate','kind':'timeline','unit':'{item}','family':'counter','selection':'evaluated-intervals','counterDomain':'nonnegative-integer'}
+    for domain in ('nonnegative-integer','nonnegative-decimal'):
+        page.validate({**complete,'items':[{**counter,'counterDomain':domain}]})
+    for mutate in (lambda x:x.pop('counterDomain'),lambda x:x.update(counterDomain=''),lambda x:x.update(counterDomain=None),lambda x:x.update(counterDomain='signed'),lambda x:x.update(selection='retained-observations'),lambda x:x.update(kind='histogram')):
+        bad=copy.deepcopy(counter);mutate(bad)
+        assert not page.is_valid({**complete,'items':[bad]}), ('counter metadata lost applicability',bad)
+    for base in (item,gauge):
+        assert not page.is_valid({**complete,'items':[{**base,'counterDomain':'nonnegative-integer'}]}), 'non-counter catalog acquired counter policy'
     bank=json.loads((ROOT/'testdata/protocol/native-histogram-view-questions-373.json').read_text())
     assert bank['version']=='goo.native-histogram-question-cases/1'
     cases=bank['cases'];assert len(cases)>=57
@@ -1404,7 +1444,7 @@ def check(spec):
                     accepted.append((shape, request))
     # Native histogram discovery adds five actual successful GET responses
     # to the prior 471/186/28 fixture baseline.
-    assert responses == 480 and requests == 189 and mux_refusals == 28, (responses, requests, mux_refusals)
+    assert responses == 489 and requests == 195 and mux_refusals == 28, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)

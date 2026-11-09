@@ -8,7 +8,9 @@ only the pages already loaded, without a request.
 Rows reuse the shared definition-library presenter and show title, measurement
 family, display kind, exact unit and compatibility with the current question. **Inspect** loads
 and verifies that exact immutable configuration. Its title, family, selection, kind and unit must
-match the row before Apply becomes available. An incompatible family or unit remains
+match the row before Apply becomes available. Counter rows additionally carry
+their normalized integer/decimal domain, checked against the loaded definition.
+An incompatible family, unit or counter domain remains
 inspectable, with Apply disabled. The exact-ID input remains available.
 
 ```mermaid

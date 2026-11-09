@@ -278,27 +278,27 @@ for suffix in ('', 'Input'):
  declaration['required']=['version','scope','selection','kind','display']
  declaration['properties']['version']={'const':'goo.view/1'}
  declaration['properties']['scope']={'type':'object','additionalProperties':False,'required':['kind','signal'],'properties':{'kind':{'const':'measurement-question'},'signal':{'const':'metrics'}}}
- declaration['properties']['selection']={'type':'object','additionalProperties':False,'required':['kind'],'properties':{'kind':{'enum':['export-interval','retained-observations']}}}
+ declaration['properties']['selection']={'type':'object','additionalProperties':False,'required':['kind'],'properties':{'kind':{'enum':['export-interval','retained-observations','evaluated-intervals']}}}
  declaration['properties']['kind']={'type':'object','additionalProperties':False,'required':['name','version'],'properties':{'name':{'enum':['histogram','timeline','table']},'version':{'const':1}}}
- declaration['properties']['display']={'type':'object','additionalProperties':False,'required':['category','value','requiresComplete'],'properties':{'category':{'enum':['bucket','time']},'value':{'enum':['observation-count','recorded-value']},'requiresComplete':{'type':'boolean'}}}
- declaration['oneOf']=[{'properties':{'selection':{'const':{'kind':'export-interval'}},'kind':{'properties':{'name':{'enum':['histogram','table']}}},'display':{'const':{'category':'bucket','value':'observation-count','requiresComplete':True}}}}, {'properties':{'selection':{'const':{'kind':'retained-observations'}},'kind':{'properties':{'name':{'enum':['timeline','table']}}},'display':{'const':{'category':'time','value':'recorded-value','requiresComplete':False}}}}]
+ declaration['properties']['display']={'type':'object','additionalProperties':False,'required':['category','value','requiresComplete'],'properties':{'category':{'enum':['bucket','time']},'value':{'enum':['observation-count','recorded-value','counter-rate']},'requiresComplete':{'type':'boolean'}}}
+ declaration['oneOf']=[{'properties':{'selection':{'const':{'kind':'export-interval'}},'kind':{'properties':{'name':{'enum':['histogram','table']}}},'display':{'const':{'category':'bucket','value':'observation-count','requiresComplete':True}}}}, {'properties':{'selection':{'const':{'kind':'retained-observations'}},'kind':{'properties':{'name':{'enum':['timeline','table']}}},'display':{'const':{'category':'time','value':'recorded-value','requiresComplete':False}}}}, {'properties':{'selection':{'const':{'kind':'evaluated-intervals'}},'kind':{'properties':{'name':{'enum':['timeline','table']}}},'display':{'const':{'category':'time','value':'counter-rate','requiresComplete':False}}}}]
  # This does not add presentation to Definition or to the reusable record-query arm.
  question_base='measurements.Question'+suffix
  definition_base='measurements.Definition'+suffix
  binding_base='measurements.Binding'+suffix
- question={'allOf':[ref(question_base),{'type':'object','required':['definition','fromMs','toMs'],'properties':{'fromMs':{'type':'integer'},'toMs':{'type':'integer'},'fromNS':{'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':19},'toNS':{'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':19},'definition':{'allOf':[ref(definition_base),{'type':'object','required':['apiVersion','name','title','kind','grain','source','lookbackMinutes','maxGapMs'],'properties':{'kind':{'enum':['histogram','gauge']},'grain':{'const':'per-stream'},'histogramBucketMs':False,'source':{'allOf':[ref(binding_base),{'type':'object','required':['services','scope','version','schemaURL','metric','unit'],'properties':{'unit':{'type':'string','minLength':1,'maxLength':64,'pattern':r'^[^\u0000\uD800-\uDFFF]*$'},'resource':False}}]}}}]}}}]}
+ question={'allOf':[ref(question_base),{'type':'object','required':['definition','fromMs','toMs'],'properties':{'fromMs':{'type':'integer'},'toMs':{'type':'integer'},'fromNS':{'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':19},'toNS':{'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':19},'definition':{'allOf':[ref(definition_base),{'type':'object','required':['apiVersion','name','title','kind','grain','source','lookbackMinutes','maxGapMs'],'properties':{'kind':{'enum':['histogram','gauge','counter']},'grain':{'const':'per-stream'},'histogramBucketMs':False,'source':{'allOf':[ref(binding_base),{'type':'object','required':['services','scope','version','schemaURL','metric','unit'],'properties':{'unit':{'type':'string','minLength':1,'maxLength':64,'pattern':r'^[^\u0000\uD800-\uDFFF]*$'},'resource':False}}]}}}]}}}]}
  # Native wire strings preserve explicit empty identities without altering ordinary admission.
  text_pattern=r'^[^\uD800-\uDFFF]*$'
  definition=question['allOf'][1]['properties']['definition']
  dp=definition['allOf'][1]['properties']
  dp.update(apiVersion={'const':'goo/measurement-package/v1alpha1'},name={'type':'string','pattern':'^[A-Za-z][A-Za-z0-9_.-]{0,127}$'},title={'type':'string','minLength':1,'maxLength':160,'pattern':text_pattern},lookbackMinutes={'type':'integer','minimum':1,'maximum':120},maxGapMs={'type':'integer','minimum':1,'maximum':600000})
- dp.update({key:False for key in ('counterDomain','stateProfile','stockDomain','histogramPercentiles','histogramThresholdsMs','lifecycle','thresholds','slo','objective','good','total') if key in schemas[definition_base]['properties']})
+ dp.update({key:False for key in ('stateProfile','stockDomain','histogramPercentiles','histogramThresholdsMs','lifecycle','thresholds','slo','objective','good','total') if key in schemas[definition_base]['properties']})
  source=dp['source']['allOf'][1]
  for key,limit,minimum in [('scope',256,1),('version',128,0),('schemaURL',1024,0),('metric',256,1)]:source['properties'][key]={'type':'string','minLength':minimum,'maxLength':limit,'pattern':text_pattern}
  source['properties']['services']={'type':'array','minItems':1,'maxItems':8,'uniqueItems':True,'items':{'type':'string','minLength':1,'maxLength':128,'pattern':text_pattern}}
  source['properties']['exactStream']={'anyOf':[{'type':'null'},{'type':'object','required':['scope','version','schemaURL'],'properties':{key:{'type':'string','minLength':minimum,'maxLength':limit,'pattern':text_pattern} for key,limit,minimum in [('scope',256,1),('version',128,0),('schemaURL',1024,0)]}}]}
  question['allOf'][1]['dependentRequired']={'fromNS':['toNS'],'toNS':['fromNS']}
- definition['allOf'][1]['allOf']=[{'if':{'properties':{'kind':{'const':'histogram'}}},'then':{'properties':{'source':{'required':['unit'],'properties':{'unit':{'enum':['s','ms']}}}}}}]
+ definition['allOf'][1]['allOf']=[{'if':{'properties':{'kind':{'const':'histogram'}}},'then':{'properties':{'source':{'required':['unit'],'properties':{'unit':{'enum':['s','ms']}}}}}}, {'if':{'properties':{'kind':{'const':'counter'}}},'then':{'properties':{'counterDomain':{'enum':['','nonnegative-decimal']}}},'else':{'properties':{'counterDomain':False}}}]
  schemas['NativeViewQuestion'+suffix]=question
  for name in ('workbench.NativeView'+suffix,'workbench.NativeViewInput'+suffix,'workbench.NativeViewReuseRequest'+suffix):
   if name not in schemas:continue
@@ -308,10 +308,10 @@ for suffix in ('', 'Input'):
   if 'title' in props:props['title']={'type':'string','minLength':1,'maxLength':120,'pattern':r'\S','description':'Configuration title, not a source scope or captured evidence label. Go enforces UTF-8 byte and control-character limits.'}
   if 'declaration' in props:
    props['declaration']=ref('workbench.NativeViewDeclaration'+suffix)
-   shape['oneOf']=[{'properties':{'question':{'properties':{'definition':{'properties':{'kind':{'const':family}}}}},'declaration':{'properties':{'selection':{'const':{'kind':selection}}}}}} for family,selection in [('histogram','export-interval'),('gauge','retained-observations')]]
+   shape['oneOf']=[{'properties':{'question':{'properties':{'definition':{'properties':{'kind':{'const':family}}}}},'declaration':{'properties':{'selection':{'const':{'kind':selection}}}}}} for family,selection in [('histogram','export-interval'),('gauge','retained-observations'),('counter','evaluated-intervals')]]
   if 'id' in props:props['id']={'type':'string','pattern':'^[a-f0-9]{64}$'}
   shape['required']=['id','question'] if 'ReuseRequest' in name else ['version','title','question','declaration']
- if 'workbench.NativeView'+suffix in schemas:schemas['workbench.NativeView'+suffix]['description']='Immutable native histogram or gauge display configuration. View ID includes question and declaration; changing the display does not change the measurement question or evidence identity. No stream index, export bounds, bins, values, basis or read clock is stored.'
+ if 'workbench.NativeView'+suffix in schemas:schemas['workbench.NativeView'+suffix]['description']='Immutable native histogram, gauge or counter display configuration. View ID includes question and declaration; changing the display does not change the measurement question or evidence identity. No stream index, export bounds, bins, values, basis or read clock is stored.'
 
 # Discovery scans at most twenty candidate IDs, exposing sanitized metadata only.
 native_list=schemas['workbench.NativeViewList']
@@ -323,11 +323,13 @@ native_list['properties']['nextCursor']={'type':'string','pattern':'^[a-f0-9]{64
 native_list['allOf']=[{'if':{'properties':{'partial':{'const':True}},'required':['partial']},'then':{'properties':{'diagnostics':{'minItems':1}}},'else':{'properties':{'diagnostics':{'maxItems':0}}}}]
 native_list['description']='Source-free metadata discovery over at most twenty scanned candidate IDs. Items and diagnostics are disjoint and together at most twenty; corrupt artifacts are unavailable, not silently absent. A present nextCursor requires twenty combined items and diagnostics and is the last scanned candidate only when more candidates exist. Combined counts, ordering, disjoint IDs and cursor relations are checked by Go. Neither a page nor an empty items array establishes a complete catalog.'
 for name in ('workbench.NativeViewSummary','workbench.NativeViewListDiagnostic'):
- shape=schemas[name];shape['additionalProperties']=False;shape['required']=list(shape['properties']);shape['properties']['id']={'type':'string','pattern':'^[a-f0-9]{64}$'}
+ shape=schemas[name];shape['additionalProperties']=False;shape['required']=[key for key in shape['properties'] if key!='counterDomain'];shape['properties']['id']={'type':'string','pattern':'^[a-f0-9]{64}$'}
  if 'kind' in shape['properties']:
   shape['properties']['kind']={'enum':['histogram','timeline','table']};shape['properties']['unit']={'type':'string','minLength':1,'maxLength':64,'pattern':r'^[^\u0000\uD800-\uDFFF]*$'};shape['properties']['title']={'type':'string','minLength':1,'maxLength':120}
-  shape['properties']['family']={'enum':['histogram','gauge']};shape['properties']['selection']={'enum':['export-interval','retained-observations']}
-  shape['oneOf']=[{'properties':{'family':{'const':'histogram'},'selection':{'const':'export-interval'},'kind':{'enum':['histogram','table']},'unit':{'enum':['s','ms']}}},{'properties':{'family':{'const':'gauge'},'selection':{'const':'retained-observations'},'kind':{'enum':['timeline','table']}}}]
+  shape['properties']['family']={'enum':['histogram','gauge','counter']};shape['properties']['selection']={'enum':['export-interval','retained-observations','evaluated-intervals']}
+  shape['oneOf']=[{'properties':{'family':{'const':'histogram'},'selection':{'const':'export-interval'},'kind':{'enum':['histogram','table']},'unit':{'enum':['s','ms']}}},{'properties':{'family':{'const':'gauge'},'selection':{'const':'retained-observations'},'kind':{'enum':['timeline','table']}}},{'required':['counterDomain'],'properties':{'family':{'const':'counter'},'selection':{'const':'evaluated-intervals'},'kind':{'enum':['timeline','table']}}}]
+  shape['properties']['counterDomain']={'enum':['nonnegative-integer','nonnegative-decimal']}
+  shape['allOf']=[{'if':{'properties':{'family':{'const':'counter'}}},'else':{'properties':{'counterDomain':False}}}]
  else:shape['properties']['reason']={'const':'unavailable-artifact'}
 
 # Shipped and authored configuration-only template expansion share one endpoint.
@@ -810,7 +812,7 @@ aggregate['groups']={'type':'array','items':{'$ref':'#/components/schemas/Record
 schemas['exploration.RecordAggregatesResult']['description']='Aggregate-only record projection: exactly count and groups reads plus one optional time-series read. Separate clocks/content bases do not establish a transactional snapshot. Changed aggregates are diagnostic and non-actionable. Never includes source rows, fields, plan, pagination or retention token.'
 # Fractional counters are explicit; omitted domain preserves integer contracts.
 for name in ('measurements.Definition','measurements.DefinitionInput'):
- schemas[name]['properties']['counterDomain'].update({'enum':['nonnegative-decimal'],'description':'Optional per-stream counter-only exact exported decimal domain. Omitted keeps integer counter semantics. Host authority requires this opt-in; Pinned CPU-time defaults use cumulative seconds; explicitly expanded network/disk profiles certify whole byte counts below 2^53 and retain cumulative temporality.'})
+ schemas[name]['properties']['counterDomain'].update({'enum':['','nonnegative-decimal'],'description':'Optional per-stream counter-only exact exported decimal domain. Omitted or empty keeps integer counter semantics. Host authority requires this opt-in; Pinned CPU-time defaults use cumulative seconds; explicitly expanded network/disk profiles certify whole byte counts below 2^53 and retain cumulative temporality.'})
 for name in ('metrics.CounterResult',):
  schemas[name]['properties']['valueDomain'].update({'enum':['nonnegative-decimal'],'description':'Explicit bounded nonnegative decimal arithmetic. Omitted retains uint64 input/count semantics.'})
 schemas['metrics.CounterInterval']['properties']['delta'].update({'maxLength':1024,'description':'Exact canonical base-ten interval difference, present only for ok intervals. Decimal differences can be longer than individual input values.'})

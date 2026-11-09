@@ -4502,3 +4502,51 @@ Full review UI/HTTP publication/export will require its own meaningful target,
 revision and actual-journey acceptance after this gate. See
 [contract, Go usage and planned storyboard](../docs/CAPTURE_RECORD_REVIEW_GATE.md)
 and [validation](../VALIDATION.md) for gate status and the unimplemented boundary.
+
+## Reusable evaluated counter displays — 389
+
+`TestHegelNativeViewReuse389` exercises 32 generated configurations across the
+implicit integer and explicit decimal domains. Exact units and normalized domains
+must match; the complete destination question, source identity, environment,
+namespace, exact bounds and freshness policy replace the donor. Compile identity,
+closed round trips, detached nested values and physical stored bytes are checked.
+The JavaScript projection agrees on all 32 applications and rejects 704 malformed
+or incompatible cases. This passed in 0.59 s; the existing gauge/histogram 386
+property passed its 100 examples in 1.45 s (combined package 2.065 s, zero skips).
+
+```sh
+go -C verification test -run '^(TestHegelNativeViewReuse389|TestHegelNativeViewReuse386)$' -count=1 -v .
+```
+
+The actual journey ledger is separately enabled with
+`GOO_NATIVE_COUNTER_VIEW_389_REPORT=artifacts/native-counter-view389/summary.json`.
+Run it from the repository root after the complete browser campaign:
+
+```sh
+GOO_NATIVE_COUNTER_VIEW_389_REPORT="$PWD/artifacts/native-counter-view389/summary.json" go -C verification test -run '^TestQuintNativeCounterViewObserved389$' -count=1 -v .
+```
+
+Its raw-source oracle derives cumulative interval states from reported epochs,
+flags, values and time gaps, and uses rational arithmetic for the decimal fixture.
+Full Go measurement replay is a separate integrity check. It validates immutable
+configuration, exact destination ownership, source-free metadata/local changes,
+painted zero versus unknown, and independently observed actor completion before
+required Quint replay.
+
+Final actual ledger passed in **3.97 s** (package **3.977 s**, zero skips):
+**11 measured facts → 11 model steps**. Three UI measurement reads, one direct
+HTTP decimal read and one independent actor read account for all **five physical
+SQL requests**, including exact parameter and read-only checks. The raw bank
+contains three donor, nine selected destination, two foreign destination and
+three decimal exports. Independent epoch/flag/gap/reset-taint arithmetic admits
+known zero, six unavailable destination intervals, final rate three and decimal
+exact rates **1/4**. Derived unavailable table fields must say `Unavailable`;
+a known integer interval's absent exact-rate field says `Not supplied`.
+
+Configuration bytes/hash, whole-destination ownership, real prior selection zero
+cleared by Apply, new-run default selection seven, and completed actor outcomes
+are checked before model replay. **Ten semantic mutations** and an unintended
+Apply-read model control are rejected. The model reuses the existing finite
+read/history counter contract; raw membership, rates and display meanings are
+independently checked in Go. This is measured trace validation, not generated
+application schedules or a claim of full source completeness.

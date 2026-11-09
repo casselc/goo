@@ -4,13 +4,16 @@ Implemented in milestone 386. See [validation](../VALIDATION.md) and the
 [executable storyboard](../journeys/386-native-gauge-view-storyboard.md).
 
 A saved native display is configuration, separate from measurement calculation
-and captured observations. Gauge and histogram displays share one immutable
+and captured observations. Gauge, histogram and counter displays share one immutable
 `NativeView` API and one browser owner. They have different selection contracts:
 
 | Measurement | Selection | Display kinds | Data meaning |
 | --- | --- | --- | --- |
 | Histogram | `export-interval` | Histogram, Table | Complete bins of one evaluated export distribution; not proof of complete upstream collection |
 | Gauge | `retained-observations` | Timeline, Table | Recorded instantaneous samples, with observed, stale and unknown states; not continuous coverage |
+| Counter | `evaluated-intervals` | Timeline, Table | Evaluated rates with gaps and reset boundaries; exact unit and domain applicability |
+
+The [counter arm](NATIVE_COUNTER_VIEW_REUSE.md) adds explicit domain compatibility.
 
 For a gauge, choose Timeline or Table, then save its display configuration. On a
 compatible current gauge question, browse saved displays, inspect a candidate,
@@ -26,7 +29,8 @@ question wins: service,
 namespace, environment policy, source identity and exact-stream selector,
 attributes, fixed bounds, lookback and freshness policy. Donor resource identity,
 values, selected observations, read clock, evidence basis and custody never
-transfer. Unsupported resource, counter, stock and state arms are refused.
+transfer. Gauge reuse refuses cross-family donors, resource bindings, stocks and
+states. Counter-to-counter reuse uses its separate domain check in the same owner.
 
 Switching Timeline/Table changes only the supplied-data projection. Gauge
 freshness stays evaluated at the fixed question window end; reopening a stored

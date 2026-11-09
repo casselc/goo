@@ -559,7 +559,7 @@ carry a result or page fields and cannot substitute for a full page. See
 
 `/native-views` provides source-free save/list, exact-ID load and checked reuse
 through `/native-views/reuse`. A `NativeView` pairs a complete measurement question
-with a closed `goo.view/1` declaration. Gauge and histogram arms have different
+with a closed `goo.view/1` declaration. Gauge, histogram and counter arms have different
 selection/display policies; family, selection and exact unit also appear in
 bounded verified catalog summaries. Reuse preserves the complete destination
 question and returns an unsaved configuration without the donor ID. It does not
@@ -571,6 +571,15 @@ and complete-bin Histogram/Table. The native compiler's nonempty-unit requiremen
 remains authoritative. See [gauge reuse](NATIVE_GAUGE_VIEW_REUSE.md),
 [histogram reuse](NATIVE_HISTOGRAM_VIEW_REUSE.md) and
 [bounded discovery](NATIVE_VIEW_DISCOVERY.md).
+
+The [counter arm](NATIVE_COUNTER_VIEW_REUSE.md) uses `evaluated-intervals`,
+Timeline/Table and `display: {category: time, value: counter-rate,
+requiresComplete: false}`. Reuse checks exact base unit and counter domain.
+Counter summaries require normalized `counterDomain` (`nonnegative-integer` or
+`nonnegative-decimal`); other families cannot carry that field. Authored counter
+questions retain the existing omitted/empty integer default or
+`nonnegative-decimal` policy. Summary labels are not new authored policies.
+The complete destination question, including its maximum gap, stays unchanged.
 
 [Gauge observation context](GAUGE_OBSERVATION_CONTEXT.md) is a Go library/browser
 projection, not another HTTP operation. Its clipped nearby-record question uses

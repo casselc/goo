@@ -6,7 +6,7 @@ import * as Native from '../ui/native-view-declaration.mjs';
 const {result}=createRequire(import.meta.url)('./fixtures/native-histogram.cjs');
 const deferred=()=>{let resolve;const promise=new Promise(r=>resolve=r);return{promise,resolve}};
 function setup(family='histogram'){
- const question=result().question;if(family==='gauge'){question.definition.kind='gauge';question.definition.source.unit='By'}const source={version:1,id:'a'.repeat(64),title:'Interval display',question:structuredClone(question),declaration:Native.create(question,'table')};
+ const question=result().question;if(family==='gauge'){question.definition.kind='gauge';question.definition.source.unit='By'}else if(family==='counter'){question.definition.kind='counter';question.definition.source.unit='{work}'}const source={version:1,id:'a'.repeat(64),title:'Interval display',question:structuredClone(question),declaration:Native.create(question,'table')};
  const host=node('section');document.body.append(host);
  let owner={question:structuredClone(question),generation:1,active:true};
  const calls=[],applied=[],pending=[];
@@ -60,4 +60,10 @@ test('gauge owner stages only exact destination intent and fences replaced or hi
 
 test('gauge metadata with omitted unit is refused before it can be applied',async()=>{
  const s=setup('gauge');delete s.source.question.definition.source.unit;const loading=s.load.onclick();s.pending.shift().resolve(s.source);await loading;assert.equal(s.apply.disabled,true);assert.match(s.status.textContent,/Display unavailable/);assert.doesNotMatch(s.status.textContent,/undefined/);assert.equal(s.applied.length,0);
+});
+
+
+test('counter owner stages only exact destination policy and rejects catalog-to-inspect domain substitutions',async()=>{
+ const s=setup('counter'),destination=structuredClone(s.owner().question);destination.definition.source.services=['another'];destination.definition.maxGapMs=1234;destination.fromMs++;s.setOwner({...s.owner(),question:destination});let operation=s.load.onclick();s.pending.shift().resolve(s.source);await operation;assert.equal(s.apply.disabled,false);operation=s.apply.onclick();assert.deepEqual(s.calls[1].body.question,destination);s.pending.shift().resolve(Native.reuse(s.source,destination));await operation;assert.equal(s.applied.length,1);assert.deepEqual(s.applied[0].question,destination);assert.equal(s.calls.length,2);
+ const h=setup('counter'),find=id=>h.host.querySelectorAll('input').find(e=>e.id===id)||h.host.querySelectorAll('button').find(e=>e.id===id)||h.host.querySelectorAll('div').find(e=>e.id===id),browse=find('measureNativeViewBrowse');operation=browse.onclick();h.pending.shift().resolve({items:[{id:h.source.id,title:h.source.title,family:'counter',selection:'evaluated-intervals',kind:'table',unit:'{work}',counterDomain:'nonnegative-integer'}],partial:false,diagnostics:[]});await operation;const rows=find('measureNativeViewRows'),entry=rows.querySelector('[data-definition-key]');assert(entry);operation=entry.onclick();const changed=structuredClone(h.source);changed.question.definition.counterDomain='nonnegative-decimal';h.pending.shift().resolve(changed);await operation;assert.equal(h.apply.disabled,true);assert.match(h.status.textContent,/listing summary/);assert.equal(h.applied.length,0);
 });

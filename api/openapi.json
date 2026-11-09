@@ -27193,9 +27193,10 @@
           "counterDomain": {
             "type": "string",
             "enum": [
+              "",
               "nonnegative-decimal"
             ],
-            "description": "Optional per-stream counter-only exact exported decimal domain. Omitted keeps integer counter semantics. Host authority requires this opt-in; Pinned CPU-time defaults use cumulative seconds; explicitly expanded network/disk profiles certify whole byte counts below 2^53 and retain cumulative temporality."
+            "description": "Optional per-stream counter-only exact exported decimal domain. Omitted or empty keeps integer counter semantics. Host authority requires this opt-in; Pinned CPU-time defaults use cumulative seconds; explicitly expanded network/disk profiles certify whole byte counts below 2^53 and retain cumulative temporality."
           },
           "environment": {
             "type": "string"
@@ -27384,9 +27385,10 @@
               }
             ],
             "enum": [
+              "",
               "nonnegative-decimal"
             ],
-            "description": "Optional per-stream counter-only exact exported decimal domain. Omitted keeps integer counter semantics. Host authority requires this opt-in; Pinned CPU-time defaults use cumulative seconds; explicitly expanded network/disk profiles certify whole byte counts below 2^53 and retain cumulative temporality."
+            "description": "Optional per-stream counter-only exact exported decimal domain. Omitted or empty keeps integer counter semantics. Host authority requires this opt-in; Pinned CPU-time defaults use cumulative seconds; explicitly expanded network/disk profiles certify whole byte counts below 2^53 and retain cumulative temporality."
           },
           "environment": {
             "type": "string"
@@ -48681,9 +48683,33 @@
                 }
               }
             }
+          },
+          {
+            "properties": {
+              "question": {
+                "properties": {
+                  "definition": {
+                    "properties": {
+                      "kind": {
+                        "const": "counter"
+                      }
+                    }
+                  }
+                }
+              },
+              "declaration": {
+                "properties": {
+                  "selection": {
+                    "const": {
+                      "kind": "evaluated-intervals"
+                    }
+                  }
+                }
+              }
+            }
           }
         ],
-        "description": "Immutable native histogram or gauge display configuration. View ID includes question and declaration; changing the display does not change the measurement question or evidence identity. No stream index, export bounds, bins, values, basis or read clock is stored."
+        "description": "Immutable native histogram, gauge or counter display configuration. View ID includes question and declaration; changing the display does not change the measurement question or evidence identity. No stream index, export bounds, bins, values, basis or read clock is stored."
       },
       "workbench.NativeViewDeclaration": {
         "properties": {
@@ -48705,7 +48731,8 @@
               "value": {
                 "enum": [
                   "observation-count",
-                  "recorded-value"
+                  "recorded-value",
+                  "counter-rate"
                 ]
               },
               "requiresComplete": {
@@ -48759,7 +48786,8 @@
               "kind": {
                 "enum": [
                   "export-interval",
-                  "retained-observations"
+                  "retained-observations",
+                  "evaluated-intervals"
                 ]
               }
             }
@@ -48830,6 +48858,32 @@
                 }
               }
             }
+          },
+          {
+            "properties": {
+              "selection": {
+                "const": {
+                  "kind": "evaluated-intervals"
+                }
+              },
+              "kind": {
+                "properties": {
+                  "name": {
+                    "enum": [
+                      "timeline",
+                      "table"
+                    ]
+                  }
+                }
+              },
+              "display": {
+                "const": {
+                  "category": "time",
+                  "value": "counter-rate",
+                  "requiresComplete": false
+                }
+              }
+            }
           }
         ]
       },
@@ -48854,7 +48908,8 @@
               "value": {
                 "enum": [
                   "observation-count",
-                  "recorded-value"
+                  "recorded-value",
+                  "counter-rate"
                 ]
               },
               "requiresComplete": {
@@ -48908,7 +48963,8 @@
               "kind": {
                 "enum": [
                   "export-interval",
-                  "retained-observations"
+                  "retained-observations",
+                  "evaluated-intervals"
                 ]
               }
             }
@@ -48974,6 +49030,32 @@
                 "const": {
                   "category": "time",
                   "value": "recorded-value",
+                  "requiresComplete": false
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "selection": {
+                "const": {
+                  "kind": "evaluated-intervals"
+                }
+              },
+              "kind": {
+                "properties": {
+                  "name": {
+                    "enum": [
+                      "timeline",
+                      "table"
+                    ]
+                  }
+                }
+              },
+              "display": {
+                "const": {
+                  "category": "time",
+                  "value": "counter-rate",
                   "requiresComplete": false
                 }
               }
@@ -49103,6 +49185,30 @@
                   "selection": {
                     "const": {
                       "kind": "retained-observations"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "question": {
+                "properties": {
+                  "definition": {
+                    "properties": {
+                      "kind": {
+                        "const": "counter"
+                      }
+                    }
+                  }
+                }
+              },
+              "declaration": {
+                "properties": {
+                  "selection": {
+                    "const": {
+                      "kind": "evaluated-intervals"
                     }
                   }
                 }
@@ -49303,10 +49409,17 @@
       },
       "workbench.NativeViewSummary": {
         "properties": {
+          "counterDomain": {
+            "enum": [
+              "nonnegative-integer",
+              "nonnegative-decimal"
+            ]
+          },
           "family": {
             "enum": [
               "histogram",
-              "gauge"
+              "gauge",
+              "counter"
             ]
           },
           "id": {
@@ -49323,7 +49436,8 @@
           "selection": {
             "enum": [
               "export-interval",
-              "retained-observations"
+              "retained-observations",
+              "evaluated-intervals"
             ]
           },
           "title": {
@@ -49385,6 +49499,41 @@
                   "timeline",
                   "table"
                 ]
+              }
+            }
+          },
+          {
+            "required": [
+              "counterDomain"
+            ],
+            "properties": {
+              "family": {
+                "const": "counter"
+              },
+              "selection": {
+                "const": "evaluated-intervals"
+              },
+              "kind": {
+                "enum": [
+                  "timeline",
+                  "table"
+                ]
+              }
+            }
+          }
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "family": {
+                  "const": "counter"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "counterDomain": false
               }
             }
           }
@@ -53156,7 +53305,8 @@
                       "kind": {
                         "enum": [
                           "histogram",
-                          "gauge"
+                          "gauge",
+                          "counter"
                         ]
                       },
                       "grain": {
@@ -53284,7 +53434,6 @@
                         "minimum": 1,
                         "maximum": 600000
                       },
-                      "counterDomain": false,
                       "stateProfile": false,
                       "stockDomain": false,
                       "lifecycle": false
@@ -53313,6 +53462,30 @@
                                 }
                               }
                             }
+                          }
+                        }
+                      },
+                      {
+                        "if": {
+                          "properties": {
+                            "kind": {
+                              "const": "counter"
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "counterDomain": {
+                              "enum": [
+                                "",
+                                "nonnegative-decimal"
+                              ]
+                            }
+                          }
+                        },
+                        "else": {
+                          "properties": {
+                            "counterDomain": false
                           }
                         }
                       }
@@ -53382,7 +53555,8 @@
                       "kind": {
                         "enum": [
                           "histogram",
-                          "gauge"
+                          "gauge",
+                          "counter"
                         ]
                       },
                       "grain": {
@@ -53510,7 +53684,6 @@
                         "minimum": 1,
                         "maximum": 600000
                       },
-                      "counterDomain": false,
                       "stateProfile": false,
                       "stockDomain": false,
                       "lifecycle": false
@@ -53539,6 +53712,30 @@
                                 }
                               }
                             }
+                          }
+                        }
+                      },
+                      {
+                        "if": {
+                          "properties": {
+                            "kind": {
+                              "const": "counter"
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "counterDomain": {
+                              "enum": [
+                                "",
+                                "nonnegative-decimal"
+                              ]
+                            }
+                          }
+                        },
+                        "else": {
+                          "properties": {
+                            "counterDomain": false
                           }
                         }
                       }

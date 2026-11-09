@@ -1,6 +1,6 @@
 # Reusable native histogram displays — 371
 
-Histogram configurations now share the `NativeView` API with [gauge displays](NATIVE_GAUGE_VIEW_REUSE.md). Histogram export-interval and complete-bin rules below remain distinct from gauge samples.
+Histogram configurations now share the `NativeView` API with [gauge displays](NATIVE_GAUGE_VIEW_REUSE.md) and [counter displays](NATIVE_COUNTER_VIEW_REUSE.md). Histogram export-interval and complete-bin rules below remain distinct from gauge samples.
 
 
 Native histogram display configuration is separate from a measurement definition

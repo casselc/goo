@@ -52,11 +52,11 @@ type NativeViewReuseRequest struct {
 
 func nativeViewQuestion(q measurements.Question) error {
 	d := q.Definition
-	if d.Grain != "per-stream" || d.Source.Resource != nil || d.HistogramBucketMS != nil || d.CounterDomain != "" || d.StateProfile != "" || d.StockDomain != "" || d.Lifecycle != nil {
-		return errors.New("native views require an unbucketed per-stream service gauge or histogram")
+	if d.Grain != "per-stream" || d.Source.Resource != nil || d.HistogramBucketMS != nil || d.StateProfile != "" || d.StockDomain != "" || d.Lifecycle != nil {
+		return errors.New("native views require an unbucketed per-stream service gauge, counter or histogram")
 	}
-	if d.Kind != "gauge" && (d.Kind != "histogram" || (d.Source.Unit != "s" && d.Source.Unit != "ms")) {
-		return errors.New("native views require a service gauge or a histogram in s or ms")
+	if d.Kind != "gauge" && d.Kind != "counter" && (d.Kind != "histogram" || (d.Source.Unit != "s" && d.Source.Unit != "ms")) {
+		return errors.New("native views require a service gauge, counter or a histogram in s or ms")
 	}
 	_, err := measurements.Compile(q)
 	return err
@@ -75,6 +75,10 @@ func (v NativeViewInput) Validate() error {
 	if v.Question.Definition.Kind == "gauge" {
 		if d.Selection.Kind != "retained-observations" || (d.Kind.Name != "timeline" && d.Kind.Name != "table") || d.Display != (NativeViewDisplay{"time", "recorded-value", false}) {
 			return errors.New("require a retained-observation gauge timeline or table")
+		}
+	} else if v.Question.Definition.Kind == "counter" {
+		if d.Selection.Kind != "evaluated-intervals" || (d.Kind.Name != "timeline" && d.Kind.Name != "table") || d.Display != (NativeViewDisplay{"time", "counter-rate", false}) {
+			return errors.New("require an evaluated-interval counter-rate timeline or table")
 		}
 	} else if d.Selection.Kind != "export-interval" || (d.Kind.Name != "histogram" && d.Kind.Name != "table") || d.Display != (NativeViewDisplay{"bucket", "observation-count", true}) {
 		return errors.New("require a complete-bin histogram or table over an explicitly selected native export interval")
@@ -164,7 +168,7 @@ func nativeQuestionWire(raw json.RawMessage) error {
 			return errors.New("explicit measurement definition and fixed bounds required")
 		}
 	}
-	definition, definitionErr := nativeObject(fields["definition"], "apiVersion", "name", "title", "kind", "environment", "environmentSelector", "lookbackMinutes", "maxGapMs", "grain", "source")
+	definition, definitionErr := nativeObject(fields["definition"], "apiVersion", "name", "title", "kind", "environment", "environmentSelector", "lookbackMinutes", "maxGapMs", "grain", "source", "counterDomain")
 	if definitionErr != nil {
 		return errors.New("explicit measurement definition required")
 	}
@@ -208,7 +212,13 @@ func nativeQuestionWire(raw json.RawMessage) error {
 	if _, present := source["resource"]; present {
 		return errors.New("native view does not accept resource authority")
 	}
-	for _, key := range []string{"histogramBucketMs", "counterDomain", "stockDomain", "stateProfile", "lifecycle"} {
+	if _, present := definition["counterDomain"]; present {
+		var kind string
+		if json.Unmarshal(definition["kind"], &kind) != nil || kind != "counter" {
+			return errors.New("counterDomain is only valid on a counter view question")
+		}
+	}
+	for _, key := range []string{"histogramBucketMs", "stockDomain", "stateProfile", "lifecycle"} {
 		if _, present := definition[key]; present {
 			return errors.New("native view does not accept unrelated measurement configuration")
 		}
@@ -225,7 +235,7 @@ func nativeQuestionWire(raw json.RawMessage) error {
 }
 
 // The authored declaration is a closed wire contract. In particular false is an
-// explicit gauge policy, not the zero value of a missing property.
+// explicit gauge/counter policy, not the zero value of a missing property.
 func (d *NativeViewDeclaration) UnmarshalJSON(raw []byte) error {
 	type wire NativeViewDeclaration
 	var value wire
@@ -371,6 +381,9 @@ func ReuseNativeView(source NativeView, destination measurements.Question) (*Nat
 	if source.Question.Definition.Source.Unit != destination.Definition.Source.Unit {
 		return nil, errors.New("native view reuse requires the exact instrument unit; no conversion")
 	}
+	if source.Question.Definition.CounterDomain != destination.Definition.CounterDomain {
+		return nil, errors.New("native view reuse requires the same counter value domain")
+	}
 	return detachNativeView(NativeView{Version: 1, Title: source.Title, Question: destination, Declaration: source.Declaration})
 }
 
@@ -378,12 +391,13 @@ const NativeViewPageSize = 20
 const NativeViewPageMaxBytes = 64 << 10
 
 type NativeViewSummary struct {
-	ID        string `json:"id"`
-	Title     string `json:"title"`
-	Kind      string `json:"kind"`
-	Unit      string `json:"unit"`
-	Family    string `json:"family"`
-	Selection string `json:"selection"`
+	ID            string `json:"id"`
+	Title         string `json:"title"`
+	Kind          string `json:"kind"`
+	Unit          string `json:"unit"`
+	Family        string `json:"family"`
+	Selection     string `json:"selection"`
+	CounterDomain string `json:"counterDomain,omitempty"`
 }
 type NativeViewListDiagnostic struct {
 	ID     string `json:"id"`
@@ -424,7 +438,14 @@ func (s Store) NativeViews(after string) (*NativeViewList, error) {
 			page.Diagnostics = append(page.Diagnostics, NativeViewListDiagnostic{id, "unavailable-artifact"})
 			continue
 		}
-		page.Items = append(page.Items, NativeViewSummary{id, view.Title, view.Declaration.Kind.Name, view.Question.Definition.Source.Unit, view.Question.Definition.Kind, view.Declaration.Selection.Kind})
+		summary := NativeViewSummary{ID: id, Title: view.Title, Kind: view.Declaration.Kind.Name, Unit: view.Question.Definition.Source.Unit, Family: view.Question.Definition.Kind, Selection: view.Declaration.Selection.Kind}
+		if summary.Family == "counter" {
+			summary.CounterDomain = view.Question.Definition.CounterDomain
+			if summary.CounterDomain == "" {
+				summary.CounterDomain = "nonnegative-integer"
+			}
+		}
+		page.Items = append(page.Items, summary)
 	}
 	raw, err := json.Marshal(page)
 	if err != nil {

@@ -96,6 +96,114 @@
         "Content-Type": "application/json"
       },
       "response": "{\"version\":1,\"id\":\"c315699298195b80513c5d5a77e66de0ec36bd4c2002ac390b598c5b7056ab58\",\"title\":\"Native gauge view\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"gauge\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"By\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"retained-observations\"},\"kind\":{\"name\":\"table\",\"version\":1},\"display\":{\"category\":\"time\",\"value\":\"recorded-value\",\"requiresComplete\":false}}}\n"
+    },
+    {
+      "name": "create-counter-",
+      "method": "POST",
+      "path": "/native-views",
+      "body": "{\"version\":1,\"title\":\"Native counter \",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"counter\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"{request}\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"evaluated-intervals\"},\"kind\":{\"name\":\"timeline\",\"version\":1},\"display\":{\"category\":\"time\",\"value\":\"counter-rate\",\"requiresComplete\":false}}}",
+      "status": 201,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"version\":1,\"id\":\"b52ed076d7897c8e5f74d1ba85ffe55e4c2abbba7d2f1ff0c6f50d2e7b8ef398\",\"title\":\"Native counter \",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"counter\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"{request}\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"evaluated-intervals\"},\"kind\":{\"name\":\"timeline\",\"version\":1},\"display\":{\"category\":\"time\",\"value\":\"counter-rate\",\"requiresComplete\":false}}}\n"
+    },
+    {
+      "name": "load-counter-",
+      "method": "GET",
+      "path": "/native-views/{id}",
+      "body": "",
+      "status": 200,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"version\":1,\"id\":\"b52ed076d7897c8e5f74d1ba85ffe55e4c2abbba7d2f1ff0c6f50d2e7b8ef398\",\"title\":\"Native counter \",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"counter\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"{request}\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"evaluated-intervals\"},\"kind\":{\"name\":\"timeline\",\"version\":1},\"display\":{\"category\":\"time\",\"value\":\"counter-rate\",\"requiresComplete\":false}}}\n"
+    },
+    {
+      "name": "reuse-counter-",
+      "method": "POST",
+      "path": "/native-views/reuse",
+      "body": "{\"id\":\"b52ed076d7897c8e5f74d1ba85ffe55e4c2abbba7d2f1ff0c6f50d2e7b8ef398\",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"counter\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":750,\"grain\":\"per-stream\",\"source\":{\"services\":[\"counter-destination\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"{request}\"}},\"fromMs\":70000,\"toMs\":130000}}",
+      "status": 200,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"version\":1,\"title\":\"Native counter \",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"counter\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":750,\"grain\":\"per-stream\",\"source\":{\"services\":[\"counter-destination\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"{request}\"}},\"fromMs\":70000,\"toMs\":130000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"evaluated-intervals\"},\"kind\":{\"name\":\"timeline\",\"version\":1},\"display\":{\"category\":\"time\",\"value\":\"counter-rate\",\"requiresComplete\":false}}}\n"
+    },
+    {
+      "name": "create-counter-table-",
+      "method": "POST",
+      "path": "/native-views",
+      "body": "{\"version\":1,\"title\":\"Native counter \",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"counter\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"{request}\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"evaluated-intervals\"},\"kind\":{\"name\":\"table\",\"version\":1},\"display\":{\"category\":\"time\",\"value\":\"counter-rate\",\"requiresComplete\":false}}}",
+      "status": 201,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"version\":1,\"id\":\"b18f4fb0ba2ddc3c373b07764de450cc9769631a534cf793554788f21124e696\",\"title\":\"Native counter \",\"question\":{\"definition\":{\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"counter\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"{request}\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"evaluated-intervals\"},\"kind\":{\"name\":\"table\",\"version\":1},\"display\":{\"category\":\"time\",\"value\":\"counter-rate\",\"requiresComplete\":false}}}\n"
+    },
+    {
+      "name": "create-counter-nonnegative-decimal",
+      "method": "POST",
+      "path": "/native-views",
+      "body": "{\"version\":1,\"title\":\"Native counter nonnegative-decimal\",\"question\":{\"definition\":{\"counterDomain\":\"nonnegative-decimal\",\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"counter\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"{request}\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"evaluated-intervals\"},\"kind\":{\"name\":\"timeline\",\"version\":1},\"display\":{\"category\":\"time\",\"value\":\"counter-rate\",\"requiresComplete\":false}}}",
+      "status": 201,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"version\":1,\"id\":\"ef5553772c3efccf47c3eac2ab3c87a2dac1e9dcc8cbb17cfcda755ff55a87a1\",\"title\":\"Native counter nonnegative-decimal\",\"question\":{\"definition\":{\"counterDomain\":\"nonnegative-decimal\",\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"counter\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"{request}\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"evaluated-intervals\"},\"kind\":{\"name\":\"timeline\",\"version\":1},\"display\":{\"category\":\"time\",\"value\":\"counter-rate\",\"requiresComplete\":false}}}\n"
+    },
+    {
+      "name": "load-counter-nonnegative-decimal",
+      "method": "GET",
+      "path": "/native-views/{id}",
+      "body": "",
+      "status": 200,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"version\":1,\"id\":\"ef5553772c3efccf47c3eac2ab3c87a2dac1e9dcc8cbb17cfcda755ff55a87a1\",\"title\":\"Native counter nonnegative-decimal\",\"question\":{\"definition\":{\"counterDomain\":\"nonnegative-decimal\",\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"counter\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"{request}\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"evaluated-intervals\"},\"kind\":{\"name\":\"timeline\",\"version\":1},\"display\":{\"category\":\"time\",\"value\":\"counter-rate\",\"requiresComplete\":false}}}\n"
+    },
+    {
+      "name": "reuse-counter-nonnegative-decimal",
+      "method": "POST",
+      "path": "/native-views/reuse",
+      "body": "{\"id\":\"ef5553772c3efccf47c3eac2ab3c87a2dac1e9dcc8cbb17cfcda755ff55a87a1\",\"question\":{\"definition\":{\"counterDomain\":\"nonnegative-decimal\",\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"counter\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":750,\"grain\":\"per-stream\",\"source\":{\"services\":[\"counter-destination\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"{request}\"}},\"fromMs\":70000,\"toMs\":130000}}",
+      "status": 200,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"version\":1,\"title\":\"Native counter nonnegative-decimal\",\"question\":{\"definition\":{\"counterDomain\":\"nonnegative-decimal\",\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"counter\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":750,\"grain\":\"per-stream\",\"source\":{\"services\":[\"counter-destination\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"{request}\"}},\"fromMs\":70000,\"toMs\":130000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"evaluated-intervals\"},\"kind\":{\"name\":\"timeline\",\"version\":1},\"display\":{\"category\":\"time\",\"value\":\"counter-rate\",\"requiresComplete\":false}}}\n"
+    },
+    {
+      "name": "create-counter-table-nonnegative-decimal",
+      "method": "POST",
+      "path": "/native-views",
+      "body": "{\"version\":1,\"title\":\"Native counter nonnegative-decimal\",\"question\":{\"definition\":{\"counterDomain\":\"nonnegative-decimal\",\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"counter\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"{request}\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"evaluated-intervals\"},\"kind\":{\"name\":\"table\",\"version\":1},\"display\":{\"category\":\"time\",\"value\":\"counter-rate\",\"requiresComplete\":false}}}",
+      "status": 201,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"version\":1,\"id\":\"0fe42562d2e0be6fc0f9cb418b481a911e3e180d0a032826813b09fe3d6c391a\",\"title\":\"Native counter nonnegative-decimal\",\"question\":{\"definition\":{\"counterDomain\":\"nonnegative-decimal\",\"apiVersion\":\"goo/measurement-package/v1alpha1\",\"name\":\"checkout-duration\",\"title\":\"Checkout duration distributions\",\"kind\":\"counter\",\"environment\":\"local\",\"lookbackMinutes\":2,\"maxGapMs\":10000,\"grain\":\"per-stream\",\"source\":{\"services\":[\"lab-go-checkout\"],\"scope\":\"github.com/casselc/goo/instrumentation\",\"version\":\"0.1.0\",\"schemaURL\":\"goo://instrumentation/v1\",\"metric\":\"goo.operation.duration\",\"unit\":\"{request}\"}},\"fromMs\":1000,\"toMs\":61000},\"declaration\":{\"version\":\"goo.view/1\",\"scope\":{\"kind\":\"measurement-question\",\"signal\":\"metrics\"},\"selection\":{\"kind\":\"evaluated-intervals\"},\"kind\":{\"name\":\"table\",\"version\":1},\"display\":{\"category\":\"time\",\"value\":\"counter-rate\",\"requiresComplete\":false}}}\n"
+    },
+    {
+      "name": "catalog-counter-domains",
+      "method": "GET",
+      "path": "/native-views",
+      "body": "",
+      "status": 200,
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      },
+      "response": "{\"items\":[{\"id\":\"0fe42562d2e0be6fc0f9cb418b481a911e3e180d0a032826813b09fe3d6c391a\",\"title\":\"Native counter nonnegative-decimal\",\"kind\":\"table\",\"unit\":\"{request}\",\"family\":\"counter\",\"selection\":\"evaluated-intervals\",\"counterDomain\":\"nonnegative-decimal\"},{\"id\":\"95fc513f9a36b7283cc922470714f9a97e85af566d2c1bf282ecf1065037ca3d\",\"title\":\"Native interval view\",\"kind\":\"histogram\",\"unit\":\"s\",\"family\":\"histogram\",\"selection\":\"export-interval\"},{\"id\":\"960593b588e8e5c4337d9df5b6364272eccc49e27ecaeb56a0d223f267786417\",\"title\":\"Native gauge view\",\"kind\":\"timeline\",\"unit\":\"By\",\"family\":\"gauge\",\"selection\":\"retained-observations\"},{\"id\":\"b18f4fb0ba2ddc3c373b07764de450cc9769631a534cf793554788f21124e696\",\"title\":\"Native counter \",\"kind\":\"table\",\"unit\":\"{request}\",\"family\":\"counter\",\"selection\":\"evaluated-intervals\",\"counterDomain\":\"nonnegative-integer\"},{\"id\":\"b52ed076d7897c8e5f74d1ba85ffe55e4c2abbba7d2f1ff0c6f50d2e7b8ef398\",\"title\":\"Native counter \",\"kind\":\"timeline\",\"unit\":\"{request}\",\"family\":\"counter\",\"selection\":\"evaluated-intervals\",\"counterDomain\":\"nonnegative-integer\"},{\"id\":\"c315699298195b80513c5d5a77e66de0ec36bd4c2002ac390b598c5b7056ab58\",\"title\":\"Native gauge view\",\"kind\":\"table\",\"unit\":\"By\",\"family\":\"gauge\",\"selection\":\"retained-observations\"},{\"id\":\"df07d793126c9c7ef6217f2ea21b789578f667c9fd3ffa8e56dc0c190797a394\",\"title\":\"Native interval view\",\"kind\":\"table\",\"unit\":\"s\",\"family\":\"histogram\",\"selection\":\"export-interval\"},{\"id\":\"ef5553772c3efccf47c3eac2ab3c87a2dac1e9dcc8cbb17cfcda755ff55a87a1\",\"title\":\"Native counter nonnegative-decimal\",\"kind\":\"timeline\",\"unit\":\"{request}\",\"family\":\"counter\",\"selection\":\"evaluated-intervals\",\"counterDomain\":\"nonnegative-decimal\"}],\"partial\":false,\"diagnostics\":[]}\n"
     }
   ]
 }

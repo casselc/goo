@@ -11,5 +11,6 @@ test('native metadata page admission keeps candidate loss explicit and the curso
 });
 test('summary compatibility checks only exact units after validating the complete destination question',()=>{
  const q=result().question,before=clone(q);assert.equal(Native.compatibility(item(1),q),true);assert.equal(Native.compatibility({...item(1),unit:'ms'},q),false);assert.deepEqual(q,before);
- for(const mutate of [q=>q.definition.kind='counter',q=>q.definition.grain='consumer-group',q=>q.definition.histogramBucketMs=1000,q=>q.definition.source.resource=null]){const invalid=clone(q);mutate(invalid);assert.throws(()=>Native.compatibility(item(1),invalid))}
+ const counter=clone(q);counter.definition.kind='counter';assert.equal(Native.compatibility(item(1),counter),false);
+ for(const mutate of [q=>q.definition.grain='consumer-group',q=>q.definition.histogramBucketMs=1000,q=>q.definition.source.resource=null]){const invalid=clone(q);mutate(invalid);assert.throws(()=>Native.compatibility(item(1),invalid))}
 });

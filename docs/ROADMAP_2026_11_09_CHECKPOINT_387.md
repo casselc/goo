@@ -26,8 +26,8 @@ interval semantics. [387 capture admission](CAPTURE_FAMILY_ADMISSION.md) closes 
 capture envelopes without replacing family evidence validation. Receipt-only
 references, nested null data, source clocks and immutable custody stay distinct.
 
-The adopted cadence is **388 breadth (delivered) → 389 facet depth (next)
-→ 390 consolidation**. Finish
+The adopted cadence is **388 breadth (delivered) → 389 facet depth (delivered)
+→ 390 consolidation (next)**. Finish
 one acceptance cut before implementing the next. This prerelease has no legacy
 route, format or API floor requiring aliases or compatibility machinery. Use the
 current Go 1.27.3 runtime and standard-library facilities where they simplify a
@@ -46,6 +46,8 @@ Recent checks also change how work is accepted:
   work or result replacement retire that capability; hidden owners cannot stage.
 - Missing/unknown values must remain distinct from recorded zero in both model
   and paint. A valid model with a misleading geometric position is insufficient.
+  An unavailable calculation can still have recorded source exports; distinguish
+  that state from an optional value not supplied by its evaluator.
 - Test physical coordinates under real application styles. The unavailable rail
   and numeric timeline must share the same time axis; equal percentage attributes
   did not prove that when global section padding changed their containing boxes.
@@ -109,38 +111,38 @@ make this work.
 
 ## 389 — depth: reuse evaluated counter displays
 
+**Delivered:** [counter display reuse](NATIVE_COUNTER_VIEW_REUSE.md), with checks
+in [validation](../VALIDATION.md). The sole next scheduled milestone is 390.
+
 User task: “Use this useful counter-rate timeline or table on another compatible
 counter question without inheriting its reset or freshness policy.”
 
-[Counter evaluation](NATIVE_COUNTERS.md) and interval presentation already exist.
-[NativeView](NATIVE_GAUGE_VIEW_REUSE.md) currently admits only gauge and histogram
-configuration; `nativeViewQuestion` rejects counters and `counterDomain`.
+The shared NativeView contract/store/API and application owner admit a closed
+Timeline/Table arm over evaluated counter intervals and rates. Applicability is
+per-stream service counter, exact literal unit and matching integer/decimal
+value domain. Catalog metadata carries the normalized counter-only domain;
+authored questions retain their existing default/decimal policies. No universal
+policy descriptor, new store or counter-view executor was introduced.
 
-- Extend the same finite native-display contract and owner with a closed counter
-  timeline/table arm over evaluated intervals/rates. Do not coerce intervals into
-  gauge samples, recompute rates from displayed totals or create another store.
-- Define applicability against the supported counter grain, exact literal unit,
-  declared integer/decimal domain and evaluated rate/reset semantics before
-  implementation. The destination retains its entire question and policy.
-  Donor `maxGap`, source identity, values, selected intervals, clocks and custody
-  must not transfer.
-- Preserve resets, epochs, gaps, stale/unknown/unavailable states and exact-rate
-  information supported by the existing evaluator. No interpolation, missing-to-
-  zero conversion, fleet sum or scalar-percentile aggregation is introduced.
-- Browse/Inspect/Apply remain configuration operations without telemetry. Apply
-  clears the prior result/selection and waits for explicit Run. Reject unsupported
-  families, units, grains or counter policies before applying.
+Reuse preserves the destination's complete question and policy. Donor maximum
+gap, source identity, values, selected intervals, clocks and custody do not
+transfer. Browse/Inspect/Apply operate on configuration without telemetry; Apply
+clears prior observations/selection and waits for explicit Run. Local display
+switching uses the same evaluated result.
 
-Acceptance includes immutable configuration round trips and byte/hash checks;
-generated compatible/refused applications across integer/decimal and reset/gap
-cases; exact destination request/calculation identity; honest supplied-data
-rendering; and an actual save → different destination → Apply → Run journey.
-Preserve existing gauge/histogram reuse through focused regressions. Use the
-current shared component/model verification stack, not a new counter-view engine.
+The existing evaluator remains authoritative for monotonic cumulative/delta
+exports, reset/epoch changes, gaps and missing values. Unavailable intervals stay
+outside the numeric scale; real zero stays numeric. Exact delta and optional
+exact-rate information remain available without manufactured precision. There is
+no interpolation, missing-to-zero conversion, fleet merging or rate recomputation
+from displayed totals. Resource-bound counters, other grains, stocks and
+unsupported policies remain outside this finite arm.
 
-Risk: equal units alone do not establish compatible rate semantics. Finalize the
-smallest explicit applicability contract in design/architecture review before
-adding the counter arm; do not add universal policy descriptors speculatively.
+Acceptance covers immutable configuration round trips and bytes, generated
+compatible/refused reuse with exact destination calculation identity, honest
+supplied-data rendering, and an actual save → different destination → Apply → Run
+journey. Existing gauge/histogram reuse remains covered. The contract and review
+record final runtime boundaries; the next consolidation must preserve them.
 
 ## 390 — consolidate: data-first native entry and component boundaries
 
@@ -161,6 +163,8 @@ contexts expose different return affordances.
 - Put the selected native visual or first observation in view at natural initial
   scroll position on desktop and 390-pixel screens. Measure the real scroll
   container and actual geometry; forced scrolling is inspection, not entry proof.
+- Consolidate display/save controls. Default titles must not describe a previous
+  display kind after a local switch; preserve titles the user has authored.
 - Bound component chrome explicitly and scope application selectors to their
   owned children. Verify standalone/server-rendered and nested SPA composition,
   numeric/unavailable time-axis alignment, small/large labels and keyboard focus.

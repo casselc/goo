@@ -5,6 +5,18 @@ status and the [active roadmap](ROADMAP_2026_11_09_CHECKPOINT_387.md) for priori
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 
+389 delivers [counter Timeline/Table display reuse](NATIVE_COUNTER_VIEW_REUSE.md)
+through the shared NativeView store/API and owner. Applicability is per-stream
+service counter, exact literal unit and matching integer/decimal domain. The
+catalog's normalized domain discriminator does not add an authored
+`nonnegative-integer` policy; the question retains the existing omitted/empty
+integer default or explicit `nonnegative-decimal`. Apply preserves the entire
+destination question, clears prior evidence/selection and waits for Run. Rates,
+resets, epochs and gaps remain evaluator-owned; unavailable values are not zero.
+Resource-bound counters, other grains, stocks and unsupported policies remain
+outside reuse. Native data-first/component consolidation (390) is the sole next
+scheduled milestone, followed by a whole-product checkpoint.
+
 388 delivers [records around a gauge observation](GAUGE_OBSERVATION_CONTEXT.md)
 in ordinary Measurements. Selecting a reported gauge timestamp stages logs or
 spans within ±60 seconds, clipped to the original exact bounds, with service,
@@ -14,8 +26,8 @@ can stage another nearby question independently of paused native source actions.
 Edits, Apply, a new measurement or result replacement retire that capability;
 hidden owners cannot stage. This is time association, not causality or coverage.
 Saved/service gauges, stocks and resource-bound gauges remain outside this cut.
-Counter display reuse (389) and native data-first/component consolidation (390)
-remain the active queue.
+Counter display reuse (389) is delivered; native data-first/component consolidation
+(390) remains next.
 
 387 delivers [capture-family admission](CAPTURE_FAMILY_ADMISSION.md): six finite
 full capture families, receipt/question/result coherence and delivery bounds are
@@ -23,16 +35,16 @@ checked before family-specific evidence validation. Foreign/null family arms are
 refused; legitimate nested nulls, historical plans and independent clocks remain
 intact. Receipt-only investigation references are separately admitted without
 result or paging authority. The [adopted 387 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_387.md)
-records delivered gauge-observation context (388), then schedules counter display
-reuse (389) and native data-first/component consolidation (390). The annotation/review pair
+records delivered gauge-observation context (388) and counter display reuse (389),
+then schedules native data-first/component consolidation (390). The annotation/review pair
 remains deferred, not a parallel prerequisite queue.
 
 386 delivers [native gauge display reuse](NATIVE_GAUGE_VIEW_REUSE.md) through one
 shared native-view store/API/UI owner. Timeline/Table declarations retain the
 complete destination question and fixed-window freshness. Unknown/no-data marks
 use a separate physically time-aligned rail outside the numeric scale. Service
-per-stream gauges with nonempty exact units are supported; resource, counter,
-stock and state display reuse remain separate. Native screen density is scheduled
+per-stream gauges with nonempty exact units are supported; counter reuse is now
+covered by 389. Resource, stock and state display reuse remain separate. Native screen density is scheduled
 for 390; current frames do not claim a complete above-fold entry.
 
 385 adds the explicit [outgoing HTTP lens](OUTGOING_HTTP.md) over current Client

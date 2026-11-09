@@ -615,8 +615,9 @@ explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-eva
 The [active roadmap](docs/ROADMAP_2026_11_09_CHECKPOINT_387.md) follows delivered outgoing HTTP
 (385), gauge display reuse (386), [capture-family consolidation](docs/CAPTURE_FAMILY_ADMISSION.md)
 (387) and [records around a gauge observation](docs/GAUGE_OBSERVATION_CONTEXT.md)
-(388). Counter display reuse (389) is next, followed by native data-first/component
-consolidation (390). Gauge context currently starts in ordinary Measurements;
+(388). [Counter display reuse](docs/NATIVE_COUNTER_VIEW_REUSE.md) (389) is delivered;
+native data-first/component consolidation (390) is next. Gauge context currently
+starts in ordinary Measurements;
 Saved and service continuation remain deferred. Earlier current RPC view reuse,
 service native interval context and measured bounded facets are also delivered.
 [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most
@@ -631,6 +632,10 @@ Apply preserves the current question; Run and export selection remain explicit.
 contract for retained-observation Timeline/Table displays. It preserves the
 complete destination question and fixed-window freshness; missing values occupy
 a separate time-aligned rail outside the numeric domain.
+[Counter display reuse](docs/NATIVE_COUNTER_VIEW_REUSE.md) uses evaluated intervals
+and rates for Timeline/Table. Applicability checks exact unit and integer/decimal
+domain; Apply retains the destination's complete question and waits for Run.
+Reset/gap semantics and optional exact rates remain evaluator-owned.
 [Typed distribution continuation](docs/TYPED_DISTRIBUTION_CONTINUATION.md) now
 checks the exact selection intent, stages the complete child question and waits
 for Run. Back retains the parent without rereading and visibly pauses selection

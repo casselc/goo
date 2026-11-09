@@ -50,6 +50,13 @@ export function validateGaugeMeasurementQuestion(question){
  if(b.exactStream!==undefined&&b.exactStream!==null)checkedStream(b.exactStream,d);
  return {fromNS:String(from),toNS:String(to)};
 }
+// Counter display applicability shares the per-stream service scope shape, not
+// the gauge evaluator or selection semantics. Counter policy remains explicit.
+export function validateCounterMeasurementQuestion(question){
+ if(question?.definition?.kind!=='counter'||own(question.definition,'counterDomain')&&!['','nonnegative-decimal'].includes(question.definition.counterDomain))fail('A supported per-stream counter domain is required');
+ const checked=structuredClone(question);checked.definition.kind='gauge';delete checked.definition.counterDomain;
+ return validateGaugeMeasurementQuestion(checked);
+}
 export function validateMeasurementIntervalSelector(selector){
  if(selector?.kind==='measurement-time-bucket')return validateMeasurementTimeBucketSelector(selector);
  if(selector?.kind==='measurement-window')return validateMeasurementWindowSelector(selector);
