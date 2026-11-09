@@ -613,11 +613,13 @@ storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
 
 The [active roadmap](docs/ROADMAP_2026_11_09_CHECKPOINT_387.md) follows delivered outgoing HTTP
-(385), gauge display reuse (386) and [capture-family consolidation](docs/CAPTURE_FAMILY_ADMISSION.md)
-(387), with fresh whole-product reviews. Next are gauge-observation record context
-(388), counter display reuse (389) and native data-first/component consolidation
-(390). Earlier current RPC view reuse, service native interval context, and
-measured bounded facets are also delivered. [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most
+(385), gauge display reuse (386), [capture-family consolidation](docs/CAPTURE_FAMILY_ADMISSION.md)
+(387) and [records around a gauge observation](docs/GAUGE_OBSERVATION_CONTEXT.md)
+(388). Counter display reuse (389) is next, followed by native data-first/component
+consolidation (390). Gauge context currently starts in ordinary Measurements;
+Saved and service continuation remain deferred. Earlier current RPC view reuse,
+service native interval context and measured bounded facets are also delivered.
+[Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most
 100 matches while Find, totals and comparison scales use the complete admitted
 set. Same-read selection/caret and exact child scope survive Return. [Typed error-triage follow-through](docs/TYPED_ERROR_TRIAGE.md) is also delivered:
 Inspect and within-service comparison preserve the complete typed question, wait

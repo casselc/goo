@@ -26,7 +26,8 @@ interval semantics. [387 capture admission](CAPTURE_FAMILY_ADMISSION.md) closes 
 capture envelopes without replacing family evidence validation. Receipt-only
 references, nested null data, source clocks and immutable custody stay distinct.
 
-The next cadence is **388 breadth → 389 facet depth → 390 consolidation**. Finish
+The adopted cadence is **388 breadth (delivered) → 389 facet depth (next)
+→ 390 consolidation**. Finish
 one acceptance cut before implementing the next. This prerelease has no legacy
 route, format or API floor requiring aliases or compatibility machinery. Use the
 current Go 1.27.3 runtime and standard-library facilities where they simplify a
@@ -39,6 +40,10 @@ Recent checks also change how work is accepted:
 - Keep accepted evidence and its page address separate from pending/failed request
   progress. Validate requested ID and cursor before adoption; refused loads retain
   the old evidence, citation and comparison capability.
+- Source-free staging from accepted held evidence is a distinct capability from
+  native source execution. Back can retain the unchanged parent and allow another
+  nearby question while source actions stay paused. Edits, Apply, new measurement
+  work or result replacement retire that capability; hidden owners cannot stage.
 - Missing/unknown values must remain distinct from recorded zero in both model
   and paint. A valid model with a misleading geometric position is insufficient.
 - Test physical coordinates under real application styles. The unavailable rail
@@ -52,14 +57,19 @@ Recent checks also change how work is accepted:
 
 ## 388 — breadth: records around a gauge observation
 
+Delivered in ordinary Measurements: [contract](GAUGE_OBSERVATION_CONTEXT.md) and
+[actual checks](../VALIDATION.md). The adopted fixed radius is ±60 seconds, clipped
+to the original exact bounds. Saved/service continuation remains deferred; the
+remaining active queue starts at 389.
+
 User task: “This observation is unusual or unavailable; what logs or spans were
 reported nearby by this instance?”
 
-This is a concrete gap. The existing
-[native record-context contract](NATIVE_RECORD_CONTEXT.md) offers counter and
-histogram interval follow-through. `PlanNativeRecordContext` represents a gauge
-only as `[atNS, atNS+1)`, and `recordContextPlans` suppresses gauge actions. A
-one-nanosecond observation must not silently become a measurement interval.
+Before 388, the [native record-context contract](NATIVE_RECORD_CONTEXT.md)
+offered counter and histogram interval follow-through, while the UI suppressed
+gauge context actions. `PlanNativeRecordContext` still represents a gauge only as
+`[atNS, atNS+1)`; 388 adds a distinct surrounding-observation projection rather
+than relaxing that contract or silently treating a point as a measurement interval.
 
 - Add a distinct observation-context projection with an explicit, documented
   fixed radius around a selected reported gauge timestamp. Clip the resulting

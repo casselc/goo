@@ -75,6 +75,16 @@ func PlanNativeRecordContext(parent measurements.Question, stream metrics.Stream
 		}
 		grain = "point-context"
 	}
+	return nativeRecordContextQuery(parent, stream, signal, from, to, grain)
+}
+
+// nativeRecordContextQuery is shared only after the caller admits its interval
+// or observation semantics. It projects established resource identity, not metric
+// selectors, into ordinary records.
+func nativeRecordContextQuery(parent measurements.Question, stream metrics.Stream, signal string, from, to uint64, grain string) (*NativeRecordContext, error) {
+	d := parent.Definition
+	hostCPU := measurements.HostIntervalCounterDefinition(d)
+	fromNS, toNS := strconv.FormatUint(from, 10), strconv.FormatUint(to, 10)
 	fromMS, toMS := from/1000000, (to+999999)/1000000
 	if toMS-fromMS > 7200000 {
 		return nil, fmt.Errorf("record context enclosing millisecond window exceeds 120 minutes; narrow the interval")

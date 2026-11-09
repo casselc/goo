@@ -5,14 +5,26 @@ status and the [active roadmap](ROADMAP_2026_11_09_CHECKPOINT_387.md) for priori
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 
+388 delivers [records around a gauge observation](GAUGE_OBSERVATION_CONTEXT.md)
+in ordinary Measurements. Selecting a reported gauge timestamp stages logs or
+spans within ±60 seconds, clipped to the original exact bounds, with service,
+instance, namespace and environment policy retained. Run is explicit; Back keeps
+the held measurement and selection without rereading. The unchanged held result
+can stage another nearby question independently of paused native source actions.
+Edits, Apply, a new measurement or result replacement retire that capability;
+hidden owners cannot stage. This is time association, not causality or coverage.
+Saved/service gauges, stocks and resource-bound gauges remain outside this cut.
+Counter display reuse (389) and native data-first/component consolidation (390)
+remain the active queue.
+
 387 delivers [capture-family admission](CAPTURE_FAMILY_ADMISSION.md): six finite
 full capture families, receipt/question/result coherence and delivery bounds are
 checked before family-specific evidence validation. Foreign/null family arms are
 refused; legitimate nested nulls, historical plans and independent clocks remain
 intact. Receipt-only investigation references are separately admitted without
 result or paging authority. The [adopted 387 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_387.md)
-schedules gauge-observation record context (388), counter display reuse (389),
-then native data-first/component consolidation (390). The annotation/review pair
+records delivered gauge-observation context (388), then schedules counter display
+reuse (389) and native data-first/component consolidation (390). The annotation/review pair
 remains deferred, not a parallel prerequisite queue.
 
 386 delivers [native gauge display reuse](NATIVE_GAUGE_VIEW_REUSE.md) through one

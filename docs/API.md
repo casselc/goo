@@ -572,6 +572,11 @@ remains authoritative. See [gauge reuse](NATIVE_GAUGE_VIEW_REUSE.md),
 [histogram reuse](NATIVE_HISTOGRAM_VIEW_REUSE.md) and
 [bounded discovery](NATIVE_VIEW_DISCOVERY.md).
 
+[Gauge observation context](GAUGE_OBSERVATION_CONTEXT.md) is a Go library/browser
+projection, not another HTTP operation. Its clipped nearby-record question uses
+the existing Explore API only after explicit Run. Saving a child question saves
+ordinary record intent; it does not capture or execute the native parent.
+
 ## Automatic service dashboard families
 
 `POST /dashboards/plan` remains a pure planning operation. It accepts optional

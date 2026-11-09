@@ -23,9 +23,10 @@ The enclosing window must satisfy the existing 120-minute record-query limit;
 invalid or oversized choices are refused, not rounded into a wider investigation.
 No current-time or arbitrary lookaround fallback is inferred.
 
-The pure API can represent a gauge point only as `[atNS,atNS+1)`. Gauge context
-actions are deferred in this UI slice: a point is not silently expanded into a
-measurement interval.
+This interval API represents a gauge point only as `[atNS,atNS+1)`. The separate
+[gauge observation context](GAUGE_OBSERVATION_CONTEXT.md) milestone adds an
+explicit, clipped time lookaround from retained gauge samples. It does not relax
+this interval contract or claim measurement coverage.
 
 ## Share only established resource identity
 

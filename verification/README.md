@@ -1,5 +1,48 @@
 # Semantic properties and model conformance
 
+## Gauge observation record context (388)
+
+Ordinary Measurements offers logs/spans around one retained per-stream service
+gauge timestamp. The fixed radius is 60 seconds: `[max(lo, at−R), min(hi, at+R))`
+inside the original exact native bounds. The upper endpoint is exclusive. Stale
+and unknown samples retain their reported timestamps; neither supplies a
+fabricated magnitude or continuous observation interval.
+
+From this verification module:
+
+```sh
+go test . -run '^(TestHegelNativeObservationContext388|TestHegelNativeRecordContextExactMembership|TestNativeRecordContextRefusalsAndPoints|TestHegelServiceNativeContext368|TestHegelSavedNativeContext364)$' -count=1 -v
+GOO_GAUGE_OBSERVATION_388_REPORT=/workspace/goo/artifacts/gauge-observation388/summary.json \
+  go test . -run '^TestQuintNativeObservationObserved388$' -count=1 -v
+```
+
+The new property passed in 0.93s: 32 generated draws produce 96 evaluated gauge
+selections and 192 Go/JavaScript plans. Integer oracles check clipping, exact
+half-open membership, enclosing millisecond bounds, missing/empty/named
+namespace, environment policy, foreign service/instance rejection and exclusion
+of metric-only filters. Common selection failures are checked in both runtimes;
+Go additionally checks full stored-result replay/integrity. JavaScript performs
+bounded selection over the ordinary owner's checked result, not a second metric
+evaluator. Existing exact-point, interval, saved and service context regressions
+remain separate and passed.
+
+Required observed replay passed in 3.11s with zero skips. Sixteen actual facts
+cover one native read, three successful nearby reads, a real source refusal and
+retry, no-read staging and unchanged held returns. Independent physical banks
+contain 97 spans, 97 logs and 16 gauge rows, with 12 admitted native samples.
+Nearby populations are 9/9/13 records, versus 1/1/2 at the one-nanosecond points
+and 25/26/25 across the whole native window. Native zero/unknown state, namespace
+presence, exact selected stream, citation and fixed clocks are checked before
+measured-counter Quint replay. All ten semantic mutants and the stage-read model
+control are rejected. Store reads and writes remain zero.
+
+The actual report is required for runtime acceptance; an absent report skips.
+Quint is required when replay runs. Compact artifacts use the
+`gauge-observation388-` prefix under `artifacts/verification/`. Saved/service gauge
+adoption remains outside this cut; shared time establishes association, not cause
+or complete trace coverage.
+
+
 ## Coherent capture admission (387)
 
 Full evidence has six exclusive families: explore, inventory, comparison,

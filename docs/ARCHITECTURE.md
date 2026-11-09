@@ -1,5 +1,12 @@
 # Architecture
 
+[Gauge observation context](GAUGE_OBSERVATION_CONTEXT.md) is a separate pure
+projection from retained gauge evidence to an ordinary typed record question.
+The planner verifies stream/sample membership and clips a fixed time lookaround
+to the native question. Application owners retain staging, explicit execution and
+held return; passive charts never fetch records. Interval and reported-exemplar
+planners keep distinct semantics.
+
 [Capture-family admission](CAPTURE_FAMILY_ADMISSION.md) checks the finite six-arm
 receipt/question/result envelope before family evidence validators. Go uses bounded
 RawMessage envelope inspection; the browser separates full pages from receipt-only

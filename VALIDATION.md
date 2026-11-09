@@ -1,5 +1,71 @@
 # Validation record
 
+## Gauge observation to nearby records — 388
+
+A distinct fixed ±60-second observation-context
+projection clips to the original native question and stages ordinary logs/spans
+questions. Go full-result replay and browser supplied-result selection checks
+have separate responsibilities. Saved/service continuation and interval/exemplar
+semantics are outside this cut.
+
+Completed checks:
+
+- Full root Go suite passes, including cmd **10.717 s**, exploration **6.049 s**,
+  capture HTTP **0.129 s**, workbench **1.940 s**, and cached measurements.
+  Focused Go planner/strict interval regressions pass (**0.057 s**). Shared
+  evaluated fixtures contain **18 valid projections / six missing-time refusals**.
+- Focused UI **62 passed**, zero skips (**505.6 ms**), including modified clicks,
+  hidden/retired owners, requested-question identity, staged intent and held Back.
+  The 24 shared Go fixtures agree with JavaScript selection/projection behavior.
+- Independent Go source review found no blocker. UI source review identified retired modified/middle-click default-navigation
+  authority; checking owner validity before gesture handling closes it. Final
+  focused **16 passed**, zero skips (**432.3 ms**), with current modified clicks
+  preserving native browser behavior.
+- Hegel **96 evaluated cases / 192 Go–JavaScript plans** pass (**0.93 s**, package
+  **0.943 s**, zero skips), using independent integer clipping and membership
+  oracles. Common selection refusals and Go-only full-result integrity mutations
+  are separate. Existing point/interval, Saved (**8.57 s**) and service context
+  (**28.76 s**) regressions pass. Unsupported current-only empty scope remains
+  an explicit negative control.
+- The first live run completed the first staged record read and no-read Back,
+  then exposed reuse of the retired native source-action lease for a second
+  source-free observation question. A separate held-result staging capability
+  now checks current result/plan/question identity, visibility and no pending
+  controller. It leaves existing execution/capture/publication authority intact.
+  Mounted lifecycle/retirement regressions **18 passed**, zero skips (**486 ms**).
+  Final full frontend **1,395 passed**, zero skips (**24.997 s**). The final
+  Go 1.27.3 static binary is rebuilt with the frozen UI. Independent source
+  review closes both UI findings.
+- Final actual Playwright **58.9 s** passes **16 measured boundaries**. Physical
+  source settlement checks **97 spans / 97 logs / 16 gauge exports**. Nearby
+  populations **9 / 9 / 13** differ from both one-nanosecond populations
+  **1 / 1 / 2** and whole-window populations **25 / 26 / 25**. One native read
+  supports three continuations and four explicit record attempts (one actual
+  502 refusal plus retry); **zero store reads/writes**. The measured proxy sees
+  15 SQL requests, distinct from the five UI source-operation requests.
+- Bombadil completes **660 snapshots / eight phases**. It independently observes
+  the exact child members, unchanged held evidence/selection and restored focus,
+  with one native read and one log read, zero store reads/writes. All three main
+  frames and final actor frame were visually inspected; native frames are
+  deliberately scrolled and do not claim an above-fold layout acceptance.
+- Actual wire **20 genuine responses / six request bodies** conform (19 HTTP 200,
+  one 502). The source bank is generated ordinary OTLP, not instrumented real
+  distributed calls or proof of complete ingestion. Campaign traces were
+  losslessly compressed and duplicate screenshots consolidated.
+
+Independent required Quint and actual ledger replay pass (**3.11 s**, package
+**3.120 s**, zero skips): **16 facts / 16 model steps / five source events**.
+Independent raw checks bind 12 admitted native observations to the 16 physical
+metric exports and the three exact record populations. **Ten semantic mutants**
+and a stage-causes-source-read model control are rejected. The final image builds
+successfully; only the local packages container was updated. `/health` returns
+`{"ok":true}` and its embedded planner/measurement UI bytes match tested source.
+Existing dependencies and persistent volumes were preserved. See the
+[storyboard](journeys/388-gauge-observation-context-storyboard.md).
+
+See the [contract](docs/GAUGE_OBSERVATION_CONTEXT.md) and
+[review](docs/reviews/GAUGE_OBSERVATION_CONTEXT_REVIEW_388.md).
+
 ## Capture-family admission consolidation — 387
 
 Six finite full capture families share receipt,
