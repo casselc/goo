@@ -1,5 +1,83 @@
 # Validation record
 
+## Data-first fixed results — 384
+
+Fixed record views now lead with compact applied scope/count and one action row,
+then the actual page or selected visual. Live, Activity continuations and stored
+records share supplied-fact presentation. Question sessions, reads, cancellation,
+immutable custody and retained Back keep their authority. Secondary context is
+below primary data; active population controls retain the same node/library.
+The public waterfall `summary-provided` attribute/property avoids duplicate parent
+facts while retaining standalone defaults, relative scale and coverage semantics.
+
+Checks:
+
+- Focused UI **42 passed**, zero skipped (**753.542 ms**); full frontend
+  **1,363 passed**, zero skipped (**22.339 s**). Includes exact counts/clocks,
+  visible partial/limited states, dirty editors, hidden-action guards, controls
+  rehoming/disposal, receipt-family restoration and SSR/detached display updates.
+  Actual cold boot caught and corrected a detached-node lookup that the unit DOM
+  fixture missed. Required disclosure gestures in 18 existing journeys and four
+  actors are updated and syntax checked; those full campaigns were not all rerun.
+- Strict real Playwright **47.0 s** (wrapper **48.9 s**), **27 measured actions /
+  ten current frames** across cold direct entry, Activity, Saved-search continuation
+  and stored table/waterfall. The actor completes **659 states / 35.098 s** with
+  actual table→waterfall→table rendering, exact IDs/basis/read clock and no
+  source/store/write calls after its initial stored reopen.
+- Whole first items, applied scope and real action rows fit at natural root scroll
+  position zero, with no document pan. Geometry uses each node's own overflow
+  ancestors and padding edges (`clientLeft`/`clientTop`), plus measured document,
+  MAIN and window positions; MAIN is not assumed to be a clipping scrollport.
+  Desktop is 1280×1000; narrow is 390×844. Narrow full-item bounds:
+  ordinary/Activity **550.36–638.05 px**, Saved child **642.73–730.42**, stored table
+  **603.45–691.14**, stored waterfall **608.45–813.95**.
+- Six matched old-383 table frames use the same independently observed fixed
+  question/source bank. Old narrow first-item bounds were ordinary
+  **1433.11–1520.80**, Saved child **1418.98–1506.67**, stored records
+  **1790.50–1878.19**. Final baseline:
+  `artifacts/fixed-result-layout384/baseline/24f90c1e-0a82-4bb0-a009-c85196c544fc/summary.json`.
+- The initial November 8 trace expired at UTC midnight. Raw lookup and actual DDL
+  confirmed calendar-day `toDate(Timestamp) + toIntervalDay(1)` with
+  `ttl_only_drop_parts = 1`, despite exporter `ttl: 24h`. The original baseline is
+  historical only; a fresh actual November 9 baseline was immediately paired.
+  No schema/data reset or fabricated replay was used. README documents the lab limit.
+- Mandatory actual-fact Quint replay **9.49 s** (package **9.500 s**), zero skips:
+  all 27 actions, ten current/six before frames, **15 semantic mutations and two
+  model controls**. Independent raw membership, live compiled plans, full counts,
+  exact scope/read facts, physical capture bytes/hash, dirty Run refusal and held
+  DOM/focus are checked. Transport JSON is compared structurally with `UseNumber`;
+  physical bytes/hash remain exact. No geometry-mirroring property model was added.
+- Existing 383 browser refusal/cancellation/late-response regression passes
+  (**10.5 s** wrapper), all 14 facts and three Back focuses true. Its actual ledger
+  also passes **7.69 s** (package **7.739 s**), zero skips, with **13 semantic
+  mutations / two controls**. Historical documentation PNGs are restored with exact
+  SHA256 equality; refreshed regression frames remain in artifacts.
+- Actual API conformance passes **eight responses / three requests**. Production
+  Go/API contracts are unchanged; no route, schema migration or compatibility
+  layer was added. Go **1.27.3** app image `27e833e3ea83…` builds and is healthy.
+  All changed served UI/CSS and unchanged API match source: exploration 62,392 B,
+  stored records 12,432, distributions 50,981, summary 3,042, captures 41,579,
+  documents 49,542, deployments 7,485,
+  population workspace 201,699, trail 7,407, record interactions 16,370, waterfall
+  10,006, CSS 96,698 and API 1,479,946. Only the app container was rebuilt; retained
+  stores, volumes, telemetry and the XTDB orphan remain preserved.
+
+Final report:
+`artifacts/fixed-result-layout384/reviewed/b8bba76d-200d-459a-8dc1-3a061a7843f5/summary.json`.
+383 regression report:
+`artifacts/captured-trace-search383/622e62d2-5cce-45ac-8f46-736561c110e2/summary.json`.
+Current PNGs and the final actor Table JPEG were visually checked. Repeated actor
+frames were pruned; the compact trace/report/frame bundle is not a complete
+reproduction directory. This is representative real-span geometry acceptance,
+not a claim that every product screen or arbitrary record density is solved.
+
+See [layout contract](docs/DATA_FIRST_FIXED_RESULTS.md),
+[storyboard](journeys/384-fixed-result-layout-storyboard.md),
+[design](docs/reviews/WHOLE_PRODUCT_DESIGN_384.md),
+[architecture](docs/reviews/WHOLE_PRODUCT_ARCHITECTURE_384.md) and the
+[adopted next roadmap](docs/ROADMAP_2026_11_09_CHECKPOINT_384.md).
+
+
 ## Captured trace-search evidence — 383
 
 The existing immutable capture store now has a checked `trace-search`

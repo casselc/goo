@@ -150,7 +150,7 @@ these views through the same saved-view catalog.
 to an explicitly chosen Goo server.
 [Record paging](docs/RECORD_PAGE_PROFILE.md) retains any held aggregate and timeline.
 
-[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_08_CHECKPOINT_381.md) ·
+[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_09_CHECKPOINT_384.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
 [Go/frontend library review and proposal](docs/LIBRARY_REFACTOR_PLAN_2026_10_28.md)
 
@@ -202,6 +202,13 @@ python3 scripts/smoke.py
 Open **http://localhost:8088**. Sample traffic starts automatically; allow 20–40
 seconds for telemetry. Published lab ports bind to loopback. The `lab` /
 `lab-local` credentials are disposable development credentials.
+
+The lab's generated trace table uses calendar-day expiry (`toDate(Timestamp) +
+INTERVAL 1 DAY` with part expiry), despite the exporter's `ttl: 24h` setting. It is
+not a rolling 24-hour guarantee: fixed questions can lose their source records at
+UTC midnight. Immutable captures retain their evidence; a fresh query can return
+no data. Inspect the actual ClickHouse table DDL when choosing retention.
+
 
 ## Follow an investigation
 
@@ -456,7 +463,7 @@ Deployment-specific authentication, tenant isolation, quotas and retention requi
 a named target and acceptance checks. External Databricks/XTDB expansion and other
 proposals stay in the [reviewed backlog](docs/BACKLOG_2026_10_25.md).
 
-[Capability/design reference index](docs/CAPABILITY_GUIDE.md) ·
+[Current capabilities and gaps](docs/CAPABILITY_GUIDE.md) ·
 [Product essence](docs/PRODUCT_ESSENCE.md) ·
 [Implementation history](docs/IMPLEMENTATION_PLAN.md) ·
 [Original handoff (historical)](START_HERE.md)
@@ -605,8 +612,8 @@ For supplied native observations, `measurements.Evaluate(question, rows, at)` is
 storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
 
-The [active roadmap](docs/ROADMAP_2026_11_08_CHECKPOINT_381.md) follows the completed 376–381
-sequence. Earlier current RPC view reuse, service native interval context, and
+The [active roadmap](docs/ROADMAP_2026_11_09_CHECKPOINT_384.md) follows the completed 382–384
+sequence and fresh whole-product reviews. Earlier current RPC view reuse, service native interval context, and
 measured bounded facets are also delivered. [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most
 100 matches while Find, totals and comparison scales use the complete admitted
 set. Same-read selection/caret and exact child scope survive Return. [Typed error-triage follow-through](docs/TYPED_ERROR_TRIAGE.md) is also delivered:
@@ -649,7 +656,9 @@ framing while keeping each source's limits and failure ownership explicit.
 complete fixed conditions and limits in investigation revisions. Reopening stages
 intent; Search reads explicitly. [Captured search evidence](docs/CAPTURED_TRACE_SEARCH.md)
 now retains an independent reread and qualified witnesses, reopens without telemetry,
-and stays held while a fresh trace is explored. Next is data-first fixed-result layout.
+and stays held while a fresh trace is explored. [Data-first fixed results](docs/DATA_FIRST_FIXED_RESULTS.md) now keep the first
+record or chosen visual in view with contextual secondary controls. Next is an
+outgoing HTTP observation lens over ordinary OTel Client spans.
 Whole-product reviews and proposed work are distinct from
 [validated delivery](VALIDATION.md).
 
@@ -715,7 +724,7 @@ scope/data/quality, charts/tables/lists/waterfalls and scope-bound controls, a b
 chart with a restricted Plotly adapter, and shared declarative/visual authoring.
 Complete-only widgets and explicit uncertainty semantics are core requirements;
 all current widgets/screens must be expressible. The app is prerelease, with no
-legacy-format or API compatibility floor. [The active roadmap](docs/ROADMAP_2026_11_08_CHECKPOINT_381.md) separates proposed work from
+legacy-format or API compatibility floor. [The active roadmap](docs/ROADMAP_2026_11_09_CHECKPOINT_384.md) separates proposed work from
 implemented capabilities; the supporting reports include pinned research sources.
 
 Single-group count breakdowns now share a [scoped display contract](docs/SCOPED_VIEW_PILOT.md):

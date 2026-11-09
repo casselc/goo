@@ -8,7 +8,7 @@ export let mounts=[],inspections=[],freshReads=[],admitted=[];
 mock.module('../../ui/components.mjs',{exports:{node,actionVisible:el=>{for(let p=el;p;p=p.parentElement)if(p.hidden||p.localName==='details'&&!p.open&&!p.children.find(child=>child.localName==='summary')?.contains(el))return false;return !!el?.isConnected},durationMS:value=>String(value)}});
 mock.module('../../ui/namespace.mjs',{exports:{namespace(host,prefix){for(const el of walk(host))if(el.id)el.id=prefix+el.id}}});
 mock.module('../../ui/deployments.mjs',{exports:{mount:()=>({setQuestion(){},invalidate(){}})}});
-mock.module('../../ui/distributions.mjs',{exports:{mount(host,options){const chart=node('div');chart.id=options.prefix+'timeChart';host.append(chart);return{invalidate(){},render(){},suspend(){}}},usesCanonicalDistribution:()=>false}});
+mock.module('../../ui/distributions.mjs',{exports:{mount(host,options){const chart=node('div');chart.id=options.prefix+'timeChart';const context=node('details');context.id=options.prefix+'recordResultContext';host.append(chart,context);return{invalidate(){},render(){},suspend(){}}},usesCanonicalDistribution:()=>false}});
 mock.module('../../ui/evidence-scope.mjs',{exports:{element:()=>node('p'),record:value=>value}});
 mock.module('../../ui/numeric-plot.mjs',{exports:{mount:()=>({invalidate(){},dispose(){},open(){}})}});
 mock.module('../../ui/queries.mjs',{exports:{postJSON:(...args)=>{freshReads.push(args);return Promise.reject(Error('Unexpected source read'))}}});

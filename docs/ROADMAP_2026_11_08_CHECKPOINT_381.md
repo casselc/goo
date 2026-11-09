@@ -2,8 +2,9 @@
 
 Adopted after 381 acceptance, reconciled from the
 [architecture review](reviews/WHOLE_PRODUCT_ARCHITECTURE_381.md) and
-[product/design review](reviews/WHOLE_PRODUCT_DESIGN_381.md). This is the sole active
-finite sequence; validation of completed work is recorded in [VALIDATION](../VALIDATION.md). The preceding
+[product/design review](reviews/WHOLE_PRODUCT_DESIGN_381.md). This records the completed
+382–384 sequence; the [384 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_384.md) now owns the active queue.
+Validation is recorded in [VALIDATION](../VALIDATION.md). The preceding
 [November 8 roadmap](ROADMAP_2026_11_08.md) retains the 376–381 delivery history.
 
 Goo's central loop remains **see current telemetry → isolate a population → follow
@@ -14,7 +15,8 @@ fresh results, held parents and immutable evidence distinct.
 
 ## Chosen finite sequence
 
-382 and 383 are delivered; the active task is **384**.
+382–384 are delivered. The [active queue](ROADMAP_2026_11_09_CHECKPOINT_384.md) is
+**385 outgoing HTTP → 386 gauge display reuse → 387 capture admission**.
 
 ### 382 — breadth: preserve and reuse a trace-search question — delivered
 
@@ -22,10 +24,10 @@ Implemented through [saved trace-search questions](SAVED_TRACE_SEARCH_QUESTIONS.
 with actual checks in [validation](../VALIDATION.md).
 
 User task: “Find traces containing these conditions across services, then keep
-that question for the next incident.” Trace search already exists; the missing
-capability is preserving its checked intent through the established question
-workflow. Its current panel owns one to four condition drafts and clears them on
-invalidation; it has no saved-question continuation.
+that question for the next incident.” At the 381 checkpoint, trace search existed
+but its checked intent could not survive through the established question
+workflow. The condition panel cleared drafts on invalidation and had no
+saved-question continuation. Milestone 382 closes that original gap.
 
 Extend the existing investigation **question card / typed step** boundary with an
 explicit trace-search payload. Reuse the current condition editor, existing
@@ -99,7 +101,7 @@ Source anchors: `exploration.TraceSearchResult`,
 `exploration/capture_store.go`, `ui/captures.mjs`, `ui/trace-search.mjs` and the
 existing retained fixed-question return in `ui/app.mjs`.
 
-### 384 — consolidate: make fixed-result data the primary content — next
+### 384 — consolidate: make fixed-result data the primary content — delivered
 
 The real 380 desktop frame shows a two-span result; the
 [383 fresh-trace frame](journeys/screenshots/383-search-trace-followthrough.png)
@@ -171,5 +173,5 @@ and compact, and distinguish source/data reads from metadata/cancel control.
 
 This prerelease has no compatibility floor requiring legacy arm aliases or
 migration layers. Use current Go/stdlib features where they simplify internals;
-keep public usage direct. After 384, perform another whole-product checkpoint
-rather than automatically promoting every deferred candidate.
+keep public usage direct. The [384 whole-product checkpoint](ROADMAP_2026_11_09_CHECKPOINT_384.md) re-ranked the next cuts
+from current source and actual usage rather than promoting deferred items automatically.

@@ -25,30 +25,32 @@ export function waterfallModel(page,display=defaults){
 }
 const Base=globalThis.HTMLElement||class{};
 export class RecordSpanWaterfall extends Base{
- static get observedAttributes(){return ['page','display']}
+ static get observedAttributes(){return ['page','display','summary-provided']}
+ set summaryProvided(value){if(value===true)this.setAttribute('summary-provided','');else this.removeAttribute('summary-provided')}
+ get summaryProvided(){return this.getAttribute('summary-provided')!==null}
  set page(value){try{this._page=value==null?null:Pages.adoptPage(value);this._pageError=''}catch(error){this._page=null;this._pageError=error.message}if(this.isConnected)this.render()}
  get page(){if(this._page!==undefined)return this._page;try{const text=this.getAttribute('page');if(!text)return this._page=null;if(text.length>Pages.RECORD_PAGE_LIMITS.maxBytes)throw Error('Record page exceeds the supplied-data budget.');return this._page=Pages.adoptPage(JSON.parse(text))}catch(error){this._pageError=error.message;return this._page=null}}
  set display(value){try{this._display=displayOptions(value);this._displayError=''}catch(error){this._display=null;this._displayError=error.message}if(this.isConnected)this.render()}
  get display(){if(this._display!==undefined)return this._display;try{const text=this.getAttribute('display');if(text&&text.length>8192)throw Error('Record display exceeds its options budget.');return this._display=displayOptions(text?JSON.parse(text):defaults)}catch(error){this._displayError=error.message;return this._display=null}}
- connectedCallback(){for(const key of ['page','display'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];this[key]=value}if(this.page!==this._renderedPage||this.display!==this._renderedDisplay)this.render()}
- attributeChangedCallback(name){if(name==='page'){this._page=undefined;this._pageError=''}else{this._display=undefined;this._displayError=''}if(this.isConnected)this.render()}
- recordItems(){if(this.page!==this._renderedPage||this.display!==this._renderedDisplay)this.render();return this._recordItems||Object.freeze([])}
+ connectedCallback(){for(const key of ['page','display','summaryProvided'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];this[key]=value}if(this.page!==this._renderedPage||this.display!==this._renderedDisplay||this.summaryProvided!==this._renderedSummaryProvided)this.render()}
+ attributeChangedCallback(name){if(name==='page'){this._page=undefined;this._pageError=''}else if(name==='display'){this._display=undefined;this._displayError=''}if(this.isConnected)this.render()}
+ recordItems(){if(this.page!==this._renderedPage||this.display!==this._renderedDisplay||this.summaryProvided!==this._renderedSummaryProvided)this.render();return this._recordItems||Object.freeze([])}
  render(){
-  this._recordItems=Object.freeze([]);this._renderedPage=null;this._renderedDisplay=null;this.replaceChildren();delete this.dataset.signal;this.dataset.state='unavailable';
+  this._recordItems=Object.freeze([]);this._renderedPage=null;this._renderedDisplay=null;this._renderedSummaryProvided=null;this.replaceChildren();delete this.dataset.signal;this.dataset.state='unavailable';
   const n=UI.node,page=this.page,display=this.display;
   if(!page||!display){this.append(n('p',this._pageError||this._displayError||'Supply a bounded span page.','record-span-waterfall-unavailable'));return}
   let model;try{model=waterfallModel(page,display)}catch(error){this.append(n('p','Span timing unavailable · '+error.message,'record-span-waterfall-unavailable'));return}
-  this._renderedPage=page;this._renderedDisplay=display;this.dataset.signal='spans';this.dataset.state=page.quality.state;
+  this._renderedPage=page;this._renderedDisplay=display;this._renderedSummaryProvided=this.summaryProvided;this.dataset.signal='spans';this.dataset.state=page.quality.state;
   const continuation=page.page.hasMore===null?'Continuation unknown':page.page.hasMore?'More records reported':'No further page reported';
-  this.append(n('p',page.page.returned+' supplied spans · offset '+page.page.offset+' · '+continuation,'record-span-waterfall-facts'));
-  const scale=model.geometry.scaleExtent,notice=n('p',(scale===null?'Timing unavailable':('Shared scale: 0–'+durationLabel(scale)))+' · each trace starts at its earliest timed supplied span · coverage unknown','record-span-waterfall-scale');notice.title='Relative origins remove gaps between traces; one common duration scale preserves comparison. Supplied extent is not complete trace latency. Async links are not parent edges.';this.append(notice);
+  if(!this.summaryProvided)this.append(n('p',page.page.returned+' supplied spans · offset '+page.page.offset+' · '+continuation,'record-span-waterfall-facts'));
+  const scale=model.geometry.scaleExtent,interpretation='Each trace starts at its earliest timed supplied span. Relative origins remove gaps between traces; one common duration scale preserves comparison. Supplied extent is not complete trace latency. Async links are not parent edges.',notice=n('p',(scale===null?'Timing unavailable':((this.summaryProvided?'Relative trace time: 0–':'Shared scale: 0–')+durationLabel(scale)))+(this.summaryProvided?' · coverage unknown':' · each trace starts at its earliest timed supplied span · coverage unknown'),'record-span-waterfall-scale');notice.title='Relative origins remove gaps between traces; one common duration scale preserves comparison. Supplied extent is not complete trace latency. Async links are not parent edges.';this.append(notice);
   if(page.quality.state==='changed_between_reads')this.append(n('p','Source changed between independent reads; supplied rows do not establish one coherent population.','record-span-waterfall-warning'));
   if(!page.rows.length){this.append(n('p','No supplied spans on this page.','record-span-waterfall-empty'));return}
   const ancestryRows=contextRecords(page.rows),byIndex=new Map(model.geometry.spans.map(span=>[span.index,span])),hosts=new Array(page.rows.length);
   for(const group of model.geometry.groups){
    const section=n('section',undefined,'record-span-waterfall-group'),heading=n('div',undefined,'record-span-waterfall-heading'),identity=n('strong',group.traceId?'Trace '+group.traceId.slice(0,8)+'…'+group.traceId.slice(-8):'Unreported trace · observation '+(page.page.offset+group.rowIndexes[0]+1));
    if(group.traceId){identity.title=group.traceId;identity.setAttribute('aria-label','Trace '+group.traceId)}
-   heading.append(identity);if(group.origin!==null&&group.rowIndexes.length>1){const time=Records.timestamp({timestamp_ns:String(group.origin)});time.title='Earliest timed supplied span · '+time.title;heading.append(time)}else if(group.origin===null)heading.append(n('span','Supplied origin unavailable'));
+   heading.append(identity);if(group.origin!==null&&group.rowIndexes.length>1){const time=Records.timestamp({timestamp_ns:String(group.origin)},{compact:this.summaryProvided});time.title='Earliest timed supplied span · '+time.title;heading.append(time)}else if(group.origin===null)heading.append(n('span','Supplied origin unavailable'));
    section.append(heading);section.setAttribute('aria-label',group.traceId?'Supplied trace fragment '+group.traceId:'Unreported trace observation '+(page.page.offset+group.rowIndexes[0]+1));
    const ordered=model.geometry.spans.filter(span=>span.groupKey===group.key);
    for(const span of ordered){
@@ -63,6 +65,7 @@ export class RecordSpanWaterfall extends Base{
     hosts[index]=Object.freeze({index,element:item,actionsHost,detailHost,details,timingButton,timeHost});
    }this.append(section);
   }
+  if(this.summaryProvided){const details=n('details',undefined,'record-span-waterfall-details');details.append(n('summary','Timing scope'),n('p',interpretation));this.append(details)}
   this._recordItems=Object.freeze(hosts);
  }
 }

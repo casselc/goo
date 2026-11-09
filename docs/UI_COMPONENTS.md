@@ -4,6 +4,11 @@
 record actions without an aggregate or grouping. No additional public component
 is introduced; the application retains query, execution and paging ownership.
 
+[Data-first fixed results](DATA_FIRST_FIXED_RESULTS.md) share a supplied-fact
+summary between live and stored record owners. The application presenter reuses
+standard timestamp and selector formatting; it has no read, navigation or custody
+authority. Page layout stays separate from the public display elements.
+
 Goo's framework-neutral Web Components render supplied telemetry/evidence data in
 server-rendered HTML or an SPA. Application adapters own source reads, query scope,
 navigation, subscriptions, retention and publication. Ordinary OTel data does not
@@ -1781,6 +1786,14 @@ qualified fields and unavailable timing retain their semantics. Component-scoped
 group styling prevents application section cards from leaking into fragments.
 SSR, detached properties and narrow layouts are checked. See
 [the contract](SUPPLIED_SPAN_WATERFALL.md).
+
+The boolean `summary-provided` HTML attribute / `.summaryProvided` property is an
+embedding option for a parent that already displays the supplied count, scope and
+read facts. It removes duplicate introductory count prose, keeps the relative-time
+scale and unknown-coverage cue visible, and places interpretation in a **Timing
+scope** disclosure after the rows. Standalone default presentation retains full
+facts. The option preserves data, item indexes and action ownership; it works with
+server HTML and detached property updates without acquiring source reads.
 
 [Trace inspector → editable view](TRACE_AS_VIEW.md) is application navigation;
 shared Table/List/Waterfall elements gain no query or modal ownership.

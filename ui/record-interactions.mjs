@@ -37,7 +37,7 @@ export function indexRecordItems(items,size){
 }
 function surface(target,rows,signal,options){
  if(['record-list','record-span-waterfall'].includes(options.recordKind)){
-  const list=node(options.recordKind==='record-span-waterfall'?'goo-record-span-waterfall':'goo-record-list');list.page=options.recordPage;list.display=options.recordLayout;target.append(list);
+  const list=node(options.recordKind==='record-span-waterfall'?'goo-record-span-waterfall':'goo-record-list');if(options.recordKind==='record-span-waterfall')list.summaryProvided=options.summaryProvided===true;list.page=options.recordPage;list.display=options.recordLayout;target.append(list);
   const handles=list.recordItems(),items=indexRecordItems(handles,rows.length),page=list.page,display=list.display;
   for(const item of items){item.actionsHost.hidden=false;item.details.hidden=true;item.detailHost.classList.add('record-detail-row');item.detailHost.hidden=true}
   return {viewport:list,current:()=>list.page===page&&list.display===display&&list.recordItems()===handles,

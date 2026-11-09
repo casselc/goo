@@ -24,6 +24,8 @@ export const completionRequiresOneExplicitRead=always(()=>state.current.phase!==
 export const invalidNumericAuthoringBlocksRun=always(()=>state.current.phase!=='invalid'||state.current.invalidDisabled===true);
 const step=registerCustomAction('goo.numericComparison',async(document,window,phase:string)=>{
  const root=document.documentElement,globals=window as any;
+ const reveal=(target:Element)=>{const parents:HTMLDetailsElement[]=[];for(let p=target.parentElement;p;p=p.parentElement)if(p.localName==='details')parents.unshift(p as HTMLDetailsElement);for(const p of parents)if(!p.open)p.querySelector<HTMLElement>(':scope>summary')?.click()};
+ const edit=()=>{if(document.getElementById('analysisControls')?.hidden){const button=[...document.getElementById('exploreRun')!.parentElement!.querySelectorAll<HTMLButtonElement>('button')].find(b=>b.textContent==='Edit question');if(!button||button.disabled)throw Error('Current Edit question required');button.click()}};
  if(phase==='mean'){
   root.dataset.ncReads='0';root.dataset.ncGolden=document.getElementById('paircohortExplain')!.textContent!;
   const pair=JSON.parse(root.dataset.ncGolden);globals.ncQuestion=pair.request.selection.question;
@@ -33,9 +35,9 @@ const step=registerCustomAction('goo.numericComparison',async(document,window,ph
  if(phase==='coverage'){const summary=document.querySelector<HTMLElement>('#paircohortMeasures .numeric-comparison details > summary')!;summary.click()}
  if(phase==='staged')window.location.hash=(await import(new URL('/question-protocol.mjs',window.location.href).href)).questionLink(globals.ncQuestion);
  if(phase==='reading')(document.getElementById('exploreRun') as HTMLButtonElement).click();
- if(phase==='pinning'){const pin=document.getElementById('baselinePin') as HTMLButtonElement;const details=pin.closest('details');if(details)details.open=true;pin.click()}
+ if(phase==='pinning'){const pin=document.getElementById('baselinePin') as HTMLButtonElement;reveal(pin);pin.click()}
  if(phase==='invalid'||phase==='complete'){
-  const outer=document.getElementById('measureComposer') as HTMLDetailsElement,inner=outer.querySelector('details') as HTMLDetailsElement;outer.open=true;inner.open=true;const unit=document.getElementById('numericUnit') as HTMLInputElement;unit.value=phase==='invalid'?'':globals.ncQuestion.numeric.unit;unit.dispatchEvent(new Event('input'));
+  edit();const outer=document.getElementById('measureComposer') as HTMLDetailsElement,inner=outer.querySelector('details') as HTMLDetailsElement;outer.open=true;inner.open=true;const unit=document.getElementById('numericUnit') as HTMLInputElement;unit.value=phase==='invalid'?'':globals.ncQuestion.numeric.unit;unit.dispatchEvent(new Event('input'));
  }
  root.dataset.ncPhase=phase;
 });

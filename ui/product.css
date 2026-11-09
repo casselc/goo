@@ -1641,3 +1641,52 @@ td details {
 .service-catalog-table>tbody>tr>td:first-child>p{margin:3px 0 0;color:var(--muted);font-size:11px}
 .service-catalog-table>tbody>tr>td:last-child>button{white-space:nowrap}
 @media(max-width:700px){.service-catalog-viewport[mobile-layout=stacked]>.service-catalog-table>tbody>tr>td:first-child{grid-column:1/-1;min-width:0;max-width:100%}}
+
+/* Fixed record results: scope, actions, primary data, then optional context. */
+.fixed-record-summary{margin:6px 0;padding:6px 0;border:0;background:transparent;overflow-wrap:anywhere}
+.question-state.fixed-record-summary{border:0;padding:6px 0}
+.fixed-record-count{display:block;font-size:14px;line-height:1.4}
+.fixed-record-summary .fixed-record-window{margin:3px 0;color:var(--muted);font-size:12px;line-height:1.4}
+.fixed-record-summary>.fixed-record-facts{margin:4px 0 0;padding:0;border:0;font-size:12px}
+.fixed-record-facts>dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:8px 16px;margin:10px 0}
+.fixed-record-facts>dl>div{min-width:0}.fixed-record-facts dt{font-size:11px;color:var(--muted)}
+.fixed-record-facts dd{margin:2px 0;overflow-wrap:anywhere}.fixed-record-warning{color:var(--warning,#f5b85d);font-size:12px;margin:4px 0}
+.fixed-question>.exploration-scope{padding:0;border:0;margin:6px 0;gap:8px}
+.fixed-question>.exploration-scope>[id$=exploreNext][disabled]{display:none}
+.question-result-actions:empty{display:none}
+.data-first-results>.result-tabs{margin:8px 0 10px;gap:18px}
+.data-first-results>.record-result-context{margin:12px 0 0;padding-top:8px}
+.record-result-context>summary{font-size:12px;color:var(--muted)}
+.record-result-context :is(.time-chart,.duration-summary){margin-block:8px;padding:8px}
+.data-first-results .saved-span-kind{gap:8px;margin:4px 0 8px}
+.saved-record-evidence>.question-result-actions{margin:4px 0;gap:8px}
+.saved-record-evidence>.question-result-actions>button:disabled{display:none}
+.saved-record-evidence>.question-result-actions>[id$=exploreCreatePackage]{display:none}
+.data-first-results #recordsPanel>.scroll{margin:0}
+.app-main:has([data-workspace-panel=explore]:not([hidden]) #exploration:not([hidden]) .entry-advanced[open]:not([hidden]) .fixed-question:not([hidden])) .workspace-header,
+.app-main:has([data-workspace-panel=investigations]:not([hidden]) #generalCaptureWorkspace:not([hidden]) #captureExploreEvidence:not([hidden])) .workspace-header{padding-block:10px 8px;gap:8px}
+.app-main:has([data-workspace-panel=explore]:not([hidden]) #exploration:not([hidden]) .entry-advanced[open]:not([hidden]) .fixed-question:not([hidden])) #workspaceDescription,
+.app-main:has([data-workspace-panel=investigations]:not([hidden]) #generalCaptureWorkspace:not([hidden]) #captureExploreEvidence:not([hidden])) #workspaceDescription{display:none}
+.active-investigation{padding-block:8px}
+@media(max-width:700px){
+ .fixed-record-summary .fixed-record-window{font-size:12px}
+ .fixed-record-count{font-size:13px}
+ .active-investigation{display:grid;grid-template-columns:minmax(0,1fr) auto;padding:8px 12px;gap:8px}
+ .active-investigation>div{min-width:0}.active-investigation strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .active-investigation p{margin:2px 0 0}.active-investigation button{font-size:11px;padding:6px 8px}
+}
+
+.fixed-record-summary .fixed-record-limits{font-size:12px;margin:4px 0;color:var(--muted)}
+
+/* A closed preservation disclosure is one toolbar action, not a second form row. */
+.fixed-question>.exploration-scope>.question-preserve{margin:0;padding:0;border:0;align-self:center}
+.fixed-question>.exploration-scope>.question-preserve>summary{min-height:32px;box-sizing:border-box;padding:6px 9px;font-size:12px;line-height:18px;border:1px solid var(--border);border-radius:6px}
+.fixed-question>.exploration-scope>.question-preserve[open]{flex-basis:100%}
+@media(pointer:coarse){.fixed-question>.exploration-scope>.question-preserve>summary{min-height:44px}}
+
+/* Saved record pages keep their title and primary actions together before data. */
+#generalCaptureWorkspace:has(#captureExploreEvidence:not([hidden]))>.section-heading{gap:8px;margin-bottom:6px}
+#generalCaptureWorkspace:has(#captureExploreEvidence:not([hidden]))>.section-heading h2{margin:0}
+#generalCaptureWorkspace:has(#captureExploreEvidence:not([hidden]))>.section-heading .controls{margin:0}
+.saved-record-evidence .saved-span-kind>label{display:flex;align-items:center;gap:8px;margin:0;min-width:0;flex:1}
+.saved-record-evidence .saved-span-kind>label>select{flex:1;min-width:0;margin:0}

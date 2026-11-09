@@ -1,3 +1,4 @@
+const {revealControl}=require('./support/explore');
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
 const {questionLink}=require('../ui/workspace.mjs'),{openFilters}=require('./support/explore'),{startBombadil,verifyWithGo}=require('./support/cross-app');
 const base='http://127.0.0.1:8088';
@@ -26,7 +27,7 @@ function assertPair(pair,records){const a=pair.request.baseline,z=pair.request.s
  for(const [i,b]of d.bins.entries()){const aa=expectedA.bins[i],zz=expectedZ.bins[i];expect(b.from).toBe(aa.from);expect(b.to).toBe(aa.to);expect(b.baselineCount).toBe(aa.count);expect(b.selectionCount).toBe(zz.count);if(unknown){for(const key of ['countDifference','baselinePercent','selectionPercent','differencePP'])expect(b[key]).toBeUndefined();continue}expect(b.countDifference).toBe(String(BigInt(zz.count)-BigInt(aa.count)));expect(b.baselinePercent).toBe(a.count==='0'?undefined:rational(BigInt(aa.count)*100n,BigInt(a.count)));expect(b.selectionPercent).toBe(z.count==='0'?undefined:rational(BigInt(zz.count)*100n,BigInt(z.count)));expect(b.differencePP).toBe(a.count==='0'||z.count==='0'?undefined:rational(100n*(BigInt(zz.count)*BigInt(a.count)-BigInt(aa.count)*BigInt(z.count)),BigInt(a.count)*BigInt(z.count)))}
  return d;
 }
-async function control(page,id){const button=page.locator('#'+id);if(!await button.isVisible())await button.locator('xpath=ancestor::details[1]').locator(':scope > summary').click();return button}
+async function control(page,id){return revealControl(page.locator('#'+id))}
 async function supplied(plot){return plot.evaluate(async (el)=>{const GooAlignedHistogram=await import('/aligned-histogram.mjs');return {comparison:el.comparison,display:el.display,model:GooAlignedHistogram.model(el.comparison,el.display),sides:[...el.querySelectorAll('goo-time-bars')].map(x=>x.data)}})}
 async function readView(page){const results=[],collect=async r=>{if(isResponse('explore',r)&&r.ok())results.push(await r.json())};page.on('response',collect);const next=page.waitForResponse(r=>isResponse('compare',r));await page.locator('.population-run').click();const response=await next;await expect.poll(()=>results.length).toBe(2);page.off('response',collect);return {results,request:response.request().postDataJSON(),response:await json(response)}}
 

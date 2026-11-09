@@ -1,5 +1,13 @@
 # Architecture
 
+[Data-first fixed results](DATA_FIRST_FIXED_RESULTS.md) share a passive scope/count
+presenter across live and stored record owners. Distributions orders primary
+records/visuals before optional context; PopulationWorkspace owns its same controls
+while their layout destination follows the active workspace. QuestionSession,
+FixedQuestionEditor, retained visits and custody keep their existing authority.
+The public waterfall summary-provided option removes redundant embedding prose
+without moving source reads into a display element.
+
 [Saved trace-search intent](SAVED_TRACE_SEARCH_QUESTIONS.md) adds a typed third arm
 to existing investigation question steps. Strict Go/JavaScript admission retains
 request identity and fixed scope; existing document revisions and fixed-visit

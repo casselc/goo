@@ -93,3 +93,13 @@ flowchart LR
 See [record interaction ownership](RECORD_INTERACTIONS.md),
 [architecture review](reviews/SUPPLIED_SPAN_WATERFALL_ARCHITECTURE_301.md) and
 [design review](reviews/SUPPLIED_SPAN_WATERFALL_DESIGN_301.md).
+
+## Supplied parent summary
+
+When an embedding surface already presents count, scope and independent read
+facts, set the boolean `summary-provided` attribute or `.summaryProvided = true`.
+The scale and coverage cue stay visible; interpretation moves to **Timing scope**
+after the rows and duplicate supplied-count prose is omitted. This is presentation
+context, not evidence of completeness. Omit the attribute / set the property to
+false for standalone full-fact rendering. Data, original indexes and action slots
+retain the same contract; SSR and detached updates are supported.

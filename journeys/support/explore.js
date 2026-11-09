@@ -31,3 +31,8 @@ module.exports.stageRecordPackage=stageRecordPackage;
 
 async function openRecordPackage(page){const panel=page.locator('summary').filter({hasText:/^Reusable question package$/}).locator('..');if(!await panel.evaluate(e=>e.open))await panel.locator(':scope > summary').click()}
 module.exports.openRecordPackage=openRecordPackage;
+
+// Reveal only this current control's native disclosure ancestry, outermost first.
+// This is a local gesture; the caller still owns any explicit source/write action.
+async function revealControl(control){for(const details of await control.locator('xpath=ancestor::details').all())if(!await details.evaluate(el=>el.open))await details.locator(':scope > summary').click();return control}
+module.exports.revealControl=revealControl;

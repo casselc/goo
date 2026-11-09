@@ -1,3 +1,4 @@
+const {revealControl}=require('./support/explore');
 const {test,expect}=require('@playwright/test'),fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os'),{execFile}=require('node:child_process'),{promisify}=require('node:util'),{startRuntime}=require('./191-generic-runtime');
 test('253 fixed owner preserves checked environment scope across edits without activating selector entry',async({page})=>{
  test.setTimeout(180000);const owned=await fs.mkdtemp(path.join(os.tmpdir(),'goo-scope-253-')),dir=path.resolve('artifacts/record-scope-253');let runtime;
@@ -22,7 +23,7 @@ test('253 fixed owner preserves checked environment scope across edits without a
   }
   // A pinned baseline must not override an explicit environment edit.
   const toMs=Date.now();await page.evaluate(q=>window.scope253.openQuestion(q,[],{stage:true}),{signal:'spans',environmentSelector:selector({mode:'unreported'}),fromMs:toMs-60000,toMs,limit:100,offset:0,groupBy:[{kind:'column',key:'service'}]});
-  let pinnedRead=page.waitForResponse(r=>r.url().endsWith('/api/explore')&&r.request().method()==='POST');await host.locator('#s253exploreRun').click();expect((await pinnedRead).status()).toBe(200);await expect(host).toHaveAttribute('data-question-phase','applied');await host.locator('#s253baselinePin').click();await expect(host.locator('#s253baselineStatus')).toContainText('Baseline:');
+  let pinnedRead=page.waitForResponse(r=>r.url().endsWith('/api/explore')&&r.request().method()==='POST');await host.locator('#s253exploreRun').click();expect((await pinnedRead).status()).toBe(200);await expect(host).toHaveAttribute('data-question-phase','applied');await(await revealControl(host.locator('#s253baselinePin'))).click();await expect(host.locator('#s253baselineStatus')).toContainText('Baseline:');
   await host.locator('#s253exploreEnvironment').fill('local');const response=page.waitForResponse(r=>r.url().endsWith('/api/explore')&&r.request().method()==='POST');await host.locator('#s253exploreRun').click();expect((await response).status()).toBe(200);await expect(host).toHaveAttribute('data-question-phase','applied');expect(requests.at(-1).environment).toBe('local');expect(requests.at(-1).environmentSelector).toBeUndefined();
   expect(errors).toEqual([]);await page.evaluate(()=>window.scope253.dispose());
  }finally{await runtime?.stop();await fs.rm(owned,{recursive:true,force:true})}

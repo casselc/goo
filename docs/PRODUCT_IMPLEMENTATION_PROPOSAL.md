@@ -1,10 +1,13 @@
 # Product implementation proposal
 
 > Historical consolidation proposal and delivery record. The
-> [current roadmap](ROADMAP_2026_10_28.md) owns execution order and
-> [current backlog](BACKLOG_2026_10_28.md) owns acceptance, reconciled in the
-> [independent review](reviews/INDEPENDENT_REVIEW_SUMMARY_236.md). Older “active”
-> and “next” labels below describe their original checkpoint, not another queue.
+> [current capability/gap index](CAPABILITY_GUIDE.md) summarizes delivered behavior;
+> the [active roadmap](ROADMAP_2026_11_09_CHECKPOINT_384.md) owns execution order.
+> The [October 28 roadmap](ROADMAP_2026_10_28.md),
+> [backlog](BACKLOG_2026_10_28.md) and
+> [independent review](reviews/INDEPENDENT_REVIEW_SUMMARY_236.md) record a prior
+> reconciliation. Older “active” and “next” labels below describe their original
+> checkpoint, not another queue.
 
 Prepared 2026-10-22; integrated after the architecture/design reviews. **The user
 has authorized working through the bounded active queue below. This is not a claim

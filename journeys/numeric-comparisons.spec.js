@@ -1,3 +1,4 @@
+const {revealControl}=require('./support/explore');
 const {test,expect}=require('@playwright/test'),{randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
 const {questionLink}=require('../ui/workspace.mjs'),{openFilters}=require('./support/explore'),{verifyWithGo,startBombadil}=require('./support/cross-app');
 const base='http://127.0.0.1:8088';
@@ -15,7 +16,7 @@ function assertPair(pair,records){const a=pair.request.baseline,z=pair.request.s
 const cohort=r=>({question:r.question,basis:r.basis,state:r.state,count:r.count,numeric:r.numeric,groups:r.groups.map(g=>({g0:g.g0,count:g.count,numeric:g.numeric}))});
 async function pairFrom(request,a,z){const body={numeric:true,baseline:cohort(a),selection:cohort(z)};return {request:body,response:await json(await request.post(base+'/api/compare',{data:body}))}}
 const isResponse=(route,r)=>r.request().method()==='POST'&&r.url().endsWith('/api/'+route);
-async function control(page,id){const button=page.locator('#'+id);if(!await button.isVisible())await button.locator('xpath=ancestor::details[1]').locator(':scope > summary').click();return button}
+async function control(page,id){return revealControl(page.locator('#'+id))}
 
 test('175 compare signed ordinary numeric populations and retain exact reusable evidence',async({page,request})=>{
  test.setTimeout(300000);page.setDefaultTimeout(15000);const environment='numeric-comparison-'+randomBytes(5).toString('hex'),toMs=Date.now(),fromMs=toMs-120000,binding={field:{kind:'attribute',key:'work.items'},type:'int64',unit:'items',parse:'canonical-decimal'},records=[];

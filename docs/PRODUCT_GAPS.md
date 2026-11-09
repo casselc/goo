@@ -1,5 +1,13 @@
 # From operation investigations to a general observability workbench
 
+> Historical early-workbench gap proposal. Its “current” and “next” labels below
+> describe that checkpoint, not the present product. Use the
+> [current capability/gap index](CAPABILITY_GUIDE.md),
+> [active roadmap](ROADMAP_2026_11_09_CHECKPOINT_384.md) and
+> [validation](../VALIDATION.md) for implemented behavior and execution order.
+> For example, live log/span Activity, cross-service trace search, captured search
+> witnesses and general view templates have since been delivered.
+
 Goo currently provides declared operation packages, bounded span inspection,
 raw duration and native histogram heatmaps, exact counter/error semantics,
 explicit fleet coverage and bounded member comparison. Saved immutable captures

@@ -1,9 +1,13 @@
 # Goo UI composition grammar and extensible views — proposal 260
 
-Execution priorities are now bounded by the [274 adoption checkpoint](VIEW_AUTHORING_CHECKPOINT_274.md):
-extend the existing saved-view authoring flow next; Plotly is optional and remaining
-specialized owners do not create an endless presenter-conversion gate. The design
-below remains context, not a competing task order.
+Historical October 30, 2026 design proposal. The
+[274 adoption checkpoint](VIEW_AUTHORING_CHECKPOINT_274.md) records an earlier
+execution decision; [authorable templates](AUTHORABLE_VIEW_TEMPLATES.md) and
+[saved display declarations](SAVED_DISPLAY_DECLARATIONS.md) describe subsequent
+delivery. Use the [current capability/gap index](CAPABILITY_GUIDE.md) and
+[active roadmap](ROADMAP_2026_11_09_CHECKPOINT_384.md) for current behavior and
+priorities. Plotly remains optional; specialized owners do not create an endless
+presenter-conversion gate. The proposal below is preserved in its original context.
 
 2026-10-30. **Design proposal for the next implementation sequence.** The trace-return
 and shared-control corrections delivered in this round are recorded separately in

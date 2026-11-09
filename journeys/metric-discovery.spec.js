@@ -1,3 +1,4 @@
+const {revealControl}=require('./support/explore');
 const {test,expect}=require('@playwright/test');
 const {execFileSync}=require('node:child_process');
 const {startBombadil,verifyWithGo}=require('./support/cross-app');
@@ -16,7 +17,7 @@ test('39 discover ordinary OTel metrics and build a reusable measurement',async(
  await expect(page.locator('#measureResult')).toContainText('operation=import');await expect(page.locator('#measureResult')).toContainText('outcome=error');
  await page.screenshot({path:'docs/journeys/screenshots/39b-discovered-measurement.png',fullPage:true});
  await page.locator('#measureCapture').click();await page.locator('#captureDraftTitle').fill('Independent OTel metric discovery');const saved=page.waitForResponse(r=>r.url().endsWith('/api/captures')&&r.request().method()==='POST');await page.locator('#captureDraftConfirm').click();expect((await saved).ok()).toBe(true);await expect(page.locator('#captureMeasurementEvidence')).toBeVisible();await page.reload();await expect(page.locator('#captureMeasurementEvidence')).toContainText('jobs.completed');
- await page.locator('#captureGeneralNotes').click();await page.locator('#documentTitle').fill('Independent metric investigation');const document=page.waitForResponse(r=>r.url().endsWith('/api/documents')&&r.request().method()==='POST');await page.locator('#documentSave').click();expect((await document).ok()).toBe(true);
+ await(await revealControl(page.locator('#captureGeneralNotes'))).click();await page.locator('#documentTitle').fill('Independent metric investigation');const document=page.waitForResponse(r=>r.url().endsWith('/api/documents')&&r.request().method()==='POST');await page.locator('#documentSave').click();expect((await document).ok()).toBe(true);
  const dir=path.resolve('artifacts/metric-discovery');await fs.mkdir(dir,{recursive:true});const ledger=path.join(dir,'ledger.json');await fs.writeFile(ledger,JSON.stringify({discovery,result}));await verifyWithGo(dir,'TestQuintMetricDiscoveryLedger',{GOO_METRIC_DISCOVERY_LEDGER:ledger});
  if(process.env.GOO_METRIC_DISCOVERY_BOMBADIL==='1'){const actor=await startBombadil({dir:path.join(dir,'bombadil-'+require('node:crypto').randomUUID()),url:base+'/#questions',specification:'verification/bombadil/metric-discovery.ts',seconds:30});try{await actor.finish()}finally{await actor.stop()}}
 });

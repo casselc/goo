@@ -1,27 +1,40 @@
 # Known issues and gaps
 
+Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
+status and the [active roadmap](ROADMAP_2026_11_09_CHECKPOINT_384.md) for priorities.
+This file retains checkpoint delivery history; lower historical “current” or
+“next” claims do not override the linked current contracts.
+
+384 closes the checked fixed-result viewport gap across ordinary Explore, Activity
+continuation, Saved-search continuation and stored records, including the full
+narrow waterfall item. Scope/counts, warnings and exact clocks remain available;
+secondary controls no longer precede primary data. The [current capability/gap
+index](CAPABILITY_GUIDE.md) replaces old proposal lists as the product index. The
+[active 384 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_384.md) is 385 outgoing HTTP,
+386 gauge display reuse and 387 coherent capture-family admission. Desktop row
+action density remains a measured future opportunity, not another active queue.
+
 383 adds [captured trace-search evidence](CAPTURED_TRACE_SEARCH.md), independent
 source/custody clocks, exact question linkage and offline reopen. Fresh trace
 Run is explicit; Back preserves the held DOM/citation/focus through success,
 refusal and cancellation. Actual lab data covers missing qualified fields and
 shared/distinct-service matches; generated cases also cover explicit empty values
-and limited lists with larger totals. The active task is 384: data-first layout
-and consolidation. Current 383 frames still show actual record rows below
-secondary controls; this remains a product usability gap.
+and limited lists with larger totals. The 384 consolidation now resolves the below-fold gap in the checked
+record surfaces; the older 383 frames retain their historical layout.
 
 382 adds reusable trace-search question cards through existing investigation
 revisions. Save, exact-revision reload and link reopening retain ordered conditions,
 typed fixed scope, exact numeric strings and list limit without telemetry reads;
 Search stays explicit. Local definition inspection makes no requests. Search
 result/witness capture and compatible evidence attachment are delivered in 383. See
-[contract](SAVED_TRACE_SEARCH_QUESTIONS.md). The active task is 384 data-first fixed-result consolidation.
+[contract](SAVED_TRACE_SEARCH_QUESTIONS.md). 384 data-first fixed-result consolidation is delivered.
 
 381 shares bounded source object framing with explicit family policies, retaining
 SQL, numeric semantics and custody in their existing owners. Record overflow now
 consistently refuses as budget before the extra row is parsed; no partial data is
-published. See [contract](BOUNDED_SOURCE_DECODING.md). The sole active queue is the
-[381 checkpoint roadmap](ROADMAP_2026_11_08_CHECKPOINT_381.md): reusable trace-search
-intent (delivered), captured witnesses (delivered), then data-first fixed-result consolidation. Milestone
+published. See [contract](BOUNDED_SOURCE_DECODING.md). The completed
+[381 checkpoint roadmap](ROADMAP_2026_11_08_CHECKPOINT_381.md) records reusable search
+intent, captured witnesses and data-first results. Milestone
 narratives below retain delivery history; they are not parallel execution queues.
 
 380 extends Saved immutable histogram captures with checked reported-exemplar
