@@ -36,6 +36,20 @@ export function validateHistogramMeasurementQuestion(question){
  if(b.exactStream!==undefined&&b.exactStream!==null)checkedStream(b.exactStream,d);
  return {fromNS:String(from),toNS:String(to)};
 }
+export function validateGaugeMeasurementQuestion(question){
+ if(!keys(question,['definition','fromMs','toMs','fromNS','toNS']))fail('A checked gauge measurement question is required');
+ const d=question.definition,b=d?.source;
+ try{Environment.selection(d)}catch{fail('Invalid native gauge environment')};if(d.environmentSelector!=null&&(d.grain!=='per-stream'||b?.resource!=null))fail('Typed native gauges require a per-stream service binding');
+ if(!keys(d,['apiVersion','name','title','kind','environment','environmentSelector','lookbackMinutes','maxGapMs','grain','source'])||d.apiVersion!=='goo/measurement-package/v1alpha1'||!text(d.name,128)||!/^[A-Za-z][A-Za-z0-9_.-]{0,127}$/.test(d.name)||!d.title||!text(d.title,160)||d.kind!=='gauge'||d.grain!=='per-stream'||!Number.isInteger(d.lookbackMinutes)||d.lookbackMinutes<1||d.lookbackMinutes>120||!Number.isInteger(d.maxGapMs)||d.maxGapMs<1||d.maxGapMs>600000)fail('Invalid native gauge definition');
+ if(!keys(b,['services','scope','version','schemaURL','metric','unit','attributes','namespace','exactStream'])||!Array.isArray(b.services)||b.services.length<1||b.services.length>8||new Set(b.services).size!==b.services.length||b.services.some(value=>!value||!text(value,128))||!b.scope||!text(b.scope,256)||!text(b.version,128)||!text(b.schemaURL,1024)||!b.metric||!text(b.metric,256)||(!b.unit||!text(b.unit,64)))fail('Invalid native gauge source binding');
+ mapping(b.attributes,16,128,512);
+ if(b.namespace!==undefined&&b.namespace!==null&&(!keys(b.namespace,['mode','value'])||!['missing','value'].includes(b.namespace.mode)||!text(b.namespace.value??'',128)||b.namespace.mode==='missing'&&(b.namespace.value??'')!==''))fail('Invalid measurement namespace');
+ const {fromMs,toMs}=question;if(!Number.isSafeInteger(fromMs)||!Number.isSafeInteger(toMs)||fromMs<0||toMs<=fromMs||toMs-fromMs>7200000||toMs>=4102444800000)fail('Invalid native measurement window');
+ let from=BigInt(fromMs)*1000000n,to=BigInt(toMs)*1000000n;
+ if(question.fromNS!==undefined||question.toNS!==undefined){from=ns(question.fromNS);to=ns(question.toNS);if(to<=from||to-from>7200000000000n||BigInt(fromMs)!==from/1000000n||BigInt(toMs)!==(to+999999n)/1000000n)fail('Native timestamps differ from their enclosing window')}
+ if(b.exactStream!==undefined&&b.exactStream!==null)checkedStream(b.exactStream,d);
+ return {fromNS:String(from),toNS:String(to)};
+}
 export function validateMeasurementIntervalSelector(selector){
  if(selector?.kind==='measurement-time-bucket')return validateMeasurementTimeBucketSelector(selector);
  if(selector?.kind==='measurement-window')return validateMeasurementWindowSelector(selector);

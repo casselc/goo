@@ -941,9 +941,9 @@ def check_fixed_query_count_views(spec):
         assert not vc.is_valid(template),'fixed query pair admitted as reusable template'
 
 
-def check_native_histogram_view_config(spec):
+def check_native_view_config(spec):
     """Native display configuration never borrows record or evidence authority."""
-    paths=('/native-histogram-views','/native-histogram-views/{id}','/native-histogram-views/reuse')
+    paths=('/native-views','/native-views/{id}','/native-views/reuse')
     for path in paths:
         method='get' if '{id}' in path else 'post'
         op=spec['paths'][path][method]
@@ -996,27 +996,41 @@ def check_native_histogram_view_config(spec):
     for field in ('version','title','question','declaration'):
         bad=copy.deepcopy(view);bad.pop(field)
         assert not create.is_valid(bad), ('native configuration missing required field',field)
+    gauge=copy.deepcopy(view);gauge['question']['definition']['kind']='gauge';gauge['question']['definition']['source']['unit']='By'
+    gauge['declaration'].update(selection={'kind':'retained-observations'},kind={'name':'timeline','version':1},display={'category':'time','value':'recorded-value','requiresComplete':False})
+    create.validate(gauge);saved.validate({**gauge,'id':'c'*64});unsaved.validate(gauge)
+    for kind in ('timeline','table'):
+        value=copy.deepcopy(gauge);value['declaration']['kind']['name']=kind;create.validate(value)
+    reuse.validate({'id':'c'*64,'question':gauge['question']})
+    empty=copy.deepcopy(gauge);empty['question']['definition']['source']['unit']='';assert not create.is_valid(empty)
+    empty['question']['definition']['source'].pop('unit');assert not create.is_valid(empty)
+    gauge_mutations=[lambda x:x['declaration']['display'].pop('requiresComplete'),lambda x:x['declaration']['display'].update(requiresComplete=None),lambda x:x['declaration']['display'].update(requiresComplete=True),lambda x:x['declaration']['kind'].update(name='histogram'),lambda x:x['declaration']['selection'].update(kind='export-interval'),lambda x:x['question']['definition'].update(kind='histogram'),lambda x:x['question']['definition'].update(kind='counter'),lambda x:x['question']['definition'].update(histogramBucketMs=None),lambda x:x.update(result={}),lambda x:x['declaration'].update(selectedObservation=0)]
+    for mutate in gauge_mutations:
+        bad=copy.deepcopy(gauge);mutate(bad)
+        assert not create.is_valid(bad), ('gauge declaration/evidence arm accepted',bad)
     # Existing ordinary record-template admission remains a separate schema arm.
     assert not validator(spec,{'$ref':'#/components/schemas/ExplorationView'}).is_valid(view)
-    print('Native histogram view configuration: closed export-only declarations, whole native question, donor-evidence refusal and source-free route contracts pass')
+    print('Native view configuration: closed histogram/gauge arms, explicit false completeness, whole destination question, donor-evidence refusal and source-free route contracts pass')
 
 
-def check_native_histogram_view_discovery(spec):
-    op=spec['paths']['/native-histogram-views']['get']
+def check_native_view_discovery(spec):
+    op=spec['paths']['/native-views']['get']
     assert op['x-schema-coverage']=='typed' and 'source-read' not in op['x-effects']
     assert set(op['responses'])=={'200','400','500'}
     assert len(op['parameters'])==1 and op['parameters'][0]['name']=='after'
     page=validator(spec,op['responses']['200']['content']['application/json']['schema'])
-    item={'id':'a'*64,'title':'Interval table','kind':'table','unit':'s'}
+    item={'id':'a'*64,'title':'Interval table','kind':'table','unit':'s','family':'histogram','selection':'export-interval'}
     complete={'items':[item],'partial':False,'diagnostics':[]}
     partial={'items':[],'partial':True,'diagnostics':[{'id':'b'*64,'reason':'unavailable-artifact'}]}
     page.validate(complete);page.validate(partial)
+    gauge={'id':'c'*64,'title':'Gauge samples','kind':'timeline','unit':'By','family':'gauge','selection':'retained-observations'}
+    page.validate({**complete,'items':[gauge]})
     for bad in ({**complete,'total':1},{**complete,'items':[{**item,'question':{}}]},{**complete,'items':[{**item,'kind':'bar'}]},{**complete,'items':[{**item,'unit':'By'}]},{**complete,'diagnostics':partial['diagnostics']},{**partial,'diagnostics':[]},{**partial,'nextCursor':''},{**partial,'diagnostics':[{'id':'b'*64,'reason':'open /private/path'}]},{**complete,'items':[item]*21}):
         assert not page.is_valid(bad), ('native discovery schema accepted malformed metadata',bad)
     bank=json.loads((ROOT/'testdata/protocol/native-histogram-view-questions-373.json').read_text())
     assert bank['version']=='goo.native-histogram-question-cases/1'
     cases=bank['cases'];assert len(cases)>=57
-    question=validator(spec,{'$ref':'#/components/schemas/NativeHistogramViewQuestionInput'})
+    question=validator(spec,{'$ref':'#/components/schemas/NativeViewQuestionInput'})
     for case in cases:
         assert isinstance(case['runtimeValid'],bool) and isinstance(case['schemaValid'],bool)
         assert question.is_valid(case['question'])==case['schemaValid'], ('native question finite schema boundary',case['name'])
@@ -1228,8 +1242,8 @@ def check(spec):
     check_fixed_query_count_views(spec)
     check_comparison_template_bindings(spec)
     check_current_rpc_template_bindings(spec)
-    check_native_histogram_view_config(spec)
-    check_native_histogram_view_discovery(spec)
+    check_native_view_config(spec)
+    check_native_view_discovery(spec)
     check_record_span_waterfall(spec)
     check_document_view_card(spec)
     bank = json.loads((ROOT/'testdata/protocol/environment-selectors.json').read_text())
@@ -1328,7 +1342,7 @@ def check(spec):
             assert media in content, (fixture.name, case['name'], media)
             payload = json.loads(case['response']) if media == 'application/json' else case['response']
             validator(spec, content[media]['schema']).validate(payload)
-            if path=='/native-histogram-views' and method=='get' and case['status']==200:
+            if path=='/native-views' and method=='get' and case['status']==200:
                 items=[item['id'] for item in payload['items']]
                 diagnostics=[item['id'] for item in payload['diagnostics']]
                 scanned=items+diagnostics
@@ -1363,7 +1377,7 @@ def check(spec):
                     accepted.append((shape, request))
     # Native histogram discovery adds five actual successful GET responses
     # to the prior 471/186/28 fixture baseline.
-    assert responses == 476 and requests == 186 and mux_refusals == 28, (responses, requests, mux_refusals)
+    assert responses == 480 and requests == 189 and mux_refusals == 28, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)

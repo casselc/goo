@@ -2244,15 +2244,15 @@
         "x-schema-coverage": "typed"
       }
     },
-    "/native-histogram-views": {
+    "/native-views": {
       "get": {
-        "operationId": "get_native_histogram_views",
-        "summary": "GET /native-histogram-views",
+        "operationId": "get_native_views",
+        "summary": "GET /native-views",
         "tags": [
-          "native-histogram-views"
+          "native-views"
         ],
         "description": "Source-free bounded metadata discovery. Fixed twenty scanned candidate IDs, ascending ID order; partial diagnostics mark unavailable artifacts. Cursor advances past the last scanned ID only when more candidates exist. Unknown, repeated and empty query parameters are refused. No telemetry or saved-evidence read; exact-ID load remains independently verified.",
-        "x-go-source": "cmd/goo/native_histogram_views_http.go",
+        "x-go-source": "cmd/goo/native_views_http.go",
         "x-effects": "saved-evidence-or-definition-read",
         "parameters": [
           {
@@ -2271,7 +2271,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NativeHistogramViewList"
+                  "$ref": "#/components/schemas/NativeViewList"
                 }
               }
             }
@@ -2300,13 +2300,13 @@
         "x-schema-coverage": "typed"
       },
       "post": {
-        "operationId": "post_native_histogram_views",
-        "summary": "POST /native-histogram-views",
+        "operationId": "post_native_views",
+        "summary": "POST /native-views",
         "tags": [
-          "native-histogram-views"
+          "native-views"
         ],
         "description": "Source-free native histogram display configuration. Explicit Apply preserves the whole current destination measurement question; Run and actual destination export selection remain separate. No donor observations, rebinning, unit conversion or upstream completeness claim.",
-        "x-go-source": "cmd/goo/native_histogram_views_http.go",
+        "x-go-source": "cmd/goo/native_views_http.go",
         "x-effects": "file-publication-with-reference-validation",
         "parameters": [],
         "responses": {
@@ -2317,7 +2317,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/NativeHistogramView"
+                      "$ref": "#/components/schemas/NativeView"
                     },
                     {
                       "required": [
@@ -2375,7 +2375,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NativeHistogramViewRequest"
+                "$ref": "#/components/schemas/NativeViewRequest"
               }
             }
           }
@@ -2384,15 +2384,15 @@
         "x-schema-coverage": "typed"
       }
     },
-    "/native-histogram-views/{id}": {
+    "/native-views/{id}": {
       "get": {
-        "operationId": "get_native_histogram_views_id",
-        "summary": "GET /native-histogram-views/{id}",
+        "operationId": "get_native_views_id",
+        "summary": "GET /native-views/{id}",
         "tags": [
-          "native-histogram-views"
+          "native-views"
         ],
         "description": "Source-free native histogram display configuration. Explicit Apply preserves the whole current destination measurement question; Run and actual destination export selection remain separate. No donor observations, rebinning, unit conversion or upstream completeness claim.",
-        "x-go-source": "cmd/goo/native_histogram_views_http.go",
+        "x-go-source": "cmd/goo/native_views_http.go",
         "x-effects": "saved-evidence-or-definition-read",
         "parameters": [
           {
@@ -2414,7 +2414,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/NativeHistogramView"
+                      "$ref": "#/components/schemas/NativeView"
                     },
                     {
                       "required": [
@@ -5925,15 +5925,15 @@
         "x-schema-coverage": "typed"
       }
     },
-    "/native-histogram-views/reuse": {
+    "/native-views/reuse": {
       "post": {
-        "operationId": "post_native_histogram_views_reuse",
-        "summary": "POST /native-histogram-views/reuse",
+        "operationId": "post_native_views_reuse",
+        "summary": "POST /native-views/reuse",
         "tags": [
-          "native-histogram-views"
+          "native-views"
         ],
         "description": "Source-free native histogram display configuration. Explicit Apply preserves the whole current destination measurement question; Run and actual destination export selection remain separate. No donor observations, rebinning, unit conversion or upstream completeness claim.",
-        "x-go-source": "cmd/goo/native_histogram_views_http.go",
+        "x-go-source": "cmd/goo/native_views_http.go",
         "x-effects": "saved-definition-read-and-pure-reuse",
         "parameters": [],
         "responses": {
@@ -5944,7 +5944,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/NativeHistogramView"
+                      "$ref": "#/components/schemas/NativeView"
                     },
                     {
                       "not": {
@@ -6004,7 +6004,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NativeHistogramViewReuseRequest"
+                "$ref": "#/components/schemas/NativeViewReuseRequest"
               }
             }
           }
@@ -8853,32 +8853,6 @@
       "NativeHistogramTimeSelector": {
         "$ref": "#/components/schemas/measurements.HistogramTimeViewSelector"
       },
-      "NativeHistogramView": {
-        "$ref": "#/components/schemas/workbench.NativeHistogramView"
-      },
-      "NativeHistogramViewList": {
-        "$ref": "#/components/schemas/workbench.NativeHistogramViewList"
-      },
-      "NativeHistogramViewRequest": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/workbench.NativeHistogramViewInputInput"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "NativeHistogramViewReuseRequest": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/workbench.NativeHistogramViewReuseRequestInput"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
       "NativeHistogramWindowSelector": {
         "$ref": "#/components/schemas/measurements.HistogramWindowViewSelector"
       },
@@ -8957,6 +8931,32 @@
       },
       "NativeResult": {
         "$ref": "#/components/schemas/measurements.Result"
+      },
+      "NativeView": {
+        "$ref": "#/components/schemas/workbench.NativeView"
+      },
+      "NativeViewList": {
+        "$ref": "#/components/schemas/workbench.NativeViewList"
+      },
+      "NativeViewRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.NativeViewInputInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "NativeViewReuseRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.NativeViewReuseRequestInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "NumericHistogramSelection": {
         "$ref": "#/components/schemas/exploration.NumericHistogramSelection"
@@ -47951,17 +47951,17 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.MeaningWindow"
       },
-      "workbench.NativeHistogramView": {
+      "workbench.NativeView": {
         "properties": {
           "declaration": {
-            "$ref": "#/components/schemas/workbench.NativeHistogramViewDeclaration"
+            "$ref": "#/components/schemas/workbench.NativeViewDeclaration"
           },
           "id": {
             "type": "string",
             "pattern": "^[a-f0-9]{64}$"
           },
           "question": {
-            "$ref": "#/components/schemas/NativeHistogramViewQuestion"
+            "$ref": "#/components/schemas/NativeViewQuestion"
           },
           "title": {
             "type": "string",
@@ -47981,11 +47981,61 @@
           "declaration"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramView",
+        "x-go-type": "github.com/casselc/goo/workbench.NativeView",
         "additionalProperties": false,
-        "description": "Immutable native histogram display configuration. View ID includes question and declaration; changing the display does not change the measurement question or evidence identity. No stream index, export bounds, bins, values, basis or read clock is stored."
+        "oneOf": [
+          {
+            "properties": {
+              "question": {
+                "properties": {
+                  "definition": {
+                    "properties": {
+                      "kind": {
+                        "const": "histogram"
+                      }
+                    }
+                  }
+                }
+              },
+              "declaration": {
+                "properties": {
+                  "selection": {
+                    "const": {
+                      "kind": "export-interval"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "question": {
+                "properties": {
+                  "definition": {
+                    "properties": {
+                      "kind": {
+                        "const": "gauge"
+                      }
+                    }
+                  }
+                }
+              },
+              "declaration": {
+                "properties": {
+                  "selection": {
+                    "const": {
+                      "kind": "retained-observations"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "description": "Immutable native histogram or gauge display configuration. View ID includes question and declaration; changing the display does not change the measurement question or evidence identity. No stream index, export bounds, bins, values, basis or read clock is stored."
       },
-      "workbench.NativeHistogramViewDeclaration": {
+      "workbench.NativeViewDeclaration": {
         "properties": {
           "display": {
             "type": "object",
@@ -47997,16 +48047,21 @@
             ],
             "properties": {
               "category": {
-                "const": "bucket"
+                "enum": [
+                  "bucket",
+                  "time"
+                ]
               },
               "value": {
-                "const": "observation-count"
+                "enum": [
+                  "observation-count",
+                  "recorded-value"
+                ]
               },
               "requiresComplete": {
-                "const": true
+                "type": "boolean"
               }
-            },
-            "description": "Complete bins of one evaluated export distribution, not upstream collection completeness. Unknown or invalid distributions are unavailable, never zero."
+            }
           },
           "kind": {
             "type": "object",
@@ -48019,6 +48074,7 @@
               "name": {
                 "enum": [
                   "histogram",
+                  "timeline",
                   "table"
                 ]
               },
@@ -48051,7 +48107,10 @@
             ],
             "properties": {
               "kind": {
-                "const": "export-interval"
+                "enum": [
+                  "export-interval",
+                  "retained-observations"
+                ]
               }
             }
           },
@@ -48067,10 +48126,64 @@
           "display"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewDeclaration",
-        "additionalProperties": false
+        "x-go-type": "github.com/casselc/goo/workbench.NativeViewDeclaration",
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "properties": {
+              "selection": {
+                "const": {
+                  "kind": "export-interval"
+                }
+              },
+              "kind": {
+                "properties": {
+                  "name": {
+                    "enum": [
+                      "histogram",
+                      "table"
+                    ]
+                  }
+                }
+              },
+              "display": {
+                "const": {
+                  "category": "bucket",
+                  "value": "observation-count",
+                  "requiresComplete": true
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "selection": {
+                "const": {
+                  "kind": "retained-observations"
+                }
+              },
+              "kind": {
+                "properties": {
+                  "name": {
+                    "enum": [
+                      "timeline",
+                      "table"
+                    ]
+                  }
+                }
+              },
+              "display": {
+                "const": {
+                  "category": "time",
+                  "value": "recorded-value",
+                  "requiresComplete": false
+                }
+              }
+            }
+          }
+        ]
       },
-      "workbench.NativeHistogramViewDeclarationInput": {
+      "workbench.NativeViewDeclarationInput": {
         "additionalProperties": false,
         "properties": {
           "display": {
@@ -48083,16 +48196,21 @@
             ],
             "properties": {
               "category": {
-                "const": "bucket"
+                "enum": [
+                  "bucket",
+                  "time"
+                ]
               },
               "value": {
-                "const": "observation-count"
+                "enum": [
+                  "observation-count",
+                  "recorded-value"
+                ]
               },
               "requiresComplete": {
-                "const": true
+                "type": "boolean"
               }
-            },
-            "description": "Complete bins of one evaluated export distribution, not upstream collection completeness. Unknown or invalid distributions are unavailable, never zero."
+            }
           },
           "kind": {
             "type": "object",
@@ -48105,6 +48223,7 @@
               "name": {
                 "enum": [
                   "histogram",
+                  "timeline",
                   "table"
                 ]
               },
@@ -48137,7 +48256,10 @@
             ],
             "properties": {
               "kind": {
-                "const": "export-interval"
+                "enum": [
+                  "export-interval",
+                  "retained-observations"
+                ]
               }
             }
           },
@@ -48146,16 +48268,70 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewDeclaration",
+        "x-go-type": "github.com/casselc/goo/workbench.NativeViewDeclaration",
         "required": [
           "version",
           "scope",
           "selection",
           "kind",
           "display"
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "selection": {
+                "const": {
+                  "kind": "export-interval"
+                }
+              },
+              "kind": {
+                "properties": {
+                  "name": {
+                    "enum": [
+                      "histogram",
+                      "table"
+                    ]
+                  }
+                }
+              },
+              "display": {
+                "const": {
+                  "category": "bucket",
+                  "value": "observation-count",
+                  "requiresComplete": true
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "selection": {
+                "const": {
+                  "kind": "retained-observations"
+                }
+              },
+              "kind": {
+                "properties": {
+                  "name": {
+                    "enum": [
+                      "timeline",
+                      "table"
+                    ]
+                  }
+                }
+              },
+              "display": {
+                "const": {
+                  "category": "time",
+                  "value": "recorded-value",
+                  "requiresComplete": false
+                }
+              }
+            }
+          }
         ]
       },
-      "workbench.NativeHistogramViewDisplay": {
+      "workbench.NativeViewDisplay": {
         "properties": {
           "category": {
             "type": "string"
@@ -48173,9 +48349,9 @@
           "requiresComplete"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewDisplay"
+        "x-go-type": "github.com/casselc/goo/workbench.NativeViewDisplay"
       },
-      "workbench.NativeHistogramViewDisplayInput": {
+      "workbench.NativeViewDisplayInput": {
         "additionalProperties": false,
         "properties": {
           "category": {
@@ -48210,16 +48386,16 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewDisplay"
+        "x-go-type": "github.com/casselc/goo/workbench.NativeViewDisplay"
       },
-      "workbench.NativeHistogramViewInputInput": {
+      "workbench.NativeViewInputInput": {
         "additionalProperties": false,
         "properties": {
           "declaration": {
-            "$ref": "#/components/schemas/workbench.NativeHistogramViewDeclarationInput"
+            "$ref": "#/components/schemas/workbench.NativeViewDeclarationInput"
           },
           "question": {
-            "$ref": "#/components/schemas/NativeHistogramViewQuestionInput"
+            "$ref": "#/components/schemas/NativeViewQuestionInput"
           },
           "title": {
             "type": "string",
@@ -48233,7 +48409,57 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewInput",
+        "x-go-type": "github.com/casselc/goo/workbench.NativeViewInput",
+        "oneOf": [
+          {
+            "properties": {
+              "question": {
+                "properties": {
+                  "definition": {
+                    "properties": {
+                      "kind": {
+                        "const": "histogram"
+                      }
+                    }
+                  }
+                }
+              },
+              "declaration": {
+                "properties": {
+                  "selection": {
+                    "const": {
+                      "kind": "export-interval"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "question": {
+                "properties": {
+                  "definition": {
+                    "properties": {
+                      "kind": {
+                        "const": "gauge"
+                      }
+                    }
+                  }
+                }
+              },
+              "declaration": {
+                "properties": {
+                  "selection": {
+                    "const": {
+                      "kind": "retained-observations"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
         "required": [
           "version",
           "title",
@@ -48241,13 +48467,13 @@
           "declaration"
         ]
       },
-      "workbench.NativeHistogramViewList": {
+      "workbench.NativeViewList": {
         "properties": {
           "diagnostics": {
             "anyOf": [
               {
                 "items": {
-                  "$ref": "#/components/schemas/workbench.NativeHistogramViewListDiagnostic"
+                  "$ref": "#/components/schemas/workbench.NativeViewListDiagnostic"
                 },
                 "type": "array"
               },
@@ -48261,7 +48487,7 @@
             "anyOf": [
               {
                 "items": {
-                  "$ref": "#/components/schemas/workbench.NativeHistogramViewSummary"
+                  "$ref": "#/components/schemas/workbench.NativeViewSummary"
                 },
                 "type": "array"
               },
@@ -48285,7 +48511,7 @@
           "diagnostics"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewList",
+        "x-go-type": "github.com/casselc/goo/workbench.NativeViewList",
         "additionalProperties": false,
         "allOf": [
           {
@@ -48317,7 +48543,7 @@
         ],
         "description": "Source-free metadata discovery over at most twenty scanned candidate IDs. Items and diagnostics are disjoint and together at most twenty; corrupt artifacts are unavailable, not silently absent. A present nextCursor requires twenty combined items and diagnostics and is the last scanned candidate only when more candidates exist. Combined counts, ordering, disjoint IDs and cursor relations are checked by Go. Neither a page nor an empty items array establishes a complete catalog."
       },
-      "workbench.NativeHistogramViewListDiagnostic": {
+      "workbench.NativeViewListDiagnostic": {
         "properties": {
           "id": {
             "type": "string",
@@ -48332,10 +48558,10 @@
           "reason"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewListDiagnostic",
+        "x-go-type": "github.com/casselc/goo/workbench.NativeViewListDiagnostic",
         "additionalProperties": false
       },
-      "workbench.NativeHistogramViewReuseRequestInput": {
+      "workbench.NativeViewReuseRequestInput": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -48343,17 +48569,17 @@
             "pattern": "^[a-f0-9]{64}$"
           },
           "question": {
-            "$ref": "#/components/schemas/NativeHistogramViewQuestionInput"
+            "$ref": "#/components/schemas/NativeViewQuestionInput"
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewReuseRequest",
+        "x-go-type": "github.com/casselc/goo/workbench.NativeViewReuseRequest",
         "required": [
           "id",
           "question"
         ]
       },
-      "workbench.NativeHistogramViewScope": {
+      "workbench.NativeViewScope": {
         "properties": {
           "kind": {
             "type": "string"
@@ -48367,9 +48593,9 @@
           "signal"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewScope"
+        "x-go-type": "github.com/casselc/goo/workbench.NativeViewScope"
       },
-      "workbench.NativeHistogramViewScopeInput": {
+      "workbench.NativeViewScopeInput": {
         "additionalProperties": false,
         "properties": {
           "kind": {
@@ -48394,9 +48620,9 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewScope"
+        "x-go-type": "github.com/casselc/goo/workbench.NativeViewScope"
       },
-      "workbench.NativeHistogramViewSelection": {
+      "workbench.NativeViewSelection": {
         "properties": {
           "kind": {
             "type": "string"
@@ -48406,9 +48632,9 @@
           "kind"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewSelection"
+        "x-go-type": "github.com/casselc/goo/workbench.NativeViewSelection"
       },
-      "workbench.NativeHistogramViewSelectionInput": {
+      "workbench.NativeViewSelectionInput": {
         "additionalProperties": false,
         "properties": {
           "kind": {
@@ -48423,10 +48649,16 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewSelection"
+        "x-go-type": "github.com/casselc/goo/workbench.NativeViewSelection"
       },
-      "workbench.NativeHistogramViewSummary": {
+      "workbench.NativeViewSummary": {
         "properties": {
+          "family": {
+            "enum": [
+              "histogram",
+              "gauge"
+            ]
+          },
           "id": {
             "type": "string",
             "pattern": "^[a-f0-9]{64}$"
@@ -48434,7 +48666,14 @@
           "kind": {
             "enum": [
               "histogram",
+              "timeline",
               "table"
+            ]
+          },
+          "selection": {
+            "enum": [
+              "export-interval",
+              "retained-observations"
             ]
           },
           "title": {
@@ -48443,21 +48682,63 @@
             "maxLength": 120
           },
           "unit": {
-            "enum": [
-              "s",
-              "ms"
-            ]
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[^\\u0000\\uD800-\\uDFFF]*$"
           }
         },
         "required": [
+          "family",
           "id",
           "kind",
+          "selection",
           "title",
           "unit"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.NativeHistogramViewSummary",
-        "additionalProperties": false
+        "x-go-type": "github.com/casselc/goo/workbench.NativeViewSummary",
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "properties": {
+              "family": {
+                "const": "histogram"
+              },
+              "selection": {
+                "const": "export-interval"
+              },
+              "kind": {
+                "enum": [
+                  "histogram",
+                  "table"
+                ]
+              },
+              "unit": {
+                "enum": [
+                  "s",
+                  "ms"
+                ]
+              }
+            }
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "gauge"
+              },
+              "selection": {
+                "const": "retained-observations"
+              },
+              "kind": {
+                "enum": [
+                  "timeline",
+                  "table"
+                ]
+              }
+            }
+          }
+        ]
       },
       "workbench.RecordViewDeclaration": {
         "properties": {
@@ -52175,7 +52456,7 @@
           }
         ]
       },
-      "NativeHistogramViewQuestion": {
+      "NativeViewQuestion": {
         "allOf": [
           {
             "$ref": "#/components/schemas/measurements.Question"
@@ -52223,7 +52504,10 @@
                     ],
                     "properties": {
                       "kind": {
-                        "const": "histogram"
+                        "enum": [
+                          "histogram",
+                          "gauge"
+                        ]
                       },
                       "grain": {
                         "const": "per-stream"
@@ -52246,10 +52530,10 @@
                             ],
                             "properties": {
                               "unit": {
-                                "enum": [
-                                  "s",
-                                  "ms"
-                                ]
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64,
+                                "pattern": "^[^\\u0000\\uD800-\\uDFFF]*$"
                               },
                               "resource": false,
                               "scope": {
@@ -52349,8 +52633,40 @@
                         "type": "integer",
                         "minimum": 1,
                         "maximum": 600000
+                      },
+                      "counterDomain": false,
+                      "stateProfile": false,
+                      "stockDomain": false,
+                      "lifecycle": false
+                    },
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "kind": {
+                              "const": "histogram"
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "source": {
+                              "required": [
+                                "unit"
+                              ],
+                              "properties": {
+                                "unit": {
+                                  "enum": [
+                                    "s",
+                                    "ms"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
                       }
-                    }
+                    ]
                   }
                 ]
               }
@@ -52366,7 +52682,7 @@
           }
         ]
       },
-      "NativeHistogramViewQuestionInput": {
+      "NativeViewQuestionInput": {
         "allOf": [
           {
             "$ref": "#/components/schemas/measurements.QuestionInput"
@@ -52414,7 +52730,10 @@
                     ],
                     "properties": {
                       "kind": {
-                        "const": "histogram"
+                        "enum": [
+                          "histogram",
+                          "gauge"
+                        ]
                       },
                       "grain": {
                         "const": "per-stream"
@@ -52437,10 +52756,10 @@
                             ],
                             "properties": {
                               "unit": {
-                                "enum": [
-                                  "s",
-                                  "ms"
-                                ]
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64,
+                                "pattern": "^[^\\u0000\\uD800-\\uDFFF]*$"
                               },
                               "resource": false,
                               "scope": {
@@ -52540,8 +52859,40 @@
                         "type": "integer",
                         "minimum": 1,
                         "maximum": 600000
+                      },
+                      "counterDomain": false,
+                      "stateProfile": false,
+                      "stockDomain": false,
+                      "lifecycle": false
+                    },
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "kind": {
+                              "const": "histogram"
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "source": {
+                              "required": [
+                                "unit"
+                              ],
+                              "properties": {
+                                "unit": {
+                                  "enum": [
+                                    "s",
+                                    "ms"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
                       }
-                    }
+                    ]
                   }
                 ]
               }

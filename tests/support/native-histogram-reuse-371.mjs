@@ -23,4 +23,4 @@ globalThis.HTMLElement=Element;const body=node('body');body.isConnected=true;glo
 mock.module('../../ui/components.mjs',{exports:{node,actionVisible}});
 
 export {node};
-export const {mount}=await import('../../ui/native-histogram-reuse.mjs');
+export const {mount}=await import('../../ui/native-view-reuse.mjs');

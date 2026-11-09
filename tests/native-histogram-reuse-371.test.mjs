@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
-import * as Native from '../ui/native-histogram-declaration.mjs';
+import * as Native from '../ui/native-view-declaration.mjs';
 import {buildNativeHistogramView} from '../ui/native-histogram-view.mjs';
 import {createSourceAdapter,hasGuarantee} from '../ui/snapshots.mjs';
 import {validateDisplay} from '../ui/view-model.mjs';

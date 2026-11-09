@@ -246,43 +246,48 @@ for suffix in ('', 'Input'):
 # Native display configuration is separate from record views and measurement identity.
 # Compatibility beyond this closed wire shape remains checked by Go without telemetry.
 for suffix in ('', 'Input'):
- declaration=schemas['workbench.NativeHistogramViewDeclaration'+suffix]
+ declaration=schemas['workbench.NativeViewDeclaration'+suffix]
  declaration['additionalProperties']=False
  declaration['required']=['version','scope','selection','kind','display']
  declaration['properties']['version']={'const':'goo.view/1'}
  declaration['properties']['scope']={'type':'object','additionalProperties':False,'required':['kind','signal'],'properties':{'kind':{'const':'measurement-question'},'signal':{'const':'metrics'}}}
- declaration['properties']['selection']={'type':'object','additionalProperties':False,'required':['kind'],'properties':{'kind':{'const':'export-interval'}}}
- declaration['properties']['kind']={'type':'object','additionalProperties':False,'required':['name','version'],'properties':{'name':{'enum':['histogram','table']},'version':{'const':1}}}
- declaration['properties']['display']={'type':'object','additionalProperties':False,'required':['category','value','requiresComplete'],'properties':{'category':{'const':'bucket'},'value':{'const':'observation-count'},'requiresComplete':{'const':True}},'description':'Complete bins of one evaluated export distribution, not upstream collection completeness. Unknown or invalid distributions are unavailable, never zero.'}
+ declaration['properties']['selection']={'type':'object','additionalProperties':False,'required':['kind'],'properties':{'kind':{'enum':['export-interval','retained-observations']}}}
+ declaration['properties']['kind']={'type':'object','additionalProperties':False,'required':['name','version'],'properties':{'name':{'enum':['histogram','timeline','table']},'version':{'const':1}}}
+ declaration['properties']['display']={'type':'object','additionalProperties':False,'required':['category','value','requiresComplete'],'properties':{'category':{'enum':['bucket','time']},'value':{'enum':['observation-count','recorded-value']},'requiresComplete':{'type':'boolean'}}}
+ declaration['oneOf']=[{'properties':{'selection':{'const':{'kind':'export-interval'}},'kind':{'properties':{'name':{'enum':['histogram','table']}}},'display':{'const':{'category':'bucket','value':'observation-count','requiresComplete':True}}}}, {'properties':{'selection':{'const':{'kind':'retained-observations'}},'kind':{'properties':{'name':{'enum':['timeline','table']}}},'display':{'const':{'category':'time','value':'recorded-value','requiresComplete':False}}}}]
  # This does not add presentation to Definition or to the reusable record-query arm.
  question_base='measurements.Question'+suffix
  definition_base='measurements.Definition'+suffix
  binding_base='measurements.Binding'+suffix
- question={'allOf':[ref(question_base),{'type':'object','required':['definition','fromMs','toMs'],'properties':{'fromMs':{'type':'integer'},'toMs':{'type':'integer'},'fromNS':{'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':19},'toNS':{'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':19},'definition':{'allOf':[ref(definition_base),{'type':'object','required':['apiVersion','name','title','kind','grain','source','lookbackMinutes','maxGapMs'],'properties':{'kind':{'const':'histogram'},'grain':{'const':'per-stream'},'histogramBucketMs':False,'source':{'allOf':[ref(binding_base),{'type':'object','required':['services','scope','version','schemaURL','metric','unit'],'properties':{'unit':{'enum':['s','ms']},'resource':False}}]}}}]}}}]}
+ question={'allOf':[ref(question_base),{'type':'object','required':['definition','fromMs','toMs'],'properties':{'fromMs':{'type':'integer'},'toMs':{'type':'integer'},'fromNS':{'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':19},'toNS':{'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':19},'definition':{'allOf':[ref(definition_base),{'type':'object','required':['apiVersion','name','title','kind','grain','source','lookbackMinutes','maxGapMs'],'properties':{'kind':{'enum':['histogram','gauge']},'grain':{'const':'per-stream'},'histogramBucketMs':False,'source':{'allOf':[ref(binding_base),{'type':'object','required':['services','scope','version','schemaURL','metric','unit'],'properties':{'unit':{'type':'string','minLength':1,'maxLength':64,'pattern':r'^[^\u0000\uD800-\uDFFF]*$'},'resource':False}}]}}}]}}}]}
  # Native wire strings preserve explicit empty identities without altering ordinary admission.
  text_pattern=r'^[^\uD800-\uDFFF]*$'
  definition=question['allOf'][1]['properties']['definition']
  dp=definition['allOf'][1]['properties']
  dp.update(apiVersion={'const':'goo/measurement-package/v1alpha1'},name={'type':'string','pattern':'^[A-Za-z][A-Za-z0-9_.-]{0,127}$'},title={'type':'string','minLength':1,'maxLength':160,'pattern':text_pattern},lookbackMinutes={'type':'integer','minimum':1,'maximum':120},maxGapMs={'type':'integer','minimum':1,'maximum':600000})
+ dp.update({key:False for key in ('counterDomain','stateProfile','stockDomain','histogramPercentiles','histogramThresholdsMs','lifecycle','thresholds','slo','objective','good','total') if key in schemas[definition_base]['properties']})
  source=dp['source']['allOf'][1]
  for key,limit,minimum in [('scope',256,1),('version',128,0),('schemaURL',1024,0),('metric',256,1)]:source['properties'][key]={'type':'string','minLength':minimum,'maxLength':limit,'pattern':text_pattern}
  source['properties']['services']={'type':'array','minItems':1,'maxItems':8,'uniqueItems':True,'items':{'type':'string','minLength':1,'maxLength':128,'pattern':text_pattern}}
  source['properties']['exactStream']={'anyOf':[{'type':'null'},{'type':'object','required':['scope','version','schemaURL'],'properties':{key:{'type':'string','minLength':minimum,'maxLength':limit,'pattern':text_pattern} for key,limit,minimum in [('scope',256,1),('version',128,0),('schemaURL',1024,0)]}}]}
  question['allOf'][1]['dependentRequired']={'fromNS':['toNS'],'toNS':['fromNS']}
- schemas['NativeHistogramViewQuestion'+suffix]=question
- for name in ('workbench.NativeHistogramView'+suffix,'workbench.NativeHistogramViewInput'+suffix,'workbench.NativeHistogramViewReuseRequest'+suffix):
+ definition['allOf'][1]['allOf']=[{'if':{'properties':{'kind':{'const':'histogram'}}},'then':{'properties':{'source':{'required':['unit'],'properties':{'unit':{'enum':['s','ms']}}}}}}]
+ schemas['NativeViewQuestion'+suffix]=question
+ for name in ('workbench.NativeView'+suffix,'workbench.NativeViewInput'+suffix,'workbench.NativeViewReuseRequest'+suffix):
   if name not in schemas:continue
   shape=schemas[name];shape['additionalProperties']=False
-  props=shape['properties'];props['question']=ref('NativeHistogramViewQuestion'+suffix)
+  props=shape['properties'];props['question']=ref('NativeViewQuestion'+suffix)
   if 'version' in props:props['version']={'const':1}
   if 'title' in props:props['title']={'type':'string','minLength':1,'maxLength':120,'pattern':r'\S','description':'Configuration title, not a source scope or captured evidence label. Go enforces UTF-8 byte and control-character limits.'}
-  if 'declaration' in props:props['declaration']=ref('workbench.NativeHistogramViewDeclaration'+suffix)
+  if 'declaration' in props:
+   props['declaration']=ref('workbench.NativeViewDeclaration'+suffix)
+   shape['oneOf']=[{'properties':{'question':{'properties':{'definition':{'properties':{'kind':{'const':family}}}}},'declaration':{'properties':{'selection':{'const':{'kind':selection}}}}}} for family,selection in [('histogram','export-interval'),('gauge','retained-observations')]]
   if 'id' in props:props['id']={'type':'string','pattern':'^[a-f0-9]{64}$'}
   shape['required']=['id','question'] if 'ReuseRequest' in name else ['version','title','question','declaration']
- if 'workbench.NativeHistogramView'+suffix in schemas:schemas['workbench.NativeHistogramView'+suffix]['description']='Immutable native histogram display configuration. View ID includes question and declaration; changing the display does not change the measurement question or evidence identity. No stream index, export bounds, bins, values, basis or read clock is stored.'
+ if 'workbench.NativeView'+suffix in schemas:schemas['workbench.NativeView'+suffix]['description']='Immutable native histogram or gauge display configuration. View ID includes question and declaration; changing the display does not change the measurement question or evidence identity. No stream index, export bounds, bins, values, basis or read clock is stored.'
 
 # Discovery scans at most twenty candidate IDs, exposing sanitized metadata only.
-native_list=schemas['workbench.NativeHistogramViewList']
+native_list=schemas['workbench.NativeViewList']
 native_list['additionalProperties']=False
 native_list['required']=['items','partial','diagnostics']
 native_list['properties']['items'].update(maxItems=20)
@@ -290,10 +295,12 @@ native_list['properties']['diagnostics'].update(maxItems=20)
 native_list['properties']['nextCursor']={'type':'string','pattern':'^[a-f0-9]{64}$'}
 native_list['allOf']=[{'if':{'properties':{'partial':{'const':True}},'required':['partial']},'then':{'properties':{'diagnostics':{'minItems':1}}},'else':{'properties':{'diagnostics':{'maxItems':0}}}}]
 native_list['description']='Source-free metadata discovery over at most twenty scanned candidate IDs. Items and diagnostics are disjoint and together at most twenty; corrupt artifacts are unavailable, not silently absent. A present nextCursor requires twenty combined items and diagnostics and is the last scanned candidate only when more candidates exist. Combined counts, ordering, disjoint IDs and cursor relations are checked by Go. Neither a page nor an empty items array establishes a complete catalog.'
-for name in ('workbench.NativeHistogramViewSummary','workbench.NativeHistogramViewListDiagnostic'):
+for name in ('workbench.NativeViewSummary','workbench.NativeViewListDiagnostic'):
  shape=schemas[name];shape['additionalProperties']=False;shape['required']=list(shape['properties']);shape['properties']['id']={'type':'string','pattern':'^[a-f0-9]{64}$'}
  if 'kind' in shape['properties']:
-  shape['properties']['kind']={'enum':['histogram','table']};shape['properties']['unit']={'enum':['s','ms']};shape['properties']['title']={'type':'string','minLength':1,'maxLength':120}
+  shape['properties']['kind']={'enum':['histogram','timeline','table']};shape['properties']['unit']={'type':'string','minLength':1,'maxLength':64,'pattern':r'^[^\u0000\uD800-\uDFFF]*$'};shape['properties']['title']={'type':'string','minLength':1,'maxLength':120}
+  shape['properties']['family']={'enum':['histogram','gauge']};shape['properties']['selection']={'enum':['export-interval','retained-observations']}
+  shape['oneOf']=[{'properties':{'family':{'const':'histogram'},'selection':{'const':'export-interval'},'kind':{'enum':['histogram','table']},'unit':{'enum':['s','ms']}}},{'properties':{'family':{'const':'gauge'},'selection':{'const':'retained-observations'},'kind':{'enum':['timeline','table']}}}]
  else:shape['properties']['reason']={'const':'unavailable-artifact'}
 
 # Shipped and authored configuration-only template expansion share one endpoint.
@@ -939,16 +946,16 @@ page['properties']['resultToken']['pattern']='^[a-f0-9]{64}$'
 reads = {'/environment-scopes','/environment-scopes/records','/pod-metric-discovery','/host-discovery','/pod-discovery','/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/page', '/explore/counted-values', '/record-aggregates', '/trace-search', '/population/explain', '/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
 for profile,roles in [('container-memory-kubeletstats-v0.137.0',['working-set']),('container-memory-k8scluster-v0.137.0',['request','limit']),('container-cpu-kubeletstats-v0.137.0',['usage']),('container-cpu-k8scluster-v0.137.0',['request','limit'])]:
  podwidget_schema['allOf'].append({'if':{'properties':{'profile':{'const':profile}},'required':['profile']},'then':{'properties':{'role':{'enum':roles}}}})
-plans = {'/native-histogram-views/reuse','/view-artifacts/encode','/view-artifacts/decode','/pod-dashboard/plan','/host-dashboard/plan','/pool-signals/plan','/pool-signals/view','/container-memory/view','/container-cpu/view','/container-resources/history','/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
-publications = {'/native-histogram-views','/kept-observations/records','/kept-observations/tail','/activity-views','/measurement-packages', '/telemetry-packages', '/annotations', '/exploration-views', '/deployments', '/documents', '/captures/comparisons'}
-requests = {'/native-histogram-views':'NativeHistogramViewRequest','/native-histogram-views/reuse':'NativeHistogramViewReuseRequest','/view-artifacts/encode':'ViewArtifactEncodeRequest','/view-artifacts/decode':'ViewArtifactDecodeRequest','/view-templates/expand':'ViewTemplateExpansionRequest','/kept-observations/repair':'KeptRepairRequest','/kept-observations/records':'KeepRecordsIntent','/kept-observations/tail':'KeepTailIntent','/pod-metric-discovery':'PodMetricDiscoveryQuestion','/pod-dashboard/plan':'PodDashboardRequest','/host-discovery':'HostDiscoveryQuestion','/pod-discovery':'PodDiscoveryQuestion','/host-dashboard/plan':'HostDashboardRequest','/pool-signals/plan':'PoolSignalsRequest','/pool-signals/view':'PoolViewRequest','/container-memory/view':'ContainerMemoryViewRequest','/container-cpu/view':'ContainerCPUViewRequest','/container-resources/history':'ContainerResourceHistoryRequest','/activity-views':'ActivityViewRequest',
+plans = {'/native-views/reuse','/view-artifacts/encode','/view-artifacts/decode','/pod-dashboard/plan','/host-dashboard/plan','/pool-signals/plan','/pool-signals/view','/container-memory/view','/container-cpu/view','/container-resources/history','/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
+publications = {'/native-views','/kept-observations/records','/kept-observations/tail','/activity-views','/measurement-packages', '/telemetry-packages', '/annotations', '/exploration-views', '/deployments', '/documents', '/captures/comparisons'}
+requests = {'/native-views':'NativeViewRequest','/native-views/reuse':'NativeViewReuseRequest','/view-artifacts/encode':'ViewArtifactEncodeRequest','/view-artifacts/decode':'ViewArtifactDecodeRequest','/view-templates/expand':'ViewTemplateExpansionRequest','/kept-observations/repair':'KeptRepairRequest','/kept-observations/records':'KeepRecordsIntent','/kept-observations/tail':'KeepTailIntent','/pod-metric-discovery':'PodMetricDiscoveryQuestion','/pod-dashboard/plan':'PodDashboardRequest','/host-discovery':'HostDiscoveryQuestion','/pod-discovery':'PodDiscoveryQuestion','/host-dashboard/plan':'HostDashboardRequest','/pool-signals/plan':'PoolSignalsRequest','/pool-signals/view':'PoolViewRequest','/container-memory/view':'ContainerMemoryViewRequest','/container-cpu/view':'ContainerCPUViewRequest','/container-resources/history':'ContainerResourceHistoryRequest','/activity-views':'ActivityViewRequest',
  '/retained-evidence/tail':'TailIntent','/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'ServiceDiscoveryRequest','/explore':'RecordQuery','/explore/page':'RecordQuery','/explore/counted-values':'RecordQuery','/record-aggregates':'RecordQuery','/trace-search':'TraceSearchRequest','/tail':'TailSelector',
  '/environment-scopes':'AdoptionWindow','/environment-scopes/records':'AdoptionRecordsQuestion','/measurements':'NativeQuestion','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
  '/telemetry-packages':'YAMLRequest','/telemetry-packages/draft':'TelemetryDraftRequest','/telemetry-packages/numeric-plan':'NumericPlanRequest','/telemetry-packages/plan':'TelemetryPlanRequest',
  '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/numeric-histograms/selection':'NumericHistogramSelectionRequest','/numeric-histograms/comparison-selection':'DistributionSelectionRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
  '/population/explain':'ExplanationRequest','/population/explain/plan':'ExplanationRequest','/population/explain/filter':'ExplanationFilterRequest','/captures':'CaptureRequest','/captures/live':'LiveComparisonRequest','/captures/comparisons':'SaveComparisonRequest','/investigations':'InvestigationRequest','/retained-evidence':'RetainRequest','/retained-evidence/{id}/annotations':'CorrectRequest',
 }
-responses = {('get','/native-histogram-views'):'NativeHistogramViewList',('post','/native-histogram-views'):'NativeHistogramView',('get','/native-histogram-views/{id}'):'NativeHistogramView',('post','/native-histogram-views/reuse'):'NativeHistogramView',('post','/view-artifacts/encode'):'ViewArtifactResult',('post','/view-artifacts/decode'):'ViewArtifactResult',('post','/view-templates/expand'):'ViewTemplateExpansion',('get','/kept-observations/search'):'KeptSearchPage',('post','/kept-observations/repair'):'KeptRepairPage',('post','/kept-observations/records'):'KeptRecords',('post','/kept-observations/tail'):'KeptObservations',('get','/kept-observations/{id}'):'KeptResource',('post','/pod-metric-discovery'):'PodMetricDiscovery',('post','/pod-dashboard/plan'):'PodDashboardPlan',('post','/host-discovery'):'HostDiscovery',('post','/pod-discovery'):'PodDiscovery',('post','/host-dashboard/plan'):'HostDashboardPlan',('post','/pool-signals/plan'):'PoolSignalsPlan',('post','/pool-signals/view'):'PoolView',('post','/container-memory/view'):'ContainerMemoryView',('post','/container-cpu/view'):'ContainerCPUView',('post','/container-resources/history'):'ContainerResourceHistory',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
+responses = {('get','/native-views'):'NativeViewList',('post','/native-views'):'NativeView',('get','/native-views/{id}'):'NativeView',('post','/native-views/reuse'):'NativeView',('post','/view-artifacts/encode'):'ViewArtifactResult',('post','/view-artifacts/decode'):'ViewArtifactResult',('post','/view-templates/expand'):'ViewTemplateExpansion',('get','/kept-observations/search'):'KeptSearchPage',('post','/kept-observations/repair'):'KeptRepairPage',('post','/kept-observations/records'):'KeptRecords',('post','/kept-observations/tail'):'KeptObservations',('get','/kept-observations/{id}'):'KeptResource',('post','/pod-metric-discovery'):'PodMetricDiscovery',('post','/pod-dashboard/plan'):'PodDashboardPlan',('post','/host-discovery'):'HostDiscovery',('post','/pod-discovery'):'PodDiscovery',('post','/host-dashboard/plan'):'HostDashboardPlan',('post','/pool-signals/plan'):'PoolSignalsPlan',('post','/pool-signals/view'):'PoolView',('post','/container-memory/view'):'ContainerMemoryView',('post','/container-cpu/view'):'ContainerCPUView',('post','/container-resources/history'):'ContainerResourceHistory',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
  ('post','/compare'):'CompareResult',('post','/inventory'):'InventoryResult',('post','/discovery'):'ServiceDiscovery',('post','/explore'):'RecordResult',('post','/explore/page'):'RecordPageResult',('post','/explore/counted-values'):'CountedValuesResult',('post','/record-aggregates'):'RecordAggregatesResult',('post','/trace-search'):'TraceSearchResult',
  ('post','/measurements'):'NativeResult',('post','/metric-discovery'):'MetricDiscoveryResult',('post','/telemetry-packages/draft'):'PackagePlan',('post','/telemetry-packages/plan'):'PackagePlan',('post','/telemetry-packages/numeric-plan'):'NumericPlan',('post','/telemetry-packages'):'SavedPackage',('get','/telemetry-packages/{revision}'):'SavedPackage',
  ('post','/recipes'):'RecipePlan',('post','/dashboards/plan'):'DashboardPlan',('post','/population/plan'):'PopulationPlan',('post','/numeric-histograms/selection'):'NumericHistogramSelection',('post','/numeric-histograms/comparison-selection'):'NumericHistogramSelection',
@@ -1037,7 +1044,7 @@ for name in ['measurements.Definition','measurements.Question','measurements.Pla
  if name not in schemas: raise ValueError(f'Missing reflected type: {name}')
 
 def go_limit(path):
- if path.startswith('/native-histogram-views'): return 131072
+ if path.startswith('/native-views'): return 131072
  if path in ('/environment-scopes','/environment-scopes/records'): return 4096
  if path in ('/container-memory/view','/container-cpu/view','/container-resources/history'): return 8388608
  if path == '/pool-signals/view': return 2097152
@@ -1049,7 +1056,7 @@ def go_limit(path):
  return 16384
 
 def effect(method,path):
- if method=='post' and path=='/native-histogram-views/reuse': return 'saved-definition-read-and-pure-reuse'
+ if method=='post' and path=='/native-views/reuse': return 'saved-definition-read-and-pure-reuse'
  if path in ('/capabilities','/ui-config'): return 'configuration-only'
  if path == '/health': return 'liveness-only'
  if path in ('/example-questions','/prebuilts'): return 'embedded-definition-read'
@@ -1111,16 +1118,16 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if method=='get' and path in ('/http-package','/operation-packages','/operations','/counter-rates','/histograms'): codes.add(503)
  if path=='/metric-discovery':
   op['description']='Explicit bounded metric metadata discovery: one fixed optional exponential-table presence probe, then one globally bounded metadata union. Missing optional table is reported in diagnostics while ordinary families remain usable. Probe/query errors fail the request. Exponential histograms are observed metadata only, unsupported for evaluation, without an executable definition. Counts are exported points, not histogram observations or complete inventory.'
- if path.startswith('/native-histogram-views'):
+ if path.startswith('/native-views'):
   codes.update((400,404,500))
   if method=='post':codes.add(413)
   op['description']='Source-free native histogram display configuration. Explicit Apply preserves the whole current destination measurement question; Run and actual destination export selection remain separate. No donor observations, rebinning, unit conversion or upstream completeness claim.'
-  if method=='get' and path=='/native-histogram-views':
+  if method=='get' and path=='/native-views':
    codes.discard(404)
    op['description']='Source-free bounded metadata discovery. Fixed twenty scanned candidate IDs, ascending ID order; partial diagnostics mark unavailable artifacts. Cursor advances past the last scanned ID only when more candidates exist. Unknown, repeated and empty query parameters are refused. No telemetry or saved-evidence read; exact-ID load remains independently verified.'
    op['parameters']=[{'name':'after','in':'query','schema':{'type':'string','pattern':'^[a-f0-9]{64}$'},'description':'Optional exclusive candidate ID cursor; unknown, repeated or explicitly empty parameters are refused.'}]
   result=op['responses'][success]['content']['application/json']
-  if path!='/native-histogram-views' or method!='get':result['schema']={'allOf':[ref('NativeHistogramView'),{'not':{'required':['id']}}]} if path.endswith('/reuse') else {'allOf':[ref('NativeHistogramView'),{'required':['id']}]}
+  if path!='/native-views' or method!='get':result['schema']={'allOf':[ref('NativeView'),{'not':{'required':['id']}}]} if path.endswith('/reuse') else {'allOf':[ref('NativeView'),{'required':['id']}]}
   if method=='get' and '{id}' in path:
    codes.update((400,404))
    op['parameters'][0]['schema']={'type':'string','pattern':'^[a-f0-9]{64}$'}

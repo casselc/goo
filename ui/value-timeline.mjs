@@ -30,13 +30,14 @@ const global = globalThis;
    connectedCallback(){if(!this.hasAttribute('role'))this.setAttribute('role','group');if(!this.hasAttribute('aria-label'))this.setAttribute('aria-label','Supplied value timeline');for(const key of ['data','selectedKey'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];this[key]=value}this.render()}
    attributeChangedCallback(name){if(name==='data')this._data=undefined;if(this.isConnected){if(name==='selected-key')this.syncSelection();else this.render()}}
    disconnectedCallback(){this._cancelBrush?.()}
-   syncSelection(){for(const mark of this.querySelectorAll(':scope > .value-timeline-plot > .value-timeline-mark'))mark.setAttribute('aria-pressed',String(mark.dataset.key===this.selectedKey))}
+   syncSelection(){for(const mark of this.querySelectorAll('.value-timeline-mark'))mark.setAttribute('aria-pressed',String(mark.dataset.key===this.selectedKey))}
    render(){
     this._cancelBrush?.();const m=model(this.data);this.replaceChildren();this.dataset.state=m.state;
     if(m.state!=='observed'){this.append(node('p',m.state==='no_data'?'No retained observations. Absence is not zero.':'Timeline unavailable.'));return}
     const scale=node('p',m.numeric?(this.data.scaleLabel||m.min+' to '+m.max+' · dashed baseline is zero'):'No numeric observations to scale','value-timeline-scale'),plot=node('div',undefined,'value-timeline-plot'),zero=node('div',undefined,'value-timeline-zero');zero.style.top=(100-m.zeroY)+'%';zero.hidden=!m.numeric;zero.setAttribute('aria-hidden','true');plot.append(zero);scale.title=m.min+' to '+m.max+' · exact displayed domain';
-    for(const p of m.points){const mark=node('button',p.y===null?'?':'','value-timeline-mark');mark.type='button';mark.dataset.key=p.key;if(p.series!==undefined)mark.dataset.series=p.series;mark.dataset.state=p.state;mark.dataset.fromNs=p.fromNS;mark.dataset.toNs=p.toNS;if(p.value!==null)mark.dataset.value=p.value;mark.dataset.interval=String(p.fromNS!==p.toNS);mark.style.left=p.left+'%';mark.style.width=p.width+'%';mark.style.top=p.y===null?'0':(100-p.y)+'%';mark.setAttribute('aria-label',p.label);mark.title=p.label;mark.setAttribute('aria-pressed',String(this.selectedKey===p.key));mark.onclick=()=>this.dispatchEvent(new CustomEvent('goo-timeline-select',{bubbles:true,detail:{key:p.key}}));plot.append(mark)}
-    this.append(scale,plot);
+    const unavailable=node('section',undefined,'value-timeline-unavailable'),rail=node('div',undefined,'value-timeline-unavailable-plot');unavailable.append(node('p','Unavailable observations · no numeric value'),rail);rail.setAttribute('aria-label','Unavailable observations positioned by time');
+    for(const p of m.points){const mark=node('button',p.y===null?'?':'','value-timeline-mark');mark.type='button';mark.dataset.key=p.key;if(p.series!==undefined)mark.dataset.series=p.series;mark.dataset.state=p.state;mark.dataset.fromNs=p.fromNS;mark.dataset.toNs=p.toNS;if(p.value!==null)mark.dataset.value=p.value;mark.dataset.interval=String(p.fromNS!==p.toNS);mark.style.left=p.left+'%';mark.style.width=p.width+'%';if(p.y!==null)mark.style.top=(100-p.y)+'%';mark.setAttribute('aria-label',p.label);mark.title=p.label;mark.setAttribute('aria-pressed',String(this.selectedKey===p.key));mark.onclick=()=>this.dispatchEvent(new CustomEvent('goo-timeline-select',{bubbles:true,detail:{key:p.key}}));(p.y===null?rail:plot).append(mark)}
+    this.append(scale,plot);if(rail.childNodes.length)this.append(unavailable);
     if(this.hasAttribute('brush'))this.bindBrush(plot);
 
    }

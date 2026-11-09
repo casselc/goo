@@ -539,6 +539,23 @@ format is introduced. Opening a trace from a result is a separate explicit
 existing record-context read. See [the semantic contract](TRACE_SEARCH.md).
 
 
+## Native display configuration
+
+`/native-views` provides source-free save/list, exact-ID load and checked reuse
+through `/native-views/reuse`. A `NativeView` pairs a complete measurement question
+with a closed `goo.view/1` declaration. Gauge and histogram arms have different
+selection/display policies; family, selection and exact unit also appear in
+bounded verified catalog summaries. Reuse preserves the complete destination
+question and returns an unsaved configuration without the donor ID. It does not
+execute measurements. The former histogram-only route names are replaced.
+
+Gauge configuration uses retained observations and Timeline/Table with explicit
+`requiresComplete: false`; histogram configuration keeps selected export intervals
+and complete-bin Histogram/Table. The native compiler's nonempty-unit requirement
+remains authoritative. See [gauge reuse](NATIVE_GAUGE_VIEW_REUSE.md),
+[histogram reuse](NATIVE_HISTOGRAM_VIEW_REUSE.md) and
+[bounded discovery](NATIVE_VIEW_DISCOVERY.md).
+
 ## Automatic service dashboard families
 
 `POST /dashboards/plan` remains a pure planning operation. It accepts optional

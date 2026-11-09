@@ -1,5 +1,103 @@
 # Validation record
 
+## Native gauge display reuse — 386
+
+Histogram and gauge display configuration share one
+`NativeView` API/UI owner; gauge selection is retained observations with explicit
+false completeness, distinct from histogram export intervals/complete bins.
+The complete destination question and fixed-window freshness remain authoritative.
+
+Completed checks:
+
+- Full root Go suite passes, including cmd **15.254 s**, exploration **10.917 s**,
+  workbench **1.535 s**, plus scripts/schema reflection. Final strict-admission
+  targeted rerun passes workbench **0.648 s**, cmd **0.042 s**. Backend tests
+  cover gauge save/load/catalog/reuse, family/unit refusal, detached destination
+  identity, explicit false, optional null representations and exact key casing.
+- Final native-view focused UI **30 passed** (**495 ms**), then the shared-rail
+  regression **17 passed** (**465.7 ms**). Final full frontend **1,378 passed**,
+  zero skips (**21.616 s**). Mounted gauge projection tests preserve stale negative, real
+  zero and unknown values, switch locally without reads or duplicate tables,
+  and reject retired callbacks. Empty/omitted units match compiler refusal.
+- Reflected API **694 wire schemas**, OpenAPI **112 operations / 725 schemas**;
+  **480 frozen handler responses / 189 admitted requests / 28 mux refusals**.
+  Four added successful gauge handler responses and three request bodies account
+  for the expected fixture-count increase. Closed gauge/histogram declarations,
+  mismatched arms, explicit false and native catalog family/selection metadata
+  are checked separately from runtime semantic constraints.
+- [Independent source review](docs/reviews/NATIVE_GAUGE_VIEW_REVIEW_386.md) found
+  and closed resource schema identity, legitimate optional-null and exact-key
+  admission gaps. No remaining source blocker. Existing histogram artifact
+  bytes/hashes and private backing directory are preserved; obsolete public
+  route/type aliases are not retained.
+- Final actual-frame review found an existing misleading unknown-value marker at
+  the numeric maximum. A bounded shared-component correction now places unknown
+  and no-data observations in a labelled unavailable rail outside the numeric
+  domain, retaining exact timestamp position, selection and keyboard/button
+  semantics. DOM regression proves no numeric value or maximum is implied;
+  refreshed actual frames and independent raw DOM admission pass below.
+
+- Generated focused verification passes **5.437 s**, zero skips: 386 Hegel
+  **100 mixed-family examples / 1,800 JavaScript refusal outcomes** (**1.04 s**),
+  existing histogram reuse (**2.98 s**), catalog (**1.41 s**) and **59 finite
+  wire cases** (**0.01 s**). Tests check detached whole destination questions,
+  exact family/unit, explicit false, closed shapes and malformed representations.
+
+Actual runtime:
+
+- Generated ordinary OTLP gauge points passed through the existing collector and
+  physical ClickHouse table. The target bank has **6 raw / 4 scoped points**,
+  excluding foreign namespace/environment controls. It contains stale **-2**,
+  stale recorded **0**, observed **3** and a flagged **no recorded value** point.
+  These are controlled test exports, not an instrumented application or sensor.
+- Final Playwright **1 passed (56.6 s)**, **11 measured gestures**. Save, Browse,
+  Inspect, Apply, local kind/selection changes and stale/missing metadata handling
+  read no telemetry; only explicit Run reads the unchanged destination. Source
+  setup and destination Run total **2 main measurement requests**. The saved
+  artifact's bytes/hash stay unchanged; no capture is created.
+- Final existing histogram journey **1 passed (11.6 s)**, actor disabled, confirms
+  shared save/apply ownership still retains histogram export/bin semantics.
+- Bombadil **814 observed states / 11 phases** independently confirms current
+  question, exact values, unknown selection, rail placement and read budget:
+  **1 measurement read / 3 metadata operations / 0 writes**.
+- Desktop and 390px raw DOM rectangles show matching numeric/unavailable track
+  left/width. All four timestamp-to-marker-center errors are within 1 px:
+  maximum **0.015625 px** desktop / **0.010417 px** narrow. Unknown has no numeric
+  value or inline numeric Y, occupies the labelled rail and remains selected.
+  Root inspected the refreshed desktop/narrow frames and final actor JPEG.
+- Actual wire: **25 responses / 7 accepted request bodies** conform, plus an
+  intentional counter request rejected by both schema and backend. Statuses:
+  **21×200, 2×201, 1×400, 1×404**. Wrong-unit configuration stays incompatible.
+
+The raw geometry gate first exposed inherited section padding that shifted the
+unavailable rail's timestamp axis. Scoped component resets fix that alignment;
+equal percentage attributes alone are not accepted as physical time evidence.
+
+One refresh correctly refused to proceed when OTLP returned 200 but the physical
+source bank remained empty: ClickHouse reported code 243, insufficient disk
+space. Removing unused Docker build cache (retaining 256 MB) recovered **9.9 GB**
+of physical space; images, containers, volumes and stores were preserved. The
+fresh cohort then settled and passed without weakening the source gate.
+
+Final independent replay passes required Quint: **11 actual facts / 11 measured
+read/history steps**, **1 explicit destination read / 0 captures**, **3.873 s**,
+zero skips. **14 semantic mutants** (including invented unknown zero, numeric-top
+placement and 14px shifted timestamp position) and an independent read-on-Apply
+model control are rejected. Raw source scope/values/freshness, immutable bytes,
+exact destination questions and wide/narrow physical geometry are admitted before
+model replay; actor success flags do not substitute for that proof.
+
+Report: `artifacts/native-gauge-view386/summary.json`. The isolated runtimes
+are stopped; campaign traces are losslessly compressed with verified hashes and
+duplicate JPEG paths resolve to retained originals.
+The final image was applied only to the local Goo application; `/health` on 8088
+returns `{"ok":true}` and `/api/native-views` returns valid source-free metadata.
+Existing dependency containers, XTDB orphan, volumes and stores remain intact.
+
+See the [contract](docs/NATIVE_GAUGE_VIEW_REUSE.md),
+[executable storyboard](journeys/386-native-gauge-view-storyboard.md) and
+[source/visual review](docs/reviews/NATIVE_GAUGE_VIEW_REVIEW_386.md).
+
 ## Outgoing HTTP observations — 385
 
 Explicit `http-client` planning adds five scoped ordinary span questions. Counts

@@ -613,8 +613,8 @@ storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
 
 The [active roadmap](docs/ROADMAP_2026_11_09_CHECKPOINT_384.md) follows the completed 382–384
-sequence and fresh whole-product reviews; 385 outgoing HTTP is delivered, with
-386 gauge display reuse next and 387 capture-family consolidation after it. Earlier current RPC view reuse, service native interval context, and
+sequence and fresh whole-product reviews. Outgoing HTTP (385) and gauge display
+reuse (386) are delivered; capture-family consolidation (387) is next. Earlier current RPC view reuse, service native interval context, and
 measured bounded facets are also delivered. [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most
 100 matches while Find, totals and comparison scales use the complete admitted
 set. Same-read selection/caret and exact child scope survive Return. [Typed error-triage follow-through](docs/TYPED_ERROR_TRIAGE.md) is also delivered:
@@ -623,6 +623,10 @@ for Run and return to held groups without rereading.
 [Native histogram display reuse](docs/NATIVE_HISTOGRAM_VIEW_REUSE.md) saves
 Histogram/Table configuration separately from measurement calculation and evidence.
 Apply preserves the current question; Run and export selection remain explicit.
+[Gauge display reuse](docs/NATIVE_GAUGE_VIEW_REUSE.md) shares that native-view
+contract for retained-observation Timeline/Table displays. It preserves the
+complete destination question and fixed-window freshness; missing values occupy
+a separate time-aligned rail outside the numeric domain.
 [Typed distribution continuation](docs/TYPED_DISTRIBUTION_CONTINUATION.md) now
 checks the exact selection intent, stages the complete child question and waits
 for Run. Back retains the parent without rereading and visibly pauses selection

@@ -22,6 +22,12 @@ retained points. Each chart belongs to one complete OTel stream identity.
   layouts from different intervals are never combined or aligned by position.
   Selecting an unknown interval removes prior bucket details instead of reusing them.
 
+Unknown and no-data marks occupy a labelled **Unavailable observations · no
+numeric value** rail outside the numeric plot. Their horizontal position and
+interval width retain time; their vertical placement implies no magnitude.
+Selection, keyboard buttons and event keys are shared with numeric marks. Missing
+values are neither placed at zero nor at the observed maximum.
+
 Time coordinates use exact nanosecond bounds. Primary labels show UTC; the
 selection's **Exact timestamp bounds** disclosure retains full nanoseconds.
 Interval lengths remain visible on the fixed time axis. Unpainted time is not

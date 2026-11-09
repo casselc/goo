@@ -10,13 +10,13 @@ import (
 	"testing"
 )
 
-func TestNativeHistogramViewList373BoundedCandidates(t *testing.T) {
+func TestNativeViewList373BoundedCandidates(t *testing.T) {
 	store := Store{Dir: t.TempDir()}
 	in := nativeViewInput371(t)
 	ids := []string{}
 	for i := range 25 {
 		in.Title = fmt.Sprintf("Display %02d", i)
-		v, e := store.CreateNativeHistogramView(in)
+		v, e := store.CreateNativeView(in)
 		if e != nil {
 			t.Fatal(e)
 		}
@@ -32,7 +32,7 @@ func TestNativeHistogramViewList373BoundedCandidates(t *testing.T) {
 			t.Fatal(e)
 		}
 	}
-	first, e := store.NativeHistogramViews("")
+	first, e := store.NativeViews("")
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -44,7 +44,7 @@ func TestNativeHistogramViewList373BoundedCandidates(t *testing.T) {
 			t.Fatal("raw failure leaked")
 		}
 	}
-	second, e := store.NativeHistogramViews(first.NextCursor)
+	second, e := store.NativeViews(first.NextCursor)
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -52,9 +52,9 @@ func TestNativeHistogramViewList373BoundedCandidates(t *testing.T) {
 		t.Fatal("unloaded next-page corruption or continuation lost", second)
 	}
 	seen := map[string]bool{}
-	for _, page := range []*NativeHistogramViewList{first, second} {
+	for _, page := range []*NativeViewList{first, second} {
 		raw, _ := json.Marshal(page)
-		if len(raw) > NativeHistogramViewPageMaxBytes || strings.Contains(string(raw), "private") {
+		if len(raw) > NativeViewPageMaxBytes || strings.Contains(string(raw), "private") {
 			t.Fatal("metadata bound or sanitation")
 		}
 		for _, item := range page.Items {
@@ -74,14 +74,14 @@ func TestNativeHistogramViewList373BoundedCandidates(t *testing.T) {
 		t.Fatal("scanned IDs omitted", len(seen))
 	}
 	first.Items[0].Title = "mutated"
-	again, e := store.NativeHistogramViews("")
+	again, e := store.NativeViews("")
 	if e != nil || again.Items[0].Title == "mutated" {
 		t.Fatal("caller mutation affected verified artifacts", e)
 	}
 }
-func TestNativeHistogramViewList373EmptyPartialAndCap(t *testing.T) {
+func TestNativeViewList373EmptyPartialAndCap(t *testing.T) {
 	store := Store{Dir: t.TempDir()}
-	empty, e := store.NativeHistogramViews("")
+	empty, e := store.NativeViews("")
 	if e != nil || empty.Partial || empty.NextCursor != "" || empty.Items == nil || empty.Diagnostics == nil || len(empty.Items) != 0 {
 		t.Fatal("false/nullable empty page", empty, e)
 	}
@@ -94,7 +94,7 @@ func TestNativeHistogramViewList373EmptyPartialAndCap(t *testing.T) {
 			t.Fatal(e)
 		}
 	}
-	partial, e := store.NativeHistogramViews("")
+	partial, e := store.NativeViews("")
 	if e != nil || !partial.Partial || len(partial.Items) != 0 || len(partial.Diagnostics) != 20 || partial.NextCursor == "" {
 		t.Fatal("corruption masqueraded as complete empty catalog", partial, e)
 	}
@@ -103,10 +103,10 @@ func TestNativeHistogramViewList373EmptyPartialAndCap(t *testing.T) {
 			t.Fatal(e)
 		}
 	}
-	if _, e = store.NativeHistogramViews(""); e == nil {
+	if _, e = store.NativeViews(""); e == nil {
 		t.Fatal("catalog cap silently truncated")
 	}
-	if _, e = store.NativeHistogramViews("../bad"); e == nil {
+	if _, e = store.NativeViews("../bad"); e == nil {
 		t.Fatal("bad cursor accepted")
 	}
 }

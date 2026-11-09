@@ -29,7 +29,8 @@ Generated Go/JavaScript admission found a real disguised-family capture hole in
 requirements. Keep semantic generation, actual-fact replay and positive visible
 browser completion; avoid new frameworks or tests that merely mirror DOM moves.
 
-The next cadence is **385 breadth → 386 facet depth → 387 consolidation**.
+The adopted cadence is **385 breadth (delivered) → 386 facet depth (delivered)
+→ 387 consolidation (next)**.
 Complete each acceptance cut before the next. This prerelease has no compatibility
 floor requiring aliases, migration adapters or old public formats. Current Go
 1.27.3 and standard libraries remain the baseline; use newer facilities when they
@@ -38,7 +39,7 @@ simplify the work, without imposing type machinery on callers.
 ## 385 — breadth: investigate outgoing HTTP dependencies
 
 Delivered: [contract](OUTGOING_HTTP.md), [storyboard](journeys/385-outgoing-http.md)
-and [actual checks](../VALIDATION.md). The remaining queue starts at 386.
+and [actual checks](../VALIDATION.md). The remaining queue starts at 387.
 
 User task: “Which outgoing web dependency is slow or has recorded errors?”
 Current service profiles cover incoming HTTP/RPC, DB clients and messaging, but
@@ -71,6 +72,10 @@ instrument discovery is not a claim of that profile's execution semantics.
 
 ## 386 — depth: reuse native gauge display configuration
 
+Delivered: [contract](NATIVE_GAUGE_VIEW_REUSE.md),
+[storyboard](../journeys/386-native-gauge-view-storyboard.md) and
+[actual checks](../VALIDATION.md). The remaining queue is 387.
+
 User task: “Use this useful gauge view on another compatible gauge.” Histogram
 configuration reuse already exists. Extend the typed native display contract with
 a bounded gauge arm using existing gauge sample/staleness rendering and scoped
@@ -97,7 +102,10 @@ unit whitelist do not describe gauge observations. Prefer a small discriminated
 native-display envelope over duplicated save/apply managers. Reuse the existing
 gauge timeline/table renderer, keep exact destination units and sample/staleness
 semantics, and distinguish a retained sample bound from continuous coverage.
-Finalize the typed arm during 386 design review before implementing it.
+The [386 design review](reviews/NATIVE_GAUGE_VIEW_REVIEW_386.md) finalized the typed
+arm before implementation. The adopted gauge
+arm uses the existing compiler's nonempty exact-unit policy; this cut does not
+broaden native measurement admission.
 
 ## 387 — consolidate: close current capture-family admission
 
@@ -138,6 +146,17 @@ engines remain wider initiatives. Do not turn this list into a parallel backlog.
 links return through Services, while Customize/native actions offer contextual
 Back. Both paths can retain evidence without reads; unify delegation in a later
 bounded usability consolidation rather than adding a second navigation owner.
+
+386 also reinforced that shared chart alignment must be checked in physical
+coordinates under real application styles, and collector acceptance is not proof
+of source settlement. Keep raw-source and geometry gates independent of click
+completion or percentage attributes. Bound disposable builder cache; preserve
+source stores when recovering lab disk pressure.
+
+Actual 386 narrow frames also show that native stream identity, diagnostic prose
+and save controls can push the primary visual low in the viewport. Reassess
+native-display density at the next whole-product checkpoint; 384's verified
+first-item contract covered fixed record surfaces, not every native screen.
 
 Reassess the whole product after 387 or earlier if actual usage invalidates the
 chosen sequence. Update this one queue from evidence rather than appending plans.

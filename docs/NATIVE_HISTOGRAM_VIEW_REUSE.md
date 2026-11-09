@@ -1,14 +1,16 @@
 # Reusable native histogram displays — 371
 
+Histogram configurations now share the `NativeView` API with [gauge displays](NATIVE_GAUGE_VIEW_REUSE.md). Histogram export-interval and complete-bin rules below remain distinct from gauge samples.
+
+
 Native histogram display configuration is separate from a measurement definition
 and from captured evidence. In Measurements, select a known export interval,
-open **Selected native bucket counts**, choose Histogram or Table, and **Save
-interval display** with a title.
-[Browse saved interval displays](NATIVE_VIEW_DISCOVERY.md) to find it again; its
-**Native histogram view ID** also supports direct loading.
+open **Selected native bucket counts**, choose Histogram or Table, and **Save display** with a title.
+[Browse saved displays](NATIVE_VIEW_DISCOVERY.md) to find it again; its
+**Native view ID** also supports direct loading.
 
 For another validated measurement question, open the existing Save/share area,
-browse the saved displays or load an exact ID and inspect its configuration. **Apply interval display**
+browse the saved displays or load an exact ID and inspect its configuration. **Apply display**
 preserves the entire current question and clears its previous result. **Run
 measurement** explicitly reads the destination. Select an actual destination
 export interval to display; applying never selects a donor or latest interval.
@@ -49,9 +51,9 @@ existing conservative authority; configuration supplies no completeness witness.
 ## API and ownership
 
 The existing Go workbench store publishes a separate content-addressed family.
-External routes are `POST /api/native-histogram-views`,
-`GET /api/native-histogram-views/{id}` and
-`POST /api/native-histogram-views/reuse` with `{id, question}`. Creation omits
+External routes are `POST /api/native-views`,
+`GET /api/native-views/{id}` and
+`POST /api/native-views/reuse` with `{id, question}`. Creation omits
 `id`; reuse reloads the source by ID and returns an unsaved configuration without
 an ID. All three routes operate on metadata, with no telemetry acquisition.
 See the generated [OpenAPI specification](../api/openapi.json).

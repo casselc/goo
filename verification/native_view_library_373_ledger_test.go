@@ -22,7 +22,7 @@ type nativeLibraryFact373 struct {
 }
 type nativeLibraryPage373 struct {
 	URL      string
-	Response workbench.NativeHistogramViewList
+	Response workbench.NativeViewList
 }
 type nativeLibraryReport373 struct {
 	base                                      nativeReuseReport371
@@ -31,14 +31,14 @@ type nativeLibraryReport373 struct {
 	RawStoreCandidateIDs                      []string
 	CorruptArtifact                           struct{ ID, Bytes string }
 	Seeds                                     []struct {
-		Request  workbench.NativeHistogramViewInput
-		Response workbench.NativeHistogramView
+		Request  workbench.NativeViewInput
+		Response workbench.NativeView
 	}
 	CatalogOracle         []nativeLibraryPage373
 	FirstPage, SecondPage nativeLibraryPage373
 	WrongUnitID           string
 	Get, WrongUnit        struct {
-		Response            workbench.NativeHistogramView
+		Response            workbench.NativeView
 		Status              int
 		ApplyDisabled       bool
 		StatusText, RowText string
@@ -112,11 +112,11 @@ func nativeLibraryAdmission373(r nativeLibraryReport373) bool {
 	if b.Version != "goo.nativeViewLibrary373/1" || len(b.Errors) != 0 || r.SourceArtifactBefore == "" || r.SourceArtifactBefore != r.SourceArtifactAfter {
 		return false
 	}
-	var source workbench.NativeHistogramView
+	var source workbench.NativeView
 	if json.Unmarshal([]byte(r.SourceArtifactBefore), &source) != nil || source.ID == "" || source.Validate() != nil || r.Get.Status != 200 || r.Get.Response.ID != source.ID || savedJSON360(r.Get.Response) != savedJSON360(source) {
 		return false
 	}
-	var saved workbench.NativeHistogramView
+	var saved workbench.NativeView
 	if json.Unmarshal(b.Save.Response, &saved) != nil || savedJSON360(saved) != savedJSON360(source) {
 		return false
 	}
@@ -124,9 +124,9 @@ func nativeLibraryAdmission373(r nativeLibraryReport373) bool {
 	if !same(b.SourceRun.Request, b.SourceQuestion) || !same(b.DestinationRun.Request, q) || !same(b.Reuse.Request.Question, q) || !same(b.Reuse.Response.Question, q) || !same(q, b.Fixture.Target.Question) || b.Reuse.Request.ID != source.ID || b.Reuse.Response.ID != "" || b.Reuse.Status != 200 || savedJSON360(b.Reuse.Response.Declaration) != savedJSON360(source.Declaration) {
 		return false
 	}
-	expected := map[string]workbench.NativeHistogramViewSummary{}
-	summary := func(v workbench.NativeHistogramView) workbench.NativeHistogramViewSummary {
-		return workbench.NativeHistogramViewSummary{ID: v.ID, Title: v.Title, Kind: v.Declaration.Kind.Name, Unit: v.Question.Definition.Source.Unit}
+	expected := map[string]workbench.NativeViewSummary{}
+	summary := func(v workbench.NativeView) workbench.NativeViewSummary {
+		return workbench.NativeViewSummary{ID: v.ID, Title: v.Title, Family: v.Question.Definition.Kind, Selection: v.Declaration.Selection.Kind, Kind: v.Declaration.Kind.Name, Unit: v.Question.Definition.Source.Unit}
 	}
 	expected[source.ID] = summary(source)
 	for _, s := range r.Seeds {
@@ -158,15 +158,15 @@ func nativeLibraryAdmission373(r nativeLibraryReport373) bool {
 	after := ""
 	for _, page := range r.CatalogOracle {
 		u, e := url.Parse(page.URL)
-		if e != nil || u.Path != "/api/native-histogram-views" || u.Query().Get("after") != after {
+		if e != nil || u.Path != "/api/native-views" || u.Query().Get("after") != after {
 			return false
 		}
 		end := min(offset+20, len(candidates))
-		items := []workbench.NativeHistogramViewSummary{}
-		diagnostics := []workbench.NativeHistogramViewListDiagnostic{}
+		items := []workbench.NativeViewSummary{}
+		diagnostics := []workbench.NativeViewListDiagnostic{}
 		for _, id := range candidates[offset:end] {
 			if id == r.CorruptArtifact.ID {
-				diagnostics = append(diagnostics, workbench.NativeHistogramViewListDiagnostic{ID: id, Reason: "unavailable-artifact"})
+				diagnostics = append(diagnostics, workbench.NativeViewListDiagnostic{ID: id, Reason: "unavailable-artifact"})
 			} else {
 				items = append(items, expected[id])
 			}
@@ -175,7 +175,7 @@ func nativeLibraryAdmission373(r nativeLibraryReport373) bool {
 		if end < len(candidates) {
 			cursor = candidates[end-1]
 		}
-		want := workbench.NativeHistogramViewList{Items: items, Partial: len(diagnostics) > 0, Diagnostics: diagnostics, NextCursor: cursor}
+		want := workbench.NativeViewList{Items: items, Partial: len(diagnostics) > 0, Diagnostics: diagnostics, NextCursor: cursor}
 		if savedJSON360(page.Response) != savedJSON360(want) {
 			return false
 		}

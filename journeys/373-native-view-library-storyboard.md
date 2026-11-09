@@ -1,12 +1,18 @@
 # Discover a saved native histogram display
 
-An operator wants to reuse a useful display without remembering its ID or inheriting another service's scope. The Measurements workspace keeps discovery under **Save or share → Native histogram view**; opening it is passive.
+Control names follow the shared native-view contract introduced in 386. The
+retained 373 frames document that original checkpoint; see the
+[current gauge/catalog journey](386-native-gauge-view-storyboard.md) for the
+current shared controls.
+
+
+An operator wants to reuse a useful display without remembering its ID or inheriting another service's scope. The Measurements workspace keeps discovery under **Save or share → Native view**; opening it is passive.
 
 Executable: [373-native-view-library.spec.js](373-native-view-library.spec.js). The fixture reuses real OTLP histograms: the source has four observations in buckets `1/2/1`; the destination has seven in `2/3/2`, with different `.02/.2 s` boundaries, typed environment policy, service, namespace, attributes, exact stream and nanosecond window.
 
-1. Run the source question, select its known export interval, choose **Table** and **Save interval display**. The immutable artifact stores configuration, not bins or a selected interval.
-2. Open the destination question in a new visit. **Browse saved interval displays** reads metadata explicitly. The test creates 26 additional configurations through the real metadata API and one intentionally corrupt file in its isolated runtime store. The first page scans 20 candidate IDs: 19 verified summaries and one diagnostic. **More saved interval displays** retrieves eight more verified summaries. The cursor is the last scanned ID, and Find covers loaded pages only. Neither ordering nor pagination implies recency or a transactional catalog snapshot.
-3. Use local **Find loaded interval displays** and select **Inspect** on the saved row. Find makes no request. Inspection retrieves the exact immutable artifact and checks its title, kind and unit against the summary before enabling Apply. Raw configuration stays collapsed by default.
+1. Run the source question, select its known export interval, choose **Table** and **Save display**. The immutable artifact stores configuration, not bins or a selected interval.
+2. Open the destination question in a new visit. **Browse saved displays** reads metadata explicitly. The test creates 26 additional configurations through the real metadata API and one intentionally corrupt file in its isolated runtime store. The first page scans 20 candidate IDs: 19 verified summaries and one diagnostic. **More saved displays** retrieves eight more verified summaries. The cursor is the last scanned ID, and Find covers loaded pages only. Neither ordering nor pagination implies recency or a transactional catalog snapshot.
+3. Use local **Find loaded displays** and select **Inspect** on the saved row. Find makes no request. Inspection retrieves the exact immutable artifact and checks its title, kind and unit against the summary before enabling Apply. Raw configuration stays collapsed by default.
 
 ![Discovered display with partial-listing disclosure](../docs/journeys/screenshots/373-discovered-native-display.png)
 
@@ -14,7 +20,7 @@ Executable: [373-native-view-library.spec.js](373-native-view-library.spec.js). 
 
 ![Incompatible unit cannot be applied](../docs/journeys/screenshots/373-incompatible-native-display.png)
 
-5. **Apply interval display** preserves the complete current destination question, clears the previous result and waits. Browse, More, Find, Inspect and Apply make zero telemetry reads and zero SQL queries. Explicitly **Run** once, then select an actual destination export interval. Goo does not select the latest export automatically. The table displays `2/3/2`, total seven, with the destination's boundaries—not the donor's bins. Independent raw ClickHouse values and the actual private complete-bin guarantee are checked.
+5. **Apply display** preserves the complete current destination question, clears the previous result and waits. Browse, More, Find, Inspect and Apply make zero telemetry reads and zero SQL queries. Explicitly **Run** once, then select an actual destination export interval. Goo does not select the latest export automatically. The table displays `2/3/2`, total seven, with the destination's boundaries—not the donor's bins. Independent raw ClickHouse values and the actual private complete-bin guarantee are checked.
 
 ![Actual destination export after explicit Run](../docs/journeys/screenshots/373-discovered-destination-buckets.png)
 

@@ -8,7 +8,6 @@ goo-value-timeline>.value-timeline-plot>.value-timeline-mark[data-interval=false
 goo-value-timeline>.value-timeline-plot>.value-timeline-mark:is([data-state=observed],[data-state=stale])::before{content:'';position:absolute;inset:7px 0 auto;height:2px;background:currentColor}
 goo-value-timeline>.value-timeline-plot>.value-timeline-mark[data-interval=false]:is([data-state=observed],[data-state=stale])::after{content:'';position:absolute;left:4px;top:4px;width:8px;height:8px;border-radius:50%;background:currentColor}
 goo-value-timeline>.value-timeline-plot>.value-timeline-mark[data-state=stale]{color:var(--muted,#98a8bf)}
-goo-value-timeline>.value-timeline-plot>.value-timeline-mark:is([data-state=unknown],[data-state=no_data]){height:100%;transform:none;border:1px dashed var(--muted,#98a8bf);background:repeating-linear-gradient(135deg,transparent,transparent 6px,#8896aa15 6px,#8896aa15 8px);color:var(--muted,#98a8bf)}
 goo-value-timeline>.value-timeline-plot>.value-timeline-mark[aria-pressed=true]{outline:2px solid var(--accent,#67ddbb);outline-offset:2px;z-index:2}
 goo-value-timeline>.value-timeline-plot>.value-timeline-mark:focus-visible{outline:3px solid var(--warning,#f5b85d);outline-offset:3px;z-index:3}
 
@@ -19,5 +18,13 @@ goo-value-timeline[brush]>.value-timeline-plot{cursor:crosshair;touch-action:pan
 goo-value-timeline[touch-brush]>.value-timeline-plot{touch-action:none}
 goo-value-timeline>.value-timeline-plot>.value-timeline-brush{position:absolute;inset-block:0;z-index:4;pointer-events:none;border-inline:2px solid var(--accent,#67ddbb);background:#77d9cb33}
 goo-value-timeline>.value-timeline-plot>.value-timeline-brush[hidden]{display:none}
-/* An unavailable point remains a point; only caller-supplied intervals paint a band. */
-goo-value-timeline>.value-timeline-plot>.value-timeline-mark[data-interval=false]:is([data-state=unknown],[data-state=no_data]){height:18px;width:18px;transform:translate(-50%,-50%);border-radius:50%;background:var(--surface,#17202c);line-height:16px}
+
+/* Missing values share time coordinates, never the numeric value axis. */
+goo-value-timeline>.value-timeline-unavailable{margin:0 0 12px;padding:0;border:0;border-radius:0;box-shadow:none;background:none;min-width:0}
+goo-value-timeline>.value-timeline-unavailable>p{margin:0 0 6px;font-size:12px;color:var(--muted,#98a8bf)}
+goo-value-timeline>.value-timeline-unavailable>.value-timeline-unavailable-plot{position:relative;min-height:26px;border-bottom:1px dashed var(--border,#2b3545)}
+goo-value-timeline>.value-timeline-unavailable>.value-timeline-unavailable-plot>.value-timeline-mark{position:absolute;top:2px;min-width:18px;height:20px;padding:0;border:1px dashed var(--muted,#98a8bf);border-radius:3px;background:var(--surface,#17202c);color:var(--muted,#98a8bf);cursor:pointer;font-size:12px;line-height:16px}
+goo-value-timeline>.value-timeline-unavailable>.value-timeline-unavailable-plot>.value-timeline-mark[data-interval=true]{min-width:1px}
+goo-value-timeline>.value-timeline-unavailable>.value-timeline-unavailable-plot>.value-timeline-mark[data-interval=false]{transform:translateX(-50%);border-radius:50%}
+goo-value-timeline>.value-timeline-unavailable>.value-timeline-unavailable-plot>.value-timeline-mark[aria-pressed=true]{outline:2px solid var(--accent,#67ddbb);outline-offset:2px;z-index:2}
+goo-value-timeline>.value-timeline-unavailable>.value-timeline-unavailable-plot>.value-timeline-mark:focus-visible{outline:3px solid var(--warning,#f5b85d);outline-offset:3px;z-index:3}

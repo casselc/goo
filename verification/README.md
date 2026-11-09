@@ -1,5 +1,29 @@
 # Semantic properties and model conformance
 
+## Native gauge display reuse (386)
+
+The shared `NativeView` configuration supports histogram export intervals and
+gauge retained observations as closed separate arms. Both use the existing
+immutable store and checked reuse; neither transfers donor observations or
+question authority.
+
+From this verification module:
+
+```sh
+go test . -run '^(TestHegelNativeViewReuse386|TestHegelNativeHistogramReuse371|TestHegelNativeHistogramCatalog373|TestNativeHistogramWireCases373)$' -count=1 -v
+GOO_NATIVE_GAUGE_VIEW_386_REPORT=/workspace/goo/artifacts/native-gauge-view386/summary.json \
+  go test . -run '^TestQuintNativeGaugeViewObserved386$' -count=1 -v
+```
+
+The generated checks preserve full
+destination questions and require matching family/unit while refusing malformed
+closed declarations, missing false completeness and incompatible arms. Observed
+replay consumes the actual 386 browser report; raw gauge points, fixed-window
+freshness, real zero versus missing, configuration bytes and measured read budgets
+are checked independently before the existing read/history model is used.
+
+Contract: [gauge display reuse](../docs/NATIVE_GAUGE_VIEW_REUSE.md).
+
 ## Outgoing HTTP observations (385)
 
 From this verification module:

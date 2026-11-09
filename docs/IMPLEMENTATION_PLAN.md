@@ -2,8 +2,8 @@
 
 > Active execution order: [384 product checkpoint](ROADMAP_2026_11_09_CHECKPOINT_384.md),
 > reconciled after delivered 382 search intent, 383 captured witnesses and 384
-> data-first results. **385 outgoing HTTP is delivered**; **386 gauge display reuse
-> → 387 coherent capture admission** is the remaining active finite queue.
+> data-first results. **385 outgoing HTTP and 386 gauge display reuse are delivered**;
+> **387 coherent capture admission** is the remaining active finite queue.
 > 367 reusable current RPC views, 368 exact service native interval context,
 > and 369 measured local facet pages are delivered with appropriate native and
 > generated validation. Full populations, exact scopes and independent clocks

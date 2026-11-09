@@ -21,10 +21,10 @@ class Element{
  getClientRects(){for(let n=this;n;n=n.parentElement)if(n.hidden)return[];return this.isConnected?[{}]:[]}focus(){document.activeElement=this}select(){}scrollIntoView(){}addEventListener(){}removeEventListener(){}
 }
 let current;
-mock.module('../ui/native-histogram-reuse.mjs',{exports:{mount:(_host,options)=>{current.nativeViews=options;return{invalidate(){},refresh(){}}}}});
+mock.module('../ui/native-view-reuse.mjs',{exports:{mount:(_host,options)=>{current.nativeViews=options;return{invalidate(){},refresh(){}}}}});
 mock.module('../ui/queries.mjs',{exports:{postJSON:async(path,body,signal)=>current.post(path,body,signal),jsonResponse:async pending=>{const r=await pending;return{ok:r.ok,status:r.status,data:await r.json()}}}});
 const Measurements=await import('../ui/measurements.mjs');
-const NativeDisplay=await import('../ui/native-histogram-declaration.mjs');
+const NativeDisplay=await import('../ui/native-view-declaration.mjs');
 const Refusals=await import('../ui/source-refusal.mjs');
 function setup(replies=[]){
  const body=new Element('body');body.root=true;const host=new Element('main');body.append(host);const events=new EventTarget();
@@ -43,7 +43,7 @@ async function failed(kind='timeout'){const h=setup([refused(kind)]);await h.ope
 
 test('mounted native Retry reuses exact typed question, nanoseconds and display intent with explicit focus recovery',async()=>{
  const h=setup([refused('timeout')]);await h.open();const declaration=NativeDisplay.create(h.q,'table');assert(h.native().onApply({question:structuredClone(h.q),declaration}));h.el('measureRun').focus();await h.el('measureRun').onclick();assert.equal(h.reads.length,1);const retry=h.el('measureRetry'),old=retry.onclick;assert.equal(retry.textContent,'Retry measurement');assert.equal(document.activeElement,retry);assert.equal(h.el('measureRun').hidden,true);assert.equal(h.el('measureCapture').disabled,true);assert.equal(h.el('measureStatus').querySelector('.source-refusal').dataset.sourceRefusalKind,'timeout');assert.equal(h.el('measureStatus').querySelector('details').open,false);assert.deepEqual(h.reads[0].question,h.q);
- retry.focus();await retry.onclick();assert.equal(h.reads.length,2);assert.deepEqual(h.reads[1].question,h.reads[0].question);assert.equal(h.el('measureCapture').disabled,false);assert.match(h.el('measureStatus').textContent,/table export interval display/);assert.equal(document.activeElement.localName,'h3');assert.equal(retry.isConnected,false);old();assert.equal(h.reads.length,2);
+ retry.focus();await retry.onclick();assert.equal(h.reads.length,2);assert.deepEqual(h.reads[1].question,h.reads[0].question);assert.equal(h.el('measureCapture').disabled,false);assert.match(h.el('measureStatus').textContent,/table display/);assert.equal(document.activeElement.localName,'h3');assert.equal(retry.isConnected,false);old();assert.equal(h.reads.length,2);
 });
 test('mounted native errors keep closed refusal kinds and raw unknown source text out of presentation',async()=>{
  for(const kind of ['timeout','budget','malformed','unavailable','cancelled']){const h=await failed(kind);assert.equal(h.reads.length,1);assert.equal(h.el('measureStatus').querySelector('.source-refusal').dataset.sourceRefusalKind,kind);assert.equal(!!h.el('measureRetry'),kind!=='cancelled')}
@@ -75,4 +75,12 @@ test('late catalog failure cannot overwrite a current source refusal, read, resu
   if(state==='pending'){h.el('measureCancel').onclick();finishRead();await running}
  }
  const h=setup();await h.open();globalThis.fetch=async()=>{throw Error('catalog unavailable')};await h.el('measureRefresh').onclick();assert.match(h.el('measureStatus').textContent,/Packages unavailable/);
+});
+
+test('gauge table and timeline consume the same retained samples locally and fence stale switches',async()=>{
+ const h=setup();await h.open();const oldNode=globalThis.Node;globalThis.Node=Element;try{
+ const r=histogramResult();r.question=structuredClone(h.q);r.question.definition.kind='gauge';r.question.definition.source.unit='By';r.gauges={fromNS:r.histograms.fromNS,toNS:r.histograms.toNS,series:[]};delete r.histograms;
+ const samples=[{atNS:String(BigInt(r.question.fromNS)+1n),value:0,state:'observed'},{atNS:String(BigInt(r.question.fromNS)+2n),state:'unknown',reason:'No recorded value'},{atNS:String(BigInt(r.question.fromNS)+3n),value:-3,state:'stale',reason:'Old sample'}],series={stream:{name:'memory.used',unit:'By',resource:{'service.name':'api','service.instance.id':'one'},attributes:{}},state:'stale',samples},before=structuredClone(series);let active=true;const host=document.createElement('section');h.host.append(host);Measurements.renderGaugeDisplay(host,series,r,{canAct:()=>active,nativeDisplay:NativeDisplay.create(r.question,'table')});const picker=host.querySelector('select');assert.equal(picker.value,'table');assert.match(host.textContent,/No recorded value/);assert.match(host.textContent,/Old sample/);assert.match(host.textContent,/Latest 3 of 3/);assert.equal(host.querySelectorAll('table').length,1);const reads=h.reads.length;
+ picker.value='timeline';picker.onchange();const plot=host.querySelector('goo-value-timeline');assert.deepEqual(plot.data.points.map(p=>[p.state,p.value]),[['observed','0'],['unknown',undefined],['stale','-3']]);assert(plot.data.points.every(p=>p.fromNS===p.toNS));assert.equal(host.querySelector('table'),null);picker.value='table';picker.onchange();assert.equal(host.querySelectorAll('table').length,1);assert.equal(h.reads.length,reads);active=false;picker.value='timeline';picker.onchange();assert.equal(host.querySelector('goo-value-timeline'),null);assert.deepEqual(series,before);
+ }finally{globalThis.Node=oldNode}
 });

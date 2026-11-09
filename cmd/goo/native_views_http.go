@@ -12,7 +12,7 @@ import (
 )
 
 // Native view routes publish configuration only, never evaluate telemetry.
-func registerNativeHistogramViews(mux *http.ServeMux, dir string) {
+func registerNativeViews(mux *http.ServeMux, dir string) {
 	store := workbench.Store{Dir: filepath.Join(dir, "workbench")}
 	fail := func(w http.ResponseWriter, err error) {
 		code := http.StatusBadRequest
@@ -27,15 +27,15 @@ func registerNativeHistogramViews(mux *http.ServeMux, dir string) {
 	}
 	query := func(w http.ResponseWriter, r *http.Request) bool {
 		if r.URL.RawQuery != "" {
-			fail(w, errors.New("native histogram view routes have no query parameters"))
+			fail(w, errors.New("native view routes have no query parameters"))
 			return false
 		}
 		return true
 	}
-	mux.HandleFunc("GET /native-histogram-views", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /native-views", func(w http.ResponseWriter, r *http.Request) {
 		values, err := url.ParseQuery(r.URL.RawQuery)
 		if err != nil {
-			fail(w, errors.New("invalid native histogram view cursor query"))
+			fail(w, errors.New("invalid native view cursor query"))
 			return
 		}
 		after := ""
@@ -46,55 +46,55 @@ func registerNativeHistogramViews(mux *http.ServeMux, dir string) {
 			}
 			after = items[0]
 		}
-		page, err := store.NativeHistogramViews(after)
+		page, err := store.NativeViews(after)
 		if err != nil {
-			httpjson.Write(w, http.StatusInternalServerError, map[string]string{"error": "Native histogram view catalog unavailable; direct IDs remain available."})
+			httpjson.Write(w, http.StatusInternalServerError, map[string]string{"error": "Native view catalog unavailable; direct IDs remain available."})
 			return
 		}
 		httpjson.Write(w, http.StatusOK, page)
 	})
-	mux.HandleFunc("POST /native-histogram-views", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("POST /native-views", func(w http.ResponseWriter, r *http.Request) {
 		if !query(w, r) {
 			return
 		}
-		var in workbench.NativeHistogramViewInput
-		if err := httpjson.Decode(w, r, &in, workbench.MaxBytes, "expected one native histogram view object"); err != nil {
+		var in workbench.NativeViewInput
+		if err := httpjson.Decode(w, r, &in, workbench.MaxBytes, "expected one native view object"); err != nil {
 			fail(w, err)
 			return
 		}
-		v, err := store.CreateNativeHistogramView(in)
+		v, err := store.CreateNativeView(in)
 		if err != nil {
 			fail(w, err)
 			return
 		}
 		httpjson.Write(w, http.StatusCreated, v)
 	})
-	mux.HandleFunc("GET /native-histogram-views/{id}", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /native-views/{id}", func(w http.ResponseWriter, r *http.Request) {
 		if !query(w, r) {
 			return
 		}
-		v, err := store.LoadNativeHistogramView(r.PathValue("id"))
+		v, err := store.LoadNativeView(r.PathValue("id"))
 		if err != nil {
 			fail(w, err)
 			return
 		}
 		httpjson.Write(w, http.StatusOK, v)
 	})
-	mux.HandleFunc("POST /native-histogram-views/reuse", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("POST /native-views/reuse", func(w http.ResponseWriter, r *http.Request) {
 		if !query(w, r) {
 			return
 		}
-		var in workbench.NativeHistogramViewReuseRequest
+		var in workbench.NativeViewReuseRequest
 		if err := httpjson.Decode(w, r, &in, workbench.MaxBytes, "expected source view ID and destination measurement question"); err != nil {
 			fail(w, err)
 			return
 		}
-		source, err := store.LoadNativeHistogramView(in.ID)
+		source, err := store.LoadNativeView(in.ID)
 		if err != nil {
 			fail(w, err)
 			return
 		}
-		v, err := workbench.ReuseNativeHistogramView(*source, in.Question)
+		v, err := workbench.ReuseNativeView(*source, in.Question)
 		if err != nil {
 			fail(w, err)
 			return

@@ -15,14 +15,14 @@ import (
 	"github.com/casselc/goo/workbench"
 )
 
-func TestNativeHistogramViewListHTTP373(t *testing.T) {
+func TestNativeViewListHTTP373(t *testing.T) {
 	reads := 0
 	previous := http.DefaultTransport
 	http.DefaultTransport = templateNoSourceTransport{&reads}
 	t.Cleanup(func() { http.DefaultTransport = previous })
 	dir := t.TempDir()
 	mux := http.NewServeMux()
-	registerNativeHistogramViews(mux, dir)
+	registerNativeViews(mux, dir)
 	var cases []planningWireCase
 	call := func(name, path string, want int) *httptest.ResponseRecorder {
 		t.Helper()
@@ -39,15 +39,15 @@ func TestNativeHistogramViewListHTTP373(t *testing.T) {
 		}
 		return w
 	}
-	decode := func(w *httptest.ResponseRecorder) *workbench.NativeHistogramViewList {
+	decode := func(w *httptest.ResponseRecorder) *workbench.NativeViewList {
 		t.Helper()
-		var p workbench.NativeHistogramViewList
+		var p workbench.NativeViewList
 		if e := json.Unmarshal(w.Body.Bytes(), &p); e != nil {
 			t.Fatal(e)
 		}
 		return &p
 	}
-	empty := decode(call("empty", "/native-histogram-views", 200))
+	empty := decode(call("empty", "/native-views", 200))
 	if empty.Partial || len(empty.Items) != 0 || len(empty.Diagnostics) != 0 || empty.NextCursor != "" {
 		t.Fatal(empty)
 	}
@@ -59,7 +59,7 @@ func TestNativeHistogramViewListHTTP373(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	in := workbench.NativeHistogramViewInput{Version: 1, Title: "Display", Question: measurements.Question{Definition: d, FromMS: 1000, ToMS: 61000}, Declaration: workbench.NativeHistogramViewDeclaration{Version: "goo.view/1", Scope: workbench.NativeHistogramViewScope{Kind: "measurement-question", Signal: "metrics"}, Selection: workbench.NativeHistogramViewSelection{Kind: "export-interval"}, Kind: workbench.ViewKind{Name: "histogram", Version: 1}, Display: workbench.NativeHistogramViewDisplay{Category: "bucket", Value: "observation-count", RequiresComplete: true}}}
+	in := workbench.NativeViewInput{Version: 1, Title: "Display", Question: measurements.Question{Definition: d, FromMS: 1000, ToMS: 61000}, Declaration: workbench.NativeViewDeclaration{Version: "goo.view/1", Scope: workbench.NativeViewScope{Kind: "measurement-question", Signal: "metrics"}, Selection: workbench.NativeViewSelection{Kind: "export-interval"}, Kind: workbench.ViewKind{Name: "histogram", Version: 1}, Display: workbench.NativeViewDisplay{Category: "bucket", Value: "observation-count", RequiresComplete: true}}}
 	store := workbench.Store{Dir: filepath.Join(dir, "workbench")}
 	ids := []string{}
 	for i := range 25 {
@@ -69,14 +69,14 @@ func TestNativeHistogramViewListHTTP373(t *testing.T) {
 		} else {
 			in.Declaration.Kind.Name = "histogram"
 		}
-		v, e := store.CreateNativeHistogramView(in)
+		v, e := store.CreateNativeView(in)
 		if e != nil {
 			t.Fatal(e)
 		}
 		ids = append(ids, v.ID)
 	}
 	slices.Sort(ids)
-	full := decode(call("full-first", "/native-histogram-views", 200))
+	full := decode(call("full-first", "/native-views", 200))
 	if len(full.Items) != 20 || full.Partial || full.NextCursor != ids[19] {
 		t.Fatal(full)
 	}
@@ -86,17 +86,17 @@ func TestNativeHistogramViewListHTTP373(t *testing.T) {
 			t.Fatal(e)
 		}
 	}
-	partial := decode(call("partial-first", "/native-histogram-views", 200))
+	partial := decode(call("partial-first", "/native-views", 200))
 	if len(partial.Items) != 18 || len(partial.Diagnostics) != 2 || !partial.Partial || partial.NextCursor != ids[19] {
 		t.Fatal(partial)
 	}
-	last := decode(call("partial-next", "/native-histogram-views?after="+partial.NextCursor, 200))
+	last := decode(call("partial-next", "/native-views?after="+partial.NextCursor, 200))
 	if len(last.Items) != 4 || len(last.Diagnostics) != 1 || !last.Partial || last.NextCursor != "" {
 		t.Fatal(last)
 	}
-	decode(call("after-end", "/native-histogram-views?after="+strings.Repeat("f", 64), 200))
+	decode(call("after-end", "/native-views?after="+strings.Repeat("f", 64), 200))
 	for _, query := range []string{"?after=", "?after", "?after=bad", "?limit=20", "?offset=0", "?after=" + ids[0] + "&after=" + ids[1], "?after=" + ids[0] + "&unknown=1"} {
-		call("bad-query", "/native-histogram-views"+query, 400)
+		call("bad-query", "/native-views"+query, 400)
 	}
 	if e = os.Rename(family, family+"-held"); e != nil {
 		t.Fatal(e)
@@ -104,7 +104,7 @@ func TestNativeHistogramViewListHTTP373(t *testing.T) {
 	if e = os.WriteFile(family, nil, 0600); e != nil {
 		t.Fatal(e)
 	}
-	unavailable := call("storage-failure", "/native-histogram-views", 500)
+	unavailable := call("storage-failure", "/native-views", 500)
 	if strings.Contains(unavailable.Body.String(), dir) {
 		t.Fatal("filesystem path leaked")
 	}

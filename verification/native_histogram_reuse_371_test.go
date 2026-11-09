@@ -63,14 +63,14 @@ func TestHegelNativeHistogramReuse371(t *testing.T) {
 		d.Source.ExactStream = &stream
 		destination.FromNS = strconv.FormatInt(destination.FromMS*1000000+int64(hegel.Draw(tc, hegel.Integers(0, 999999))), 10)
 		destination.ToNS = strconv.FormatInt(destination.ToMS*1000000-int64(hegel.Draw(tc, hegel.Integers(0, 999999))), 10)
-		decl := workbench.NativeHistogramViewDeclaration{Version: "goo.view/1", Scope: workbench.NativeHistogramViewScope{Kind: "measurement-question", Signal: "metrics"}, Selection: workbench.NativeHistogramViewSelection{Kind: "export-interval"}, Kind: workbench.ViewKind{Name: "histogram", Version: 1}, Display: workbench.NativeHistogramViewDisplay{Category: "bucket", Value: "observation-count", RequiresComplete: true}}
+		decl := workbench.NativeViewDeclaration{Version: "goo.view/1", Scope: workbench.NativeViewScope{Kind: "measurement-question", Signal: "metrics"}, Selection: workbench.NativeViewSelection{Kind: "export-interval"}, Kind: workbench.ViewKind{Name: "histogram", Version: 1}, Display: workbench.NativeViewDisplay{Category: "bucket", Value: "observation-count", RequiresComplete: true}}
 		store := workbench.Store{Dir: t.TempDir()}
-		source, err := store.CreateNativeHistogramView(workbench.NativeHistogramViewInput{Version: 1, Title: "Reusable native bins", Question: origin, Declaration: decl})
+		source, err := store.CreateNativeView(workbench.NativeViewInput{Version: 1, Title: "Reusable native bins", Question: origin, Declaration: decl})
 		if err != nil {
 			tc.Fatal(err)
 		}
 		decl.Kind.Name = "table"
-		table, err := store.CreateNativeHistogramView(workbench.NativeHistogramViewInput{Version: 1, Title: source.Title, Question: origin, Declaration: decl})
+		table, err := store.CreateNativeView(workbench.NativeViewInput{Version: 1, Title: source.Title, Question: origin, Declaration: decl})
 		if err != nil || source.ID == table.ID || !reflect.DeepEqual(source.Question, table.Question) {
 			tc.Fatal("display artifact changed measurement identity", err)
 		}
@@ -81,7 +81,7 @@ func TestHegelNativeHistogramReuse371(t *testing.T) {
 		if err != nil {
 			tc.Fatal(err)
 		}
-		reused, err := workbench.ReuseNativeHistogramView(*source, destination)
+		reused, err := workbench.ReuseNativeView(*source, destination)
 		if err != nil || reused.ID != "" || !reflect.DeepEqual(reused.Question, destination) || !reflect.DeepEqual(reused.Declaration, source.Declaration) {
 			tc.Fatal("native Go reuse changed destination or display", err)
 		}
@@ -100,7 +100,7 @@ func TestHegelNativeHistogramReuse371(t *testing.T) {
 			tc.Fatalf("native display cross-runtime fixture: %v\n%s", err, out)
 		}
 		var actual struct {
-			Reused    workbench.NativeHistogramView
+			Reused    workbench.NativeView
 			Refusals  int
 			Unchanged bool
 		}

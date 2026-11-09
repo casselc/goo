@@ -1,9 +1,9 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
-import * as Native from '../ui/native-histogram-declaration.mjs';
+import * as Native from '../ui/native-view-declaration.mjs';
 const {result}=createRequire(import.meta.url)('./fixtures/native-histogram.cjs');
-const id=n=>n.toString(16).padStart(64,'0'),item=n=>({id:id(n),title:'Native '+n+' 雪',kind:n%2?'histogram':'table',unit:'s'}),clone=structuredClone;
+const id=n=>n.toString(16).padStart(64,'0'),item=n=>({id:id(n),title:'Native '+n+' 雪',family:'histogram',selection:'export-interval',kind:n%2?'histogram':'table',unit:'s'}),clone=structuredClone;
 test('native metadata page admission keeps candidate loss explicit and the cursor at the last scanned ID',()=>{
  const raw={items:Array.from({length:20},(_,i)=>i+1).filter(n=>n!==2).map(item),partial:true,diagnostics:[{id:id(2),reason:'unavailable-artifact'}],nextCursor:id(20)},before=clone(raw),checked=Native.page(raw,{after:id(0)});assert.deepEqual(checked,raw);checked.items[0].title='caller mutation';assert.deepEqual(raw,before);
  for(const mutate of [p=>p.partial=false,p=>p.diagnostics[0].reason='missing',p=>p.nextCursor=id(2),p=>p.items.push(item(1)),p=>p.items.reverse(),p=>p.items[0].basis='captured',p=>p.total=3,p=>p.items[0].unit='By',p=>p.items[0].kind='line',p=>p.diagnostics.push({id:id(1),reason:'unavailable-artifact'})]){const bad=clone(raw);mutate(bad);assert.throws(()=>Native.page(bad,{after:id(0)}))}

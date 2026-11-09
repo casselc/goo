@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-import * as Native from '../ui/native-histogram-declaration.mjs';
+import * as Native from '../ui/native-view-declaration.mjs';
 const input=JSON.parse(fs.readFileSync(0,'utf8')),before=JSON.stringify(input);
 globalThis.fetch=()=>{throw Error('Metadata admission must not read telemetry')};
 let after='';for(const page of input.pages){Native.page(page,{after});after=page.nextCursor??''}

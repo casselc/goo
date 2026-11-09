@@ -51,7 +51,7 @@ future priority. Earlier audits are dated design inputs, not another execution q
 | `goo-aligned-histogram` | `comparison` / `.comparison`, `display` / `.display`; typed side/range intent | [Canonical aligned histograms](SCOPED_HISTOGRAM_COMPARISONS.md); independent immutable operands and exact denominator choices, no source ownership. |
 | `goo-time-bars` | `data` / `.data`, controlled key and optional range intent | [Time bars](UI_TIME_BARS.md); exact supplied count domain. |
 | `goo-chart-frame` | Heading/unit/window/state attributes or `.data`; caller-owned children | [Chart frame](UI_CHART_FRAME.md). |
-| `goo-value-timeline` | `data` / `.data`, controlled key, optional brush intent | [Native timelines](NATIVE_TIMELINES.md). |
+| `goo-value-timeline` | `data` / `.data`, controlled key, optional brush intent | [Native timelines](NATIVE_TIMELINES.md); unavailable observations use a separate time-aligned rail outside the numeric domain. |
 | `goo-bucket-heatmap` | `data` / `.data`, controlled cell, optional range intent | [Bucket matrix](NATIVE_HEATMAPS.md); raw-span/native adapters remain separate. |
 | `goo-comparison-series` | `data` / `.data`, UTC/elapsed alignment | [Count-series comparison](COMPARISON_SERIES.md). |
 | `goo-time-range` | `data` JSON / `.data` | Bounded supplied millisecond range; [source](../ui/time-range.mjs). |

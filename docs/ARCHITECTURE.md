@@ -1,5 +1,13 @@
 # Architecture
 
+[Native display reuse](NATIVE_GAUGE_VIEW_REUSE.md) shares one `NativeView`
+configuration store/API/UI owner across histogram export intervals and gauge
+retained observations. Closed declarations carry family-specific display meaning;
+reuse replaces the entire donor question with a detached validated destination.
+Source execution, fixed-window freshness and custody stay in their existing
+owners. The shared passive value timeline places unknown observations outside its
+numeric domain in a labelled, time-aligned rail.
+
 [Data-first fixed results](DATA_FIRST_FIXED_RESULTS.md) share a passive scope/count
 presenter across live and stored record owners. Distributions orders primary
 records/visuals before optional context; PopulationWorkspace owns its same controls

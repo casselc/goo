@@ -1,14 +1,14 @@
-# Discover native histogram displays — 373
+# Discover saved native displays
 
 In Measurements, validate the destination question, then open **Save or share →
-Native histogram view**. **Browse saved interval displays** loads metadata.
-**More saved interval displays** loads the next page. **Find loaded interval
-displays** filters only the pages already loaded, without a request.
+Native view**. **Browse saved displays** loads metadata.
+**More saved displays** loads the next page. **Find loaded displays** filters
+only the pages already loaded, without a request.
 
-Rows reuse the shared definition-library presenter and show title, Histogram or
-Table, exact unit and compatibility with the current question. **Inspect** loads
-and verifies that exact immutable configuration. Its title, kind and unit must
-match the row before Apply becomes available. An incompatible unit remains
+Rows reuse the shared definition-library presenter and show title, measurement
+family, display kind, exact unit and compatibility with the current question. **Inspect** loads
+and verifies that exact immutable configuration. Its title, family, selection, kind and unit must
+match the row before Apply becomes available. An incompatible family or unit remains
 inspectable, with Apply disabled. The exact-ID input remains available.
 
 ```mermaid
@@ -20,19 +20,21 @@ flowchart LR
   Q[Current validated question] --> A[Explicit Apply preserves question]
   V --> A
   A --> R[Explicit Run reads destination]
-  R --> S[Explicit export selection supplies actual bins]
+  R --> S[Family-specific supplied-data display]
 ```
 
 Browse, Find, Inspect and Apply acquire no telemetry. Apply clears the old result
-and stages the unchanged current question. Run and actual destination export
-selection remain explicit. A row carries no observations, read clock, source
+and stages the unchanged current question. Run remains explicit. Histogram
+export selection supplies actual bins; gauge views display retained samples
+with their original freshness and unknown states. A row carries no observations, read clock, source
 basis or completeness witness. Complete-bin authority comes from the existing
 evaluated distribution, as described in the
-[native reuse contract](NATIVE_HISTOGRAM_VIEW_REUSE.md).
+[histogram reuse contract](NATIVE_HISTOGRAM_VIEW_REUSE.md). See the separate
+[gauge contract](NATIVE_GAUGE_VIEW_REUSE.md) for instantaneous observations.
 
 ## Bounded listing
 
-`GET /api/native-histogram-views` accepts only an optional `after` cursor containing
+`GET /api/native-views` accepts only an optional `after` cursor containing
 one lowercase 64-character hex ID. Each page scans at most **20 candidate IDs**
 in lexical order, verifying at most 20 artifacts under the existing 128 KiB
 artifact limit. The metadata response is bounded to **64 KiB**.
