@@ -1,0 +1,5 @@
+// Read-only physical-source acceptance bank for a previously executed SDK workload.
+const fs=require('node:fs/promises'),crypto=require('node:crypto'),path=require('node:path');
+const {request}=require('@playwright/test'),{readBank}=require('./http-client385');
+async function main(){const [workloadPath,bankPath]=process.argv.slice(2);if(!workloadPath||!bankPath)throw Error('Usage: node journeys/support/http-client385-bank.js WORKLOAD.json BANK.json');const context=await request.newContext();try{const workload=JSON.parse(await fs.readFile(workloadPath,'utf8')),bank=await readBank(context,workload);bank.workloadSourceSHA256=crypto.createHash('sha256').update(await fs.readFile(path.join(__dirname,'http-client385-workload.go'))).digest('hex');await fs.writeFile(bankPath,JSON.stringify(bank,null,2));console.log(JSON.stringify({service:workload.service,environment:workload.environment,rows:bank.rows.length,count:bank.expectedClientCount,status:bank.expected.spanStatus,sourceSHA256:bank.workloadSourceSHA256}))}finally{await context.dispose()}}
+main().catch(error=>{console.error(error);process.exitCode=1});

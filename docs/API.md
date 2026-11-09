@@ -542,9 +542,10 @@ existing record-context read. See [the semantic contract](TRACE_SEARCH.md).
 ## Automatic service dashboard families
 
 `POST /dashboards/plan` remains a pure planning operation. It accepts optional
-`DashboardRequest.profile`: `auto`, `all-spans` or `http-server`. Omitting it
-(including its existing empty/null decoding) preserves the legacy v2 response
-without new profile/family fields. Both path forms accept the same 256 KiB
+`DashboardRequest.profile`: `auto`, `all-spans`, `http-server`, `http-client`,
+`rpc-server-current`, `rpc-server`, `db-client`, `messaging-consumer` or
+`messaging-producer`. Omitted/empty/null selects the generic overview without
+profile/family fields. Both path forms accept the same 256 KiB
 request ceiling. No source execution or new route is added.
 
 Opt-in plans add selected `profile`, `families` descriptors and optional widget
@@ -569,6 +570,14 @@ business outcome stay distinct. Counts are span observations, not deduplicated
 requests. Related native instruments keep separate stream identity, units and
 evidence bases. See [automatic dashboards](AUTOMATIC_DASHBOARDS.md).
 
+
+Outgoing HTTP uses explicit `http-client` selection and current method metadata
+with an observed spans signal. It adds five ordinary typed span widgets under
+`goo/http-client-span-observations/v1`: activity, address, method, literal port and
+response status. Every question requires exact Client kind and a nonempty current
+method in the complete fixed scope. Optional grouping fields may be missing or
+empty. This profile has no automatic-priority or native metric binding; unknown
+profile names are refused. See [outgoing HTTP](OUTGOING_HTTP.md).
 
 Incoming RPC uses the same planning route and additive v2 contract. The optional
 `rpc-server` profile is distinct from HTTP. For this supported legacy RPC family,

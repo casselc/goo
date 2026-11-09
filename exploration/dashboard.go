@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/casselc/goo/identity"
 	"github.com/casselc/goo/measurements"
+	"slices"
 	"sort"
 	"strings"
 	"unicode/utf8"
@@ -108,7 +109,7 @@ func DashboardRecordQuestion(scope InventoryQuestion, service, signal string) Qu
 // PlanServiceDashboard performs no source reads. Every executable widget uses an
 // existing typed evaluator; no SQL, health policy or fleet aggregation is inferred.
 func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclaration) (*DashboardPlan, error) {
-	if in.Profile != "" && in.Profile != "auto" && in.Profile != "all-spans" && in.Profile != "http-server" && in.Profile != "rpc-server" && in.Profile != "rpc-server-current" && in.Profile != "db-client" && in.Profile != "messaging-consumer" && in.Profile != "messaging-producer" {
+	if in.Profile != "" && in.Profile != "auto" && in.Profile != "all-spans" && in.Profile != "http-server" && in.Profile != "http-client" && in.Profile != "rpc-server" && in.Profile != "rpc-server-current" && in.Profile != "db-client" && in.Profile != "messaging-consumer" && in.Profile != "messaging-producer" {
 		return nil, fmt.Errorf("unsupported dashboard profile")
 	}
 	if in.Scope.Service != nil {
@@ -161,6 +162,9 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			}
 		}
 	}
+	// Outgoing HTTP is an explicit record lens. A method metadata key is only
+	// a candidate, never proof of Client spans or an automatic/native profile.
+	httpClientCandidate := signals["spans"] && slices.Contains(in.Fields, Field{Kind: "attribute", Key: "http.request.method"})
 	rpcSystem, rpcMethod := false, false
 	if signals["spans"] {
 		for _, f := range in.Fields {
@@ -228,6 +232,7 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 	rpcActive := false
 	rpcCurrentActive := false
 	httpActive := false
+	httpClientActive := false
 	if in.Profile != "" {
 		p.Profile = in.Profile
 		if p.Profile == "auto" {
@@ -249,6 +254,9 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		if p.Profile == "http-server" && !httpCandidate {
 			return nil, fmt.Errorf("HTTP server profile requires supplied current HTTP metadata or an eligible duration instrument")
 		}
+		if p.Profile == "http-client" && !httpClientCandidate {
+			return nil, fmt.Errorf("HTTP client profile requires supplied current http.request.method span metadata")
+		}
 		if p.Profile == "rpc-server" && !rpcCandidate {
 			return nil, fmt.Errorf("RPC server profile requires supplied legacy rpc.system and rpc.method metadata or an eligible legacy duration instrument")
 		}
@@ -269,6 +277,7 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		rpcActive = p.Profile == "rpc-server"
 		rpcCurrentActive = p.Profile == "rpc-server-current"
 		httpActive = p.Profile == "http-server"
+		httpClientActive = p.Profile == "http-client"
 		genericState := "not_observed"
 		if signals["spans"] {
 			genericState = "supported"
@@ -279,7 +288,14 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			httpState = "candidate"
 			httpReason = "Metadata candidate only. Incoming span observations require exact Server kind and a nonempty current http.request.method in the actual read; conformance is unverified"
 		}
-		p.Families = []DashboardFamily{{Key: "http-server", Title: "Incoming HTTP", State: httpState, Grain: "server-span-record", Reason: httpReason, RuleSet: "goo/http-server-span-observations/v1", Selected: httpActive}, {Key: "all-spans", Title: "All spans", State: genericState, Grain: "span-record", Reason: "Mixed reported span kinds and retries; records are not request throughput", Selected: !httpActive && !rpcActive && !rpcCurrentActive && !dbActive && !messagingActive}}
+		p.Families = []DashboardFamily{{Key: "http-server", Title: "Incoming HTTP", State: httpState, Grain: "server-span-record", Reason: httpReason, RuleSet: "goo/http-server-span-observations/v1", Selected: httpActive}, {Key: "all-spans", Title: "All spans", State: genericState, Grain: "span-record", Reason: "Mixed reported span kinds and retries; records are not request throughput", Selected: !httpActive && !httpClientActive && !rpcActive && !rpcCurrentActive && !dbActive && !messagingActive}}
+		if httpClientCandidate {
+			family := DashboardFamily{Key: "http-client", Title: "Outgoing HTTP", State: "candidate", Grain: "client-span-record", Reason: "OTel v1.45.0 observation lens; current method metadata suggests a candidate only. Actual reads require exact Client kind and nonempty http.request.method. Missing destination fields remain visible; conformance, callee identity and complete topology are unverified", RuleSet: "goo/http-client-span-observations/v1", Selected: httpClientActive}
+			p.Families = append(p.Families[:1], append([]DashboardFamily{family}, p.Families[1:]...)...)
+		}
+		if httpClientActive {
+			p.Warnings = append(p.Warnings, "Outgoing HTTP counts are matching reported Client-span records, not unique requests or physical attempts. Retry representation and instrumentation coverage remain unknown. HTTP response-status values are literal reported context, separate from recorded span Error; no default port, callee-service identity or remote health is inferred.")
+		}
 		if rpcCandidate || rpcActive {
 			family := DashboardFamily{Key: "rpc-server", Title: "Legacy RPC", State: "candidate", Grain: "server-span-record", Reason: "Legacy metadata candidate only. Actual reads require exact Server kind and nonempty rpc.system and rpc.method; recorded status is not protocol outcome or conformance", RuleSet: "goo/rpc-server-legacy-span-observations/v1", Selected: rpcActive}
 			p.Families = append(p.Families[:1], append([]DashboardFamily{family}, p.Families[1:]...)...)
@@ -320,6 +336,12 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				w.Title = "HTTP server span observations"
 				w.Grain = "server-span-record"
 				w.Reason = "Exact Server kind and nonempty current HTTP method; observed span status is not a verified HTTP outcome policy"
+			}
+			if httpClientActive && signal == "spans" {
+				q = dashboardHTTPClientQuestion(q)
+				w.Title = "HTTP client span observations"
+				w.Grain = "client-span-record"
+				w.Reason = "Exact Client kind and nonempty current HTTP method; counts are reported span records, and recorded span status remains separate from HTTP response status"
 			}
 			if rpcActive && signal == "spans" {
 				q = dashboardRPCQuestion(q)
@@ -362,7 +384,7 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		}
 		p.Widgets = append(p.Widgets, w)
 	}
-	if signals["spans"] {
+	if signals["spans"] && !httpClientActive {
 		keys := []string{"http.route", "rpc.method", "db.system.name", "db.system", "messaging.destination.name", "messaging.system"}
 		if httpActive {
 			keys = []string{"http.route"}
@@ -435,6 +457,21 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			}
 			p.Widgets = append(p.Widgets, w)
 			break
+		}
+	}
+	if httpClientActive {
+		// Each dimension is a separate ordinary typed question over the same full
+		// record population. An absent dimension remains a missing-value group.
+		for _, dimension := range []struct{ key, field, title, reason string }{
+			{"dimension", "server.address", "Reported HTTP destinations", "Literal server.address values; missing and empty addresses remain separate. An address does not identify a callee service or verified dependency topology"},
+			{"http-client-methods", "http.request.method", "Reported HTTP methods", "Literal current method values on matching Client-span records; _OTHER remains a reported value, not inferred request identity"},
+			{"http-client-ports", "server.port", "Reported HTTP destination ports", "Literal reported server.port values; missing, empty and noncanonical values remain visible. No scheme-based default port or inferred endpoint identity"},
+			{"http-client-responses", "http.response.status_code", "Reported HTTP response status", "Literal response-status values, including missing and empty; not a span Error classification or universal HTTP failure policy"},
+		} {
+			q := dashboardHTTPClientQuestion(DashboardRecordQuestion(in.Scope, in.Service, "spans"))
+			q.GroupBy = []Field{{Kind: "attribute", Key: dimension.field}}
+			q.Summary, q.SpanStatus = "span-duration", true
+			p.Widgets = append(p.Widgets, DashboardWidget{Key: dimension.key, Title: dimension.title, State: "supported", Grain: "client-span-record", Family: "http-client", Query: &q, Reason: dimension.reason})
 		}
 	}
 	// Detach and canonically sort descriptors. Never pick by discovery row order.
@@ -714,6 +751,12 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 // current-key method policy is explicit: missing and reported empty are excluded;
 // custom nonempty method strings remain reported values, not verified conformance.
 func dashboardHTTPQuestion(q Query) Query {
+	return dashboardHTTPObservationQuestion(q, "Server")
+}
+func dashboardHTTPClientQuestion(q Query) Query {
+	return dashboardHTTPObservationQuestion(q, "Client")
+}
+func dashboardHTTPObservationQuestion(q Query, kind string) Query {
 	parts := []Predicate{}
 	if q.Where != nil {
 		if len(q.Where.All) > 0 {
@@ -722,7 +765,7 @@ func dashboardHTTPQuestion(q Query) Query {
 			parts = append(parts, *q.Where)
 		}
 	}
-	parts = append(parts, Predicate{Field: &Field{Kind: "column", Key: "kind"}, Op: "eq", Value: "Server"}, Predicate{Field: &Field{Kind: "attribute", Key: "http.request.method"}, Op: "ne"})
+	parts = append(parts, Predicate{Field: &Field{Kind: "column", Key: "kind"}, Op: "eq", Value: kind}, Predicate{Field: &Field{Kind: "attribute", Key: "http.request.method"}, Op: "ne"})
 	q.Where = &Predicate{All: parts}
 	return q
 }

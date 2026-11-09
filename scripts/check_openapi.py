@@ -1195,6 +1195,19 @@ def check_captured_trace_search(spec):
             assert list(check.iter_errors(bad)), ('captured search malformed question accepted',suffix,bad)
     print('Captured trace search: typed request, exclusive payload and null/budget controls pass')
 
+def check_http_client_profile385(spec):
+    check=validator(spec,{'$ref':'#/components/schemas/exploration.DashboardRequestInput'})
+    request={'profile':'http-client','scope':{'environment':'prod','namespace':{'mode':'value','value':''},'fromMs':1000,'toMs':61000},
+             'service':'caller','signals':['spans'],'fields':[{'kind':'attribute','key':'http.request.method'}]}
+    check.validate(request)
+    for profile in ('','auto','all-spans','http-server','rpc-server-current','rpc-server','db-client','messaging-consumer','messaging-producer',None):
+        check.validate({**request,'profile':profile})
+    omitted=copy.deepcopy(request);omitted.pop('profile');check.validate(omitted)
+    for bad in ('HTTP-client','http-client-native','http_client',True,17,[]):
+        assert list(check.iter_errors({**request,'profile':bad})), ('unknown dashboard profile accepted',bad)
+    assert 'not attempts' in spec['components']['schemas']['exploration.DashboardRequestInput']['properties']['profile']['description']
+    print('Outgoing HTTP385: exact profile enum, nullable generic selection and native/alias refusal shape pass')
+
 def check(spec):
     review_responses,review_accepted=check_capture_reviews(spec)
     check_package_scopes(spec)
@@ -1203,6 +1216,7 @@ def check(spec):
     check_record_step_selector(spec)
     check_saved_trace_search_steps(spec)
     check_captured_trace_search(spec)
+    check_http_client_profile385(spec)
     validate_spec(spec)
     check_activity_scope_views(spec)
     check_view_artifacts(spec)

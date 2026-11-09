@@ -5,13 +5,20 @@ status and the [active roadmap](ROADMAP_2026_11_09_CHECKPOINT_384.md) for priori
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 
+385 adds the explicit [outgoing HTTP lens](OUTGOING_HTTP.md) over current Client
+span observations, including literal destination/method/port/status groups and
+existing saved question/capture workflows. Native HTTP-client metric adoption is
+still separate. Ordinary widget/group links return through Services; Customize
+and native actions offer contextual Back. Both retain held evidence without reads,
+but the differing return affordances remain a later usability consolidation input.
+
 384 closes the checked fixed-result viewport gap across ordinary Explore, Activity
 continuation, Saved-search continuation and stored records, including the full
 narrow waterfall item. Scope/counts, warnings and exact clocks remain available;
 secondary controls no longer precede primary data. The [current capability/gap
 index](CAPABILITY_GUIDE.md) replaces old proposal lists as the product index. The
-[active 384 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_384.md) is 385 outgoing HTTP,
-386 gauge display reuse and 387 coherent capture-family admission. Desktop row
+[active 384 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_384.md) has delivered 385 outgoing HTTP;
+next are 386 gauge display reuse and 387 coherent capture-family admission. Desktop row
 action density remains a measured future opportunity, not another active queue.
 
 383 adds [captured trace-search evidence](CAPTURED_TRACE_SEARCH.md), independent

@@ -37,6 +37,9 @@ simplify the work, without imposing type machinery on callers.
 
 ## 385 — breadth: investigate outgoing HTTP dependencies
 
+Delivered: [contract](OUTGOING_HTTP.md), [storyboard](journeys/385-outgoing-http.md)
+and [actual checks](../VALIDATION.md). The remaining queue starts at 386.
+
 User task: “Which outgoing web dependency is slow or has recorded errors?”
 Current service profiles cover incoming HTTP/RPC, DB clients and messaging, but
 have no outgoing HTTP-client lens. Reuse service inventory, DashboardRequest/Plan,
@@ -88,6 +91,14 @@ refused applications, supplied-data rendering, exact destination request equalit
 immutable saved configuration and real save→apply→Run journeys with current frames.
 Choose the smallest public API justified by the existing grammar.
 
+385 reconnaissance confirms that gauge reuse must not merely relax the histogram
+arm: explicit bins, complete export intervals and the histogram seconds/milliseconds
+unit whitelist do not describe gauge observations. Prefer a small discriminated
+native-display envelope over duplicated save/apply managers. Reuse the existing
+gauge timeline/table renderer, keep exact destination units and sample/staleness
+semantics, and distinguish a retained sample bound from continuous coverage.
+Finalize the typed arm during 386 design review before implementing it.
+
 ## 387 — consolidate: close current capture-family admission
 
 User task: “A saved item always means the evidence its receipt says it contains.”
@@ -123,5 +134,10 @@ separate source/mathematical gates.
 Broad DB/broker server health, alert delivery, authenticated tenancy/presence,
 contributed executable kinds/WYSIWYG authoring, warehouse lowering and new storage
 engines remain wider initiatives. Do not turn this list into a parallel backlog.
+385 also exposed an existing navigation-affordance mismatch: ordinary widget/group
+links return through Services, while Customize/native actions offer contextual
+Back. Both paths can retain evidence without reads; unify delegation in a later
+bounded usability consolidation rather than adding a second navigation owner.
+
 Reassess the whole product after 387 or earlier if actual usage invalidates the
 chosen sequence. Update this one queue from evidence rather than appending plans.

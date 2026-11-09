@@ -613,7 +613,8 @@ storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
 
 The [active roadmap](docs/ROADMAP_2026_11_09_CHECKPOINT_384.md) follows the completed 382–384
-sequence and fresh whole-product reviews. Earlier current RPC view reuse, service native interval context, and
+sequence and fresh whole-product reviews; 385 outgoing HTTP is delivered, with
+386 gauge display reuse next and 387 capture-family consolidation after it. Earlier current RPC view reuse, service native interval context, and
 measured bounded facets are also delivered. [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most
 100 matches while Find, totals and comparison scales use the complete admitted
 set. Same-read selection/caret and exact child scope survive Return. [Typed error-triage follow-through](docs/TYPED_ERROR_TRIAGE.md) is also delivered:
@@ -657,8 +658,12 @@ complete fixed conditions and limits in investigation revisions. Reopening stage
 intent; Search reads explicitly. [Captured search evidence](docs/CAPTURED_TRACE_SEARCH.md)
 now retains an independent reread and qualified witnesses, reopens without telemetry,
 and stays held while a fresh trace is explored. [Data-first fixed results](docs/DATA_FIRST_FIXED_RESULTS.md) now keep the first
-record or chosen visual in view with contextual secondary controls. Next is an
-outgoing HTTP observation lens over ordinary OTel Client spans.
+record or chosen visual in view with contextual secondary controls.
+[Outgoing HTTP observations](docs/OUTGOING_HTTP.md) add an explicit service lens
+for Client-span activity, destinations, methods, literal ports and response
+status. Full counts stay separate from bounded pages; recorded span Error stays
+separate from HTTP response status. Trace expansion visibly discloses its wider
+scope, and checked questions/captures use the existing evidence workflow.
 Whole-product reviews and proposed work are distinct from
 [validated delivery](VALIDATION.md).
 

@@ -1,5 +1,28 @@
 # Semantic properties and model conformance
 
+## Outgoing HTTP observations (385)
+
+From this verification module:
+
+```sh
+go test . -run '^(TestHegelHTTPClientProfile385|TestHTTPClientNativeProfileRemainsGeneric385)$' -count=1 -v
+GOO_HTTP_CLIENT_385_CHURL=http://127.0.0.1:8123 \
+  go test . -run '^TestHTTPClientCompiledSQL385$' -count=1 -v
+GOO_HTTP_CLIENT_385_REPORT=/workspace/goo/artifacts/http-client385/summary.json \
+  go test . -run '^TestQuintHTTPClientObserved385$' -count=1 -v
+```
+
+The generated check compares Go planning/population admission with the JavaScript
+widget witness over literal values, exact resource scopes and repeated records.
+The SQL check uses read-only virtual rows through real ClickHouse, independently
+checking full membership, null/empty groups, duration and recorded status. Bounded
+parameter chunks avoid transport limits without changing the fixture population
+or production settings. Optional endpoint/report checks skip when their explicit
+input is absent; those skips are not runtime acceptance. The observed replay
+requires an actual successful browser report and Quint, with independently
+admitted request/custody/read counters and negative controls. See the
+[executable storyboard](../docs/journeys/385-outgoing-http.md).
+
 ## Native measurement recovery (378)
 
 The actual `journeys/378-native-recovery.spec.js` plants only failed source reads;

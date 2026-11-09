@@ -1,7 +1,8 @@
 # Automatic operational dashboards — product initiative
 
-Status: **HTTP, current/older RPC and database-client/messaging roles delivered**.
-Later stages remain proposed. Clarified by the user on 2026-10-25 after the whole-product review.
+Status: **Incoming/outgoing HTTP, current/older RPC and database-client/messaging roles delivered**.
+Outgoing HTTP is an explicit observation lens; it does not change automatic
+profile priority. See [its contract](OUTGOING_HTTP.md). Later stages remain proposed. Clarified by the user on 2026-10-25 after the whole-product review.
 This is the expanded C2 initiative in the
 [current roadmap](ROADMAP_2026_11_05.md), not a claim every family is implemented.
 

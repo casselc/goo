@@ -98,6 +98,21 @@ widget remains not observed. Registered operation bindings retain their declared
 populations. This slice does not establish request throughput, business success,
 complete traces, percentile merging or a complete RED dashboard.
 
+## Outgoing HTTP observations
+
+Choose **Outgoing HTTP** explicitly to read exact reported Client spans with a
+nonempty current `http.request.method` in the fixed service, namespace and
+environment/window. Activity and destinations lead; method, literal port and
+response status share a compact context disclosure. Each widget retains its own
+source-read basis, full population totals and bounded presentation.
+
+Metadata candidacy is not evidence of a matching Client population. Empty or
+failed reads do not select another profile. Recorded span Error is distinct from
+HTTP response status, and destination addresses do not establish remote health
+or callee identity. See the [profile contract](OUTGOING_HTTP.md) and
+[pinned official convention](HTTP_CLIENT_CONVENTION_385.md). Native
+`http.client.request.duration` execution remains a separate future binding.
+
 ## Current RPC observations
 
 **Current RPC** (`rpc-server-current`) is pinned to OTel semantic conventions

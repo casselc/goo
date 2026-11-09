@@ -1,5 +1,90 @@
 # Validation record
 
+## Outgoing HTTP observations — 385
+
+Explicit `http-client` planning adds five scoped ordinary span questions. Counts
+retain reported Client-record grain, missing/empty destinations remain distinct,
+and literal ports/response status are not normalized into endpoint identity or
+a new failure policy. Trace expansion now persistently discloses its wider scope.
+
+Completed checks:
+
+- Full Go suite passes, including cmd **9.395 s**, exploration **5.062 s**,
+  measurements **4.221 s**, workbench **1.601 s**. Eight intentional response
+  fixtures across five planning fixture files gained the metadata candidate.
+- Final focused UI **31 passed** (**575 ms**); full frontend **1,370 passed**,
+  zero skips (**18.821 s**). Covers profile retention, literal groups, disclosure
+  state, current ownership and persistent pending/refused/retried trace scope.
+- Hegel **100 generated examples / 1,100 Go–JavaScript outcomes**, zero skips
+  (**4.713 s**). Repeated observations, all environment modes, exact namespace
+  choices, malformed resources, missing/empty and literal values are covered.
+- Read-only compiled SQL **240 queries**, 20 environment/namespace scopes and
+  four groupings (**33.946 s**), zero skips. Independent raw membership,
+  duplicate record counts, duration sums, recorded status and literal groups
+  agree with real ClickHouse. Initial oversized form/query fixtures failed
+  transport limits; bounded parameter chunks fixed test transport without
+  changing production limits or source records.
+- OpenAPI: **112 operations / 725 schemas**, **476 frozen responses**,
+  **186 admitted requests**, **28 mux refusals**, with closed profile enum and
+  native/alias refusal controls. No new API route or Go wire type.
+- Independent [source review](docs/reviews/OUTGOING_HTTP_REVIEW_385.md) found a
+  namespace omission disclosure gap; the persistent visible trace scope notice
+  closes it. No remaining source-review blocker.
+
+Actual runtime checks:
+
+- Final Go SDK workload made **126 real HTTP calls**, exporting **378 spans**
+  through the existing collector. Independent physical rows establish **117**
+  eligible Client records (Error **9**, Unset **108**), distinct Server/control
+  records and exact resource scopes. W3C propagation connects the caller Server,
+  Client and peer Server in a different namespace. The committed workload source
+  hash was recorded by the independent bank adapter.
+- Playwright **1 passed (1.2 min)** with **13 measured action facts**: five widget
+  reads, actual source refusal/exact retry, missing-destination drill, **117 full /
+  100 displayed** records, exact broader trace scope, held dashboard DOM/evidence
+  and zero-read Services return. Navigation intentionally focuses the workspace
+  heading, not the previous widget link. Browser-driver corrections concerned
+  ordinary nonexecuting Logs metadata, existing navigation/focus and native
+  disclosure visibility; they required no production change.
+- Save creates an immutable checked question revision. Run and capture performs
+  an independent read, retains **117 physical records**, serves a **100-record
+  page**, and links a successor revision. After a real **502** source probe,
+  cold capture reopening performs no SQL; stored bytes remain unchanged.
+- Initial Bombadil campaign recorded **554 states**, but final JPEG review
+  exposed a premature completion transition after the return click. Its return
+  claim was rejected. The strengthened fresh campaign passes **552 observed
+  states**, with separate `returning` then `complete` phases requiring visible
+  Services, selected `http-client`, the same widget nodes and exact evidence.
+  `returned`, `preserved`, source/return guards and active workspace agree. Root
+  inspected the final JPEG: it paints the returned outgoing dashboard. This
+  positive DOM/paint proof is separate from the main Playwright ledger.
+- Actual wire validation: **44 responses / 24 request bodies** conform, including
+  real/refused source responses (**37×200, 4×201, 2×502, 1×503**).
+- Four actual desktop/narrow/trace/offline frames were inspected by root. The
+  destination frames deliberately scroll that widget into view; they make no
+  whole-dashboard above-fold claim. The 390px frame uses the existing horizontal
+  table viewport with no document overflow.
+
+Report: `artifacts/http-client385/summary.json`. The isolated runtime was stopped;
+existing lab stores, volumes and retained stream entries were not reset.
+
+Main observed replay: **13 facts → 23 measured read/history/capture steps**,
+**10 source calls + 1 capture within those gestures**, passes required Quint (**final fresh report: 3.668 s**, zero skips).
+All **10 semantic mutants** and an independent passive-read model counter mutant
+are rejected. This admits actual requests, raw membership/duration/status,
+held DOM, immutable capture hash/page, linked revisions and custody clocks; actor
+booleans are not inputs to that proof. The final fresh report passed again
+after the strengthened campaign. Both raw campaign traces were losslessly gzip
+compressed with verified hashes; duplicate JPEG bytes share retained originals.
+The final campaign keeps eight unique frames with every original path readable.
+The reviewed image was then applied only to the local `packages` container;
+`GET /health` on port 8088 returns `{"ok":true}`. Dependency containers, the
+XTDB orphan, volumes and stored evidence were preserved.
+
+Contract: [outgoing HTTP](docs/OUTGOING_HTTP.md);
+[official pinned research](docs/HTTP_CLIENT_CONVENTION_385.md);
+[executable storyboard](docs/journeys/385-outgoing-http.md).
+
 ## Data-first fixed results — 384
 
 Fixed record views now lead with compact applied scope/count and one action row,
