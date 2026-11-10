@@ -13690,7 +13690,7 @@
                 "type": "null"
               }
             ],
-            "description": "Optional auto, all-spans, http-server, http-client, rpc-server-current, rpc-server, db-client, messaging-consumer or messaging-producer selection. Outgoing HTTP is explicit-only and pinned to OTel v1.45.0; actual record widgets require Client kind and nonempty current http.request.method. Destination, method, literal reported port and response status have separate bounded queries; missing/empty values remain distinct. Counts are Client-span records, not attempts, unique requests, callee identity or remote health. Native http.client.request.duration profile adoption is separate and is not enabled by this profile. Omitted/empty/null selects the generic record overview. Automatic precedence is HTTP, current RPC, legacy RPC, DB client, messaging consumer, messaging producer, then All spans. Current RPC is pinned to OTel semantic conventions v1.45.0: positive same-row Server/rpc.system.name hint plus current-key metadata, or a compatible rpc.server.call.duration histogram in seconds. Method is optional; missing and empty method groups remain distinct. Legacy RPC requires its independent rpc.system/rpc.method population or millisecond duration instrument. Flat keys alone are candidates, not observations; no alias union, conformance claim or hidden probe.",
+            "description": "Optional auto, all-spans, http-server, http-client, rpc-server-current, rpc-server, db-client, messaging-consumer or messaging-producer selection. Outgoing HTTP is explicit-only and pinned to OTel v1.45.0; actual record widgets require Client kind and nonempty current http.request.method. Destination, method, literal reported port and response status have separate bounded queries; missing/empty values remain distinct. Counts are Client-span records, not attempts, unique requests, callee identity or remote health. Native http.client.request.duration histograms in exact seconds have independently checked per-stream bindings. They do not enable this record lens or prove Client spans; record-profile selection does not grant native binding authority. Omitted/empty/null selects the generic record overview. Automatic precedence is HTTP, current RPC, legacy RPC, DB client, messaging consumer, messaging producer, then All spans. Current RPC is pinned to OTel semantic conventions v1.45.0: positive same-row Server/rpc.system.name hint plus current-key metadata, or a compatible rpc.server.call.duration histogram in seconds. Method is optional; missing and empty method groups remain distinct. Legacy RPC requires its independent rpc.system/rpc.method population or millisecond duration instrument. Flat keys alone are candidates, not observations; no alias union, conformance claim or hidden probe.",
             "enum": [
               "",
               "auto",
@@ -13787,7 +13787,7 @@
         "properties": {
           "family": {
             "type": "string",
-            "description": "Optional display/planning family identity; not a telemetry field or a shared native/span/log denominator."
+            "description": "Optional display/planning family identity; not a telemetry field or a shared native/span/log denominator. A per-stream http-client measurement is an independently bound duration histogram, not proof that the Client-span lens is available."
           },
           "grain": {
             "type": "string"
@@ -29299,7 +29299,8 @@
             ]
           },
           "profile": {
-            "type": "string"
+            "type": "string",
+            "description": "Advisory instrument-shape profile, not convention conformance or execution authority. http-client-request-duration names the pinned OTel v1.45.0 histogram in seconds; generic kernel eligibility, literal schema identity, dimension presence and evaluated interval coverage remain separate."
           },
           "reasons": {
             "anyOf": [

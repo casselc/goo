@@ -83,6 +83,10 @@ func observedCoverage(i Instrument, observations []DiscoveryObservation) Instrum
 	case "http.server.request.duration":
 		keys["http.request.method"] = true
 		keys["http.response.status_code"] = true
+	case CurrentHTTPClientDurationMetric:
+		for _, key := range []string{"http.request.method", "server.address", "server.port", "http.response.status_code", "error.type", "network.protocol.name", "network.protocol.version", "url.scheme", "url.template"} {
+			keys[key] = true
+		}
 	case CurrentRPCDurationMetric:
 		for _, key := range []string{"rpc.system.name", "rpc.method", "rpc.status_code", "error.type"} {
 			keys[key] = true
@@ -211,6 +215,30 @@ func PlanInstrument(i Instrument, observations []DiscoveryObservation) Instrumen
 		} else {
 			p.Hints = append(p.Hints, "Named-pool eligibility is unconfirmed: it requires the pinned cumulative nonmonotonic connection stock binding and one of the first 25 observed streams reporting the same nonempty instance, pool name and nonempty literal state. Missing preview evidence is not absence; the generic binding remains available.")
 		}
+		return p
+	}
+	if i.Metric == CurrentHTTPClientDurationMetric {
+		p.ShapeMatches = CurrentHTTPClientDurationShape(i)
+		if !p.ShapeMatches {
+			p.Hints = append(p.Hints, "The pinned HTTP client duration convention requires an explicit histogram in unit s. Retain the generic binding if eligible; no conversion or legacy alias is applied.")
+			return p
+		}
+		p.Profile = "http-client-request-duration"
+		p.Title = "HTTP client request duration candidate"
+		p.RuleSet = CurrentHTTPClientRuleSet
+		switch i.SchemaURL {
+		case CurrentHTTPClientSchema:
+			p.Hints = append(p.Hints, "Schema URL matches the pinned rule set; this does not verify conformance.")
+		case "":
+			p.Hints = append(p.Hints, "Schema URL omitted; reported stream identity is retained and conformance is unverified.")
+		default:
+			p.Hints = append(p.Hints, "Other schema URL retained literally; no schema migration or conformance is inferred.")
+		}
+		p.Hints = append(p.Hints,
+			"The convention requires http.request.method, server.address and server.port. Missing, empty and literal values remain independent observed stream evidence; incomplete dimension metadata does not disable a valid generic histogram binding.",
+			"http.response.status_code is conditional on a received response and error.type on failure. network.protocol.name is conditional, network.protocol.version recommended, and url.scheme and url.template opt-in; no universal error policy or default destination is inferred.",
+			"Native duration observations do not establish Client spans, unique requests, retries, callee identity, remote health or span-to-metric joins. Dimensions and reported schema do not prove convention conformance.",
+			"Run evaluates explicit histograms per exact stream with retained seconds, temporality, reset/gap and interval coverage. No fleet percentile or request rate is inferred.")
 		return p
 	}
 	if i.Metric == CurrentRPCDurationMetric {

@@ -115,15 +115,19 @@ existing overall timeline and comparison functionality are not missing features.
 
 ## 392 — depth: native outgoing HTTP duration observations
 
+Status: [finite implementation](HTTP_CLIENT_NATIVE_DURATION.md) delivered. The
+source profile is pinned to OTel v1.45.0; actual journey, generated/observed model
+and final image checks pass. The sole remaining item is 393 consolidation,
+followed by whole-product review.
+
 User task: “This service reports HTTP-client duration histograms; show their
 measured request-duration distribution and let me investigate the observations.”
 
 [Outgoing HTTP Client-span observations](OUTGOING_HTTP.md) are delivered in 385.
-Native `http.client.request.duration` profile execution is separate: current
-instrument capability/dashboard binding code recognizes server duration, and
-385 tests explicitly prevent a generic client histogram from acquiring outgoing
-profile authority. Extend the established histogram path rather than adding an
-executor or relabelling incoming HTTP data.
+Native `http.client.request.duration` profile execution is separate. The bounded
+implementation extends instrument capability/dashboard binding through the
+existing histogram path. Generic histogram eligibility never grants outgoing
+Client-span authority; no executor or incoming-data relabelling is introduced.
 
 - Pin and review the relevant OTel semantic convention before enabling execution.
   Define exact metric name, explicit-histogram source representation, supported

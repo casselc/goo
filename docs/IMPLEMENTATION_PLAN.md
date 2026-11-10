@@ -4,9 +4,10 @@
 > reconciled after delivered gauge-observation record context (388), counter
 > display reuse (389) and [data-first native composition](NATIVE_DATA_FIRST.md)
 > (390). [391 reusable log-pattern count displays](LOG_PATTERN_DISPLAY_REUSE.md)
-> are delivered. The sole remaining finite queue is **
-> 392 native HTTP-client duration profiles → 393 proof-gated literal parameter
-> transport audit**, followed by whole-product review. Existing source, custody
+> are delivered. [392 native HTTP-client duration profiles](HTTP_CLIENT_NATIVE_DURATION.md)
+> are delivered. The sole remaining finite queue is
+> **393 proof-gated literal parameter transport audit**, followed
+> by whole-product review. Existing source, custody
 > and return ownership stay authoritative. Saved/service gauge context remains a
 > separate follow-up; earlier delivery notes remain history.
 > 367 reusable current RPC views, 368 exact service native interval context,

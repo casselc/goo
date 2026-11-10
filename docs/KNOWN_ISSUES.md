@@ -16,9 +16,12 @@ desktop and 2,609 to 581 px on narrow screens; saved counter narrow moves from
 Compact chart chrome now belongs to the passive component's density profile.
 [Checked log-pattern count displays](LOG_PATTERN_DISPLAY_REUSE.md) (391) are
 delivered through the existing population workspace, with actual source,
-held-return, model and image acceptance. The [390 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_390.md) keeps native
-HTTP-client duration profiles (392), then an evidence-gated literal
-source-parameter audit (393) as the remaining finite queue. Detailed checks,
+held-return, model and image acceptance. [Native HTTP-client duration profiles](HTTP_CLIENT_NATIVE_DURATION.md) (392)
+are delivered: exact explicit histograms in seconds
+use the existing native path independently of Client-span evidence. The
+[390 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_390.md) keeps an evidence-gated literal
+source-parameter audit (393), followed by whole-product
+review, as the remaining finite queue. Detailed checks,
 including held-return regressions and model replay, are recorded in
 [validation](../VALIDATION.md); this summary does not substitute for their
 individual outcomes.

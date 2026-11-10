@@ -1,5 +1,41 @@
 # Semantic properties and model conformance
 
+## Native outgoing HTTP duration (392)
+
+The pinned v1.45.0 profile requires the exact `http.client.request.duration`
+explicit histogram in seconds. Schema URLs and dimension presence stay literal
+metadata; they do not establish conformance. Milliseconds remain a generic
+binding. Native duration observations and current Client-span evidence retain
+separate eligibility, populations and source clocks.
+
+From this verification module:
+
+```sh
+XDG_CACHE_HOME=/workspace/.cache \
+  go test . -run '^TestHegelHTTPClientNativeProfile392$' -count=1 -v
+GOO_NATIVE_HTTP_CLIENT_392_REPORT=/workspace/goo/artifacts/native-http-client392/summary.json \
+  go test . -run '^TestQuintHTTPClientNativeObserved392$' -count=1 -v
+```
+
+The generated check passed 128 shared Go/JavaScript profile/source vectors in
+0.51s. Required observed admission and Quint replay passed in 4.00s (package
+4.007s), with zero skips: 15 physical exports, six raw spans and 15 measured
+facts. Independent finite raw-bucket/count/range admission covers delta,
+cumulative, epoch change, excessive gap and flagged unknown intervals. Existing
+kernel properties own the general evaluator; this cut adds no second evaluator.
+All six semantic mutants and the local-source-read model control were rejected.
+The independent actor issued one actual HTTP read and one physical SQL read.
+
+Main counters are 34 source API reads, 11 store/catalog reads, one native display
+publication and one explicit capture publication. The 11 reads include capture
+catalog searches; they are not 11 artifact loads. Four direct native setup reads
+and one inventory capture precede those counters. Exact SQL and typed parameters
+are admitted separately. The service chart deliberately imports a passive
+browser-held snapshot; ordinary Measurements retains source-read bin guarantees.
+Both representations must preserve every selector, parent basis, read clock and
+bucket value. Missing reports skip and are not runtime acceptance; observed
+replay requires Quint.
+
 ## Reusable log-pattern count displays (391)
 
 The finite `log-pattern-count-v1` declaration profile accepts only a sole

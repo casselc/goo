@@ -1,5 +1,58 @@
 # Validation record
 
+## Native HTTP-client duration observations — 392
+
+The [HTTP-client duration profile](docs/HTTP_CLIENT_NATIVE_DURATION.md) is
+delivered. The exact seconds explicit-histogram profile is pinned to OTel
+semantic conventions v1.45.0. Metrics-only discovery is useful independently
+of Client spans; existing histogram evaluation, captures and display reuse remain
+authoritative. Final runtime, observed-model and image acceptance pass.
+
+Recorded checks:
+
+- Targeted Go checks passed in **0.011 s / 0.022 s**. Full measurements passed
+  **6.242 s** and exploration **5.130 s**. Optional direct ClickHouse tests were
+  not enabled; these results are not a zero-skip real-source claim.
+- Focused frontend **37 tests passed / 761.27 ms**; full **1,416 tests passed /
+  zero skips / 49.790 s**.
+
+- cmd/goo passed **10.378 s**. API regeneration/checks passed: **694 wire
+  schemas / 112 operations / 725 schemas / 489 fixtures / 195 requests / 28 mux
+  refusals**.
+- Hegel shared adoption/reuse checks passed **128 cases / 0.51 s / package
+  0.523 s / zero skips**.
+- Actual main journey passed **54.7 s / 57.2 s runner**, covering **15 histogram
+  exports / four streams / six spans / four evidence modes / 15 measured facts**.
+  Observed work: **34 source requests / 11 store catalog-and-artifact GETs /
+  one configuration publication / one capture publication / 77 physical SQL requests**.
+  These clocks and operations are distinct, not a single source-read counter.
+- The actor completed **560 snapshots / six phases** with **one actual HTTP
+  read**; physical read-only SQL advanced **77 → 78**.
+- Current-binary service 368 and outgoing HTTP 385 regressions passed
+  **13.9 s / 15.3 s**, combined **31.1 s**. Wire checks passed over **91 genuine
+  responses / 52 requests**.
+- Design reviewed all **three fresh frames** without a blocker; root reviewed
+  service and narrow layouts.
+
+- Required observed Quint/admission passed **4.00 s / package 4.007 s / zero
+  skips**. It admits the **15 exports / six spans / 15 facts / four evidence
+  modes**, exact raw buckets, P95 ranges, reset/gap/flag and stream identity,
+  immutable artifact bytes and separate clocks. Passive retained-service snapshot
+  normalization is explicit and grants no additional authority. Strict observed
+  budgets remain **34 source / 11 catalog-and-artifact GETs / one configuration /
+  one capture**; the actor contributes **one HTTP read / SQL 77 → 78**. All six
+  semantic mutants and the unintended local-read model control were rejected.
+
+- Final image accepted **2026-11-10** (the convention research and actual source
+  capture remain dated November 9):
+  `sha256:fc184bbf8ce06154858edda38b913008eaf74e2783cd082ed9b29f9df845c3ed`.
+  Quiet Compose configuration, managed-CA build, packages-only `up --no-deps`
+  and health passed. The changed UI asset and OpenAPI bytes exactly match source;
+  persistent stores and the XTDB orphan were preserved.
+
+All bounded 392 gates are closed. Only 393's proof-gated literal parameter audit
+remains before whole-product review.
+
 ## Reusable log-pattern count displays — 391
 
 Delivered: [count-only pattern Bar/Table views](docs/LOG_PATTERN_DISPLAY_REUSE.md)

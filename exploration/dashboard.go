@@ -510,7 +510,7 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 	}
 	modernNativeSort := in.Profile != ""
 	for _, instrument := range instruments {
-		if measurements.GoRuntimeExactCandidate(instrument) {
+		if measurements.GoRuntimeExactCandidate(instrument) || dashboardNativeHTTPClient(in.Scope, in.Service, instrument) {
 			modernNativeSort = true
 			break
 		}
@@ -528,6 +528,12 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 		if modernNativeSort {
 			if httpActive {
 				a, b := dashboardNativeHTTP(in.Scope, in.Service, instruments[i]), dashboardNativeHTTP(in.Scope, in.Service, instruments[j])
+				if a != b {
+					return a
+				}
+			}
+			if httpClientActive {
+				a, b := dashboardNativeHTTPClient(in.Scope, in.Service, instruments[i]), dashboardNativeHTTPClient(in.Scope, in.Service, instruments[j])
 				if a != b {
 					return a
 				}
@@ -573,6 +579,16 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 					ranks := map[string]int{"go.memory.used": 0, "go.memory.gc.goal": 1, "go.goroutine.count": 2}
 					return ranks[instruments[i].Metric] < ranks[instruments[j].Metric]
 				}
+			}
+			// Recognized outgoing duration precedes generic options without changing
+			// the existing active-family, pool or runtime priority above.
+			aServer, bServer := dashboardNativeHTTP(in.Scope, in.Service, instruments[i]), dashboardNativeHTTP(in.Scope, in.Service, instruments[j])
+			if aServer != bServer {
+				return aServer
+			}
+			aClient, bClient := dashboardNativeHTTPClient(in.Scope, in.Service, instruments[i]), dashboardNativeHTTPClient(in.Scope, in.Service, instruments[j])
+			if aClient != bClient {
+				return aClient
 			}
 			a, _ := json.Marshal(instruments[i].Definition)
 			b, _ := json.Marshal(instruments[j].Definition)
@@ -672,6 +688,10 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				w.Reason = "Independent native messaging process duration binding in seconds; not all Consumer receive/process spans, message throughput or queue health"
 			}
 		}
+		if dashboardNativeHTTPClient(in.Scope, in.Service, instrument) {
+			w.Family = "http-client"
+			w.Reason = "Independent native HTTP client request duration in seconds; full stream identity, temporality and interval coverage remain separate from Client spans, retries, callee identity and remote health"
+		}
 		if measurements.PoolConnectionsCandidate(instrument) {
 			w.Family = "database-pool-connections"
 			w.Reason = "Named-pool connection stocks with certified nonnegative-integer domain; states, pools, instances and read clocks remain independent. No capacity ratio or pool health is inferred"
@@ -768,6 +788,11 @@ func dashboardHTTPObservationQuestion(q Query, kind string) Query {
 	parts = append(parts, Predicate{Field: &Field{Kind: "column", Key: "kind"}, Op: "eq", Value: kind}, Predicate{Field: &Field{Kind: "attribute", Key: "http.request.method"}, Op: "ne"})
 	q.Where = &Predicate{All: parts}
 	return q
+}
+
+// Native client duration is independent of the outgoing Client-span lens.
+func dashboardNativeHTTPClient(scope InventoryQuestion, service string, i measurements.Instrument) bool {
+	return measurements.CurrentHTTPClientDurationShape(i) && dashboardNativeDuration(scope, service, i)
 }
 func dashboardNativeHTTP(scope InventoryQuestion, service string, i measurements.Instrument) bool {
 	if i.Metric != "http.server.request.duration" || (i.Unit != "s" && i.Unit != "ms") {

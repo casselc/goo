@@ -137,8 +137,8 @@ func TestHTTPClientDashboardExplicitOnlyMetadataAndNativeSeparation385(t *testin
 		t.Fatal(err)
 	}
 	for _, widget := range p.Widgets {
-		if widget.Measurement != nil && widget.Family == "http-client" {
-			t.Fatal("generic native metric acquired client profile authority")
+		if widget.Measurement != nil && (widget.Family != "http-client" || widget.Grain != "per-stream" || widget.Query != nil) {
+			t.Fatal("qualified native client duration lost independent per-stream semantics", widget)
 		}
 	}
 	in.Fields = nil
