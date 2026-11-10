@@ -1,21 +1,20 @@
 # Observability exploration as a source of training examples
 
-> Implemented foundation: [cross-product tags/notes and optional retention of selected
-> saved-capture or exact live-page observations](WORKBENCH_ANNOTATIONS.md). Reviewed
-> training labels, vocabularies and dataset exports below remain proposed.
-> The [365 readiness gate](CAPTURE_RECORD_REVIEW_GATE.md) now proves exact
-> capture-member resolution and a private pinned-branch publication prototype;
-> it does not deliver the reviewed-label UI/API/export workflow.
+> Current delivery: [tags/notes and optional retention](WORKBENCH_ANNOTATIONS.md),
+> [exact kept observations](KEPT_OBSERVATIONS.md), and
+> [captured-record review, vocabularies and dataset export](CAPTURE_RECORD_REVIEW.md)
+> are implemented. The [365 readiness gate](CAPTURE_RECORD_REVIEW_GATE.md) is a
+> historical precursor, not the present delivery boundary.
 
-
-Observation-focused design note, 2026-10-22 UTC. Its delivery sequence applies to
-retained training examples, not to all annotation surfaces. The
-[whole-product annotation design](PRODUCT_ANNOTATIONS_DESIGN.md) is the primary
-architecture and implementation roadmap. **Reviewed task-label editing,
-dataset snapshots and training export are not implemented.** Current record
-inspection, bounded selection, typed population definitions, immutable captures
-and comparison receipts provide useful foundations. This design adds no model
-runtime to the query path and does not require goo manifests or Go instrumentation.
+Observation-focused design note, originally 2026-10-22 UTC; status reconciled
+2026-11-10. Its remaining proposals apply to retained training examples, not all
+annotation surfaces. Existing captured-record task-label editing, review revisions,
+dataset snapshots and training export are delivered under their finite contracts.
+Contextual task discovery and a disjoint verified kept-occurrence review target
+remain deferred; existing capture review does not automatically admit either.
+The [whole-product annotation design](PRODUCT_ANNOTATIONS_DESIGN.md) provides
+historical rationale. This design adds no model runtime to the query path and
+requires neither Goo manifests nor Go instrumentation.
 
 The natural interaction is: notice something, select the evidence, give it meaning,
 then preserve that meaning so it can be reviewed and reused. The same action

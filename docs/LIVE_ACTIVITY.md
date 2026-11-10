@@ -108,10 +108,14 @@ The legacy advanced editor is a temporary compatibility consumer; the
 [whole-product reviews](STREAM_FIRST_WHOLE_PRODUCT_DESIGN.md) and
 [active queue](IMPLEMENTATION_PLAN.md) name its replacement/removal gates.
 
-The monitor does not publish captures or annotations. Exact retention of selected
-tail observations requires server-owned membership/read-window capabilities.
-Current tail handles are not native `resultToken` values. Existing fixed-page and
-saved-capture retention remains available through its existing explicit paths.
+The monitor supports the existing [Keep selected workflow](KEPT_OBSERVATIONS.md)
+for server-attested tail occurrences. Selection pauses the stream; Keep uses the
+original connection, selector and short-lived membership references without a
+telemetry reread. Expired or unavailable membership cannot be replaced by local
+row contents. Tail references are distinct from fixed-page `resultToken` values.
+Keeping exact occurrences does not establish a complete population; a fresh
+capture remains a separate explicit read. Optional annotation/XTDB retention has
+its own gates and is not required to keep observations.
 
 Journeys 102/103 exercise real OTLP logs/spans, startup request counts, inert fixed
 and saved links, scope/mode changes, local inspection, scroll anchoring, capacity

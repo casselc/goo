@@ -1,5 +1,28 @@
 # Validation record
 
+## Literal source-parameter transport — 393
+
+The [actual transport audit](docs/LITERAL_PARAMETER_TRANSPORT.md) passes with
+both existing encoders unchanged. A settled ordinary OTLP bank contains 50 legal
+values, 50 near misses and one missing-key control in each of logs and gauges.
+Eight independent raw settlement queries check physical bytes and membership.
+
+- Final rebuilt verification passes **4.123 s / zero skips**: 32 Hegel intent
+  cases, typed pre-HTTP refusals, **150 real public-source arms**, **12 altered
+  literal/decoding controls**, and **147 distinct server-decoded String echoes**.
+- The audit exposed a separate typed-input defect: JSON cloning repaired invalid
+  UTF-8 before validation. Original questions now validate before cloning;
+  source execution refuses before HTTP, and offline evaluation rejects malformed
+  bytes while accepting a genuine replacement-character literal.
+- Full Go regression packages pass: measurements **5.850 s**, exploration
+  **5.611 s**, and cmd/goo **8.784 s**. Optional direct ClickHouse tests were
+  not enabled in those package runs; the zero-skip actual audit above supplies
+  separate real-source evidence.
+- Existing row, byte and time budgets remain unchanged. No encoder refactor or
+  performance claim follows from parity. UI/screenshots and observed models are
+  unchanged; source checks do not substitute for new browser/model evidence.
+
+
 ## Native HTTP-client duration observations — 392
 
 The [HTTP-client duration profile](docs/HTTP_CLIENT_NATIVE_DURATION.md) is

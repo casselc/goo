@@ -56,6 +56,11 @@ func (q DiscoveryQuestion) clone() DiscoveryQuestion {
 	return q
 }
 func (q Question) detached() (Question, error) {
+	// JSON cloning replaces malformed UTF-8. Reject it while the caller's
+	// original literal bytes are still available to validation.
+	if err := q.Validate(); err != nil {
+		return Question{}, err
+	}
 	raw, e := json.Marshal(q)
 	if e != nil {
 		return Question{}, e

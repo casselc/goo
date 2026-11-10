@@ -1,6 +1,7 @@
 # Roadmap after the 390 checkpoint
 
-Adopted November 9, 2026 after the 390 whole-product checkpoint. This replaces the
+Historical queue, superseded by the [393 checkpoint](ROADMAP_2026_11_10_CHECKPOINT_393.md).
+Originally adopted November 9, 2026 after the 390 whole-product checkpoint. This replaces the
 completed [387 checkpoint queue](ROADMAP_2026_11_09_CHECKPOINT_387.md).
 The [current capability index](CAPABILITY_GUIDE.md) summarizes delivered behavior;
 [validation](../VALIDATION.md) distinguishes checks actually run. This is one

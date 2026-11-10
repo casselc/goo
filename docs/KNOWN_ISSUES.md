@@ -1,7 +1,7 @@
 # Known issues and gaps
 
 Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
-status and the [active roadmap](ROADMAP_2026_11_09_CHECKPOINT_390.md) for priorities.
+status and the [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_393.md) for priorities.
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 
@@ -18,10 +18,10 @@ Compact chart chrome now belongs to the passive component's density profile.
 delivered through the existing population workspace, with actual source,
 held-return, model and image acceptance. [Native HTTP-client duration profiles](HTTP_CLIENT_NATIVE_DURATION.md) (392)
 are delivered: exact explicit histograms in seconds
-use the existing native path independently of Client-span evidence. The
-[390 checkpoint](ROADMAP_2026_11_09_CHECKPOINT_390.md) keeps an evidence-gated literal
-source-parameter audit (393), followed by whole-product
-review, as the remaining finite queue. Detailed checks,
+use the existing native path independently of Client-span evidence. The [literal source-parameter audit](LITERAL_PARAMETER_TRANSPORT.md) (393)
+confirms legal-value parity and fixes typed validation before JSON cloning.
+The [393 checkpoint](ROADMAP_2026_11_10_CHECKPOINT_393.md) adopts the next finite
+breadth, depth and consolidation queue after whole-product review. Detailed checks,
 including held-return regressions and model replay, are recorded in
 [validation](../VALIDATION.md); this summary does not substitute for their
 individual outcomes.

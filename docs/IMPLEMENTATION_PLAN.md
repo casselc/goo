@@ -1,15 +1,14 @@
 # Implementation plan
 
-> Active execution order: [390 product checkpoint](ROADMAP_2026_11_09_CHECKPOINT_390.md),
-> reconciled after delivered gauge-observation record context (388), counter
-> display reuse (389) and [data-first native composition](NATIVE_DATA_FIRST.md)
-> (390). [391 reusable log-pattern count displays](LOG_PATTERN_DISPLAY_REUSE.md)
-> are delivered. [392 native HTTP-client duration profiles](HTTP_CLIENT_NATIVE_DURATION.md)
-> are delivered. The sole remaining finite queue is
-> **393 proof-gated literal parameter transport audit**, followed
-> by whole-product review. Existing source, custody
-> and return ownership stay authoritative. Saved/service gauge context remains a
-> separate follow-up; earlier delivery notes remain history.
+> Active execution order: [393 product checkpoint](ROADMAP_2026_11_10_CHECKPOINT_393.md).
+> 391 log-pattern display reuse and 392 native HTTP-client duration are delivered;
+> 393 actual literal transport parity, preclone validation and full Go package
+> checks pass.
+> The sole finite queue is **394 direct distribution → existing Customize →
+> 395 count-only grouped-time display reuse → 396 composed held-staging
+> consolidation**, then whole-product review. 395 has an explicit supplied-data
+> semantic feasibility gate. Existing source, custody and return owners remain
+> authoritative; deferred candidates are not parallel execution queues.
 > 367 reusable current RPC views, 368 exact service native interval context,
 > and 369 measured local facet pages are delivered with appropriate native and
 > generated validation. Full populations, exact scopes and independent clocks
