@@ -6,7 +6,7 @@ display reuse and 392 native HTTP-client duration profile are delivered. The 393
 actual literal-parameter audit passed: 150 legal source arms, 12 controls and 147
 server String echoes; final audit/fix acceptance passed in 4.123 s. Legal
 transport parity required no encoder rewrite; the separate typed-input preclone
-validation fix is accepted. Root's full package checks are still running. [Validation](../VALIDATION.md) owns final outcomes.
+validation fix is accepted. The measurements, exploration and Go server regression packages pass. [Validation](../VALIDATION.md) owns final outcomes.
 
 This is one finite **breadth → depth → consolidation** queue. The
 [capability index](CAPABILITY_GUIDE.md) describes current behavior. Independent
@@ -36,7 +36,12 @@ workflow. The contrary Live documentation was stale and has been corrected.
 Captured-record review, vocabularies and export also already ship; the historical
 training proposal now distinguishes these from deferred tasks.
 
-## 394 — breadth: direct distribution-to-customization progression
+## 394 — delivered: direct distribution-to-customization progression
+
+[394 delivery](DISTRIBUTION_CUSTOMIZATION.md) uses the existing flat count display
+and trail owner, with actual log/span journeys, source-free held Back, save/reuse,
+Bombadil and finite semantic/observed verification. The remaining execution order
+is 395, then 396.
 
 User task: “This distribution is useful; customize and reuse its scoped view
 without visiting a record inspection first.”

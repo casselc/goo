@@ -4,9 +4,9 @@
 > 391 log-pattern display reuse and 392 native HTTP-client duration are delivered;
 > 393 actual literal transport parity, preclone validation and full Go package
 > checks pass.
-> The sole finite queue is **394 direct distribution → existing Customize →
-> 395 count-only grouped-time display reuse → 396 composed held-staging
-> consolidation**, then whole-product review. 395 has an explicit supplied-data
+> [394 direct distribution customization](DISTRIBUTION_CUSTOMIZATION.md) is delivered.
+> The remaining finite queue is **395 count-only grouped-time display reuse →
+> 396 composed held-staging consolidation**, then whole-product review. 395 has an explicit supplied-data
 > semantic feasibility gate. Existing source, custody and return owners remain
 > authoritative; deferred candidates are not parallel execution queues.
 > 367 reusable current RPC views, 368 exact service native interval context,

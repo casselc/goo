@@ -623,8 +623,10 @@ are delivered. [Native HTTP-client duration profiles](docs/HTTP_CLIENT_NATIVE_DU
 (392) are delivered. The [literal transport audit](docs/LITERAL_PARAMETER_TRANSPORT.md)
 (393) confirms both source encoders preserve legal values and fixes typed
 question validation before JSON cloning. The whole-product review selects
-direct population-view customization, grouped count timelines, and bounded
-workflow consolidation as the next cadence. Gauge context starts in ordinary Measurements;
+[direct distribution customization](docs/DISTRIBUTION_CUSTOMIZATION.md) (394),
+followed by grouped count timelines and bounded workflow consolidation.
+Customize distribution stages the existing count display over its exact question;
+Run is explicit and Back retains the held parent without rereading. Gauge context starts in ordinary Measurements;
 Saved and service continuation remain deferred. Earlier current RPC view reuse,
 service native interval context and measured bounded facets are also delivered.
 [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most

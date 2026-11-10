@@ -5,7 +5,7 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-393. The [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_393.md) owns execution order;
+394. The [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_393.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
 below are research inputs, not additional backlogs or claims of vendor parity.
 
@@ -33,9 +33,9 @@ below are research inputs, not additional backlogs or claims of vendor parity.
 
 These are current gaps or gates, not an automatically scheduled feature list.
 The active roadmap adopts a finite breadth/depth/consolidation queue after the
-393 whole-product checkpoint: 394 direct distribution-to-Customize, 395 grouped
-count-over-time reuse (semantic feasibility first), then 396 composed held-staging
-consolidation. Delivered layout acceptance and remaining feature
+393 whole-product checkpoint: [direct distribution customization](DISTRIBUTION_CUSTOMIZATION.md)
+(394) is delivered; 395 grouped count-over-time reuse (semantic feasibility first),
+then 396 composed held-staging consolidation remain. Delivered layout acceptance and remaining feature
 boundaries are distinguished below.
 
 | Area | Remaining gap or decision | Current reference |

@@ -1,5 +1,44 @@
 # Validation record
 
+## Direct distribution customization — 394
+
+[Customize distribution](docs/DISTRIBUTION_CUSTOMIZATION.md) stages the existing
+flat count display over the complete original question. It does not import source
+evidence into a new read. Ordinary logs and spans use the existing view store,
+Run and held-return owners; no new editor or query backend is introduced.
+
+- Focused UI **3 passed / zero skips / 452.62 ms**; full frontend **1,419 passed /
+  zero skips / 19.111 s**. Go server checks passed **8.582 s**.
+- Hegel cross-language contract checks passed **0.376 s**: **32 log/span handoffs**,
+  exact typed selectors/bounds/limits, detached display reuse, immutable Go store
+  round trips and explicit unsupported-input refusals. These generated source
+  fixtures are separate from actual ClickHouse evidence.
+- Actual ordinary OTel journey passed **20.0 s / 21.7 s runner**, covering both
+  signals, **36 raw records / 35 measured facts**, full-question staging, explicit
+  execution, no-read Back and local changes, immutable configuration save/reuse,
+  and real hidden/inert/pending/superseded controls. Offset, empty and failed
+  source cases are actual; changed-read refusal is generated/helper coverage.
+- Observed browser work: **14 source requests / four view-store GETs / two
+  configuration publications / 50 physical SQL requests**. Two destination seed
+  configurations are separate setup writes. Source APIs, store operations and
+  SQL are distinct counters.
+- Bombadil passed **37.9 s / 40.1 s runner**: **608 snapshots / eight phases**,
+  two actual source requests and physical SQL **4 → 12**. The initial four SQL
+  requests belong to the separate genuine source-button screenshot prelude.
+- Design approved all **four actual frames**, including the source shortcut and
+  narrow destination. Existing narrow-table horizontal share visibility remains
+  a bounded common-component refinement, not new 394 behavior.
+- Required observed Quint/admission passed **4.651 s / zero skips**, admitting
+  both ordinary-signal journeys, all 36 physical rows, 35 facts and the actor
+  companion. All **six semantic mutants** and the unintended staging-read model
+  control were rejected. This checks recorded source outcomes and ownership; it
+  does not infer upstream ingestion completeness.
+- The updated lab image is
+  `sha256:d35ff24f7b9bb29063fd970ce7b89056bca174730dba15dc5e09388be5ab1757`.
+  Capabilities and exact served distribution-module bytes pass. Only the Goo
+  server container was replaced; existing telemetry services and stores remain.
+
+
 ## Literal source-parameter transport — 393
 
 The [actual transport audit](docs/LITERAL_PARAMETER_TRANSPORT.md) passes with

@@ -5,6 +5,11 @@ UTC handles. In the [recent-activity canvas](RECENT_ACTIVITY.md), **Open selecte
 population** also stages an independently run child while retaining its paused
 parent. See [range/drilldown ownership, keyboard/touch behavior and storyboards](RANGE_DRILLDOWNS.md).
 
+For an accepted ordinary count distribution, [**Customize distribution**](DISTRIBUTION_CUSTOMIZATION.md)
+stages the existing authored display directly, preserving the exact page-zero
+question and current Bar/Table presentation. No companion or telemetry read is
+added. Run is explicit; Back restores the held distribution.
+
 Start with any applied span or log question in Explore, including cross-service
 resource/attribute predicates. **Explore linked population** asks the Go planner
 to compose existing record kernels, then reads one or two signal questions. The

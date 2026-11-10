@@ -5,6 +5,11 @@ alongside its checked queries. Reopen it from **Saved exploration views**, then
 **Run population view** explicitly. Browsing or reopening configurations does not
 read telemetry. A saved view is configuration; captures preserve frozen evidence.
 
+[**Customize distribution**](DISTRIBUTION_CUSTOMIZATION.md) starts this same
+configuration from a current ordinary count breakdown. It preserves the complete
+question and local presentation; unsupported measures and nonzero offsets remain
+explicitly unavailable.
+
 Choose **Reusable display** for an ordinary single-field span or log
 breakdown. Switch bars/table, captured values/population share, Find and sort
 locally. **Measure** selects count or a numeric/duration measure supplied by the

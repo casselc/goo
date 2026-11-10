@@ -21,7 +21,12 @@ are delivered: exact explicit histograms in seconds
 use the existing native path independently of Client-span evidence. The [literal source-parameter audit](LITERAL_PARAMETER_TRANSPORT.md) (393)
 confirms legal-value parity and fixes typed validation before JSON cloning.
 The [393 checkpoint](ROADMAP_2026_11_10_CHECKPOINT_393.md) adopts the next finite
-breadth, depth and consolidation queue after whole-product review. Detailed checks,
+breadth, depth and consolidation queue after whole-product review.
+[Direct distribution customization](DISTRIBUTION_CUSTOMIZATION.md) (394) uses the
+existing flat count display and exact staged question, explicit Run and no-read
+held Back. Numeric/duration/status profiles and nonzero offsets remain outside
+this shortcut; their existing workflows remain available. Grouped count timeline
+reuse (395), then bounded held-staging consolidation (396), remain next. Detailed checks,
 including held-return regressions and model replay, are recorded in
 [validation](../VALIDATION.md); this summary does not substitute for their
 individual outcomes.
