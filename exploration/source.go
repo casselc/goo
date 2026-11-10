@@ -20,30 +20,31 @@ import (
 )
 
 type Result struct {
-	HistogramDataset  *ViewDataset       `json:"histogramDataset,omitempty"`
-	ViewDataset       *ViewDataset       `json:"viewDataset,omitempty"`
-	TimeDataset       *ViewDataset       `json:"timeDataset,omitempty"`
-	SummaryDataset    *ViewDataset       `json:"summaryDataset,omitempty"`
-	NumericHistogram  *NumericHistogram  `json:"numericHistogram,omitempty"`
-	ResultToken       string             `json:"resultToken,omitempty"`
-	TraceExamples     *TraceExampleSet   `json:"traceExamples,omitempty"`
-	Numeric           *NumericSummary    `json:"numeric,omitempty"`
-	GroupedTimeSeries []TimeSeriesGroup  `json:"groupedTimeSeries,omitempty"`
-	SpanStatus        *SpanStatusSummary `json:"spanStatus,omitempty"`
-	TimeSeries        []TimePoint        `json:"timeSeries,omitempty"`
-	Duration          *DurationSummary   `json:"duration,omitempty"`
-	Question          Query              `json:"question"`
-	CapturedAt        string             `json:"capturedAt"`
-	Basis             string             `json:"basis"`
-	Count             string             `json:"count"`
-	State             string             `json:"state"`
-	Rows              []json.RawMessage  `json:"rows"`
-	HasMore           bool               `json:"hasMore"`
-	Groups            []json.RawMessage  `json:"groups"`
-	Fields            []Field            `json:"fields"`
-	FieldsLimited     bool               `json:"fieldsLimited"`
-	Plan              Plan               `json:"plan"`
-	Warnings          []string           `json:"warnings"`
+	GroupedTimeDataset *ViewDataset       `json:"groupedTimeDataset,omitempty"`
+	HistogramDataset   *ViewDataset       `json:"histogramDataset,omitempty"`
+	ViewDataset        *ViewDataset       `json:"viewDataset,omitempty"`
+	TimeDataset        *ViewDataset       `json:"timeDataset,omitempty"`
+	SummaryDataset     *ViewDataset       `json:"summaryDataset,omitempty"`
+	NumericHistogram   *NumericHistogram  `json:"numericHistogram,omitempty"`
+	ResultToken        string             `json:"resultToken,omitempty"`
+	TraceExamples      *TraceExampleSet   `json:"traceExamples,omitempty"`
+	Numeric            *NumericSummary    `json:"numeric,omitempty"`
+	GroupedTimeSeries  []TimeSeriesGroup  `json:"groupedTimeSeries,omitempty"`
+	SpanStatus         *SpanStatusSummary `json:"spanStatus,omitempty"`
+	TimeSeries         []TimePoint        `json:"timeSeries,omitempty"`
+	Duration           *DurationSummary   `json:"duration,omitempty"`
+	Question           Query              `json:"question"`
+	CapturedAt         string             `json:"capturedAt"`
+	Basis              string             `json:"basis"`
+	Count              string             `json:"count"`
+	State              string             `json:"state"`
+	Rows               []json.RawMessage  `json:"rows"`
+	HasMore            bool               `json:"hasMore"`
+	Groups             []json.RawMessage  `json:"groups"`
+	Fields             []Field            `json:"fields"`
+	FieldsLimited      bool               `json:"fieldsLimited"`
+	Plan               Plan               `json:"plan"`
+	Warnings           []string           `json:"warnings"`
 }
 type Source struct {
 	Endpoint, User, Password string
@@ -375,6 +376,7 @@ func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnl
 	}
 	r.ViewDataset = groupViewDataset(r, plan.Groups != "")
 	r.TimeDataset = timeViewDataset(r, plan.TimeSeries != "")
+	r.GroupedTimeDataset = groupedTimeViewDataset(r, plan.GroupedTimeSeries != "")
 	r.SummaryDataset = summaryViewDataset(r, true)
 	r.HistogramDataset = histogramViewDataset(r)
 	if r.HistogramDataset == nil {

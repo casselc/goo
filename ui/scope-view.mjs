@@ -1,8 +1,9 @@
+import {render as renderGroupedTimeline} from './grouped-timeline-view.mjs';
 import {bindIntervalRange} from './interval-range.mjs';
 /* Public passive scoped displays. The host owns scope, requests and selection. */
 import {validateSnapshot, validateDisplay, selectionIntent, scopeIntent, measureValue, supportsSelection, capabilities,displayRows,populationShare,fractionFacts,histogramIntent} from './view-model.mjs';
 import {formatCell,supportText,exactText,categoryText,categoryLabel,isFraction,fractionContextText} from './view-values.mjs';
-import {asSnapshot,parseSnapshotJSON} from './snapshots.mjs';
+import {asSnapshot,parseSnapshotJSON,hasGuarantee} from './snapshots.mjs';
 import {histogramFacts,histogramBoundText,histogramRangeText,histogramCompactRangeText,nativeHistogramCompactRangeText} from './histogram-values.mjs';
 import './chart-frame.mjs';
 import './time-bars.mjs';
@@ -25,7 +26,7 @@ export function frozenConfig(value){
 
 // Read chrome is presentation only: no certainty is inferred from displayed rows.
 export function qualityFacts(snapshot){
- const q=snapshot.quality,kind=snapshot.shape==='time-series'?'intervals':snapshot.shape==='histogram'?'bins':snapshot.shape==='summary'?'summary':'groups';
+ const q=snapshot.quality,kind=snapshot.shape==='grouped-time-series'?'grouped intervals':snapshot.shape==='time-series'?'intervals':snapshot.shape==='histogram'?'bins':snapshot.shape==='summary'?'summary':'groups';
  const values=[`${q.extent} ${kind}`,`${q.value} values`,`${q.sampling} upstream sampling`];
  return {visible:[...values,...(q.freshness!=='fixed'?[`${q.freshness} snapshot`]:[])],exact:[snapshot.origin,...values,`${q.freshness} snapshot`,snapshot.capturedAt?'Captured '+snapshot.capturedAt:'Capture time unavailable'].filter(Boolean)};
 }
@@ -226,8 +227,9 @@ class Chart extends SuppliedElement {
         this.refuse(checked.reasons);return;
       }
       const rows=snapshot.shape==='ranked'?displayRows(snapshot,display):snapshot.rows;
-      const root=n('goo-chart-frame',undefined,'scope-view');root.data={title:display.title||(snapshot.shape==='histogram'?(snapshot.histogram.kind==='otel-explicit'?'Instrument observation distribution':snapshot.histogram.kind==='span-duration'?'Captured span duration distribution':'Captured numeric distribution'):snapshot.shape==='time-series'?'Captured records over time':snapshot.shape==='summary'?'Population summary':'Scoped breakdown'),window:capturedClock(snapshot.capturedAt),state:snapshot.quality.extent==='unknown'||snapshot.quality.value==='unknown'?'unknown':snapshot.quality.extent==='partial'?'partial':!snapshot.rows.length||snapshot.shape==='histogram'&&histogramFacts(snapshot).total==='0'||snapshot.shape==='summary'&&snapshot.rows[0].values.count==='0'?'no_data':'observed'};root.dataset.valueKnowledge=snapshot.quality.value;root.append(quality(snapshot));
-      if(!snapshot.rows.length&&display.kind!=='time-bar')root.append(n('p',snapshot.shape==='time-series'?'No supplied intervals. Coverage is unknown.':'No supplied groups.','scope-view-empty'));
+      const root=n('goo-chart-frame',undefined,'scope-view');root.data={title:display.title||(snapshot.shape==='histogram'?(snapshot.histogram.kind==='otel-explicit'?'Instrument observation distribution':snapshot.histogram.kind==='span-duration'?'Captured span duration distribution':'Captured numeric distribution'):snapshot.shape==='grouped-time-series'?'Captured records by group over time':snapshot.shape==='time-series'?'Captured records over time':snapshot.shape==='summary'?'Population summary':'Scoped breakdown'),window:capturedClock(snapshot.capturedAt),state:snapshot.quality.extent==='unknown'||snapshot.quality.value==='unknown'?'unknown':snapshot.quality.extent==='partial'?'partial':!snapshot.rows.length||snapshot.shape==='histogram'&&histogramFacts(snapshot).total==='0'||snapshot.shape==='summary'&&snapshot.rows[0].values.count==='0'?'no_data':'observed'};root.dataset.valueKnowledge=snapshot.quality.value;if(snapshot.shape==='grouped-time-series')root.setAttribute('density','compact');root.append(quality(snapshot));
+      if(snapshot.shape==='grouped-time-series')root.append(renderGroupedTimeline(snapshot,display,{onSelect:hasGuarantee(snapshot,'grouped-intervals')?(key=>emit(this,'goo-select',selectionIntent(snapshot,key))):undefined}));
+      else if(!snapshot.rows.length&&display.kind!=='time-bar')root.append(n('p',snapshot.shape==='time-series'?'No supplied intervals. Coverage is unknown.':'No supplied groups.','scope-view-empty'));
       else if(!rows.length&&snapshot.shape==='ranked')root.append(n('p','No matching groups. '+snapshot.rows.length+' groups remain in this result.','scope-view-empty'));
       else if(display.kind==='table')root.append(table(this,snapshot,display,rows));
       else if(snapshot.quality.value==='unknown'){root.append(n('p','Geometry unavailable: value knowledge is unknown. Supplied values remain inspectable.','scope-view-unavailable'),table(this,snapshot,display))}

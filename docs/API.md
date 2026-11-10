@@ -1170,3 +1170,19 @@ empty or omitted legacy environment name; nonempty legacy names retain their old
 semantics. Filesystem captures preserve the field. Saved definitions/views,
 parent-edge/native/service families and XTDB remain unsupported. See
 [request examples, capabilities and rollback limits](RECORD_SELECTOR_API.md).
+
+## Grouped count timeline profile — 395
+
+Supported ordinary grouped-count results add `groupedTimeDataset`, using the
+`grouped-time-series` shape and `grouped-intervals` result-aspect guarantee.
+Exact category/interval keys distinguish missing and present-empty values;
+coherent absent bins have count `"0"`, while uncertain absence is null/unknown.
+This does not establish upstream ingestion completeness.
+
+The existing timeline declaration adds `display.profile: "grouped-count-v1"`,
+count-only Small multiples/Table/Heatmap kinds and bounded local `query`/`order`.
+These options are strings when supplied; explicit null/nonstring values are
+refused. Grouping and bucket width remain on the parent query. The existing
+composition/store/reuse endpoints preserve the destination's complete question.
+See [the finite contract](GROUPED_COUNT_TIMELINE_REUSE.md) for supported profiles,
+source/derived/display bounds, and execution ownership. No new HTTP route is added.

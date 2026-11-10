@@ -1902,3 +1902,28 @@ displays accept `display.labels: [baselineRole, selectionRole]`; see
 [operand roles](COMPARISON_OPERAND_ROLES.md) for literal bounds and neutral defaults.
 Application-owned count pairs propagate their checked operand-fact labels to both
 displays. The labels do not acquire source, navigation or evidence authority.
+
+## Grouped count timelines — 395
+
+`goo-chart` consumes the shared `grouped-time-series` snapshot through the same
+property/HTML attribute boundary as other displays. The application adapter admits
+`Result.groupedTimeDataset`; the passive renderer owns no requests or navigation.
+
+```js
+chart.snapshot = admittedResult.groupedTimeDataset;
+chart.display = {kind: 'heatmap', value: 'count', query: '', order: 'label'};
+```
+
+Small multiples, Table and Heatmap share exact typed category/interval keys and
+one all-group count scale. Find and source/label ordering are local. Heatmaps admit
+at most 32 intervals; the other kinds support the declared maximum of 240. Missing
+and empty categories remain distinct. UTC headings expose complete half-open bounds
+in accessible names/tooltips; literal row labels retain case.
+
+Only admitted coherent grouped coverage paints inferred zero bins and enables
+scope continuation. Diagnostic positive counts remain visible; absent cells are
+unknown. Generic copied JSON imports downgrade zero-fill on a private clone and
+retain no continuation guarantee. The host resolves selection events against its
+current question; `TimelineView` supplies the existing controls and paused-state
+behavior. See [profile, reuse and bounds](GROUPED_COUNT_TIMELINE_REUSE.md) and
+[executed storyboard](../journeys/395-grouped-timeline-storyboard.md).

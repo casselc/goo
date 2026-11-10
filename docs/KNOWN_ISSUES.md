@@ -25,8 +25,12 @@ breadth, depth and consolidation queue after whole-product review.
 [Direct distribution customization](DISTRIBUTION_CUSTOMIZATION.md) (394) uses the
 existing flat count display and exact staged question, explicit Run and no-read
 held Back. Numeric/duration/status profiles and nonzero offsets remain outside
-this shortcut; their existing workflows remain available. Grouped count timeline
-reuse (395), then bounded held-staging consolidation (396), remain next. Detailed checks,
+this shortcut; their existing workflows remain available.
+[Grouped count timeline reuse](GROUPED_COUNT_TIMELINE_REUSE.md) (395) is delivered
+through shared Small multiples/Table/Heatmap displays and existing configuration
+owners. Count-only single-group admission, fixed widths, zero/unknown semantics
+and explicit heatmap limits remain visible. Bounded held-staging consolidation
+(396), then whole-product review, remain next. Detailed checks,
 including held-return regressions and model replay, are recorded in
 [validation](../VALIDATION.md); this summary does not substitute for their
 individual outcomes.

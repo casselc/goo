@@ -5,9 +5,9 @@
 > 393 actual literal transport parity, preclone validation and full Go package
 > checks pass.
 > [394 direct distribution customization](DISTRIBUTION_CUSTOMIZATION.md) is delivered.
-> The remaining finite queue is **395 count-only grouped-time display reuse →
-> 396 composed held-staging consolidation**, then whole-product review. 395 has an explicit supplied-data
-> semantic feasibility gate. Existing source, custody and return owners remain
+> [395 grouped count timeline reuse](GROUPED_COUNT_TIMELINE_REUSE.md) is delivered
+> after its supplied-data semantic gate. The remaining finite queue is
+> **396 composed held-staging consolidation**, then whole-product review. Existing source, custody and return owners remain
 > authoritative; deferred candidates are not parallel execution queues.
 > 367 reusable current RPC views, 368 exact service native interval context,
 > and 369 measured local facet pages are delivered with appropriate native and

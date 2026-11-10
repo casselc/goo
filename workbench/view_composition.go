@@ -263,6 +263,14 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 	if facet != nil {
 		rawChildren++
 	}
+	for _, child := range c.Children {
+		if child.Timeline != nil && child.Timeline.Display.Profile == "grouped-count-v1" {
+			if aggregate || comparison != nil || facet != nil || len(c.Children) != 2 {
+				return errors.New("grouped count composition requires only timeline and records children")
+			}
+			return nil
+		}
+	}
 	if !aggregate && (len(c.Children) != rawChildren || !visibleRecords || q.Signal != "logs" && q.Signal != "spans") {
 		return errors.New("records-only composition requires visible logs or spans records with at most one facet")
 	}
@@ -312,13 +320,10 @@ func ReuseViewComposition(c ViewComposition, source, destination exploration.Que
 			display := *child.Comparison
 			out.Children[i].Comparison = &display
 		} else {
-			if source.BucketMS != destination.BucketMS {
-				return ViewComposition{}, errors.New("timeline requires the same explicit bucket width")
-			}
-			if err := child.Timeline.Validate(destination); err != nil {
+			display, err := ReuseTimelineViewDeclaration(*child.Timeline, source, destination)
+			if err != nil {
 				return ViewComposition{}, err
 			}
-			display := *child.Timeline
 			out.Children[i].Timeline = &display
 		}
 	}

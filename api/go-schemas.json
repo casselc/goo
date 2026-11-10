@@ -10959,6 +10959,16 @@
       "fieldsLimited": {
         "type": "boolean"
       },
+      "groupedTimeDataset": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/scopedview.Dataset"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "groupedTimeSeries": {
         "anyOf": [
           {
@@ -29044,6 +29054,15 @@
   },
   "workbench.TimelineViewDisplay": {
     "properties": {
+      "order": {
+        "type": "string"
+      },
+      "profile": {
+        "type": "string"
+      },
+      "query": {
+        "type": "string"
+      },
       "requiresComplete": {
         "type": "boolean"
       },
@@ -29063,6 +29082,36 @@
   "workbench.TimelineViewDisplayInput": {
     "additionalProperties": false,
     "properties": {
+      "order": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "profile": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "query": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "requiresComplete": {
         "anyOf": [
           {

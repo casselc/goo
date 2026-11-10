@@ -409,7 +409,9 @@ for suffix in ('', 'Input'):
  children['allOf']=[{'contains':{'required':[role]},'minContains':1,'maxContains':1} for role in ('records',)]
  children['allOf'].extend([{'contains':{'required':[role]},'minContains':0,'maxContains':1} for role in ('aggregate','timeline','comparison','facet')])
  children['allOf'].append({'contains':{'not':{'required':['facet']},'properties':{'hidden':{'const':False}}},'minContains':1})
- children['allOf'].append({'if':{'contains':{'required':['aggregate']}},'else':{'maxItems':2,'items':{'anyOf':[{'required':['records'],'properties':{'hidden':{'const':False},'records':{'properties':{'scope':{'properties':{'signal':{'enum':['logs','spans']}}}}}}},{'required':['facet']}]}}})
+ grouped_timeline_child={'required':['timeline'],'properties':{'timeline':{'properties':{'display':{'required':['profile'],'properties':{'profile':{'const':'grouped-count-v1'}}}}}}}
+ raw_records_child={'required':['records'],'properties':{'hidden':{'const':False},'records':{'properties':{'scope':{'properties':{'signal':{'enum':['logs','spans']}}}}}}}
+ children['allOf'].append({'if':{'contains':{'required':['aggregate']}},'else':{'oneOf':[{'maxItems':2,'items':{'anyOf':[raw_records_child,{'required':['facet']}]}},{'minItems':2,'maxItems':2,'contains':grouped_timeline_child,'items':{'anyOf':[{'required':['records']},grouped_timeline_child]}}]}})
  children['allOf'].append({'if':{'contains':{'required':['facet']}},'then':{'items':{'properties':{'comparison':{'required':['baselineQuery'],'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}}}}}}}})
  facet=schemas['workbench.FacetViewDeclaration'+suffix];facet['additionalProperties']=False
  facet['required']=['version','scope','kind','field','display']
@@ -442,12 +444,16 @@ for suffix in ('', 'Input'):
  timeline['properties']['version']['const']='goo.view/1'
  for field in ('scope','kind','display'):timeline['properties'][field]['type']='object'
  timeline['properties']['scope']['required']=['kind','signal']
- timeline['description']='Captured record counts or query-supported raw-span mean/p95 duration over the parent query explicit positive bucket width. Duration requires spans with summary span-duration, checked semantically by Go. Exact clipped bounds, per-cell support/availability and completeness belong to the supplied time dataset, never the declaration. No rate, population-share or percentile-averaging semantics.'
+ timeline['description']='Fixed record counts or query-supported raw-span mean/p95 duration over explicit bounded buckets. The grouped-count-v1 profile consumes one ordinary typed group by fixed interval, with small multiples, Table or Heatmap (at most32 intervals). Grouping, width, exact clipped bounds, zero/unknown state and completeness are checked against the parent query and supplied dataset. No rates, population shares or averaged percentiles.'
  kind=schemas['workbench.TimelineViewKind'+suffix];kind['additionalProperties']=False;kind['required']=['name','version']
- kind['properties']['name']['enum']=['time-bar','table'];kind['properties']['version']['const']=1
+ kind['properties']['name']['enum']=['time-bar','table','small-multiples','heatmap'];kind['properties']['version']['const']=1
  display=schemas['workbench.TimelineViewDisplay'+suffix];display['additionalProperties']=False;display['required']=['value']
  display['properties']['value']['enum']=['count','duration.mean','duration.p95'];display['properties']['title']['maxLength']=120
  display['properties']['requiresComplete']['type']='boolean'
+ display['properties']['profile']['enum']=['','grouped-count-v1']
+ display['properties']['query'].update(type='string',maxLength=256)
+ display['properties']['order']['enum']=['','source','label']
+ timeline.setdefault('allOf',[]).append({'if':{'properties':{'display':{'required':['profile'],'properties':{'profile':{'const':'grouped-count-v1'}}}},'required':['display']},'then':{'properties':{'kind':{'properties':{'name':{'enum':['small-multiples','heatmap','table']}}},'display':{'properties':{'value':{'const':'count'}}}}},'else':{'properties':{'kind':{'properties':{'name':{'enum':['time-bar','table']}}},'display':{'properties':{'query':{'const':''},'order':{'const':''}}}}}})
  record=schemas['workbench.RecordViewDeclaration'+suffix];record['additionalProperties']=False
  record['required']=['version','scope','kind','display']
  for field in ('scope','kind','display'): record['properties'][field]['type']='object'
@@ -469,7 +475,10 @@ for suffix in ('', 'Input'):
  view.setdefault('allOf',[]).append({'if':{'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['facet']}}}}}},'then':{'properties':{'queries':{'items':{'properties':{'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}}}}})
  flat=['layout','columns','fieldColumns','displays','breakdowns','tail']
  view.setdefault('allOf',[]).append({'if':{'required':['composition']},'then':{'required':['version','title','queries'],'properties':{'version':{'const':1},'queries':{'type':'array','minItems':1,'maxItems':1}},'not':{'anyOf':[{'required':[field]} for field in flat]}},'else':{'required':['layout','columns']}})
- raw_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'not':{'contains':{'required':['aggregate']}}}}}}}
+ raw_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'not':{'contains':{'anyOf':[{'required':['aggregate']},grouped_timeline_child]}}}}}}}
+ grouped_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':grouped_timeline_child}}}}}
+ grouped_query={'required':['groupTimeSeries','groupBy','bucketMs'],'properties':{'signal':{'enum':['logs','spans']},'groupTimeSeries':{'const':True},'groupBy':{'minItems':1,'maxItems':1},'bucketMs':{'enum':[1000,10000,60000,300000]},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'summary':{'const':''},'spanStatus':{'const':False}}}
+ view.setdefault('allOf',[]).append({'if':grouped_composition,'then':{'properties':{'queries':{'items':grouped_query}}}})
  view.setdefault('allOf',[]).append({'if':raw_composition,'then':{'properties':{'queries':{'items':{'properties':{'signal':{'enum':['logs','spans']},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}}}}})
 
 # Immutable selected observations, independent of source and annotation storage.
@@ -590,13 +599,13 @@ schemas['exploration.FractionViewCell']={'allOf':[ref('scopedview.Cell'),{'not':
 schemas['scopedview.Values']={'type':'object','additionalProperties':{'type':['string','null'],'maxLength':1024},'description':'Exact strings or explicit missing values. Dataset fields and shape constrain every cell; no vendor-specific opaque payload.'}
 view=schemas['scopedview.Dataset'];view_props=view['properties']
 view_props['partition']=ref('scopedview.Partition')
-view['description']='Supplied immutable captured-record snapshot: ranked groups, explicit intervals or population summaries with optional exact numeric/duration measures. An optional ranked partition derives its denominator from the same exhaustive group read. Result-aspect completeness never certifies raw-record paging, upstream ingestion/sampling or a transactional count/page pair. Scope/revision equality, partition sums and interval coverage are runtime checked.'
-view_props['version']['const']='goo.dataset/1';view_props['shape']['enum']=['ranked','time-series','summary','histogram']
-view_props['id']['pattern']='^[a-f0-9]{64}:(groups|intervals|summary|bins|native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins|native-window:(0|[1-9][0-9]*):bins)$';view_props['revision']['pattern']='^[a-f0-9]{64}$';view_props['capturedAt']['format']='date-time'
+view['description']='Supplied immutable captured-record snapshot: ranked groups, explicit intervals, typed group-by-interval counts or population summaries with optional exact numeric/duration measures. An optional ranked partition derives its denominator from the same exhaustive group read. Result-aspect completeness never certifies raw-record paging, upstream ingestion/sampling or a transactional count/page pair. Scope/revision equality, partition sums and interval coverage are runtime checked.'
+view_props['version']['const']='goo.dataset/1';view_props['shape']['enum']=['ranked','time-series','grouped-time-series','summary','histogram']
+view_props['id']['pattern']='^[a-f0-9]{64}:(groups|intervals|grouped-intervals|summary|bins|native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins|native-window:(0|[1-9][0-9]*):bins)$';view_props['revision']['pattern']='^[a-f0-9]{64}$';view_props['capturedAt']['format']='date-time'
 view_props['origin']['enum']=['source-read','browser-held']
 view_props['sourceBasis'].update(minLength=1,maxLength=128,description='Unverified caller-claimed source basis, separate from the content-hashed held revision. Not a signed receipt.')
 view_props['fields']={'type':'array','minItems':2,'maxItems':18,'items':ref('scopedview.Field')}
-view_props['rows']={'type':'array','maxItems':1000,'items':ref('scopedview.Row')}
+view_props['rows']={'type':'array','maxItems':1920,'items':ref('scopedview.Row')}
 view_props['dimensions']={'type':'array','minItems':1,'maxItems':2,'uniqueItems':True,'items':{'enum':['category','category1']}}
 view_scope=schemas['scopedview.Scope']['properties']
 for name in ('id','generation'):view_scope[name]['pattern']='^[a-f0-9]{64}$'
@@ -615,7 +624,7 @@ view_quality=schemas['scopedview.Quality']['properties'];view_quality['extent'][
 for name,value in [('basis','captured-query'),('value','derived'),('sampling','unknown'),('freshness','fixed')]:view_quality[name]['const']=value
 view_quality['sampling']['description']='Upstream sampling and collection completeness remain unverified even for complete result aspects.'
 view_quality['extent']['description']='Only groups/intervals as named by shape; disagreement or unproved coverage remains unknown.'
-view_complete=schemas['scopedview.Completeness']['properties'];view_complete['basis']['const']='captured-query';view_complete['aspects']={'type':'array','minItems':1,'maxItems':1,'items':{'enum':['groups','intervals','summary','bins']}}
+view_complete=schemas['scopedview.Completeness']['properties'];view_complete['basis']['const']='captured-query';view_complete['aspects']={'type':'array','minItems':1,'maxItems':1,'items':{'enum':['groups','intervals','grouped-intervals','summary','bins']}}
 view_complete['revision']['pattern']='^[a-f0-9]{64}$'
 view_complete['scopeId']['pattern']='^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)|:native-window:(0|[1-9][0-9]*))?$'
 schemas['scopedview.Completeness']['description']='Bound to enclosing revision/scope ID; runtime enforces equality. Intervals require exhaustive contiguous known-state coverage. Never inferred from page length or a separate count.'
@@ -673,6 +682,15 @@ time_shape={'required':['interval'],'not':{'anyOf':[{'required':['dimensions']},
  'fields':{'minItems':3,'maxItems':18,'prefixItems':time_fields,'items':{'allOf':[ref('scopedview.Field'),{'properties':{'key':{'enum':list(measure_specs)}}}]}},
  'rows':{'maxItems':240,'items':time_row},
  'completeness':{'properties':{'aspects':{'const':['intervals']}}}}}
+# Grouped intervals have their own Cartesian coverage, not an unsplit timeline
+# guarantee or a partition/share denominator. Runtime checks categories, sums,
+# canonical digest keys and complete aligned coverage against the exact question.
+grouped_selector={'required':['groupTimeSeries','groupBy','bucketMs'],'properties':{'signal':{'enum':['logs','spans']},'groupTimeSeries':{'const':True},'groupBy':{'minItems':1,'maxItems':1},'summary':{'const':''},'spanStatus':{'const':False}},'not':{'anyOf':[{'required':[key]} for key in ['numeric','numericHistogram','reportedEdge']]}}
+grouped_values=copy.deepcopy(time_values)
+grouped_values['required']=['category','fromMs','toMs','count']
+grouped_values['properties']={'category':category,'fromMs':epoch_ms,'toMs':epoch_ms,'count':{'type':['string','null']}}
+grouped_row={'allOf':[ref('scopedview.Row'),{'required':['state'],'not':{'required':['cells']},'properties':{'key':{'pattern':'^group-interval:[a-f0-9]{64}$'},'values':grouped_values},'oneOf':copy.deepcopy(time_states)}]}
+grouped_shape={'required':['interval','dimensions'],'not':{'anyOf':[{'required':[key]} for key in ['partition','histogram']]},'properties':{'shape':{'const':'grouped-time-series'},'id':{'pattern':'^[a-f0-9]{64}:grouped-intervals$'},'dimensions':{'const':['category']},'interval':{'type':'object'},'scope':{'properties':{'signal':{'enum':['logs','spans']},'selector':grouped_selector}},'fields':{'minItems':4,'maxItems':4,'prefixItems':[view_field_spec('category','string',nullable=True),*time_fields]},'rows':{'maxItems':1920,'items':grouped_row},'completeness':{'properties':{'aspects':{'const':['grouped-intervals']}}}}}
 summary_values={'type':'object','required':['count'],'properties':{'count':exact_count,**measure_values},'additionalProperties':False}
 summary_row={'allOf':[ref('scopedview.Row'),{'not':{'required':['state']},'properties':{'key':{'const':'population'},'values':summary_values}}]}
 summary_fields=[view_field_spec('count','number','records')]
@@ -742,9 +760,11 @@ native_shape['allOf'].append({'if':{'properties':{'scope':{'properties':{'select
 native_shape['properties']['sourceBasis']={'type':'string','pattern':'^[a-f0-9]{64}$'}
 native_shape['properties']['rows']['prefixItems']=[{'properties':{'values':{'properties':{'from':{'const':'-inf'}}}}}]
 native_shape['properties']['rows']['allOf']=[{'contains':{'properties':{'values':{'properties':{key:{'const':value}}}}},'minContains':1,'maxContains':1} for key,value in [('from','-inf'),('to','+inf')]]
-view['oneOf']=[ranked_shape,time_shape,summary_shape,hist_shape,duration_shape,native_shape]
+view['oneOf']=[ranked_shape,time_shape,grouped_shape,summary_shape,hist_shape,duration_shape,native_shape]
 
 view['allOf']=[{'if':{'properties':{'quality':{'properties':{'extent':{'const':'complete'}},'required':['extent']}},'required':['quality']},'then':{'required':['completeness'],'properties':{'completeness':{'type':'object'},'rows':{'items':{'properties':{'state':{'enum':['observed','no_data']}}}}}},'else':{'properties':{'completeness':{'type':'null'}}}}]
+
+view['allOf'].append({'if':{'properties':{'shape':{'const':'grouped-time-series'}}},'else':{'properties':{'rows':{'maxItems':1000}}}})
 
 view['allOf'].append({'if':{'properties':{'scope':{'properties':{'signal':{'const':'metrics'}}}}},'then':{'properties':{'shape':{'const':'histogram'},'histogram':{'properties':{'kind':{'const':'otel-explicit'}}},'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}:(native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)|native-window:(0|[1-9][0-9]*))$'}}}}},'else':{'properties':{'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}$'},'selector':ref('exploration.Query')}}}}})
 

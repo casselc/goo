@@ -1,3 +1,4 @@
+import {validateGrouped} from './grouped-timeline-schema.mjs';
 import {validateMeasurementIntervalSelector,binary64Rational,nativeRationalCoordinate} from './measurement-scope.mjs';
 import {categoryText,categoryLabel} from './view-values.mjs';
 import {validateNumericPredicate} from './question-protocol.mjs';
@@ -45,7 +46,7 @@ function aggregationValid(field){
  return a.method==='exact'&&a.quantile===undefined;
 }
 // This is the public pilot registry, not a vendor-renderer registry.
-export const kinds=Object.freeze({table:Object.freeze({category:'any',numericValue:false}),bar:Object.freeze({shape:'ranked',category:'any',numericValue:true}),line:Object.freeze({shape:'ranked',category:'number',numericValue:true}),'time-bar':Object.freeze({shape:'time-series',category:'timestamp',numericValue:true}),histogram:Object.freeze({shape:'histogram',category:'rational',numericValue:true})});
+export const kinds=Object.freeze({table:Object.freeze({category:'any',numericValue:false}),bar:Object.freeze({shape:'ranked',category:'any',numericValue:true}),line:Object.freeze({shape:'ranked',category:'number',numericValue:true}),'small-multiples':Object.freeze({shape:'grouped-time-series',category:'any',numericValue:false}),heatmap:Object.freeze({shape:'grouped-time-series',category:'any',numericValue:false}),'time-bar':Object.freeze({shape:'time-series',category:'timestamp',numericValue:true}),histogram:Object.freeze({shape:'histogram',category:'rational',numericValue:true})});
 const result=reasons=>({ok:reasons.length===0,reasons});
 const enumField=(o,k,a,r)=>{if(!member(o?.[k],a))r.push(`Invalid ${k}`)};
 export function validateSnapshot(s){
@@ -56,7 +57,7 @@ export function validateSnapshot(s){
  if(s.origin==='browser-held'&&(s.completeness!==undefined||s.quality?.extent==='complete'))reasons.push('Browser-held snapshots cannot attest complete source coverage');
  for(const key of ['sourceBasis','capturedAt'])if(s[key]!==undefined&&!text(s[key]))reasons.push('Invalid optional dataset provenance '+key);
  for(const k of ['id','revision'])if(!text(s[k]))reasons.push(`Missing dataset ${k}`);
- if(!member(s.shape,['ranked','time-series','summary','histogram']))reasons.push('Unsupported dataset shape');
+ if(!member(s.shape,['ranked','time-series','grouped-time-series','summary','histogram']))reasons.push('Unsupported dataset shape');
  if(!record(s.scope)||!text(s.scope.id)||!(text(s.scope.generation)||Number.isSafeInteger(s.scope.generation)&&s.scope.generation>=0)||!member(s.scope.signal,['spans','logs','metrics'])||!record(s.scope.selector))reasons.push('A checked scope identity, generation, signal and selector are required');
  if(s.scope?.signal==='metrics'){try{validateMeasurementIntervalSelector(s.scope.selector)}catch(error){reasons.push(error.message)}if(s.shape!=='histogram'||s.histogram?.kind!=='otel-explicit')reasons.push('Measurement scopes require explicit native observation histograms')}
  const fields=new Map();
@@ -70,7 +71,7 @@ export function validateSnapshot(s){
   else if(Array.isArray(s.rows))for(const row of s.rows)try{categoryLabel(field,row?.values?.[field.key])}catch{reasons.push('Invalid log-pattern category identity')}
  }
  if([...fields.values()].some(field=>field.type==='histogram-bound'&&(s.shape!=='histogram'||!['span-duration','otel-explicit'].includes(s.histogram?.kind)||!['from','to'].includes(field.key))))reasons.push('Histogram bounds require declared native or span-duration bin endpoints');
- if(s.dimensions!==undefined&&(!Array.isArray(s.dimensions)||!s.dimensions.length||s.shape!=='ranked'||new Set(s.dimensions).size!==s.dimensions.length||s.dimensions.some(key=>typeof key!=='string'||!fields.has(key)||fields.get(key)?.aggregation!==undefined)))reasons.push('Ranked dimensions must be distinct declared field keys');
+ if(s.dimensions!==undefined&&(!Array.isArray(s.dimensions)||!s.dimensions.length||!['ranked','grouped-time-series'].includes(s.shape)||new Set(s.dimensions).size!==s.dimensions.length||s.dimensions.some(key=>typeof key!=='string'||!fields.has(key)||fields.get(key)?.aggregation!==undefined)))reasons.push('Ranked dimensions must be distinct declared field keys');
  if(!Array.isArray(s.rows)||s.rows.length>10000)reasons.push('Dataset requires at most 10000 supplied rows');
  else {const keys=new Set();for(const row of s.rows){if(!record(row)||!text(row.key)||keys.has(row.key)||!record(row.values)){reasons.push('Invalid or duplicate stable row key');continue}keys.add(row.key);for(const [key,value] of Object.entries(row.values)){const field=fields.get(key);if(!field){reasons.push(`Undeclared field ${key}`);continue}if(value===null){if(field.nullable!==true)reasons.push('Null values require an explicitly nullable field');continue}if(!typed(value,field))reasons.push(`Invalid ${field.type} value for ${key}`)}}}
  if(s.shape==='ranked'&&Array.isArray(s.rows))for(const row of s.rows){if(fields.has('count')&&!uint64(row?.values?.count))reasons.push('Every ranked row requires its declared exact captured count');if(Array.isArray(s.dimensions)&&s.dimensions.some(key=>!record(row?.values)||!own(row.values,key)))reasons.push('Every declared group dimension requires a supplied cell value')}
@@ -78,18 +79,20 @@ export function validateSnapshot(s){
  if(Array.isArray(s.rows)){validateCells(s,fields,reasons);validateCountRelationships(s,fields,reasons)}
  if(!record(s.quality))reasons.push('Dataset quality is required');
  else {enumField(s.quality,'extent',['complete','partial','unknown'],reasons);enumField(s.quality,'basis',['captured-query'],reasons);enumField(s.quality,'value',['recorded','derived','estimated','unknown'],reasons);enumField(s.quality,'sampling',['unknown','none','sampled'],reasons);enumField(s.quality,'freshness',['fixed','live'],reasons)}
- if(s.completeness!==undefined){const c=s.completeness;if(!record(c)||c.basis!=='captured-query'||!text(c.revision)||!text(c.scopeId)||!Array.isArray(c.aspects)||c.aspects.some(a=>!member(a,['groups','intervals','summary','bins']))||new Set(c.aspects).size!==c.aspects.length)reasons.push('Invalid completeness attestation')}
+ if(s.completeness!==undefined){const c=s.completeness;if(!record(c)||c.basis!=='captured-query'||!text(c.revision)||!text(c.scopeId)||!Array.isArray(c.aspects)||c.aspects.some(a=>!member(a,['groups','intervals','grouped-intervals','summary','bins']))||new Set(c.aspects).size!==c.aspects.length)reasons.push('Invalid completeness attestation')}
  if(s.shape==='time-series')validateIntervals(s,fields,reasons);
+ if(s.shape==='grouped-time-series')validateGrouped(s,fields,reasons);
  if(s.shape==='summary')validateSummary(s,fields,reasons);
  if(s.shape==='histogram')validateHistogram(s,fields,reasons);
  else if(s.histogram!==undefined)reasons.push('Histogram geometry requires a histogram dataset');
  if(s.quality?.extent==='complete'&&!attested(s))reasons.push(`Complete extent requires matching captured-query ${aspect(s)} attestation`);
  return result([...new Set(reasons)]);
 }
-function aspect(s){return s.shape==='histogram'?'bins':s.shape==='time-series'?'intervals':s.shape==='summary'?'summary':'groups'}
+function aspect(s){return s.shape==='histogram'?'bins':s.shape==='grouped-time-series'?'grouped-intervals':s.shape==='time-series'?'intervals':s.shape==='summary'?'summary':'groups'}
 function attested(s){const c=s.completeness;return c?.basis===s.quality?.basis&&c?.revision===s.revision&&c?.scopeId===s.scope?.id&&Array.isArray(c?.aspects)&&c.aspects.includes(aspect(s))}
 export function eligibleKinds(snapshot){
  if(!validateSnapshot(snapshot).ok)return [];
+ if(snapshot.shape==='grouped-time-series')return ['small-multiples','table',...(Math.ceil((Number(snapshot.interval.toMs)-Number(snapshot.interval.fromMs))/Number(snapshot.interval.bucketMs))<=32?['heatmap']:[])];
  if(snapshot.dimensions?.length>1)return ['table'];
  if(snapshot.shape==='histogram')return ['table','histogram'];
  const fields=snapshot.fields,numericFields=fields.filter(numericType);
@@ -104,14 +107,16 @@ export function validateDisplay(snapshot,display){
  if(display.scale!==undefined&&!member(display.scale,['max','population']))reasons.push('Choose max or population scale');
  if(display.query!==undefined&&(typeof display.query!=='string'||display.query.length>256))reasons.push('Find text must contain at most 256 characters');
  if(display.order!==undefined&&!member(display.order,['source','label','value-desc','value-asc']))reasons.push('Choose a supported display order');
- if((display.scale!==undefined||display.query!==undefined||display.order!==undefined)&&(snapshot.shape!=='ranked'||!member(display.kind,['bar','table'])))reasons.push('Find, ordering and scale options require a ranked table or bar view');
+ if((display.scale!==undefined||display.query!==undefined||display.order!==undefined)&&(!['ranked','grouped-time-series'].includes(snapshot.shape)||!member(display.kind,['bar','table','small-multiples','heatmap'])))reasons.push('Find, ordering and scale options require a ranked table or bar view');
  if(display.scale==='population'){
   if(display.value!=='count')reasons.push('Population shares are available only for captured record counts');
   if(!snapshot.partition)reasons.push('Captured-population shares are unavailable for this result');
   else if(snapshot.partition.total==='0')reasons.push('No captured population is available for shares');
  }
+ if(snapshot.shape==='grouped-time-series'&&display.order!==undefined&&!['source','label'].includes(display.order))reasons.push('Grouped timelines support source or label order');
  if(display.requiresComplete!==undefined&&typeof display.requiresComplete!=='boolean')reasons.push('requiresComplete must be boolean');
  if(snapshot.dimensions?.length>1&&display.kind!=='table')reasons.push('Multiple group dimensions require the exact table until a series mapping is declared');
+ if(snapshot.shape==='grouped-time-series'){if(!['small-multiples','table','heatmap'].includes(display.kind)||(display.value??'count')!=='count'||display.scale!==undefined||display.category!==undefined||display.start!==undefined||display.end!==undefined)reasons.push('Grouped timelines require their declared count geometry');if(display.kind==='heatmap'&&Math.ceil((Number(snapshot.interval.toMs)-Number(snapshot.interval.fromMs))/Number(snapshot.interval.bucketMs))>32)reasons.push('Heatmaps support at most 32 intervals; use Small multiples or Table.');}
  const kind=kinds[display.kind];
  if(kind.shape&&kind.shape!==snapshot.shape)reasons.push('Display kind does not support this dataset shape');
  if(display.kind==='histogram'){
@@ -161,6 +166,7 @@ function validateIntervals(s,fields,reasons){
  if(previous!==to)covered=false;
  if(s.quality?.extent==='complete'&&!covered)reasons.push('Complete interval coverage cannot contain gaps or unknown buckets');
 }
+export function groupedIntervalIntent(snapshot,key){const c=context(snapshot),row=snapshot.rows.find(row=>row.key===key);if(snapshot.shape!=='grouped-time-series'||!row||!['observed','no_data'].includes(row.state))throw TypeError('Choose a known supplied grouped interval');return {type:'scope-group-window',...c,key};}
 export function intervalIntent(snapshot,key){
  const c=context(snapshot),row=snapshot.rows.find(row=>row.key===key);
  if(snapshot.shape!=='time-series'||!row||row.state==='unknown')throw TypeError('Window selection requires a known supplied interval in this dataset revision');
@@ -224,7 +230,7 @@ function validateSummary(snapshot,fields,reasons){
  for(const field of fields.values())if(field.key!=='count'&&(!field.aggregation||field.type!=='rational'&&field.aggregation.family!=='span-status'))reasons.push('Population summaries contain only captured count and declared exact rational aggregate measures');
 }
 
-const shapeCapabilities=Object.freeze({ranked:Object.freeze({selectRows:true,filterDimensions:true,selectWindows:false}), 'time-series':Object.freeze({selectRows:true,filterDimensions:false,selectWindows:true}), summary:Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false}),histogram:Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false})});
+const shapeCapabilities=Object.freeze({ranked:Object.freeze({selectRows:true,filterDimensions:true,selectWindows:false}), 'grouped-time-series':Object.freeze({selectRows:true,filterDimensions:false,selectWindows:true}), 'time-series':Object.freeze({selectRows:true,filterDimensions:false,selectWindows:true}), summary:Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false}),histogram:Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false})});
 const none=Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false,completeAspects:Object.freeze([])});
 export function capabilities(snapshot){
  if(!validateSnapshot(snapshot).ok)return none;

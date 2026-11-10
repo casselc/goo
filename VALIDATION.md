@@ -1,5 +1,55 @@
 # Validation record
 
+## Reusable grouped count timelines — 395
+
+[The grouped count profile](docs/GROUPED_COUNT_TIMELINE_REUSE.md) is delivered through
+shared Small multiples/Table/Heatmap displays, the existing population owner and
+immutable configuration store. Known zero, uncertain absence, typed group identity
+and exact query-anchored intervals remain distinct.
+
+- Focused projection/store checks passed **0.087 s / 0.075 s**. Full exploration
+  passed **17.482 s**; final workbench and Go server passed **1.253 s / 7.980 s**.
+  Optional direct ClickHouse Go checks were not enabled; actual source acceptance
+  below is separate evidence.
+- Full frontend **1,431 passed / zero skips / 18.356 s**. Final targeted display,
+  grammar and ownership regressions **24 passed / zero skips / 347.79 ms** after
+  the bounded visual fixes.
+- Hegel cross-language checks passed **0.342 s / zero skips**, covering **32
+  projection/reuse/store vectors** and **13 declaration wire cases**. New local
+  Find/order options reject explicit null and nonstring values in both Go and JS.
+- Actual ordinary OTel journey passed **19.9 s / 22.1 s runner**: **38 physical
+  records / six source-child-destination matrices / 27 facts** across logs and
+  spans. It checks missing/empty/Unicode groups, all exact cells including zeros,
+  non-aligned 137 ms anchors, 500/700 ms final bins, immutable save/reuse and
+  source-free Back. A known-zero missing-group cell actually opens an exact staged
+  nested child and returns to its unchanged held parent without a source read.
+- Measured browser work: **six source requests / four artifact GETs / two
+  configuration publications / 36 physical SQL requests**, plus two separately
+  recorded destination setup configurations. Catalog metadata operations are not
+  included in the artifact-GET counter.
+- Bombadil passed **36.5 s / 37.9 s runner**: **568 snapshots / nine phases / two
+  actual HTTP reads / physical SQL 0 → 12**, with no screenshot prelude. Held
+  source basis, capture clock and local Find survive Back. No actor pixel claim.
+- Required observed Quint/admission passed **4.840 s / zero skips**, admitting the
+  raw record/cell oracles, actual continuation/return and immutable bytes. All
+  **16 rejecting controls** were rejected: eleven main semantic mutants, the
+  unintended stage-read model control and four actor mutations.
+- OpenAPI regeneration/checks pass: **694 wire schemas / 112 operations / 725
+  schemas / 489 fixture responses / 195 requests / 28 mux refusals**. Actual
+  workflow validation passes over **28 genuine responses / ten requests**.
+- API docs browser checks pass over all **112 operations**, including disclosure,
+  filtering, limits, mobile overflow and no page errors.
+- The final lab image is
+  `sha256:f0619a489e997753f62839fdfa98152f0041f40abcd5653a3366d28d6f537ac9`.
+  Capabilities and exact served renderer/OpenAPI bytes pass. Only the Goo server
+  container was updated; telemetry services, stores and volumes remain intact.
+- Design approved all **four final frames**. Literal labels retain case, default
+  figure margins no longer consume narrow width, and compact UTC headings retain
+  exact bounds in accessible names/tooltips. Browser-computed filled-cell text
+  contrast is at least **5.11:1**. Source, derived-row, heatmap and snapshot budgets
+  stay bounded; no ingestion-completeness or performance claim is inferred.
+
+
 ## Direct distribution customization — 394
 
 [Customize distribution](docs/DISTRIBUTION_CUSTOMIZATION.md) stages the existing

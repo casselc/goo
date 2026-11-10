@@ -9,7 +9,7 @@ import {validate as validateSaved} from './saved-capture-protocol.mjs';
 import {fromExploration as recordPageFromExploration} from './record-page.mjs';
 
 const source=createSourceAdapter({id:'goo.explore'}),stored=createSourceAdapter({id:'goo.verified-saved-explore'});
-const slots=Object.freeze({viewDataset:'ranked',timeDataset:'time-series',summaryDataset:'summary',histogramDataset:'histogram'});
+const slots=Object.freeze({viewDataset:'ranked',timeDataset:'time-series',groupedTimeDataset:'grouped-time-series',summaryDataset:'summary',histogramDataset:'histogram'});
 const record=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const recordPages=new WeakMap(),storedRecordPages=new WeakMap();
 function freezeStoredMetadata(value){if(value&&typeof value==='object'){for(const child of Object.values(value))freezeStoredMetadata(child);Object.freeze(value)}return value;}
@@ -36,6 +36,11 @@ function admit(data,expected,adapter,{paging=false}={}){
       const known=['observed','no_data'].includes(data.state),counts=Array.isArray(value.rows)&&value.rows.every(row=>typeof row?.values?.count==='string'&&/^(0|[1-9]\d*)$/.test(row.values.count));
       const coherent=known&&counts&&value.rows.reduce((sum,row)=>sum+BigInt(row.values.count),0n).toString()===data.count;
       if(!coherent&&(value.partition!==undefined||value.completeness!==undefined||value.quality?.extent==='complete'))throw Error('Inconsistent log-pattern reads cannot attest a complete population.');
+    }
+    if(slot==='groupedTimeDataset'){
+      const known=['observed','no_data'].includes(data.state),rows=Array.isArray(value.rows)&&value.rows.every(row=>row?.state!=='unknown'&&typeof row?.values?.count==='string'&&/^(0|[1-9][0-9]*)$/.test(row.values.count));
+      const coherent=known&&rows&&value.rows.reduce((sum,row)=>sum+BigInt(row.values.count),0n).toString()===data.count;
+      if(!coherent&&(value.completeness!==undefined||value.quality?.extent==='complete'))throw Error('Inconsistent grouped reads cannot attest complete group intervals.');
     }
     result[slot]=adapter.adoptSnapshot(value,{question:paging?value.scope.selector:expected});
   }

@@ -14,7 +14,7 @@ const witnesses=new WeakMap(),comparisons=new WeakSet(),histogramComparisons=new
 let nextSource=0,nextLocal=0;
 const record=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const own=(value,key)=>Object.prototype.hasOwnProperty.call(value,key);
-const aspect=snapshot=>snapshot.shape==='histogram'?'bins':snapshot.shape==='time-series'?'intervals':snapshot.shape==='summary'?'summary':'groups';
+const aspect=snapshot=>snapshot.shape==='histogram'?'bins':snapshot.shape==='grouped-time-series'?'grouped-intervals':snapshot.shape==='time-series'?'intervals':snapshot.shape==='summary'?'summary':'groups';
 export class SnapshotError extends TypeError {
  constructor(code,message){super(message);this.name='SnapshotError';this.code=code}
 }
@@ -100,6 +100,7 @@ function hold(raw){
  const id='goo.local/'+ ++nextLocal;raw.id=id;raw.revision=id;
  raw.origin='browser-held';delete raw.completeness;
  if(record(raw.quality))raw.quality.extent='unknown';
+ if(raw.shape==='grouped-time-series'&&Array.isArray(raw.rows))for(const row of raw.rows)if(row?.state==='no_data'&&row.values?.count==='0'){row.state='unknown';row.values.count=null}
  return raw;
 }
 export function importSnapshot(raw){
@@ -121,7 +122,7 @@ function sourceQuestion(raw,question){
  checkedQuestion(question);checkedQuestion(raw.scope.selector);
  if(questionIdentity(raw.scope.selector)!==questionIdentity(question))fail('source-question','Source snapshot does not match the checked requested question');
  if(raw.scope.signal!==question.signal)fail('source-question','Source snapshot signal does not match its question');
- if(raw.shape==='time-series'&&(raw.interval.fromMs!==String(question.fromMs)||raw.interval.toMs!==String(question.toMs)||raw.interval.bucketMs!==String(question.bucketMs)))fail('source-question','Source interval geometry does not match its question');
+ if(['time-series','grouped-time-series'].includes(raw.shape)&&(raw.interval.fromMs!==String(question.fromMs)||raw.interval.toMs!==String(question.toMs)||raw.interval.bucketMs!==String(question.bucketMs)))fail('source-question','Source interval geometry does not match its question');
  if(raw.shape==='ranked'&&(raw.dimensions?.length??0)!==(question.groupBy?.length??0))fail('source-question','Source group dimensions do not match its question');
  if(raw.shape==='histogram'){
   if(raw.histogram.kind==='span-duration'){

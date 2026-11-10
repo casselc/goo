@@ -41,7 +41,7 @@ training proposal now distinguishes these from deferred tasks.
 [394 delivery](DISTRIBUTION_CUSTOMIZATION.md) uses the existing flat count display
 and trail owner, with actual log/span journeys, source-free held Back, save/reuse,
 Bombadil and finite semantic/observed verification. The remaining execution order
-is 395, then 396.
+is 396 after delivered 395.
 
 User task: “This distribution is useful; customize and reuse its scoped view
 without visiting a record inspection first.”
@@ -68,7 +68,14 @@ Acceptance:
 - Refresh storyboard, genuine desktop/narrow frames, relevant Bombadil actions,
   finite property cases and observed trace/model checks with rejecting controls.
 
-## 395 — depth: reusable grouped count-over-time displays
+## 395 — delivered: reusable grouped count-over-time displays
+
+[395 delivery](GROUPED_COUNT_TIMELINE_REUSE.md) implements the grouped dataset,
+profile, shared displays and existing save/reuse path. Actual logs/spans, exact
+cell oracles, nested zero-cell continuation/Back, UI/accessibility review,
+property/wire cases and observed model/actor validation pass. The source budget
+is 1,000 observed cells; dense materialization is separately bounded at 1,920.
+The remaining execution order is 396, then whole-product review.
 
 User task: “Keep this service or route breakdown over time and reuse its display
 on another compatible fixed population.”
@@ -108,6 +115,9 @@ composed acceptance cases that execute both producer and application gates acros
 suspend, Back, repeated staging, replacement, hidden/inert state and stale replies.
 Verify zero reads for approved staging and continued refusal for retired
 acquisition/publication. Include failed replacement with prior accepted evidence.
+Exercise a held parent's local kind/Find edit followed by Save/reopen: the saved
+declaration must match the visible draft without renewing source actions. A
+read-only phase must be explicit; it must not silently discard a visible edit.
 
 Clean up duplicated predicates only where actual repeated orchestration has the
 same ownership semantics. A regression-only closure is acceptable when no safe

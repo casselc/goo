@@ -65,3 +65,7 @@ goo-aligned-histogram{display:block;min-width:0;max-width:100%}goo-aligned-histo
 .scope-view-read-facts{margin:4px 0 0;padding:0;border:0;background:transparent;font-size:11px;color:var(--muted,#98a8bf)}
 .scope-view-read-facts p{margin:3px 0;overflow-wrap:anywhere}
 @media(pointer:coarse){.scoped-breakdown-settings>summary,.scope-view-read-facts>summary,.scoped-breakdown-settings-controls :is(select,input:not([type=checkbox])){min-height:44px}}
+/* Grouped count views retain literal category text and usable narrow width. */
+.grouped-timeline-view{margin-inline:0;min-width:0;max-width:100%}
+.grouped-timeline-view th[scope="row"]{min-width:8rem;width:8rem;max-width:18rem;text-transform:none;letter-spacing:normal;white-space:normal;word-break:normal;overflow-wrap:anywhere;text-align:left;font-weight:500}
+section[aria-label="Grouped record timeline"] input[type="checkbox"]{box-sizing:border-box;width:16px;height:16px;min-width:16px;min-height:16px;flex:0 0 16px;padding:0;margin:0;align-self:center}

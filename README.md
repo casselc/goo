@@ -622,11 +622,12 @@ stay unchanged. [Reusable log-pattern count displays](docs/LOG_PATTERN_DISPLAY_R
 are delivered. [Native HTTP-client duration profiles](docs/HTTP_CLIENT_NATIVE_DURATION.md)
 (392) are delivered. The [literal transport audit](docs/LITERAL_PARAMETER_TRANSPORT.md)
 (393) confirms both source encoders preserve legal values and fixes typed
-question validation before JSON cloning. The whole-product review selects
-[direct distribution customization](docs/DISTRIBUTION_CUSTOMIZATION.md) (394),
-followed by grouped count timelines and bounded workflow consolidation.
-Customize distribution stages the existing count display over its exact question;
-Run is explicit and Back retains the held parent without rereading. Gauge context starts in ordinary Measurements;
+question validation before JSON cloning.
+[Count distributions](docs/DISTRIBUTION_CUSTOMIZATION.md) and
+[grouped count timelines](docs/GROUPED_COUNT_TIMELINE_REUSE.md) can be customized
+and reused through the existing workspace. Configuration retains the exact
+question, Run is explicit, and Back restores held evidence without rereading.
+The next checkpoint consolidates those workflow boundaries. Gauge context starts in ordinary Measurements;
 Saved and service continuation remain deferred. Earlier current RPC view reuse,
 service native interval context and measured bounded facets are also delivered.
 [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most

@@ -1,6 +1,6 @@
 /* Pure host-owned staging. A binding is a retained capability, not event
    authentication. Session owns execution epochs; this module performs no IO. */
-import {isSnapshot,getSnapshotInfo} from './snapshots.mjs';
+import {isSnapshot,getSnapshotInfo,hasGuarantee} from './snapshots.mjs';
 import {identity as questionIdentity} from './question-session.mjs';
 import {validateRecordQuestion} from './question-protocol.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
@@ -9,7 +9,7 @@ import {durationRangeFacts} from './histogram-values.mjs';
 
 const bindings=new WeakMap(),own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
 const record=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
-const slots=Object.freeze({groups:'ranked',intervals:'time-series',summary:'summary',histogram:'histogram'});
+const slots=Object.freeze({groups:'ranked',intervals:'time-series',groupedIntervals:'grouped-time-series',summary:'summary',histogram:'histogram'});
 const baseKeys=['type','datasetId','revision','scopeId','generation'];
 export class ScopeActionError extends TypeError {constructor(code,message){super(message);this.name='ScopeActionError';this.code=code}}
 const fail=(code,message)=>{throw new ScopeActionError(code,message)};
@@ -101,6 +101,7 @@ export function createActionContext(configuration){
    if(typeof active!=='boolean'||typeof canStage!=='boolean')return refusal('owner-state','Action owner callbacks must return synchronous booleans');
    if(!active)return refusal('inactive','This view is not active');
    if(!canStage)return refusal('not-applied','Run the staged question before refining its results');
+   if(entry.slot==='groupedIntervals'&&!hasGuarantee(entry.snapshot,'grouped-intervals'))return refusal('incoherent','Grouped intervals require coherent exhaustive source coverage');
    if(!entry.coherent||!root.coherent)return refusal('incoherent','Source reads disagree; run the question again');
    const rootInfo=getSnapshotInfo(root.snapshot);
    if(root.entry!=='source'||rootInfo.entry!=='source'||!entry.sourceInstance||entry.sourceInstance!==rootInfo.sourceInstance)return refusal('source-required','Held data cannot stage a source question');
@@ -115,7 +116,13 @@ export function createActionContext(configuration){
    const snapshot=entry.snapshot;
    if(!sameIdentity(intent,snapshot))return refusal('identity-mismatch','Selection belongs to a different snapshot');
    const question=structuredClone(entry.question);let label;
-   if(entry.slot==='groups'){
+   if(entry.slot==='groupedIntervals'){
+    const row=snapshot.rows.find(row=>row.key===intent.key),field=question.groupBy?.[0];
+    if(!exactKeys(intent,[...baseKeys,'key'])||intent.type!=='scope-group-window'||!row||!['observed','no_data'].includes(row.state)||!field)return refusal('invalid-membership','Choose a known supplied grouped interval');
+    const from=Number(row.values.fromMs),to=Number(row.values.toMs),value=row.values.category;
+    if(!Number.isSafeInteger(from)||!Number.isSafeInteger(to)||from<question.fromMs||to>question.toMs||from>=to)return refusal('invalid-window','Grouped interval is outside the captured question');
+    question.fromMs=from;question.toMs=to;question.where={all:[...(question.where?.all??(question.where?[question.where]:[])),{field:structuredClone(field),op:op(value),...(value===null?{}:{value})}]};label='Grouped interval';
+   }else if(entry.slot==='groups'){
     const dimensions=snapshot.dimensions??[],groupBy=question.groupBy??[];let values;
     if(!dimensions.length||dimensions.length!==groupBy.length)return refusal('dimension-mismatch','Group dimensions do not match the captured question');
     if(intent.type==='scope-filter'){
