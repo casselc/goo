@@ -40,6 +40,10 @@ unmeasured performance claim or speculative source concurrency belongs here.
 
 ## 400 — breadth: author a compact population summary
 
+Delivered through [authored population summaries](AUTHORED_POPULATION_SUMMARIES.md).
+[Validation](../VALIDATION.md) records actual source, actor and contract checks.
+The remaining active cadence is 401 → 402, then whole-product review.
+
 User task: “Keep the few relevant facts beside these records or this chart, then
 reuse that presentation over another compatible population.”
 

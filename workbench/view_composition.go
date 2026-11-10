@@ -57,6 +57,7 @@ type CompositionKind struct {
 // A child chooses exactly one typed role. Its role is its stable identity;
 // duplicate roles, arbitrary IDs and recursive layout are deliberately absent.
 type ViewCompositionChild struct {
+	Summary    *SummaryViewDeclaration         `json:"summary,omitempty"`
 	Aggregate  *ViewDeclaration                `json:"aggregate,omitempty"`
 	Records    *RecordViewDeclaration          `json:"records,omitempty"`
 	Timeline   *TimelineViewDeclaration        `json:"timeline,omitempty"`
@@ -75,14 +76,15 @@ func (c *ViewCompositionChild) UnmarshalJSON(data []byte) error {
 	_, timeline := fields["timeline"]
 	_, comparison := fields["comparison"]
 	_, facet := fields["facet"]
+	_, summary := fields["summary"]
 	roles := 0
-	for _, present := range []bool{aggregate, records, timeline, comparison, facet} {
+	for _, present := range []bool{aggregate, records, timeline, comparison, facet, summary} {
 		if present {
 			roles++
 		}
 	}
 	if roles != 1 {
-		return errors.New("composition children require exactly one aggregate, records, timeline, comparison or facet role")
+		return errors.New("composition children require exactly one aggregate, records, timeline, comparison, facet or summary role")
 	}
 	if hidden, present := fields["hidden"]; present && bytes.Equal(bytes.TrimSpace(hidden), []byte("null")) {
 		return errors.New("child visibility requires a boolean")
@@ -186,21 +188,21 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 	if _, err := exploration.Compile(q); err != nil {
 		return err
 	}
-	if c.Version != "goo.composition/1" || c.Kind.Name != "stack" || c.Kind.Version != 1 || (len(c.Children) < 1 || len(c.Children) > 5) {
-		return errors.New("require a pinned record composition with one to five children")
+	if c.Version != "goo.composition/1" || c.Kind.Name != "stack" || c.Kind.Version != 1 || (len(c.Children) < 1 || len(c.Children) > 6) {
+		return errors.New("require a pinned record composition with one to six children")
 	}
-	aggregate, records, timeline, visibleData, visibleRecords := false, false, false, false, false
+	aggregate, records, timeline, summary, visibleData, visibleRecords := false, false, false, false, false, false
 	var comparison *CountComparisonViewDeclaration
 	var facet *FacetViewDeclaration
 	for _, child := range c.Children {
 		roles := 0
-		for _, present := range []bool{child.Aggregate != nil, child.Records != nil, child.Timeline != nil, child.Comparison != nil, child.Facet != nil} {
+		for _, present := range []bool{child.Aggregate != nil, child.Records != nil, child.Timeline != nil, child.Comparison != nil, child.Facet != nil, child.Summary != nil} {
 			if present {
 				roles++
 			}
 		}
 		if roles != 1 {
-			return errors.New("composition children require exactly one aggregate, records, timeline, comparison or facet role")
+			return errors.New("composition children require exactly one aggregate, records, timeline, comparison, facet or summary role")
 		}
 		visibleData = visibleData || !child.Hidden && child.Facet == nil
 		visibleRecords = visibleRecords || !child.Hidden && child.Records != nil
@@ -218,6 +220,14 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 			}
 			records = true
 			if err := child.Records.Validate(q); err != nil {
+				return err
+			}
+		} else if child.Summary != nil {
+			if summary {
+				return errors.New("composition allows at most one summary child")
+			}
+			summary = true
+			if err := child.Summary.Validate(q); err != nil {
 				return err
 			}
 		} else if child.Comparison != nil {
@@ -249,6 +259,9 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 	if !records || !visibleData {
 		return errors.New("composition requires records and at least one visible data child")
 	}
+	if summary && comparison != nil {
+		return errors.New("summary and comparison children cannot be combined")
+	}
 	if facet != nil && comparison != nil {
 		if comparison.Kind.Name != "query-count-comparison" || comparison.BaselineQuery == nil {
 			return errors.New("facets can accompany only fresh fixed-query ordinary comparisons")
@@ -260,6 +273,12 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 		}
 	}
 	rawChildren := 1
+	if summary {
+		rawChildren++
+		if timeline {
+			rawChildren++
+		}
+	}
 	if facet != nil {
 		rawChildren++
 	}
@@ -271,10 +290,10 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 			return nil
 		}
 	}
-	if !aggregate && (len(c.Children) != rawChildren || !visibleRecords || q.Signal != "logs" && q.Signal != "spans") {
+	if !aggregate && (len(c.Children) != rawChildren || !visibleRecords && !summary || q.Signal != "logs" && q.Signal != "spans") {
 		return errors.New("records-only composition requires visible logs or spans records with at most one facet")
 	}
-	if !aggregate && (q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.GroupTimeSeries) {
+	if !aggregate && (q.Numeric != nil && !summary || q.NumericHistogram != nil || q.ReportedEdge != nil || q.GroupTimeSeries) {
 		return errors.New("records-only composition requires an ordinary raw query without numeric, histogram, reported-edge or grouped-time profiles")
 	}
 	return nil
@@ -304,6 +323,12 @@ func ReuseViewComposition(c ViewComposition, source, destination exploration.Que
 			display.Display.Columns = slices.Clone(child.Records.Display.Columns)
 			display.Display.FieldColumns = slices.Clone(child.Records.Display.FieldColumns)
 			out.Children[i].Records = &display
+		} else if child.Summary != nil {
+			display, err := ReuseSummaryViewDeclaration(*child.Summary, source, destination)
+			if err != nil {
+				return ViewComposition{}, err
+			}
+			out.Children[i].Summary = &display
 		} else if child.Facet != nil {
 			if err := child.Facet.Validate(destination); err != nil {
 				return ViewComposition{}, err

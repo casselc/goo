@@ -3,8 +3,8 @@
 > Active execution order: [399 product checkpoint](ROADMAP_2026_11_10_CHECKPOINT_399.md),
 > reconciled across [architecture/Go and design/product reviews](reviews/ROADMAP_RECONCILIATION_399.md).
 > 397 quantitative Customize, 398 grouped mean-duration reuse and 399 pure display
-> helper consolidation are accepted. The sole finite queue is **400 compact summary
-> authoring → 401 Services/Saved gauge context → 402 shared-table overflow/context**,
+> helper consolidation and 400 compact summary authoring are accepted. The remaining
+> finite queue is **401 Services/Saved gauge context → 402 shared-table overflow/context**,
 > then whole-product review. Source/custody gates and enclosing Go/JS/API carrier
 > checks remain feature acceptance; grouped P95 and broader platform work are deferred.
 > 367 reusable current RPC views, 368 exact service native interval context,

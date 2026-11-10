@@ -1984,3 +1984,19 @@ imports application owners, numeric authoring controls or PopulationSelection;
 its supplied rectangle event is converted by the existing Distributions owner.
 Cohort snapshots, requests and scope/publication leases stay application-owned.
 See [the dependency boundary](PURE_DISPLAY_HELPERS.md).
+
+
+## Authored population summaries — 400
+
+The sixth optional composition role, `summary`, pins `measure-summary/1` to an
+ordinary record query and one to six distinct existing fields. Records remain
+required. `summary-declaration.mjs` validates available count/numeric/duration/status
+facts and compatible reuse. The application consumes only `summaryDataset`;
+local field/order controls and passive rendering perform no source IO.
+
+Explicit `goo-measure-summary` display field lists retain their exact supplied
+order rather than being regrouped by family. With `data-first`, chosen facts
+precede folded Read facts; support/method disclosures remain available. Authored
+summaries use this mode with compact defaults. No extra ordered flag is required.
+The existing comparison surface is unchanged. See
+[the contract](AUTHORED_POPULATION_SUMMARIES.md).

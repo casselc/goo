@@ -15,7 +15,7 @@ function normalized(view){
  if(next.template&&!next.template.baseline)delete next.template.baseline;if(next.tail&&!next.tail.baseline)delete next.tail.baseline;
  const declaration=d=>{if(d.display.profile==null||d.display.profile==='')delete d.display.profile;for(const key of ['title','scale','order','query','view'])if(d.display[key]==='')delete d.display[key];if(d.display.requiresComplete===false)delete d.display.requiresComplete;empty(d.display,'fieldColumns')};
  for(const d of Object.values(next.displays||{}))declaration(d);
- for(const child of next.composition?.children||[]){if(child.hidden===false)delete child.hidden;for(const role of ['aggregate','records','timeline','comparison','facet'])if(child[role])declaration(child[role]);if(child.comparison?.baselineQuery)child.comparison.baselineQuery=question(child.comparison.baselineQuery);}
+ for(const child of next.composition?.children||[]){if(child.hidden===false)delete child.hidden;for(const role of ['aggregate','records','timeline','comparison','facet','summary'])if(child[role])declaration(child[role]);if(child.comparison?.baselineQuery)child.comparison.baselineQuery=question(child.comparison.baselineQuery);}
  for(const d of Object.values(next.breakdowns||{})){if(d.distribution===false)delete d.distribution;d.metric??='';d.comparisonMetric??='';if(d.baseline)d.baseline=question(d.baseline);else delete d.baseline;}
  const stable=x=>Array.isArray(x)?x.map(stable):object(x)?Object.fromEntries(Object.keys(x).sort().map(key=>[key,stable(x[key])])):x;return JSON.stringify(stable(next));
 }

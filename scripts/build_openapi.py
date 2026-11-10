@@ -396,7 +396,7 @@ for suffix in ('', 'Input'):
  composition['required']=['version','kind','children']
  composition['properties']['kind']['type']='object'
  composition['properties']['version']['const']='goo.composition/1'
- composition['description']='One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison and facet within five unique roles. A facet is an explicit field control, not a visible data child. It may accompany a fresh fixed-query count comparison, validated against both operands; captured comparisons remain outside that combination. No rows, subscriptions or runtime guarantees are stored.'
+ composition['description']='One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison and facet within six unique roles, including an optional compact population summary. A facet is an explicit field control, not a visible data child. It may accompany a fresh fixed-query count comparison, validated against both operands; captured comparisons remain outside that combination. No rows, subscriptions or runtime guarantees are stored.'
  for name,kind_name in [('CompositionKind','stack'),('RecordViewKind','record-table')]:
   kind=schemas['workbench.'+name+suffix];kind['additionalProperties']=False
   kind['required']=['name','version']
@@ -405,17 +405,34 @@ for suffix in ('', 'Input'):
   kind['properties']['version']['const']=1
  child=schemas['workbench.ViewCompositionChild'+suffix];child['additionalProperties']=False
  child['properties']['hidden']['type']='boolean'
- child['oneOf']=[{'required':[role],'not':{'anyOf':[{'required':[other]} for other in ('aggregate','records','timeline','comparison','facet') if other!=role]}} for role in ('aggregate','records','timeline','comparison','facet')]
- for field in ('aggregate','records','timeline','comparison','facet'):
+ child['oneOf']=[{'required':[role],'not':{'anyOf':[{'required':[other]} for other in ('aggregate','records','timeline','comparison','facet','summary') if other!=role]}} for role in ('aggregate','records','timeline','comparison','facet','summary')]
+ for field in ('aggregate','records','timeline','comparison','facet','summary'):
   child['properties'][field]['type']='object'
- children=composition['properties']['children'];children.update(type='array',minItems=1,maxItems=5,items={'$ref':'#/components/schemas/workbench.ViewCompositionChild'+suffix,'type':'object'})
+ children=composition['properties']['children'];children.update(type='array',minItems=1,maxItems=6,items={'$ref':'#/components/schemas/workbench.ViewCompositionChild'+suffix,'type':'object'})
  children['allOf']=[{'contains':{'required':[role]},'minContains':1,'maxContains':1} for role in ('records',)]
- children['allOf'].extend([{'contains':{'required':[role]},'minContains':0,'maxContains':1} for role in ('aggregate','timeline','comparison','facet')])
+ children['allOf'].extend([{'contains':{'required':[role]},'minContains':0,'maxContains':1} for role in ('aggregate','timeline','comparison','facet','summary')])
  children['allOf'].append({'contains':{'not':{'required':['facet']},'properties':{'hidden':{'const':False}}},'minContains':1})
  grouped_timeline_child={'required':['timeline'],'properties':{'timeline':{'properties':{'display':{'required':['profile'],'properties':{'profile':{'enum':['grouped-count-v1','grouped-duration-mean-v1']}}}}}}}
  raw_records_child={'required':['records'],'properties':{'hidden':{'const':False},'records':{'properties':{'scope':{'properties':{'signal':{'enum':['logs','spans']}}}}}}}
- children['allOf'].append({'if':{'contains':{'required':['aggregate']}},'else':{'oneOf':[{'maxItems':2,'items':{'anyOf':[raw_records_child,{'required':['facet']}]}},{'minItems':2,'maxItems':2,'contains':grouped_timeline_child,'items':{'anyOf':[{'required':['records']},grouped_timeline_child]}}]}})
+ children['allOf'].append({'if':{'contains':{'required':['aggregate']}},'else':{'oneOf':[{'minItems':2,'maxItems':4,'contains':{'required':['summary']},'items':{'anyOf':[{'required':[role]} for role in ('records','summary','timeline','facet')]}},{'maxItems':2,'items':{'anyOf':[raw_records_child,{'required':['facet']}]}},{'minItems':2,'maxItems':2,'contains':grouped_timeline_child,'items':{'anyOf':[{'required':['records']},grouped_timeline_child]}}]}})
  children['allOf'].append({'if':{'contains':{'required':['facet']}},'then':{'items':{'properties':{'comparison':{'required':['baselineQuery'],'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}}}}}}}})
+ children['allOf'].append({'if':{'contains':{'required':['summary']}},'then':{'not':{'contains':{'required':['comparison']}}}})
+ summary=schemas['workbench.SummaryViewDeclaration'+suffix]
+ summary.update(additionalProperties=False,required=['version','scope','kind','display'])
+ summary['description']='One to six selected existing population facts in authored order, under the parent ordinary record query. No calculations, snapshots, query or source authority. Records remain required; Run is explicit. Runtime checks supported field families, bindings, units and query combinations.'
+ summary['properties']['version']={'const':'goo.view/1'}
+ for name in ('scope','kind','display'):summary['properties'][name]['type']='object'
+ summary_scope={'type':'object','additionalProperties':False,'required':['kind','signal'],'properties':{'kind':{'const':'record-query'},'signal':{'enum':['logs','spans']}}}
+ summary['properties']['scope']=summary_scope
+ sk=schemas['workbench.SummaryViewKind'+suffix]
+ sk.update(additionalProperties=False,required=['name','version'])
+ sk['properties'].update(name={'const':'measure-summary'},version={'const':1})
+ sd=schemas['workbench.SummaryViewDisplay'+suffix]
+ sd.update(additionalProperties=False,required=['fields'])
+ summary_keys=['count','numeric.mean','numeric.sum','numeric.min','numeric.max','duration.mean','duration.min','duration.max','duration.p50','duration.p95','duration.p99','status.error','status.ok','status.unset','status.unknown','status.error_fraction']
+ sd['properties']['fields']={'type':'array','minItems':1,'maxItems':6,'uniqueItems':True,'items':{'enum':summary_keys}}
+ sd['properties']['title']={'type':'string','maxLength':120,'description':'At most120 UTF-8 bytes, valid Unicode with no controls; runtime enforces byte budget and nonblank nonempty text.'}
+ summary['allOf']=[{'if':{'required':['display'],'properties':{'display':{'required':['fields'],'properties':{'fields':{'contains':{'enum':[key for key in summary_keys if key.startswith(('duration.','status.'))]}}}}}},'then':{'properties':{'scope':{'properties':{'signal':{'const':'spans'}}}}}}]
  facet=schemas['workbench.FacetViewDeclaration'+suffix];facet['additionalProperties']=False
  facet['required']=['version','scope','kind','field','display']
  facet['properties']['version']['const']='goo.view/1'
@@ -485,7 +502,7 @@ for suffix in ('', 'Input'):
  view.setdefault('allOf',[]).append({'if':{'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['facet']}}}}}},'then':{'properties':{'queries':{'items':{'properties':{'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}}}}})
  flat=['layout','columns','fieldColumns','displays','breakdowns','tail']
  view.setdefault('allOf',[]).append({'if':{'required':['composition']},'then':{'required':['version','title','queries'],'properties':{'version':{'const':1},'queries':{'type':'array','minItems':1,'maxItems':1}},'not':{'anyOf':[{'required':[field]} for field in flat]}},'else':{'required':['layout','columns']}})
- raw_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'not':{'contains':{'anyOf':[{'required':['aggregate']},grouped_timeline_child]}}}}}}}
+ raw_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'not':{'contains':{'anyOf':[{'required':['aggregate']},{'required':['summary']},grouped_timeline_child]}}}}}}}
  grouped_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':grouped_timeline_child}}}}}
  grouped_query={'required':['groupTimeSeries','groupBy','bucketMs'],'properties':{'signal':{'enum':['logs','spans']},'groupTimeSeries':{'const':True},'groupBy':{'minItems':1,'maxItems':1},'bucketMs':{'enum':[1000,10000,60000,300000]},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'summary':{'const':''},'spanStatus':{'const':False}}}
  grouped_query['properties'].pop('summary')
@@ -497,6 +514,18 @@ for suffix in ('', 'Input'):
   if profile=='grouped-duration-mean-v1':query_profile.update(required=['signal','summary']);query_profile['properties']['signal']={'const':'spans'}
   view['allOf'].append({'if':profile_composition,'then':{'properties':{'queries':{'items':query_profile}}}})
 
+ summary_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['summary']}}}}}}
+ summary_query={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':2,'items':{'not':{'required':['kind','key'],'properties':{'kind':{'const':'column'},'key':{'enum':['body_pattern_v1','duration_bucket']}}}}},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False},'summary':{'enum':['','span-duration']}}}
+ view.setdefault('allOf',[]).append({'if':summary_composition,'then':{'not':{'required':['template']},'properties':{'queries':{'items':summary_query}}}})
+ for family in ('numeric.','duration.','status.'):
+  field_condition={'required':['summary'],'properties':{'summary':{'properties':{'display':{'required':['fields'],'properties':{'fields':{'contains':{'enum':[key for key in summary_keys if key.startswith(family)]}}}}}}}}
+  present={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':field_condition}}}}}
+  query={'properties':{}}
+  if family=='numeric.':query.update(required=['numeric']);query['properties']['numeric']={'type':'object'}
+  else:
+   name='summary' if family=='duration.' else 'spanStatus'
+   query.update(required=['signal',name]);query['properties'].update(signal={'const':'spans'},**{name:{'const':'span-duration' if family=='duration.' else True}})
+  view['allOf'].append({'if':present,'then':{'properties':{'queries':{'items':query}}}})
  view.setdefault('allOf',[]).append({'if':raw_composition,'then':{'properties':{'queries':{'items':{'properties':{'signal':{'enum':['logs','spans']},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}}}}})
 
 # Immutable selected observations, independent of source and annotation storage.

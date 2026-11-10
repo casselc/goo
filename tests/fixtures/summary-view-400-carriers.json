@@ -1,0 +1,3469 @@
+[
+  {
+    "name": "logs-count-count",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "logs",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "logs"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "logs"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-numeric-selected-order",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "logs",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          }
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "logs"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "numeric.max",
+                  "numeric.min",
+                  "numeric.sum",
+                  "numeric.mean",
+                  "count"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "logs"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "duration-selected-order",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "summary": "span-duration"
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "duration.p95",
+                  "duration.p50",
+                  "duration.max",
+                  "duration.min",
+                  "duration.mean",
+                  "count"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "status-selected-order",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "status.error_fraction",
+                  "status.unknown",
+                  "status.unset",
+                  "status.ok",
+                  "status.error",
+                  "count"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-selected-order",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "reversed-order",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          },
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "hidden-summary",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            },
+            "hidden": true
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "summary-only-visible",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            },
+            "hidden": true
+          }
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "summary-with-aggregate",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true,
+          "groupBy": [
+            {
+              "kind": "attribute",
+              "key": "work.class"
+            }
+          ]
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          },
+          {
+            "aggregate": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "bar",
+                "version": 1
+              },
+              "display": {
+                "category": "category",
+                "value": "numeric.mean",
+                "scale": "max"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "summary-with-timeline",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true,
+          "bucketMs": 1000
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          },
+          {
+            "timeline": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "time-bar",
+                "version": 1
+              },
+              "display": {
+                "value": "duration.mean"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "summary-with-facet",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "logs",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "logs"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "logs"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          },
+          {
+            "facet": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "logs"
+              },
+              "kind": {
+                "name": "categorical-facet",
+                "version": 1
+              },
+              "field": {
+                "kind": "attribute",
+                "key": "work.class"
+              },
+              "display": {
+                "basis": "applied"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "duplicate-summary",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          },
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "missing-records",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "all-hidden",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            },
+            "hidden": true
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            },
+            "hidden": true
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "summary-null",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": null
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "summary-extra-data",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              },
+              "snapshot": {}
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "child-extra-source",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            },
+            "source": {}
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "child-double-role",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            },
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "flat-layout",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "layout": "records"
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "flat-columns",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "columns": [
+        "utc"
+      ]
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "summary-unknown-field",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "invented"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "summary-explicit-null-fields",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": null
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "summary-explicit-null-title",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ],
+                "title": null
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "query-summary-missing",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "query-numeric-missing",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "query-status-missing",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration"
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "query-grouped",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true,
+          "groupTimeSeries": true,
+          "bucketMs": 1000,
+          "groupBy": [
+            {
+              "kind": "attribute",
+              "key": "work.class"
+            }
+          ]
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "query-histogram",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true,
+          "numericHistogram": {
+            "binning": "powers-of-two"
+          }
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "query-logs",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "logs",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count",
+                  "numeric.mean",
+                  "duration.mean",
+                  "duration.p95",
+                  "status.error",
+                  "status.error_fraction"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "spans"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "summary-with-comparison",
+    "view": {
+      "version": 1,
+      "title": "Population summary",
+      "queries": [
+        {
+          "signal": "logs",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "composition": {
+        "version": "goo.composition/1",
+        "kind": {
+          "name": "stack",
+          "version": 1
+        },
+        "children": [
+          {
+            "summary": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "logs"
+              },
+              "kind": {
+                "name": "measure-summary",
+                "version": 1
+              },
+              "display": {
+                "fields": [
+                  "count"
+                ]
+              }
+            }
+          },
+          {
+            "records": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "logs"
+              },
+              "kind": {
+                "name": "record-table",
+                "version": 1
+              },
+              "display": {
+                "columns": [
+                  "utc",
+                  "service",
+                  "summary"
+                ]
+              }
+            }
+          },
+          {
+            "comparison": {
+              "version": "goo.view/1",
+              "scope": {
+                "kind": "record-query",
+                "signal": "logs"
+              },
+              "kind": {
+                "name": "query-count-comparison",
+                "version": 1
+              },
+              "baselineQuery": {
+                "signal": "logs",
+                "environment": "prod",
+                "fromMs": 1137,
+                "toMs": 9137,
+                "limit": 3,
+                "offset": 0,
+                "where": {
+                  "all": [
+                    {
+                      "field": {
+                        "kind": "resource",
+                        "key": "service.namespace"
+                      },
+                      "op": "eq",
+                      "value": ""
+                    },
+                    {
+                      "any": [
+                        {
+                          "field": {
+                            "kind": "attribute",
+                            "key": "work.class"
+                          },
+                          "op": "eq",
+                          "value": "read"
+                        },
+                        {
+                          "field": {
+                            "kind": "attribute",
+                            "key": "work.class"
+                          },
+                          "op": "eq",
+                          "value": "write"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "display": {
+                "value": "count"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  }
+]

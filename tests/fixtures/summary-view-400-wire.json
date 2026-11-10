@@ -1,0 +1,6407 @@
+[
+  {
+    "name": "logs-count-count",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-count-selected-order",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-numeric-count",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-numeric-numeric.mean",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.mean"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-numeric-numeric.sum",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.sum"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-numeric-numeric.min",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.min"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-numeric-numeric.max",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.max"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-numeric-selected-order",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.max",
+          "numeric.min",
+          "numeric.sum",
+          "numeric.mean",
+          "count"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "spans-count-count",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "spans-count-selected-order",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "spans-numeric-count",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "spans-numeric-numeric.mean",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.mean"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "spans-numeric-numeric.sum",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.sum"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "spans-numeric-numeric.min",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.min"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "spans-numeric-numeric.max",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.max"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "spans-numeric-selected-order",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.max",
+          "numeric.min",
+          "numeric.sum",
+          "numeric.mean",
+          "count"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "duration-count",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "duration-duration.mean",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.mean"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "duration-duration.min",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.min"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "duration-duration.max",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.max"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "duration-duration.p50",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.p50"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "duration-duration.p95",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.p95"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "duration-duration.p99",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.p99"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "duration-selected-order",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.p95",
+          "duration.p50",
+          "duration.max",
+          "duration.min",
+          "duration.mean",
+          "count"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "status-count",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "status-status.error",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "status.error"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "status-status.ok",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "status.ok"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "status-status.unset",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "status.unset"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "status-status.unknown",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "status.unknown"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "status-status.error_fraction",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "status-selected-order",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "status.error_fraction",
+          "status.unknown",
+          "status.unset",
+          "status.ok",
+          "status.error",
+          "count"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-count",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-numeric.mean",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.mean"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-numeric.sum",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.sum"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-numeric.min",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.min"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-numeric.max",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.max"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-duration.mean",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.mean"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-duration.min",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.min"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-duration.max",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.max"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-duration.p50",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.p50"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-duration.p95",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.p95"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-duration.p99",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.p99"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-status.error",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "status.error"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-status.ok",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "status.ok"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-status.unset",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "status.unset"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-status.unknown",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "status.unknown"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-status.error_fraction",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "combined-selected-order",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.mean",
+          "numeric.max",
+          "numeric.min",
+          "numeric.sum",
+          "numeric.mean",
+          "count"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "display-fields-48",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": null
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "display-fields-49",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": []
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "display-fields-50",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "count"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "display-fields-51",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "count",
+          "count",
+          "count",
+          "count",
+          "count",
+          "count"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "display-fields-52",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "unknown"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "display-fields-53",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          null
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "display-fields-54",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": "count"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "display-title-55",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ],
+        "title": null
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "display-title-56",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ],
+        "title": 3
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "display-title-57",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ],
+        "title": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "display-title-58",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ],
+        "title": "  "
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "display-title-59",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ],
+        "title": "x\n"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "display-title-60",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ],
+        "title": "\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "display-title-61",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ],
+        "title": "\ud800"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "display-compact-62",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ],
+        "compact": true
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "display-snapshot-63",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ],
+        "snapshot": {}
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "root-version",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/2",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "root-evidence",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      },
+      "evidence": {}
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "scope-signal",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "scope-kind",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "measurement-question",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "scope-question",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans",
+        "question": {
+          "signal": "spans",
+          "environment": "prod",
+          "fromMs": 1137,
+          "toMs": 9137,
+          "limit": 3,
+          "offset": 0,
+          "where": {
+            "all": [
+              {
+                "field": {
+                  "kind": "resource",
+                  "key": "service.namespace"
+                },
+                "op": "eq",
+                "value": ""
+              },
+              {
+                "any": [
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "read"
+                  },
+                  {
+                    "field": {
+                      "kind": "attribute",
+                      "key": "work.class"
+                    },
+                    "op": "eq",
+                    "value": "write"
+                  }
+                ]
+              }
+            ]
+          },
+          "numeric": {
+            "field": {
+              "kind": "attribute",
+              "key": "work.value"
+            },
+            "type": "int64",
+            "unit": "{item}",
+            "parse": "canonical-decimal"
+          },
+          "summary": "span-duration",
+          "spanStatus": true
+        }
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "kind-name",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "kind-version",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 2
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "kind-source",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1,
+        "source": true
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "omitted-version",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "omitted-scope",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "omitted-kind",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "omitted-display",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "omitted-display-fields",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {}
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "valid-unicode-title",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ],
+        "title": "\u96ea summary"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "unsupported-source-numeric.mean",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "numeric.mean"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "unsupported-source-duration.mean",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "duration.mean"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "unsupported-source-status.error",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "status.error"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "unsupported-query-groupTimeSeries-81",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true,
+      "groupTimeSeries": true
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "unsupported-query-numericHistogram-82",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true,
+      "numericHistogram": {
+        "binning": "powers-of-two"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "unsupported-query-reportedEdge-83",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true,
+      "reportedEdge": {}
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "unsupported-query-groupBy-84",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true,
+      "groupBy": [
+        {
+          "kind": "column",
+          "key": "body_pattern_v1"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "unsupported-query-groupBy-85",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true,
+      "groupBy": [
+        {
+          "kind": "column",
+          "key": "duration_bucket"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "ordinary-group-count-0",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true,
+      "groupBy": []
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "ordinary-group-count-1",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.class"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "ordinary-group-count-2",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 9137,
+      "limit": 3,
+      "offset": 0,
+      "where": {
+        "all": [
+          {
+            "field": {
+              "kind": "resource",
+              "key": "service.namespace"
+            },
+            "op": "eq",
+            "value": ""
+          },
+          {
+            "any": [
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "read"
+              },
+              {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.class"
+                },
+                "op": "eq",
+                "value": "write"
+              }
+            ]
+          }
+        ]
+      },
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "work.value"
+        },
+        "type": "int64",
+        "unit": "{item}",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration",
+      "spanStatus": true,
+      "groupBy": [
+        {
+          "kind": "resource",
+          "key": "service.name"
+        },
+        {
+          "kind": "attribute",
+          "key": "work.class"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "measure-summary",
+        "version": 1
+      },
+      "display": {
+        "fields": [
+          "count",
+          "numeric.mean",
+          "duration.mean",
+          "duration.p95",
+          "status.error",
+          "status.error_fraction"
+        ]
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  }
+]

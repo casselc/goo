@@ -1,5 +1,52 @@
 # Validation record
 
+## Authored compact population summaries — 400
+
+[Population summaries](docs/AUTHORED_POPULATION_SUMMARIES.md) are an optional
+sixth composition role over the existing source summary dataset. One to six
+ordered count/numeric/duration/recorded-status facts use the existing passive
+component, with compact defaults and folded read facts. No grouping, additional
+summary SQL or evaluator is introduced. Templates, comparison children and
+specialized source profiles remain explicitly outside this arm.
+
+- Go workbench/server checks passed **2.018 s / 8.159 s** on Go **1.27.3**.
+  Focused actual source/editor callback tests **four passed / zero skips**.
+  Full frontend **1,456 passed / zero skips / 62.750 s**, including explicit
+  field-order rendering, visibility and retired/hidden/inert/pending control refusal.
+- Shared **89 leaf / 30 enclosing-view Go/JavaScript vectors** and accepted-store
+  round trips passed **0.341 s**. The same API cases pass for input/output shapes.
+  Whole-query field availability, byte/Unicode/control text and binding checks
+  remain runtime semantics. Full OpenAPI checks passed **112 operations / 731
+  schemas / 489 fixture responses / 195 admitted requests / 28 refusals**.
+  All **42 actual browser API responses** and their available request bodies
+  also conform.
+- Actual main passed in **about one minute / 1.1 minutes runner**, with **36
+  physical records / three ungrouped source/destination cases / 40 boundaries**.
+  Independent raw membership and arithmetic check all supplied numeric, duration
+  and status values/support. Chosen mixed-family order survives save/reopen/reuse;
+  full predicates, environment policy, exact bounds and nondefault page limits
+  remain intact. Actual controls distinguish empty input, no valid values and zero.
+- Main observed work: **13 source requests / nine configuration GETs / three
+  browser publications / 39 physical SQL queries**, plus **three explicit
+  destination-setup publications**. Stage, local field/order changes, Inspect/Apply,
+  reopen and held Back add no telemetry reads. One authored summary is rendered,
+  without a duplicate automatic summary.
+- Independent Bombadil passed **36.3 s / 37.7 s runner**: **400 snapshots / nine
+  phases / two source requests / six physical SQL queries**. It observes numeric
+  field selection/order and the exact held return. No actor pixel-oracle claim.
+- Required observed Quint admission passed **6.49 s / zero skips**, checking raw
+  records, source plans/settings, values/support, exact means/quantiles, counters
+  and actor observations. All **eight semantic mutants** and the **staging-read
+  model control** were rejected. Hegel passed **48 generated local field/order/
+  reuse/store vectors / 1.83 s**; these are not additional source observations.
+- Design accepted all **three actual desktop/narrow frames**. Storyboard and
+  serial verification commands are current. The remaining roadmap is Services/
+  Saved gauge context (401), then shared-table overflow/context (402).
+- Rebuilt and refreshed only the lab packages service. Running image
+  `sha256:6b83dc157b0cbcfa1c65447e9cb21ffc3e69c935a9df07c3c26a2e19534a412b`
+  responds to the capabilities check; served summary declaration and population
+  modules match reviewed source bytes. Existing services and stores were preserved.
+
 ## Pure display dependency consolidation — 399
 
 [Pure display helpers](docs/PURE_DISPLAY_HELPERS.md) separate six supplied-value

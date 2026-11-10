@@ -28981,6 +28981,182 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.StepScope"
   },
+  "workbench.SummaryViewDeclaration": {
+    "properties": {
+      "display": {
+        "$ref": "#/components/schemas/workbench.SummaryViewDisplay"
+      },
+      "kind": {
+        "$ref": "#/components/schemas/workbench.SummaryViewKind"
+      },
+      "scope": {
+        "$ref": "#/components/schemas/workbench.ViewDeclarationScope"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "scope",
+      "kind",
+      "display"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.SummaryViewDeclaration"
+  },
+  "workbench.SummaryViewDeclarationInput": {
+    "additionalProperties": false,
+    "properties": {
+      "display": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.SummaryViewDisplayInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "kind": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.SummaryViewKindInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scope": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ViewDeclarationScopeInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.SummaryViewDeclaration"
+  },
+  "workbench.SummaryViewDisplay": {
+    "properties": {
+      "fields": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "fields"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.SummaryViewDisplay"
+  },
+  "workbench.SummaryViewDisplayInput": {
+    "additionalProperties": false,
+    "properties": {
+      "fields": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.SummaryViewDisplay"
+  },
+  "workbench.SummaryViewKind": {
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "version": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "name",
+      "version"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.SummaryViewKind"
+  },
+  "workbench.SummaryViewKindInput": {
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.SummaryViewKind"
+  },
   "workbench.TimelineViewDeclaration": {
     "properties": {
       "display": {
@@ -29399,6 +29575,16 @@
           }
         ]
       },
+      "summary": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.SummaryViewDeclaration"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "timeline": {
         "anyOf": [
           {
@@ -29484,6 +29670,23 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/workbench.RecordViewDeclarationInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "summary": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.SummaryViewDeclarationInput"
               },
               {
                 "type": "null"

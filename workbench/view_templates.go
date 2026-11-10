@@ -202,6 +202,10 @@ func (d recordViewTemplate) validateProfile(q exploration.Query) error {
 }
 
 func (b ViewTemplateBinding) Validate(q exploration.Query, c ViewComposition) error {
+	if slices.ContainsFunc(c.Children, func(child ViewCompositionChild) bool { return child.Summary != nil }) {
+		return errors.New("summary children are not category templates")
+	}
+
 	if _, err := exploration.Compile(q); err != nil {
 		return err
 	}

@@ -82,6 +82,7 @@ function measureList(snapshot,fields){
 
 function summaryBody(snapshot,display){
   const root=n('div',undefined,'measure-summary'),fields=display.fields.map(key=>snapshot.fields.find(field=>field.key===key));
+  if(display.configured){root.append(measureList(snapshot,fields));return root;}
   const groups=[['Captured records',fields.filter(field=>!field.aggregation)],['Numeric values',fields.filter(field=>field.aggregation?.family==='numeric')],['Duration',fields.filter(field=>field.aggregation?.family==='duration')],['Span status',fields.filter(field=>field.aggregation?.family==='span-status'||field.aggregation?.family==='ratio'&&snapshot.fields.find(ref=>ref.key===field.aggregation.numerator)?.aggregation?.family==='span-status')],['Fractions',fields.filter(field=>field.aggregation?.family==='ratio'&&snapshot.fields.find(ref=>ref.key===field.aggregation.numerator)?.aggregation?.family!=='span-status')]];
   for(const [title,items] of groups){if(!items.length)continue;const section=n('section',undefined,'measure-group');section.append(n('h4',title));
     const primary=display.compact&&!display.configured&&!['Span status','Fractions'].includes(title)?items.filter(field=>!field.aggregation||['mean','quantile'].includes(field.aggregation.kind)):items;
@@ -123,7 +124,7 @@ function comparisonBody(comparison,display){
 }
 
 class Supplied extends (globalThis.HTMLElement||class {}){
-  static get observedAttributes(){return ['snapshot','comparison','display']}
+  static get observedAttributes(){return ['snapshot','comparison','display','data-first']}
   connectedCallback(){for(const key of ['snapshot','comparison','display'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];this[key]=value}this.render()}
   attributeChangedCallback(){this.render()}
   normalize(key,value){return key==='snapshot'?asSnapshot(value):key==='comparison'?asComparison(value):frozenConfig(value)}
@@ -145,7 +146,7 @@ class Summary extends Supplied{
   render(){try{
     const snapshot=this.snapshot,valid=validateSnapshot(snapshot);if(!valid.ok){this.refuse(this._inputErrors?.snapshot?[this._inputErrors.snapshot]:valid.reasons);return}if(snapshot.shape!=='summary'){this.refuse(['A population summary snapshot is required.']);return}
     const display=options(this.display,snapshot.fields),root=n('goo-chart-frame',undefined,'measure-frame');root.data={title:display.title||'Population summary',state:snapshot.quality.extent==='unknown'||snapshot.quality.value==='unknown'?'unknown':snapshot.quality.extent==='partial'?'partial':snapshot.rows[0].values.count==='0'?'no_data':'observed'};
-    root.append(provenance(snapshot),summaryBody(snapshot,display));this.replaceChildren(root);
+    if(this.hasAttribute('data-first')){const facts=n('details',undefined,'measure-read-facts');facts.append(n('summary','Read facts'),provenance(snapshot));root.append(summaryBody(snapshot,display),facts)}else root.append(provenance(snapshot),summaryBody(snapshot,display));this.replaceChildren(root);
   }catch(error){this.refuse([error instanceof SyntaxError?'Invalid summary JSON.':error.message||'Summary unavailable.'])}}
 }
 

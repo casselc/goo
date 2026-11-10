@@ -49064,12 +49064,283 @@
                 "composition": {
                   "properties": {
                     "children": {
+                      "contains": {
+                        "required": [
+                          "summary"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "template"
+                ]
+              },
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "signal": {
+                        "enum": [
+                          "logs",
+                          "spans"
+                        ]
+                      },
+                      "groupBy": {
+                        "maxItems": 2,
+                        "items": {
+                          "not": {
+                            "required": [
+                              "kind",
+                              "key"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "const": "column"
+                              },
+                              "key": {
+                                "enum": [
+                                  "body_pattern_v1",
+                                  "duration_bucket"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      },
+                      "summary": {
+                        "enum": [
+                          "",
+                          "span-duration"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "summary"
+                        ],
+                        "properties": {
+                          "summary": {
+                            "properties": {
+                              "display": {
+                                "required": [
+                                  "fields"
+                                ],
+                                "properties": {
+                                  "fields": {
+                                    "contains": {
+                                      "enum": [
+                                        "numeric.mean",
+                                        "numeric.sum",
+                                        "numeric.min",
+                                        "numeric.max"
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "numeric": {
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "numeric"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "summary"
+                        ],
+                        "properties": {
+                          "summary": {
+                            "properties": {
+                              "display": {
+                                "required": [
+                                  "fields"
+                                ],
+                                "properties": {
+                                  "fields": {
+                                    "contains": {
+                                      "enum": [
+                                        "duration.mean",
+                                        "duration.min",
+                                        "duration.max",
+                                        "duration.p50",
+                                        "duration.p95",
+                                        "duration.p99"
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "signal": {
+                        "const": "spans"
+                      },
+                      "summary": {
+                        "const": "span-duration"
+                      }
+                    },
+                    "required": [
+                      "signal",
+                      "summary"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "summary"
+                        ],
+                        "properties": {
+                          "summary": {
+                            "properties": {
+                              "display": {
+                                "required": [
+                                  "fields"
+                                ],
+                                "properties": {
+                                  "fields": {
+                                    "contains": {
+                                      "enum": [
+                                        "status.error",
+                                        "status.ok",
+                                        "status.unset",
+                                        "status.unknown",
+                                        "status.error_fraction"
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "signal": {
+                        "const": "spans"
+                      },
+                      "spanStatus": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "signal",
+                      "spanStatus"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
                       "not": {
                         "contains": {
                           "anyOf": [
                             {
                               "required": [
                                 "aggregate"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "summary"
                               ]
                             },
                             {
@@ -49802,12 +50073,283 @@
                 "composition": {
                   "properties": {
                     "children": {
+                      "contains": {
+                        "required": [
+                          "summary"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "template"
+                ]
+              },
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "signal": {
+                        "enum": [
+                          "logs",
+                          "spans"
+                        ]
+                      },
+                      "groupBy": {
+                        "maxItems": 2,
+                        "items": {
+                          "not": {
+                            "required": [
+                              "kind",
+                              "key"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "const": "column"
+                              },
+                              "key": {
+                                "enum": [
+                                  "body_pattern_v1",
+                                  "duration_bucket"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      },
+                      "summary": {
+                        "enum": [
+                          "",
+                          "span-duration"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "summary"
+                        ],
+                        "properties": {
+                          "summary": {
+                            "properties": {
+                              "display": {
+                                "required": [
+                                  "fields"
+                                ],
+                                "properties": {
+                                  "fields": {
+                                    "contains": {
+                                      "enum": [
+                                        "numeric.mean",
+                                        "numeric.sum",
+                                        "numeric.min",
+                                        "numeric.max"
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "numeric": {
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "numeric"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "summary"
+                        ],
+                        "properties": {
+                          "summary": {
+                            "properties": {
+                              "display": {
+                                "required": [
+                                  "fields"
+                                ],
+                                "properties": {
+                                  "fields": {
+                                    "contains": {
+                                      "enum": [
+                                        "duration.mean",
+                                        "duration.min",
+                                        "duration.max",
+                                        "duration.p50",
+                                        "duration.p95",
+                                        "duration.p99"
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "signal": {
+                        "const": "spans"
+                      },
+                      "summary": {
+                        "const": "span-duration"
+                      }
+                    },
+                    "required": [
+                      "signal",
+                      "summary"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "summary"
+                        ],
+                        "properties": {
+                          "summary": {
+                            "properties": {
+                              "display": {
+                                "required": [
+                                  "fields"
+                                ],
+                                "properties": {
+                                  "fields": {
+                                    "contains": {
+                                      "enum": [
+                                        "status.error",
+                                        "status.ok",
+                                        "status.unset",
+                                        "status.unknown",
+                                        "status.error_fraction"
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "signal": {
+                        "const": "spans"
+                      },
+                      "spanStatus": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "signal",
+                      "spanStatus"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
                       "not": {
                         "contains": {
                           "anyOf": [
                             {
                               "required": [
                                 "aggregate"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "summary"
                               ]
                             },
                             {
@@ -52616,6 +53158,316 @@
         ],
         "description": "Fixed authored scope for record, native measurement or trace-search intent. Runtime verifies exact environment policy and bounds against the selected typed payload. Only native measurements admit exact nanosecond scope fields."
       },
+      "workbench.SummaryViewDeclaration": {
+        "properties": {
+          "display": {
+            "$ref": "#/components/schemas/workbench.SummaryViewDisplay",
+            "type": "object"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/workbench.SummaryViewKind",
+            "type": "object"
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "signal"
+            ],
+            "properties": {
+              "kind": {
+                "const": "record-query"
+              },
+              "signal": {
+                "enum": [
+                  "logs",
+                  "spans"
+                ]
+              }
+            }
+          },
+          "version": {
+            "const": "goo.view/1"
+          }
+        },
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "display"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.SummaryViewDeclaration",
+        "additionalProperties": false,
+        "description": "One to six selected existing population facts in authored order, under the parent ordinary record query. No calculations, snapshots, query or source authority. Records remain required; Run is explicit. Runtime checks supported field families, bindings, units and query combinations.",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "display"
+              ],
+              "properties": {
+                "display": {
+                  "required": [
+                    "fields"
+                  ],
+                  "properties": {
+                    "fields": {
+                      "contains": {
+                        "enum": [
+                          "duration.mean",
+                          "duration.min",
+                          "duration.max",
+                          "duration.p50",
+                          "duration.p95",
+                          "duration.p99",
+                          "status.error",
+                          "status.ok",
+                          "status.unset",
+                          "status.unknown",
+                          "status.error_fraction"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "workbench.SummaryViewDeclarationInput": {
+        "additionalProperties": false,
+        "properties": {
+          "display": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.SummaryViewDisplayInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.SummaryViewKindInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "signal"
+            ],
+            "properties": {
+              "kind": {
+                "const": "record-query"
+              },
+              "signal": {
+                "enum": [
+                  "logs",
+                  "spans"
+                ]
+              }
+            }
+          },
+          "version": {
+            "const": "goo.view/1"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.SummaryViewDeclaration",
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "display"
+        ],
+        "description": "One to six selected existing population facts in authored order, under the parent ordinary record query. No calculations, snapshots, query or source authority. Records remain required; Run is explicit. Runtime checks supported field families, bindings, units and query combinations.",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "display"
+              ],
+              "properties": {
+                "display": {
+                  "required": [
+                    "fields"
+                  ],
+                  "properties": {
+                    "fields": {
+                      "contains": {
+                        "enum": [
+                          "duration.mean",
+                          "duration.min",
+                          "duration.max",
+                          "duration.p50",
+                          "duration.p95",
+                          "duration.p99",
+                          "status.error",
+                          "status.ok",
+                          "status.unset",
+                          "status.unknown",
+                          "status.error_fraction"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "workbench.SummaryViewDisplay": {
+        "properties": {
+          "fields": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 6,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "count",
+                "numeric.mean",
+                "numeric.sum",
+                "numeric.min",
+                "numeric.max",
+                "duration.mean",
+                "duration.min",
+                "duration.max",
+                "duration.p50",
+                "duration.p95",
+                "duration.p99",
+                "status.error",
+                "status.ok",
+                "status.unset",
+                "status.unknown",
+                "status.error_fraction"
+              ]
+            }
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120,
+            "description": "At most120 UTF-8 bytes, valid Unicode with no controls; runtime enforces byte budget and nonblank nonempty text."
+          }
+        },
+        "required": [
+          "fields"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.SummaryViewDisplay",
+        "additionalProperties": false
+      },
+      "workbench.SummaryViewDisplayInput": {
+        "additionalProperties": false,
+        "properties": {
+          "fields": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 6,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "count",
+                "numeric.mean",
+                "numeric.sum",
+                "numeric.min",
+                "numeric.max",
+                "duration.mean",
+                "duration.min",
+                "duration.max",
+                "duration.p50",
+                "duration.p95",
+                "duration.p99",
+                "status.error",
+                "status.ok",
+                "status.unset",
+                "status.unknown",
+                "status.error_fraction"
+              ]
+            }
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120,
+            "description": "At most120 UTF-8 bytes, valid Unicode with no controls; runtime enforces byte budget and nonblank nonempty text."
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.SummaryViewDisplay",
+        "required": [
+          "fields"
+        ]
+      },
+      "workbench.SummaryViewKind": {
+        "properties": {
+          "name": {
+            "const": "measure-summary"
+          },
+          "version": {
+            "const": 1
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.SummaryViewKind",
+        "additionalProperties": false
+      },
+      "workbench.SummaryViewKindInput": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "const": "measure-summary"
+          },
+          "version": {
+            "const": 1
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.SummaryViewKind",
+        "required": [
+          "name",
+          "version"
+        ]
+      },
       "workbench.TimelineViewDeclaration": {
         "properties": {
           "display": {
@@ -53407,7 +54259,7 @@
             ],
             "type": "array",
             "minItems": 1,
-            "maxItems": 5,
+            "maxItems": 6,
             "items": {
               "$ref": "#/components/schemas/workbench.ViewCompositionChild",
               "type": "object"
@@ -53460,6 +54312,15 @@
               },
               {
                 "contains": {
+                  "required": [
+                    "summary"
+                  ]
+                },
+                "minContains": 0,
+                "maxContains": 1
+              },
+              {
+                "contains": {
                   "not": {
                     "required": [
                       "facet"
@@ -53483,6 +54344,39 @@
                 },
                 "else": {
                   "oneOf": [
+                    {
+                      "minItems": 2,
+                      "maxItems": 4,
+                      "contains": {
+                        "required": [
+                          "summary"
+                        ]
+                      },
+                      "items": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "records"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "summary"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "timeline"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "facet"
+                            ]
+                          }
+                        ]
+                      }
+                    },
                     {
                       "maxItems": 2,
                       "items": {
@@ -53611,6 +54505,24 @@
                     }
                   }
                 }
+              },
+              {
+                "if": {
+                  "contains": {
+                    "required": [
+                      "summary"
+                    ]
+                  }
+                },
+                "then": {
+                  "not": {
+                    "contains": {
+                      "required": [
+                        "comparison"
+                      ]
+                    }
+                  }
+                }
               }
             ]
           },
@@ -53631,7 +54543,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewComposition",
         "additionalProperties": false,
-        "description": "One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison and facet within five unique roles. A facet is an explicit field control, not a visible data child. It may accompany a fresh fixed-query count comparison, validated against both operands; captured comparisons remain outside that combination. No rows, subscriptions or runtime guarantees are stored."
+        "description": "One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison and facet within six unique roles, including an optional compact population summary. A facet is an explicit field control, not a visible data child. It may accompany a fresh fixed-query count comparison, validated against both operands; captured comparisons remain outside that combination. No rows, subscriptions or runtime guarantees are stored."
       },
       "workbench.ViewCompositionChild": {
         "properties": {
@@ -53682,6 +54594,17 @@
             ],
             "type": "object"
           },
+          "summary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.SummaryViewDeclaration"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
           "timeline": {
             "anyOf": [
               {
@@ -53724,6 +54647,11 @@
                   "required": [
                     "facet"
                   ]
+                },
+                {
+                  "required": [
+                    "summary"
+                  ]
                 }
               ]
             }
@@ -53752,6 +54680,11 @@
                 {
                   "required": [
                     "facet"
+                  ]
+                },
+                {
+                  "required": [
+                    "summary"
                   ]
                 }
               ]
@@ -53782,6 +54715,11 @@
                   "required": [
                     "facet"
                   ]
+                },
+                {
+                  "required": [
+                    "summary"
+                  ]
                 }
               ]
             }
@@ -53811,6 +54749,11 @@
                   "required": [
                     "facet"
                   ]
+                },
+                {
+                  "required": [
+                    "summary"
+                  ]
                 }
               ]
             }
@@ -53839,6 +54782,45 @@
                 {
                   "required": [
                     "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "summary"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "summary"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "aggregate"
+                  ]
+                },
+                {
+                  "required": [
+                    "records"
+                  ]
+                },
+                {
+                  "required": [
+                    "timeline"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "facet"
                   ]
                 }
               ]
@@ -53932,6 +54914,24 @@
             ],
             "type": "object"
           },
+          "summary": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.SummaryViewDeclarationInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
           "timeline": {
             "anyOf": [
               {
@@ -53979,6 +54979,11 @@
                   "required": [
                     "facet"
                   ]
+                },
+                {
+                  "required": [
+                    "summary"
+                  ]
                 }
               ]
             }
@@ -54007,6 +55012,11 @@
                 {
                   "required": [
                     "facet"
+                  ]
+                },
+                {
+                  "required": [
+                    "summary"
                   ]
                 }
               ]
@@ -54037,6 +55047,11 @@
                   "required": [
                     "facet"
                   ]
+                },
+                {
+                  "required": [
+                    "summary"
+                  ]
                 }
               ]
             }
@@ -54066,6 +55081,11 @@
                   "required": [
                     "facet"
                   ]
+                },
+                {
+                  "required": [
+                    "summary"
+                  ]
                 }
               ]
             }
@@ -54094,6 +55114,45 @@
                 {
                   "required": [
                     "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "summary"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "summary"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "aggregate"
+                  ]
+                },
+                {
+                  "required": [
+                    "records"
+                  ]
+                },
+                {
+                  "required": [
+                    "timeline"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "facet"
                   ]
                 }
               ]
@@ -54125,7 +55184,7 @@
             ],
             "type": "array",
             "minItems": 1,
-            "maxItems": 5,
+            "maxItems": 6,
             "items": {
               "$ref": "#/components/schemas/workbench.ViewCompositionChildInput",
               "type": "object"
@@ -54178,6 +55237,15 @@
               },
               {
                 "contains": {
+                  "required": [
+                    "summary"
+                  ]
+                },
+                "minContains": 0,
+                "maxContains": 1
+              },
+              {
+                "contains": {
                   "not": {
                     "required": [
                       "facet"
@@ -54201,6 +55269,39 @@
                 },
                 "else": {
                   "oneOf": [
+                    {
+                      "minItems": 2,
+                      "maxItems": 4,
+                      "contains": {
+                        "required": [
+                          "summary"
+                        ]
+                      },
+                      "items": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "records"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "summary"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "timeline"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "facet"
+                            ]
+                          }
+                        ]
+                      }
+                    },
                     {
                       "maxItems": 2,
                       "items": {
@@ -54329,6 +55430,24 @@
                     }
                   }
                 }
+              },
+              {
+                "if": {
+                  "contains": {
+                    "required": [
+                      "summary"
+                    ]
+                  }
+                },
+                "then": {
+                  "not": {
+                    "contains": {
+                      "required": [
+                        "comparison"
+                      ]
+                    }
+                  }
+                }
               }
             ]
           },
@@ -54362,7 +55481,7 @@
           "kind",
           "children"
         ],
-        "description": "One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison and facet within five unique roles. A facet is an explicit field control, not a visible data child. It may accompany a fresh fixed-query count comparison, validated against both operands; captured comparisons remain outside that combination. No rows, subscriptions or runtime guarantees are stored."
+        "description": "One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison and facet within six unique roles, including an optional compact population summary. A facet is an explicit field control, not a visible data child. It may accompany a fresh fixed-query count comparison, validated against both operands; captured comparisons remain outside that combination. No rows, subscriptions or runtime guarantees are stored."
       },
       "workbench.ViewDeclaration": {
         "properties": {

@@ -632,8 +632,9 @@ question, Run is explicit, and Back restores held evidence without rereading.
 edits and saved definitions aligned after Back; invalid Find blocks Save and
 recovers on correction. Source controls retain their separate lifetime.
 [Pure display-helper consolidation](docs/PURE_DISPLAY_HELPERS.md) is complete.
-The reviewed queue is compact summary authoring, Services/Saved gauge context,
-then shared-table overflow and context. Gauge context starts in ordinary Measurements;
+[Compact summary authoring](docs/AUTHORED_POPULATION_SUMMARIES.md) keeps selected
+whole-population facts in the same reusable grammar. The remaining queue is
+Services/Saved gauge context, then shared-table overflow and context. Gauge context starts in ordinary Measurements;
 Saved and service continuation remain deferred. Earlier current RPC view reuse,
 service native interval context and measured bounded facets are also delivered.
 [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most

@@ -5,7 +5,7 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-399. The [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_399.md) owns execution order;
+400. The [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_399.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
 below are research inputs, not additional backlogs or claims of vendor parity.
 
@@ -39,8 +39,10 @@ and [held editing/save consolidation](HELD_PRESENTATION_OWNERSHIP.md) (396)
 are delivered. Quantitative customization (397) preserves the selected numeric or
 duration measure through that same workflow. [Grouped mean duration](GROUPED_MEAN_DURATION_REUSE.md) (398) preserves exact
 sum/count support with unavailable empty latency. [Pure helper consolidation](PURE_DISPLAY_HELPERS.md) (399) removes grouped
-renderer back edges without moving source ownership. The reviewed next queue is
-400 summary authoring, 401 Services/Saved gauge context, then 402 shared-table context. Delivered layout acceptance and remaining feature
+renderer back edges without moving source ownership.
+[Summary authoring](AUTHORED_POPULATION_SUMMARIES.md) (400) uses existing exact
+whole-population facts with no forced grouping. The remaining queue is 401
+Services/Saved gauge context, then 402 shared-table context. Delivered layout acceptance and remaining feature
 boundaries are distinguished below.
 
 | Area | Remaining gap or decision | Current reference |
