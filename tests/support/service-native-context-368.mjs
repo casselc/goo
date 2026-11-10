@@ -4,6 +4,7 @@ import * as Context from '../../ui/native-record-context.mjs';
 class Element {
  constructor(tag='div'){this.localName=tag;this.children=[];this.isConnected=true;this.hidden=false;this.open=false;this.listeners={};this.selectedKey='held-interval';this.dataset={}}
  append(...children){this.children.push(...children);for(const child of children)if(child&&typeof child==='object')child.parentElement=this}
+ contains(node){return this.children.some(child=>child===node||child&&typeof child==='object'&&child.contains?.(node))}
  setAttribute(){}
  addEventListener(type,fn){this.listeners[type]=fn}
  closest(selector){return selector==='[inert]'&&this.inert?this:null}

@@ -5,6 +5,11 @@ Saved owner with a separately checked export/sample relation. Interval gestures
 retain the contract below; reported references preserve the original measurement
 window and exact namespace rather than substituting a derived interval.
 
+[Retained gauge observation context](RETAINED_GAUGE_RECORD_CONTEXT.md) has its own
+receipt/result and unique-sample admission. A reported point supplies a clipped
+nearby window, not a captured export interval; unavailable magnitude is not an
+invented zero.
+
 Milestone 364 adds the existing native interval-context gesture to saved
 counter/histogram evidence. Implementation, UI/generated, genuine native/recorded-fact model replay and
 positive actor checks pass, together with the shared kept-context regression. See [validation](../VALIDATION.md) for execution status.
@@ -53,10 +58,11 @@ Existing planner restrictions remain: supported counter/histogram export
 intervals only, with established service/resource identity and exact half-open
 nanosecond membership. The enclosing millisecond source window retains exact
 timestamp predicates, policy, namespace and instance distinctions. Metric
-attributes and instrumentation scope do not become record filters. Gauges,
-stocks, aggregated histogram time buckets and unsupported resources acquire no
-invented interval or lookaround. An unknown native value does not manufacture a
-numeric contribution.
+attributes and instrumentation scope do not become record filters. Gauges use
+[separate observation-context admission](RETAINED_GAUGE_RECORD_CONTEXT.md), never
+an invented export interval. Stocks, aggregated histogram time buckets and
+unsupported resources acquire no interval or lookaround. An unknown native value
+does not manufacture a numeric contribution.
 
 ## Retain origin, not a joint observation
 

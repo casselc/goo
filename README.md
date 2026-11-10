@@ -633,9 +633,10 @@ edits and saved definitions aligned after Back; invalid Find blocks Save and
 recovers on correction. Source controls retain their separate lifetime.
 [Pure display-helper consolidation](docs/PURE_DISPLAY_HELPERS.md) is complete.
 [Compact summary authoring](docs/AUTHORED_POPULATION_SUMMARIES.md) keeps selected
-whole-population facts in the same reusable grammar. The remaining queue is
-Services/Saved gauge context, then shared-table overflow and context. Gauge context starts in ordinary Measurements;
-Saved and service continuation remain deferred. Earlier current RPC view reuse,
+whole-population facts in the same reusable grammar.
+[Retained gauge observation context](docs/RETAINED_GAUGE_RECORD_CONTEXT.md) documents
+Services/Saved admission, exact nearby-record scope and source-free return alongside
+ordinary Measurements. Earlier current RPC view reuse,
 service native interval context and measured bounded facets are also delivered.
 [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most
 100 matches while Find, totals and comparison scales use the complete admitted

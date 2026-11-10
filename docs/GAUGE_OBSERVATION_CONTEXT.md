@@ -1,7 +1,9 @@
 # Records around a gauge observation
 
-Milestone 388. Implemented in ordinary Measurements; see
-[validation](../VALIDATION.md) for checked behavior and limits.
+Milestone 388 covers ordinary Measurements; see [validation](../VALIDATION.md)
+for checked behavior and limits. Services and Saved have separate
+[retained-gauge admission](RETAINED_GAUGE_RECORD_CONTEXT.md), rather than borrowing
+the ordinary measurement owner's authority.
 
 The user task is to inspect logs or spans reported near an unusual or unavailable
 gauge observation. This is a time association within one reported service
@@ -78,9 +80,9 @@ flowchart LR
 
 Existing counter/histogram interval planning and reported-exemplar navigation
 retain their own admission. A gauge point is not promoted into a native coverage
-interval. The first cut excludes stock, resource-bound gauges, Saved and service
-dashboard continuation; those surfaces require their own retained-evidence
-admission before adopting the projection.
+interval. Stock and resource-bound gauges remain outside this projection. The
+original 388 cut excluded Services and Saved; their separate request/receipt and
+retained-sample gates are defined in [401](RETAINED_GAUGE_RECORD_CONTEXT.md).
 
 Trace expansion remains a separate, broader read by reported trace ID. Saving or
 sharing the child question retains its filters, not a durable citation to the

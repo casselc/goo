@@ -2000,3 +2000,11 @@ precede folded Read facts; support/method disclosures remain available. Authored
 summaries use this mode with compact defaults. No extra ordered flag is required.
 The existing comparison surface is unchanged. See
 [the contract](AUTHORED_POPULATION_SUMMARIES.md).
+
+### Retained gauge observation context (401)
+
+Services and Saved reuse the existing timeline inspector and observation actions;
+no new display component is introduced. Application owners admit the actual
+requested widget or full capture envelope and bind action lifetimes. Picker drafts
+retire staging without reads; local component disclosure grants no source lease.
+See [retained gauge context](RETAINED_GAUGE_RECORD_CONTEXT.md).

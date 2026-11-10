@@ -92,6 +92,10 @@ Acceptance:
 
 ## 401 — depth: records around retained gauges in Services and Saved
 
+Delivered through [retained gauge context](RETAINED_GAUGE_RECORD_CONTEXT.md).
+[Validation](../VALIDATION.md) records actual source, actor and contract checks.
+The remaining active milestone is 402, then whole-product review.
+
 User task: “This reported gauge observation is unusual or unavailable. Show logs
 or spans around it, then return to exactly the native evidence I was inspecting.”
 

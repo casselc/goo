@@ -21,6 +21,10 @@ reopen itself after another case is chosen. Draft text and exact document/captur
 references remain with their existing owners. The active-investigation context
 and Browse investigations return to the retained page-local draft.
 
+[Gauge-to-record context](RETAINED_GAUGE_RECORD_CONTEXT.md) keeps the immutable
+receipt, original native read and selected reported sample separate from fresh
+record evidence. Returning to the retained measurement does not reload its capture.
+
 ## Secondary tools and relevant recovery
 
 - General capture ID entry lives in **Open a capture by ID** inside the evidence

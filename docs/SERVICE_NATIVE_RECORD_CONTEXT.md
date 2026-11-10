@@ -10,6 +10,10 @@ histogram export interval, and choose **Logs in interval** or **Spans in
 interval**. The existing record workspace stages the question for explicit
 **Run**. **Back to service** returns to the held service card and selection.
 
+For a gauge, [retained observation context](RETAINED_GAUGE_RECORD_CONTEXT.md)
+uses a uniquely retained reported timestamp and the requested widget question.
+It clips a nearby window; it does not promote the point into an export interval.
+
 ```mermaid
 sequenceDiagram
   participant User
@@ -48,8 +52,10 @@ the service. A failed child read does not change the held metric evidence; a lat
 response must not publish after Return. No native or capture-store read belongs
 to staging or returning.
 
-This cut excludes gauge lookaround, stock observations, aggregate buckets,
-fleet percentiles and broad resource joins. It reuses existing rendering,
+This interval cut excludes gauge lookaround; the separate
+[gauge contract](RETAINED_GAUGE_RECORD_CONTEXT.md) owns that gesture. Stock
+observations, aggregate buckets, fleet percentiles and broad resource joins remain
+outside these service interval actions. The interval path reuses existing rendering,
 planning and fixed-record navigation; no endpoint or storage format is added.
 
 See [architecture review](reviews/SERVICE_NATIVE_RECORD_CONTEXT_ARCHITECTURE_368.md)

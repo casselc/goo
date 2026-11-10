@@ -41,6 +41,11 @@ unavailable. Percentiles remain outside this arm. Pure display-helper
 [consolidation](PURE_DISPLAY_HELPERS.md) (399) is delivered. The architecture/Go
 and design/product reviews adopt compact summary authoring (400), Services/Saved
 gauge context (401), then shared-table overflow/context (402).
+[Retained gauge context](RETAINED_GAUGE_RECORD_CONTEXT.md) (401) is delivered for
+Services and Saved service gauges, including zero/unavailable observations and
+read-free held return. Stocks/resource gauges remain outside this arm. Picker
+draft edits retire staging immediately; reverting does not revive old controls.
+Shared-table overflow/context (402) is next, followed by whole-product review.
 [Summary authoring](AUTHORED_POPULATION_SUMMARIES.md) (400) is delivered through
 the existing composition, summary dataset and store. It supports up to six ordered
 count/numeric/duration/recorded-status facts without requiring grouping; specialized

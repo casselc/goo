@@ -1,5 +1,50 @@
 # Validation record
 
+## Retained gauge context in Services and Saved — 401
+
+[Retained gauge context](docs/RETAINED_GAUGE_RECORD_CONTEXT.md) extends the existing
+observation planner and held-return owners. Select a service gauge sample, stage
+nearby logs/spans, Run explicitly, then return to the same evidence and selection.
+Zero and unavailable values remain distinct. Stocks/resource gauges are excluded.
+
+- Focused Go server/planner checks passed **5.372 s / 0.412 s** on Go **1.27.3**;
+  these are targeted checks, not a full Go suite or optional XTDB/source campaign.
+- Full frontend **1,465 passed / zero skips / 31.217 s**. Final focused gauge
+  tests **nine passed / zero skips / 0.381 s**, including actual picker checkbox,
+  defaults and clear edits, permanent draft retirement, late owners, reverted
+  drafts and explicit Apply. Full Saved receipt validation also retains existing
+  counter/histogram/exemplar behavior through upgraded complete fixtures.
+- Hegel passed **24 complete Saved carriers / 48 Go+JS observation plans / 936
+  refusal controls / 0.869 s**. API checks passed those **24 carriers / 120
+  malformed-envelope controls**. All **71 actual browser API responses** and
+  available request bodies conform to OpenAPI. No production API type changed.
+- Actual main passed **51.4 s / 54.1 s runner**: **six Services/Saved cases / 39
+  boundaries**, named/missing/empty namespaces, current-only/effective policy,
+  zero/unavailable samples and both clipped window edges. Independent raw rows
+  establish exact membership. Stage, hidden/inert/stale callbacks and Return add
+  no source/store reads; return preserves native DOM, selection, focus and receipt.
+  A deliberately held response after Return cannot replace the parent.
+- Main observed **31 source requests / six capture GETs / zero browser writes /
+  84 physical SQL statements**, including dashboard/setup work. **Seven explicit
+  child Runs** account for **21** statements: existing count, rows and field
+  discovery SQL. Setup capture publications are recorded separately.
+- Independent Bombadil passed **42.7 s / 44.4 s runner**, with **693 snapshots**
+  across initial, stream, selected, staged, read, back and complete. It performs
+  one explicit record request / three SQL statements, with no native or capture
+  reread after setup. Pixel review is separate from its state assertions.
+- Required observed Quint/main and actor admission passed **5.210 s / zero skips**.
+  Exact compiled child SQL and parameter bindings match actual source calls.
+  All **ten semantic mutants** and the **staging-read model control** were rejected.
+  This includes foreign source binds, changed bounds/basis/receipt and parent drift.
+- Rebuilt and refreshed only the lab packages service; capabilities returns 200
+  and all six changed served UI modules match reviewed bytes. Image
+  `sha256:33ba3415618583c6e9e8b1b188d3703ff0c66eaf0e8e6ffcb55d19838d2ff9cf`.
+  Existing telemetry, services and stores were preserved.
+- Design accepted all **three actual desktop/390px frames**. The executable
+  [storyboard](journeys/401-retained-gauge-context-storyboard.md), custody/process
+  diagram and Services/Saved docs are current. Next is shared-table overflow and
+  retained context (402), then whole-product review.
+
 ## Authored compact population summaries — 400
 
 [Population summaries](docs/AUTHORED_POPULATION_SUMMARIES.md) are an optional

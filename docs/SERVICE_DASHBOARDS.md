@@ -438,6 +438,11 @@ builds its gauge/counter/histogram chart. Selecting observations or native bucke
 performs no source read and changes neither dashboard scope nor stored evidence.
 Compact latest-value cards and their whole-window coverage semantics are unchanged.
 
+[Gauge-to-record context](RETAINED_GAUGE_RECORD_CONTEXT.md) uses the selected
+reported observation in this retained result, bound to the requested widget and
+current visit. Logs/spans stage without reading; Run is explicit, and Return keeps
+the native selection and original read clock.
+
 
 ## Planned family expansion
 
