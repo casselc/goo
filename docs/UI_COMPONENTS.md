@@ -1942,3 +1942,20 @@ keeps the last valid plot, exposes an inline accessible error and blocks Save;
 correction publishes the same settings shown by the view. The outward
 `presentation()` retains the raw draft so source Customize cannot silently copy
 an earlier query. See [ownership and regression contract](HELD_PRESENTATION_OWNERSHIP.md).
+
+
+## Quantitative distribution continuation — 397
+
+Ordinary numeric and span-duration Bar/Table profiles use the same scoped
+breakdown editor and application-owned Customize action as count. The adapter's
+current presentation supplies the selected measure, Find and order; the hidden
+legacy measure selector has no authority. Noncount population shares are refused.
+The exact numeric binding, literal unit, parse policy and complete query remain
+parent-owned. Supplied invalid/missing/empty support and unavailable arithmetic
+retain their existing component semantics. No new renderer or component role is
+introduced. See [the workflow](DISTRIBUTION_CUSTOMIZATION.md).
+
+Ordinary display controls accept omission for defaults. Explicit null for text,
+scale, order or complete-only is rejected consistently by the Go decoder and
+JavaScript validator; the existing ordinary optional profile-null convention is
+unchanged. Invalid Unicode is rejected before Go JSON decoding can repair it.

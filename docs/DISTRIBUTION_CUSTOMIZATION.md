@@ -1,10 +1,10 @@
 # Customize an accepted distribution
 
-Milestone 394 is delivered;
+Milestone 394 count customization and milestone 397 quantitative customization are delivered;
 [validation](../VALIDATION.md) records executed checks. The
-[active roadmap](ROADMAP_2026_11_10_CHECKPOINT_393.md) defines this finite cut.
+[active roadmap](ROADMAP_2026_11_10_CHECKPOINT_396.md) defines this finite cut.
 
-An accepted ordinary log/span count breakdown leads directly to the existing
+An accepted ordinary log/span count, numeric or span-duration breakdown leads directly to the existing
 [population workspace](POPULATION_WORKSPACE.md) and its
 [display controls and Preserve](SAVED_DISPLAY_DECLARATIONS.md). Use **Customize distribution** after the visual instead of inspecting a
 record merely to reach the same scoped display editor. This continuation adds no
@@ -12,14 +12,20 @@ query engine, renderer, view store or second population owner.
 
 ## Finite admission
 
-The profile is count-only, one ordinary qualified grouping, logs or spans,
-observed nonempty evidence and the full canonical ranked source groups. Offset
-must be zero: a nonzero offset is explicitly unavailable because existing stored
-views require page zero. A nondefault limit is retained exactly. An active
-noncount presentation is refused rather than silently converted to count.
+The profile accepts one ordinary qualified grouping, logs or spans, observed
+nonempty evidence and the full canonical ranked source groups. Bar and Table
+support captured count; numeric mean, sum, minimum and maximum; and span-duration
+mean, minimum, maximum, p50, p95 and p99 when supplied by the query. Offset must be
+zero; a nondefault limit is retained exactly. The current selected measure and
+presentation are preserved, never silently converted to count. Numeric field,
+type, scale, literal unit and parse policy remain part of the complete question.
+Only count has population-share scale. Quantitative bars use the full-population
+maximum magnitude; local Find does not redefine it. Invalid, empty and missing
+numeric support remain separate; no valid values means unavailable arithmetic,
+not zero. Duration percentiles remain group summaries, never fleet percentiles.
 The originating result and its complete question must remain current and accepted.
 
-Numeric measures, duration summaries, status summaries, reported-edge scopes,
+Status summaries, reported-edge scopes,
 grouped-time queries, numeric histograms and derived pattern profiles do not
 acquire this continuation merely because they draw bars. Existing specialized
 workflows remain available. Changed-between-read evidence cannot attest a complete
@@ -46,7 +52,7 @@ its own status distinct from any prior accepted evidence still retained.
 
 ```mermaid
 flowchart LR
-  D[Accepted count distribution] --> C[Direct customization action]
+  D[Accepted ordinary distribution] --> C[Direct customization action]
   C --> S[Existing flat display configuration staged]
   S --> R[Explicit Run population view]
   R --> V[Existing display controls]
@@ -67,4 +73,5 @@ Empty, changed, failed and unsupported cases need explicit outcomes rather than
 an enabled no-op. The log/span journey, Bombadil campaign and required observed-model admission
 pass; all six semantic mutants and the unintended staging-read model control
 are rejected. See the [executable storyboard](../journeys/394-distribution-customize-storyboard.md)
-and [validation](../VALIDATION.md) for the measured outcomes.
+and the [quantitative storyboard](../journeys/397-quantitative-customize-storyboard.md)
+for 397. [Validation](../VALIDATION.md) records the measured outcomes.

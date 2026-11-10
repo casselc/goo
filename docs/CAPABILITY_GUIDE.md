@@ -5,7 +5,7 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-396. The [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_396.md) owns execution order;
+397. The [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_396.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
 below are research inputs, not additional backlogs or claims of vendor parity.
 
@@ -36,8 +36,9 @@ The active roadmap adopts a finite breadth/depth/consolidation queue after the
 393 whole-product checkpoint: [direct distribution customization](DISTRIBUTION_CUSTOMIZATION.md)
 (394) and [grouped count timeline reuse](GROUPED_COUNT_TIMELINE_REUSE.md) (395)
 and [held editing/save consolidation](HELD_PRESENTATION_OWNERSHIP.md) (396)
-are delivered. The next queue is 397 quantitative customization, 398 grouped mean
-duration, then 399 pure display-helper consolidation. Delivered layout acceptance and remaining feature
+are delivered. Quantitative customization (397) preserves the selected numeric or
+duration measure through that same workflow. The remaining queue is 398 grouped
+mean duration, then 399 pure display-helper consolidation. Delivered layout acceptance and remaining feature
 boundaries are distinguished below.
 
 | Area | Remaining gap or decision | Current reference |

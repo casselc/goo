@@ -24,8 +24,8 @@ The [393 checkpoint](ROADMAP_2026_11_10_CHECKPOINT_393.md) adopts the next finit
 breadth, depth and consolidation queue after whole-product review.
 [Direct distribution customization](DISTRIBUTION_CUSTOMIZATION.md) (394) uses the
 existing flat count display and exact staged question, explicit Run and no-read
-held Back. Numeric/duration/status profiles and nonzero offsets remain outside
-this shortcut; their existing workflows remain available.
+held Back. 397 extends this shortcut to numeric and span-duration Bar/Table measures with
+exact bindings and support; status profiles and nonzero offsets remain outside.
 [Grouped count timeline reuse](GROUPED_COUNT_TIMELINE_REUSE.md) (395) is delivered
 through shared Small multiples/Table/Heatmap displays and existing configuration
 owners. Count-only single-group admission, fixed widths, zero/unknown semantics
@@ -34,8 +34,9 @@ and explicit heatmap limits remain visible.
 trail-return saved-intent drift and invalid Find publication while preserving
 retired source controls. Independent architecture, design, frontend and Go reviews
 are reconciled in the [396 checkpoint](ROADMAP_2026_11_10_CHECKPOINT_396.md).
-The finite next queue is quantitative customization (397), grouped mean duration
-(398), then pure display-helper consolidation (399). Detailed checks,
+Quantitative customization (397) preserves the current measure and full question.
+The finite next queue is grouped mean duration (398), then pure display-helper
+consolidation (399). Detailed checks,
 including held-return regressions and model replay, are recorded in
 [validation](../VALIDATION.md); this summary does not substitute for their
 individual outcomes.

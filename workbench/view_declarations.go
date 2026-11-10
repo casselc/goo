@@ -1,10 +1,13 @@
 package workbench
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"strings"
 
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/identity"
 )
 
 // ViewDeclaration stores reusable display intent, never captured values, runtime
@@ -37,6 +40,31 @@ type ViewDisplay struct {
 	Order            string `json:"order,omitempty"`
 	Query            string `json:"query,omitempty"`
 	RequiresComplete bool   `json:"requiresComplete,omitempty"`
+}
+
+// Optional display controls are omitted for defaults, never null reset commands.
+func (d *ViewDisplay) UnmarshalJSON(data []byte) error {
+	if !identity.WellFormedJSON(data) {
+		return errors.New("display text must be valid Unicode")
+	}
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return err
+	}
+	for _, name := range []string{"category", "value", "title", "scale", "order", "query", "requiresComplete"} {
+		if raw, present := fields[name]; present && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+			return errors.New("display " + name + " must not be null")
+		}
+	}
+	type wire ViewDisplay
+	var value wire
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&value); err != nil {
+		return err
+	}
+	*d = ViewDisplay(value)
+	return nil
 }
 
 func (d ViewDeclaration) Validate(q exploration.Query) error {

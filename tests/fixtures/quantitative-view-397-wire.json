@@ -1,0 +1,2552 @@
+[
+  {
+    "name": "bar-count",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "count"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "table-count",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "count"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "bar-numeric.mean",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "table-numeric.mean",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "bar-numeric.sum",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.sum"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "table-numeric.sum",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.sum"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "bar-numeric.min",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.min"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "table-numeric.min",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.min"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "bar-numeric.max",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.max"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "table-numeric.max",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.max"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "bar-duration.mean",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "duration.mean"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "table-duration.mean",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "duration.mean"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "bar-duration.min",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "duration.min"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "table-duration.min",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "duration.min"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "bar-duration.max",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "duration.max"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "table-duration.max",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "duration.max"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "bar-duration.p50",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "duration.p50"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "table-duration.p50",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "duration.p50"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "bar-duration.p95",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "duration.p95"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "table-duration.p95",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "duration.p95"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "bar-duration.p99",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "duration.p99"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "table-duration.p99",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "duration.p99"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "query-",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "query": ""
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "order-",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "order": ""
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "scale-",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "scale": ""
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "title-",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "title": ""
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "requiresComplete-False",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "requiresComplete": false
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "query-None",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "query": null
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "order-None",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "order": null
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "scale-None",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "scale": null
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "title-None",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "title": null
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "requiresComplete-None",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "requiresComplete": null
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "query-7",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "query": 7
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "query-\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "query": "\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "query-a\nb",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "query": "a\nb"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "query-\ud800",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "query": "\ud800"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "title-  ",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "title": "  "
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "category-other",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "other",
+        "value": "numeric.mean"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "value-numeric.p95",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.p95"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "scale-population",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "scale": "population"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "order-reverse",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "order": "reverse"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "requiresComplete-true",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "requiresComplete": "true"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "unknown-x",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean",
+        "unknown": "x"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "profile-null",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "count",
+        "profile": null
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-bar-count",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "count"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-table-count",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "count"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-bar-numeric.mean",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-table-numeric.mean",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-bar-numeric.sum",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.sum"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-table-numeric.sum",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.sum"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-bar-numeric.min",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.min"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-table-numeric.min",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.min"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-bar-numeric.max",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.max"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "logs-table-numeric.max",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.max"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "omitted-required-category",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "value": "count"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "omitted-required-value",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      },
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "numeric-without-binding",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "summary": "span-duration"
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "numeric.mean"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "duration-without-summary",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1000,
+      "toMs": 5000,
+      "limit": 7,
+      "offset": 0,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "workload.class"
+        }
+      ],
+      "numeric": {
+        "field": {
+          "kind": "attribute",
+          "key": "payload.size"
+        },
+        "type": "int64",
+        "unit": "bytes",
+        "parse": "canonical-decimal"
+      }
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "bar",
+        "version": 1
+      },
+      "display": {
+        "category": "category",
+        "value": "duration.mean"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  }
+]

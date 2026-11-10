@@ -33,6 +33,10 @@ type machinery or unmeasured optimization merely to use a language feature.
 
 ## 397 — breadth: customize ordinary quantitative distributions
 
+Delivered through the existing flat display path; see [validation](../VALIDATION.md)
+and the [quantitative storyboard](../journeys/397-quantitative-customize-storyboard.md).
+The remaining active queue is 398 → 399.
+
 User task: “Keep this useful numeric or latency breakdown as a reusable view,
 without changing its measure or going through record inspection.”
 

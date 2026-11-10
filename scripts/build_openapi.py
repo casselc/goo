@@ -373,6 +373,9 @@ for suffix in ('', 'Input'):
  kind=schemas['workbench.ViewKind'+suffix];kind['additionalProperties']=False
  kind['properties']['name']['enum']=['bar','table'];kind['properties']['version']['const']=1
  display=schemas['workbench.ViewDisplay'+suffix];display['additionalProperties']=False
+ display['required']=['category','value']
+ for name in ('category','value','title','scale','order','query','requiresComplete'):
+  prop=display['properties'][name];prop.pop('anyOf',None);prop['type']='boolean' if name=='requiresComplete' else 'string'
  display['properties']['category']['const']='category';display['properties']['value']['enum']=['count','numeric.mean','numeric.sum','numeric.min','numeric.max','duration.mean','duration.min','duration.max','duration.p50','duration.p95','duration.p99']
  display['properties']['scale']['enum']=['','max','population']
  display['properties']['profile']['enum']=['','log-pattern-count-v1']+([None] if suffix else [])

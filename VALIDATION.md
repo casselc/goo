@@ -1,5 +1,49 @@
 # Validation record
 
+## Ordinary quantitative distribution customization — 397
+
+[Direct Customize](docs/DISTRIBUTION_CUSTOMIZATION.md) now preserves existing
+numeric and span-duration Bar/Table measures through the same staged population
+workspace and immutable configuration store. No evaluator, renderer or query
+engine was added. Count shares, quantitative magnitude scales and numeric support
+remain separate. Explicit null controls and malformed Unicode now fail closed in
+the ordinary Go display decoder, matching JavaScript; API input types are aligned.
+
+- Focused real-wrapper/declaration checks **14 passed / zero skips**. Full frontend
+  **1,442 passed / zero skips / 75.116 s**. Go workbench/server checks passed
+  **1.695 s / 12.090 s** on Go **1.27.3**.
+- Shared **58 Go/JavaScript authored-wire vectors** and accepted immutable-store
+  round trips passed **0.531 s**; all **58 API shape vectors** passed separately.
+  Byte limits, invalid Unicode/control text and query-supported measures remain
+  runtime validation rather than JSON Schema claims. Full OpenAPI checks passed:
+  **112 operations / 489 fixture responses / 195 admitted requests / 28 refusals**.
+  All **50 actual browser handler responses**, including their request bodies
+  where present and real source failures, also conform.
+- Actual ordinary OTel journey passed **58.6 s / about one minute runner**:
+  **36 physical records / three quantitative cases / 55 measured boundaries**.
+  Independent raw-record/support/sum/extrema and exact rational mean checks cover
+  numeric logs, numeric spans and span duration including zero, signed values,
+  missing, empty and invalid input. Full predicates, both environment policies,
+  exact bounds and nondefault paging survive staging and destination reuse.
+- Main observed work: **21 source requests / nine configuration GETs / three
+  browser publications**, plus **three explicit destination-setup publications**.
+  **75 physical SQL attempts** include three deliberately refused Count requests.
+  Staging, local changes, Inspect/Apply, reopen and held Back add no telemetry reads;
+  hidden/inert/pending/superseded producer callbacks cannot stage.
+- Independent Bombadil passed **41.3 s / 43.7 s runner** with **295 snapshots /
+  eight phases**. Its two explicit campaign reads use **eight SQL queries**, after
+  four setup queries. No actor pixel-oracle claim. Design approved all **four
+  actual desktop/narrow frames**; the executable storyboard is current.
+- Required observed Quint admission passed **13.11 s / zero skips**, checking
+  physical raw records, exact aggregates, read plans/settings, counters and actor
+  observations. All **seven semantic mutants** and the **staging-read model
+  control** were rejected. Hegel passed **48 local staging/reuse/store vectors /
+  0.53 s** over those actual source frames; these are not additional source reads.
+- Rebuilt and updated only the lab packages service. Running image
+  `sha256:81ddb626585b09c436540afe94f105b21fee56fdebb1e7407e2d471134983127`
+  responds to the capabilities check; its served distribution module matches the
+  reviewed source bytes. Telemetry services and retained stores were preserved.
+
 ## Held local editing and saved intent — 396
 
 [Held presentation ownership](docs/HELD_PRESENTATION_OWNERSHIP.md) is delivered.
