@@ -5,7 +5,7 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-398. The [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_396.md) owns execution order;
+399. The [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_399.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
 below are research inputs, not additional backlogs or claims of vendor parity.
 
@@ -38,8 +38,9 @@ The active roadmap adopts a finite breadth/depth/consolidation queue after the
 and [held editing/save consolidation](HELD_PRESENTATION_OWNERSHIP.md) (396)
 are delivered. Quantitative customization (397) preserves the selected numeric or
 duration measure through that same workflow. [Grouped mean duration](GROUPED_MEAN_DURATION_REUSE.md) (398) preserves exact
-sum/count support with unavailable empty latency. The remaining queue is 399 pure
-display-helper consolidation, then whole-product review. Delivered layout acceptance and remaining feature
+sum/count support with unavailable empty latency. [Pure helper consolidation](PURE_DISPLAY_HELPERS.md) (399) removes grouped
+renderer back edges without moving source ownership. The reviewed next queue is
+400 summary authoring, 401 Services/Saved gauge context, then 402 shared-table context. Delivered layout acceptance and remaining feature
 boundaries are distinguished below.
 
 | Area | Remaining gap or decision | Current reference |
@@ -47,11 +48,11 @@ boundaries are distinguished below.
 | Native context coverage | Ordinary Measurements gauge nearby-record context is delivered alongside existing counter/histogram interval context. Saved/service gauge continuation, stock and broader resource contexts require their own retained-evidence admission. | [Gauge context contract](GAUGE_OBSERVATION_CONTEXT.md) |
 | Further density | [384](DATA_FIRST_FIXED_RESULTS.md) covers checked fixed/retained records; [390](NATIVE_DATA_FIRST.md) delivers actual first-item visibility in ordinary, service-expanded and saved native entry. Other screens and larger-label/population cases remain evidence-driven refinements, not another automatic redesign. | [Current native contract](NATIVE_DATA_FIRST.md) |
 | Native outgoing HTTP | The explicit Client-span lens is delivered; the exact seconds explicit-histogram `http.client.request.duration` discovered profile is delivered in 392. Generic duration execution/discovery does not grant Client-span lens authority. | [Outgoing HTTP contract](OUTGOING_HTTP.md) and [native duration contract](HTTP_CLIENT_NATIVE_DURATION.md) |
-| Training/review workflow | A contextual task chooser and a disjoint verified kept-occurrence review target remain candidates. Existing captured-record review and export are already delivered. | [Review contract](CAPTURE_RECORD_REVIEW.md) and [deferred alternatives](ROADMAP_2026_11_10_CHECKPOINT_396.md#reconciled-candidates-and-deferrals) |
+| Training/review workflow | A contextual task chooser and a disjoint verified kept-occurrence review target remain candidates. Existing captured-record review and export are already delivered. | [Review contract](CAPTURE_RECORD_REVIEW.md) and [deferred alternatives](ROADMAP_2026_11_10_CHECKPOINT_399.md#reconciled-candidates-and-deferrals) |
 | Display grammar coverage | Gauge, histogram and counter display reuse are delivered. Counter compatibility requires exact unit and matching integer/decimal domain; resource-bound counters, stocks and other grains remain outside that arm. [Checked count-only log-pattern display admission/reuse](LOG_PATTERN_DISPLAY_REUSE.md) is delivered in 391; pattern execution already exists. | [Counter contract](NATIVE_COUNTER_VIEW_REUSE.md) and [gauge/histogram contract](NATIVE_GAUGE_VIEW_REUSE.md) |
 | Exponential histograms | General execution is deferred until the source and mathematical representation preserve the required semantics. Discovery metadata does not grant evaluation support. | [Readiness decision](EXPONENTIAL_HISTOGRAM_READINESS.md) |
 | Broader customization | Checked templates and declarative displays exist. Arbitrary contributed executable kinds and a general WYSIWYG editor remain wider initiatives. | [Current authoring](AUTHORABLE_VIEW_TEMPLATES.md), [research](reviews/CUSTOMIZATION_RESEARCH_260.md) |
-| Production and external platforms | Multi-user tenancy/presence, alert delivery, broader broker/database-server health, warehouse lowering and new storage engines require separate design and validation. | [Roadmap boundaries](ROADMAP_2026_11_10_CHECKPOINT_396.md), [Databricks research](DATABRICKS_METRIC_VIEWS.md) |
+| Production and external platforms | Multi-user tenancy/presence, alert delivery, broader broker/database-server health, warehouse lowering and new storage engines require separate design and validation. | [Roadmap boundaries](ROADMAP_2026_11_10_CHECKPOINT_399.md), [Databricks research](DATABRICKS_METRIC_VIEWS.md) |
 
 ## Research and delivery history
 

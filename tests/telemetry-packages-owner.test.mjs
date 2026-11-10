@@ -7,7 +7,7 @@ let elements=new Map(),focuses=0,metadata=[],reads=[],listeners=new Map(),staged
 globalThis.document={createElement:tag=>new Element(tag),getElementById:id=>elements.get(id)};
 globalThis.addEventListener=(name,fn)=>listeners.set(name,fn);globalThis.dispatchEvent=event=>{if(event.type==='goo:apply-telemetry-package')staged.push(event.detail);else listeners.get(event.type)?.(event)};globalThis.CustomEvent=class{constructor(type,options){this.type=type;this.detail=options.detail}};
 mock.module('../ui/definition-library.mjs',{exports:{mount(){return{set(){},search(){}}}}});
-mock.module('../ui/meaning.mjs',{exports:{mount(){}}});mock.module('../ui/distributions.mjs',{exports:{durationMS(){return '0 ms'}}});mock.module('../ui/field-presentation.mjs',{exports:{label:field=>field.key}});
+mock.module('../ui/meaning.mjs',{exports:{mount(){}}});mock.module('../ui/distribution-values.mjs',{exports:{durationMS(){return '0 ms'}}});mock.module('../ui/field-presentation.mjs',{exports:{label:field=>field.key}});
 mock.module('../ui/queries.mjs',{exports:{postJSON:(url,question,signal)=>new Promise(resolve=>reads.push({url,question,signal,resolve}))}});
 mock.module('../ui/source-snapshots.mjs',{exports:{adoptExploration:data=>data}});
 const {mount}=await import('../ui/telemetry-packages.mjs');

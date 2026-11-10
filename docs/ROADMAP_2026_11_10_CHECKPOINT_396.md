@@ -1,5 +1,8 @@
 # Roadmap after the 396 checkpoint
 
+> Completed historical cadence. The [399 checkpoint](ROADMAP_2026_11_10_CHECKPOINT_399.md)
+> supersedes this execution queue after accepted 397–399 work and independent review.
+
 Adopted November 10, 2026 after accepted 396 browser, actor, property and observed
 model checks. This replaces the completed [393 checkpoint](ROADMAP_2026_11_10_CHECKPOINT_393.md).
 [Validation](../VALIDATION.md) owns executed results; the

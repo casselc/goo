@@ -32,7 +32,7 @@ mock.module('../ui/namespace.mjs',{exports:{namespace(){}}});
 mock.module('../ui/record-interactions.mjs',{exports:{mount(...args){mounts.push(args);return {}}}});
 mock.module('../ui/scoped-breakdown.mjs',{exports:{mount(){return {suspendActions(){}}}}});
 mock.module('../ui/trace-comparison-view.mjs',{exports:{}});
-mock.module('../ui/distributions.mjs',{exports:{durationMS:()=>''}});
+mock.module('../ui/distribution-values.mjs',{exports:{durationMS:()=>''}});
 mock.module('../ui/trace-journey.mjs',{exports:{finding(){}}});
 mock.module('../ui/visualizations.mjs',{exports:{actionVisible:()=>true,breakdown(){},waterfall(){waterfallHook?.()}}});
 const {mount}=await import('../ui/record-results.mjs');

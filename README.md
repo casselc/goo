@@ -150,7 +150,7 @@ these views through the same saved-view catalog.
 to an explicitly chosen Goo server.
 [Record paging](docs/RECORD_PAGE_PROFILE.md) retains any held aggregate and timeline.
 
-[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_10_CHECKPOINT_396.md) ·
+[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_10_CHECKPOINT_399.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
 [Go/frontend library review and proposal](docs/LIBRARY_REFACTOR_PLAN_2026_10_28.md)
 
@@ -612,7 +612,7 @@ For supplied native observations, `measurements.Evaluate(question, rows, at)` is
 storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
 
-The [active roadmap](docs/ROADMAP_2026_11_10_CHECKPOINT_396.md) follows delivered outgoing HTTP
+The [active roadmap](docs/ROADMAP_2026_11_10_CHECKPOINT_399.md) follows delivered outgoing HTTP
 (385), gauge display reuse (386), [capture-family consolidation](docs/CAPTURE_FAMILY_ADMISSION.md)
 (387) and [records around a gauge observation](docs/GAUGE_OBSERVATION_CONTEXT.md)
 (388), [counter display reuse](docs/NATIVE_COUNTER_VIEW_REUSE.md) (389) and
@@ -630,8 +630,10 @@ and reused through the existing workspace. Configuration retains the exact
 question, Run is explicit, and Back restores held evidence without rereading.
 [Held presentation ownership](docs/HELD_PRESENTATION_OWNERSHIP.md) keeps local
 edits and saved definitions aligned after Back; invalid Find blocks Save and
-recovers on correction. Source controls retain their separate lifetime. The next
-queue continues with pure display-helper consolidation, then whole-product review. Gauge context starts in ordinary Measurements;
+recovers on correction. Source controls retain their separate lifetime.
+[Pure display-helper consolidation](docs/PURE_DISPLAY_HELPERS.md) is complete.
+The reviewed queue is compact summary authoring, Services/Saved gauge context,
+then shared-table overflow and context. Gauge context starts in ordinary Measurements;
 Saved and service continuation remain deferred. Earlier current RPC view reuse,
 service native interval context and measured bounded facets are also delivered.
 [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most
@@ -756,7 +758,7 @@ scope/data/quality, charts/tables/lists/waterfalls and scope-bound controls, a b
 chart with a restricted Plotly adapter, and shared declarative/visual authoring.
 Complete-only widgets and explicit uncertainty semantics are core requirements;
 all current widgets/screens must be expressible. The app is prerelease, with no
-legacy-format or API compatibility floor. [The active roadmap](docs/ROADMAP_2026_11_10_CHECKPOINT_396.md) separates proposed work from
+legacy-format or API compatibility floor. [The active roadmap](docs/ROADMAP_2026_11_10_CHECKPOINT_399.md) separates proposed work from
 implemented capabilities; the supporting reports include pinned research sources.
 
 Single-group count breakdowns now share a [scoped display contract](docs/SCOPED_VIEW_PILOT.md):

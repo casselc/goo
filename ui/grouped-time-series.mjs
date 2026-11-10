@@ -1,12 +1,11 @@
 import './bucket-heatmap.mjs';
 /* Small multiples share a fixed captured scale. Local controls never read telemetry. */
 import * as Discovery from './discovery.mjs';
-import * as Distributions from './distributions.mjs';
-import * as NumericMeasures from './numeric-measures.mjs';
-import * as PopulationSelection from './population-selection.mjs';
+import * as DistributionValues from './distribution-values.mjs';
+import * as NumericValues from './numeric-values.mjs';
 const global=globalThis;
 function mount(host,data,{onSelect,onRectangle}={}){
-  const node=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);return n},api=Distributions,apiNumeric=NumericMeasures;
+  const node=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);return n},api=DistributionValues,apiNumeric=NumericValues;
   host.replaceChildren();host.hidden=false;host.classList.add('grouped-time-chart');host.append(node('h3','Compare breakdowns over time'));
   const controls=node('div');controls.className='controls';const label=node('label','Chart measure'),select=node('select');select.setAttribute('aria-label','Grouped chart measure');select.dataset.seriesMeasure='true';
   for(const [key,title]of [['count','Captured record count'],...(data.numeric?[['numeric-mean','Numeric mean (absolute magnitude)'],['numeric-sum','Numeric sum (absolute magnitude)'],['numeric-min','Numeric minimum (absolute magnitude)'],['numeric-max','Numeric maximum (absolute magnitude)']]:[]),...(data.duration?[['mean','Mean span duration'],['p95','p95 span duration'],['max','Maximum span duration']]:[]),...(data.spanStatus?[['error-rate','Recorded error percentage']]:[])]){const o=node('option',title);o.value=key;select.append(o)}label.append(select);
@@ -17,7 +16,7 @@ function mount(host,data,{onSelect,onRectangle}={}){
    controls.hidden=scale.hidden=list.hidden=status.hidden=true;host.querySelector('h3').textContent='Span duration over time';const order=Discovery.durationOrder,grid=node('goo-bucket-heatmap');
    const columns=data.timeSeries.map((p,i)=>({key:String(i),label:new Date(p.fromMs).toISOString(),cells:order.map(key=>{const g=groups.find(g=>g.values[0]===key),point=g?.points.find(x=>x.fromMs===p.fromMs&&x.toMs===p.toMs);return point?{state:'observed',value:point.count}:{state:'unknown'}})}));
    grid.data={title:'Raw span duration by UTC interval · half-open buckets',ceiling:columns.reduce((max,c)=>c.cells.reduce((n,p)=>p.value&&BigInt(p.value)>BigInt(n)?p.value:n,max),'0'),rows:order.map(key=>({key,label:key})),columns};
-   if(onRectangle){grid.setAttribute('range-select','');grid.addEventListener('goo-heatmap-range',e=>onRectangle(PopulationSelection.rectangle(data,e.detail)))}
+   if(onRectangle){grid.setAttribute('range-select','');grid.addEventListener('goo-heatmap-range',e=>onRectangle(e.detail))}
    host.append(grid);
   }
   function draw(){

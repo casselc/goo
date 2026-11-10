@@ -5,7 +5,7 @@ import * as Attributes from './attributes.mjs';
 import * as ComparisonInspection from './comparison-inspection.mjs';
 import * as ComparisonSeriesOwner from './comparison-series-owner.mjs';
 import * as ComparisonVisual from './comparison-visual.mjs';
-import * as Distributions from './distributions.mjs';
+import * as DistributionValues from './distribution-values.mjs';
 import * as EvidenceScope from './evidence-scope.mjs';
 import * as Measurements from './measurements.mjs';
 import * as NativePresentation from './native-presentation.mjs';
@@ -73,7 +73,7 @@ function mount(host,{baseline,current=()=>true,onLink,kind='record'}){
      for(const [title,summary,side]of[['Baseline',view.latency.baseline,'baseline'],['Comparison',view.latency.current,'current']]){const element=n('goo-latency');element.dataset.side=side;element.ceilingNs=latencyCeiling;element.heading=title;element.headingLevel=5;element.summary=summary;pair.append(element)}
      output.append(pair,n('small','Span latency · mean and exact p50 / p95 / p99, shared fixed scale. Source records, not end-to-end request latency.'))}
    }else if(q.summary==='span-duration')output.append(n('p','Span latency unavailable for this snapshot.'));
-   if(view.status){const {baseline:x,current:y}=view.status,pct=Distributions.percent;
+   if(view.status){const {baseline:x,current:y}=view.status,pct=DistributionValues.percent;
     const values=[pct(x.error,x.count),pct(y.error,y.count)];
     const figure=ComparisonVisual.pair(output,{title:'Recorded error share',values,display:[values[0]+'% · '+x.error+'/'+x.count+' spans',values[1]+'% · '+y.error+'/'+y.count+' spans'],unit:'%',ceiling:'100',delta:view.status.delta+' pp',labels:['Baseline','Comparison']});figure.dataset.measure='recorded-error-share';
     const details=n('details');details.append(n('summary','Recorded status coverage'));

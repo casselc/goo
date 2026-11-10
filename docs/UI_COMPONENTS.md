@@ -1972,3 +1972,15 @@ while observed zero is valid latency. Human duration labels and exact support
 appear in interval details. `goo-time-bars` accepts an optional supplied human
 `ceilingLabel`; rational millisecond geometry remains exact and source-free.
 See [the contract](GROUPED_MEAN_DURATION_REUSE.md).
+
+
+## Pure display arithmetic — 399
+
+Distribution percentages, duration text, metric ranking/widths and category labels
+live in `distribution-values.mjs`, alongside existing pure numeric/field modules.
+Display consumers import that module directly. The shared component `durationMS`
+export delegates to the same function. The fallback grouped renderer no longer
+imports application owners, numeric authoring controls or PopulationSelection;
+its supplied rectangle event is converted by the existing Distributions owner.
+Cohort snapshots, requests and scope/publication leases stay application-owned.
+See [the dependency boundary](PURE_DISPLAY_HELPERS.md).

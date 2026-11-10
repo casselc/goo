@@ -1,5 +1,49 @@
 # Validation record
 
+## Pure display dependency consolidation — 399
+
+[Pure display helpers](docs/PURE_DISPLAY_HELPERS.md) separate six supplied-value
+arithmetic/formatting functions from the Distributions application owner. The
+grouped renderer loses both its direct owner import and indirect selection-helper
+back edge. Rectangle conversion stays in the existing application callsite;
+cohort snapshots, requests, scope and publication ownership remain there.
+No backend/API type changed and no performance benefit is claimed.
+
+- Focused helper/migrated-consumer checks: **34 passed / zero skips / 0.865 s**.
+  Seven new cases compare frozen **011580e3** production outputs and refusal
+  boundaries for exact large values, null/zero, signs, units and literal labels.
+  Real fallback-renderer fixtures verify full-population scales and supplied
+  rectangle dispatch. The helper has **four pure transitive modules**; the public
+  passive display graph has **59 modules**, with explicit owner/source exclusion.
+  Hostile-global import checks perform no browser/transport/store/registration work.
+- Full frontend **1,452 passed / zero skips / 36.693 s**. Go embedded server/HTTP
+  checks passed **13.597 s** on Go **1.27.3**. The component duration formatter is
+  the same pure function; no obsolete Distributions formatter facade remains.
+- Actual399 ordinary OTel journey passed **22.0 s / 25.9 s runner**: **12 physical
+  spans / eight grouped metrics / 16 measured boundaries**, checking independent
+  raw count/duration/status/numeric arithmetic, common widths, units/signs, Find,
+  exact emitted questions and held return. Two source requests use **12 physical
+  SQL queries**. Keyboard rectangle selection stages exact time and **[5,50) ms**
+  duration predicates without another read. Ordinary selection stages the existing
+  fixed-question draft; configured Customize remains the population-workspace route.
+- Shared398 grouped-mean regression on the399 binary passed **21.2 s / 23.7 s
+  runner**, retaining source/destination exact support, save/reuse and no-read Back.
+  Its independent Bombadil passed **36.5 s / 37.6 s runner** with **323 snapshots /
+  nine phases / 12 physical SQL queries**. No actor pixel-oracle claim.
+- Required observed398 Quint admission passed **7.90 s / zero skips** over the
+  fresh post-refactor reports. All **seven semantic mutants** and the **staging-read
+  model control** were rejected. Hegel passed **32 generated local staging/reuse/
+  store vectors / 1.63 s**; these are not additional source observations.
+- Design accepted all **three new actual399 desktop/narrow/rectangle frames**.
+  Affected398 frames, storyboards and serial commands are current. Independent
+  architecture/Go and design/product reviews are reconciled in the adopted
+  [399 checkpoint](docs/ROADMAP_2026_11_10_CHECKPOINT_399.md): **400 summaries →
+  401 Services/Saved gauge context → 402 shared-table overflow/context**.
+- Rebuilt and refreshed only the lab packages service. Running image
+  `sha256:4fa561587b7abfa978d0029662c6b66fd836663bdb179929f81904849fca6ff8`
+  responds to the capabilities check; served pure-helper and grouped-renderer
+  modules match reviewed source bytes. Existing services and stores were preserved.
+
 ## Reusable grouped mean duration — 398
 
 [Grouped mean duration](docs/GROUPED_MEAN_DURATION_REUSE.md) extends the existing

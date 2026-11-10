@@ -2,7 +2,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict');const {su
 test('capture summaries retain exact counts and retention separately from saved question identity',()=>{const page={receipt:{id:'x'},explore:{count:'18446744073709551615',basis:'source',state:'observed'},retainedRecords:1000,recordsLimited:true};assert.deepEqual(summary(page),{count:'18446744073709551615',basis:'source',state:'observed',retainedRecords:1000,recordsLimited:true});assert.equal(routeFromHash('#capture='+'a'.repeat(64)),'investigations');assert.equal(routeFromHash('#capture=../'),'explore');});
 
 test('duration display preserves uint64 and rational precision',()=>{
- const {durationMS}=require('../ui/distributions.mjs');
+ const {durationMS}=require('../ui/distribution-values.mjs');
  assert.equal(durationMS('21115000000','205'),'103.000 ms');
  assert.equal(durationMS('18446744073709551615'),'18446744073709.552 ms');
  assert.equal(durationMS('0','0'),'—');
@@ -11,7 +11,8 @@ test('duration display preserves uint64 and rational precision',()=>{
 });
 
 test('group duration ranking compares exact rational means and strips measures from count comparisons',()=>{
- const {compareMetric,groupMetric,metricWidth,snapshot}=require('../ui/distributions.mjs');
+ const {compareMetric,groupMetric,metricWidth}=require('../ui/distribution-values.mjs');
+ const {snapshot}=require('../ui/distributions.mjs');
  const a={g0:'a',count:'2',duration:{state:'observed',count:'2',sumNs:'18446744073709551616',p95Ns:'18446744073709551615'}};
  const b={g0:'b',count:'3',duration:{state:'observed',count:'3',sumNs:'27670116110564327425',p95Ns:'18446744073709551614'}};
  assert.equal(compareMetric(a,b,'mean'),1);assert.equal(compareMetric(a,b,'p95'),-1);
@@ -21,7 +22,8 @@ test('group duration ranking compares exact rational means and strips measures f
 });
 
 test('measure comparisons retain full summaries and rank exact change rather than rounded labels',()=>{
- const {snapshot,compareMeasureDifference,groupMetric}=require('../ui/distributions.mjs');
+ const {snapshot,compareMeasureDifference}=require('../ui/distributions.mjs');
+ const {groupMetric}=require('../ui/distribution-values.mjs');
  const d=(sum,count)=>({state:'observed',count,sumNs:sum,p95Ns:'10'});
  const a={value:'a',measures:{baselineDuration:d('18446744073709551616','2'),selectionDuration:d('18446744073709551618','2')}};
  const b={value:'b',measures:{baselineDuration:d('18446744073709551616','2'),selectionDuration:d('18446744073709551619','2')}};

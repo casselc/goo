@@ -1,7 +1,7 @@
 # Known issues and gaps
 
 Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
-status and the [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_396.md) for priorities.
+status and the [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_399.md) for priorities.
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 
@@ -38,7 +38,9 @@ Quantitative customization (397) preserves the current measure and full question
 [Grouped mean duration](GROUPED_MEAN_DURATION_REUSE.md) (398) extends the checked
 grouped composition with exact per-cell sum/count support; empty duration remains
 unavailable. Percentiles remain outside this arm. Pure display-helper
-consolidation (399) is next, followed by whole-product review. Detailed checks,
+[consolidation](PURE_DISPLAY_HELPERS.md) (399) is delivered. The architecture/Go
+and design/product reviews adopt compact summary authoring (400), Services/Saved
+gauge context (401), then shared-table overflow/context (402). Detailed checks,
 including held-return regressions and model replay, are recorded in
 [validation](../VALIDATION.md); this summary does not substitute for their
 individual outcomes.

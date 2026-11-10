@@ -44,12 +44,19 @@ test('display entry imports a closed passive graph without publishing namespaces
   for(const name of ['source-refusal','source-refusal-view'])assert.ok(visited.has(new URL('../ui/'+name+'.mjs',import.meta.url).href));
   assert.deepEqual(Object.keys(await import('../ui/source-refusal.mjs')).sort(),['SourceReadError','failure','reasons','refusal','responseError']);
   assert.deepEqual(Object.keys(await import('../ui/source-refusal-view.mjs')),['renderRefusal']);
-  for(const name of ['queries','filter-values','facet-value-reads','population-workspace','exploration'])assert.equal(visited.has(new URL('../ui/'+name+'.mjs',import.meta.url).href),false);
+  for(const name of ['queries','filter-values','facet-value-reads','population-workspace','exploration','distributions','numeric-measures','grouped-time-series'])assert.equal(visited.has(new URL('../ui/'+name+'.mjs',import.meta.url).href),false);
   // Exact numeric admission is now a shared pure module, without pulling app owners into display.
   assert.ok(visited.has(new URL('../ui/numeric-predicate.mjs',import.meta.url).href));
   // Grouped timelines add only their pure shape validator to this graph.
   assert.ok(visited.has(new URL('../ui/grouped-timeline-schema.mjs', import.meta.url).href));
-  assert.equal(visited.size, 58);
+  // The shared duration formatter now lives in a pure leaf used by components;
+  // it adds one module, never the distribution owner or numeric-control adapter.
+  const valuesURL = new URL('../ui/distribution-values.mjs', import.meta.url);
+  assert.ok(visited.has(valuesURL.href));
+  const values = await import(valuesURL.href);
+  assert.equal(display.UI.durationMS, values.durationMS);
+  assert.deepEqual(Object.keys(values).sort(), ['compareMetric','durationMS','groupMetric','metricWidth','percent','valueLabel']);
+  assert.equal(visited.size, 59);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {
