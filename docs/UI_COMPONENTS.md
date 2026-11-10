@@ -346,8 +346,13 @@ baseline or starting a query.
 tbody, scoped headers and controls. It supplies a keyboard-focusable labelled
 region and contained horizontal overflow. Set `aria-label` or `aria-labelledby`,
 `density="compact"` for tighter cells, and optionally `sticky-header` with an
-app-owned bounded height. Default density uses comfortable spacing. It never
-replaces children, sorts, pages, calculates totals or attaches subscriptions.
+app-owned bounded height. `sticky-first-column` retains the first identity cell
+when horizontal overflow exists; use it only when that column supplies context.
+Directional edge cues appear only while more columns exist offscreen. Local
+resize/content observers disconnect on removal; they never read source data.
+See [wide-table context](TABLE_CONTEXT.md). Default density uses comfortable
+spacing. It never replaces children, sorts, pages, calculates totals or attaches
+source subscriptions.
 Adapters can append/update native rows while retaining existing nodes and focus;
 reconnect and attribute updates retain all content. The adapter must supply row
 identity, retention and follow/pause behavior for any future streaming surface.

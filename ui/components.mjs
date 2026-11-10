@@ -31,7 +31,21 @@ const global = globalThis;
   }
   if(!global.customElements.get('goo-facet-list'))global.customElements.define('goo-facet-list',GooFacetList);
   class GooTable extends global.HTMLElement{
-   connectedCallback(){if(!this.hasAttribute('tabindex'))this.tabIndex=0;if(!this.hasAttribute('role'))this.setAttribute('role','region');if(!this.hasAttribute('aria-label')&&!this.hasAttribute('aria-labelledby'))this.setAttribute('aria-label','Data table');}
+   connectedCallback(){
+    if(!this.hasAttribute('tabindex'))this.tabIndex=0;if(!this.hasAttribute('role'))this.setAttribute('role','region');if(!this.hasAttribute('aria-label')&&!this.hasAttribute('aria-labelledby'))this.setAttribute('aria-label','Data table');
+    this._tableScroll??=()=>this.refreshOverflow();this.addEventListener('scroll',this._tableScroll,{passive:true});
+    if(global.ResizeObserver)this._tableResize=new global.ResizeObserver(()=>this.refreshOverflow());
+    if(global.MutationObserver){this._tableMutation=new global.MutationObserver(()=>{this.observeTable();this.refreshOverflow()});this._tableMutation.observe(this,{childList:true,subtree:true,characterData:true})}
+    this.observeTable();this.refreshOverflow();
+   }
+   observeTable(){const table=this.querySelector(':scope > table');if(table!==this._tableContent){if(this._tableContent)this._tableResize?.unobserve(this._tableContent);this._tableContent=table;if(table)this._tableResize?.observe(table)}this._tableResize?.observe(this)}
+   refreshOverflow(){
+    const max=Math.max(0,this.scrollWidth-this.clientWidth),left=Math.max(0,Math.min(max,Math.abs(this.scrollLeft))),start=max>1&&left>1,end=max>1&&left<max-1;
+    const state=start&&end?'both':start?'start':end?'end':'';
+    if(state){if(this.getAttribute('data-overflow-inline')!==state)this.setAttribute('data-overflow-inline',state)}else this.removeAttribute('data-overflow-inline');
+    return state;
+   }
+   disconnectedCallback(){this.removeEventListener('scroll',this._tableScroll);this._tableResize?.disconnect();this._tableMutation?.disconnect();this._tableResize=null;this._tableMutation=null;this._tableContent=null;this.removeAttribute('data-overflow-inline')}
   }
   class GooResultState extends global.HTMLElement{
    static get observedAttributes(){return ['state','announce']}

@@ -1,7 +1,7 @@
 # Known issues and gaps
 
 Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
-status and the [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_399.md) for priorities.
+status and the [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_402.md) for priorities.
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 
@@ -45,7 +45,10 @@ gauge context (401), then shared-table overflow/context (402).
 Services and Saved service gauges, including zero/unavailable observations and
 read-free held return. Stocks/resource gauges remain outside this arm. Picker
 draft edits retire staging immediately; reverting does not revive old controls.
-Shared-table overflow/context (402) is next, followed by whole-product review.
+[Shared-table context](TABLE_CONTEXT.md) (402) is delivered with overflow-only
+edge cues, pinned identity, compact grouped UTC context and local-only observers.
+The [402 review](reviews/ROADMAP_RECONCILIATION_402.md) adopts trace-search
+continuation, ungrouped summary templates and shared parameter encoding next.
 [Summary authoring](AUTHORED_POPULATION_SUMMARIES.md) (400) is delivered through
 the existing composition, summary dataset and store. It supports up to six ordered
 count/numeric/duration/recorded-status facts without requiring grouping; specialized

@@ -72,7 +72,7 @@ export function tableFields(snapshot,display){
 }
 function table(host,snapshot,display,rows=displayRows(snapshot,display)){
   const frame=n('goo-table'),table=n('table'),head=n('thead'),row=n('tr'),body=n('tbody');
-  frame.setAttribute('density','compact');if(host.getAttribute('mobile-layout')==='stacked')frame.setAttribute('mobile-layout','stacked');
+  frame.setAttribute('density','compact');frame.setAttribute('sticky-first-column','');frame.setAttribute('sticky-header','');if(host.getAttribute('mobile-layout')==='stacked')frame.setAttribute('mobile-layout','stacked');
   table.append(n('caption',display.scale==='population'?'Supplied values · shares of '+snapshot.partition.total+' captured records':'Supplied values'));
   const mapped=[display.category,display.value].map(key=>snapshot.fields.find(field=>field.key===key));
   const fields=display.kind==='table'?tableFields(snapshot,display):mapped.every(Boolean)?mapped:snapshot.fields;

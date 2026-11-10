@@ -1,5 +1,51 @@
 # Validation record
 
+## Shared-table overflow and retained context — 402
+
+[Shared table context](docs/TABLE_CONTEXT.md) adds local directional overflow cues
+and explicit pinned identity/header adoption for quantitative, grouped interval
+and native tables. Grouped rows retain compact UTC starts while overflowing;
+full interval columns/tooltips and literal labels, units and support remain intact.
+A readable minimum prevents auto-layout from collapsing identity to one character.
+Dense scope/grouped viewports are bounded locally; no global grid is introduced.
+
+- Full frontend **1,468 passed / zero skips / 35.145 s**. Focused observer tests
+  cover overflow directions/tolerance, late contents, resizing, teardown/reconnect,
+  caller labels and no fetch. Grouped tests cover repeated intervals, cross-date
+  labels and unchanged heatmap/source values. No Go or API semantic type changed;
+  no new Go/source/model campaign or performance claim is made for this layout cut.
+- The actual journey reuses independently checked ordinary numeric logs, grouped
+  mean-duration spans and a Saved gauge from the existing source fixtures. Six
+  desktop/390px boundaries preserve exact text/tooltips and chart data/display.
+  Keyboard and pointer reach later fields in overflowing numeric/grouped tables,
+  identity remains readable and header geometry is retained during vertical scroll.
+  The native gauge fits at 390px and receives no redundant overflow cue.
+- Final actual browser acceptance: **two passed / 19.0 s runner**, with real-data
+  **12.5 s** and separate standalone **2.4 s**. Design accepted all six regenerated
+  desktop/narrow frames.
+- All local gestures add **zero source/store/SQL IO**. Full observed workflow is
+  **two browser source requests / four store GETs / 11 physical SQL statements**,
+  with explicit ingest, source polling and capture setup separate. Captured evidence
+  and saved declarations are unchanged by local presentation. No causal, coverage
+  or snapshot guarantee is inferred from layout.
+- Separate standalone synthetic component coverage checks server HTML, a fitting
+  table, disclosure, nested/detached/reconnected content, browser scroll keys and
+  pointer access. It performs **zero API calls**; it is layout coverage, not a
+  replacement for the real source journey. Existing source/actor semantic checks
+  remain documented in their own milestones.
+- The first screenshot review rejected a one-character identity column; geometry
+  acceptance now requires readable identity and room for later fields. A second
+  review required compact interval context beside repeated groups. Both fixes are
+  covered by the final source/browser tests and actual regenerated frames.
+- Rebuilt and refreshed only the lab packages service; capabilities returns 200
+  and all six changed served modules/styles match reviewed bytes. Image
+  `sha256:3fe33e50c00f756936230898e41511665d6b6b184e570377298105afcda320c0`.
+  Telemetry, stores, other services and the XTDB container were preserved.
+- Whole-product architecture/Go and design/usability reviews adopt the finite
+  [403 → 404 → 405 cadence](docs/ROADMAP_2026_11_10_CHECKPOINT_402.md): trace-search
+  continuation, ungrouped summary templates, shared parameter wire encoding.
+  The capability guide is reconciled with delivered 401/402 behavior.
+
 ## Retained gauge context in Services and Saved — 401
 
 [Retained gauge context](docs/RETAINED_GAUGE_RECORD_CONTEXT.md) extends the existing

@@ -69,3 +69,9 @@ goo-aligned-histogram{display:block;min-width:0;max-width:100%}goo-aligned-histo
 .grouped-timeline-view{margin-inline:0;min-width:0;max-width:100%}
 .grouped-timeline-view th[scope="row"]{min-width:8rem;width:8rem;max-width:18rem;text-transform:none;letter-spacing:normal;white-space:normal;word-break:normal;overflow-wrap:anywhere;text-align:left;font-weight:500}
 section[aria-label="Grouped record timeline"] input[type="checkbox"]{box-sizing:border-box;width:16px;height:16px;min-width:16px;min-height:16px;flex:0 0 16px;padding:0;margin:0;align-self:center}
+
+/* Dense supplied tables own their viewport so interval headers remain in view. */
+.scope-view>goo-table,.scope-view-values>goo-table,.grouped-timeline-view>goo-table{max-block-size:min(60vh,32rem)}
+
+.grouped-interval-context{display:none}
+.grouped-timeline-view>goo-table[data-overflow-inline] .grouped-interval-context{display:block;margin-block-start:3px;font-size:11px;color:var(--muted,#98a8bf);font-variant-numeric:tabular-nums;font-weight:400}

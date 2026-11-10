@@ -1,5 +1,7 @@
 # Roadmap after the 399 checkpoint
 
+Completed by 402 and superseded by the [402 checkpoint](ROADMAP_2026_11_10_CHECKPOINT_402.md).
+
 Adopted November 10, 2026 after the 399 source/frontend/Go regressions and
 independent whole-product architecture and design reviews. This replaces the
 completed [396 checkpoint](ROADMAP_2026_11_10_CHECKPOINT_396.md).

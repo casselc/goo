@@ -1,12 +1,12 @@
 # Implementation plan
 
-> Active execution order: [399 product checkpoint](ROADMAP_2026_11_10_CHECKPOINT_399.md),
-> reconciled across [architecture/Go and design/product reviews](reviews/ROADMAP_RECONCILIATION_399.md).
-> 397 quantitative Customize, 398 grouped mean-duration reuse and 399 pure display
-> helper consolidation, 400 compact summary authoring and 401 retained gauge context
-> are accepted. The remaining finite queue is **402 shared-table overflow/context**,
-> then whole-product review. Source/custody gates and enclosing Go/JS/API carrier
-> checks remain feature acceptance; grouped P95 and broader platform work are deferred.
+> Active execution order: [402 product checkpoint](ROADMAP_2026_11_10_CHECKPOINT_402.md),
+> reconciled across [architecture/Go and design/usability reviews](reviews/ROADMAP_RECONCILIATION_402.md).
+> 400 compact summaries, 401 retained gauge context and 402 shared-table context
+> are delivered. The next finite cadence is **403 trace-search continuation →
+> 404 ungrouped summary templates → 405 shared parameter encoding**, then review.
+> Each milestone retains its source/custody and enclosing carrier gates. Grouped
+> P95, host sample context and broader platform work remain deferred.
 > 367 reusable current RPC views, 368 exact service native interval context,
 > and 369 measured local facet pages are delivered with appropriate native and
 > generated validation. Full populations, exact scopes and independent clocks
