@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"github.com/casselc/goo/exploration"
+	"github.com/casselc/goo/identity"
 )
 
 // TimelineViewDeclaration consumes the supplied unsplit time dataset. Bucket
@@ -35,11 +36,14 @@ type TimelineViewDisplay struct {
 
 // New local-control fields are optional strings, not nullable reset commands.
 func (d *TimelineViewDisplay) UnmarshalJSON(data []byte) error {
+	if !identity.WellFormedJSON(data) {
+		return errors.New("timeline text must be valid Unicode")
+	}
 	var fields map[string]json.RawMessage
 	if err := json.Unmarshal(data, &fields); err != nil {
 		return err
 	}
-	for _, name := range []string{"query", "order"} {
+	for _, name := range []string{"query", "order", "title"} {
 		if raw, present := fields[name]; present {
 			var value string
 			if bytes.Equal(bytes.TrimSpace(raw), []byte("null")) || json.Unmarshal(raw, &value) != nil {
@@ -47,6 +51,10 @@ func (d *TimelineViewDisplay) UnmarshalJSON(data []byte) error {
 			}
 		}
 	}
+	if raw, present := fields["requiresComplete"]; present && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		return errors.New("timeline complete-only must not be null")
+	}
+
 	type wire TimelineViewDisplay
 	var value wire
 	decoder := json.NewDecoder(bytes.NewReader(data))
@@ -60,7 +68,7 @@ func (d *TimelineViewDisplay) UnmarshalJSON(data []byte) error {
 
 func (d TimelineViewDeclaration) Validate(q exploration.Query) error {
 	if q.GroupTimeSeries || d.Display.Profile != "" {
-		return d.validateGroupedCount(q)
+		return d.validateGrouped(q)
 	}
 	if d.Display.Query != "" || d.Display.Order != "" {
 		return errors.New("unsplit timelines do not define grouped local controls")
@@ -92,12 +100,14 @@ func (d TimelineViewDeclaration) Validate(q exploration.Query) error {
 	return nil
 }
 
-func (d TimelineViewDeclaration) validateGroupedCount(q exploration.Query) error {
-	if d.Version != "goo.view/1" || d.Scope.Kind != "record-query" || d.Scope.Signal != q.Signal || d.Kind.Version != 1 || d.Display.Profile != "grouped-count-v1" || !exploration.GroupedCountTimelineQuery(q) || d.Display.Value != "count" {
-		return errors.New("grouped timelines require the pinned grouped-count-v1 single-field count profile")
+func (d TimelineViewDeclaration) validateGrouped(q exploration.Query) error {
+	count := d.Display.Profile == "grouped-count-v1" && exploration.GroupedCountTimelineQuery(q) && d.Display.Value == "count"
+	mean := d.Display.Profile == "grouped-duration-mean-v1" && exploration.GroupedMeanDurationTimelineQuery(q) && d.Display.Value == "duration.mean"
+	if d.Version != "goo.view/1" || d.Scope.Kind != "record-query" || d.Scope.Signal != q.Signal || d.Kind.Version != 1 || !(count || mean) {
+		return errors.New("grouped timelines require the pinned count or raw-span mean-duration profile")
 	}
 	if d.Kind.Name != "small-multiples" && d.Kind.Name != "table" && d.Kind.Name != "heatmap" {
-		return errors.New("choose small-multiples, heatmap or table for grouped counts")
+		return errors.New("choose small-multiples, heatmap or table for grouped timelines")
 	}
 	if d.Kind.Name == "heatmap" && 1+(q.ToMS-q.FromMS-1)/q.BucketMS > 32 {
 		return errors.New("grouped heatmaps require at most 32 fixed intervals")
@@ -121,7 +131,7 @@ func ReuseTimelineViewDeclaration(d TimelineViewDeclaration, source, destination
 	if source.Signal != destination.Signal || source.BucketMS != destination.BucketMS {
 		return TimelineViewDeclaration{}, errors.New("timeline requires the same signal and explicit bucket width")
 	}
-	if d.Display.Profile == "grouped-count-v1" && (len(destination.GroupBy) != 1 || source.GroupBy[0] != destination.GroupBy[0]) {
+	if (d.Display.Profile == "grouped-count-v1" || d.Display.Profile == "grouped-duration-mean-v1") && (len(destination.GroupBy) != 1 || source.GroupBy[0] != destination.GroupBy[0]) {
 		return TimelineViewDeclaration{}, errors.New("grouped timeline requires the same qualified grouping field")
 	}
 	if e := d.Validate(destination); e != nil {

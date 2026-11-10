@@ -412,7 +412,7 @@ for suffix in ('', 'Input'):
  children['allOf']=[{'contains':{'required':[role]},'minContains':1,'maxContains':1} for role in ('records',)]
  children['allOf'].extend([{'contains':{'required':[role]},'minContains':0,'maxContains':1} for role in ('aggregate','timeline','comparison','facet')])
  children['allOf'].append({'contains':{'not':{'required':['facet']},'properties':{'hidden':{'const':False}}},'minContains':1})
- grouped_timeline_child={'required':['timeline'],'properties':{'timeline':{'properties':{'display':{'required':['profile'],'properties':{'profile':{'const':'grouped-count-v1'}}}}}}}
+ grouped_timeline_child={'required':['timeline'],'properties':{'timeline':{'properties':{'display':{'required':['profile'],'properties':{'profile':{'enum':['grouped-count-v1','grouped-duration-mean-v1']}}}}}}}
  raw_records_child={'required':['records'],'properties':{'hidden':{'const':False},'records':{'properties':{'scope':{'properties':{'signal':{'enum':['logs','spans']}}}}}}}
  children['allOf'].append({'if':{'contains':{'required':['aggregate']}},'else':{'oneOf':[{'maxItems':2,'items':{'anyOf':[raw_records_child,{'required':['facet']}]}},{'minItems':2,'maxItems':2,'contains':grouped_timeline_child,'items':{'anyOf':[{'required':['records']},grouped_timeline_child]}}]}})
  children['allOf'].append({'if':{'contains':{'required':['facet']}},'then':{'items':{'properties':{'comparison':{'required':['baselineQuery'],'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}}}}}}}})
@@ -453,10 +453,17 @@ for suffix in ('', 'Input'):
  display=schemas['workbench.TimelineViewDisplay'+suffix];display['additionalProperties']=False;display['required']=['value']
  display['properties']['value']['enum']=['count','duration.mean','duration.p95'];display['properties']['title']['maxLength']=120
  display['properties']['requiresComplete']['type']='boolean'
- display['properties']['profile']['enum']=['','grouped-count-v1']
+ display['properties']['profile']['enum']=['','grouped-count-v1','grouped-duration-mean-v1']
+ display['properties']['title'].pop('anyOf',None);display['properties']['title']['type']='string'
  display['properties']['query'].update(type='string',maxLength=256)
  display['properties']['order']['enum']=['','source','label']
- timeline.setdefault('allOf',[]).append({'if':{'properties':{'display':{'required':['profile'],'properties':{'profile':{'const':'grouped-count-v1'}}}},'required':['display']},'then':{'properties':{'kind':{'properties':{'name':{'enum':['small-multiples','heatmap','table']}}},'display':{'properties':{'value':{'const':'count'}}}}},'else':{'properties':{'kind':{'properties':{'name':{'enum':['time-bar','table']}}},'display':{'properties':{'query':{'const':''},'order':{'const':''}}}}}})
+ grouped_profile={'required':['profile'],'properties':{'profile':{'enum':['grouped-count-v1','grouped-duration-mean-v1']}}}
+ timeline.setdefault('allOf',[]).append({'if':{'required':['display'],'properties':{'display':grouped_profile}},'then':{'properties':{'kind':{'properties':{'name':{'enum':['small-multiples','heatmap','table']}}}}},'else':{'properties':{'kind':{'properties':{'name':{'enum':['time-bar','table']}}},'display':{'properties':{'query':{'const':''},'order':{'const':''}}}}}})
+ for profile,value in [('grouped-count-v1','count'),('grouped-duration-mean-v1','duration.mean')]:
+  required={'display':{'properties':{'value':{'const':value}}}}
+  if profile=='grouped-duration-mean-v1':required['scope']={'properties':{'signal':{'const':'spans'}}}
+  timeline['allOf'].append({'if':{'required':['display'],'properties':{'display':{'required':['profile'],'properties':{'profile':{'const':profile}}}}},'then':{'properties':required}})
+
  record=schemas['workbench.RecordViewDeclaration'+suffix];record['additionalProperties']=False
  record['required']=['version','scope','kind','display']
  for field in ('scope','kind','display'): record['properties'][field]['type']='object'
@@ -481,7 +488,15 @@ for suffix in ('', 'Input'):
  raw_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'not':{'contains':{'anyOf':[{'required':['aggregate']},grouped_timeline_child]}}}}}}}
  grouped_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':grouped_timeline_child}}}}}
  grouped_query={'required':['groupTimeSeries','groupBy','bucketMs'],'properties':{'signal':{'enum':['logs','spans']},'groupTimeSeries':{'const':True},'groupBy':{'minItems':1,'maxItems':1},'bucketMs':{'enum':[1000,10000,60000,300000]},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'summary':{'const':''},'spanStatus':{'const':False}}}
+ grouped_query['properties'].pop('summary')
  view.setdefault('allOf',[]).append({'if':grouped_composition,'then':{'properties':{'queries':{'items':grouped_query}}}})
+ for profile in ('grouped-count-v1','grouped-duration-mean-v1'):
+  profile_child={'required':['timeline'],'properties':{'timeline':{'properties':{'display':{'required':['profile'],'properties':{'profile':{'const':profile}}}}}}}
+  profile_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':profile_child}}}}}
+  query_profile={'properties':{'summary':{'const':'span-duration' if profile=='grouped-duration-mean-v1' else ''}}}
+  if profile=='grouped-duration-mean-v1':query_profile.update(required=['signal','summary']);query_profile['properties']['signal']={'const':'spans'}
+  view['allOf'].append({'if':profile_composition,'then':{'properties':{'queries':{'items':query_profile}}}})
+
  view.setdefault('allOf',[]).append({'if':raw_composition,'then':{'properties':{'queries':{'items':{'properties':{'signal':{'enum':['logs','spans']},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}}}}})
 
 # Immutable selected observations, independent of source and annotation storage.
@@ -559,7 +574,7 @@ epoch_ms={'type':'string','pattern':'^(0|[1-9][0-9]*)$','maxLength':16,'descript
 category={'type':['string','null'],'maxLength':1024,'description':'Null is missing; empty string is present empty. Runtime enforces1024 UTF-8 bytes; Schema maxLength counts characters.'}
 rational_value={'type':'string','pattern':'^(0|-?[1-9][0-9]*)(/[1-9][0-9]*)?$','maxLength':1024,'description':'Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value.'}
 measure_specs={}
-for family,kinds in [('numeric',['mean','sum','min','max']),('duration',['mean','min','max','p50','p95','p99'])]:
+for family,kinds in [('numeric',['mean','sum','min','max']),('duration',['mean','sum','min','max','p50','p95','p99'])]:
  for kind in kinds:
   quantile={'p50':'0.5','p95':'0.95','p99':'0.99'}.get(kind)
   measure_specs[family+'.'+kind]={'family':family,'kind':'quantile' if quantile else kind,'method':'quantilesExactHigh' if quantile else 'exact-rational' if kind=='mean' else 'exact',**({'quantile':quantile} if quantile else {})}
@@ -694,6 +709,22 @@ grouped_values['required']=['category','fromMs','toMs','count']
 grouped_values['properties']={'category':category,'fromMs':epoch_ms,'toMs':epoch_ms,'count':{'type':['string','null']}}
 grouped_row={'allOf':[ref('scopedview.Row'),{'required':['state'],'not':{'required':['cells']},'properties':{'key':{'pattern':'^group-interval:[a-f0-9]{64}$'},'values':grouped_values},'oneOf':copy.deepcopy(time_states)}]}
 grouped_shape={'required':['interval','dimensions'],'not':{'anyOf':[{'required':[key]} for key in ['partition','histogram']]},'properties':{'shape':{'const':'grouped-time-series'},'id':{'pattern':'^[a-f0-9]{64}:grouped-intervals$'},'dimensions':{'const':['category']},'interval':{'type':'object'},'scope':{'properties':{'signal':{'enum':['logs','spans']},'selector':grouped_selector}},'fields':{'minItems':4,'maxItems':4,'prefixItems':[view_field_spec('category','string',nullable=True),*time_fields]},'rows':{'maxItems':1920,'items':grouped_row},'completeness':{'properties':{'aspects':{'const':['grouped-intervals']}}}}}
+# The mean-only grouped arm retains exact per-cell duration sum/count support.
+grouped_mean_shape=copy.deepcopy(grouped_shape)
+gm=grouped_mean_shape['properties']
+gm['scope']['properties']['signal']={'const':'spans'}
+gm['scope']['properties']['selector']['properties'].update(signal={'const':'spans'},summary={'const':'span-duration'})
+gm['scope']['properties']['selector']['required']+=['signal','summary']
+gm['fields'].update(minItems=6,maxItems=6,prefixItems=[view_field_spec('category','string',nullable=True),*time_fields,view_field_spec('duration.sum','rational','ns',nullable=True),view_field_spec('duration.mean','rational','ns',nullable=True)])
+gm_values=copy.deepcopy(grouped_values)
+gm_values['required']+=['duration.sum','duration.mean']
+gm_values['properties'].update({key:copy.deepcopy(measure_values[key]) for key in ['duration.sum','duration.mean']})
+gm_row=copy.deepcopy(grouped_row)
+gm_row['allOf'][1].pop('not')
+gm_row['allOf'][1]['properties']['values']=gm_values
+gm_row['allOf'][1]['required']+=['cells']
+gm_row['allOf'][1]['properties']['cells']={'type':'object','required':['duration.sum','duration.mean'],'additionalProperties':False,'properties':{key:ref('exploration.SupportedViewCell') for key in ['duration.sum','duration.mean']}}
+gm['rows']['items']=gm_row
 summary_values={'type':'object','required':['count'],'properties':{'count':exact_count,**measure_values},'additionalProperties':False}
 summary_row={'allOf':[ref('scopedview.Row'),{'not':{'required':['state']},'properties':{'key':{'const':'population'},'values':summary_values}}]}
 summary_fields=[view_field_spec('count','number','records')]
@@ -763,7 +794,7 @@ native_shape['allOf'].append({'if':{'properties':{'scope':{'properties':{'select
 native_shape['properties']['sourceBasis']={'type':'string','pattern':'^[a-f0-9]{64}$'}
 native_shape['properties']['rows']['prefixItems']=[{'properties':{'values':{'properties':{'from':{'const':'-inf'}}}}}]
 native_shape['properties']['rows']['allOf']=[{'contains':{'properties':{'values':{'properties':{key:{'const':value}}}}},'minContains':1,'maxContains':1} for key,value in [('from','-inf'),('to','+inf')]]
-view['oneOf']=[ranked_shape,time_shape,grouped_shape,summary_shape,hist_shape,duration_shape,native_shape]
+view['oneOf']=[ranked_shape,time_shape,grouped_shape,grouped_mean_shape,summary_shape,hist_shape,duration_shape,native_shape]
 
 view['allOf']=[{'if':{'properties':{'quality':{'properties':{'extent':{'const':'complete'}},'required':['extent']}},'required':['quality']},'then':{'required':['completeness'],'properties':{'completeness':{'type':'object'},'rows':{'items':{'properties':{'state':{'enum':['observed','no_data']}}}}}},'else':{'properties':{'completeness':{'type':'null'}}}}]
 

@@ -264,9 +264,9 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 		rawChildren++
 	}
 	for _, child := range c.Children {
-		if child.Timeline != nil && child.Timeline.Display.Profile == "grouped-count-v1" {
+		if child.Timeline != nil && (child.Timeline.Display.Profile == "grouped-count-v1" || child.Timeline.Display.Profile == "grouped-duration-mean-v1") {
 			if aggregate || comparison != nil || facet != nil || len(c.Children) != 2 {
-				return errors.New("grouped count composition requires only timeline and records children")
+				return errors.New("grouped timeline composition requires only timeline and records children")
 			}
 			return nil
 		}

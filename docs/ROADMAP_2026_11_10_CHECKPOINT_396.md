@@ -35,7 +35,7 @@ type machinery or unmeasured optimization merely to use a language feature.
 
 Delivered through the existing flat display path; see [validation](../VALIDATION.md)
 and the [quantitative storyboard](../journeys/397-quantitative-customize-storyboard.md).
-The remaining active queue is 398 → 399.
+398 is also delivered; 399 remains before whole-product review.
 
 User task: “Keep this useful numeric or latency breakdown as a reusable view,
 without changing its measure or going through record inspection.”
@@ -71,6 +71,9 @@ Acceptance:
   and observed model/property checks. Unsupported inputs have explicit outcomes.
 
 ## 398 — depth: reusable grouped mean duration
+
+Delivered through [exact raw-span support](GROUPED_MEAN_DURATION_REUSE.md) and
+the existing grouped displays. [Validation](../VALIDATION.md) records actual checks.
 
 User task: “Which route or service group became slower in this interval? Reuse
 that duration-over-time view on another compatible span population.”

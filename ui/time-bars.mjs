@@ -13,7 +13,7 @@ const global = globalThis;
    const value=known?p.value:null,positive=known&&parsed.n>0n;
    points.push({key:p.key,label:p.label,state,value,positive,height:positive&&ceiling.n>0n?Number(parsed.n*ceiling.d*10000n/(parsed.d*ceiling.n))/100:0,...(typeof p.href==='string'?{href:p.href}:{})});
   }
-  return {state:'observed',title:typeof data.title==='string'?data.title:'Captured records over time',unit:typeof data.unit==='string'?data.unit:'records',ceiling:data.ceiling,fromLabel:typeof data.fromLabel==='string'?data.fromLabel:'',toLabel:typeof data.toLabel==='string'?data.toLabel:'',interactive:data.interactive===true,points};
+  return {state:'observed',title:typeof data.title==='string'?data.title:'Captured records over time',unit:typeof data.unit==='string'?data.unit:'records',ceiling:data.ceiling,...(typeof data.ceilingLabel==='string'?{ceilingLabel:data.ceilingLabel}:{}),fromLabel:typeof data.fromLabel==='string'?data.fromLabel:'',toLabel:typeof data.toLabel==='string'?data.toLabel:'',interactive:data.interactive===true,points};
  }
  function safeHref(value){if(typeof value!=='string'||!value.trim()||value.trim()!==value)return null;try{const url=new URL(value,'https://component.invalid/');return ['https:','http:'].includes(url.protocol)?value:null}catch{return null}}
  function node(tag,text,cls){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e}
@@ -31,7 +31,7 @@ const global = globalThis;
     this._rangeGesture?.clear();
     this.onpointerdown=this.onpointermove=this.onpointerup=this.onpointercancel=this.onkeydown=null;this._ignoreClick=false;this._rangeGesture=null;this._clearRange=null;const m=model(this.data);this.replaceChildren();this.dataset.state=m.state;
     if(m.state!=='observed'){this.append(node('p','Time chart unavailable.','time-bars-unavailable'));return}
-    const figure=node('figure',undefined,'time-bars-figure'),caption=node('figcaption',m.title),scale=node('p','0–'+m.ceiling+' '+m.unit+' · supplied scale','time-bars-scale'),bars=node('div',undefined,'time-bars');
+    const figure=node('figure',undefined,'time-bars-figure'),caption=node('figcaption',m.title),scale=node('p','0–'+(m.ceilingLabel||m.ceiling+' '+m.unit)+' · supplied scale','time-bars-scale'),bars=node('div',undefined,'time-bars');
     for(const p of m.points){const href=safeHref(p.href),tag=href?'a':m.interactive?'button':'span',bar=node(tag,undefined,'time-bar');if(tag==='button')bar.type='button';if(href)bar.href=href;
      bar.dataset.key=p.key;bar.dataset.state=p.state;bar.dataset.positive=String(p.positive);if(p.value!==null)bar.dataset.count=p.value;bar.style.setProperty('--bar-height',p.height+'%');bar.setAttribute('aria-label',p.label);bar.title=p.label;
      if(tag==='span'){bar.setAttribute('role','img')}

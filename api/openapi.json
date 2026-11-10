@@ -22526,6 +22526,7 @@
                 "numeric.min",
                 "numeric.max",
                 "duration.mean",
+                "duration.sum",
                 "duration.min",
                 "duration.max",
                 "duration.p50",
@@ -23247,6 +23248,110 @@
                           },
                           "method": {
                             "const": "exact-rational"
+                          }
+                        }
+                      },
+                      "unit": {
+                        "const": "ns"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "duration.sum"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "duration.sum"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "duration.sum"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "duration.sum"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "duration.sum": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "duration"
+                          },
+                          "kind": {
+                            "const": "sum"
+                          },
+                          "method": {
+                            "const": "exact"
                           }
                         }
                       },
@@ -36814,6 +36919,38 @@
                 "const": "duration"
               },
               "kind": {
+                "const": "sum"
+              },
+              "method": {
+                "const": "exact"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "quantile"
+                  ]
+                },
+                {
+                  "required": [
+                    "numerator"
+                  ]
+                },
+                {
+                  "required": [
+                    "denominator"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "duration"
+              },
+              "kind": {
                 "const": "min"
               },
               "method": {
@@ -37539,6 +37676,7 @@
                                 "numeric.min",
                                 "numeric.max",
                                 "duration.mean",
+                                "duration.sum",
                                 "duration.min",
                                 "duration.max",
                                 "duration.p50",
@@ -37636,6 +37774,15 @@
                                   ],
                                   "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
                                   "maxLength": 1024,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "duration.sum": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
                                   "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
                                 },
                                 "duration.min": {
@@ -37867,6 +38014,7 @@
                                 "numeric.min",
                                 "numeric.max",
                                 "duration.mean",
+                                "duration.sum",
                                 "duration.min",
                                 "duration.max",
                                 "duration.p50",
@@ -37973,6 +38121,15 @@
                                   ],
                                   "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
                                   "maxLength": 1024,
+                                  "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                },
+                                "duration.sum": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^(0|[1-9][0-9]*)$",
+                                  "maxLength": 20,
                                   "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
                                 },
                                 "duration.min": {
@@ -38286,6 +38443,15 @@
                                       "maxLength": 1024,
                                       "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
                                     },
+                                    "duration.sum": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^(0|[1-9][0-9]*)$",
+                                      "maxLength": 20,
+                                      "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                                    },
                                     "duration.min": {
                                       "type": [
                                         "string",
@@ -38537,6 +38703,7 @@
                             "numeric.min",
                             "numeric.max",
                             "duration.mean",
+                            "duration.sum",
                             "duration.min",
                             "duration.max",
                             "duration.p50",
@@ -38637,6 +38804,15 @@
                               ],
                               "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
                               "maxLength": 1024,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.sum": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
                               "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
                             },
                             "duration.min": {
@@ -39137,6 +39313,414 @@
             }
           },
           {
+            "required": [
+              "interval",
+              "dimensions"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "partition"
+                  ]
+                },
+                {
+                  "required": [
+                    "histogram"
+                  ]
+                }
+              ]
+            },
+            "properties": {
+              "shape": {
+                "const": "grouped-time-series"
+              },
+              "id": {
+                "pattern": "^[a-f0-9]{64}:grouped-intervals$"
+              },
+              "dimensions": {
+                "const": [
+                  "category"
+                ]
+              },
+              "interval": {
+                "type": "object"
+              },
+              "scope": {
+                "properties": {
+                  "signal": {
+                    "const": "spans"
+                  },
+                  "selector": {
+                    "required": [
+                      "groupTimeSeries",
+                      "groupBy",
+                      "bucketMs",
+                      "signal",
+                      "summary"
+                    ],
+                    "properties": {
+                      "signal": {
+                        "const": "spans"
+                      },
+                      "groupTimeSeries": {
+                        "const": true
+                      },
+                      "groupBy": {
+                        "minItems": 1,
+                        "maxItems": 1
+                      },
+                      "summary": {
+                        "const": "span-duration"
+                      },
+                      "spanStatus": {
+                        "const": false
+                      }
+                    },
+                    "not": {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "numeric"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "numericHistogram"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "reportedEdge"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "fields": {
+                "minItems": 6,
+                "maxItems": 6,
+                "prefixItems": [
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/scopedview.Field"
+                      },
+                      {
+                        "properties": {
+                          "key": {
+                            "const": "category"
+                          },
+                          "type": {
+                            "const": "string"
+                          },
+                          "nullable": {
+                            "const": true
+                          }
+                        },
+                        "required": [
+                          "nullable"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/scopedview.Field"
+                      },
+                      {
+                        "properties": {
+                          "key": {
+                            "const": "fromMs"
+                          },
+                          "type": {
+                            "const": "timestamp"
+                          },
+                          "unit": {
+                            "const": "ms"
+                          },
+                          "nullable": {
+                            "const": false
+                          }
+                        },
+                        "required": [
+                          "unit"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/scopedview.Field"
+                      },
+                      {
+                        "properties": {
+                          "key": {
+                            "const": "toMs"
+                          },
+                          "type": {
+                            "const": "timestamp"
+                          },
+                          "unit": {
+                            "const": "ms"
+                          },
+                          "nullable": {
+                            "const": false
+                          }
+                        },
+                        "required": [
+                          "unit"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/scopedview.Field"
+                      },
+                      {
+                        "properties": {
+                          "key": {
+                            "const": "count"
+                          },
+                          "type": {
+                            "const": "number"
+                          },
+                          "unit": {
+                            "const": "records"
+                          },
+                          "nullable": {
+                            "const": true
+                          }
+                        },
+                        "required": [
+                          "unit",
+                          "nullable"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/scopedview.Field"
+                      },
+                      {
+                        "properties": {
+                          "key": {
+                            "const": "duration.sum"
+                          },
+                          "type": {
+                            "const": "rational"
+                          },
+                          "unit": {
+                            "const": "ns"
+                          },
+                          "nullable": {
+                            "const": true
+                          }
+                        },
+                        "required": [
+                          "unit",
+                          "nullable"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/scopedview.Field"
+                      },
+                      {
+                        "properties": {
+                          "key": {
+                            "const": "duration.mean"
+                          },
+                          "type": {
+                            "const": "rational"
+                          },
+                          "unit": {
+                            "const": "ns"
+                          },
+                          "nullable": {
+                            "const": true
+                          }
+                        },
+                        "required": [
+                          "unit",
+                          "nullable"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "rows": {
+                "maxItems": 1920,
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/scopedview.Row"
+                    },
+                    {
+                      "required": [
+                        "state",
+                        "cells"
+                      ],
+                      "properties": {
+                        "key": {
+                          "pattern": "^group-interval:[a-f0-9]{64}$"
+                        },
+                        "values": {
+                          "type": "object",
+                          "required": [
+                            "category",
+                            "fromMs",
+                            "toMs",
+                            "count",
+                            "duration.sum",
+                            "duration.mean"
+                          ],
+                          "properties": {
+                            "category": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "maxLength": 1024,
+                              "description": "Null is missing; empty string is present empty. Runtime enforces1024 UTF-8 bytes; Schema maxLength counts characters."
+                            },
+                            "fromMs": {
+                              "type": "string",
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 16,
+                              "description": "Exact nonnegative epoch milliseconds, Date-safe; Go checked queries are bounded before2100."
+                            },
+                            "toMs": {
+                              "type": "string",
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 16,
+                              "description": "Exact nonnegative epoch milliseconds, Date-safe; Go checked queries are bounded before2100."
+                            },
+                            "count": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "duration.sum": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.mean": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "cells": {
+                          "type": "object",
+                          "required": [
+                            "duration.sum",
+                            "duration.mean"
+                          ],
+                          "additionalProperties": false,
+                          "properties": {
+                            "duration.sum": {
+                              "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                            },
+                            "duration.mean": {
+                              "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                            }
+                          }
+                        }
+                      },
+                      "oneOf": [
+                        {
+                          "properties": {
+                            "state": {
+                              "const": "observed"
+                            },
+                            "values": {
+                              "required": [
+                                "count"
+                              ],
+                              "properties": {
+                                "count": {
+                                  "type": "string",
+                                  "pattern": "^[1-9][0-9]*$",
+                                  "maxLength": 20,
+                                  "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "properties": {
+                            "state": {
+                              "const": "no_data"
+                            },
+                            "values": {
+                              "required": [
+                                "count"
+                              ],
+                              "properties": {
+                                "count": {
+                                  "const": "0"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "properties": {
+                            "state": {
+                              "const": "unknown"
+                            },
+                            "values": {
+                              "properties": {
+                                "count": {
+                                  "type": "null"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "completeness": {
+                "properties": {
+                  "aspects": {
+                    "const": [
+                      "grouped-intervals"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
             "not": {
               "anyOf": [
                 {
@@ -39208,6 +39792,7 @@
                             "numeric.min",
                             "numeric.max",
                             "duration.mean",
+                            "duration.sum",
                             "duration.min",
                             "duration.max",
                             "duration.p50",
@@ -39298,6 +39883,15 @@
                               ],
                               "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
                               "maxLength": 1024,
+                              "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                            },
+                            "duration.sum": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)$",
+                              "maxLength": 20,
                               "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
                             },
                             "duration.min": {
@@ -41775,6 +42369,7 @@
               "numeric.min",
               "numeric.max",
               "duration.mean",
+              "duration.sum",
               "duration.min",
               "duration.max",
               "duration.p50",
@@ -42059,6 +42654,50 @@
                     },
                     "method": {
                       "const": "exact-rational"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "key": {
+                  "const": "duration.sum"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit",
+                "nullable"
+              ],
+              "properties": {
+                "nullable": {
+                  "const": true
+                },
+                "type": {
+                  "const": "rational"
+                },
+                "unit": {
+                  "const": "ns"
+                },
+                "aggregation": {
+                  "type": "object",
+                  "properties": {
+                    "family": {
+                      "const": "duration"
+                    },
+                    "kind": {
+                      "const": "sum"
+                    },
+                    "method": {
+                      "const": "exact"
                     }
                   }
                 }
@@ -43282,6 +43921,7 @@
                 "numeric.min",
                 "numeric.max",
                 "duration.mean",
+                "duration.sum",
                 "duration.min",
                 "duration.max",
                 "duration.p50",
@@ -43871,6 +44511,114 @@
                       "values": {
                         "properties": {
                           "duration.mean": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "duration.sum"
+                  ]
+                }
+              },
+              "required": [
+                "values"
+              ]
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "duration.sum"
+                  ],
+                  "properties": {
+                    "duration.sum": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "cells": {
+                  "required": [
+                    "duration.sum"
+                  ]
+                }
+              },
+              "required": [
+                "cells"
+              ]
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "duration.sum"
+                  ]
+                },
+                "cells": {
+                  "properties": {
+                    "duration.sum": {
+                      "$ref": "#/components/schemas/exploration.SupportedViewCell"
+                    }
+                  }
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "duration.sum": {
+                            "properties": {
+                              "state": {
+                                "enum": [
+                                  "derived",
+                                  "estimated"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "duration.sum": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$",
+                            "maxLength": 20,
+                            "description": "Exact canonical reduced rational or integer in declared human units. Runtime rejects non-reduced fractions and denominator1; no float conversion defines the value."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "duration.sum": {
                             "type": "null"
                           }
                         }
@@ -48137,7 +48885,10 @@
                                 ],
                                 "properties": {
                                   "profile": {
-                                    "const": "grouped-count-v1"
+                                    "enum": [
+                                      "grouped-count-v1",
+                                      "grouped-duration-mean-v1"
+                                    ]
                                   }
                                 }
                               }
@@ -48190,13 +48941,115 @@
                       "reportedEdge": {
                         "type": "null"
                       },
-                      "summary": {
-                        "const": ""
-                      },
                       "spanStatus": {
                         "const": false
                       }
                     }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "timeline"
+                        ],
+                        "properties": {
+                          "timeline": {
+                            "properties": {
+                              "display": {
+                                "required": [
+                                  "profile"
+                                ],
+                                "properties": {
+                                  "profile": {
+                                    "const": "grouped-count-v1"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "summary": {
+                        "const": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "timeline"
+                        ],
+                        "properties": {
+                          "timeline": {
+                            "properties": {
+                              "display": {
+                                "required": [
+                                  "profile"
+                                ],
+                                "properties": {
+                                  "profile": {
+                                    "const": "grouped-duration-mean-v1"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "summary": {
+                        "const": "span-duration"
+                      },
+                      "signal": {
+                        "const": "spans"
+                      }
+                    },
+                    "required": [
+                      "signal",
+                      "summary"
+                    ]
                   }
                 }
               }
@@ -48232,7 +49085,10 @@
                                       ],
                                       "properties": {
                                         "profile": {
-                                          "const": "grouped-count-v1"
+                                          "enum": [
+                                            "grouped-count-v1",
+                                            "grouped-duration-mean-v1"
+                                          ]
                                         }
                                       }
                                     }
@@ -48767,7 +49623,10 @@
                                 ],
                                 "properties": {
                                   "profile": {
-                                    "const": "grouped-count-v1"
+                                    "enum": [
+                                      "grouped-count-v1",
+                                      "grouped-duration-mean-v1"
+                                    ]
                                   }
                                 }
                               }
@@ -48820,13 +49679,115 @@
                       "reportedEdge": {
                         "type": "null"
                       },
-                      "summary": {
-                        "const": ""
-                      },
                       "spanStatus": {
                         "const": false
                       }
                     }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "timeline"
+                        ],
+                        "properties": {
+                          "timeline": {
+                            "properties": {
+                              "display": {
+                                "required": [
+                                  "profile"
+                                ],
+                                "properties": {
+                                  "profile": {
+                                    "const": "grouped-count-v1"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "summary": {
+                        "const": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "timeline"
+                        ],
+                        "properties": {
+                          "timeline": {
+                            "properties": {
+                              "display": {
+                                "required": [
+                                  "profile"
+                                ],
+                                "properties": {
+                                  "profile": {
+                                    "const": "grouped-duration-mean-v1"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "summary": {
+                        "const": "span-duration"
+                      },
+                      "signal": {
+                        "const": "spans"
+                      }
+                    },
+                    "required": [
+                      "signal",
+                      "summary"
+                    ]
                   }
                 }
               }
@@ -48862,7 +49823,10 @@
                                       ],
                                       "properties": {
                                         "profile": {
-                                          "const": "grouped-count-v1"
+                                          "enum": [
+                                            "grouped-count-v1",
+                                            "grouped-duration-mean-v1"
+                                          ]
                                         }
                                       }
                                     }
@@ -51688,6 +52652,9 @@
         "allOf": [
           {
             "if": {
+              "required": [
+                "display"
+              ],
               "properties": {
                 "display": {
                   "required": [
@@ -51695,14 +52662,14 @@
                   ],
                   "properties": {
                     "profile": {
-                      "const": "grouped-count-v1"
+                      "enum": [
+                        "grouped-count-v1",
+                        "grouped-duration-mean-v1"
+                      ]
                     }
                   }
                 }
-              },
-              "required": [
-                "display"
-              ]
+              }
             },
             "then": {
               "properties": {
@@ -51714,13 +52681,6 @@
                         "heatmap",
                         "table"
                       ]
-                    }
-                  }
-                },
-                "display": {
-                  "properties": {
-                    "value": {
-                      "const": "count"
                     }
                   }
                 }
@@ -51745,6 +52705,73 @@
                     },
                     "order": {
                       "const": ""
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "display"
+              ],
+              "properties": {
+                "display": {
+                  "required": [
+                    "profile"
+                  ],
+                  "properties": {
+                    "profile": {
+                      "const": "grouped-count-v1"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "display": {
+                  "properties": {
+                    "value": {
+                      "const": "count"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "display"
+              ],
+              "properties": {
+                "display": {
+                  "required": [
+                    "profile"
+                  ],
+                  "properties": {
+                    "profile": {
+                      "const": "grouped-duration-mean-v1"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "display": {
+                  "properties": {
+                    "value": {
+                      "const": "duration.mean"
+                    }
+                  }
+                },
+                "scope": {
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
                     }
                   }
                 }
@@ -51817,6 +52844,9 @@
         "allOf": [
           {
             "if": {
+              "required": [
+                "display"
+              ],
               "properties": {
                 "display": {
                   "required": [
@@ -51824,14 +52854,14 @@
                   ],
                   "properties": {
                     "profile": {
-                      "const": "grouped-count-v1"
+                      "enum": [
+                        "grouped-count-v1",
+                        "grouped-duration-mean-v1"
+                      ]
                     }
                   }
                 }
-              },
-              "required": [
-                "display"
-              ]
+              }
             },
             "then": {
               "properties": {
@@ -51843,13 +52873,6 @@
                         "heatmap",
                         "table"
                       ]
-                    }
-                  }
-                },
-                "display": {
-                  "properties": {
-                    "value": {
-                      "const": "count"
                     }
                   }
                 }
@@ -51879,6 +52902,73 @@
                 }
               }
             }
+          },
+          {
+            "if": {
+              "required": [
+                "display"
+              ],
+              "properties": {
+                "display": {
+                  "required": [
+                    "profile"
+                  ],
+                  "properties": {
+                    "profile": {
+                      "const": "grouped-count-v1"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "display": {
+                  "properties": {
+                    "value": {
+                      "const": "count"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "display"
+              ],
+              "properties": {
+                "display": {
+                  "required": [
+                    "profile"
+                  ],
+                  "properties": {
+                    "profile": {
+                      "const": "grouped-duration-mean-v1"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "display": {
+                  "properties": {
+                    "value": {
+                      "const": "duration.mean"
+                    }
+                  }
+                },
+                "scope": {
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
+                    }
+                  }
+                }
+              }
+            }
           }
         ]
       },
@@ -51896,7 +52986,8 @@
             "type": "string",
             "enum": [
               "",
-              "grouped-count-v1"
+              "grouped-count-v1",
+              "grouped-duration-mean-v1"
             ]
           },
           "query": {
@@ -51955,7 +53046,8 @@
             ],
             "enum": [
               "",
-              "grouped-count-v1"
+              "grouped-count-v1",
+              "grouped-duration-mean-v1"
             ]
           },
           "query": {
@@ -51982,15 +53074,8 @@
             "type": "boolean"
           },
           "title": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "maxLength": 120
+            "maxLength": 120,
+            "type": "string"
           },
           "value": {
             "anyOf": [
@@ -52450,7 +53535,10 @@
                                 ],
                                 "properties": {
                                   "profile": {
-                                    "const": "grouped-count-v1"
+                                    "enum": [
+                                      "grouped-count-v1",
+                                      "grouped-duration-mean-v1"
+                                    ]
                                   }
                                 }
                               }
@@ -52478,7 +53566,10 @@
                                     ],
                                     "properties": {
                                       "profile": {
-                                        "const": "grouped-count-v1"
+                                        "enum": [
+                                          "grouped-count-v1",
+                                          "grouped-duration-mean-v1"
+                                        ]
                                       }
                                     }
                                   }
@@ -53162,7 +54253,10 @@
                                 ],
                                 "properties": {
                                   "profile": {
-                                    "const": "grouped-count-v1"
+                                    "enum": [
+                                      "grouped-count-v1",
+                                      "grouped-duration-mean-v1"
+                                    ]
                                   }
                                 }
                               }
@@ -53190,7 +54284,10 @@
                                     ],
                                     "properties": {
                                       "profile": {
-                                        "const": "grouped-count-v1"
+                                        "enum": [
+                                          "grouped-count-v1",
+                                          "grouped-duration-mean-v1"
+                                        ]
                                       }
                                     }
                                   }

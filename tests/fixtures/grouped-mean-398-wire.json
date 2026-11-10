@@ -1,0 +1,1501 @@
+[
+  {
+    "name": "small-multiples",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "table",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "table",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "heatmap",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "heatmap",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "query-0",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "query": ""
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "query-1",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "query": "\u96ea"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "query-2",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "query": null
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "query-3",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "query": 3
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "query-4",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "query": "a\nb"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "query-5",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "query": "\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "query-6",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "query": "\ud800"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "order-0",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "order": ""
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "order-1",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "order": "source"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "order-2",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "order": "label"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "order-3",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "order": null
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "order-4",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "order": 3
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "order-5",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "order": "value-desc"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "title-0",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "title": ""
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "title-1",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "title": "A mean"
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "title-2",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "title": null
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "title-3",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "title": 3
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "title-4",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "title": "   "
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "title-5",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "title": "a\nb"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "title-6",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "title": "\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea\u96ea"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "title-7",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "title": "\ud800"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "requiresComplete-0",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "requiresComplete": false
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "requiresComplete-1",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "requiresComplete": true
+      }
+    },
+    "accepted": true,
+    "apiAccepted": true
+  },
+  {
+    "name": "requiresComplete-2",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "requiresComplete": null
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "requiresComplete-3",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "requiresComplete": 3
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "profile-None",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": null,
+        "value": "duration.mean"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "profile-",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "",
+        "value": "duration.mean"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "profile-grouped-count-v1",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-count-v1",
+        "value": "duration.mean"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "value-count",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "count"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "value-duration.p95",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.p95"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "extra-True",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean",
+        "extra": true
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "missing-value",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "missing-profile",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "value": "duration.mean"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "wrong-kind",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "time-bar",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "logs",
+    "question": {
+      "signal": "logs",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "logs"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": false
+  },
+  {
+    "name": "missing-duration-summary",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "wrong-bucket",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 4637,
+      "limit": 3,
+      "bucketMs": 500,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "small-multiples",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  },
+  {
+    "name": "heatmap-wide",
+    "question": {
+      "signal": "spans",
+      "environment": "prod",
+      "fromMs": 1137,
+      "toMs": 34137,
+      "limit": 3,
+      "bucketMs": 1000,
+      "groupTimeSeries": true,
+      "summary": "span-duration",
+      "groupBy": [
+        {
+          "kind": "attribute",
+          "key": "work.group"
+        }
+      ]
+    },
+    "declaration": {
+      "version": "goo.view/1",
+      "scope": {
+        "kind": "record-query",
+        "signal": "spans"
+      },
+      "kind": {
+        "name": "heatmap",
+        "version": 1
+      },
+      "display": {
+        "profile": "grouped-duration-mean-v1",
+        "value": "duration.mean"
+      }
+    },
+    "accepted": false,
+    "apiAccepted": true
+  }
+]

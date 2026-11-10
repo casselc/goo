@@ -3,8 +3,8 @@
 > Active execution order: [396 product checkpoint](ROADMAP_2026_11_10_CHECKPOINT_396.md),
 > reconciled across [design, frontend, architecture and Go reviews](reviews/ROADMAP_RECONCILIATION_396.md).
 > 394 direct count customization, 395 grouped count reuse and 396 held-presentation
-> correction and 397 quantitative Customize are accepted. The remaining finite queue is
-> **398 grouped mean-duration reuse → 399 pure display-helper cycle extraction**,
+> correction, 397 quantitative Customize and 398 grouped mean-duration reuse are
+> accepted. The remaining finite queue is **399 pure display-helper cycle extraction**,
 > then whole-product review. 398 requires exact raw sum/count support first;
 > P95, summary-child and Saved/service gauge adoption remain deferred.
 > 367 reusable current RPC views, 368 exact service native interval context,

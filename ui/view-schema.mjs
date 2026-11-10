@@ -1,4 +1,4 @@
-import {validateGrouped} from './grouped-timeline-schema.mjs';
+import {validateGrouped,groupedMeanQuery} from './grouped-timeline-schema.mjs';
 import {validateMeasurementIntervalSelector,binary64Rational,nativeRationalCoordinate} from './measurement-scope.mjs';
 import {categoryText,categoryLabel} from './view-values.mjs';
 import {validateNumericPredicate} from './question-protocol.mjs';
@@ -116,7 +116,7 @@ export function validateDisplay(snapshot,display){
  if(snapshot.shape==='grouped-time-series'&&display.order!==undefined&&!['source','label'].includes(display.order))reasons.push('Grouped timelines support source or label order');
  if(display.requiresComplete!==undefined&&typeof display.requiresComplete!=='boolean')reasons.push('requiresComplete must be boolean');
  if(snapshot.dimensions?.length>1&&display.kind!=='table')reasons.push('Multiple group dimensions require the exact table until a series mapping is declared');
- if(snapshot.shape==='grouped-time-series'){if(!['small-multiples','table','heatmap'].includes(display.kind)||(display.value??'count')!=='count'||display.scale!==undefined||display.category!==undefined||display.start!==undefined||display.end!==undefined)reasons.push('Grouped timelines require their declared count geometry');if(display.kind==='heatmap'&&Math.ceil((Number(snapshot.interval.toMs)-Number(snapshot.interval.fromMs))/Number(snapshot.interval.bucketMs))>32)reasons.push('Heatmaps support at most 32 intervals; use Small multiples or Table.');}
+ if(snapshot.shape==='grouped-time-series'){if(!['small-multiples','table','heatmap'].includes(display.kind)||(display.value??'count')!==(groupedMeanQuery(snapshot.scope.selector)?'duration.mean':'count')||display.scale!==undefined||display.category!==undefined||display.start!==undefined||display.end!==undefined)reasons.push('Grouped timelines require their declared count or mean-duration geometry');if(display.kind==='heatmap'&&Math.ceil((Number(snapshot.interval.toMs)-Number(snapshot.interval.fromMs))/Number(snapshot.interval.bucketMs))>32)reasons.push('Heatmaps support at most 32 intervals; use Small multiples or Table.');}
  const kind=kinds[display.kind];
  if(kind.shape&&kind.shape!==snapshot.shape)reasons.push('Display kind does not support this dataset shape');
  if(display.kind==='histogram'){

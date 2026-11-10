@@ -1,5 +1,52 @@
 # Validation record
 
+## Reusable grouped mean duration — 398
+
+[Grouped mean duration](docs/GROUPED_MEAN_DURATION_REUSE.md) extends the existing
+shared grouped interval dataset and timeline/records composition. The feasibility
+gate confirmed exact raw per-cell duration sum/count and additive read agreement.
+The pinned mean-only profile adds no evaluator, renderer framework or workspace.
+Known empty cells have null latency; an observed zero-duration span has a valid
+zero mean. Duration percentiles remain outside this grouped reuse arm.
+
+- Go exploration/workbench/server suites passed **12.601 s / 4.713 s / 18.134 s**
+  on Go **1.27.3**. Source/projection checks reject malformed contributing support
+  and preserve unknown absences after inconsistent reads. Focused UI ownership,
+  exact support, scale and zero/unknown checks: **18 passed / zero skips**.
+- Full frontend: **1,445 passed / zero skips / 37.102 s**. The prior blanket
+  rejection of grouped duration was updated to admit the pinned mean profile;
+  unsupported summary/geometry cases remain refused.
+- Shared **41 actual Go/JavaScript declaration vectors** and accepted-store round
+  trips passed **0.155 s**. API checks cover the same **41 shape vectors** plus
+  **14 enclosing saved-view cases**, including count/mean query mismatches.
+  Byte/Unicode/control rules and exact query/interval semantics remain runtime
+  checks rather than JSON Schema claims.
+  Full OpenAPI validation passed **112 operations / 489 fixture responses /
+  195 admitted requests / 28 refusals**; all **18 actual browser API responses**
+  and their available request bodies also conform.
+- Actual ordinary OTel main passed **21.0 s / 25.3 s runner**: **19 physical spans /
+  16 measured boundaries**, with independent exact per-cell sum/count and reduced
+  rational mean oracles over **16 source / 20 destination cells**. Missing, empty,
+  Unicode, real zero duration and shorter final intervals are covered. All three
+  display kinds use the full supplied-population scale, unaffected by Find/order.
+- Main observed work: **three source requests / three configuration GETs / one
+  browser publication / 18 physical SQL queries**. A separate destination setup
+  publication is explicit fixture setup. Staging, local changes, Inspect/Apply,
+  reopen, nested/outer Back and stale-stage probes add no telemetry reads.
+- Independent Bombadil passed **36.4 s / 38.3 s runner**: **405 snapshots / nine
+  phases**, including known-zero-count selection with unavailable mean and held
+  return. Its two source requests use **12 physical SQL queries**. No actor
+  pixel-oracle claim. Design accepted all **four actual desktop/narrow frames**.
+- Required observed Quint admission passed **4.93 s / zero skips**, checking
+  independent physical membership, sums/counts/means, raw clocks, plans and actor.
+  All **seven semantic mutants** and the **staging-read model control** failed.
+  Hegel passed **32 local staging/reuse/store vectors / 1.93 s**, preserving scales
+  and rejecting altered support; these are separate from actual source reads.
+- Rebuilt and refreshed only the lab packages service. Running image
+  `sha256:b5c470ac95953d813ee7053402241fe42cb513020a9dd34e1ce95bf41d62e3a1`
+  responds to the capabilities check; served grouped renderer/schema modules match
+  reviewed source bytes. Existing telemetry services and stores were preserved.
+
 ## Ordinary quantitative distribution customization — 397
 
 [Direct Customize](docs/DISTRIBUTION_CUSTOMIZATION.md) now preserves existing

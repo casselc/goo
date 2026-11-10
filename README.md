@@ -624,13 +624,14 @@ are delivered. [Native HTTP-client duration profiles](docs/HTTP_CLIENT_NATIVE_DU
 (393) confirms both source encoders preserve legal values and fixes typed
 question validation before JSON cloning.
 [Count, numeric and duration distributions](docs/DISTRIBUTION_CUSTOMIZATION.md) and
-[grouped count timelines](docs/GROUPED_COUNT_TIMELINE_REUSE.md) can be customized
+[grouped count timelines](docs/GROUPED_COUNT_TIMELINE_REUSE.md) and
+[grouped mean-duration views](docs/GROUPED_MEAN_DURATION_REUSE.md) can be customized
 and reused through the existing workspace. Configuration retains the exact
 question, Run is explicit, and Back restores held evidence without rereading.
 [Held presentation ownership](docs/HELD_PRESENTATION_OWNERSHIP.md) keeps local
 edits and saved definitions aligned after Back; invalid Find blocks Save and
 recovers on correction. Source controls retain their separate lifetime. The next
-queue continues with grouped mean duration, then display-helper consolidation. Gauge context starts in ordinary Measurements;
+queue continues with pure display-helper consolidation, then whole-product review. Gauge context starts in ordinary Measurements;
 Saved and service continuation remain deferred. Earlier current RPC view reuse,
 service native interval context and measured bounded facets are also delivered.
 [Facet pages](docs/LARGE_FACET_INTERACTIONS.md) mount at most

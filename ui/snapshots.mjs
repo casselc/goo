@@ -100,7 +100,7 @@ function hold(raw){
  const id='goo.local/'+ ++nextLocal;raw.id=id;raw.revision=id;
  raw.origin='browser-held';delete raw.completeness;
  if(record(raw.quality))raw.quality.extent='unknown';
- if(raw.shape==='grouped-time-series'&&Array.isArray(raw.rows))for(const row of raw.rows)if(row?.state==='no_data'&&row.values?.count==='0'){row.state='unknown';row.values.count=null}
+ if(raw.shape==='grouped-time-series'&&Array.isArray(raw.rows))for(const row of raw.rows)if(row?.state==='no_data'&&row.values?.count==='0'){row.state='unknown';row.values.count=null;for(const key of ['duration.sum','duration.mean'])if(Object.hasOwn(row.values,key)){row.values[key]=null;(row.cells??={})[key]={state:'unknown'}}}
  return raw;
 }
 export function importSnapshot(raw){

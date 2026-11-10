@@ -1959,3 +1959,16 @@ Ordinary display controls accept omission for defaults. Explicit null for text,
 scale, order or complete-only is rejected consistently by the Go decoder and
 JavaScript validator; the existing ordinary optional profile-null convention is
 unchanged. Invalid Unicode is rejected before Go JSON decoding can repair it.
+
+
+## Grouped mean duration — 398
+
+The existing grouped interval composition accepts a pinned raw-span mean profile
+alongside the distinct count profile. Its six-field dataset retains category,
+exact bounds, captured count, duration sum and rational mean, with per-cell
+support. Small multiples, Table and eligible Heatmap share the full-population
+mean scale; Find never rescales the population. Empty durations remain unavailable
+while observed zero is valid latency. Human duration labels and exact support
+appear in interval details. `goo-time-bars` accepts an optional supplied human
+`ceilingLabel`; rational millisecond geometry remains exact and source-free.
+See [the contract](GROUPED_MEAN_DURATION_REUSE.md).

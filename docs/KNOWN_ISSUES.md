@@ -35,8 +35,10 @@ trail-return saved-intent drift and invalid Find publication while preserving
 retired source controls. Independent architecture, design, frontend and Go reviews
 are reconciled in the [396 checkpoint](ROADMAP_2026_11_10_CHECKPOINT_396.md).
 Quantitative customization (397) preserves the current measure and full question.
-The finite next queue is grouped mean duration (398), then pure display-helper
-consolidation (399). Detailed checks,
+[Grouped mean duration](GROUPED_MEAN_DURATION_REUSE.md) (398) extends the checked
+grouped composition with exact per-cell sum/count support; empty duration remains
+unavailable. Percentiles remain outside this arm. Pure display-helper
+consolidation (399) is next, followed by whole-product review. Detailed checks,
 including held-return regressions and model replay, are recorded in
 [validation](../VALIDATION.md); this summary does not substitute for their
 individual outcomes.
