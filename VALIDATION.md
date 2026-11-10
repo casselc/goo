@@ -1,5 +1,64 @@
 # Validation record
 
+## Explicit trace-search continuation — 403
+
+[Trace-search continuation](docs/TRACE_SEARCH_CONTINUATION.md) separates authored
+search intent from scope-bound lexical page position. Next/First/Retry explicitly
+read and replace pages. Full counts precede position filtering; remaining counts
+precede page limiting. Empty continuations retain full counts. Capture rereads the
+current positioned page; immutable reopen is source-free. Saved intent excludes
+position. Accepted reads fold conditions to keep evidence and controls first.
+
+- Targeted Go trace-search/capture checks passed **1.098 s / 0.371 s** in
+  exploration/server packages on Go **1.27.3**. New tests exercise source markers,
+  empty-page count/basis changes, scope hashes, strict HTTP wire/cancellation and
+  positioned capture/refresh. These are targeted checks, not a full Go suite or
+  optional warehouse campaign. Old complete result fixtures include remaining counts.
+- Final frontend **1,474 passed / zero skips / 26.194 s**. Six new continuation
+  cases cover complete result admission, hidden/inert/retired controls, pending
+  draft retirement, current-page capture, authored save, local disclosure and
+  source-free retained DOM. Standard SHA-256 and cross-language hash checks retain
+  Unicode, empty literals, HTML escaping and exact numeric text semantics.
+- Hegel passed **90 generated complete page/capture carriers / 2,046 Go+JS
+  refusal controls / 1.741 s**, plus **nine canonical hash vectors**. Generated
+  fixed-bank partition proofs do not establish a stable walk over changing data.
+  API shape checks passed **90 carriers / 83 page inputs / 865 malformed-wire
+  controls**; runtime hash equality and witness membership remain separate checks.
+- Full OpenAPI validation passed **113 operations / 735 schemas / 489 fixture
+  responses / 195 admitted requests / 28 refusals**. All **36 actual browser/direct
+  API responses** and available request bodies conform to the generated contract.
+- Final actual main passed **11.4 s / 13.3 s runner**: **26 physical spans / seven
+  matching trace IDs / four lexical pages at limit two / 24 observed boundaries**.
+  Independent raw oracles verify every condition witness, page membership, full
+  and remaining counts, including positive full count on an empty continuation.
+  Current-page capture reopens with the source deliberately unavailable; bytes,
+  page position and custody remain unchanged. Save/reopen retains root intent.
+  Child Back preserves the exact held page; hidden/inert/retired callbacks and
+  a deliberately late page after a limit edit cannot publish or execute again.
+- Observed main work: **13 browser/direct source requests / one capture GET /
+  one capture publication / one document publication / 19 physical SQL statements**.
+  Twelve search statements include the explicit capture reread; seven statements
+  serve two existing record children. Stage, local edits/disclosure, save staging,
+  resize and Back add no telemetry reads. A continuation is one SQL execution;
+  its matched CTE may scan the source more than once. No latency or transactional
+  snapshot improvement is claimed.
+- Independent Bombadil passed **41.3 s / 43.1 s runner**: **700 snapshots / nine
+  phases / three explicit first-next-first searches / three SQL statements**,
+  with no writes, no page accumulation and the same exact source bank.
+- Required observed main/actor admission passed **5.868 s / zero skips**:
+  **nine actual page reads / 24 ownership boundaries**, exact compiled SQL and
+  parameter matches, **ten semantic mutants** and **one staging-read model
+  control** rejected. Full shared record/query HTTP policy suites also pass.
+- Rebuilt and refreshed only the lab packages service; capabilities returns 200,
+  all seven changed UI modules and served OpenAPI match reviewed source bytes.
+  Image `sha256:e446494610b6ae673ecda47991adb83fb6cfb0f6ff084a9f0eefbe32c9fa8114`.
+  Existing services, volumes, telemetry, captures and XTDB were preserved.
+- Design accepted all **three final desktop/390px frames**. Actual page two shows
+  First/Next and returned IDs above the fold; Saved evidence separates full count,
+  retained page and receipt. The executable storyboard, API and custody/process
+  diagram are current. Next is **404 ungrouped summary templates**, then **405
+  shared parameter encoding** and whole-product review.
+
 ## Shared-table overflow and retained context — 402
 
 [Shared table context](docs/TABLE_CONTEXT.md) adds local directional overflow cues

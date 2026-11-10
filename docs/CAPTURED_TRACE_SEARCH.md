@@ -51,3 +51,11 @@ sequenceDiagram
 ![Stored qualified fields at 390 pixels](journeys/screenshots/383-captured-search-390.png)
 
 ![Fresh trace with retained search return](journeys/screenshots/383-search-trace-followthrough.png)
+
+## Positioned evidence
+
+[Search continuation](TRACE_SEARCH_CONTINUATION.md) stores `traceSearchPosition`
+beside the authored `traceSearch` in a page capture. Capture explicitly rereads
+that page; reopening is source-free, and refresh preserves the same position.
+Reuse extracts authored intent and starts from its first page. A page receipt
+does not establish a stable union with earlier or later reads.

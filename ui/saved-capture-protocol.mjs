@@ -1,4 +1,5 @@
 import {validateResult as validateSearchResult} from './trace-search-result.mjs';
+import {validatePosition} from './trace-search-position.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
 /* Checked stored response boundary. No source reads, DOM or persistence. */
 import * as Environment from './record-environment.mjs';
@@ -18,7 +19,7 @@ function fixedWindow(q){if(!object(q)||!Number.isSafeInteger(q.fromMs)||!Number.
 function inventoryQuestion(q){fixedWindow(q);Environment.selection(q);if(Object.keys(q).some(k=>!['environment','environmentSelector','fromMs','toMs','namespace','service'].includes(k)))throw Error('Invalid stored inventory question.');if(own(q,'service')&&(typeof q.service!=='string'||!q.service.isWellFormed()||q.service.includes('\0')||new TextEncoder().encode(q.service).length>128))throw Error('Invalid stored inventory service.');if(q.namespace!=null){const n=q.namespace;if(!object(n)||Object.keys(n).some(k=>!['mode','value'].includes(k))||!['missing','value'].includes(n.mode)||n.value!==undefined&&(typeof n.value!=='string'||!n.value.isWellFormed()||n.value.includes('\0')||new TextEncoder().encode(n.value).length>128)||n.mode==='missing'&&n.value!==undefined&&n.value!=='')throw Error('Invalid stored inventory namespace.');}}
 function captureFamily(question){
  if(!object(question)||!own(arms,question.kind))throw Error('Unsupported stored capture family.');const selected=arms[question.kind];
- if(!object(question[selected])||Object.keys(question).some(k=>k!=='kind'&&k!==selected))throw Error('Stored capture question requires one exclusive non-null family.');
+ if(!object(question[selected])||Object.keys(question).some(k=>k!=='kind'&&k!==selected&&!(selected==='traceSearch'&&k==='traceSearchPosition')))throw Error('Stored capture question requires one exclusive non-null family.');
  return selected;
 }
 function receipt(page,expectedID){
@@ -30,7 +31,7 @@ function checkedQuestion(q,key){
  else if(key==='inventory')inventoryQuestion(q.inventory);
  else if(key==='comparison'){if(!object(q.comparison)||q.comparison.distribution!=null&&typeof q.comparison.distribution!=='boolean')throw Error('Invalid stored comparison question.');for(const side of ['baseline','selection']){Questions.validateRecordQuestion(q.comparison[side]);validatePredicate(q.comparison[side].where,q.comparison[side].signal)}if(!Environment.sameQuestionEnvironment(q.comparison.baseline,q.comparison.selection))throw Error('Stored comparison environment policies differ.');}
  else if(key==='explanation')Explanation.validate(q.explanation);
- else if(key==='traceSearch')Questions.validateTraceSearchRequest(q.traceSearch);
+ else if(key==='traceSearch'){Questions.validateTraceSearchRequest(q.traceSearch);if(own(q,'traceSearchPosition'))validatePosition(q.traceSearchPosition,q.traceSearch);}
  else Questions.validateStep(Questions.measurementStep(q.measurement));
 }
 function exclusivePayload(page,key,{reference=false}={}){if(!object(page))throw Error('Invalid stored capture envelope.');for(const arm of Object.values(arms))if(own(page,arm)&&(reference||arm!==key))throw Error('Stored capture has mixed payload families.');if(!reference&&!object(page[key]))throw Error('Stored capture requires its selected result.');}
@@ -45,7 +46,7 @@ function validate(page,expectedID){
  }else{
   cursor(page,'nextCursor',null);cursor(page,'previousCursor',null);
   if(key==='measurement'){if(!object(result.question)||Session.identity(q.measurement)!==Session.identity(result.question)||result.rows!==null&&!Array.isArray(result.rows)||page.retainedRecords!==(result.rows?.length??0)||page.recordsLimited)throw Error('Stored measurement differs from its immutable receipt or bounded input.');}
-  else if(key==='traceSearch'){validateSearchResult(result,q.traceSearch);if(page.retainedRecords!==result.items.length||page.recordsLimited!==result.hasMore)throw Error('Stored trace-search capture is not a record page.');}
+  else if(key==='traceSearch'){validateSearchResult(result,q.traceSearch,q.traceSearchPosition);if(page.retainedRecords!==result.items.length||page.recordsLimited!==result.hasMore)throw Error('Stored trace-search capture is not a record page.');}
   else {if(page.retainedRecords!==0||page.recordsLimited)throw Error('Stored aggregate capture has no record pages.');
    if(key==='inventory'){inventoryQuestion(result.question);if(Session.identity(q.inventory)!==Session.identity(result.question)||result.rows!==null&&!Array.isArray(result.rows)||(result.rows?.length??0)>1000||!id(result.basis)||!clock(result.capturedAt)||typeof result.count!=='string'||!/^(0|[1-9]\d*)$/.test(result.count)||result.bucketLabels!==null&&!Array.isArray(result.bucketLabels)||result.warnings!==null&&!Array.isArray(result.warnings)||!object(result.plan))throw Error('Stored inventory differs from its immutable receipt.');}
    else if(key==='comparison'){const expected=q.comparison.distribution,actual=result.request?.distribution;if(expected!=null&&typeof expected!=='boolean'||actual!=null&&typeof actual!=='boolean'||(expected===true)!==(actual===true))throw Error('Stored comparison distribution intent differs from its immutable receipt.');for(const side of ['baseline','selection'])checkedRecord(q.comparison[side],result.request?.[side]?.question);}

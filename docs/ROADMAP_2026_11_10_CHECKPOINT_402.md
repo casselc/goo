@@ -13,6 +13,10 @@ This prerelease has no legacy-format obligation; current Go is 1.27.3.
 
 ## 403 — breadth: continue a trace search beyond the first page
 
+Delivered through [trace-search continuation](TRACE_SEARCH_CONTINUATION.md).
+[Validation](../VALIDATION.md) records actual source, actor and carrier checks.
+The remaining active cadence is 404 → 405, then whole-product review.
+
 User task: “There are more matching traces. Let me inspect the next ones without
 rebuilding the search or losing its conditions.”
 

@@ -876,3 +876,8 @@ contract](docs/SAVED_COUNT_TIMELINE.md).
 Dense quantitative, interval and native tables share [overflow and retained
 context](docs/TABLE_CONTEXT.md): directional edge cues, pinned identity and
 compact UTC interval context, with native keyboard scrolling and no extra reads.
+
+[Trace-search continuation](docs/TRACE_SEARCH_CONTINUATION.md) explicitly reads
+later ID-ordered pages while retaining the full fixed search. Save keeps intent;
+Capture rereads the current positioned page. Conditions fold after successful
+reads, keeping page controls and evidence first.

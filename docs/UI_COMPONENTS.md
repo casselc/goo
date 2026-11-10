@@ -2013,3 +2013,11 @@ no new display component is introduced. Application owners admit the actual
 requested widget or full capture envelope and bind action lifetimes. Picker drafts
 retire staging without reads; local component disclosure grants no source lease.
 See [retained gauge context](RETAINED_GAUGE_RECORD_CONTEXT.md).
+
+### Trace-search page ownership (403)
+
+Trace continuation reuses native disclosure, button and table controls. Conditions
+fold after accepted reads; reopening them is local. Application adapters own
+page positions, requests, cancellation, current action leases and captures.
+The pure position/result modules perform no IO; no display component gains a
+source subscription. See [continuation](TRACE_SEARCH_CONTINUATION.md).

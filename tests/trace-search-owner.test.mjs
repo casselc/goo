@@ -38,7 +38,7 @@ function fixture(selector){
 }
 function response(request,resources){
  const fieldValues=Search.conditionFields(request.conditions[0]).map(field=>({field,value:field.kind==='resource'?(Object.hasOwn(resources,field.key)?resources[field.key]:null):field.key==='name'?'work':'api'}));
- return {ok:true,data:{request,readAt:'2026-11-05T00:00:00Z',basis:'a'.repeat(64),plan:{sql:'SELECT',parameters:{}},warnings:[],state:'observed',matchedTraces:'1',hasMore:false,items:[{traceId:'1'.repeat(32),witnesses:[{conditionIndex:0,matchingRecords:'1',spanId:'2'.repeat(16),parentSpanId:'',service:'api',operation:'work',kind:'Server',timestampNs:'1000000000',durationNs:'1',fieldValues}]}]}};
+ return {ok:true,data:{request,readAt:'2026-11-05T00:00:00Z',basis:'a'.repeat(64),plan:{sql:'SELECT',parameters:{}},warnings:[],state:'observed',matchedTraces:'1',remainingTraces:'1',hasMore:false,items:[{traceId:'1'.repeat(32),witnesses:[{conditionIndex:0,matchingRecords:'1',spanId:'2'.repeat(16),parentSpanId:'',service:'api',operation:'work',kind:'Server',timestampNs:'1000000000',durationNs:'1',fieldValues}]}]}};
 }
 test('mounted typed search opens a fresh exact trace with the same policy/window and no parent predicate',async()=>{
  for(const [selector,resources]of [[Environment.current('prod'),{[Environment.currentKey]:'prod'}],[Environment.effective({mode:'named',value:'prod'}),{[Environment.legacyKey]:'prod'}],[Environment.effective({mode:'empty'}),{[Environment.currentKey]:''}],[Environment.effective({mode:'unreported'}),{}]]){
@@ -56,7 +56,7 @@ test('condition edits abort the old request and cannot admit a late result into 
  const f=fixture(Environment.effective({mode:'unreported'})),pending=button(f.host,'Run trace search').onclick(),read=requests[0];editors[0].onChange(eq('name','changed'),null);assert(read.signal.aborted);read.resolve(response(read.request,{}));await pending;assert.equal(button(f.host,'Open trace (fresh read)'),undefined);const next=button(f.host,'Run trace search').onclick();assert.equal(requests.length,2);assert.deepEqual(requests[1].request.conditions,[eq('name','changed')]);f.owner.dispose();requests[1].resolve(response(requests[1].request,{}));await next;
 });
 test('refused replacement clears the old scope label instead of displaying stale policy context',()=>{
- const f=fixture(Environment.effective({mode:'named',value:'prod'})),panel=f.host.children.find(node=>node.attributes['aria-label']==='Find traces containing span conditions'),scope=panel.children[2];assert.match(scope.textContent,/current\/legacy precedence/);f.question.reportedEdge={};assert.equal(f.owner.open(eq('name','other'),f.opener),false);assert.equal(scope.textContent,'');assert.equal(requests.length,0);assert.equal(button(f.host,'Run trace search').disabled,true);f.owner.dispose();
+ const f=fixture(Environment.effective({mode:'named',value:'prod'})),panel=f.host.children.find(node=>node.attributes['aria-label']==='Find traces containing span conditions'),scope=all(panel).find(node=>Object.hasOwn(node.dataset,'traceSearchScope'));assert.match(scope.textContent,/current\/legacy precedence/);f.question.reportedEdge={};assert.equal(f.owner.open(eq('name','other'),f.opener),false);assert.equal(scope.textContent,'');assert.equal(requests.length,0);assert.equal(button(f.host,'Run trace search').disabled,true);f.owner.dispose();
 });
 
 test('explicit Close restores the current opener viewport and focus without another read',()=>{

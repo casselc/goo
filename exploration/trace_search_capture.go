@@ -36,12 +36,31 @@ func ValidateTraceSearchResult(result *TraceSearchResult) error {
 	if err != nil {
 		return err
 	}
-	n := big.NewInt(int64(len(result.Items)))
-	if total.Cmp(n) < 0 || result.HasMore != (total.Cmp(n) > 0) || result.HasMore && len(result.Items) != r.Limit {
-		return errors.New("trace-search list and full count disagree")
+	remaining, err := decimal(result.RemainingTraces)
+	if err != nil || remaining.Cmp(total) > 0 {
+		return errors.New("invalid trace-search remaining count")
 	}
-	if (total.Sign() == 0 && result.State != "no_data") || (total.Sign() > 0 && result.State != "observed") {
-		return errors.New("trace-search state and full count disagree")
+	if result.Position != nil {
+		if err = ValidateTraceSearchPosition(r, *result.Position); err != nil {
+			return err
+		}
+	} else if remaining.Cmp(total) != 0 {
+		return errors.New("initial trace search remaining count differs from total")
+	}
+	n := big.NewInt(int64(len(result.Items)))
+	if remaining.Cmp(n) < 0 || result.HasMore != (remaining.Cmp(n) > 0) || result.HasMore && len(result.Items) != r.Limit {
+		return errors.New("trace-search page list and remaining count disagree")
+	}
+	if (remaining.Sign() == 0 && result.State != "no_data") || (remaining.Sign() > 0 && result.State != "observed") {
+		return errors.New("trace-search state and page count disagree")
+	}
+	if result.HasMore {
+		next, err := NextTraceSearchPosition(r, result.Items[len(result.Items)-1].TraceID)
+		if err != nil || !reflect.DeepEqual(result.NextPosition, next) {
+			return errors.New("trace-search next position differs from retained page")
+		}
+	} else if result.NextPosition != nil {
+		return errors.New("terminal trace search has next position")
 	}
 	if strings.TrimSpace(result.Plan.SQL) == "" || len(result.Plan.SQL) > 256<<10 || !utf8.ValidString(result.Plan.SQL) || result.Plan.Parameters == nil || len(result.Plan.Parameters) > 1024 {
 		return errors.New("invalid retained trace-search plan")
@@ -61,6 +80,9 @@ func ValidateTraceSearchResult(result *TraceSearchResult) error {
 	}
 	selection, _ := r.EnvironmentSelection()
 	last := ""
+	if result.Position != nil {
+		last = result.Position.LastTraceID
+	}
 	for _, item := range result.Items {
 		if !exampleID(item.TraceID, 32) || item.TraceID <= last || len(item.Witnesses) != len(r.Conditions) {
 			return errors.New("invalid retained trace identity or witness count")

@@ -5,6 +5,12 @@ status and the [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_402.md) for priori
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 
+[Trace-search continuation](TRACE_SEARCH_CONTINUATION.md) (403) delivers explicit
+ID-ordered page reads, positive full counts on empty continuations, current-page
+capture and source-free reopen. Positions bind the full authored search; saving
+intent excludes position. Each page remains a fresh read, not a stable union.
+404 ungrouped summary templates and 405 shared parameter encoding remain next.
+
 390 delivers [data-first native composition](NATIVE_DATA_FIRST.md) across ordinary
 Measurements, service-expanded native data and saved evidence. Successful reads
 collapse authoring; plots/first items precede full identity and provenance.

@@ -2,8 +2,9 @@
 
 [Save a trace-search question](SAVED_TRACE_SEARCH_QUESTIONS.md) in an investigation
 revision, then reopen its complete fixed conditions and list limit without reading
-telemetry. Search remains explicit. This saves intent; search-result/witness
-capture remains a separate next milestone.
+telemetry. Search remains explicit. [Capture](CAPTURED_TRACE_SEARCH.md) preserves
+search results and witnesses separately. [Continuation](TRACE_SEARCH_CONTINUATION.md)
+keeps page position outside authored intent and supports explicit fresh page reads.
 
 `POST /api/trace-search` exposes the Go endpoint `POST /trace-search`. A search finds distinct valid reported trace IDs within one environment and fixed UTC window where every requested span condition matches at least one source span observation. Conditions can match different services or the same observation. There is no distinct-span constraint, span ordering, parent topology or causal inference.
 

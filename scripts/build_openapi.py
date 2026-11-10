@@ -117,6 +117,17 @@ for wire in ('exploration.TraceSearchRequest','exploration.TraceSearchRequestInp
  shape['properties']['limit'].update(minimum=1,maximum=100)
  shape['oneOf']=[{'required':['environment'],'properties':{'environment':{'type':'string','minLength':1},'environmentSelector':{'type':'null'}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''},'environmentSelector':{'$ref':'#/components/schemas/'+target}}}]
  shape['description']='Fixed-window trace-wide search. A scalar environment means current-key-only; an explicit environmentSelector preserves current-only/effective policy and named/empty/unreported scope. No implicit wildcard or projection to a weaker scalar. Conditions are independent EXISTS tests within the selected environment and window, not same-span or causal claims.'
+# Page position is execution metadata bound to the exact authored request, not intent.
+for suffix in ('','Input'):
+ position=schemas['exploration.TraceSearchPosition'+suffix]
+ position.update(type='object',additionalProperties=False,required=['version','requestHash','lastTraceId'])
+ position['properties']={'version':{'const':'goo/trace-search-position/v1'},'requestHash':{'type':'string','pattern':'^[a-f0-9]{64}$'},'lastTraceId':{'type':'string','pattern':'^[a-f0-9]{32}$','not':{'const':'0'*32}}}
+ position['description']='Exact lexical position after a retained reported trace ID, bound by SHA-256 to canonical authored request JSON. This is not a snapshot, authentication capability or saved search definition; runtime verifies the request hash.'
+ page=schemas.get('exploration.TraceSearchPageRequest'+suffix)
+ if page:
+  page.update(type='object',additionalProperties=False,required=['request','position'])
+  page['properties']={'request':ref('exploration.TraceSearchRequest'+suffix),'position':ref('exploration.TraceSearchPosition'+suffix)}
+  page['description']='Explicit fresh continuation read. Full matching-trace count is before position filtering; remainingTraces counts matching IDs strictly after the supplied position before page limiting. No implicit paging or stable union guarantee.'
 for wire in ('exploration.TraceSearchWitness','exploration.TraceSearchWitnessInput'):
  if wire in schemas:
   schemas[wire]['properties']['fieldValues']['minItems']=2
@@ -206,12 +217,13 @@ for suffix in ('', 'Input'):
  question['additionalProperties']=False
  question['required']=['kind']
  question['properties']['kind']={'enum':[kind for kind,_,_,_ in capture_families]}
+ question['properties']['traceSearchPosition']=ref('exploration.TraceSearchPosition'+suffix)
  question.pop('allOf',None)
  question['oneOf']=[]
  for kind,arm,target,_ in capture_families:
   question['properties'][arm]=ref((target+suffix) if target else request_name)
-  question['oneOf'].append({'required':[arm],'properties':{'kind':{'const':kind}},'not':{'anyOf':[{'required':[other]} for _,other,_,_ in capture_families if other!=arm]}})
- question['description']='Exactly one explicit nonnull capture question arm. Omit the entire question only where the owning refresh/held-promotion request permits it; an empty/null/mixed question is not omission. Nested nullable data retain their family meaning.'
+  question['oneOf'].append({'required':[arm],'properties':{'kind':{'const':kind},**({'traceSearchPosition':False} if kind!='trace-search' else {})},'not':{'anyOf':[{'required':[other]} for _,other,_,_ in capture_families if other!=arm]}})
+ question['description']='Exactly one explicit nonnull capture question arm. Only trace-search admits optional nonnull traceSearchPosition execution metadata; its authored traceSearch remains position-free. Omit the entire question only where the owning refresh/held-promotion request permits it; an empty/null/mixed question is not omission. Nested nullable data retain their family meaning.'
 for name in ('exploration.CaptureReceipt','exploration.CaptureReceiptInput'):
  if name not in schemas:continue
  receipt=schemas[name];receipt['additionalProperties']=False
@@ -249,7 +261,10 @@ for wire in ('exploration.CapturePage','exploration.SavedCapture'):
 search_result=schemas['exploration.TraceSearchResult']
 search_result['properties']['items'].update(maxItems=100)
 search_result['properties']['matchedTraces'].update(pattern='^(0|[1-9][0-9]*)$',maxLength=20)
-search_result['description']='Full matching reported-trace count with a bounded representative witness list. hasMore describes the list, not telemetry completeness. ReadAt and basis belong to this source read; capture custody time is separate. Runtime checks request, plan, state, qualified witness fields and exact counts.'
+search_result['properties']['remainingTraces'].update(pattern='^(0|[1-9][0-9]*)$',maxLength=20)
+for key in ('position','nextPosition'):search_result['properties'][key]=ref('exploration.TraceSearchPosition')
+search_result.setdefault('allOf',[]).append({'if':{'required':['hasMore'],'properties':{'hasMore':{'const':True}}},'then':{'required':['nextPosition']},'else':{'properties':{'nextPosition':False}}})
+search_result['description']='Full matching reported-trace count before position filtering, with a bounded representative witness page and exact remainingTraces after position. Optional position echoes the executed page; nextPosition is supplied only when hasMore. Each page is a fresh read, never a stable snapshot or accumulated complete union. hasMore describes remaining IDs in this read, not telemetry completeness. ReadAt and basis belong to this source read; capture custody time is separate. Runtime checks request, plan, state, qualified witness fields and exact counts.'
 
 summary['description']='Bounded discovery metadata, not a receipt. Legacy environment null means unknown or an explicitly versioned selector. environmentSelector preserves policy/scope; legacy name filters do not match selector captures.'
 summary['properties']['environmentSelector']['description']='Exact versioned policy/scope, separate from legacy current-only environment. Read with version 250 or newer.'
@@ -1068,20 +1083,20 @@ page['properties']['capturedAt']['format']='date-time'
 page['properties']['state']['enum']=['observed','no_data','changed_between_reads']
 page['properties']['resultToken']['pattern']='^[a-f0-9]{64}$'
 
-reads = {'/environment-scopes','/environment-scopes/records','/pod-metric-discovery','/host-discovery','/pod-discovery','/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/page', '/explore/counted-values', '/record-aggregates', '/trace-search', '/population/explain', '/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
+reads = {'/environment-scopes','/environment-scopes/records','/pod-metric-discovery','/host-discovery','/pod-discovery','/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/page', '/explore/counted-values', '/record-aggregates', '/trace-search', '/trace-search/page', '/population/explain', '/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
 for profile,roles in [('container-memory-kubeletstats-v0.137.0',['working-set']),('container-memory-k8scluster-v0.137.0',['request','limit']),('container-cpu-kubeletstats-v0.137.0',['usage']),('container-cpu-k8scluster-v0.137.0',['request','limit'])]:
  podwidget_schema['allOf'].append({'if':{'properties':{'profile':{'const':profile}},'required':['profile']},'then':{'properties':{'role':{'enum':roles}}}})
 plans = {'/native-views/reuse','/view-artifacts/encode','/view-artifacts/decode','/pod-dashboard/plan','/host-dashboard/plan','/pool-signals/plan','/pool-signals/view','/container-memory/view','/container-cpu/view','/container-resources/history','/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
 publications = {'/native-views','/kept-observations/records','/kept-observations/tail','/activity-views','/measurement-packages', '/telemetry-packages', '/annotations', '/exploration-views', '/deployments', '/documents', '/captures/comparisons'}
 requests = {'/native-views':'NativeViewRequest','/native-views/reuse':'NativeViewReuseRequest','/view-artifacts/encode':'ViewArtifactEncodeRequest','/view-artifacts/decode':'ViewArtifactDecodeRequest','/view-templates/expand':'ViewTemplateExpansionRequest','/kept-observations/repair':'KeptRepairRequest','/kept-observations/records':'KeepRecordsIntent','/kept-observations/tail':'KeepTailIntent','/pod-metric-discovery':'PodMetricDiscoveryQuestion','/pod-dashboard/plan':'PodDashboardRequest','/host-discovery':'HostDiscoveryQuestion','/pod-discovery':'PodDiscoveryQuestion','/host-dashboard/plan':'HostDashboardRequest','/pool-signals/plan':'PoolSignalsRequest','/pool-signals/view':'PoolViewRequest','/container-memory/view':'ContainerMemoryViewRequest','/container-cpu/view':'ContainerCPUViewRequest','/container-resources/history':'ContainerResourceHistoryRequest','/activity-views':'ActivityViewRequest',
- '/retained-evidence/tail':'TailIntent','/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'ServiceDiscoveryRequest','/explore':'RecordQuery','/explore/page':'RecordQuery','/explore/counted-values':'RecordQuery','/record-aggregates':'RecordQuery','/trace-search':'TraceSearchRequest','/tail':'TailSelector',
+ '/retained-evidence/tail':'TailIntent','/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'ServiceDiscoveryRequest','/explore':'RecordQuery','/explore/page':'RecordQuery','/explore/counted-values':'RecordQuery','/record-aggregates':'RecordQuery','/trace-search':'TraceSearchRequest','/trace-search/page':'TraceSearchPageRequest','/tail':'TailSelector',
  '/environment-scopes':'AdoptionWindow','/environment-scopes/records':'AdoptionRecordsQuestion','/measurements':'NativeQuestion','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
  '/telemetry-packages':'YAMLRequest','/telemetry-packages/draft':'TelemetryDraftRequest','/telemetry-packages/numeric-plan':'NumericPlanRequest','/telemetry-packages/plan':'TelemetryPlanRequest',
  '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/numeric-histograms/selection':'NumericHistogramSelectionRequest','/numeric-histograms/comparison-selection':'DistributionSelectionRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
  '/population/explain':'ExplanationRequest','/population/explain/plan':'ExplanationRequest','/population/explain/filter':'ExplanationFilterRequest','/captures':'CaptureRequest','/captures/live':'LiveComparisonRequest','/captures/comparisons':'SaveComparisonRequest','/investigations':'InvestigationRequest','/retained-evidence':'RetainRequest','/retained-evidence/{id}/annotations':'CorrectRequest',
 }
 responses = {('get','/native-views'):'NativeViewList',('post','/native-views'):'NativeView',('get','/native-views/{id}'):'NativeView',('post','/native-views/reuse'):'NativeView',('post','/view-artifacts/encode'):'ViewArtifactResult',('post','/view-artifacts/decode'):'ViewArtifactResult',('post','/view-templates/expand'):'ViewTemplateExpansion',('get','/kept-observations/search'):'KeptSearchPage',('post','/kept-observations/repair'):'KeptRepairPage',('post','/kept-observations/records'):'KeptRecords',('post','/kept-observations/tail'):'KeptObservations',('get','/kept-observations/{id}'):'KeptResource',('post','/pod-metric-discovery'):'PodMetricDiscovery',('post','/pod-dashboard/plan'):'PodDashboardPlan',('post','/host-discovery'):'HostDiscovery',('post','/pod-discovery'):'PodDiscovery',('post','/host-dashboard/plan'):'HostDashboardPlan',('post','/pool-signals/plan'):'PoolSignalsPlan',('post','/pool-signals/view'):'PoolView',('post','/container-memory/view'):'ContainerMemoryView',('post','/container-cpu/view'):'ContainerCPUView',('post','/container-resources/history'):'ContainerResourceHistory',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
- ('post','/compare'):'CompareResult',('post','/inventory'):'InventoryResult',('post','/discovery'):'ServiceDiscovery',('post','/explore'):'RecordResult',('post','/explore/page'):'RecordPageResult',('post','/explore/counted-values'):'CountedValuesResult',('post','/record-aggregates'):'RecordAggregatesResult',('post','/trace-search'):'TraceSearchResult',
+ ('post','/compare'):'CompareResult',('post','/inventory'):'InventoryResult',('post','/discovery'):'ServiceDiscovery',('post','/explore'):'RecordResult',('post','/explore/page'):'RecordPageResult',('post','/explore/counted-values'):'CountedValuesResult',('post','/record-aggregates'):'RecordAggregatesResult',('post','/trace-search'):'TraceSearchResult',('post','/trace-search/page'):'TraceSearchResult',
  ('post','/measurements'):'NativeResult',('post','/metric-discovery'):'MetricDiscoveryResult',('post','/telemetry-packages/draft'):'PackagePlan',('post','/telemetry-packages/plan'):'PackagePlan',('post','/telemetry-packages/numeric-plan'):'NumericPlan',('post','/telemetry-packages'):'SavedPackage',('get','/telemetry-packages/{revision}'):'SavedPackage',
  ('post','/recipes'):'RecipePlan',('post','/dashboards/plan'):'DashboardPlan',('post','/population/plan'):'PopulationPlan',('post','/numeric-histograms/selection'):'NumericHistogramSelection',('post','/numeric-histograms/comparison-selection'):'NumericHistogramSelection',
  ('get','/http-package'):'LiveHTTPResult',('get','/operations'):'LiveOperations',('get','/counter-rates'):'LiveRates',('get','/histograms'):'LiveHistograms',
@@ -1169,6 +1184,7 @@ for name in ['measurements.Definition','measurements.Question','measurements.Pla
  if name not in schemas: raise ValueError(f'Missing reflected type: {name}')
 
 def go_limit(path):
+ if path=='/trace-search/page': return 66560
  if path.startswith('/native-views'): return 131072
  if path in ('/environment-scopes','/environment-scopes/records'): return 4096
  if path in ('/container-memory/view','/container-cpu/view','/container-resources/history'): return 8388608
@@ -1223,7 +1239,7 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if path=='/kept-observations/search':op['parameters']=[{'name':name,'in':'query','schema':({'type':'string','enum':['','tail-selection','result-page','saved-capture']} if name=='origin' else {'type':'string','enum':['','logs','spans']} if name=='signal' else {'type':'string','maxLength':256,'description':'Case-sensitive literal UTF-8 text, at most 256 bytes. Empty text lists metadata.'} if name=='text' else {'type':'string','maxLength':1024})} for name in ('origin','signal','text','cursor')]
  for p in {'/captures':['cursor'],'/captures/{id}':['cursor'],'/captures/{id}/followups':['row'],'/captures/{id}/compare':['selection','distribution']}.get(path,[]):
   if method=='get' and not any(v['name']==p and v['in']=='query' for v in op['parameters']):op['parameters'].append({'name':p,'in':'query','schema':{'type':'string'},'description':'Single canonical value; saved evidence is not reread from the telemetry source.'})
- controlled=method=='post' and path in ('/environment-scopes','/environment-scopes/records','/metric-discovery','/pod-metric-discovery','/host-discovery','/pod-discovery','/measurements','/explore','/explore/page','/explore/counted-values','/record-aggregates','/trace-search','/population/explain','/inventory','/discovery','/captures','/captures/live')
+ controlled=method=='post' and path in ('/environment-scopes','/environment-scopes/records','/metric-discovery','/pod-metric-discovery','/host-discovery','/pod-discovery','/measurements','/explore','/explore/page','/explore/counted-values','/record-aggregates','/trace-search','/trace-search/page','/population/explain','/inventory','/discovery','/captures','/captures/live')
  controlled = controlled or method=='get' and path in ('/http-package','/operations','/counter-rates','/histograms')
  if controlled:op['parameters'].append({'name':'X-Goo-Query-ID','in':'header','schema':{'type':'string','pattern':'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$'},'description':'Optional short-lived cancellation capability; repeated/cancelled IDs are refused.'})
  if method=='post' and path in requests:

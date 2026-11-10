@@ -1295,6 +1295,28 @@ def check_captured_trace_search(spec):
             assert list(check.iter_errors(bad)), ('captured search malformed question accepted',suffix,bad)
     print('Captured trace search: typed request, exclusive payload and null/budget controls pass')
 
+def check_trace_search_pages403(spec):
+    request={'version':'goo/trace-search/v1','environment':'prod','fromMs':1000,'toMs':2000,
+             'conditions':[{'field':{'kind':'column','key':'service'},'op':'eq','value':'api'}],'limit':7}
+    position={'version':'goo/trace-search-position/v1','requestHash':'a'*64,'lastTraceId':'1'*32}
+    for suffix in ('','Input'):
+        page=validator(spec,{'$ref':'#/components/schemas/exploration.TraceSearchPageRequestInput'})
+        page.validate({'request':request,'position':position})
+        for bad in ({'request':request},{'position':position},{'request':request,'position':None},
+                    {'request':None,'position':position},{'request':request,'position':{**position,'lastTraceId':'0'*32}},
+                    {'request':request,'position':{**position,'requestHash':'a'*63}},
+                    {'request':request,'position':{**position,'extra':True}}):
+            assert not page.is_valid(bad),('invalid trace page shape accepted',suffix,bad)
+        capture=validator(spec,{'$ref':'#/components/schemas/exploration.CaptureQuestion'+suffix})
+        capture.validate({'kind':'trace-search','traceSearch':request,'traceSearchPosition':position})
+        for bad in ({'kind':'trace-search','traceSearch':request,'traceSearchPosition':None},
+                    {'kind':'explore','explore':{'signal':'spans','environment':'prod','fromMs':1000,'toMs':2000,'limit':7},'traceSearchPosition':position}):
+            assert not capture.is_valid(bad),('capture page position granted to wrong family',suffix,bad)
+    operation=spec['paths']['/trace-search/page']['post']
+    assert operation['x-go-body-limit-bytes']==66560
+    assert any(p['name']=='X-Goo-Query-ID' for p in operation['parameters'])
+    print('Trace pages403: closed position/page shapes, trace-only capture metadata and query admission pass (hash equality remains runtime-owned)')
+
 def check_capture_envelopes387(spec):
     record={'signal':'spans','environment':'prod','fromMs':1000,'toMs':2000,'limit':100,'offset':0}
     grouped={**record,'groupBy':[{'kind':'column','key':'service'}]}
@@ -1342,6 +1364,7 @@ def check(spec):
     check_record_step_selector(spec)
     check_saved_trace_search_steps(spec)
     check_captured_trace_search(spec)
+    check_trace_search_pages403(spec)
     check_capture_envelopes387(spec)
     check_http_client_profile385(spec)
     validate_spec(spec)

@@ -52,15 +52,18 @@ type TraceSearchItem struct {
 	Witnesses []TraceSearchWitness `json:"witnesses"`
 }
 type TraceSearchResult struct {
-	Request       TraceSearchRequest `json:"request"`
-	ReadAt        string             `json:"readAt"`
-	Basis         string             `json:"basis"`
-	State         string             `json:"state"`
-	MatchedTraces string             `json:"matchedTraces"`
-	HasMore       bool               `json:"hasMore"`
-	Items         []TraceSearchItem  `json:"items"`
-	Plan          TraceSearchPlan    `json:"plan"`
-	Warnings      []string           `json:"warnings"`
+	Request         TraceSearchRequest   `json:"request"`
+	ReadAt          string               `json:"readAt"`
+	Basis           string               `json:"basis"`
+	State           string               `json:"state"`
+	MatchedTraces   string               `json:"matchedTraces"`
+	RemainingTraces string               `json:"remainingTraces"`
+	Position        *TraceSearchPosition `json:"position,omitempty"`
+	NextPosition    *TraceSearchPosition `json:"nextPosition,omitempty"`
+	HasMore         bool                 `json:"hasMore"`
+	Items           []TraceSearchItem    `json:"items"`
+	Plan            TraceSearchPlan      `json:"plan"`
+	Warnings        []string             `json:"warnings"`
 }
 
 // EnvironmentSelection uses the same checked wire boundary as ordinary queries.
@@ -99,7 +102,7 @@ func (r TraceSearchRequest) Validate() error {
 	}
 	return nil
 }
-func CompileTraceSearch(r TraceSearchRequest) (TraceSearchPlan, error) {
+func compileTraceSearchAggregate(r TraceSearchRequest) (TraceSearchPlan, error) {
 	if e := r.Validate(); e != nil {
 		return TraceSearchPlan{}, e
 	}
@@ -130,21 +133,38 @@ func CompileTraceSearch(r TraceSearchRequest) (TraceSearchPlan, error) {
 		order := "tuple(Timestamp, SpanId, ParentSpanId, ServiceName, SpanName, SpanKind, Duration, [" + strings.Join(values, ", ") + "])"
 		columns = append(columns, "argMinIf("+tuple+", "+order+", "+condition+") AS w"+n)
 	}
-	sql := "SELECT " + strings.Join(columns, ", ") + base + " GROUP BY TraceId HAVING " + strings.Join(having, " AND ") + " ORDER BY TraceId LIMIT " + strconv.Itoa(r.Limit+1) + " FORMAT JSONEachRow"
+	sql := "SELECT " + strings.Join(columns, ", ") + base + " GROUP BY TraceId HAVING " + strings.Join(having, " AND ")
 	if len(sql) > 256<<10 {
 		return TraceSearchPlan{}, fmt.Errorf("trace search compiled SQL exceeds 256 KiB; simplify conditions")
 	}
 	return TraceSearchPlan{SQL: sql, Parameters: c.params}, nil
 }
+func CompileTraceSearch(r TraceSearchRequest) (TraceSearchPlan, error) {
+	plan, err := compileTraceSearchAggregate(r)
+	if err != nil {
+		return plan, err
+	}
+	plan.SQL += " ORDER BY TraceId LIMIT " + strconv.Itoa(r.Limit+1) + " FORMAT JSONEachRow"
+	if len(plan.SQL) > 256<<10 {
+		return TraceSearchPlan{}, fmt.Errorf("trace search compiled SQL exceeds 256 KiB; simplify conditions")
+	}
+	return plan, nil
+}
 func newTraceSearchResult(r TraceSearchRequest, plan TraceSearchPlan) *TraceSearchResult {
-	return &TraceSearchResult{Request: detached(r), State: "no_data", MatchedTraces: "0", Items: []TraceSearchItem{}, Plan: plan, Warnings: []string{"Distinct valid reported trace IDs within this environment and fixed window; not unique invocations or complete traces.", "Conditions are independent EXISTS tests. One observed span may satisfy several conditions; no ordering, parent topology or causal relationship is implied.", "Each witness is one representative matching record, not every matching span. Duplicate records remain in matching-record counts.", "This is one source aggregate read. Sampling, late arrivals, source coverage and records outside the fixed window remain unknown."}}
+	return &TraceSearchResult{Request: detached(r), State: "no_data", MatchedTraces: "0", RemainingTraces: "0", Items: []TraceSearchItem{}, Plan: plan, Warnings: []string{"Distinct valid reported trace IDs within this environment and fixed window; not unique invocations or complete traces.", "Conditions are independent EXISTS tests. One observed span may satisfy several conditions; no ordering, parent topology or causal relationship is implied.", "Each witness is one representative matching record, not every matching span. Duplicate records remain in matching-record counts.", "Each page is a fresh source aggregate read, not a stable snapshot. Late arrivals or corrections may change page membership and totals; traversing pages does not prove a complete union. Sampling, source coverage and records outside the fixed window remain unknown."}}
 }
 func (s Source) SearchTraces(ctx context.Context, r TraceSearchRequest) (*TraceSearchResult, error) {
+	return s.searchTraces(ctx, r, nil)
+}
+func (s Source) searchTraces(ctx context.Context, r TraceSearchRequest, position *TraceSearchPosition) (*TraceSearchResult, error) {
 	if err := r.Validate(); err != nil {
 		return nil, err
 	}
 	r = detached(r)
 	plan, e := CompileTraceSearch(r)
+	if position != nil {
+		plan, e = CompileTraceSearchPage(TraceSearchPageRequest{Request: r, Position: *position})
+	}
 	if e != nil {
 		return nil, e
 	}
@@ -152,13 +172,26 @@ func (s Source) SearchTraces(ctx context.Context, r TraceSearchRequest) (*TraceS
 	if e != nil {
 		return nil, e
 	}
+	// Keep the exact source metadata in the basis, including an empty-page marker.
+	sourceRows := rows
 	selection, _ := r.EnvironmentSelection()
 	out := newTraceSearchResult(r, plan)
+	out.Position = detached(position)
+	sourceTotal, sourceRemaining := "", ""
+	if position != nil {
+		rows, sourceTotal, sourceRemaining, e = decodeTraceSearchPageMetadata(rows, len(r.Conditions))
+		if e != nil {
+			return nil, e
+		}
+	}
 	if len(rows) > r.Limit+1 {
 		return nil, fmt.Errorf("trace search source row bound exceeded")
 	}
 	last := ""
-	total := ""
+	if position != nil {
+		last = position.LastTraceID
+	}
+	total := sourceTotal
 	for _, raw := range rows {
 		var object map[string]json.RawMessage
 		if json.Unmarshal(raw, &object) != nil || object == nil {
@@ -226,23 +259,36 @@ func (s Source) SearchTraces(ctx context.Context, r TraceSearchRequest) (*TraceS
 		}
 		out.Items = append(out.Items, item)
 	}
-	if len(rows) > 0 {
-		n, _ := decimal(total)
-		if n.Cmp(big.NewInt(int64(len(rows)))) < 0 || len(rows) < r.Limit+1 && n.Cmp(big.NewInt(int64(len(rows)))) != 0 {
-			return nil, fmt.Errorf("trace search source list and total disagree")
+	if position == nil {
+		if total == "" {
+			total = "0"
 		}
-		out.MatchedTraces = total
+		sourceRemaining = total
+	}
+	remaining, err := decimal(sourceRemaining)
+	full, fullErr := decimal(total)
+	if err != nil || fullErr != nil || full.Cmp(remaining) < 0 || remaining.Cmp(big.NewInt(int64(len(rows)))) < 0 || len(rows) < r.Limit+1 && remaining.Cmp(big.NewInt(int64(len(rows)))) != 0 {
+		return nil, fmt.Errorf("trace search source list and counts disagree")
+	}
+	out.MatchedTraces = total
+	out.RemainingTraces = sourceRemaining
+	if remaining.Sign() > 0 {
 		out.State = "observed"
 	}
 	out.HasMore = len(out.Items) > r.Limit
 	if out.HasMore {
 		out.Items = out.Items[:r.Limit]
+		out.NextPosition, e = NextTraceSearchPosition(r, out.Items[len(out.Items)-1].TraceID)
+		if e != nil {
+			return nil, e
+		}
 	}
 	out.ReadAt = time.Now().UTC().Format(time.RFC3339Nano)
 	material, _ := json.Marshal(struct {
-		Request TraceSearchRequest
-		Rows    []json.RawMessage
-	}{r, rows})
+		Request  TraceSearchRequest
+		Position *TraceSearchPosition
+		Rows     []json.RawMessage
+	}{r, position, sourceRows})
 	sum := sha256.Sum256(material)
 	out.Basis = hex.EncodeToString(sum[:])
 	encoded, e := json.Marshal(out)
@@ -259,8 +305,18 @@ type TraceSearchRecord struct {
 }
 
 func ReferenceTraceSearch(r TraceSearchRequest, records []TraceSearchRecord) ([]TraceSearchItem, string, error) {
+	items, total, _, err := referenceTraceSearch(r, records, nil)
+	return items, total, err
+}
+func ReferenceTraceSearchPage(r TraceSearchPageRequest, records []TraceSearchRecord) ([]TraceSearchItem, string, string, error) {
+	if err := r.Validate(); err != nil {
+		return nil, "", "", err
+	}
+	return referenceTraceSearch(r.Request, records, &r.Position)
+}
+func referenceTraceSearch(r TraceSearchRequest, records []TraceSearchRecord, position *TraceSearchPosition) ([]TraceSearchItem, string, string, error) {
 	if e := r.Validate(); e != nil {
-		return nil, "", e
+		return nil, "", "", e
 	}
 	groups := map[string][][]TraceSearchWitness{}
 	for _, record := range records {
@@ -272,7 +328,7 @@ func ReferenceTraceSearch(r TraceSearchRequest, records []TraceSearchRecord) ([]
 			continue
 		}
 		if _, ok := canonicalNS(v[Field{Kind: "column", Key: "duration_ns"}]); !ok {
-			return nil, "", fmt.Errorf("reference record requires canonical duration_ns")
+			return nil, "", "", fmt.Errorf("reference record requires canonical duration_ns")
 		}
 		if groups[id] == nil {
 			groups[id] = make([][]TraceSearchWitness, len(r.Conditions))
@@ -304,10 +360,15 @@ func ReferenceTraceSearch(r TraceSearchRequest, records []TraceSearchRecord) ([]
 	}
 	sort.Slice(items, func(i, j int) bool { return items[i].TraceID < items[j].TraceID })
 	total := strconv.Itoa(len(items))
+	if position != nil {
+		first := sort.Search(len(items), func(i int) bool { return items[i].TraceID > position.LastTraceID })
+		items = items[first:]
+	}
+	remaining := strconv.Itoa(len(items))
 	if len(items) > r.Limit {
 		items = items[:r.Limit]
 	}
-	return items, total, nil
+	return items, total, remaining, nil
 }
 
 // The reference chooses current/legacy presence independently of the SQL compiler.

@@ -1852,6 +1852,16 @@
       }
     ]
   },
+  "TraceSearchPageRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/exploration.TraceSearchPageRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "TraceSearchRequest": {
     "anyOf": [
       {
@@ -3535,6 +3545,16 @@
             "type": "null"
           }
         ]
+      },
+      "traceSearchPosition": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.TraceSearchPosition"
+          },
+          {
+            "type": "null"
+          }
+        ]
       }
     },
     "required": [
@@ -3647,6 +3667,23 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/exploration.TraceSearchRequestInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "traceSearchPosition": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.TraceSearchPositionInput"
               },
               {
                 "type": "null"
@@ -12246,6 +12283,33 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.TraceSearchItem"
   },
+  "exploration.TraceSearchPageRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "position": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.TraceSearchPositionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "request": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.TraceSearchRequestInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.TraceSearchPageRequest"
+  },
   "exploration.TraceSearchPlan": {
     "properties": {
       "parameters": {
@@ -12271,6 +12335,63 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.TraceSearchPlan"
+  },
+  "exploration.TraceSearchPosition": {
+    "properties": {
+      "lastTraceId": {
+        "type": "string"
+      },
+      "requestHash": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "requestHash",
+      "lastTraceId"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.TraceSearchPosition"
+  },
+  "exploration.TraceSearchPositionInput": {
+    "additionalProperties": false,
+    "properties": {
+      "lastTraceId": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "requestHash": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.TraceSearchPosition"
   },
   "exploration.TraceSearchRequest": {
     "properties": {
@@ -12441,10 +12562,33 @@
       "matchedTraces": {
         "type": "string"
       },
+      "nextPosition": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.TraceSearchPosition"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "plan": {
         "$ref": "#/components/schemas/exploration.TraceSearchPlan"
       },
+      "position": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.TraceSearchPosition"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "readAt": {
+        "type": "string"
+      },
+      "remainingTraces": {
         "type": "string"
       },
       "request": {
@@ -12473,6 +12617,7 @@
       "basis",
       "state",
       "matchedTraces",
+      "remainingTraces",
       "hasMore",
       "items",
       "plan",

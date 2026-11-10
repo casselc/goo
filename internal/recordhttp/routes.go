@@ -37,6 +37,7 @@ func Register(mux *http.ServeMux, source exploration.Source, snapshots *explorat
 		_, err := exploration.CompileTraceSearch(request)
 		return err
 	}, source.SearchTraces)
+	registerRead(mux, "/trace-search/page", exploration.TraceSearchPageRequest.Validate, source.SearchTracePage)
 	registerRead(mux, "/explore/page", exploration.Query.Validate, func(ctx context.Context, q exploration.Query) (*exploration.RecordPageResult, error) {
 		result, err := source.FetchRecordPage(ctx, q)
 		if err != nil {

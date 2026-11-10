@@ -7660,6 +7660,93 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/trace-search/page": {
+      "post": {
+        "operationId": "post_trace_search_page",
+        "summary": "POST /trace-search/page",
+        "tags": [
+          "trace-search"
+        ],
+        "description": "Current owner: internal/recordhttp/routes.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits.",
+        "x-go-source": "internal/recordhttp/routes.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TraceSearchResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceReadFailure"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TraceSearchPageRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 66560,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/view-artifacts/decode": {
       "post": {
         "operationId": "post_view_artifacts_decode",
@@ -9597,6 +9684,16 @@
               }
             },
             "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "TraceSearchPageRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.TraceSearchPageRequestInput"
           },
           {
             "type": "null"
@@ -11648,6 +11745,9 @@
           },
           "traceSearch": {
             "$ref": "#/components/schemas/TraceSearchCaptureRequest"
+          },
+          "traceSearchPosition": {
+            "$ref": "#/components/schemas/exploration.TraceSearchPosition"
           }
         },
         "required": [
@@ -11664,7 +11764,8 @@
             "properties": {
               "kind": {
                 "const": "explore"
-              }
+              },
+              "traceSearchPosition": false
             },
             "not": {
               "anyOf": [
@@ -11703,7 +11804,8 @@
             "properties": {
               "kind": {
                 "const": "inventory"
-              }
+              },
+              "traceSearchPosition": false
             },
             "not": {
               "anyOf": [
@@ -11742,7 +11844,8 @@
             "properties": {
               "kind": {
                 "const": "comparison"
-              }
+              },
+              "traceSearchPosition": false
             },
             "not": {
               "anyOf": [
@@ -11781,7 +11884,8 @@
             "properties": {
               "kind": {
                 "const": "measurement"
-              }
+              },
+              "traceSearchPosition": false
             },
             "not": {
               "anyOf": [
@@ -11820,7 +11924,8 @@
             "properties": {
               "kind": {
                 "const": "explanation"
-              }
+              },
+              "traceSearchPosition": false
             },
             "not": {
               "anyOf": [
@@ -11892,7 +11997,7 @@
             }
           }
         ],
-        "description": "Exactly one explicit nonnull capture question arm. Omit the entire question only where the owning refresh/held-promotion request permits it; an empty/null/mixed question is not omission. Nested nullable data retain their family meaning."
+        "description": "Exactly one explicit nonnull capture question arm. Only trace-search admits optional nonnull traceSearchPosition execution metadata; its authored traceSearch remains position-free. Omit the entire question only where the owning refresh/held-promotion request permits it; an empty/null/mixed question is not omission. Nested nullable data retain their family meaning."
       },
       "exploration.CaptureQuestionInput": {
         "additionalProperties": false,
@@ -11924,6 +12029,9 @@
           },
           "traceSearch": {
             "$ref": "#/components/schemas/TraceSearchCaptureRequestInput"
+          },
+          "traceSearchPosition": {
+            "$ref": "#/components/schemas/exploration.TraceSearchPositionInput"
           }
         },
         "type": "object",
@@ -11939,7 +12047,8 @@
             "properties": {
               "kind": {
                 "const": "explore"
-              }
+              },
+              "traceSearchPosition": false
             },
             "not": {
               "anyOf": [
@@ -11978,7 +12087,8 @@
             "properties": {
               "kind": {
                 "const": "inventory"
-              }
+              },
+              "traceSearchPosition": false
             },
             "not": {
               "anyOf": [
@@ -12017,7 +12127,8 @@
             "properties": {
               "kind": {
                 "const": "comparison"
-              }
+              },
+              "traceSearchPosition": false
             },
             "not": {
               "anyOf": [
@@ -12056,7 +12167,8 @@
             "properties": {
               "kind": {
                 "const": "measurement"
-              }
+              },
+              "traceSearchPosition": false
             },
             "not": {
               "anyOf": [
@@ -12095,7 +12207,8 @@
             "properties": {
               "kind": {
                 "const": "explanation"
-              }
+              },
+              "traceSearchPosition": false
             },
             "not": {
               "anyOf": [
@@ -12167,7 +12280,7 @@
             }
           }
         ],
-        "description": "Exactly one explicit nonnull capture question arm. Omit the entire question only where the owning refresh/held-promotion request permits it; an empty/null/mixed question is not omission. Nested nullable data retain their family meaning."
+        "description": "Exactly one explicit nonnull capture question arm. Only trace-search admits optional nonnull traceSearchPosition execution metadata; its authored traceSearch remains position-free. Omit the entire question only where the owning refresh/held-promotion request permits it; an empty/null/mixed question is not omission. Nested nullable data retain their family meaning."
       },
       "exploration.CaptureReceipt": {
         "properties": {
@@ -21671,6 +21784,24 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.TraceSearchItem"
       },
+      "exploration.TraceSearchPageRequestInput": {
+        "additionalProperties": false,
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/exploration.TraceSearchRequestInput"
+          },
+          "position": {
+            "$ref": "#/components/schemas/exploration.TraceSearchPositionInput"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchPageRequest",
+        "required": [
+          "request",
+          "position"
+        ],
+        "description": "Explicit fresh continuation read. Full matching-trace count is before position filtering; remainingTraces counts matching IDs strictly after the supplied position before page limiting. No implicit paging or stable union guarantee."
+      },
       "exploration.TraceSearchPlan": {
         "properties": {
           "parameters": {
@@ -21696,6 +21827,60 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.TraceSearchPlan"
+      },
+      "exploration.TraceSearchPosition": {
+        "properties": {
+          "version": {
+            "const": "goo/trace-search-position/v1"
+          },
+          "requestHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "lastTraceId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{32}$",
+            "not": {
+              "const": "00000000000000000000000000000000"
+            }
+          }
+        },
+        "required": [
+          "version",
+          "requestHash",
+          "lastTraceId"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchPosition",
+        "additionalProperties": false,
+        "description": "Exact lexical position after a retained reported trace ID, bound by SHA-256 to canonical authored request JSON. This is not a snapshot, authentication capability or saved search definition; runtime verifies the request hash."
+      },
+      "exploration.TraceSearchPositionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "version": {
+            "const": "goo/trace-search-position/v1"
+          },
+          "requestHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "lastTraceId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{32}$",
+            "not": {
+              "const": "00000000000000000000000000000000"
+            }
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.TraceSearchPosition",
+        "required": [
+          "version",
+          "requestHash",
+          "lastTraceId"
+        ],
+        "description": "Exact lexical position after a retained reported trace ID, bound by SHA-256 to canonical authored request JSON. This is not a snapshot, authentication capability or saved search definition; runtime verifies the request hash."
       },
       "exploration.TraceSearchRequest": {
         "properties": {
@@ -21934,11 +22119,22 @@
             "pattern": "^(0|[1-9][0-9]*)$",
             "maxLength": 20
           },
+          "nextPosition": {
+            "$ref": "#/components/schemas/exploration.TraceSearchPosition"
+          },
           "plan": {
             "$ref": "#/components/schemas/exploration.TraceSearchPlan"
           },
+          "position": {
+            "$ref": "#/components/schemas/exploration.TraceSearchPosition"
+          },
           "readAt": {
             "type": "string"
+          },
+          "remainingTraces": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20
           },
           "request": {
             "$ref": "#/components/schemas/exploration.TraceSearchRequest"
@@ -21966,6 +22162,7 @@
           "basis",
           "state",
           "matchedTraces",
+          "remainingTraces",
           "hasMore",
           "items",
           "plan",
@@ -21973,7 +22170,31 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.TraceSearchResult",
-        "description": "Full matching reported-trace count with a bounded representative witness list. hasMore describes the list, not telemetry completeness. ReadAt and basis belong to this source read; capture custody time is separate. Runtime checks request, plan, state, qualified witness fields and exact counts."
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "hasMore"
+              ],
+              "properties": {
+                "hasMore": {
+                  "const": true
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "nextPosition"
+              ]
+            },
+            "else": {
+              "properties": {
+                "nextPosition": false
+              }
+            }
+          }
+        ],
+        "description": "Full matching reported-trace count before position filtering, with a bounded representative witness page and exact remainingTraces after position. Optional position echoes the executed page; nextPosition is supplied only when hasMore. Each page is a fresh read, never a stable snapshot or accumulated complete union. hasMore describes remaining IDs in this read, not telemetry completeness. ReadAt and basis belong to this source read; capture custody time is separate. Runtime checks request, plan, state, qualified witness fields and exact counts."
       },
       "exploration.TraceSearchWitness": {
         "properties": {

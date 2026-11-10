@@ -181,6 +181,7 @@ func TestTraceSearchCapture383MissingVersusEmpty(t *testing.T) {
 	result := newTraceSearchResult(q, plan)
 	result.Items = items
 	result.MatchedTraces = total
+	result.RemainingTraces = total
 	result.State = "observed"
 	result.ReadAt = "2026-11-08T22:00:00Z"
 	result.Basis = strings.Repeat("a", 64)

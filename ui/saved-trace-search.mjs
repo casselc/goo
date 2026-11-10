@@ -10,7 +10,7 @@ function checked(page){
  validateSaved(page);
  const {receipt,traceSearch}=page||{};
  if(!/^[a-f0-9]{64}$/.test(receipt?.id)||receipt.question?.kind!=='trace-search'||!traceSearch)throw Error('Stored search differs from its immutable receipt.');
- validateTraceSearchRequest(receipt.question.traceSearch);validateResult(traceSearch,receipt.question.traceSearch);
+ validateTraceSearchRequest(receipt.question.traceSearch);validateResult(traceSearch,receipt.question.traceSearch,receipt.question.traceSearchPosition);
  return structuredClone({receipt,traceSearch});
 }
 function traceQuestion(request,traceId){return {signal:'spans',...Environment.questionFields(request),fromMs:request.fromMs,toMs:request.toMs,limit:100,offset:0,where:{all:[{field:{kind:'column',key:'trace_id'},op:'eq',value:traceId}]}}}

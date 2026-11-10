@@ -89,7 +89,13 @@ func generatedSearchCapture383(seed, total, limit int, empty bool) exploration.S
 	if total == 0 {
 		state = "no_data"
 	}
-	result := &exploration.TraceSearchResult{Request: request, ReadAt: time.UnixMilli(request.ToMS + 1).UTC().Format(time.RFC3339Nano), Basis: strings.Repeat("b", 64), State: state, MatchedTraces: count, HasMore: total > limit, Items: items, Plan: plan, Warnings: []string{"Bounded representative witnesses; not complete traces."}}
+	result := &exploration.TraceSearchResult{Request: request, ReadAt: time.UnixMilli(request.ToMS + 1).UTC().Format(time.RFC3339Nano), Basis: strings.Repeat("b", 64), State: state, MatchedTraces: count, RemainingTraces: count, HasMore: total > limit, Items: items, Plan: plan, Warnings: []string{"Bounded representative witnesses; not complete traces."}}
+	if result.HasMore {
+		result.NextPosition, err = exploration.NextTraceSearchPosition(request, result.Items[len(result.Items)-1].TraceID)
+		if err != nil {
+			panic(err)
+		}
+	}
 	return exploration.SavedCapture{CaptureReceipt: exploration.CaptureReceipt{Version: 1, Title: "Exact generated search evidence", CapturedAt: time.UnixMilli(request.ToMS + 2).UTC().Format(time.RFC3339Nano), Question: exploration.CaptureQuestion{Kind: "trace-search", TraceSearch: &request}}, TraceSearch: result}
 }
 

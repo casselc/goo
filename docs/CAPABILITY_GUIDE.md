@@ -5,7 +5,7 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-402. The [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_402.md) owns execution order;
+403. The [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_402.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
 below are research inputs, not additional backlogs or claims of vendor parity.
 
@@ -17,6 +17,7 @@ below are research inputs, not additional backlogs or claims of vendor parity.
 | Narrow and inspect ordinary telemetry | [Typed filters](FILTER_EDITOR.md), [counted field values](FILTER_VALUES.md), structured attributes and [qualified field presentation](FIELD_PRESENTATION.md) | Missing and present-empty values differ. A displayed page does not define total counts. |
 | Compare populations | [Population workspace](POPULATION_WORKSPACE.md), distributions, baseline/selection comparisons and [fresh-window comparisons](FRESH_COMPARISON.md) | Independent reads can disagree. Ranked differences are leads, not statistical significance or cause. |
 | Follow traces across services | [Cross-service trace search](TRACE_SEARCH.md), qualified witnesses, [waterfalls and trace findings](TRACE_FINDINGS.md) | Conditions are independent within a reported trace ID. Witnesses do not prove ordering, a unique invocation or a complete trace. |
+| Continue a trace search | [Explicit ID-ordered pages](TRACE_SEARCH_CONTINUATION.md), exact scope-bound positions and current-page capture | Each page is a fresh read; full counts precede position filtering. No stable or complete page union is promised. |
 | Reuse a cross-service search | [Saved trace-search questions](SAVED_TRACE_SEARCH_QUESTIONS.md) and [captured search evidence](CAPTURED_TRACE_SEARCH.md) | Saving intent reads no telemetry. Capture explicitly rereads; reopening evidence is source-free. A fresh child trace keeps its original citation and held Back path. |
 | Triage recorded errors and logs | [Error triage](ERROR_TRIAGE.md), [log patterns](LOG_PATTERNS.md), pattern timelines and [time comparisons](LOG_PATTERN_TIME_COMPARISONS.md) | Recorded status/exception evidence is not inferred application failure. Pattern populations retain unclassified coverage. |
 | Inspect discovered services and resources | [Service dashboards](SERVICE_DASHBOARDS.md), [host observations](HOST_RESOURCES.md) and [Kubernetes resources](KUBERNETES_RESOURCES.md) | Reported associations do not prove topology, ownership or health. Only supported OTel profiles become executable widgets. |
@@ -42,8 +43,8 @@ sum/count support with unavailable empty latency. [Pure helper consolidation](PU
 renderer back edges without moving source ownership.
 [Summary authoring](AUTHORED_POPULATION_SUMMARIES.md) (400) uses existing exact
 whole-population facts with no forced grouping. [Retained gauge context](RETAINED_GAUGE_RECORD_CONTEXT.md)
-(401) and [shared-table context](TABLE_CONTEXT.md) (402) are delivered. Next: trace-search
-continuation, ungrouped summary templates and shared parameter encoding. Delivered
+(401) and [shared-table context](TABLE_CONTEXT.md) (402) are delivered. [Trace-search continuation](TRACE_SEARCH_CONTINUATION.md) (403) is delivered. Next:
+ungrouped summary templates and shared parameter encoding. Delivered
 capabilities and remaining boundaries are distinguished below.
 
 | Area | Remaining gap or decision | Current reference |

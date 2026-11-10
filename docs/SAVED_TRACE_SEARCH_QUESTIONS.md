@@ -67,3 +67,8 @@ See [storyboard](../journeys/382-saved-trace-search-storyboard.md),
 ![Inspect the complete saved search definition locally](journeys/screenshots/382-saved-trace-search.png)
 
 ![Reopened fixed trace-search intent at 390 pixels](journeys/screenshots/382-reopened-trace-search-390.png)
+
+[Continuation positions](TRACE_SEARCH_CONTINUATION.md) belong to execution and
+captured evidence, not saved authored search steps. Saving or reusing intent
+starts at the first page; conditions, environment policy, fixed window and limit
+remain unchanged. Capturing a later page explicitly rereads that position.

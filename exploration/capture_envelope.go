@@ -48,6 +48,9 @@ func validateCaptureArms(kind string, present [6]bool) error {
 	return nil
 }
 func (q CaptureQuestion) validateShape() error {
+	if q.TraceSearchPosition != nil && q.Kind != "trace-search" {
+		return errors.New("trace-search position requires trace-search family")
+	}
 	return validateCaptureArms(q.Kind, [6]bool{q.TraceSearch != nil, q.Explanation != nil, q.Measurement != nil, q.Comparison != nil, q.Explore != nil, q.Inventory != nil})
 }
 func (c SavedCapture) validateShape() error {
@@ -120,7 +123,7 @@ func decodeCaptureWire(raw []byte, out any) error {
 }
 func (q *CaptureQuestion) UnmarshalJSON(data []byte) error {
 	*q = CaptureQuestion{}
-	fields, canonical, err := captureWire(data, append([]string{"kind"}, captureArmKeys[:]...))
+	fields, canonical, err := captureWire(data, append([]string{"kind", "traceSearchPosition"}, captureArmKeys[:]...))
 	if err != nil {
 		return err
 	}
@@ -130,6 +133,9 @@ func (q *CaptureQuestion) UnmarshalJSON(data []byte) error {
 	}
 	if err = captureWireArm(fields, kind); err != nil {
 		return err
+	}
+	if _, present := fields["traceSearchPosition"]; present && kind != "trace-search" {
+		return errors.New("trace-search position requires trace-search family")
 	}
 	type wire CaptureQuestion
 	var value wire
@@ -261,7 +267,7 @@ func validateCapturePage(p CapturePage) error {
 			return errors.New("invalid measurement capture page")
 		}
 	case "trace-search":
-		if !reflect.DeepEqual(p.TraceSearch.Request, *p.Receipt.Question.TraceSearch) {
+		if !reflect.DeepEqual(p.TraceSearch.Request, *p.Receipt.Question.TraceSearch) || !reflect.DeepEqual(p.TraceSearch.Position, p.Receipt.Question.TraceSearchPosition) {
 			return errors.New("capture page trace search differs from receipt")
 		}
 		if !noCursors || p.RetainedRecords > p.Receipt.Question.TraceSearch.Limit || p.RetainedRecords != len(p.TraceSearch.Items) || p.RecordsLimited != p.TraceSearch.HasMore {
