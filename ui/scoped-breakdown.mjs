@@ -1,3 +1,4 @@
+import {nativeControlReady} from './dom-visibility.mjs';
 /* Application adapter: supplied data and local display/selection; host owns effects. */
 import './scope-view.mjs';
 import {eligibleKinds,validateSnapshot,groupIntent,intervalIntent,displayRows,fractionFacts} from './view-model.mjs';
@@ -62,7 +63,7 @@ export function mount(target,snapshot,{onScope,onWindow,onSelect,onInspectTrace,
   status.textContent=`${location} · ${field?.aggregation?formatCell(field,selected.values[field.key],cell):selected.values.count+' captured records'}${context?' · '+context:temporal&&selected.state==='no_data'?' · no captured data; health unknown':''}${actionsPaused&&hasActions?' · '+pauseNotice:''}`;
   status.title=field?exactText(field,selected.values[field.key],cell):'';
  };
- chart.snapshot=snapshot;display();pick.addEventListener('change',display);complete.addEventListener('change',display);scale.addEventListener('change',display);order.addEventListener('change',display);measure.addEventListener('change',()=>{display();selectionSummary()});
+ chart.snapshot=snapshot;display();for(const control of [pick,complete,scale,order])control.addEventListener('change',()=>{if(nativeControlReady(control))display()});measure.addEventListener('change',()=>{if(!nativeControlReady(measure))return;display();selectionSummary()});
  chart.addEventListener('goo-select',event=>{
   const intent=event.detail;
   if(intent?.type!=='select'||intent.datasetId!==snapshot.id||intent.revision!==snapshot.revision||intent.scopeId!==snapshot.scope.id||intent.generation!==snapshot.scope.generation)return;

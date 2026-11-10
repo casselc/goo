@@ -1,5 +1,49 @@
 # Validation record
 
+## Held local editing and saved intent — 396
+
+[Held presentation ownership](docs/HELD_PRESENTATION_OWNERSHIP.md) is delivered.
+Actual baseline characterization distinguished correct nested Back from two bugs:
+trail return saved stale presentation, and a fresh current-owner invalid Find
+could publish the previous valid query. The fix shares current-definition/native
+control guards while keeping source staging generations and action contexts intact.
+
+- Focused composed UI checks **22 passed / zero skips**. Full frontend **1,438
+  passed / zero skips / 31.005 s**. Go server/embedded-UI checks passed **11.030 s**.
+- Actual final main journey passed **17.5 s / 19.7 s runner**, covering **20 measured
+  boundaries**, both return paths, exact visible-versus-saved declarations,
+  invalid Find refusal/correction, no-read reopen, and a real failed replacement.
+  Pending and failed replacement probes cannot use retired Find/Stage/Save controls.
+- Main observed work: **four source requests / one artifact GET / three
+  configuration publications / 19 physical SQL attempts**: three successful
+  six-query reads and one deliberately failed Count query. Every local edit,
+  Back/reopen and retired callback probe adds zero source reads.
+- Baseline **16.5 s / 19.7 s runner** remains diagnostic evidence of the two actual
+  pre-fix failures, not passing product acceptance. Its additional invalid Save
+  publication is deliberately absent from the fixed run.
+- Bombadil passed **35.8 s / 37.3 s runner**: **536 snapshots / 13 phases**, with
+  **two actual source HTTP 200 responses / three configuration HTTP 201 responses /
+  physical SQL 0 → 12**. No actor pixel-verification claim.
+- Generated Hegel wrapper schedules passed **0.63 s**: **32 schedules / 1,278 actual
+  wrapper attempts / 110 accepted / 1,168 refusals / 56 stale controls**. These are
+  semantic callback schedules, separate from real-source observations.
+- Required observed Quint/admission passed **6.363 s / zero skips**, admitting the
+  independent raw-cell/read-clock checks, fixed main/actor effects and diagnostic
+  baseline. All **five semantic mutations** and the held-local-read model control
+  were rejected.
+- Actual API validation passes over **18 genuine responses / seven requests**.
+  This UI-only change adds no route, wire type or backend evaluator.
+- Design approved all **three current frames**, including visible invalid-input
+  feedback with disabled Save and the corrected narrow layout. Storyboard and
+  verification commands are current.
+- Rebuilt and updated only the lab packages service. Image
+  `sha256:46b525e7f8d8b31e551cd66268a3588acc6dc11fe83cd2ec2b72ae30f397f226`
+  is healthy; served timeline and population modules match the reviewed source bytes.
+- Independent architecture, design, frontend and Go reviews are reconciled in the
+  [396 checkpoint](docs/ROADMAP_2026_11_10_CHECKPOINT_396.md). Go **1.27.3** remains
+  current for this project; no unmeasured speedup or upgrade-only migration is claimed.
+
+
 ## Reusable grouped count timelines — 395
 
 [The grouped count profile](docs/GROUPED_COUNT_TIMELINE_REUSE.md) is delivered through

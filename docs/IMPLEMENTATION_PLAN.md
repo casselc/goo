@@ -1,14 +1,12 @@
 # Implementation plan
 
-> Active execution order: [393 product checkpoint](ROADMAP_2026_11_10_CHECKPOINT_393.md).
-> 391 log-pattern display reuse and 392 native HTTP-client duration are delivered;
-> 393 actual literal transport parity, preclone validation and full Go package
-> checks pass.
-> [394 direct distribution customization](DISTRIBUTION_CUSTOMIZATION.md) is delivered.
-> [395 grouped count timeline reuse](GROUPED_COUNT_TIMELINE_REUSE.md) is delivered
-> after its supplied-data semantic gate. The remaining finite queue is
-> **396 composed held-staging consolidation**, then whole-product review. Existing source, custody and return owners remain
-> authoritative; deferred candidates are not parallel execution queues.
+> Active execution order: [396 product checkpoint](ROADMAP_2026_11_10_CHECKPOINT_396.md),
+> reconciled across [design, frontend, architecture and Go reviews](reviews/ROADMAP_RECONCILIATION_396.md).
+> 394 direct count customization, 395 grouped count reuse and 396 held-presentation
+> correction are accepted. The sole finite queue is **397 quantitative Customize →
+> 398 grouped mean-duration reuse → 399 pure display-helper cycle extraction**,
+> then whole-product review. 398 requires exact raw sum/count support first;
+> P95, summary-child and Saved/service gauge adoption remain deferred.
 > 367 reusable current RPC views, 368 exact service native interval context,
 > and 369 measured local facet pages are delivered with appropriate native and
 > generated validation. Full populations, exact scopes and independent clocks

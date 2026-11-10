@@ -1,7 +1,7 @@
 # Known issues and gaps
 
 Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
-status and the [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_393.md) for priorities.
+status and the [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_396.md) for priorities.
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 
@@ -29,8 +29,13 @@ this shortcut; their existing workflows remain available.
 [Grouped count timeline reuse](GROUPED_COUNT_TIMELINE_REUSE.md) (395) is delivered
 through shared Small multiples/Table/Heatmap displays and existing configuration
 owners. Count-only single-group admission, fixed widths, zero/unknown semantics
-and explicit heatmap limits remain visible. Bounded held-staging consolidation
-(396), then whole-product review, remain next. Detailed checks,
+and explicit heatmap limits remain visible.
+[Held presentation consolidation](HELD_PRESENTATION_OWNERSHIP.md) (396) fixes
+trail-return saved-intent drift and invalid Find publication while preserving
+retired source controls. Independent architecture, design, frontend and Go reviews
+are reconciled in the [396 checkpoint](ROADMAP_2026_11_10_CHECKPOINT_396.md).
+The finite next queue is quantitative customization (397), grouped mean duration
+(398), then pure display-helper consolidation (399). Detailed checks,
 including held-return regressions and model replay, are recorded in
 [validation](../VALIDATION.md); this summary does not substitute for their
 individual outcomes.

@@ -1,6 +1,7 @@
 # Roadmap after the 393 checkpoint
 
-Adopted November 10, 2026. This replaces the completed
+Historical queue, superseded by the [396 checkpoint](ROADMAP_2026_11_10_CHECKPOINT_396.md).
+Originally adopted November 10, 2026. This replaces the completed
 [390 checkpoint queue](ROADMAP_2026_11_09_CHECKPOINT_390.md). Its 391 log-pattern
 display reuse and 392 native HTTP-client duration profile are delivered. The 393
 actual literal-parameter audit passed: 150 legal source arms, 12 controls and 147

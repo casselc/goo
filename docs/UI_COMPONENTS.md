@@ -1927,3 +1927,18 @@ retain no continuation guarantee. The host resolves selection events against its
 current question; `TimelineView` supplies the existing controls and paused-state
 behavior. See [profile, reuse and bounds](GROUPED_COUNT_TIMELINE_REUSE.md) and
 [executed storyboard](../journeys/395-grouped-timeline-storyboard.md).
+
+
+## Local definition edits after return — 396
+
+Application adapters treat current local-definition callbacks separately from
+retired source actions. Ranked and timeline presentation changes can update the
+current visible definition after Back without restarting reads. Native event
+callbacks use the same visible/enabled/non-inert control check; explicit
+`setPresentation` and property updates retain detached and programmatic behavior.
+
+Grouped timeline `onFindDraft` reports raw validity to the owner. Invalid text
+keeps the last valid plot, exposes an inline accessible error and blocks Save;
+correction publishes the same settings shown by the view. The outward
+`presentation()` retains the raw draft so source Customize cannot silently copy
+an earlier query. See [ownership and regression contract](HELD_PRESENTATION_OWNERSHIP.md).

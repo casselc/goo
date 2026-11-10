@@ -5,9 +5,10 @@ function actionVisible(element){
  for(let closed=element.closest('details:not([open])');closed;closed=closed.parentElement?.closest('details:not([open])'))if(!closed.querySelector(':scope > summary')?.contains(element))return false;
  return true;
 }
+function nativeControlReady(element){return actionVisible(element)&&!element.disabled&&!element.matches(':disabled')&&element.getAttribute('aria-disabled')!=='true'&&!element.closest('[inert]')}
 function revealFocus(origin,fallback){
  const target=actionVisible(origin)?origin:fallback;
  target?.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'});
  target?.focus({preventScroll:true});return target;
 }
-export {actionVisible,revealFocus};
+export {actionVisible,revealFocus,nativeControlReady};
