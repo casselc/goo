@@ -1,7 +1,7 @@
 # Known issues and gaps
 
 Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
-status and the [active roadmap](ROADMAP_2026_11_10_CHECKPOINT_402.md) for priorities.
+status and the [active roadmap](ROADMAP_2026_11_11_CHECKPOINT_405.md) for priorities.
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 
@@ -14,7 +14,11 @@ count/duration/status facts beside records without grouping. Both template roots
 must be page zero; expansion refuses continuation pages rather than rewriting
 them. Numeric measure bindings and additional roles remain outside this arm.
 Count-only Customize summary is reachable through Population context.
-405 shared parameter encoding remains next, then whole-product review.
+[Shared parameter encoding](CLICKHOUSE_PARAMETER_ENCODING.md) (405) is delivered.
+The actual differential found 33 wire changes and zero old semantic mismatches
+across 50 legal literals. The [405 review](reviews/ROADMAP_RECONCILIATION_405.md)
+adopts observed-record rates, authored numeric histograms and passive grammar
+exports/examples as the next finite cadence.
 
 390 delivers [data-first native composition](NATIVE_DATA_FIRST.md) across ordinary
 Measurements, service-expanded native data and saved evidence. Successful reads

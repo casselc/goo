@@ -176,8 +176,7 @@ func (s Source) read(ctx context.Context, plan Plan) ([]json.RawMessage, error) 
 	}
 	v := u.Query()
 	for k, x := range plan.Parameters {
-		esc := strings.NewReplacer("\\", "\\\\", "\n", "\\n", "\t", "\\t", "\r", "\\r", "\x00", "\\0").Replace(x)
-		v.Set("param_"+k, esc)
+		v.Set("param_"+k, sourcehttp.EncodeParameter(x))
 	}
 	for k, x := range map[string]string{"readonly": "1", "max_execution_time": "10", "max_result_rows": "10001", "result_overflow_mode": "throw", "max_bytes_to_read": "268435456", "read_overflow_mode": "throw"} {
 		v.Set(k, x)

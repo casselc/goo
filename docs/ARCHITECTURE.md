@@ -2038,3 +2038,8 @@ routes, review UI and downloadable export remain unimplemented. The closed next
 contract is explicit pinned branches, not automatic latest labels or global
 consensus. Reuse existing storage without requiring XTDB; ordinary notes/tags do
 not become judgments. See [contract, Go usage and planned storyboard](CAPTURE_RECORD_REVIEW_GATE.md).
+
+[Shared ClickHouse parameter encoding](CLICKHOUSE_PARAMETER_ENCODING.md) (405)
+consolidates only literal Escaped-text conversion inside `internal/sourcehttp`.
+Record and measurement adapters retain their own policies, budgets, compilers and
+result decoders. The transport diagram and actual-byte proof are in that contract.

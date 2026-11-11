@@ -51,22 +51,6 @@ type Source struct {
 	Client                   *http.Client
 }
 
-// ClickHouse HTTP query parameters use the Escaped text format after URL
-// decoding. URL encoding alone loses backslashes and rejects literal tabs.
-func encodeParameter(value string) string {
-	var b strings.Builder
-	for _, r := range value {
-		if r == '\\' {
-			b.WriteString(`\\`)
-		} else if r < 32 || r == 127 {
-			fmt.Fprintf(&b, `\x%02x`, r)
-		} else {
-			b.WriteRune(r)
-		}
-	}
-	return b.String()
-}
-
 func (s Source) read(ctx context.Context, sql string, params map[string]string) ([]json.RawMessage, error) {
 	endpoint, e := url.Parse(s.Endpoint)
 	if e != nil {
@@ -82,7 +66,7 @@ func (s Source) read(ctx context.Context, sql string, params map[string]string) 
 	v.Set("max_bytes_to_read", "268435456")
 	v.Set("read_overflow_mode", "throw")
 	for k, p := range params {
-		v.Set("param_"+k, encodeParameter(p))
+		v.Set("param_"+k, sourcehttp.EncodeParameter(p))
 	}
 	endpoint.RawQuery = v.Encode()
 	client := s.Client

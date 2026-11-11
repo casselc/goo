@@ -152,7 +152,7 @@ these views through the same saved-view catalog.
 to an explicitly chosen Goo server.
 [Record paging](docs/RECORD_PAGE_PROFILE.md) retains any held aggregate and timeline.
 
-[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_10_CHECKPOINT_402.md) ·
+[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_11_CHECKPOINT_405.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
 [Go/frontend library review and proposal](docs/LIBRARY_REFACTOR_PLAN_2026_10_28.md)
 
@@ -614,7 +614,7 @@ For supplied native observations, `measurements.Evaluate(question, rows, at)` is
 storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
 
-The [active roadmap](docs/ROADMAP_2026_11_10_CHECKPOINT_402.md) follows delivered outgoing HTTP
+The [active roadmap](docs/ROADMAP_2026_11_11_CHECKPOINT_405.md) follows delivered outgoing HTTP
 (385), gauge display reuse (386), [capture-family consolidation](docs/CAPTURE_FAMILY_ADMISSION.md)
 (387) and [records around a gauge observation](docs/GAUGE_OBSERVATION_CONTEXT.md)
 (388), [counter display reuse](docs/NATIVE_COUNTER_VIEW_REUSE.md) (389) and
@@ -623,7 +623,8 @@ and saved native data now lead their entry layouts; source and return ownership
 stay unchanged. [Reusable log-pattern count displays](docs/LOG_PATTERN_DISPLAY_REUSE.md) (391)
 are delivered. [Native HTTP-client duration profiles](docs/HTTP_CLIENT_NATIVE_DURATION.md)
 (392) are delivered. The [literal transport audit](docs/LITERAL_PARAMETER_TRANSPORT.md)
-(393) confirms both source encoders preserve legal values and fixes typed
+(393) confirms both source encoders preserve legal values; [405 shares their
+parameter encoder](docs/CLICKHOUSE_PARAMETER_ENCODING.md). The audit also fixes typed
 question validation before JSON cloning.
 [Count, numeric and duration distributions](docs/DISTRIBUTION_CUSTOMIZATION.md) and
 [grouped count timelines](docs/GROUPED_COUNT_TIMELINE_REUSE.md) and
@@ -762,7 +763,7 @@ scope/data/quality, charts/tables/lists/waterfalls and scope-bound controls, a b
 chart with a restricted Plotly adapter, and shared declarative/visual authoring.
 Complete-only widgets and explicit uncertainty semantics are core requirements;
 all current widgets/screens must be expressible. The app is prerelease, with no
-legacy-format or API compatibility floor. [The active roadmap](docs/ROADMAP_2026_11_10_CHECKPOINT_402.md) separates proposed work from
+legacy-format or API compatibility floor. [The active roadmap](docs/ROADMAP_2026_11_11_CHECKPOINT_405.md) separates proposed work from
 implemented capabilities; the supporting reports include pinned research sources.
 
 Single-group count breakdowns now share a [scoped display contract](docs/SCOPED_VIEW_PILOT.md):

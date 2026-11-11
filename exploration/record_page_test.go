@@ -8,6 +8,8 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/casselc/goo/internal/sourcehttp"
 )
 
 type pageReadRecorder struct {
@@ -182,7 +184,7 @@ func TestRecordPagePreservesOriginalDerivedProjection289(t *testing.T) {
 			}
 			wantParams := map[string]string{}
 			for key, value := range plan.Parameters {
-				wantParams[key] = encodeParameter(value)
+				wantParams[key] = sourcehttp.EncodeParameter(value)
 			}
 			if !reflect.DeepEqual(recorder.params[1], wantParams) {
 				t.Fatal("original row query parameters changed", recorder.params[1], wantParams)

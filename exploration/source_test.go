@@ -8,6 +8,8 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/casselc/goo/internal/sourcehttp"
 )
 
 func TestSourcePagesDoNotDefineTotals(t *testing.T) {
@@ -90,7 +92,7 @@ func TestChangedReadsDoNotClaimNoData(t *testing.T) {
 func TestHTTPParameterEscaping(t *testing.T) {
 	value := "a\\b\\n\t\n雪"
 	expected := `a\\b\\n\x09\x0a雪`
-	if got := encodeParameter(value); got != expected {
+	if got := sourcehttp.EncodeParameter(value); got != expected {
 		t.Fatalf("%q != %q", got, expected)
 	}
 }

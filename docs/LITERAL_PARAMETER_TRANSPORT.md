@@ -1,5 +1,9 @@
 # Literal source-parameter transport
 
+[Shared parameter encoding](CLICKHOUSE_PARAMETER_ENCODING.md) (405) now consolidates
+the validated source writers. This audit retains its original source/byte contract;
+405 validation records fresh round trips and the old/shared decoder comparison.
+
 The 393 audit found matching literal selection through the existing record and
 metric source encoders. They remain unchanged. A separate validation defect was
 fixed: native `Source.Run` and `Evaluate` now reject malformed typed input before

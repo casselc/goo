@@ -52,7 +52,7 @@ func TestNativeSourceRequestWireContract(t *testing.T) {
 			t.Fatal("source auth changed")
 		}
 		q := r.URL.Query()
-		want := map[string]string{"custom": "keep", "param_p0": "literal\\\\n\\n\\t\\r\\0\b\f'雪+%", "readonly": "1", "max_execution_time": "10", "max_result_rows": "10001", "result_overflow_mode": "throw", "max_bytes_to_read": "268435456", "read_overflow_mode": "throw"}
+		want := map[string]string{"custom": "keep", "param_p0": `literal\\n\x0a\x09\x0d\x00\x08\x0c'雪+%`, "readonly": "1", "max_execution_time": "10", "max_result_rows": "10001", "result_overflow_mode": "throw", "max_bytes_to_read": "268435456", "read_overflow_mode": "throw"}
 		if len(q) != len(want) {
 			t.Fatal("unexpected query policy", q)
 		}

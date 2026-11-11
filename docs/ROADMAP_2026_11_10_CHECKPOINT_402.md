@@ -1,5 +1,7 @@
 # Roadmap after the 402 checkpoint
 
+Completed through 405 and superseded by the [405 checkpoint](ROADMAP_2026_11_11_CHECKPOINT_405.md).
+
 The next finite cadence is **403 breadth → 404 depth → 405 consolidation**, then
 whole-product review. See [review reconciliation](reviews/ROADMAP_RECONCILIATION_402.md)
 for adopted and deferred candidates, and [validation](../VALIDATION.md) for executed
@@ -62,6 +64,9 @@ field order, zero/unavailable/support semantics and read budgets. Keep source-fr
 configuration steps separate from explicit execution/publication.
 
 ## 405 — consolidation: one ClickHouse parameter wire encoder
+
+Delivered through [shared parameter encoding](CLICKHOUSE_PARAMETER_ENCODING.md).
+[Validation](../VALIDATION.md) records actual cross-family source and decoder checks.
 
 Share only the pure escaping function currently duplicated in exploration and
 measurements. Compare existing behavior first and use actual cross-family source

@@ -10,6 +10,8 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/casselc/goo/internal/sourcehttp"
 )
 
 func traceSearchTestRequest() TraceSearchRequest {
@@ -114,7 +116,7 @@ func TestClickHouseTraceSearchParity(t *testing.T) {
 		req.ContentLength = int64(len(sql))
 		u := *req.URL
 		q := u.Query()
-		q.Set("param_fixture", encodeParameter(string(data)))
+		q.Set("param_fixture", sourcehttp.EncodeParameter(string(data)))
 		u.RawQuery = q.Encode()
 		req.URL = &u
 		return http.DefaultTransport.RoundTrip(req)

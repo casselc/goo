@@ -31,7 +31,7 @@ modules rather than the application/query client; these conformance examples are
 separate from real OTLP-backed [user journeys](journeys/README.md).
 
 This is the current component contract index. [Known issues](KNOWN_ISSUES.md)
-records product/backend limits; the [current continuation proposal](ROADMAP_2026_10_30.md) owns
+records product/backend limits; the [active roadmap](ROADMAP_2026_11_11_CHECKPOINT_405.md) owns
 future priority. Earlier audits are dated design inputs, not another execution queue.
 
 ## Public elements
