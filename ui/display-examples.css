@@ -1,0 +1,18 @@
+/* Reference page layout; reusable display styles remain in their feature files. */
+:root{color-scheme:dark;font:14px/1.5 system-ui,sans-serif;color:#e3e9f3;background:#10141c;--ink:#e3e9f3;--muted:#98a8bf;--border:#2b3545;--panel:#151d28;--accent:#79ddc6}
+.display-examples{max-width:1060px;margin:auto;padding:20px}
+.display-examples h1{font-size:24px;margin:8px 0}
+.display-examples h2{font-size:16px;margin:0 0 10px}
+.display-examples p{margin:8px 0;color:var(--muted)}
+.display-examples a{color:var(--accent)}
+.display-examples nav{display:flex;gap:16px;flex-wrap:wrap}
+.display-examples-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:20px 0}
+.display-examples-grid>section{min-width:0}
+.display-examples .display-examples-wide{grid-column:1/-1}
+.display-examples label{display:inline-flex;align-items:center;gap:8px;margin:0 0 10px}
+.display-examples select{font:inherit;color:inherit;background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:5px 8px}
+.display-examples :is(a,select,summary):focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.display-examples details>summary{cursor:pointer}
+.display-examples pre{overflow:auto;padding:12px;background:var(--panel);border:1px solid var(--border);border-radius:8px;font-size:12px}
+.display-examples [role=status]{min-height:1.5em}
+@media(max-width:650px){.display-examples{padding:12px}.display-examples-grid{grid-template-columns:minmax(0,1fr);gap:14px}}

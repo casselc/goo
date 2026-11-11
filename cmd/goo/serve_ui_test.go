@@ -37,7 +37,7 @@ func TestEmbeddedUIAndMetadataWithoutSource(t *testing.T) {
 				handler.ServeHTTP(w, httptest.NewRequest("GET", path, nil))
 				return w
 			}
-			for path, contentType := range map[string]string{"/": "text/html", "/index.html": "text/html", "/ui-components": "text/html", "/app.mjs": "application/javascript", "/components.css": "text/css", "/api-docs": "text/html", "/openapi.json": "application/json"} {
+			for path, contentType := range map[string]string{"/": "text/html", "/index.html": "text/html", "/ui-components": "text/html", "/display-examples": "text/html", "/app.mjs": "application/javascript", "/components.css": "text/css", "/api-docs": "text/html", "/openapi.json": "application/json"} {
 				w := request(path)
 				if w.Code != 200 || !strings.HasPrefix(w.Header().Get("Content-Type"), contentType) || w.Header().Get("Cache-Control") != "no-store" {
 					t.Fatal(path, w.Code, w.Header())

@@ -1,5 +1,45 @@
 # Validation record
 
+## Passive display exports, embedding and product checkpoint — 408
+
+[Passive embedding](docs/PASSIVE_DISPLAY_EMBEDDING.md) completes the public
+`display.mjs` entry with ScopeView and MeasureSummary. The new `/display-examples`
+reference demonstrates attributes/fallback HTML, detached/pre-registration
+properties, and local display kinds over explicitly synthetic supplied fixtures.
+No query/schema/arithmetic or application acquisition owner changed.
+
+- Embedded Go UI/metadata checks passed **0.066 s** on Go **1.27.3**, including the
+  new static route, content types/no-store and exact embedded module/style bytes.
+- Final frontend: **1,492 passed / zero skips / 25.283 s**. The public graph is
+  **64 modules**, scans bare/static dependencies, excludes application/reference
+  bootstraps, and imports in fresh DOM-less/registration environments whose IO,
+  storage, timer and application globals throw. No elements instantiate on import
+  and no global namespace is published. This is not a full Go/source-suite claim.
+- Actual Playwright conformance passed **5.5 s** against the reviewed isolated Go
+  binary. It checks SSR fallback and upgrade, pre-registration/detached properties,
+  exact supplied facts with distinct local IDs, immutable caller inputs,
+  Bars/Table/keyboard intents, attribute updates and preserved local identities.
+  Imported fixtures refuse complete-only display; no source authority is invented.
+- Browser requests included **zero API calls**, no application/source-owner
+  modules, storage or network API attempts, namespace publication or page errors.
+  These are synthetic component fixtures, not OTLP/source observations. Source,
+  property arithmetic and model semantics are unchanged; no new telemetry or
+  model campaign is claimed for this export/reference-only milestone.
+- Captured actual desktop/390px reference frames and updated the executable
+  storyboard, diagram and component/embedding docs. Design review found no visual
+  blocker; screenshots alone do not establish full accessibility compliance.
+- Architecture/Go, design/usability and product agents completed the whole-product
+  review. The [reconciled roadmap](docs/ROADMAP_2026_11_11_CHECKPOINT_408.md) adopts
+  **409 service-window captured-count comparisons → 410 incoming HTTP response
+  context → 411 quantitative chrome/ownership consolidation**. Task discovery,
+  rate comparisons and a bounded verification-family extraction remain explicit
+  candidates. Corrected the stale XTDB setup command naming the removed service;
+  no lab configuration or stores changed for that documentation fix.
+- Rebuilt/refreshed only the application service. Capabilities returns 200 and
+  the reference, public entry and catalog serve reviewed bytes. Running image
+  `sha256:98ea0f031315aabdd2faaae9b5b953085c0fdfadc0b3aaf3652c475f496785eb`.
+  Existing telemetry, stores and XTDB remain intact.
+
 ## Authored numeric histograms beside records — 407
 
 [Reusable numeric distributions](docs/AUTHORED_NUMERIC_HISTOGRAMS.md) adds the

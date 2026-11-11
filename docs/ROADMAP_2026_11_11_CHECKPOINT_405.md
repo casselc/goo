@@ -1,5 +1,8 @@
 # Roadmap after the 405 checkpoint
 
+This cadence is complete. The [408 checkpoint roadmap](ROADMAP_2026_11_11_CHECKPOINT_408.md)
+owns the next execution order; this document retains the accepted 406–408 scope.
+
 The [402 cadence](ROADMAP_2026_11_10_CHECKPOINT_402.md) delivered trace-search
 continuation, ungrouped record/summary templates and shared ClickHouse parameter
 encoding. [Validation](../VALIDATION.md) records actual results; the

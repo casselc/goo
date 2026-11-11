@@ -38,10 +38,10 @@ The optional backend is a Go adapter using pgx and XTDB 2.2.0's PostgreSQL wire
 protocol. It is an experiment alongside the normal annotation store, not a
 migration of all metadata to XTDB or a native ClickHouse external-source connector.
 
-Start the ordinary lab, build the query/packages image, then enable the overlay:
+Start the ordinary lab, build the Go packages image, then enable the overlay:
 
 ```sh
-docker compose -f compose.yaml -f compose.xtdb.yaml up -d --no-build xtdb packages query
+docker compose -f compose.yaml -f compose.xtdb.yaml up -d --no-build xtdb packages
 ```
 
 The overlay pins XTDB's image digest, binds ports to loopback, limits memory/CPU,

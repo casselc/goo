@@ -31,3 +31,5 @@ export * as RecordSpanWaterfall from './record-span-waterfall.mjs';
 
 export * as CategoricalFacet from './categorical-facet.mjs';
 export * as FacetDeclaration from './facet-declaration.mjs';
+export * as ScopeView from './scope-view.mjs';
+export * as MeasureSummary from './measure-summary.mjs';

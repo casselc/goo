@@ -2,13 +2,18 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readdir,readFile} from 'node:fs/promises';
 
+// Page bootstraps require their own document. Every other module remains safe
+// to import before a host mounts an application owner or supplied display.
+const explicitEntries=new Set(['app.mjs','display-examples.mjs']);
+
 test('application owners import without DOM, source reads or namespace publication',async()=>{
   const before=new Set(Object.getOwnPropertyNames(globalThis)),fetch=globalThis.fetch;
   let reads=0;globalThis.fetch=()=>{reads++;throw Error('Owner import must not read sources')};
   try{
-    for(const file of (await readdir(new URL('../ui/',import.meta.url))).filter(p=>p.endsWith('.mjs')&&p!=='app.mjs')){
+    for(const file of (await readdir(new URL('../ui/',import.meta.url))).filter(p=>p.endsWith('.mjs')&&!explicitEntries.has(p))){
       const source=await readFile(new URL('../ui/'+file,import.meta.url),'utf8');
       assert.doesNotMatch(source,/\brequire\s*\(|module\.exports|(?:global|globalThis|window)\.Goo/);
+      assert.doesNotMatch(source,/(?:\bfrom\s*|\bimport\s*(?:\(\s*)?)['"](?:\.\/|\/)?display-examples\.mjs['"]/,file+' must not import the standalone reference bootstrap');
       await import('../ui/'+file);
     }
     assert.equal(reads,0);
@@ -16,10 +21,15 @@ test('application owners import without DOM, source reads or namespace publicati
   }finally{globalThis.fetch=fetch}
 });
 
-test('HTML uses one explicit application entry and the compatibility bridge is gone',async()=>{
+test('HTML uses explicit application/reference entries and the compatibility bridge is gone',async()=>{
   const html=await readFile(new URL('../ui/index.html',import.meta.url),'utf8');
   assert.deepEqual([...html.matchAll(/<script[^>]*src="([^"]+)"/g)].map(m=>m[1]),['/app.mjs']);
   assert.match(html,/<script type="module" src="\/app\.mjs"><\/script>/);
+  const reference=await readFile(new URL('../ui/display-examples.html',import.meta.url),'utf8');
+  assert.deepEqual([...reference.matchAll(/<script[^>]*src="([^"]+)"/g)].map(m=>m[1]),['/display-examples.mjs']);
+  assert.match(reference,/<script type="module" src="\/display-examples\.mjs"><\/script>/);
+  const entry=await readFile(new URL('../ui/app.mjs',import.meta.url),'utf8');
+  assert.doesNotMatch(entry,/(?:\bfrom\s*|\bimport\s*(?:\(\s*)?)['"](?:\.\/|\/)?display-examples\.mjs['"]/);
   assert.equal((await readdir(new URL('../ui/',import.meta.url))).includes('app-display.mjs'),false);
 });
 

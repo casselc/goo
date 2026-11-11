@@ -1,7 +1,7 @@
 # Known issues and gaps
 
 Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
-status and the [active roadmap](ROADMAP_2026_11_11_CHECKPOINT_405.md) for priorities.
+status and the [active roadmap](ROADMAP_2026_11_11_CHECKPOINT_408.md) for priorities.
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 
@@ -24,7 +24,9 @@ exports/examples as the next finite cadence.
 or count/clipped-interval rates in fixed ordinary summaries and ungrouped timelines.
 Rates remain an explicit presentation choice. Grouped rates, live-buffer rates
 and rate comparisons are excluded. [Authored numeric histograms](AUTHORED_NUMERIC_HISTOGRAMS.md)
-(407) is delivered; passive grammar exports/examples (408) remains next. Design review noted nonblocking narrow
+(407) and [passive embedding examples](PASSIVE_DISPLAY_EMBEDDING.md) (408) are delivered.
+The 408 review adopts service-window counts, incoming HTTP response context and
+quantitative view consolidation next. Design review noted nonblocking narrow
 chart-label truncation and inherited stacked metadata for later product review.
 407 review also noted nested chart borders/headings and weak horizontal-scroll
 affordance on narrow screens. These are review candidates, not added execution tasks.

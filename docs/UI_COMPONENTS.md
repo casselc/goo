@@ -1,5 +1,10 @@
 # Display component library
 
+[Passive embedding examples](PASSIVE_DISPLAY_EMBEDDING.md), served at
+`/display-examples`, demonstrate the public `display.mjs` entry, including
+ScopeView and MeasureSummary, with attributes, detached properties and local
+display kinds over explicitly supplied synthetic data.
+
 [Records-only compositions](RECORD_ONLY_VIEWS.md) reuse these displays and shared
 record actions without an aggregate or grouping. No additional public component
 is introduced; the application retains query, execution and paging ownership.

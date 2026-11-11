@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>goo · Supplied display examples</title>
+  <link rel="stylesheet" href="/components.css">
+  <link rel="stylesheet" href="/chart-frame.css">
+  <link rel="stylesheet" href="/scope-view.css">
+  <link rel="stylesheet" href="/measure-summary.css">
+  <link rel="stylesheet" href="/display-examples.css">
+  <script type="module" src="/display-examples.mjs"></script>
+</head>
+<body class="display-examples">
+  <header>
+    <nav aria-label="Reference"><a href="/ui-components">Component catalog</a><a href="/">Goo</a></nav>
+    <h1>Supplied displays</h1>
+    <p>Synthetic fixtures · no source connection. HTML attributes and JavaScript properties share the same display contracts.</p>
+  </header>
+  <main class="display-examples-grid">
+    <section aria-labelledby="display408-summary-heading">
+      <h2 id="display408-summary-heading">HTML attributes</h2>
+      <goo-measure-summary id="display408-summary" data-first snapshot='{&quot;version&quot;:&quot;goo.dataset/1&quot;,&quot;revision&quot;:&quot;fixture-408&quot;,&quot;origin&quot;:&quot;browser-held&quot;,&quot;capturedAt&quot;:&quot;2026-11-12T00:01:00Z&quot;,&quot;scope&quot;:{&quot;id&quot;:&quot;synthetic-408&quot;,&quot;generation&quot;:&quot;fixture-408&quot;,&quot;signal&quot;:&quot;logs&quot;,&quot;selector&quot;:{&quot;signal&quot;:&quot;logs&quot;,&quot;environment&quot;:&quot;synthetic-example&quot;,&quot;fromMs&quot;:1794441600000,&quot;toMs&quot;:1794441660000,&quot;limit&quot;:3,&quot;offset&quot;:0,&quot;groupBy&quot;:[{&quot;kind&quot;:&quot;column&quot;,&quot;key&quot;:&quot;service&quot;}]}},&quot;quality&quot;:{&quot;extent&quot;:&quot;unknown&quot;,&quot;basis&quot;:&quot;captured-query&quot;,&quot;value&quot;:&quot;recorded&quot;,&quot;sampling&quot;:&quot;unknown&quot;,&quot;freshness&quot;:&quot;fixed&quot;},&quot;id&quot;:&quot;synthetic-408-summary&quot;,&quot;shape&quot;:&quot;summary&quot;,&quot;fields&quot;:[{&quot;key&quot;:&quot;count&quot;,&quot;label&quot;:&quot;Captured records&quot;,&quot;type&quot;:&quot;number&quot;,&quot;unit&quot;:&quot;records&quot;}],&quot;rows&quot;:[{&quot;key&quot;:&quot;population&quot;,&quot;values&quot;:{&quot;count&quot;:&quot;20&quot;}}]}' display='{"fields":["count"],"title":"Supplied summary"}'>20 captured records · synthetic supplied summary.</goo-measure-summary>
+    </section>
+    <section aria-labelledby="display408-detached-heading">
+      <h2 id="display408-detached-heading">Detached properties · same summary</h2>
+      <div id="display408-summary-table-host"></div>
+    </section>
+    <section class="display-examples-wide" aria-labelledby="display408-upgrade-heading">
+      <h2 id="display408-upgrade-heading">Properties before registration</h2>
+      <label for="display408-kind">View <select id="display408-kind" disabled><option value="bar">Bars</option><option value="table">Table</option></select></label>
+      <div id="display408-ranked-host"></div>
+      <p id="display408-status" role="status">Waiting for display modules.</p>
+    </section>
+  </main>
+  <details>
+    <summary>Embedding code</summary>
+    <pre><code>import './display.mjs';
+const chart = document.createElement('goo-chart');
+chart.snapshot = suppliedDataset;
+chart.display = {kind: 'table', title: 'Supplied values'};
+host.append(chart);
+
+// A host may handle goo-select locally.
+// Source reads, scope changes and saving belong to the host.</code></pre>
+  </details>
+  <noscript><p>JavaScript upgrades the supplied displays. The HTML summary remains readable above.</p></noscript>
+  <script id="display408-summary-data" type="application/json">{"version":"goo.dataset/1","revision":"fixture-408","origin":"browser-held","capturedAt":"2026-11-12T00:01:00Z","scope":{"id":"synthetic-408","generation":"fixture-408","signal":"logs","selector":{"signal":"logs","environment":"synthetic-example","fromMs":1794441600000,"toMs":1794441660000,"limit":3,"offset":0,"groupBy":[{"kind":"column","key":"service"}]}},"quality":{"extent":"unknown","basis":"captured-query","value":"recorded","sampling":"unknown","freshness":"fixed"},"id":"synthetic-408-summary","shape":"summary","fields":[{"key":"count","label":"Captured records","type":"number","unit":"records"}],"rows":[{"key":"population","values":{"count":"20"}}]}</script>
+  <script id="display408-ranked-data" type="application/json">{"version":"goo.dataset/1","revision":"fixture-408","origin":"browser-held","capturedAt":"2026-11-12T00:01:00Z","scope":{"id":"synthetic-408","generation":"fixture-408","signal":"logs","selector":{"signal":"logs","environment":"synthetic-example","fromMs":1794441600000,"toMs":1794441660000,"limit":3,"offset":0,"groupBy":[{"kind":"column","key":"service"}]}},"quality":{"extent":"unknown","basis":"captured-query","value":"recorded","sampling":"unknown","freshness":"fixed"},"id":"synthetic-408-groups","shape":"ranked","dimensions":["category"],"fields":[{"key":"category","label":"Service","type":"string"},{"key":"count","label":"Captured records","type":"number","unit":"records"}],"rows":[{"key":"api","values":{"category":"api","count":"12"}},{"key":"worker","values":{"category":"worker","count":"8"}},{"key":"archive","values":{"category":"archive","count":"0"}}]}</script>
+</body>
+</html>

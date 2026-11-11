@@ -102,7 +102,7 @@ func newUIHandler(api http.Handler) (http.Handler, error) {
 		})
 		return nil
 	}
-	for route, name := range map[string]string{"/{$}": "index.html", "/index.html": "index.html", "/ui-components": "components.html"} {
+	for route, name := range map[string]string{"/{$}": "index.html", "/index.html": "index.html", "/ui-components": "components.html", "/display-examples": "display-examples.html"} {
 		if err := serve(route, uiassets.Assets, name, "text/html; charset=utf-8"); err != nil {
 			return nil, err
 		}
