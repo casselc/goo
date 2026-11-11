@@ -28,8 +28,8 @@ type ViewTemplateReference struct {
 	Title   string `json:"title"`
 }
 
-// ViewTemplateBinding opts a saved composition into the destination's existing
-// category field. It never supplies a destination query or execution authority.
+// ViewTemplateBinding opts a saved composition into an explicit destination
+// profile. It never supplies a destination query or execution authority.
 type ViewTemplateBinding struct {
 	Version  string `json:"version"`
 	Group    string `json:"group"`
@@ -202,12 +202,29 @@ func (d recordViewTemplate) validateProfile(q exploration.Query) error {
 }
 
 func (b ViewTemplateBinding) Validate(q exploration.Query, c ViewComposition) error {
-	if slices.ContainsFunc(c.Children, func(child ViewCompositionChild) bool { return child.Summary != nil }) {
-		return errors.New("summary children are not category templates")
-	}
-
 	if _, err := exploration.Compile(q); err != nil {
 		return err
+	}
+	if q.Offset != 0 {
+		return errors.New("reusable templates require a page-zero destination root")
+	}
+	if b.Profile == "ordinary-summary" {
+		if b.Version != "goo.template/1" || b.Group != "none" || b.Baseline != "" {
+			return errors.New("population summary templates require the pinned ungrouped binding without baseline")
+		}
+		if len(q.GroupBy) != 0 || q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.GroupTimeSeries {
+			return errors.New("population summary templates require ungrouped ordinary records without specialized or numeric measures")
+		}
+		if err := c.Validate(q); err != nil {
+			return err
+		}
+		if len(c.Children) != 2 || !slices.ContainsFunc(c.Children, func(child ViewCompositionChild) bool { return child.Summary != nil }) || !slices.ContainsFunc(c.Children, func(child ViewCompositionChild) bool { return child.Records != nil }) {
+			return errors.New("population summary templates require exactly summary and records children")
+		}
+		return nil
+	}
+	if slices.ContainsFunc(c.Children, func(child ViewCompositionChild) bool { return child.Summary != nil }) {
+		return errors.New("summary children require the ungrouped population summary template profile")
 	}
 	if len(q.GroupBy) != 1 || q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.GroupTimeSeries || q.GroupBy[0] == (exploration.Field{Kind: "column", Key: "body_pattern_v1"}) {
 		return errors.New("reusable templates require one ordinary nonnumeric grouping")
@@ -348,7 +365,9 @@ func expandAuthoredTemplate(source ExplorationView, q exploration.Query, baselin
 	if _, err := exploration.Compile(q); err != nil {
 		return ViewTemplateExpansion{}, err
 	}
-	q.Offset = 0
+	if q.Offset != 0 {
+		return ViewTemplateExpansion{}, errors.New("template destination requires a page-zero root; continuation pages are not rewritten")
+	}
 	if q.Signal != source.Queries[0].Signal {
 		return ViewTemplateExpansion{}, errors.New("template and destination must use the same signal")
 	}

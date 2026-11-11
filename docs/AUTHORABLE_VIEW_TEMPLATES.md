@@ -1,5 +1,9 @@
 # Author reusable views
 
+The category-bound arm below is complemented by [ungrouped record/summary
+templates](UNGROUPED_SUMMARY_TEMPLATES.md) (404), with an explicit `group: none`
+binding and no aggregate or baseline. Both arms require page-zero roots.
+
 Use the existing view composition as the canvas: choose bars or a table, its
 measure, record columns, an optional [fixed timeline](TIMELINE_VIEW_TEMPLATES.md),
 and a [declared facet](DECLARATIVE_FACETS.md).
@@ -37,7 +41,8 @@ A facet has a different binding: its qualified field, title, applied-scope basis
 and visibility stay literal. Destination validation checks that field but never
 rewrites it to the category. Loaded values and selections are not copied.
 
-Delivery offset starts at zero on expansion. Applying in the UI requires a page-zero
+Authored expansion refuses nonzero delivery offsets; it does not rewrite them.
+Applying in the UI requires a page-zero
 configured root; ordinary record-page inspection keeps that root and remains
 supported. Ordinary saved-composition reuse
 continues to require its existing exact grouping compatibility.

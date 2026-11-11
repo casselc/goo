@@ -2,10 +2,9 @@
 
 > Active execution order: [402 product checkpoint](ROADMAP_2026_11_10_CHECKPOINT_402.md),
 > reconciled across [architecture/Go and design/usability reviews](reviews/ROADMAP_RECONCILIATION_402.md).
-> 400 compact summaries, 401 retained gauge context and 402 shared-table context
-> are delivered. 403 trace-search continuation is also delivered. The remaining
-> finite queue is **404 ungrouped summary templates → 405 shared parameter encoding**,
-> then whole-product review.
+> 400 compact summaries, 401 retained gauge context, 402 shared-table context,
+> 403 trace-search continuation and 404 ungrouped summary templates are delivered.
+> The remaining finite task is **405 shared parameter encoding**, then whole-product review.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped
 > P95, host sample context and broader platform work remain deferred.
 > 367 reusable current RPC views, 368 exact service native interval context,

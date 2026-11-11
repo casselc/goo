@@ -1,5 +1,62 @@
 # Validation record
 
+## Ungrouped record/summary templates — 404
+
+[Ungrouped summary templates](docs/UNGROUPED_SUMMARY_TEMPLATES.md) add the explicit
+`ordinary-summary` / `group: none` binding for exactly summary and records.
+Selected count/span-duration/recorded-status facts reuse the supplied dataset;
+no grouping, summary SQL or evaluator is introduced. Numeric measure bindings and
+extra roles remain excluded. Source/destination roots must be page zero; authored
+expansion now refuses continuation offsets across all template families rather
+than silently rewriting them. The destination's complete query remains unchanged.
+
+- Targeted Go workbench/server template, summary, composition and carrier checks
+  passed **0.222 s / 0.038 s** on Go **1.27.3**. New regressions exercise exact
+  destination queries, store round trips, profile/field/refusal gates and
+  continuation refusal without source/destination mutation across seven families.
+  These are affected-package checks, not a full Go or optional warehouse campaign.
+- Final frontend **1,481 passed / zero skips / 25.098 s**. Seven focused new
+  contract/owner cases passed **0.496 s**, including actual author/Apply
+  callbacks, current request/draft ownership, hidden/inert/pending/retired refusal
+  and source-free count-zero/nonzero summary entry. The real count-only workflow
+  exposed a hidden fallback: Customize summary now lives in the existing
+  Population context disclosure instead of the hidden old result shell.
+- Hegel passed **48 complete Go/JS template/expansion/store carriers / 576 Go
+  refusal controls / 1,044 JS controls / 1.225 s**. Valid policy/scope generators
+  cover scalar and typed environments; invalid current-only empty/unreported
+  combinations remain refusal controls. API vectors passed **48 carriers / 960
+  malformed-wire controls** through complete input/output shapes.
+- Full OpenAPI passed **113 operations / 735 schemas / 489 fixture responses /
+  195 admitted requests / 28 refusals**. All **40 actual handler responses** and
+  available request bodies conform. Field availability, exact scope and content
+  identities remain runtime proofs rather than JSON Schema claims.
+- Actual main passed **33.6 s / 35.8 s runner**: **36 physical records / two
+  count-log and mixed span-summary families / 33 observed boundaries**. Independent
+  raw oracles verify values, support, units, methods and ordered selected fields.
+  Author/save/reopen, destination Inspect/Apply/Run and save/reopen/Run preserve
+  full predicates, environment policy, fixed bounds, projection and limit five.
+  Zero and empty controls remain distinct. Held Back preserves original evidence;
+  pending Inspect edits and hidden/inert/retired Apply cannot act again.
+- Main observed **10 source requests / nine configuration GETs / four browser
+  publications / three expansion POSTs / 30 physical SQL statements**, plus two
+  explicit destination-configuration setup publications. Stage, field/order edits,
+  template authoring, Inspect/Apply, reopen and held Back add no telemetry reads.
+- Independent Bombadil passed **36.0 s / 37.2 s runner**: **514 snapshots / six
+  phases / one expansion / one explicit source request / three SQL statements**.
+  Two configuration setup publications are separate; the actor publishes nothing.
+- Required observed main/actor admission passed **8.880 s / zero skips**. Exact
+  source SQL/parameters, raw summary facts, configuration identities, complete
+  queries, ownership budgets and actor observations are admitted independently.
+  All **ten semantic mutants** and **one local-read model control** were rejected.
+- Rebuilt and refreshed only the lab packages service; capabilities returns 200,
+  all three changed served UI modules and OpenAPI match reviewed source bytes.
+  Image `sha256:94872245b830577a3cbc75317ac91199a5de81f7057db718f1e4d0945d96d0a9`.
+  Other services, telemetry, volumes, stored evidence and XTDB were preserved.
+- Design accepted all **three actual author/result desktop/390px frames**. The
+  storyboard, grammar/process diagram and existing summary/template docs are
+  current. No performance or transactional snapshot benefit is claimed. Next is
+  **405 shared ClickHouse parameter encoding**, then whole-product review.
+
 ## Explicit trace-search continuation — 403
 
 [Trace-search continuation](docs/TRACE_SEARCH_CONTINUATION.md) separates authored

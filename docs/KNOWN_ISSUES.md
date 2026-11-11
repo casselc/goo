@@ -9,7 +9,12 @@ This file retains checkpoint delivery history; lower historical “current” or
 ID-ordered page reads, positive full counts on empty continuations, current-page
 capture and source-free reopen. Positions bind the full authored search; saving
 intent excludes position. Each page remains a fresh read, not a stable union.
-404 ungrouped summary templates and 405 shared parameter encoding remain next.
+[Ungrouped summary templates](UNGROUPED_SUMMARY_TEMPLATES.md) (404) now reuse
+count/duration/status facts beside records without grouping. Both template roots
+must be page zero; expansion refuses continuation pages rather than rewriting
+them. Numeric measure bindings and additional roles remain outside this arm.
+Count-only Customize summary is reachable through Population context.
+405 shared parameter encoding remains next, then whole-product review.
 
 390 delivers [data-first native composition](NATIVE_DATA_FIRST.md) across ordinary
 Measurements, service-expanded native data and saved evidence. Successful reads

@@ -29,7 +29,7 @@ func TestRecordListSavedTemplateAndReusePreserveKindAndScope(t *testing.T) {
 	}
 	target := cloneAuthored(t, source).Queries[0]
 	target.Where.All[0].Value = "another-db-service"
-	target.FromMS, target.ToMS, target.Offset = 70000, 130000, 100
+	target.FromMS, target.ToMS, target.Offset = 70000, 130000, 0
 	target.GroupBy = []exploration.Field{{Kind: "resource", Key: "db.namespace"}}
 	before, _ := json.Marshal(loaded)
 	expanded, err := ExpandViewTemplate(ViewTemplateExpansionRequest{Source: loaded, Query: &target})
@@ -37,7 +37,6 @@ func TestRecordListSavedTemplateAndReusePreserveKindAndScope(t *testing.T) {
 		t.Fatal(err)
 	}
 	expected := target
-	expected.Offset = 0
 	if !reflect.DeepEqual(expanded.View.Queries[0], expected) || !reflect.DeepEqual(expanded.View.Composition.Children[1].Records, records) {
 		t.Fatal("list expansion rewrote scope or display")
 	}

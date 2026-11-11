@@ -53,7 +53,7 @@ func TestAuthoredTemplateBindsDestinationWithoutScopeTransfer(t *testing.T) {
 	destination.Environment = "staging"
 	destination.FromMS = 70000
 	destination.ToMS = 130000
-	destination.Offset = 100
+	destination.Offset = 0
 	destination.GroupBy = []exploration.Field{{Kind: "attribute", Key: "db.namespace"}}
 	destination.Where.All[0].Value = "other-db-api"
 	beforeSource, _ := json.Marshal(saved)
@@ -63,7 +63,6 @@ func TestAuthoredTemplateBindsDestinationWithoutScopeTransfer(t *testing.T) {
 		t.Fatal(err)
 	}
 	expected := destination
-	expected.Offset = 0
 	if !reflect.DeepEqual(out.View.Queries[0], expected) || out.Template.ID != saved.ID || out.View.ID != "" || out.View.Template == nil {
 		t.Fatal("scope/reference changed", out)
 	}

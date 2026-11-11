@@ -41,7 +41,7 @@ func TestAuthoredTimelineTemplatePreservesDestinationAndPresentation(t *testing.
 						t.Fatal("timeline changed on reload", err)
 					}
 					destination := cloneAuthored(t, source).Queries[0]
-					destination.Environment, destination.FromMS, destination.ToMS, destination.Offset = "staging", 70000, 135000, 100
+					destination.Environment, destination.FromMS, destination.ToMS, destination.Offset = "staging", 70000, 135000, 0
 					destination.Where.All[0].Value = "other-db-service"
 					destination.GroupBy = []exploration.Field{{Kind: "attribute", Key: "db.namespace"}}
 					beforeSource, _ := json.Marshal(loaded)
@@ -51,7 +51,6 @@ func TestAuthoredTimelineTemplatePreservesDestinationAndPresentation(t *testing.
 						t.Fatal(err)
 					}
 					expected := destination
-					expected.Offset = 0
 					if !reflect.DeepEqual(out.View.Queries[0], expected) || !reflect.DeepEqual(out.View.Composition, source.Composition) || out.Template.ID != saved.ID || out.View.ID != "" {
 						t.Fatal("template imported scope or changed presentation", out)
 					}

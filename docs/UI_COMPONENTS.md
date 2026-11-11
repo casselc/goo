@@ -2021,3 +2021,12 @@ fold after accepted reads; reopening them is local. Application adapters own
 page positions, requests, cancellation, current action leases and captures.
 The pure position/result modules perform no IO; no display component gains a
 source subscription. See [continuation](TRACE_SEARCH_CONTINUATION.md).
+
+### Ungrouped summary template ownership (404)
+
+The records-plus-summary template profile reuses `goo-measure-summary`, existing
+record kinds, native author controls and Inspect/Apply. It adds no renderer or
+source evaluator. Count-only Customize summary uses the existing Population
+context disclosure, avoiding the hidden old result shell. Application owners keep
+request, draft and publication lifetimes; templates transfer presentation only.
+See [ungrouped templates](UNGROUPED_SUMMARY_TEMPLATES.md).

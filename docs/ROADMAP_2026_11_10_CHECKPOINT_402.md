@@ -38,6 +38,10 @@ where the changed owner requires them.
 
 ## 404 — depth: reuse an ungrouped record/summary template
 
+Delivered through [ungrouped summary templates](UNGROUPED_SUMMARY_TEMPLATES.md).
+[Validation](../VALIDATION.md) records actual source, actor and full-carrier checks.
+The remaining active task is 405, then whole-product review.
+
 User task: “Reuse these few key facts beside records in another compatible scope,
 without making up a grouping.”
 

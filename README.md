@@ -132,6 +132,8 @@ its fixed scope and paused parent. Build reusable views with [saved displays](do
 beside the default table, with
 [shared record interactions](docs/RECORD_INTERACTIONS.md).
 [Records-only views](docs/RECORD_ONLY_VIEWS.md) also work with ungrouped raw logs or spans.
+[Reuse records with selected summary facts](docs/UNGROUPED_SUMMARY_TEMPLATES.md)
+without inventing a grouping. Inspect/Apply keeps the destination query; Run is explicit.
 [Open an inspected trace as a view](docs/TRACE_AS_VIEW.md) to edit and save its presentation.
 [Add a breakdown](docs/ADD_BREAKDOWN.md) to grow a records view into a chart, then
 [compare a selected cohort](docs/AUTHORED_COHORTS.md) with its held parent or rest.

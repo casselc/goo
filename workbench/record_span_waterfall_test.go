@@ -33,7 +33,7 @@ func TestRecordSpanWaterfallPersistsAndReusesExistingComposition(t *testing.T) {
 		target.Environment = "staging"
 		target.FromMS = 70000
 		target.ToMS = 135001
-		target.Offset = 100
+		target.Offset = 0
 		target.GroupBy = []exploration.Field{{Kind: "attribute", Key: "db.namespace"}}
 		target.Where.All[0].Value = "other-client"
 		baseline := strings.Repeat("b", 64)
@@ -46,7 +46,6 @@ func TestRecordSpanWaterfallPersistsAndReusesExistingComposition(t *testing.T) {
 		expected := cloneAuthored(t, source)
 		expected.Composition.Children[2].Comparison.BaselineCapture = baseline
 		expectedQuery := target
-		expectedQuery.Offset = 0
 		if !reflect.DeepEqual(expanded.View.Composition, expected.Composition) || !reflect.DeepEqual(expanded.View.Queries, []exploration.Query{expectedQuery}) {
 			t.Fatal("waterfall expansion changed presentation or target query")
 		}

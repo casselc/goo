@@ -39,7 +39,7 @@ func TestComparisonTemplateRequiresExplicitDestinationBaselineAndDetaches(t *tes
 			target.Environment = "other-environment"
 			target.FromMS = 70000
 			target.ToMS = 135000
-			target.Offset = 100
+			target.Offset = 0
 			target.GroupBy = []exploration.Field{{Kind: "attribute", Key: "db.namespace"}}
 			target.Where.All[0].Value = "other-service"
 			baseline := strings.Repeat("b", 64)
@@ -68,7 +68,7 @@ func TestComparisonTemplateRequiresExplicitDestinationBaselineAndDetaches(t *tes
 			out.View.Composition.Children[0].Comparison.Display.Title = "mutated"
 			out.View.Queries[0].Where.All[0].Value = "mutated"
 			afterSource, _ := json.Marshal(saved)
-			target.Offset = 100
+			target.Offset = 0
 			afterTarget, _ := json.Marshal(target)
 			if string(beforeSource) != string(afterSource) || string(beforeTarget) != string(afterTarget) {
 				t.Fatal("expansion aliased caller state")

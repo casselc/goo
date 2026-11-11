@@ -1123,6 +1123,45 @@ def check_native_view_discovery(spec):
     print(f'Native discovery: bounded closed metadata; {len(cases)} explicit native question schema outcomes checked (runtime enclosure remains Go/JS semantic admission)')
 
 
+def check_summary_template_bindings404(spec):
+    """Finite ungrouped summary template arm through real saved/expansion carriers."""
+    binding={'version':'goo.template/1','group':'none','profile':'ordinary-summary'}
+    scope={'kind':'record-query','signal':'logs'}
+    summary={'version':'goo.view/1','scope':scope,'kind':{'name':'measure-summary','version':1},'display':{'fields':['count']}}
+    records={'version':'goo.view/1','scope':scope,'kind':{'name':'record-table','version':1},'display':{'columns':['utc','summary']}}
+    query={'signal':'logs','environment':'prod','fromMs':1000,'toMs':61000,'limit':7,'offset':0}
+    source={'version':1,'title':'Reusable population facts','queries':[query],
+            'composition':{'version':'goo.composition/1','kind':{'name':'stack','version':1},'children':[{'summary':summary},{'records':records}]},
+            'template':binding}
+    target={**query,'environment':'staging','limit':3,'where':{'field':{'kind':'column','key':'service'},'op':'eq','value':'api'}}
+    request={'source':source,'query':target}
+    for suffix in ('','Input'):
+        bound=validator(spec,{'$ref':'#/components/schemas/workbench.ViewTemplateBinding'+suffix})
+        view=validator(spec,{'$ref':'#/components/schemas/workbench.ExplorationView'+suffix})
+        bound.validate(binding);view.validate(source)
+        for changes in ({'group':'destination'},{'profile':'ordinary'},{'baseline':'destination'},{'baseline':None},{'profile':None},{'extra':True}):
+            assert not bound.is_valid({**binding,**changes}), ('invalid summary binding admitted',changes)
+        bad_views=[]
+        bad=copy.deepcopy(source);bad['composition']['children'].pop();bad_views.append(bad)
+        bad=copy.deepcopy(source);bad['composition']['children'][0]['summary']['display']['fields']=['numeric.mean'];bad_views.append(bad)
+        for changes in ({'offset':1},{'groupBy':[{'kind':'column','key':'service'}]},
+                        {'numeric':{'field':{'kind':'attribute','key':'work.amount'},'type':'int64','unit':'{item}','parse':'canonical-decimal'}},
+                        {'groupTimeSeries':True}):
+            bad=copy.deepcopy(source);bad['queries'][0].update(changes);bad_views.append(bad)
+        bad=copy.deepcopy(source);bad['template']={'version':'goo.template/1','group':'destination','profile':'ordinary'};bad_views.append(bad)
+        bad=copy.deepcopy(source);bad['composition']['children'].append({'aggregate':{'version':'goo.view/1','scope':scope,'kind':{'name':'bar','version':1},'display':{'category':'category','value':'count'}}});bad_views.append(bad)
+        for bad in bad_views:
+            assert not view.is_valid(bad), 'unsupported summary template carrier admitted'
+    expansion=validator(spec,{'$ref':'#/components/schemas/workbench.ViewTemplateExpansionRequestInput'})
+    expansion.validate(request)
+    for changes in ({'offset':1},{'groupBy':[{'kind':'column','key':'service'}]}):
+        bad=copy.deepcopy(request);bad['query'].update(changes)
+        assert not expansion.is_valid(bad), ('invalid summary destination admitted',changes)
+    bad={**request,'baselineCapture':'a'*64}
+    assert not expansion.is_valid(bad), 'summary template gained comparison baseline'
+    print('Summary templates404: finite closed binding and complete saved/expansion carriers pass; scope equality and field availability remain runtime-owned')
+
+
 def check_current_rpc_template_bindings(spec):
     """Current RPC is an explicit binding, not a legacy alias or method witness."""
     binding = {'version':'goo.template/1','group':'destination','profile':'otel.rpc-server-current'}
@@ -1378,6 +1417,7 @@ def check(spec):
     check_fixed_query_count_views(spec)
     check_comparison_template_bindings(spec)
     check_current_rpc_template_bindings(spec)
+    check_summary_template_bindings404(spec)
     check_native_view_config(spec)
     check_native_view_discovery(spec)
     check_record_span_waterfall(spec)

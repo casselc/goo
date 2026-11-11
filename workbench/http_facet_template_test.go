@@ -71,10 +71,9 @@ func TestOrdinaryFacetTemplateRetainsLiteralFieldAndDestination311(t *testing.T)
 		target.FromMS = 61000
 		target.ToMS = 121000
 		target.Limit = 70
-		target.Offset = 100
+		target.Offset = 0
 		target.Where = &exploration.Predicate{Field: &exploration.Field{Kind: "attribute", Key: "tenant"}, Op: "eq", Value: "payments"}
 		expected := target
-		expected.Offset = 0
 		result, err := ExpandViewTemplate(ViewTemplateExpansionRequest{Source: saved, Query: &target})
 		if err != nil {
 			t.Fatal(err)

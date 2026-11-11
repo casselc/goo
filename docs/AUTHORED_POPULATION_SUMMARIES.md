@@ -23,7 +23,8 @@ a summary still describes the whole captured population, not the displayed page
 or selected group. Records remain a required composition role. Optional ordinary
 aggregate, timeline and facet children retain their existing eligibility rules.
 Grouped timelines, histograms, native metrics, reported-edge scopes, log patterns,
-comparison children, templates and arbitrary expressions are outside this arm.
+comparison children and arbitrary expressions remain outside this arm. Template
+reuse is the separate [404 arm](UNGROUPED_SUMMARY_TEMPLATES.md).
 
 Field selection, field order, title and visibility are local presentation. Explicit
 field lists preserve their authored order. The compact authored view leads with
@@ -51,3 +52,8 @@ numeric facts are selected. Presentation carries no donor values, source leases
 or completeness claims. Staging, local edits, Inspect/Apply, reopen and held Back
 read no telemetry; Run is explicit. Current configuration publication has its own
 ownership and is counted separately from source reads.
+
+[Ungrouped record/summary templates](UNGROUPED_SUMMARY_TEMPLATES.md) (404) add
+a separate finite reuse arm for these supplied facts. It retains summary order
+and record presentation without grouping, and validates the complete destination
+query before Apply. Numeric and specialized template profiles remain excluded.

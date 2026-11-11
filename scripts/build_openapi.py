@@ -355,13 +355,16 @@ for suffix in ('', 'Input'):
   request['properties']['template']['enum']=['otel.http-server-routes','otel.db-client-operations','otel.rpc-server-current-methods']
   request['properties']['version']['const']=1
   for field in ('source','query','widget'):request['properties'][field]['type']='object'
+  request['properties']['query'].setdefault('properties',{})['offset']={'const':0}
+  summary_source={'required':['source'],'properties':{'source':{'required':['template'],'properties':{'template':{'required':['group','profile'],'properties':{'group':{'const':'none'},'profile':{'const':'ordinary-summary'}}}}}}}
+  summary_destination={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False},'offset':{'const':0},'summary':{'enum':['','span-duration']}}}
   request.pop('required',None)
   request['properties']['baselineCapture'].update(type='string',pattern='^[a-f0-9]{64}$')
   request['properties']['baselineCapture']['description']='Explicit destination baseline for comparison templates only. Never defaults to the source specimen; pure expansion does not fetch or verify evidence. Existing Prepare checks the chosen stored capture against the destination.'
   request['oneOf']=[{'required':['template','version','widget'],'not':{'anyOf':[{'required':['source']},{'required':['query']},{'required':['baselineCapture']}]}},
                     {'required':['source','query'],'not':{'anyOf':[{'required':['template']},{'required':['version']},{'required':['widget']}]}}]
   comparison_source={'properties':{'source':{'properties':{'composition':{'properties':{'children':{'contains':{'required':['comparison']}}},'required':['children']}},'required':['composition']}},'required':['source']}
-  request['allOf']=[{'if':comparison_source,'then':{'required':['baselineCapture']},'else':{'not':{'required':['baselineCapture']}}}]
+  request['allOf']=[{'if':comparison_source,'then':{'required':['baselineCapture']},'else':{'not':{'required':['baselineCapture']}}},{'if':summary_source,'then':{'properties':{'query':summary_destination}}}]
  reference=schemas.get('workbench.ViewTemplateReference'+suffix)
  if reference:
   reference['properties']['version']['const']=1
@@ -371,11 +374,13 @@ for suffix in ('', 'Input'):
  if binding:
   binding['additionalProperties']=False
   binding['properties']['version']['const']='goo.template/1'
-  binding['properties']['group']['const']='destination'
-  binding['properties']['profile']['enum']=['ordinary','otel.db-client','otel.http-server','otel.rpc-server-current']
+  binding['properties']['group']={'enum':['destination','none']}
+  category_profiles=['ordinary','otel.db-client','otel.http-server','otel.rpc-server-current']
+  binding['properties']['profile']['enum']=[*category_profiles,'ordinary-summary']
+  binding['oneOf']=[{'properties':{'group':{'const':'destination'},'profile':{'enum':category_profiles}}},{'properties':{'group':{'const':'none'},'profile':{'const':'ordinary-summary'},'baseline':False}}]
   binding['properties']['baseline']['const']='destination'
   binding['required']=['version','group','profile']
-  binding['properties']['profile']['description']='Checked destination role binding. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read.'
+  binding['properties']['profile']['description']='Checked destination role binding. ordinary-summary requires group none and exactly summary plus records over ordinary ungrouped page-zero nonnumeric queries, with no baseline. Category profiles retain group destination. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read.'
 
 # Saved reusable record display declarations contain configuration, never data.
 for suffix in ('', 'Input'):
@@ -510,7 +515,18 @@ for suffix in ('', 'Input'):
  view=schemas['workbench.ExplorationView'+suffix]
  view['properties']['composition']['type']='object'
  view['properties']['template']['type']='object'
- view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['aggregate']},'minContains':1}}}}}})
+ summary_template={'required':['template'],'properties':{'template':{'required':['group','profile'],'properties':{'group':{'const':'none'},'profile':{'const':'ordinary-summary'}}}}}
+ summary_template_children={
+  'minItems':2,'maxItems':2,
+  'allOf':[{'contains':{'required':[role]},'minContains':1,'maxContains':1} for role in ('summary','records')],
+  'items':{
+   'not':{'anyOf':[{'required':[role]} for role in ('aggregate','timeline','facet','comparison')]},
+   'properties':{'summary':{'properties':{'display':{'properties':{'fields':{'items':{'enum':[key for key in summary_keys if not key.startswith('numeric.')]}}}}}}}
+  }
+ }
+ summary_template_query={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False},'offset':{'const':0},'summary':{'enum':['','span-duration']}}}
+ category_template_children={'contains':{'required':['aggregate']},'minContains':1,'not':{'contains':{'required':['summary']}}}
+ view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'required':['composition'],'properties':{'queries':{'items':{'properties':{'offset':{'const':0}}}}},'if':summary_template,'then':{'properties':{'composition':{'properties':{'children':summary_template_children}},'queries':{'items':summary_template_query}}},'else':{'properties':{'composition':{'properties':{'children':category_template_children}}}}}})
  template_comparison={'properties':{'composition':{'properties':{'children':{'contains':{'required':['comparison']}}},'required':['children']}},'required':['composition']}
  view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'if':template_comparison,'then':{'properties':{'template':{'required':['baseline']}}},'else':{'properties':{'template':{'not':{'required':['baseline']}}}}}})
  view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'properties':{'composition':{'properties':{'children':{'not':{'contains':{'required':['comparison'],'properties':{'comparison':{'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}}}}}}}}}}}}})
@@ -531,7 +547,7 @@ for suffix in ('', 'Input'):
 
  summary_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['summary']}}}}}}
  summary_query={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':2,'items':{'not':{'required':['kind','key'],'properties':{'kind':{'const':'column'},'key':{'enum':['body_pattern_v1','duration_bucket']}}}}},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False},'summary':{'enum':['','span-duration']}}}
- view.setdefault('allOf',[]).append({'if':summary_composition,'then':{'not':{'required':['template']},'properties':{'queries':{'items':summary_query}}}})
+ view.setdefault('allOf',[]).append({'if':summary_composition,'then':{'properties':{'queries':{'items':summary_query}}}})
  for family in ('numeric.','duration.','status.'):
   field_condition={'required':['summary'],'properties':{'summary':{'properties':{'display':{'required':['fields'],'properties':{'fields':{'contains':{'enum':[key for key in summary_keys if key.startswith(family)]}}}}}}}}
   present={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':field_condition}}}}}

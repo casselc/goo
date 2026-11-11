@@ -48876,15 +48876,178 @@
                 "composition"
               ],
               "properties": {
-                "composition": {
-                  "properties": {
-                    "children": {
-                      "contains": {
-                        "required": [
-                          "aggregate"
-                        ]
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "offset": {
+                        "const": 0
+                      }
+                    }
+                  }
+                }
+              },
+              "if": {
+                "required": [
+                  "template"
+                ],
+                "properties": {
+                  "template": {
+                    "required": [
+                      "group",
+                      "profile"
+                    ],
+                    "properties": {
+                      "group": {
+                        "const": "none"
                       },
-                      "minContains": 1
+                      "profile": {
+                        "const": "ordinary-summary"
+                      }
+                    }
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "composition": {
+                    "properties": {
+                      "children": {
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "allOf": [
+                          {
+                            "contains": {
+                              "required": [
+                                "summary"
+                              ]
+                            },
+                            "minContains": 1,
+                            "maxContains": 1
+                          },
+                          {
+                            "contains": {
+                              "required": [
+                                "records"
+                              ]
+                            },
+                            "minContains": 1,
+                            "maxContains": 1
+                          }
+                        ],
+                        "items": {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "aggregate"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "timeline"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "facet"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "comparison"
+                                ]
+                              }
+                            ]
+                          },
+                          "properties": {
+                            "summary": {
+                              "properties": {
+                                "display": {
+                                  "properties": {
+                                    "fields": {
+                                      "items": {
+                                        "enum": [
+                                          "count",
+                                          "duration.mean",
+                                          "duration.min",
+                                          "duration.max",
+                                          "duration.p50",
+                                          "duration.p95",
+                                          "duration.p99",
+                                          "status.error",
+                                          "status.ok",
+                                          "status.unset",
+                                          "status.unknown",
+                                          "status.error_fraction"
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "queries": {
+                    "items": {
+                      "properties": {
+                        "signal": {
+                          "enum": [
+                            "logs",
+                            "spans"
+                          ]
+                        },
+                        "groupBy": {
+                          "maxItems": 0
+                        },
+                        "numeric": {
+                          "type": "null"
+                        },
+                        "numericHistogram": {
+                          "type": "null"
+                        },
+                        "reportedEdge": {
+                          "type": "null"
+                        },
+                        "groupTimeSeries": {
+                          "const": false
+                        },
+                        "offset": {
+                          "const": 0
+                        },
+                        "summary": {
+                          "enum": [
+                            "",
+                            "span-duration"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "composition": {
+                    "properties": {
+                      "children": {
+                        "contains": {
+                          "required": [
+                            "aggregate"
+                          ]
+                        },
+                        "minContains": 1,
+                        "not": {
+                          "contains": {
+                            "required": [
+                              "summary"
+                            ]
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -49296,11 +49459,6 @@
               }
             },
             "then": {
-              "not": {
-                "required": [
-                  "template"
-                ]
-              },
               "properties": {
                 "queries": {
                   "items": {
@@ -49885,15 +50043,178 @@
                 "composition"
               ],
               "properties": {
-                "composition": {
-                  "properties": {
-                    "children": {
-                      "contains": {
-                        "required": [
-                          "aggregate"
-                        ]
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "offset": {
+                        "const": 0
+                      }
+                    }
+                  }
+                }
+              },
+              "if": {
+                "required": [
+                  "template"
+                ],
+                "properties": {
+                  "template": {
+                    "required": [
+                      "group",
+                      "profile"
+                    ],
+                    "properties": {
+                      "group": {
+                        "const": "none"
                       },
-                      "minContains": 1
+                      "profile": {
+                        "const": "ordinary-summary"
+                      }
+                    }
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "composition": {
+                    "properties": {
+                      "children": {
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "allOf": [
+                          {
+                            "contains": {
+                              "required": [
+                                "summary"
+                              ]
+                            },
+                            "minContains": 1,
+                            "maxContains": 1
+                          },
+                          {
+                            "contains": {
+                              "required": [
+                                "records"
+                              ]
+                            },
+                            "minContains": 1,
+                            "maxContains": 1
+                          }
+                        ],
+                        "items": {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "aggregate"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "timeline"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "facet"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "comparison"
+                                ]
+                              }
+                            ]
+                          },
+                          "properties": {
+                            "summary": {
+                              "properties": {
+                                "display": {
+                                  "properties": {
+                                    "fields": {
+                                      "items": {
+                                        "enum": [
+                                          "count",
+                                          "duration.mean",
+                                          "duration.min",
+                                          "duration.max",
+                                          "duration.p50",
+                                          "duration.p95",
+                                          "duration.p99",
+                                          "status.error",
+                                          "status.ok",
+                                          "status.unset",
+                                          "status.unknown",
+                                          "status.error_fraction"
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "queries": {
+                    "items": {
+                      "properties": {
+                        "signal": {
+                          "enum": [
+                            "logs",
+                            "spans"
+                          ]
+                        },
+                        "groupBy": {
+                          "maxItems": 0
+                        },
+                        "numeric": {
+                          "type": "null"
+                        },
+                        "numericHistogram": {
+                          "type": "null"
+                        },
+                        "reportedEdge": {
+                          "type": "null"
+                        },
+                        "groupTimeSeries": {
+                          "const": false
+                        },
+                        "offset": {
+                          "const": 0
+                        },
+                        "summary": {
+                          "enum": [
+                            "",
+                            "span-duration"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "composition": {
+                    "properties": {
+                      "children": {
+                        "contains": {
+                          "required": [
+                            "aggregate"
+                          ]
+                        },
+                        "minContains": 1,
+                        "not": {
+                          "contains": {
+                            "required": [
+                              "summary"
+                            ]
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -50305,11 +50626,6 @@
               }
             },
             "then": {
-              "not": {
-                "required": [
-                  "template"
-                ]
-              },
               "properties": {
                 "queries": {
                   "items": {
@@ -56197,8 +56513,10 @@
             "const": "destination"
           },
           "group": {
-            "type": "string",
-            "const": "destination"
+            "enum": [
+              "destination",
+              "none"
+            ]
           },
           "profile": {
             "type": "string",
@@ -56206,9 +56524,10 @@
               "ordinary",
               "otel.db-client",
               "otel.http-server",
-              "otel.rpc-server-current"
+              "otel.rpc-server-current",
+              "ordinary-summary"
             ],
-            "description": "Checked destination role binding. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read."
+            "description": "Checked destination role binding. ordinary-summary requires group none and exactly summary plus records over ordinary ungrouped page-zero nonnumeric queries, with no baseline. Category profiles retain group destination. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read."
           },
           "version": {
             "type": "string",
@@ -56222,7 +56541,35 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewTemplateBinding",
-        "additionalProperties": false
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "properties": {
+              "group": {
+                "const": "destination"
+              },
+              "profile": {
+                "enum": [
+                  "ordinary",
+                  "otel.db-client",
+                  "otel.http-server",
+                  "otel.rpc-server-current"
+                ]
+              }
+            }
+          },
+          {
+            "properties": {
+              "group": {
+                "const": "none"
+              },
+              "profile": {
+                "const": "ordinary-summary"
+              },
+              "baseline": false
+            }
+          }
+        ]
       },
       "workbench.ViewTemplateBindingInput": {
         "additionalProperties": false,
@@ -56239,15 +56586,10 @@
             "const": "destination"
           },
           "group": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "const": "destination"
+            "enum": [
+              "destination",
+              "none"
+            ]
           },
           "profile": {
             "anyOf": [
@@ -56262,9 +56604,10 @@
               "ordinary",
               "otel.db-client",
               "otel.http-server",
-              "otel.rpc-server-current"
+              "otel.rpc-server-current",
+              "ordinary-summary"
             ],
-            "description": "Checked destination role binding. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read."
+            "description": "Checked destination role binding. ordinary-summary requires group none and exactly summary plus records over ordinary ungrouped page-zero nonnumeric queries, with no baseline. Category profiles retain group destination. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read."
           },
           "version": {
             "anyOf": [
@@ -56280,6 +56623,34 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewTemplateBinding",
+        "oneOf": [
+          {
+            "properties": {
+              "group": {
+                "const": "destination"
+              },
+              "profile": {
+                "enum": [
+                  "ordinary",
+                  "otel.db-client",
+                  "otel.http-server",
+                  "otel.rpc-server-current"
+                ]
+              }
+            }
+          },
+          {
+            "properties": {
+              "group": {
+                "const": "none"
+              },
+              "profile": {
+                "const": "ordinary-summary"
+              },
+              "baseline": false
+            }
+          }
+        ],
         "required": [
           "version",
           "group",
@@ -56341,7 +56712,12 @@
                 "type": "null"
               }
             ],
-            "type": "object"
+            "type": "object",
+            "properties": {
+              "offset": {
+                "const": 0
+              }
+            }
           },
           "source": {
             "anyOf": [
@@ -56494,6 +56870,74 @@
                 "required": [
                   "baselineCapture"
                 ]
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "source"
+              ],
+              "properties": {
+                "source": {
+                  "required": [
+                    "template"
+                  ],
+                  "properties": {
+                    "template": {
+                      "required": [
+                        "group",
+                        "profile"
+                      ],
+                      "properties": {
+                        "group": {
+                          "const": "none"
+                        },
+                        "profile": {
+                          "const": "ordinary-summary"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "query": {
+                  "properties": {
+                    "signal": {
+                      "enum": [
+                        "logs",
+                        "spans"
+                      ]
+                    },
+                    "groupBy": {
+                      "maxItems": 0
+                    },
+                    "numeric": {
+                      "type": "null"
+                    },
+                    "numericHistogram": {
+                      "type": "null"
+                    },
+                    "reportedEdge": {
+                      "type": "null"
+                    },
+                    "groupTimeSeries": {
+                      "const": false
+                    },
+                    "offset": {
+                      "const": 0
+                    },
+                    "summary": {
+                      "enum": [
+                        "",
+                        "span-duration"
+                      ]
+                    }
+                  }
+                }
               }
             }
           }
