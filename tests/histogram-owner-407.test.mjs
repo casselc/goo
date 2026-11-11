@@ -1,0 +1,48 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import {readFileSync} from 'node:fs';
+import * as Histogram from '../ui/histogram-declaration.mjs';
+import {distributionCustomization} from '../ui/distributions.mjs';
+import {histogramEdges,histogramIntent,validateDisplay} from '../ui/view-model.mjs';
+import {createSourceAdapter} from '../ui/snapshots.mjs';
+import {createActionContext} from '../ui/scope-actions.mjs';
+import * as Composition from '../ui/view-composition.mjs';
+const q={signal:'logs',environment:'prod',fromMs:1000,toMs:4500,limit:2,offset:0,where:{field:{kind:'attribute',key:'team'},op:'eq',value:'source'},numeric:{field:{kind:'attribute',key:'size'},type:'uint64',unit:'By',parse:'canonical-decimal'},numericHistogram:{binning:'powers-of-two'}};
+function data(){const edges=histogramEdges(q.numeric),raw={version:'goo.dataset/1',id:'hist407',revision:'basis407',origin:'source-read',scope:{id:'scope407',generation:'basis407',signal:q.signal,selector:q},shape:'histogram',fields:[{key:'from',label:'From',type:'rational',unit:'By'},{key:'to',label:'To',type:'rational',unit:'By'},{key:'count',label:'Captured records',type:'number',unit:'records'}],histogram:{kind:'numeric',binning:'powers-of-two',binding:q.numeric,support:{total:'5',valid:'2',missing:'1',empty:'1',invalid:'1'},closure:'left-closed-right-open'},rows:edges.slice(0,-1).map((from,i)=>({key:'bin:'+i,values:{from,to:edges[i+1],count:i===0?'2':'0'},state:i===0?'observed':'no_data'})),quality:{extent:'complete',basis:'captured-query',value:'derived',sampling:'unknown',freshness:'fixed'},completeness:{basis:'captured-query',revision:'basis407',scopeId:'scope407',aspects:['bins']}};return{question:structuredClone(q),basis:raw.revision,count:'5',state:'observed',histogramDataset:createSourceAdapter({id:'hist407-tests'}).adoptSnapshot(raw,{question:q})};}
+test('407 numeric customization transfers full fixed question and presentation without bins or source authority',()=>{
+ const d=data(),before=JSON.stringify(d),declaration=Histogram.update(Histogram.create(q),{kind:'table',requiresComplete:true},q),v=distributionCustomization(d,declaration);
+ assert.deepEqual(v.queries,[q]);assert.deepEqual(v.composition.children[0].histogram,declaration);assert.equal(v.composition.children[1].records.kind.name,'record-table');assert.equal(v.histogramDataset,undefined);assert.equal(v.basis,undefined);assert.equal(JSON.stringify(d),before);assert.equal(validateDisplay(d.histogramDataset,Histogram.presentation(declaration)).ok,true);
+ for(const patch of [{state:'changed_between_reads'},{basis:'foreign'},{count:'6'},{question:{...q,offset:1}},{histogramDataset:structuredClone(d.histogramDataset)}])assert.throws(()=>distributionCustomization({...d,...patch}));
+});
+function harness(options={}){
+ const all=[];function node(tag,text,cls){const e={localName:tag,textContent:text,className:cls,children:[],attrs:{},disabled:false,isConnected:true,hidden:false,listeners:{},append(...v){this.children.push(...v)},replaceChildren(...v){this.children=[...v]},setAttribute(k,v){this.attrs[k]=v},getAttribute(k){return this.attrs[k]??null},addEventListener(k,fn){this.listeners[k]=fn},matches(){return this.fieldsetDisabled===true},closest(){return this.inert?{}:null},querySelectorAll(tag){const visit=x=>x&&typeof x==='object'?[...(x.localName===tag?[x]:[]),...(x.children??[]).flatMap(visit)]:[];return this.children.flatMap(visit)}};all.push(e);if(tag==='goo-chart')e.append(node('button','Local bin highlight'));return e}
+ const state={allowed:true,changes:[],resolves:0,cancels:0,disposals:0,reads:0};class Planner{cancel(){state.cancels++}invalidate(){state.cancels++}plan(){state.reads++;throw Error('source reads are forbidden')}}
+ const env={UI:{node,actionVisible:e=>e.isConnected&&!e.hidden},HistogramDeclaration:Histogram,isSnapshot:()=>true,validateSnapshot:()=>({ok:true}),Planner,Explanation:{mount:()=>({dispose(){state.disposals++},invalidate(){state.disposals++}})},displayBound:x=>x,structuredClone,Event};vm.createContext(env);
+ const source=readFileSync(new URL('../ui/numeric-distribution.mjs',import.meta.url),'utf8');vm.runInContext(source.slice(source.indexOf('function mount('),source.indexOf('\nexport {')),env);
+ const d=data(),host=node('div'),owner=env.mount(host,d,{...options,canAct:()=>state.allowed,open:()=>{state.reads++;},resolveRange:()=>{state.resolves++;return{ok:true,fromBin:0,toBin:1,from:'0',to:'1',question:q}},onPresentation:x=>state.changes.push(x)});
+ return{state,all,owner,chart:all.find(x=>x.localName==='goo-chart'),kind:all.find(x=>x.attrs['aria-label']==='Distribution view'),complete:all.find(x=>x.attrs['aria-label']==='Complete bins only'),inspect:all.find(x=>x.textContent==='Inspect selected population'),geometry:all.find(x=>x.textContent==='Local bin highlight'),tray:all.find(x=>x.className==='numeric-distribution-selection')};
+}
+test('407 local kind/complete controls retire ranges and refuse hidden, pending, table and suspended callbacks',()=>{
+ const h=harness(),{kind,complete,chart,state,owner}=h,oldKind=kind.onchange;
+ for(const key of ['hidden','inert','disabled','fieldsetDisabled']){kind[key]=true;kind.value='table';oldKind();assert.equal(state.changes.length,0);kind[key]=false}
+ state.allowed=false;kind.value='table';oldKind();assert.equal(state.changes.length,0);state.allowed=true;
+ chart.listeners['goo-histogram-range']({detail:{fromKey:'bin:0',toKey:'bin:0'}});assert.equal(state.resolves,1);assert.equal(h.tray.hidden,false);
+ kind.value='table';oldKind();assert.equal(h.tray.hidden,true);assert.equal(state.disposals,1);assert.equal(owner.presentation().kind.name,'table');h.inspect.onclick();chart.listeners['goo-histogram-range']({detail:{fromKey:'bin:0',toKey:'bin:0'}});assert.equal(state.resolves,1);assert.equal(state.reads,0);
+ kind.value='histogram';oldKind();complete.checked=true;complete.onchange();assert.equal(owner.presentation().display.requiresComplete,true);complete.checked=false;complete.onchange();assert.equal(Object.hasOwn(owner.presentation().display,'requiresComplete'),false);
+ const changes=state.changes.length;owner.suspend();kind.value='table';oldKind();complete.checked=true;complete.onchange();assert.equal(state.changes.length,changes);assert.equal(state.reads,0);
+});
+
+test('407 population histogram uses checked histogram range ownership, including exact max+1 bounds',()=>{
+ const d=data(),env={HistogramDeclaration:Histogram,Composition,composition:Composition.createHistogram(q),views:new Map(),histogramSourceEpochs:new WeakMap(),generation:1,queries:[q],results:[],createActionContext:config=>{const actions=createActionContext({epoch:config.epoch,active:config.active,canStage:config.canStage});return{...actions,bind:input=>actions.bind({role:input.role,slot:input.slot,epoch:input.epoch,snapshot:input.snapshot,question:input.question,coherent:input.coherent})}},node:()=>({isConnected:true,append(){}}),localPresentationCurrent:()=>true,compositionReady:()=>true,countPending:false,reusePending:false,active:()=>true,childOwner:null,title:'Histogram',actionVisible:()=>true,openChild:(queries,opener,label,config)=>{env.child={queries,opener,label,config}},NumericDistribution:{mount(target,data,options){env.options=options;return{}}}};
+ vm.createContext(env);const source=readFileSync(new URL('../ui/population-workspace.mjs',import.meta.url),'utf8'),start=source.indexOf('  function renderHistogram(');vm.runInContext(source.slice(start,source.indexOf('  function renderSummary(',start)),env);env.renderHistogram({append(){}},d);
+ const checked=env.options.resolveRange(histogramIntent(d.histogramDataset,'bin:64'));assert.equal(checked.ok,true,checked.reason);assert.equal(checked.fromBin,64);assert.equal(checked.toBin,65);assert.equal(checked.to,'18446744073709551616');assert.deepEqual(checked.question,q);
+ const pendingOpener={disabled:true,closest:()=>null};env.options.open(q,undefined,undefined,pendingOpener);assert.equal(env.child.queries.length,1);assert.deepEqual(env.child.queries[0],q);assert.equal(env.child.opener,pendingOpener);assert.equal(env.child.config.recent,false);assert.deepEqual(env.child.config.composition,env.composition);
+ env.generation++;env.renderHistogram({append(){}},d);assert.equal(env.options.resolveRange,undefined,'held Back must not renew source range authority');assert.equal(env.options.canAct(),true,'local display controls stay usable on held bins');
+ const reread=data();env.renderHistogram({append(){}},reread);assert.equal(env.options.resolveRange(histogramIntent(reread.histogramDataset,'bin:0')).ok,true,'a newly accepted read restores range authority');
+});
+
+test('407 source-free read-only highlights stay enabled while explicitly held range controls pause',async()=>{
+ const saved=harness({readOnly:true});await Promise.resolve();assert.equal(saved.geometry.disabled,false);saved.kind.value='table';saved.kind.onchange();assert.equal(saved.owner.presentation().kind.name,'table');assert.equal(saved.geometry.disabled,false);assert.equal(saved.state.reads,0);
+ const held=harness({readOnly:true,rangePaused:true});await Promise.resolve();assert.equal(held.geometry.disabled,true);assert.equal(held.kind.disabled,false);held.kind.value='table';held.kind.onchange();assert.equal(held.owner.presentation().kind.name,'table');assert.equal(held.state.reads,0);
+});

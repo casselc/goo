@@ -57,6 +57,7 @@ type CompositionKind struct {
 // A child chooses exactly one typed role. Its role is its stable identity;
 // duplicate roles, arbitrary IDs and recursive layout are deliberately absent.
 type ViewCompositionChild struct {
+	Histogram  *HistogramViewDeclaration       `json:"histogram,omitempty"`
 	Summary    *SummaryViewDeclaration         `json:"summary,omitempty"`
 	Aggregate  *ViewDeclaration                `json:"aggregate,omitempty"`
 	Records    *RecordViewDeclaration          `json:"records,omitempty"`
@@ -71,6 +72,7 @@ func (c *ViewCompositionChild) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &fields); err != nil {
 		return err
 	}
+	_, histogram := fields["histogram"]
 	_, aggregate := fields["aggregate"]
 	_, records := fields["records"]
 	_, timeline := fields["timeline"]
@@ -78,13 +80,13 @@ func (c *ViewCompositionChild) UnmarshalJSON(data []byte) error {
 	_, facet := fields["facet"]
 	_, summary := fields["summary"]
 	roles := 0
-	for _, present := range []bool{aggregate, records, timeline, comparison, facet, summary} {
+	for _, present := range []bool{aggregate, records, timeline, comparison, facet, summary, histogram} {
 		if present {
 			roles++
 		}
 	}
 	if roles != 1 {
-		return errors.New("composition children require exactly one aggregate, records, timeline, comparison, facet or summary role")
+		return errors.New("composition children require exactly one aggregate, records, timeline, comparison, facet, histogram or summary role")
 	}
 	if hidden, present := fields["hidden"]; present && bytes.Equal(bytes.TrimSpace(hidden), []byte("null")) {
 		return errors.New("child visibility requires a boolean")
@@ -194,19 +196,28 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 	aggregate, records, timeline, summary, visibleData, visibleRecords := false, false, false, false, false, false
 	var comparison *CountComparisonViewDeclaration
 	var facet *FacetViewDeclaration
+	var histogram *HistogramViewDeclaration
 	for _, child := range c.Children {
 		roles := 0
-		for _, present := range []bool{child.Aggregate != nil, child.Records != nil, child.Timeline != nil, child.Comparison != nil, child.Facet != nil, child.Summary != nil} {
+		for _, present := range []bool{child.Aggregate != nil, child.Records != nil, child.Timeline != nil, child.Comparison != nil, child.Facet != nil, child.Summary != nil, child.Histogram != nil} {
 			if present {
 				roles++
 			}
 		}
 		if roles != 1 {
-			return errors.New("composition children require exactly one aggregate, records, timeline, comparison, facet or summary role")
+			return errors.New("composition children require exactly one aggregate, records, timeline, comparison, facet, histogram or summary role")
 		}
 		visibleData = visibleData || !child.Hidden && child.Facet == nil
 		visibleRecords = visibleRecords || !child.Hidden && child.Records != nil
-		if child.Aggregate != nil {
+		if child.Histogram != nil {
+			if histogram != nil {
+				return errors.New("composition allows one histogram child")
+			}
+			histogram = child.Histogram
+			if err := histogram.Validate(q); err != nil {
+				return err
+			}
+		} else if child.Aggregate != nil {
 			if aggregate {
 				return errors.New("composition requires exactly one aggregate child")
 			}
@@ -259,6 +270,12 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 	if !records || !visibleData {
 		return errors.New("composition requires records and at least one visible data child")
 	}
+	if histogram != nil {
+		if len(c.Children) != 2 || !visibleRecords || !slices.ContainsFunc(c.Children, func(child ViewCompositionChild) bool { return child.Histogram != nil && !child.Hidden }) {
+			return errors.New("histogram composition requires exactly visible histogram and records children")
+		}
+		return nil
+	}
 	if summary && comparison != nil {
 		return errors.New("summary and comparison children cannot be combined")
 	}
@@ -309,7 +326,13 @@ func ReuseViewComposition(c ViewComposition, source, destination exploration.Que
 	out := c
 	out.Children = slices.Clone(c.Children)
 	for i, child := range c.Children {
-		if child.Aggregate != nil {
+		if child.Histogram != nil {
+			display, err := ReuseHistogramViewDeclaration(*child.Histogram, source, destination)
+			if err != nil {
+				return ViewComposition{}, err
+			}
+			out.Children[i].Histogram = &display
+		} else if child.Aggregate != nil {
 			display, err := ReuseViewDeclaration(*child.Aggregate, source, destination)
 			if err != nil {
 				return ViewComposition{}, err

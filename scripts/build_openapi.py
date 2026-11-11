@@ -347,6 +347,9 @@ for name in ('workbench.NativeViewSummary','workbench.NativeViewListDiagnostic')
   shape['allOf']=[{'if':{'properties':{'family':{'const':'counter'}}},'else':{'properties':{'counterDomain':False}}}]
  else:shape['properties']['reason']={'const':'unavailable-artifact'}
 
+#407 reuses supplied fixed numeric bins; binding equality remains a runtime proof.
+histogram_query407={'required':['numeric','numericHistogram'],'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numeric':{'type':'object'},'numericHistogram':{'type':'object','required':['binning'],'properties':{'binning':{'const':'powers-of-two'}}},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False},'offset':{'const':0}}}
+
 # Shipped and authored configuration-only template expansion share one endpoint.
 for suffix in ('', 'Input'):
  request=schemas.get('workbench.ViewTemplateExpansionRequest'+suffix)
@@ -364,7 +367,9 @@ for suffix in ('', 'Input'):
   request['oneOf']=[{'required':['template','version','widget'],'not':{'anyOf':[{'required':['source']},{'required':['query']},{'required':['baselineCapture']}]}},
                     {'required':['source','query'],'not':{'anyOf':[{'required':['template']},{'required':['version']},{'required':['widget']}]}}]
   comparison_source={'properties':{'source':{'properties':{'composition':{'properties':{'children':{'contains':{'required':['comparison']}}},'required':['children']}},'required':['composition']}},'required':['source']}
-  request['allOf']=[{'if':comparison_source,'then':{'required':['baselineCapture']},'else':{'not':{'required':['baselineCapture']}}},{'if':summary_source,'then':{'properties':{'query':summary_destination}}}]
+  histogram_source={'required':['source'],'properties':{'source':{'required':['template'],'properties':{'template':{'required':['group','profile'],'properties':{'group':{'const':'none'},'profile':{'const':'ordinary-histogram'}}}}}}}
+  request['allOf']=[{'if':comparison_source,'then':{'required':['baselineCapture']},'else':{'not':{'required':['baselineCapture']}}},{'if':summary_source,'then':{'properties':{'query':summary_destination}}},{'if':histogram_source,'then':{'properties':{'query':copy.deepcopy(histogram_query407)}}}]
+
  reference=schemas.get('workbench.ViewTemplateReference'+suffix)
  if reference:
   reference['properties']['version']['const']=1
@@ -376,11 +381,11 @@ for suffix in ('', 'Input'):
   binding['properties']['version']['const']='goo.template/1'
   binding['properties']['group']={'enum':['destination','none']}
   category_profiles=['ordinary','otel.db-client','otel.http-server','otel.rpc-server-current']
-  binding['properties']['profile']['enum']=[*category_profiles,'ordinary-summary']
-  binding['oneOf']=[{'properties':{'group':{'const':'destination'},'profile':{'enum':category_profiles}}},{'properties':{'group':{'const':'none'},'profile':{'const':'ordinary-summary'},'baseline':False}}]
+  binding['properties']['profile']['enum']=[*category_profiles,'ordinary-summary','ordinary-histogram']
+  binding['oneOf']=[{'properties':{'group':{'const':'destination'},'profile':{'enum':category_profiles}}},{'properties':{'group':{'const':'none'},'profile':{'enum':['ordinary-summary','ordinary-histogram']},'baseline':False}}]
   binding['properties']['baseline']['const']='destination'
   binding['required']=['version','group','profile']
-  binding['properties']['profile']['description']='Checked destination role binding. ordinary-summary requires group none and exactly summary plus records over ordinary ungrouped page-zero nonnumeric queries, with no baseline. Category profiles retain group destination. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read.'
+  binding['properties']['profile']['description']='Checked destination role binding. ordinary-summary requires group none and exactly summary plus records over ordinary ungrouped page-zero nonnumeric queries, with no baseline. ordinary-histogram requires group none and exactly histogram plus records over page-zero ungrouped numeric powers-of-two queries; exact numeric binding and binning compatibility remains runtime-owned. Category profiles retain group destination. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read.'
 
 # Saved reusable record display declarations contain configuration, never data.
 for suffix in ('', 'Input'):
@@ -416,7 +421,7 @@ for suffix in ('', 'Input'):
  composition['required']=['version','kind','children']
  composition['properties']['kind']['type']='object'
  composition['properties']['version']['const']='goo.composition/1'
- composition['description']='One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison and facet within six unique roles, including an optional compact population summary. A facet is an explicit field control, not a visible data child. It may accompany a fresh fixed-query count comparison, validated against both operands; captured comparisons remain outside that combination. No rows, subscriptions or runtime guarantees are stored.'
+ composition['description']='One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison and facet within six unique roles, including an optional compact population summary. A facet is an explicit field control, not a visible data child. It may accompany a fresh fixed-query count comparison, validated against both operands; captured comparisons remain outside that combination. A separate histogram plus records pair consumes supplied exact numeric bins. No rows, subscriptions or runtime guarantees are stored.'
  for name,kind_name in [('CompositionKind','stack'),('RecordViewKind','record-table')]:
   kind=schemas['workbench.'+name+suffix];kind['additionalProperties']=False
   kind['required']=['name','version']
@@ -425,18 +430,34 @@ for suffix in ('', 'Input'):
   kind['properties']['version']['const']=1
  child=schemas['workbench.ViewCompositionChild'+suffix];child['additionalProperties']=False
  child['properties']['hidden']['type']='boolean'
- child['oneOf']=[{'required':[role],'not':{'anyOf':[{'required':[other]} for other in ('aggregate','records','timeline','comparison','facet','summary') if other!=role]}} for role in ('aggregate','records','timeline','comparison','facet','summary')]
- for field in ('aggregate','records','timeline','comparison','facet','summary'):
+ child['oneOf']=[{'required':[role],'not':{'anyOf':[{'required':[other]} for other in ('aggregate','records','timeline','comparison','facet','summary','histogram') if other!=role]}} for role in ('aggregate','records','timeline','comparison','facet','summary','histogram')]
+ for field in ('aggregate','records','timeline','comparison','facet','summary','histogram'):
   child['properties'][field]['type']='object'
  children=composition['properties']['children'];children.update(type='array',minItems=1,maxItems=6,items={'$ref':'#/components/schemas/workbench.ViewCompositionChild'+suffix,'type':'object'})
  children['allOf']=[{'contains':{'required':[role]},'minContains':1,'maxContains':1} for role in ('records',)]
- children['allOf'].extend([{'contains':{'required':[role]},'minContains':0,'maxContains':1} for role in ('aggregate','timeline','comparison','facet','summary')])
+ children['allOf'].extend([{'contains':{'required':[role]},'minContains':0,'maxContains':1} for role in ('aggregate','timeline','comparison','facet','summary','histogram')])
  children['allOf'].append({'contains':{'not':{'required':['facet']},'properties':{'hidden':{'const':False}}},'minContains':1})
  grouped_timeline_child={'required':['timeline'],'properties':{'timeline':{'properties':{'display':{'required':['profile'],'properties':{'profile':{'enum':['grouped-count-v1','grouped-duration-mean-v1']}}}}}}}
+ histogram_children={'minItems':2,'maxItems':2,'allOf':[{'contains':{'required':[role]},'minContains':1,'maxContains':1} for role in ('histogram','records')],'items':{'anyOf':[{'required':['histogram']},{'required':['records']}]}}
  raw_records_child={'required':['records'],'properties':{'hidden':{'const':False},'records':{'properties':{'scope':{'properties':{'signal':{'enum':['logs','spans']}}}}}}}
- children['allOf'].append({'if':{'contains':{'required':['aggregate']}},'else':{'oneOf':[{'minItems':2,'maxItems':4,'contains':{'required':['summary']},'items':{'anyOf':[{'required':[role]} for role in ('records','summary','timeline','facet')]}},{'maxItems':2,'items':{'anyOf':[raw_records_child,{'required':['facet']}]}},{'minItems':2,'maxItems':2,'contains':grouped_timeline_child,'items':{'anyOf':[{'required':['records']},grouped_timeline_child]}}]}})
+ children['allOf'].append({'if':{'contains':{'required':['aggregate']}},'else':{'oneOf':[copy.deepcopy(histogram_children),{'minItems':2,'maxItems':4,'contains':{'required':['summary']},'items':{'anyOf':[{'required':[role]} for role in ('records','summary','timeline','facet')]}},{'maxItems':2,'items':{'anyOf':[raw_records_child,{'required':['facet']}]}},{'minItems':2,'maxItems':2,'contains':grouped_timeline_child,'items':{'anyOf':[{'required':['records']},grouped_timeline_child]}}]}})
+ children['allOf'].append({'if':{'contains':{'required':['histogram']}},'then':copy.deepcopy(histogram_children)})
  children['allOf'].append({'if':{'contains':{'required':['facet']}},'then':{'items':{'properties':{'comparison':{'required':['baselineQuery'],'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}}}}}}}})
  children['allOf'].append({'if':{'contains':{'required':['summary']}},'then':{'not':{'contains':{'required':['comparison']}}}})
+ histogram=schemas['workbench.HistogramViewDeclaration'+suffix]
+ histogram.update(additionalProperties=False,required=['version','scope','kind','display'])
+ histogram['description']='Supplied numeric powers-of-two histogram or exact-bin Table beside records. Raw counts only; no normalization, bins, values, source lease or selection authority is stored. Parent query owns the exact numeric binding and binning, and explicit Run reads evidence.'
+ histogram['properties']['version']={'const':'goo.view/1'}
+ for name in ('scope','kind','display'):histogram['properties'][name]['type']='object'
+ histogram['properties']['scope']={'type':'object','additionalProperties':False,'required':['kind','signal'],'properties':{'kind':{'const':'record-query'},'signal':{'enum':['logs','spans']}}}
+ hk=schemas['workbench.HistogramViewKind'+suffix]
+ hk.update(additionalProperties=False,required=['name','version'])
+ hk['properties'].update(name={'enum':['histogram','table']},version={'const':1})
+ hd=schemas['workbench.HistogramViewDisplay'+suffix]
+ hd.update(additionalProperties=False,required=['category','value'])
+ hd['properties']['category']={'const':'from'};hd['properties']['value']={'const':'count'}
+ hd['properties']['title']={'type':'string','maxLength':120,'description':'At most120 UTF-8 bytes, valid Unicode with no controls; runtime enforces byte budget and nonblank nonempty text.'}
+ hd['properties']['requiresComplete']={'type':'boolean','description':'When true, display requires the supplied bins completeness witness; configuration never supplies that witness.'}
  summary=schemas['workbench.SummaryViewDeclaration'+suffix]
  summary.update(additionalProperties=False,required=['version','scope','kind','display'])
  summary['description']='One to six selected existing population facts in authored order, under the parent ordinary record query. No calculations, snapshots, query or source authority. Records remain required; Run is explicit. Runtime checks supported field families, bindings, units and query combinations.'
@@ -526,15 +547,16 @@ for suffix in ('', 'Input'):
   }
  }
  summary_template_query={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False},'offset':{'const':0},'summary':{'enum':['','span-duration']}}}
+ histogram_template={'required':['template'],'properties':{'template':{'required':['group','profile'],'properties':{'group':{'const':'none'},'profile':{'const':'ordinary-histogram'}}}}}
  category_template_children={'contains':{'required':['aggregate']},'minContains':1,'not':{'contains':{'required':['summary']}}}
- view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'required':['composition'],'properties':{'queries':{'items':{'properties':{'offset':{'const':0}}}}},'if':summary_template,'then':{'properties':{'composition':{'properties':{'children':summary_template_children}},'queries':{'items':summary_template_query}}},'else':{'properties':{'composition':{'properties':{'children':category_template_children}}}}}})
+ view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'required':['composition'],'properties':{'queries':{'items':{'properties':{'offset':{'const':0}}}}},'if':summary_template,'then':{'properties':{'composition':{'properties':{'children':summary_template_children}},'queries':{'items':summary_template_query}}},'else':{'if':histogram_template,'then':{'properties':{'composition':{'properties':{'children':copy.deepcopy(histogram_children)}},'queries':{'items':copy.deepcopy(histogram_query407)}}},'else':{'properties':{'composition':{'properties':{'children':category_template_children}}}}}}})
  template_comparison={'properties':{'composition':{'properties':{'children':{'contains':{'required':['comparison']}}},'required':['children']}},'required':['composition']}
  view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'if':template_comparison,'then':{'properties':{'template':{'required':['baseline']}}},'else':{'properties':{'template':{'not':{'required':['baseline']}}}}}})
  view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'properties':{'composition':{'properties':{'children':{'not':{'contains':{'required':['comparison'],'properties':{'comparison':{'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}}}}}}}}}}}}})
  view.setdefault('allOf',[]).append({'if':{'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['facet']}}}}}},'then':{'properties':{'queries':{'items':{'properties':{'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}}}}})
  flat=['layout','columns','fieldColumns','displays','breakdowns','tail']
  view.setdefault('allOf',[]).append({'if':{'required':['composition']},'then':{'required':['version','title','queries'],'properties':{'version':{'const':1},'queries':{'type':'array','minItems':1,'maxItems':1}},'not':{'anyOf':[{'required':[field]} for field in flat]}},'else':{'required':['layout','columns']}})
- raw_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'not':{'contains':{'anyOf':[{'required':['aggregate']},{'required':['summary']},grouped_timeline_child]}}}}}}}
+ raw_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'not':{'contains':{'anyOf':[{'required':['aggregate']},{'required':['summary']},{'required':['histogram']},grouped_timeline_child]}}}}}}}
  grouped_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':grouped_timeline_child}}}}}
  grouped_query={'required':['groupTimeSeries','groupBy','bucketMs'],'properties':{'signal':{'enum':['logs','spans']},'groupTimeSeries':{'const':True},'groupBy':{'minItems':1,'maxItems':1},'bucketMs':{'enum':[1000,10000,60000,300000]},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'summary':{'const':''},'spanStatus':{'const':False}}}
  grouped_query['properties'].pop('summary')
@@ -546,6 +568,8 @@ for suffix in ('', 'Input'):
   if profile=='grouped-duration-mean-v1':query_profile.update(required=['signal','summary']);query_profile['properties']['signal']={'const':'spans'}
   view['allOf'].append({'if':profile_composition,'then':{'properties':{'queries':{'items':query_profile}}}})
 
+ histogram_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['histogram']}}}}}}
+ view.setdefault('allOf',[]).append({'if':histogram_composition,'then':{'properties':{'queries':{'items':copy.deepcopy(histogram_query407)}}}})
  summary_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['summary']}}}}}}
  summary_query={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':2,'items':{'not':{'required':['kind','key'],'properties':{'kind':{'const':'column'},'key':{'enum':['body_pattern_v1','duration_bucket']}}}}},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False},'summary':{'enum':['','span-duration']}}}
  view.setdefault('allOf',[]).append({'if':summary_composition,'then':{'properties':{'queries':{'items':summary_query}}}})

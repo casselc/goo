@@ -1,5 +1,52 @@
 # Validation record
 
+## Authored numeric histograms beside records — 407
+
+[Reusable numeric distributions](docs/AUTHORED_NUMERIC_HISTOGRAMS.md) adds the
+finite histogram+records composition and `ordinary-histogram` template profile.
+Histogram/Table and complete-bin requirements reuse supplied data. Reuse requires
+identical qualified numeric field, type, scale, literal unit, parse policy and
+binning; the destination question stays intact. Existing source execution and
+range planning are reused. Held return preserves local display controls while
+range actions remain paused until Run; Saved highlighting stays source-free.
+
+- Targeted Go workbench/server histogram, template, composition and summary checks
+  passed **0.373 s / 0.882 s** on Go **1.27.3**. HTTP store/reopen/expand checks
+  cover **12 signal/type/kind combinations** without source reads. This is not a
+  full project suite or optional warehouse-fixture claim.
+- Final frontend: **1,491 passed / zero skips / 26.444 s**. Invoked owner checks
+  cover exact range resolution, pending completion, local kind changes, hidden/
+  inert/disabled controls, held renewal and preserved passive Saved highlighting.
+- Hegel Go/JS checks passed **9.465 s**: **54 whole source/view/store/template
+  carriers / 756 binding and declaration refusal controls**, across signed,
+  unsigned and fixed-decimal values, invalid-only and empty populations. Older
+  synthetic positive-aggregate/empty-page fixtures correctly retain unknown
+  coverage; they cannot satisfy complete-only display. No attestation was invented.
+- Separate API vectors passed **54 whole carriers / 216 malformed-display/root
+  controls**. Regenerated OpenAPI checks passed **24 output/Input carrier cases /
+  624 shape/profile refusals**, existing **113 operations / 489 fixture responses /
+  195 admitted requests / 28 mux refusals**, and **24 actual handler frames**.
+- Final actual Playwright journey passed **36.0 s** with **46 persisted OTel
+  records** and independent membership/parse/bin oracles. Exact domain extrema,
+  values beyond JavaScript safe integers, missing/empty/invalid values, legacy
+  environment policy and foreign-scope controls remain explicit. **21 boundaries /
+  6 source reads / 18 existing SQL statements / 1 user save / 1 expansion /
+  1 source-free range plan**. Author/save/reopen/reuse, child reads and paused
+  held return passed on the final binary.
+- Actual Bombadil acceptance passed **38.0 s**, with **457 snapshots / six phases /
+  one expansion / one explicit source read / three SQL statements / no publication**
+  at 390 px. Observed raw-source/actor validation and Quint replay passed
+  **3.952 s**, rejecting **five semantic mutants** and a planted local source read.
+  Report-gated checks ran with actual reports; no opt-in skips in that invocation.
+- Updated the executable storyboard, diagram, component/template docs and actual
+  desktop/390 px frames. Architecture and design agents found no blocker. Nested
+  chart frames/headings and narrow horizontal-scroll affordance remain review
+  candidates; screenshots alone do not establish keyboard/screen-reader behavior.
+- Rebuilt/refreshed only the application service. Capabilities returns 200 and
+  reviewed histogram UI/OpenAPI assets match served bytes. Running image
+  `sha256:8687a41f1fdb7bf2bedb3c494374559096a871d2ed683f95680b1759e405a7d9`.
+  Existing telemetry, stores and XTDB remain intact.
+
 ## Captured-record activity rates — 406
 
 [Captured-record rates](docs/CAPTURED_RECORD_RATES.md) adds an explicit exact

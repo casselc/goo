@@ -208,6 +208,21 @@ func (b ViewTemplateBinding) Validate(q exploration.Query, c ViewComposition) er
 	if q.Offset != 0 {
 		return errors.New("reusable templates require a page-zero destination root")
 	}
+	if b.Profile == "ordinary-histogram" {
+		if b.Version != "goo.template/1" || b.Group != "none" || b.Baseline != "" || !HistogramViewEligible(q) {
+			return errors.New("numeric histogram templates require the pinned ungrouped page-zero binding without baseline")
+		}
+		if err := c.Validate(q); err != nil {
+			return err
+		}
+		if len(c.Children) != 2 || !slices.ContainsFunc(c.Children, func(child ViewCompositionChild) bool { return child.Histogram != nil }) || !slices.ContainsFunc(c.Children, func(child ViewCompositionChild) bool { return child.Records != nil }) {
+			return errors.New("numeric histogram templates require exactly histogram and records")
+		}
+		return nil
+	}
+	if slices.ContainsFunc(c.Children, func(child ViewCompositionChild) bool { return child.Histogram != nil }) {
+		return errors.New("histogram children require the ordinary-histogram template profile")
+	}
 	if b.Profile == "ordinary-summary" {
 		if b.Version != "goo.template/1" || b.Group != "none" || b.Baseline != "" {
 			return errors.New("population summary templates require the pinned ungrouped binding without baseline")
@@ -374,6 +389,15 @@ func expandAuthoredTemplate(source ExplorationView, q exploration.Query, baselin
 	for _, child := range source.Composition.Children {
 		if child.Timeline != nil && (q.BucketMS <= 0 || q.BucketMS != source.Queries[0].BucketMS) {
 			return ViewTemplateExpansion{}, errors.New("timeline requires the same explicit bucket width; configure the destination interval width and Run explicitly")
+		}
+	}
+	if source.Template.Profile == "ordinary-histogram" {
+		for _, child := range source.Composition.Children {
+			if child.Histogram != nil {
+				if _, err := ReuseHistogramViewDeclaration(*child.Histogram, source.Queries[0], q); err != nil {
+					return ViewTemplateExpansion{}, err
+				}
+			}
 		}
 	}
 	if err = source.Template.Validate(q, *source.Composition); err != nil {

@@ -5,7 +5,7 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-406. The [active roadmap](ROADMAP_2026_11_11_CHECKPOINT_405.md) owns execution order;
+407. The [active roadmap](ROADMAP_2026_11_11_CHECKPOINT_405.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
 below are research inputs, not additional backlogs or claims of vendor parity.
 
@@ -28,7 +28,7 @@ below are research inputs, not additional backlogs or claims of vendor parity.
 | Follow a gauge observation into records | [Logs/spans around an observation](GAUGE_OBSERVATION_CONTEXT.md) from ordinary Measurements, Services and Saved, explicit Run and held Back | A reported timestamp anchors clipped ±60s time association; no causal join, metric-label filter inference or new coverage claim. Saved retains immutable custody; service staging binds the accepted widget. |
 | Preserve and hand off an investigation | [Typed question steps](INVESTIGATION_STEPS.md), [immutable captures](GENERAL_CAPTURES.md), [six-family admission](CAPTURE_FAMILY_ADMISSION.md), notes and [linked evidence histories](LINKED_QUESTION_EVIDENCE.md) | Authored intent, source-read basis and custody receipt are separate. Refresh creates a successor; it does not rewrite prior evidence. |
 | Keep observations and annotate examples | [Kept observations](KEPT_OBSERVATIONS.md), [tags/notes](WORKBENCH_ANNOTATIONS.md) and [captured-record review](CAPTURE_RECORD_REVIEW.md) | Review targets one immutable occurrence. Labels are local judgments with explicit vocabularies, not ground truth or authenticated reviewer attribution. |
-| Author reusable scoped views | [View templates](AUTHORABLE_VIEW_TEMPLATES.md), [ungrouped summary templates](UNGROUPED_SUMMARY_TEMPLATES.md), [saved display declarations](SAVED_DISPLAY_DECLARATIONS.md), record tables/lists, timelines and declared facets | Compatibility is checked against the supplied data profile. Configuration is not captured data or permission to execute arbitrary code. |
+| Author reusable scoped views | [View templates](AUTHORABLE_VIEW_TEMPLATES.md), [ungrouped summary templates](UNGROUPED_SUMMARY_TEMPLATES.md), [numeric histogram views](AUTHORED_NUMERIC_HISTOGRAMS.md), [saved display declarations](SAVED_DISPLAY_DECLARATIONS.md), record tables/lists, timelines and declared facets | Compatibility is checked against the supplied data profile. Configuration is not captured data or permission to execute arbitrary code. |
 | Extend displays and automate workflows | [Framework-neutral components](UI_COMPONENTS.md), checked data/kind contracts and the [Go HTTP/OpenAPI contract](API.md) | Display components consume supplied data. Application owners retain reads, navigation, scope and publication authority. |
 
 ## Remaining boundaries
@@ -48,7 +48,8 @@ whole-population facts with no forced grouping. [Retained gauge context](RETAINE
 [Ungrouped summary templates](UNGROUPED_SUMMARY_TEMPLATES.md) (404) are also delivered;
 [Shared parameter encoding](CLICKHOUSE_PARAMETER_ENCODING.md) (405) is delivered.
 [Captured-record rates](CAPTURED_RECORD_RATES.md) (406) are delivered.
-Next: authored numeric histograms and passive grammar exports/examples. Delivered
+[Authored numeric histograms](AUTHORED_NUMERIC_HISTOGRAMS.md) (407) are delivered.
+Next: passive grammar exports/examples. Delivered
 capabilities and remaining boundaries are distinguished below.
 
 | Area | Remaining gap or decision | Current reference |

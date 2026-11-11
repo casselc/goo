@@ -23,9 +23,11 @@ exports/examples as the next finite cadence.
 [Captured-record rates](CAPTURED_RECORD_RATES.md) (406) supplies exact count/window
 or count/clipped-interval rates in fixed ordinary summaries and ungrouped timelines.
 Rates remain an explicit presentation choice. Grouped rates, live-buffer rates
-and rate comparisons are excluded. Authored numeric histograms (407) and passive
-grammar exports/examples (408) remain next. Design review noted nonblocking narrow
+and rate comparisons are excluded. [Authored numeric histograms](AUTHORED_NUMERIC_HISTOGRAMS.md)
+(407) is delivered; passive grammar exports/examples (408) remains next. Design review noted nonblocking narrow
 chart-label truncation and inherited stacked metadata for later product review.
+407 review also noted nested chart borders/headings and weak horizontal-scroll
+affordance on narrow screens. These are review candidates, not added execution tasks.
 
 390 delivers [data-first native composition](NATIVE_DATA_FIRST.md) across ordinary
 Measurements, service-expanded native data and saved evidence. Successful reads

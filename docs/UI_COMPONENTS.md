@@ -14,6 +14,11 @@ server-rendered HTML or an SPA. Application adapters own source reads, query sco
 navigation, subscriptions, retention and publication. Ordinary OTel data does not
 need a goo manifest to use the supplied record/attribute displays.
 
+[Authored numeric histograms](AUTHORED_NUMERIC_HISTOGRAMS.md) reuse `goo-chart`
+for Histogram/Table over one supplied dataset. The numeric-distribution adapter
+owns local display controls; the population owner retains the accepted read and
+existing range planner. Reusable declarations contain no bins or support facts.
+
 [Supplied count-pair composition](COUNT_PAIR_PRESENTATION.md) reuses the existing
 measure/group display elements in `comparison-visual.mjs`. The host supplies checked
 comparison models and operand facts, and retains acquisition, navigation and

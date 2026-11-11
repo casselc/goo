@@ -3,6 +3,8 @@
 The category-bound arm below is complemented by [ungrouped record/summary
 templates](UNGROUPED_SUMMARY_TEMPLATES.md) (404), with an explicit `group: none`
 binding and no aggregate or baseline. Both arms require page-zero roots.
+[Numeric histogram templates](AUTHORED_NUMERIC_HISTOGRAMS.md) use a separate
+`ordinary-histogram` profile, retaining exact numeric and bin compatibility.
 
 Use the existing view composition as the canvas: choose bars or a table, its
 measure, record columns, an optional [fixed timeline](TIMELINE_VIEW_TEMPLATES.md),

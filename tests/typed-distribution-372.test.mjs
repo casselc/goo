@@ -18,7 +18,7 @@ function setup(){const data=fixture(),host=node('section');document.body.append(
  globalThis.fetch=(path,options)=>new Promise(resolve=>pending.push({path,options,resolve}));
  const context=createActionContext({epoch:()=>1,active:()=>active,canStage:()=>active}),binding=context.bind({role:'current',slot:'histogram',epoch:1,snapshot:data.histogramDataset,question:data.question,coherent:true});
  const owner=mount(host,data,{open:(...args)=>opened.push(args),canAct:()=>active,resolveRange:intent=>context.histogram(binding,intent)});
- const section=host.children[0],chart=section.children[0],button=section.querySelectorAll('button')[0];
+ const section=host.children[0],chart=section.querySelector('goo-chart'),button=section.querySelectorAll('button')[0];
  const selected=clone(data.question);selected.where={all:[clone(data.question.where),{all:[{numeric:clone(data.question.numeric),op:'gte',value:from},{numeric:clone(data.question.numeric),op:'lt',value:to}]}]};
  const rest=clone(data.question);rest.where={all:[clone(data.question.where),{any:[...['missing','empty','invalid'].map(op=>({numeric:clone(data.question.numeric),op})),{numeric:clone(data.question.numeric),op:'lt',value:from},{numeric:clone(data.question.numeric),op:'gte',value:to}]}]};const project=q=>{const v=clone(q);delete v.numeric;delete v.numericHistogram;v.groupBy=[{kind:'column',key:'service'}];return v};const plan={binning:'powers-of-two',parent:data.question,selected,rest,fromBin,toBin,from,to,comparison:{selection:project(selected),baseline:project(rest)}};
  return{data,host,owner,section,chart,button,opened,pending,intent,plan,active:v=>active=v};}

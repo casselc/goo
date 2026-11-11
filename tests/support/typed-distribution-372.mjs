@@ -1,11 +1,18 @@
 import {mock} from 'node:test';
 import {actionVisible} from '../../ui/dom-visibility.mjs';
+// Element.append accepts DOM nodes or strings; text participates in content,
+// connectivity and containment but never matches element selectors.
+class TextNode{
+ constructor(value){this.textContent=String(value);this.parentElement=null;this.isConnected=false}
+ contains(element){return element===this}matches(){return false}querySelectorAll(){return []}
+}
+const appendNode=value=>value!==null&&typeof value==='object'?value:new TextNode(value);
 export class Element{
  constructor(tag='section'){this.tagName=tag;this.children=[];this.attributes={};this.dataset={};this._connected=false;this._text='';this.style={setProperty(key,value){this[key]=value}};this.listeners=new Map();this.className='';this.value='';this.classList={add:(name)=>{if(!this.className.split(' ').includes(name))this.className+=' '+name},toggle:(name,on)=>{this.className=this.className.split(' ').filter(value=>value&&value!==name).join(' ');if(on)this.classList.add(name)}}}
  get isConnected(){return this._connected}set isConnected(value){this._connected=value;for(const child of this.children)child.isConnected=value}
  set textContent(value){this._text=String(value??'')}get textContent(){return this._text+this.children.map(child=>child.textContent).join('')}
- append(...children){for(const child of children){if(child.parentElement)child.parentElement.children=child.parentElement.children.filter(item=>item!==child);child.parentElement=this;child.isConnected=this.isConnected;this.children.push(child)}}
- prepend(...children){this.append(...children);this.children=[...children,...this.children.filter(child=>!children.includes(child))]}
+ append(...children){for(const value of children){const child=appendNode(value);if(child.parentElement)child.parentElement.children=child.parentElement.children.filter(item=>item!==child);child.parentElement=this;child.isConnected=this.isConnected;this.children.push(child)}}
+ prepend(...values){const children=values.map(appendNode);this.append(...children);this.children=[...children,...this.children.filter(child=>!children.includes(child))]}
  replaceChildren(...children){for(const child of this.children){child.parentElement=null;child.isConnected=false}this.children=[];this._text='';this.append(...children)}
  contains(element){return element===this||this.children.some(child=>child.contains(element))}
  setAttribute(key,value){this.attributes[key]=String(value)}getAttribute(key){return this.attributes[key]??null}

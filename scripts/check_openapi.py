@@ -1123,6 +1123,62 @@ def check_native_view_discovery(spec):
     print(f'Native discovery: bounded closed metadata; {len(cases)} explicit native question schema outcomes checked (runtime enclosure remains Go/JS semantic admission)')
 
 
+def check_histogram_templates407(spec):
+    """Whole authored histogram carriers are finite; cross-binding equality is runtime-owned."""
+    cases=controls=0
+    for suffix in ('','Input'):
+        view=validator(spec,{'$ref':'#/components/schemas/workbench.ExplorationView'+suffix})
+        declaration=validator(spec,{'$ref':'#/components/schemas/workbench.HistogramViewDeclaration'+suffix})
+        request=validator(spec,{'$ref':'#/components/schemas/workbench.ViewTemplateExpansionRequestInput'})
+        for signal in ('logs','spans'):
+            for typ in ('int64','uint64','decimal64'):
+                binding={'field':{'kind':'attribute','key':'work.amount'},'type':typ,'unit':'{item}','parse':'canonical-decimal'}
+                if typ=='decimal64':binding['scale']=2
+                query={'signal':signal,'environment':'prod','fromMs':1000,'toMs':61000,'limit':7,'offset':0,
+                       'numeric':binding,'numericHistogram':{'binning':'powers-of-two'}}
+                scope={'kind':'record-query','signal':signal}
+                records={'version':'goo.view/1','scope':scope,'kind':{'name':'record-list','version':1},'display':{'columns':['utc','summary']}}
+                for kind in ('histogram','table'):
+                    histogram={'version':'goo.view/1','scope':scope,'kind':{'name':kind,'version':1},
+                               'display':{'category':'from','value':'count','title':'Captured amounts','requiresComplete':True}}
+                    source={'version':1,'title':'Captured amounts','queries':[query],
+                            'template':{'version':'goo.template/1','group':'none','profile':'ordinary-histogram'},
+                            'composition':{'version':'goo.composition/1','kind':{'name':'stack','version':1},'children':[{'histogram':histogram},{'records':records}]}}
+                    declaration.validate(histogram);view.validate(source)
+                    destination=copy.deepcopy(query);destination.update(environment='destination',fromMs=62000,toMs=122000,limit=3,bucketMs=10000)
+                    if signal=='spans':destination.update(summary='span-duration',spanStatus=True)
+                    request.validate({'source':source,'query':destination})
+                    expanded=copy.deepcopy(source);expanded['queries']=[destination]
+                    view.validate(expanded)
+                    # Bounded display controls never carry a bin observation or calculation.
+                    for change in ({'category':'to'},{'value':'numeric.mean'},{'normalization':'probability'},
+                                   {'scale':'population'},{'requiresComplete':None},{'query':'*'},
+                                   {'bins':[]},{'title':None}):
+                        bad=copy.deepcopy(histogram);bad['display'].update(change)
+                        assert not declaration.is_valid(bad),('invalid histogram display accepted',change)
+                        controls+=1
+                    for changes in ({'offset':1},{'groupBy':[{'kind':'column','key':'service'}]},
+                                    {'groupTimeSeries':True},{'numeric':None},{'numericHistogram':None},
+                                    {'numericHistogram':{'binning':'adaptive'}}):
+                        bad=copy.deepcopy(source);bad['queries'][0].update(changes)
+                        assert not view.is_valid(bad),('unsupported histogram question accepted',changes)
+                        bad_request={'source':source,'query':{**destination,**changes}}
+                        assert not request.is_valid(bad_request),('unsupported histogram destination accepted',changes)
+                        controls+=2
+                    for changes in ({'group':'destination'},{'profile':'ordinary-summary'},{'baseline':'destination'}):
+                        bad=copy.deepcopy(source);bad['template'].update(changes)
+                        assert not view.is_valid(bad),('foreign histogram binding accepted',changes)
+                        controls+=1
+                    for added in ({'summary':{'version':'goo.view/1','scope':scope,'kind':{'name':'measure-summary','version':1},'display':{'fields':['count']}}},
+                                  {'histogram':histogram}):
+                        bad=copy.deepcopy(source);bad['composition']['children'].append(added)
+                        assert not view.is_valid(bad),'histogram acquired another role'
+                        controls+=1
+                    assert not request.is_valid({'source':source,'query':destination,'baselineCapture':'a'*64})
+                    controls+=1;cases+=1
+    print(f'Histogram templates407: {cases} whole output/Input carriers and {controls} shape/profile controls pass; exact numeric-binding/binning equality remains Go/JS-owned')
+
+
 def check_record_rates406(spec):
     """Rates retain their own closed count/exposure contract and ordinary scope."""
     field={'key':'record.rate','label':'Captured log records/s','type':'rational','unit':'records/s','nullable':True,
@@ -1457,6 +1513,7 @@ def check(spec):
     check_current_rpc_template_bindings(spec)
     check_summary_template_bindings404(spec)
     check_record_rates406(spec)
+    check_histogram_templates407(spec)
     check_native_view_config(spec)
     check_native_view_discovery(spec)
     check_record_span_waterfall(spec)

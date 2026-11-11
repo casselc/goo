@@ -1,5 +1,9 @@
 # Exact numeric distributions
 
+[Authored numeric distributions](AUTHORED_NUMERIC_HISTOGRAMS.md) can preserve
+Histogram/Table and completeness requirements beside records, with checked
+presentation reuse over a compatible destination question.
+
 270 adds [canonical aligned comparisons](SCOPED_HISTOGRAM_COMPARISONS.md),
 preserving captured-record percentages and adding a separate valid-value share
 scale. Each side retains its own immutable scope, support and capture time.

@@ -49567,21 +49567,132 @@
                 }
               },
               "else": {
-                "properties": {
-                  "composition": {
-                    "properties": {
-                      "children": {
-                        "contains": {
-                          "required": [
-                            "aggregate"
-                          ]
+                "if": {
+                  "required": [
+                    "template"
+                  ],
+                  "properties": {
+                    "template": {
+                      "required": [
+                        "group",
+                        "profile"
+                      ],
+                      "properties": {
+                        "group": {
+                          "const": "none"
                         },
-                        "minContains": 1,
-                        "not": {
+                        "profile": {
+                          "const": "ordinary-histogram"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "composition": {
+                      "properties": {
+                        "children": {
+                          "minItems": 2,
+                          "maxItems": 2,
+                          "allOf": [
+                            {
+                              "contains": {
+                                "required": [
+                                  "histogram"
+                                ]
+                              },
+                              "minContains": 1,
+                              "maxContains": 1
+                            },
+                            {
+                              "contains": {
+                                "required": [
+                                  "records"
+                                ]
+                              },
+                              "minContains": 1,
+                              "maxContains": 1
+                            }
+                          ],
+                          "items": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "histogram"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "records"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "queries": {
+                      "items": {
+                        "required": [
+                          "numeric",
+                          "numericHistogram"
+                        ],
+                        "properties": {
+                          "signal": {
+                            "enum": [
+                              "logs",
+                              "spans"
+                            ]
+                          },
+                          "groupBy": {
+                            "maxItems": 0
+                          },
+                          "numeric": {
+                            "type": "object"
+                          },
+                          "numericHistogram": {
+                            "type": "object",
+                            "required": [
+                              "binning"
+                            ],
+                            "properties": {
+                              "binning": {
+                                "const": "powers-of-two"
+                              }
+                            }
+                          },
+                          "reportedEdge": {
+                            "type": "null"
+                          },
+                          "groupTimeSeries": {
+                            "const": false
+                          },
+                          "offset": {
+                            "const": 0
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "composition": {
+                      "properties": {
+                        "children": {
                           "contains": {
                             "required": [
-                              "summary"
+                              "aggregate"
                             ]
+                          },
+                          "minContains": 1,
+                          "not": {
+                            "contains": {
+                              "required": [
+                                "summary"
+                              ]
+                            }
                           }
                         }
                       }
@@ -49987,6 +50098,72 @@
                     "children": {
                       "contains": {
                         "required": [
+                          "histogram"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "required": [
+                      "numeric",
+                      "numericHistogram"
+                    ],
+                    "properties": {
+                      "signal": {
+                        "enum": [
+                          "logs",
+                          "spans"
+                        ]
+                      },
+                      "groupBy": {
+                        "maxItems": 0
+                      },
+                      "numeric": {
+                        "type": "object"
+                      },
+                      "numericHistogram": {
+                        "type": "object",
+                        "required": [
+                          "binning"
+                        ],
+                        "properties": {
+                          "binning": {
+                            "const": "powers-of-two"
+                          }
+                        }
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      },
+                      "offset": {
+                        "const": 0
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
                           "summary"
                         ]
                       }
@@ -50348,6 +50525,11 @@
                             {
                               "required": [
                                 "summary"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "histogram"
                               ]
                             },
                             {
@@ -50826,21 +51008,132 @@
                 }
               },
               "else": {
-                "properties": {
-                  "composition": {
-                    "properties": {
-                      "children": {
-                        "contains": {
-                          "required": [
-                            "aggregate"
-                          ]
+                "if": {
+                  "required": [
+                    "template"
+                  ],
+                  "properties": {
+                    "template": {
+                      "required": [
+                        "group",
+                        "profile"
+                      ],
+                      "properties": {
+                        "group": {
+                          "const": "none"
                         },
-                        "minContains": 1,
-                        "not": {
+                        "profile": {
+                          "const": "ordinary-histogram"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "composition": {
+                      "properties": {
+                        "children": {
+                          "minItems": 2,
+                          "maxItems": 2,
+                          "allOf": [
+                            {
+                              "contains": {
+                                "required": [
+                                  "histogram"
+                                ]
+                              },
+                              "minContains": 1,
+                              "maxContains": 1
+                            },
+                            {
+                              "contains": {
+                                "required": [
+                                  "records"
+                                ]
+                              },
+                              "minContains": 1,
+                              "maxContains": 1
+                            }
+                          ],
+                          "items": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "histogram"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "records"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "queries": {
+                      "items": {
+                        "required": [
+                          "numeric",
+                          "numericHistogram"
+                        ],
+                        "properties": {
+                          "signal": {
+                            "enum": [
+                              "logs",
+                              "spans"
+                            ]
+                          },
+                          "groupBy": {
+                            "maxItems": 0
+                          },
+                          "numeric": {
+                            "type": "object"
+                          },
+                          "numericHistogram": {
+                            "type": "object",
+                            "required": [
+                              "binning"
+                            ],
+                            "properties": {
+                              "binning": {
+                                "const": "powers-of-two"
+                              }
+                            }
+                          },
+                          "reportedEdge": {
+                            "type": "null"
+                          },
+                          "groupTimeSeries": {
+                            "const": false
+                          },
+                          "offset": {
+                            "const": 0
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "composition": {
+                      "properties": {
+                        "children": {
                           "contains": {
                             "required": [
-                              "summary"
+                              "aggregate"
                             ]
+                          },
+                          "minContains": 1,
+                          "not": {
+                            "contains": {
+                              "required": [
+                                "summary"
+                              ]
+                            }
                           }
                         }
                       }
@@ -51246,6 +51539,72 @@
                     "children": {
                       "contains": {
                         "required": [
+                          "histogram"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "required": [
+                      "numeric",
+                      "numericHistogram"
+                    ],
+                    "properties": {
+                      "signal": {
+                        "enum": [
+                          "logs",
+                          "spans"
+                        ]
+                      },
+                      "groupBy": {
+                        "maxItems": 0
+                      },
+                      "numeric": {
+                        "type": "object"
+                      },
+                      "numericHistogram": {
+                        "type": "object",
+                        "required": [
+                          "binning"
+                        ],
+                        "properties": {
+                          "binning": {
+                            "const": "powers-of-two"
+                          }
+                        }
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      },
+                      "offset": {
+                        "const": 0
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
                           "summary"
                         ]
                       }
@@ -51607,6 +51966,11 @@
                             {
                               "required": [
                                 "summary"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "histogram"
                               ]
                             },
                             {
@@ -52016,6 +52380,200 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.FacetViewKind",
+        "required": [
+          "name",
+          "version"
+        ]
+      },
+      "workbench.HistogramViewDeclaration": {
+        "properties": {
+          "display": {
+            "$ref": "#/components/schemas/workbench.HistogramViewDisplay",
+            "type": "object"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/workbench.HistogramViewKind",
+            "type": "object"
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "signal"
+            ],
+            "properties": {
+              "kind": {
+                "const": "record-query"
+              },
+              "signal": {
+                "enum": [
+                  "logs",
+                  "spans"
+                ]
+              }
+            }
+          },
+          "version": {
+            "const": "goo.view/1"
+          }
+        },
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "display"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.HistogramViewDeclaration",
+        "additionalProperties": false,
+        "description": "Supplied numeric powers-of-two histogram or exact-bin Table beside records. Raw counts only; no normalization, bins, values, source lease or selection authority is stored. Parent query owns the exact numeric binding and binning, and explicit Run reads evidence."
+      },
+      "workbench.HistogramViewDeclarationInput": {
+        "additionalProperties": false,
+        "properties": {
+          "display": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.HistogramViewDisplayInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.HistogramViewKindInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "signal"
+            ],
+            "properties": {
+              "kind": {
+                "const": "record-query"
+              },
+              "signal": {
+                "enum": [
+                  "logs",
+                  "spans"
+                ]
+              }
+            }
+          },
+          "version": {
+            "const": "goo.view/1"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.HistogramViewDeclaration",
+        "required": [
+          "version",
+          "scope",
+          "kind",
+          "display"
+        ],
+        "description": "Supplied numeric powers-of-two histogram or exact-bin Table beside records. Raw counts only; no normalization, bins, values, source lease or selection authority is stored. Parent query owns the exact numeric binding and binning, and explicit Run reads evidence."
+      },
+      "workbench.HistogramViewDisplay": {
+        "properties": {
+          "category": {
+            "const": "from"
+          },
+          "requiresComplete": {
+            "type": "boolean",
+            "description": "When true, display requires the supplied bins completeness witness; configuration never supplies that witness."
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120,
+            "description": "At most120 UTF-8 bytes, valid Unicode with no controls; runtime enforces byte budget and nonblank nonempty text."
+          },
+          "value": {
+            "const": "count"
+          }
+        },
+        "required": [
+          "category",
+          "value"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.HistogramViewDisplay",
+        "additionalProperties": false
+      },
+      "workbench.HistogramViewDisplayInput": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "const": "from"
+          },
+          "requiresComplete": {
+            "type": "boolean",
+            "description": "When true, display requires the supplied bins completeness witness; configuration never supplies that witness."
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 120,
+            "description": "At most120 UTF-8 bytes, valid Unicode with no controls; runtime enforces byte budget and nonblank nonempty text."
+          },
+          "value": {
+            "const": "count"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.HistogramViewDisplay",
+        "required": [
+          "category",
+          "value"
+        ]
+      },
+      "workbench.HistogramViewKind": {
+        "properties": {
+          "name": {
+            "enum": [
+              "histogram",
+              "table"
+            ]
+          },
+          "version": {
+            "const": 1
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.HistogramViewKind",
+        "additionalProperties": false
+      },
+      "workbench.HistogramViewKindInput": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "enum": [
+              "histogram",
+              "table"
+            ]
+          },
+          "version": {
+            "const": 1
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.HistogramViewKind",
         "required": [
           "name",
           "version"
@@ -55642,6 +56200,15 @@
               },
               {
                 "contains": {
+                  "required": [
+                    "histogram"
+                  ]
+                },
+                "minContains": 0,
+                "maxContains": 1
+              },
+              {
+                "contains": {
                   "not": {
                     "required": [
                       "facet"
@@ -55665,6 +56232,44 @@
                 },
                 "else": {
                   "oneOf": [
+                    {
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "allOf": [
+                        {
+                          "contains": {
+                            "required": [
+                              "histogram"
+                            ]
+                          },
+                          "minContains": 1,
+                          "maxContains": 1
+                        },
+                        {
+                          "contains": {
+                            "required": [
+                              "records"
+                            ]
+                          },
+                          "minContains": 1,
+                          "maxContains": 1
+                        }
+                      ],
+                      "items": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "histogram"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "records"
+                            ]
+                          }
+                        ]
+                      }
+                    },
                     {
                       "minItems": 2,
                       "maxItems": 4,
@@ -55802,6 +56407,53 @@
                 "if": {
                   "contains": {
                     "required": [
+                      "histogram"
+                    ]
+                  }
+                },
+                "then": {
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "allOf": [
+                    {
+                      "contains": {
+                        "required": [
+                          "histogram"
+                        ]
+                      },
+                      "minContains": 1,
+                      "maxContains": 1
+                    },
+                    {
+                      "contains": {
+                        "required": [
+                          "records"
+                        ]
+                      },
+                      "minContains": 1,
+                      "maxContains": 1
+                    }
+                  ],
+                  "items": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "histogram"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "records"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "contains": {
+                    "required": [
                       "facet"
                     ]
                   }
@@ -55864,7 +56516,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ViewComposition",
         "additionalProperties": false,
-        "description": "One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison and facet within six unique roles, including an optional compact population summary. A facet is an explicit field control, not a visible data child. It may accompany a fresh fixed-query count comparison, validated against both operands; captured comparisons remain outside that combination. No rows, subscriptions or runtime guarantees are stored."
+        "description": "One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison and facet within six unique roles, including an optional compact population summary. A facet is an explicit field control, not a visible data child. It may accompany a fresh fixed-query count comparison, validated against both operands; captured comparisons remain outside that combination. A separate histogram plus records pair consumes supplied exact numeric bins. No rows, subscriptions or runtime guarantees are stored."
       },
       "workbench.ViewCompositionChild": {
         "properties": {
@@ -55903,6 +56555,17 @@
           },
           "hidden": {
             "type": "boolean"
+          },
+          "histogram": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.HistogramViewDeclaration"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
           },
           "records": {
             "anyOf": [
@@ -55973,6 +56636,11 @@
                   "required": [
                     "summary"
                   ]
+                },
+                {
+                  "required": [
+                    "histogram"
+                  ]
                 }
               ]
             }
@@ -56006,6 +56674,11 @@
                 {
                   "required": [
                     "summary"
+                  ]
+                },
+                {
+                  "required": [
+                    "histogram"
                   ]
                 }
               ]
@@ -56041,6 +56714,11 @@
                   "required": [
                     "summary"
                   ]
+                },
+                {
+                  "required": [
+                    "histogram"
+                  ]
                 }
               ]
             }
@@ -56074,6 +56752,11 @@
                 {
                   "required": [
                     "summary"
+                  ]
+                },
+                {
+                  "required": [
+                    "histogram"
                   ]
                 }
               ]
@@ -56109,6 +56792,11 @@
                   "required": [
                     "summary"
                   ]
+                },
+                {
+                  "required": [
+                    "histogram"
+                  ]
                 }
               ]
             }
@@ -56142,6 +56830,50 @@
                 {
                   "required": [
                     "facet"
+                  ]
+                },
+                {
+                  "required": [
+                    "histogram"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "histogram"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "aggregate"
+                  ]
+                },
+                {
+                  "required": [
+                    "records"
+                  ]
+                },
+                {
+                  "required": [
+                    "timeline"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "facet"
+                  ]
+                },
+                {
+                  "required": [
+                    "summary"
                   ]
                 }
               ]
@@ -56216,6 +56948,24 @@
               }
             ],
             "type": "boolean"
+          },
+          "histogram": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.HistogramViewDeclarationInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "type": "object"
           },
           "records": {
             "anyOf": [
@@ -56305,6 +57055,11 @@
                   "required": [
                     "summary"
                   ]
+                },
+                {
+                  "required": [
+                    "histogram"
+                  ]
                 }
               ]
             }
@@ -56338,6 +57093,11 @@
                 {
                   "required": [
                     "summary"
+                  ]
+                },
+                {
+                  "required": [
+                    "histogram"
                   ]
                 }
               ]
@@ -56373,6 +57133,11 @@
                   "required": [
                     "summary"
                   ]
+                },
+                {
+                  "required": [
+                    "histogram"
+                  ]
                 }
               ]
             }
@@ -56406,6 +57171,11 @@
                 {
                   "required": [
                     "summary"
+                  ]
+                },
+                {
+                  "required": [
+                    "histogram"
                   ]
                 }
               ]
@@ -56441,6 +57211,11 @@
                   "required": [
                     "summary"
                   ]
+                },
+                {
+                  "required": [
+                    "histogram"
+                  ]
                 }
               ]
             }
@@ -56474,6 +57249,50 @@
                 {
                   "required": [
                     "facet"
+                  ]
+                },
+                {
+                  "required": [
+                    "histogram"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "required": [
+              "histogram"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "aggregate"
+                  ]
+                },
+                {
+                  "required": [
+                    "records"
+                  ]
+                },
+                {
+                  "required": [
+                    "timeline"
+                  ]
+                },
+                {
+                  "required": [
+                    "comparison"
+                  ]
+                },
+                {
+                  "required": [
+                    "facet"
+                  ]
+                },
+                {
+                  "required": [
+                    "summary"
                   ]
                 }
               ]
@@ -56567,6 +57386,15 @@
               },
               {
                 "contains": {
+                  "required": [
+                    "histogram"
+                  ]
+                },
+                "minContains": 0,
+                "maxContains": 1
+              },
+              {
+                "contains": {
                   "not": {
                     "required": [
                       "facet"
@@ -56590,6 +57418,44 @@
                 },
                 "else": {
                   "oneOf": [
+                    {
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "allOf": [
+                        {
+                          "contains": {
+                            "required": [
+                              "histogram"
+                            ]
+                          },
+                          "minContains": 1,
+                          "maxContains": 1
+                        },
+                        {
+                          "contains": {
+                            "required": [
+                              "records"
+                            ]
+                          },
+                          "minContains": 1,
+                          "maxContains": 1
+                        }
+                      ],
+                      "items": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "histogram"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "records"
+                            ]
+                          }
+                        ]
+                      }
+                    },
                     {
                       "minItems": 2,
                       "maxItems": 4,
@@ -56727,6 +57593,53 @@
                 "if": {
                   "contains": {
                     "required": [
+                      "histogram"
+                    ]
+                  }
+                },
+                "then": {
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "allOf": [
+                    {
+                      "contains": {
+                        "required": [
+                          "histogram"
+                        ]
+                      },
+                      "minContains": 1,
+                      "maxContains": 1
+                    },
+                    {
+                      "contains": {
+                        "required": [
+                          "records"
+                        ]
+                      },
+                      "minContains": 1,
+                      "maxContains": 1
+                    }
+                  ],
+                  "items": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "histogram"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "records"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "contains": {
+                    "required": [
                       "facet"
                     ]
                   }
@@ -56802,7 +57715,7 @@
           "kind",
           "children"
         ],
-        "description": "One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison and facet within six unique roles, including an optional compact population summary. A facet is an explicit field control, not a visible data child. It may accompany a fresh fixed-query count comparison, validated against both operands; captured comparisons remain outside that combination. No rows, subscriptions or runtime guarantees are stored."
+        "description": "One fixed record query supplies visible records with an optional categorical facet, or aggregate and records with optional timeline, comparison and facet within six unique roles, including an optional compact population summary. A facet is an explicit field control, not a visible data child. It may accompany a fresh fixed-query count comparison, validated against both operands; captured comparisons remain outside that combination. A separate histogram plus records pair consumes supplied exact numeric bins. No rows, subscriptions or runtime guarantees are stored."
       },
       "workbench.ViewDeclaration": {
         "properties": {
@@ -57309,9 +58222,10 @@
               "otel.db-client",
               "otel.http-server",
               "otel.rpc-server-current",
-              "ordinary-summary"
+              "ordinary-summary",
+              "ordinary-histogram"
             ],
-            "description": "Checked destination role binding. ordinary-summary requires group none and exactly summary plus records over ordinary ungrouped page-zero nonnumeric queries, with no baseline. Category profiles retain group destination. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read."
+            "description": "Checked destination role binding. ordinary-summary requires group none and exactly summary plus records over ordinary ungrouped page-zero nonnumeric queries, with no baseline. ordinary-histogram requires group none and exactly histogram plus records over page-zero ungrouped numeric powers-of-two queries; exact numeric binding and binning compatibility remains runtime-owned. Category profiles retain group destination. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read."
           },
           "version": {
             "type": "string",
@@ -57348,7 +58262,10 @@
                 "const": "none"
               },
               "profile": {
-                "const": "ordinary-summary"
+                "enum": [
+                  "ordinary-summary",
+                  "ordinary-histogram"
+                ]
               },
               "baseline": false
             }
@@ -57389,9 +58306,10 @@
               "otel.db-client",
               "otel.http-server",
               "otel.rpc-server-current",
-              "ordinary-summary"
+              "ordinary-summary",
+              "ordinary-histogram"
             ],
-            "description": "Checked destination role binding. ordinary-summary requires group none and exactly summary plus records over ordinary ungrouped page-zero nonnumeric queries, with no baseline. Category profiles retain group destination. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read."
+            "description": "Checked destination role binding. ordinary-summary requires group none and exactly summary plus records over ordinary ungrouped page-zero nonnumeric queries, with no baseline. ordinary-histogram requires group none and exactly histogram plus records over page-zero ungrouped numeric powers-of-two queries; exact numeric binding and binning compatibility remains runtime-owned. Category profiles retain group destination. Current RPC requires exact Server kind and nonempty rpc.system.name; rpc.method may be missing or empty. Expansion preserves destination scope and performs no telemetry read."
           },
           "version": {
             "anyOf": [
@@ -57429,7 +58347,10 @@
                 "const": "none"
               },
               "profile": {
-                "const": "ordinary-summary"
+                "enum": [
+                  "ordinary-summary",
+                  "ordinary-histogram"
+                ]
               },
               "baseline": false
             }
@@ -57719,6 +58640,80 @@
                         "",
                         "span-duration"
                       ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "source"
+              ],
+              "properties": {
+                "source": {
+                  "required": [
+                    "template"
+                  ],
+                  "properties": {
+                    "template": {
+                      "required": [
+                        "group",
+                        "profile"
+                      ],
+                      "properties": {
+                        "group": {
+                          "const": "none"
+                        },
+                        "profile": {
+                          "const": "ordinary-histogram"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "query": {
+                  "required": [
+                    "numeric",
+                    "numericHistogram"
+                  ],
+                  "properties": {
+                    "signal": {
+                      "enum": [
+                        "logs",
+                        "spans"
+                      ]
+                    },
+                    "groupBy": {
+                      "maxItems": 0
+                    },
+                    "numeric": {
+                      "type": "object"
+                    },
+                    "numericHistogram": {
+                      "type": "object",
+                      "required": [
+                        "binning"
+                      ],
+                      "properties": {
+                        "binning": {
+                          "const": "powers-of-two"
+                        }
+                      }
+                    },
+                    "reportedEdge": {
+                      "type": "null"
+                    },
+                    "groupTimeSeries": {
+                      "const": false
+                    },
+                    "offset": {
+                      "const": 0
                     }
                   }
                 }

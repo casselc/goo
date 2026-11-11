@@ -136,6 +136,8 @@ beside the default table, with
 without inventing a grouping. Inspect/Apply keeps the destination query; Run is explicit.
 [Captured-record rates](docs/CAPTURED_RECORD_RATES.md) are an optional summary or
 ungrouped timeline measure, using exact counts and the actual window or bucket duration.
+[Reuse numeric histograms beside records](docs/AUTHORED_NUMERIC_HISTOGRAMS.md)
+with Histogram/Table views and exact numeric-binding compatibility.
 [Open an inspected trace as a view](docs/TRACE_AS_VIEW.md) to edit and save its presentation.
 [Add a breakdown](docs/ADD_BREAKDOWN.md) to grow a records view into a chart, then
 [compare a selected cohort](docs/AUTHORED_COHORTS.md) with its held parent or rest.

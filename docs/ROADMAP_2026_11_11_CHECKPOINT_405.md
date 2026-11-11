@@ -17,7 +17,7 @@ Implemented: [captured-record rates](CAPTURED_RECORD_RATES.md) now have a distin
 typed field and exact count/exposure facts in fixed ordinary summaries and
 ungrouped timelines. Existing defaults remain unchanged. See the executable
 [journey](../journeys/406-record-rate-storyboard.md) and [validation](../VALIDATION.md).
-The next development item is **407**; keep **408** as the consolidation step.
+407 is also implemented below; **408** is the next consolidation step.
 
 User task: “How quickly are these log/span records appearing, and when did that
 activity change?”
@@ -45,6 +45,13 @@ raw count/window oracles and real desktop/narrow gestures; refresh affected acto
 and ownership checks rather than creating a separate source owner.
 
 ## 407 — depth: author numeric histograms beside records
+
+Implemented: [authored numeric histograms](AUTHORED_NUMERIC_HISTOGRAMS.md) now
+preserve Histogram/Table and completeness requirements beside records, with an
+exact numeric/bin-bound template profile. Current-source range planning and held
+return remain separate from local display changes. See the executable
+[journey](../journeys/407-authored-histogram-storyboard.md) and [validation](../VALIDATION.md).
+Proceed to **408**, then the planned whole-product review.
 
 User task: “Keep this numeric distribution and its records as a reusable view,
 then apply the presentation to another compatible population.”

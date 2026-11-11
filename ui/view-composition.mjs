@@ -4,6 +4,7 @@ import * as Aggregate from './view-declaration.mjs';
 import * as Timeline from './timeline-declaration.mjs';
 import * as Facet from './facet-declaration.mjs';
 import * as Summary from './summary-declaration.mjs';
+import * as Histogram from './histogram-declaration.mjs';
 import {selectionQueries} from './categorical-selection.mjs';
 import {validateRecordQuestion} from './question-protocol.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
@@ -23,8 +24,9 @@ export function validate(value,q){
  validateRecordQuestion(q);closed(value,['version','kind','children']);closed(value.kind,['name','version']);
  if(value.version!=='goo.composition/1'||value.kind.name!=='stack'||value.kind.version!==1||!Array.isArray(value.children)||![1,2,3,4,5,6].includes(value.children.length))throw Error('Use a pinned record composition with one to six unique roles.');
  const roles=new Set();let visible=false;
- for(const child of value.children){closed(child,['aggregate','records','timeline','comparison','facet','summary','hidden']);const names=['aggregate','records','timeline','comparison','facet','summary'].filter(name=>Object.hasOwn(child,name));if(names.length!==1||child.hidden!==undefined&&typeof child.hidden!=='boolean')throw Error('Choose exactly one typed role per composition child.');const name=names[0];if(roles.has(name))throw Error('Use each composition role once.');roles.add(name);visible ||= name!=='facet'&&child.hidden!==true;if(name==='aggregate')Aggregate.validate(child.aggregate,q);else if(name==='timeline')Timeline.validate(child.timeline,q);else if(name==='comparison')CapturedCount.validate(child.comparison,q);else if(name==='facet')Facet.validate(child.facet,q);else if(name==='summary')Summary.validate(child.summary,q);else recordDisplay(child.records,q)}
+ for(const child of value.children){closed(child,['aggregate','records','timeline','comparison','facet','summary','histogram','hidden']);const names=['aggregate','records','timeline','comparison','facet','summary','histogram'].filter(name=>Object.hasOwn(child,name));if(names.length!==1||child.hidden!==undefined&&typeof child.hidden!=='boolean')throw Error('Choose exactly one typed role per composition child.');const name=names[0];if(roles.has(name))throw Error('Use each composition role once.');roles.add(name);visible ||= name!=='facet'&&child.hidden!==true;if(name==='aggregate')Aggregate.validate(child.aggregate,q);else if(name==='timeline')Timeline.validate(child.timeline,q);else if(name==='comparison')CapturedCount.validate(child.comparison,q);else if(name==='facet')Facet.validate(child.facet,q);else if(name==='summary')Summary.validate(child.summary,q);else if(name==='histogram')Histogram.validate(child.histogram,q);else recordDisplay(child.records,q)}
  if(!roles.has('records'))throw Error('Keep a records child.');
+ if(roles.has('histogram')){if(roles.size!==2||value.children.some(child=>child.hidden===true))throw Error('Keep exactly visible histogram and records children.');const next=structuredClone(value);for(const child of next.children)if(child.histogram)child.histogram=Histogram.validate(child.histogram,q);return next;}
  const groupedTimeline=q.groupTimeSeries&&roles.size===2&&roles.has('timeline')&&roles.has('records');
  if(q.groupTimeSeries&&!groupedTimeline)throw Error('Grouped count views require only timeline and records.');
  if(roles.has('summary')&&roles.has('comparison'))throw Error('Population summary cannot share a comparison composition.');
@@ -38,22 +40,23 @@ export const aggregate=value=>value?.children?.find(child=>child.aggregate)?.agg
 export const records=value=>value?.children?.find(child=>child.records)?.records;
 export const timeline=value=>value?.children?.find(child=>child.timeline)?.timeline;
 export const comparison=value=>value?.children?.find(child=>child.comparison)?.comparison;
+export const histogram=value=>value?.children?.find(child=>child.histogram)?.histogram;
 export const summary=value=>value?.children?.find(child=>child.summary)?.summary;
 export const facet=value=>value?.children?.find(child=>child.facet)?.facet;
-export const role=child=>child.aggregate?'aggregate':child.timeline?'timeline':child.comparison?'comparison':child.facet?'facet':child.summary?'summary':'records';
+export const role=child=>child.aggregate?'aggregate':child.timeline?'timeline':child.comparison?'comparison':child.facet?'facet':child.summary?'summary':child.histogram?'histogram':'records';
 export const visible=(value,name)=>!!value.children.find(child=>role(child)===name&&!child.hidden);
 export function create(q,declaration,options={columns:['utc','service','summary','context']}){return validate({version:'goo.composition/1',kind:{name:'stack',version:1},children:[{aggregate:declaration},{records:{version:'goo.view/1',scope:{kind:'record-query',signal:q.signal},kind:{name:'record-table',version:1},display:structuredClone(options)}}]},q)}
 export function createRecords(q,options={columns:['utc','service','summary','context']}){return validate({version:'goo.composition/1',kind:{name:'stack',version:1},children:[{records:{version:'goo.view/1',scope:{kind:'record-query',signal:q.signal},kind:{name:'record-table',version:1},display:structuredClone(options)}}]},q)}
 export function setAggregate(value,next,q){return validate({...value,children:value.children.map(child=>child.aggregate?{...child,aggregate:next}:child)},q)}
 export function setRecords(value,next,q){return validate({...value,children:value.children.map(child=>child.records?{...child,records:{...child.records,display:next}}:child)},q)}
 export function setRecordKind(value,name,q){return validate({...value,children:value.children.map(child=>child.records?{...child,records:{...child.records,kind:{name,version:1}}}:child)},q)}
-export function setHidden(value,name,hidden,q){if(!['aggregate','records','timeline','comparison','facet','summary'].includes(name))throw Error('Choose an existing composition role.');return validate({...value,children:value.children.map(child=>role(child)===name?{...child,hidden}:child)},q)}
+export function setHidden(value,name,hidden,q){if(!['aggregate','records','timeline','comparison','facet','summary','histogram'].includes(name))throw Error('Choose an existing composition role.');return validate({...value,children:value.children.map(child=>role(child)===name?{...child,hidden}:child)},q)}
 export function reverse(value,q){return validate({...value,children:[...value.children].reverse()},q)}
 // Compatibility concerns configuration only; current inputs and paging stay with
 // the host. Browser metadata checks do not replace authoritative Go compilation.
 export function reuse(value,source,destination){
  const next=validate(value,source);if(CapturedCount.queryVariant(comparison(next)))throw Error('Fixed comparison views must open their original questions; presentation Apply is unavailable.');if(comparison(next))CapturedCount.compatible(source,destination);
- next.children=next.children.map(child=>child.aggregate?{...child,aggregate:Aggregate.reuse(child.aggregate,source,destination)}:child.timeline?{...child,timeline:Timeline.reuse(child.timeline,source,destination)}:child.comparison?{...child,comparison:CapturedCount.validate({...child.comparison,scope:{kind:'record-query',signal:destination.signal}},destination)}:child.facet?{...child,facet:Facet.validate(child.facet,destination)}:child.summary?{...child,summary:Summary.reuse(child.summary,source,destination)}:{...child,records:recordDisplay(child.records,destination)});
+ next.children=next.children.map(child=>child.histogram?{...child,histogram:Histogram.reuse(child.histogram,source,destination)}:child.aggregate?{...child,aggregate:Aggregate.reuse(child.aggregate,source,destination)}:child.timeline?{...child,timeline:Timeline.reuse(child.timeline,source,destination)}:child.comparison?{...child,comparison:CapturedCount.validate({...child.comparison,scope:{kind:'record-query',signal:destination.signal}},destination)}:child.facet?{...child,facet:Facet.validate(child.facet,destination)}:child.summary?{...child,summary:Summary.reuse(child.summary,source,destination)}:{...child,records:recordDisplay(child.records,destination)});
  return validate(next,destination);
 }
 export function declaration(view,signal){const found=aggregate(view?.composition);return found?.scope.signal===signal?found:view?.displays?.[signal]}
@@ -103,3 +106,6 @@ export function narrowFixedComparison(value,q,items){
 
 export function setSummary(value,next,q){return validate({...value,children:next?(summary(value)?value.children.map(child=>child.summary?{...child,summary:next}:child):[{summary:next},...value.children]):value.children.filter(child=>!child.summary)},q)}
 export function createSummary(q,options={columns:['utc','service','summary','context']}){return validate({version:'goo.composition/1',kind:{name:'stack',version:1},children:[{summary:Summary.create(q)},{records:{version:'goo.view/1',scope:{kind:'record-query',signal:q.signal},kind:{name:'record-table',version:1},display:structuredClone(options)}}]},q)}
+
+export function createHistogram(q,declaration=Histogram.create(q),options={columns:['utc','service','summary','context']}){return validate({version:'goo.composition/1',kind:{name:'stack',version:1},children:[{histogram:declaration},{records:{version:'goo.view/1',scope:{kind:'record-query',signal:q.signal},kind:{name:'record-table',version:1},display:structuredClone(options)}}]},q)}
+export function setHistogram(value,next,q){return validate({...value,children:value.children.map(child=>child.histogram?{...child,histogram:next}:child)},q)}
