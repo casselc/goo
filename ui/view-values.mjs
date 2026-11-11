@@ -25,6 +25,10 @@ function rounded(n,d){
   return (remainder?'≈ ':'')+(negative?'−':'')+String(scaled/1000n)+(digits?'.'+digits:'');
 }
 
+export const isRate=field=>field?.aggregation?.family==='rate'&&field.aggregation.kind==='records-per-second';
+// Rates remain an explicit presentation choice, even when supplied by the source.
+export const defaultSummaryFields=fields=>fields.filter(field=>(field.type==='number'||field.type==='rational')&&!isRate(field));
+export function rateContextText(facts){return facts?`${facts.count} captured ${facts.count==='1'?'record':'records'} over ${facts.elapsedMs} ms`:'';}
 export const isFraction=field=>field?.aggregation?.family==='ratio'&&field.aggregation.kind==='fraction';
 export function fractionContextText(facts){
   if(!facts)return '';
@@ -70,6 +74,7 @@ export function exactText(field,value,cell,facts){
   if(field?.type==='timestamp')parts[0]+=' since Unix epoch';
   if(field?.aggregation){const a=field.aggregation;parts.push(a.family+' '+a.kind,a.method+(a.quantile!==undefined?' · q='+a.quantile:''))}
   if(isFraction(field)){parts.push(field.aggregation.numerator+' / '+field.aggregation.denominator+' · bounded fraction');const context=fractionContextText(facts);if(context)parts.push(context)}
+  if(isRate(field)){const context=rateContextText(cell?.rate);if(context)parts.push(context,'count × 1000 / elapsed ms')}
   if(cell?.state)parts.push(cell.state);
   const support=supportText(cell);if(support)parts.push(support);
   return parts.join(' · ');

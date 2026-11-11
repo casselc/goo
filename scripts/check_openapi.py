@@ -1123,6 +1123,44 @@ def check_native_view_discovery(spec):
     print(f'Native discovery: bounded closed metadata; {len(cases)} explicit native question schema outcomes checked (runtime enclosure remains Go/JS semantic admission)')
 
 
+def check_record_rates406(spec):
+    """Rates retain their own closed count/exposure contract and ordinary scope."""
+    field={'key':'record.rate','label':'Captured log records/s','type':'rational','unit':'records/s','nullable':True,
+           'aggregation':{'family':'rate','kind':'records-per-second','method':'exact-rational'}}
+    check=validator(spec,{'$ref':'#/components/schemas/scopedview.Field'})
+    check.validate(field)
+    for changes in ({'unit':'1'},{'type':'number'},{'nullable':False},
+                    {'aggregation':{'family':'ratio','kind':'fraction','method':'exact-rational','numerator':'status.error','denominator':'count'}}):
+        assert not check.is_valid({**field,**changes}), ('invalid rate field accepted',changes)
+    cell=validator(spec,{'$ref':'#/components/schemas/exploration.RecordRateViewCell'})
+    cell.validate({'state':'derived','rate':{'count':'0','elapsedMs':'500'}})
+    cell.validate({'state':'unknown'})
+    for bad in ({'state':'derived'},{'state':'derived','rate':{'count':'1','elapsedMs':'0'}},
+                {'state':'unknown','rate':{'count':'1','elapsedMs':'500'}},
+                {'state':'no_data','rate':{'count':'0','elapsedMs':'500'}},
+                {'state':'derived','rate':{'count':'1','elapsedMs':'500','extra':True}}):
+        assert not cell.is_valid(bad), ('invalid rate operands accepted',bad)
+    query={'signal':'logs','environment':'prod','fromMs':1000,'toMs':61000,'limit':7,'offset':0}
+    scope={'kind':'record-query','signal':'logs'}
+    summary={'version':'goo.view/1','scope':scope,'kind':{'name':'measure-summary','version':1},'display':{'fields':['count','record.rate']}}
+    timeline={'version':'goo.view/1','scope':scope,'kind':{'name':'time-bar','version':1},'display':{'value':'record.rate'}}
+    records={'version':'goo.view/1','scope':scope,'kind':{'name':'record-list','version':1},'display':{'columns':['utc','summary']}}
+    source={'version':1,'title':'Captured activity','queries':[query],
+            'composition':{'version':'goo.composition/1','kind':{'name':'stack','version':1},'children':[{'summary':summary},{'timeline':timeline},{'records':records}]}}
+    for suffix in ('','Input'):
+        view=validator(spec,{'$ref':'#/components/schemas/workbench.ExplorationView'+suffix})
+        view.validate(source)
+        for changes in ({'groupBy':[{'kind':'column','key':'service'}]},{'groupTimeSeries':True}):
+            bad=copy.deepcopy(source);bad['queries'][0].update(changes)
+            assert not view.is_valid(bad), ('grouped record rate accepted',changes)
+        bad=copy.deepcopy(source);bad['composition']['children'][1]['timeline']['display']['profile']='grouped-count-v1'
+        assert not view.is_valid(bad), 'record rate gained a grouped profile'
+        template=copy.deepcopy(source);template['composition']['children'].pop(1)
+        template['template']={'version':'goo.template/1','group':'none','profile':'ordinary-summary'}
+        view.validate(template)
+    print('Record rates406: typed rate operands, ordinary declarations and closed summary template pass; exact count/window arithmetic remains runtime-owned')
+
+
 def check_summary_template_bindings404(spec):
     """Finite ungrouped summary template arm through real saved/expansion carriers."""
     binding={'version':'goo.template/1','group':'none','profile':'ordinary-summary'}
@@ -1418,6 +1456,7 @@ def check(spec):
     check_comparison_template_bindings(spec)
     check_current_rpc_template_bindings(spec)
     check_summary_template_bindings404(spec)
+    check_record_rates406(spec)
     check_native_view_config(spec)
     check_native_view_discovery(spec)
     check_record_span_waterfall(spec)

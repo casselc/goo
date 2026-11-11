@@ -6,12 +6,18 @@ encoding. [Validation](../VALIDATION.md) records actual results; the
 [review reconciliation](reviews/ROADMAP_RECONCILIATION_405.md) records the adopted
 architecture and design decisions.
 
-The next finite cadence is **406 breadth → 407 depth → 408 consolidation**, then
+The finite cadence is **406 breadth → 407 depth → 408 consolidation**, then
 whole-product review. Keep current ordinary OTel → scope a population → inspect
 or compare evidence → preserve/reuse the question and presentation. A manifest is
 optional. This prerelease has no legacy-format obligation; current Go is 1.27.3.
 
 ## 406 — breadth: captured-record activity rate in the shared grammar
+
+Implemented: [captured-record rates](CAPTURED_RECORD_RATES.md) now have a distinct
+typed field and exact count/exposure facts in fixed ordinary summaries and
+ungrouped timelines. Existing defaults remain unchanged. See the executable
+[journey](../journeys/406-record-rate-storyboard.md) and [validation](../VALIDATION.md).
+The next development item is **407**; keep **408** as the consolidation step.
 
 User task: “How quickly are these log/span records appearing, and when did that
 activity change?”

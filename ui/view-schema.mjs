@@ -1,7 +1,7 @@
 import {validateGrouped,groupedMeanQuery} from './grouped-timeline-schema.mjs';
 import {validateMeasurementIntervalSelector,binary64Rational,nativeRationalCoordinate} from './measurement-scope.mjs';
 import {categoryText,categoryLabel} from './view-values.mjs';
-import {validateNumericPredicate} from './question-protocol.mjs';
+import {validateRecordQuestion,validateNumericPredicate} from './question-protocol.mjs';
 export {categoryText};
 /* Structural, IO-free dataset schema. Metadata consistency is not authority. Exact values are never replaced by plotting coordinates. */
 const own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
@@ -37,6 +37,7 @@ export function rationalCoordinate(value){
 function typed(value,field){return field.type==='number'?numeric(value):field.type==='rational'?rationalParts(value)!==null:field.type==='timestamp'?timestamp(value):field.type==='histogram-bound'?value==='+inf'||value==='-inf'||rationalParts(value)!==null:typeof value==='string'&&value.length<=1024}
 function aggregationValid(field){
  const a=field.aggregation;if(!record(a)||!numericType(field)||!text(field.unit))return false;
+ if(a.family==='rate')return Object.keys(a).length===3&&field.key==='record.rate'&&a.kind==='records-per-second'&&a.method==='exact-rational'&&field.type==='rational'&&field.unit==='records/s'&&field.nullable===true;
  if(a.family==='span-status')return Object.keys(a).length===3&&a.kind==='count'&&a.method==='exact'&&field.type==='number'&&field.unit==='records';
  if(a.family==='ratio')return Object.keys(a).length===5&&a.kind==='fraction'&&a.method==='exact-rational'&&field.type==='rational'&&field.unit==='1'&&text(a.numerator)&&text(a.denominator)&&a.numerator!==a.denominator;
  if(Object.keys(a).some(key=>!['family','kind','method','quantile'].includes(key))||!member(a.family,['numeric','duration'])||!member(a.kind,['mean','sum','min','max','quantile']))return false;
@@ -76,7 +77,7 @@ export function validateSnapshot(s){
  else {const keys=new Set();for(const row of s.rows){if(!record(row)||!text(row.key)||keys.has(row.key)||!record(row.values)){reasons.push('Invalid or duplicate stable row key');continue}keys.add(row.key);for(const [key,value] of Object.entries(row.values)){const field=fields.get(key);if(!field){reasons.push(`Undeclared field ${key}`);continue}if(value===null){if(field.nullable!==true)reasons.push('Null values require an explicitly nullable field');continue}if(!typed(value,field))reasons.push(`Invalid ${field.type} value for ${key}`)}}}
  if(s.shape==='ranked'&&Array.isArray(s.rows))for(const row of s.rows){if(fields.has('count')&&!uint64(row?.values?.count))reasons.push('Every ranked row requires its declared exact captured count');if(Array.isArray(s.dimensions)&&s.dimensions.some(key=>!record(row?.values)||!own(row.values,key)))reasons.push('Every declared group dimension requires a supplied cell value')}
  if(s.partition!==undefined)validatePartition(s,fields,reasons);
- if(Array.isArray(s.rows)){validateCells(s,fields,reasons);validateCountRelationships(s,fields,reasons)}
+ if(Array.isArray(s.rows)){validateCells(s,fields,reasons);validateCountRelationships(s,fields,reasons);validateRecordRate(s,fields,reasons)}
  if(!record(s.quality))reasons.push('Dataset quality is required');
  else {enumField(s.quality,'extent',['complete','partial','unknown'],reasons);enumField(s.quality,'basis',['captured-query'],reasons);enumField(s.quality,'value',['recorded','derived','estimated','unknown'],reasons);enumField(s.quality,'sampling',['unknown','none','sampled'],reasons);enumField(s.quality,'freshness',['fixed','live'],reasons)}
  if(s.completeness!==undefined){const c=s.completeness;if(!record(c)||c.basis!=='captured-query'||!text(c.revision)||!text(c.scopeId)||!Array.isArray(c.aspects)||c.aspects.some(a=>!member(a,['groups','intervals','grouped-intervals','summary','bins']))||new Set(c.aspects).size!==c.aspects.length)reasons.push('Invalid completeness attestation')}
@@ -180,6 +181,28 @@ export function groupIntent(snapshot,key){
  return {type:'scope-group',...c,key,values};
 }
 
+
+function validateRecordRate(snapshot,fields,reasons){
+ const rates=[...fields.values()].filter(f=>f.key==='record.rate'||f.aggregation?.family==='rate');
+ for(const row of snapshot.rows)for(const [key,cell] of Object.entries(row?.cells??{}))if(cell?.rate!==undefined&&key!=='record.rate')reasons.push('Rate facts belong only to captured record rate');
+ if(!rates.length)return;
+ const q=snapshot.scope?.selector;
+ let profile=true;try{validateRecordQuestion(q)}catch{profile=false}
+ if(snapshot.quality?.freshness!=='fixed'||!profile||!['logs','spans'].includes(q?.signal)||q.signal!==snapshot.scope.signal||!Number.isSafeInteger(q.fromMs)||!Number.isSafeInteger(q.toMs)||q.toMs<=q.fromMs||(q.groupBy?.length??0)!==0||q.groupTimeSeries||q.numericHistogram||q.reportedEdge||!['summary','time-series'].includes(snapshot.shape)||rates.length!==1){reasons.push('Captured rate requires its declared ordinary fixed record window');return}
+ for(const row of snapshot.rows){
+  const cell=row?.cells?.['record.rate'],value=row?.values?.['record.rate'],count=row?.values?.count;
+  let elapsed=BigInt(q.toMs)-BigInt(q.fromMs);
+  if(snapshot.shape==='time-series'){
+   const a=row?.values?.fromMs,b=row?.values?.toMs;
+   if(!timestamp(a)||!timestamp(b)||BigInt(a)<BigInt(q.fromMs)||BigInt(b)>BigInt(q.toMs)||BigInt(b)<=BigInt(a)){reasons.push('Captured rate requires actual interval exposure');continue}
+   elapsed=BigInt(b)-BigInt(a);
+  }
+  if(snapshot.shape==='time-series'&&row?.state==='unknown'){if(value!==null||count!==null||cell?.state!=='unknown'||cell?.rate!==undefined)reasons.push('Unknown captured rate cannot invent count or exposure facts');continue}
+  const facts=cell?.rate,parts=rationalParts(value);
+  if(cell?.state!=='derived'||!record(facts)||Object.keys(facts).length!==2||!uint64(count)||facts.count!==count||!positiveMS(facts.elapsedMs)||BigInt(facts.elapsedMs)!==elapsed||!parts||parts.numerator*elapsed!==BigInt(count)*1000n*parts.denominator)reasons.push('Captured rate must equal its exact row count and declared exposure');
+ }
+}
+
 function validateCells(snapshot,fields,reasons){
  const measures=[...fields.values()].filter(field=>field.aggregation);
  for(const row of snapshot.rows){
@@ -190,6 +213,8 @@ function validateCells(snapshot,fields,reasons){
    const cell=row.cells?.[field.key],value=row.values[field.key];
    if(!record(cell)||!member(cell.state,['derived','estimated','no_data','no_valid_values','unknown'])){reasons.push('Every aggregation requires an explicit measure cell state');continue}
    if(!own(row.values,field.key)){reasons.push('Every aggregation requires a supplied exact value or explicit null');continue}
+   if(field.aggregation.family!=='rate'&&cell.rate!==undefined)reasons.push('Rate facts belong only to captured record rate');
+   if(field.aggregation.family==='rate'){if(cell.support!==undefined)reasons.push('Captured rate does not use numeric parse support');continue}
    if(field.aggregation.family==='span-status'||field.aggregation.family==='ratio'){
     if(cell.support!==undefined)reasons.push('Count relationships do not use numeric parse support');
     continue;

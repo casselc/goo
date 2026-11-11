@@ -17,6 +17,9 @@ counts and the existing Error fraction. Each selected fact must be supplied by
 the parent question. Status fractions retain all captured spans in their
 denominator; they are not an application outcome policy. Percentiles remain
 empirical summaries of that raw span population.
+For ordinary ungrouped queries, [captured-record rate](CAPTURED_RECORD_RATES.md)
+is an additional explicit field choice. It retains count/exposure facts and leaves
+existing defaults unchanged; unknown sampling and coverage remain unknown.
 
 No grouping is required. Up to two ordinary groupings may remain in the question;
 a summary still describes the whole captured population, not the displayed page

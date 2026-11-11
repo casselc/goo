@@ -24266,6 +24266,16 @@
   },
   "scopedview.Cell": {
     "properties": {
+      "rate": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/scopedview.RateFacts"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "state": {
         "type": "string"
       },
@@ -24289,6 +24299,23 @@
   "scopedview.CellInput": {
     "additionalProperties": false,
     "properties": {
+      "rate": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/scopedview.RateFactsInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "state": {
         "anyOf": [
           {
@@ -25342,6 +25369,49 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/scopedview.Quality"
+  },
+  "scopedview.RateFacts": {
+    "properties": {
+      "count": {
+        "type": "string"
+      },
+      "elapsedMs": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "count",
+      "elapsedMs"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/scopedview.RateFacts"
+  },
+  "scopedview.RateFactsInput": {
+    "additionalProperties": false,
+    "properties": {
+      "count": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "elapsedMs": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/scopedview.RateFacts"
   },
   "scopedview.Row": {
     "properties": {

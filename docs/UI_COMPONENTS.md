@@ -2030,3 +2030,13 @@ source evaluator. Count-only Customize summary uses the existing Population
 context disclosure, avoiding the hidden old result shell. Application owners keep
 request, draft and publication lifetimes; templates transfer presentation only.
 See [ungrouped templates](UNGROUPED_SUMMARY_TEMPLATES.md).
+
+### Captured-record rate presentation
+
+`record.rate` is a supplied rational measure with `rate / records-per-second`
+aggregation and `records/s` units. `cell.rate` retains exact count and elapsed-ms
+facts; shared validation checks the result against the row and fixed window.
+`goo-measure-summary` and `goo-chart` render the supplied value through existing
+formatting and disclosures. Default summaries exclude the optional field; owners
+provide the explicit summary/timeline measure choice. No component reads or
+calculates a source rate. See [captured-record rates](CAPTURED_RECORD_RATES.md).

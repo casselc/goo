@@ -35,11 +35,11 @@ func TestSummaryTemplate404HTTPStoreReopenExpandWithoutSource(t *testing.T) {
 	}
 	for _, signal := range []string{"logs", "spans"} {
 		q := exploration.Query{Signal: signal, Environment: "source", FromMS: 1000, ToMS: 61000, Limit: 7}
-		fields := []string{"count"}
+		fields := []string{"count", "record.rate"}
 		if signal == "spans" {
 			q.Summary = "span-duration"
 			q.SpanStatus = true
-			fields = []string{"status.error", "count", "duration.mean"}
+			fields = []string{"status.error", "count", "record.rate", "duration.mean"}
 		}
 		scope := workbench.ViewDeclarationScope{Kind: "record-query", Signal: signal}
 		source := workbench.ExplorationView{Version: 1, Title: "Reusable " + signal + " facts", Queries: []exploration.Query{q},

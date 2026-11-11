@@ -3,8 +3,9 @@
 > Active execution order: [405 product checkpoint](ROADMAP_2026_11_11_CHECKPOINT_405.md),
 > reconciled across [architecture/Go and design/product reviews](reviews/ROADMAP_RECONCILIATION_405.md).
 > 403 trace continuation, 404 ungrouped summary templates and 405 shared parameter
-> encoding are delivered. Next: **406 observed-record rates → 407 authored numeric
-> histograms → 408 passive grammar exports/examples**, then whole-product review.
+> encoding are delivered. **406 captured-record rates** is delivered in fixed
+> summaries and ungrouped timelines. Next: **407 authored numeric histograms →
+> 408 passive grammar exports/examples**, then whole-product review.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped
 > P95, host sample context and broader platform work remain deferred.
 > 367 reusable current RPC views, 368 exact service native interval context,

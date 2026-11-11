@@ -99,6 +99,9 @@ func SummaryViewFields(q exploration.Query) []string {
 		}
 	}
 	fields := []string{"count"}
+	if exploration.RecordRateQuery(q) {
+		fields = append(fields, exploration.RecordRateKey)
+	}
 	for _, field := range exploration.ViewMeasureFields(q) {
 		fields = append(fields, field.Key)
 	}

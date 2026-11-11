@@ -5,7 +5,7 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-405. The [active roadmap](ROADMAP_2026_11_11_CHECKPOINT_405.md) owns execution order;
+406. The [active roadmap](ROADMAP_2026_11_11_CHECKPOINT_405.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
 below are research inputs, not additional backlogs or claims of vendor parity.
 
@@ -15,6 +15,7 @@ below are research inputs, not additional backlogs or claims of vendor parity.
 | --- | --- | --- |
 | See what is happening now | [Live Activity](LIVE_ACTIVITY.md), scoped log/span streams, inspection and [contextual investigation actions](ACTIVITY_NAVIGATION.md) | A bounded live buffer is not the full population; disconnects, gaps and pauses remain explicit. |
 | Narrow and inspect ordinary telemetry | [Typed filters](FILTER_EDITOR.md), [counted field values](FILTER_VALUES.md), structured attributes and [qualified field presentation](FIELD_PRESENTATION.md) | Missing and present-empty values differ. A displayed page does not define total counts. |
+| Inspect captured activity over time | [Exact captured-record rates](CAPTURED_RECORD_RATES.md) in fixed summaries and ungrouped timelines | Count/window rates describe captured records, not unsampled traffic or application throughput. Clipped buckets use their actual duration. |
 | Compare populations | [Population workspace](POPULATION_WORKSPACE.md), distributions, baseline/selection comparisons and [fresh-window comparisons](FRESH_COMPARISON.md) | Independent reads can disagree. Ranked differences are leads, not statistical significance or cause. |
 | Follow traces across services | [Cross-service trace search](TRACE_SEARCH.md), qualified witnesses, [waterfalls and trace findings](TRACE_FINDINGS.md) | Conditions are independent within a reported trace ID. Witnesses do not prove ordering, a unique invocation or a complete trace. |
 | Continue a trace search | [Explicit ID-ordered pages](TRACE_SEARCH_CONTINUATION.md), exact scope-bound positions and current-page capture | Each page is a fresh read; full counts precede position filtering. No stable or complete page union is promised. |
@@ -46,8 +47,8 @@ whole-population facts with no forced grouping. [Retained gauge context](RETAINE
 (401) and [shared-table context](TABLE_CONTEXT.md) (402) are delivered. [Trace-search continuation](TRACE_SEARCH_CONTINUATION.md) (403) is delivered.
 [Ungrouped summary templates](UNGROUPED_SUMMARY_TEMPLATES.md) (404) are also delivered;
 [Shared parameter encoding](CLICKHOUSE_PARAMETER_ENCODING.md) (405) is delivered.
-Next: observed-record rates, authored numeric histograms and passive grammar
-exports/examples. Delivered
+[Captured-record rates](CAPTURED_RECORD_RATES.md) (406) are delivered.
+Next: authored numeric histograms and passive grammar exports/examples. Delivered
 capabilities and remaining boundaries are distinguished below.
 
 | Area | Remaining gap or decision | Current reference |

@@ -90,8 +90,16 @@ type Aggregation struct {
 	Denominator string `json:"denominator,omitempty"`
 }
 type Cell struct {
-	State   string   `json:"state"`
-	Support *Support `json:"support,omitempty"`
+	State   string     `json:"state"`
+	Support *Support   `json:"support,omitempty"`
+	Rate    *RateFacts `json:"rate,omitempty"`
+}
+
+// RateFacts retains the exact captured count and elapsed query/bucket time.
+// It describes observed records, not upstream throughput or coverage.
+type RateFacts struct {
+	Count     string `json:"count"`
+	ElapsedMS string `json:"elapsedMs"`
 }
 type Support struct {
 	Total   string `json:"total"`

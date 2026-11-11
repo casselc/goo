@@ -1,5 +1,47 @@
 # Validation record
 
+## Captured-record activity rates — 406
+
+[Captured-record rates](docs/CAPTURED_RECORD_RATES.md) adds an explicit exact
+`record.rate` measure to fixed ordinary summaries and ungrouped timelines.
+Count/exposure facts travel with each value; clipped intervals use their actual
+width. Known zero stays derived, unknown intervals invent no facts, and existing
+default cards/measures remain unchanged. Grouped, live and comparison rates remain
+excluded. No additional source SQL or renderer-side rate evaluator was added.
+
+- Targeted Go exploration/workbench/server summary, timeline, comparison and
+  template checks passed **0.080 s / 0.429 s / 0.130 s** on Go **1.27.3**.
+  HTTP save/reopen/expand now includes selected rate fields. This is not a full
+  project suite or optional warehouse-fixture claim.
+- Final frontend: **1,484 passed / zero skips / 30.515 s**. Exact rate formatting,
+  facts/disclosures, unchanged defaults and passive display boundaries pass.
+- Hegel Go/JS whole source, declaration, store and destination-template carriers
+  passed **0.683 s**, including UInt64 extrema, exact reduced rationals, shortened
+  buckets and supplied unknown/refusal controls. **80 complete wire vectors /
+  800 malformed-wire controls** passed the separate API harness. Synthetic extrema
+  and unknown intervals are contract tests, not observed source traffic.
+- Actual Playwright journey passed **24.9 s**, ingesting **24 real OTel log/span
+  records** and checking independent persisted membership. Summary authoring,
+  save/reopen, destination-safe reuse, clipped timeline selection, local kind
+  changes, zero/empty controls and retired handlers passed. **24 boundaries /
+  8 source reads / 28 existing SQL statements / 2 user writes / 1 expansion**.
+- Actual Bombadil destination reuse passed **36.8 s** at 390 px: **434 snapshots /
+  six phases / one expansion / one explicit source read / three SQL statements /
+  no publication**. Observed source/actor validation and Quint replay passed
+  **4.173 s**, rejecting **seven semantic mutants** and a planted source read
+  during local selection; no report-gated checks skipped in this invocation.
+- Regenerated OpenAPI passes **113 operations / 489 fixture responses /
+  195 admitted requests / 28 mux refusals**, plus **27 actual handler frames**.
+  Separate rate metadata and scope gates exclude unsupported profiles.
+- Updated executable storyboard and three actual desktop/390 px documentation
+  frames. Design review found no blocker; narrow chart labels and inherited
+  stacked metadata remain minor polish opportunities. Keyboard/screen-reader
+  behavior is not established by screenshots alone.
+- Rebuilt/refreshed only the lab application service; capabilities returns 200
+  and reviewed rate UI/OpenAPI assets match served bytes. Running image
+  `sha256:f72ab8f75187c166b9429b8eb7570763abe5addcaf8cb173b18c2e365557f496`.
+  Telemetry, stores, containers and the existing XTDB service were preserved.
+
 ## Shared ClickHouse parameter encoding — 405
 
 [Shared parameter encoding](docs/CLICKHOUSE_PARAMETER_ENCODING.md) replaces two

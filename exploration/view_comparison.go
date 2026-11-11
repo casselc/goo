@@ -58,9 +58,19 @@ func summaryViewDataset(r *Result, exhaustiveSummary bool) *ViewDataset {
 	if !ok {
 		return nil
 	}
-	d.Rows = []ViewRow{{Key: "population", Values: values, Cells: cells}}
+	row := ViewRow{Key: "population", Values: values, Cells: cells}
+	if RecordRateQuery(r.Question) {
+		d.Fields = append(d.Fields, recordRateField(r.Question))
+		if !addRecordRate(&row, r.Question.ToMS-r.Question.FromMS, false) {
+			return nil
+		}
+	}
+	d.Rows = []ViewRow{row}
 	if exhaustiveSummary && r.State != "changed_between_reads" {
 		attestView(d, "summary")
+	}
+	if ValidateRecordRateDataset(d) != nil {
+		return nil
 	}
 	return d
 }
@@ -108,6 +118,18 @@ func heldSummaryView(c Cohort) *ViewDataset {
 	d := summaryViewDataset(r, false)
 	if d == nil {
 		return nil
+	}
+	// Rate comparisons are outside the initial fixed summary/timeline profile.
+	fields := d.Fields[:0]
+	for _, field := range d.Fields {
+		if field.Key != RecordRateKey {
+			fields = append(fields, field)
+		}
+	}
+	d.Fields = fields
+	for i := range d.Rows {
+		delete(d.Rows[i].Values, RecordRateKey)
+		delete(d.Rows[i].Cells, RecordRateKey)
 	}
 	d.Origin = "browser-held"
 	d.SourceBasis = canonical.Basis

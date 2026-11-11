@@ -2,7 +2,7 @@ import {render as renderGroupedTimeline} from './grouped-timeline-view.mjs';
 import {bindIntervalRange} from './interval-range.mjs';
 /* Public passive scoped displays. The host owns scope, requests and selection. */
 import {validateSnapshot, validateDisplay, selectionIntent, scopeIntent, measureValue, supportsSelection, capabilities,displayRows,populationShare,fractionFacts,histogramIntent} from './view-model.mjs';
-import {formatCell,supportText,exactText,categoryText,categoryLabel,isFraction,fractionContextText} from './view-values.mjs';
+import {formatCell,supportText,exactText,categoryText,categoryLabel,isFraction,fractionContextText,isRate,rateContextText} from './view-values.mjs';
 import {asSnapshot,parseSnapshotJSON,hasGuarantee} from './snapshots.mjs';
 import {histogramFacts,histogramBoundText,histogramRangeText,histogramCompactRangeText,nativeHistogramCompactRangeText} from './histogram-values.mjs';
 import './chart-frame.mjs';
@@ -93,7 +93,7 @@ function table(host,snapshot,display,rows=displayRows(snapshot,display)){
 }
 
 export function timeState(row,key,value){return key==='count'?row.state:value.coordinate!==null?'observed':row.cells?.[key]?.state==='no_data'?'no_data':'unknown'}
-export function timeLegend(field,key){return key==='count'?[['Captured records','scope-time-observed-key'],['No data · zero','scope-time-empty-key'],['Unknown / unreported','scope-time-unknown-key']]:[[field.label+(isFraction(field)?' · 0–100%':''),'scope-time-observed-key'],['Known zero','scope-time-empty-key'],['No data','scope-time-no-data-key'],['Unavailable / unreported','scope-time-unknown-key']];}
+export function timeLegend(field,key){if(isRate(field))return [[field.label+(field.label.endsWith('records/s')?'':' · records/s'),'scope-time-observed-key'],['Known zero','scope-time-empty-key'],['Unknown / unreported','scope-time-unknown-key']];return key==='count'?[['Captured records','scope-time-observed-key'],['No data · zero','scope-time-empty-key'],['Unknown / unreported','scope-time-unknown-key']]:[[field.label+(isFraction(field)?' · 0–100%':''),'scope-time-observed-key'],['Known zero','scope-time-empty-key'],['No data','scope-time-no-data-key'],['Unavailable / unreported','scope-time-unknown-key']];}
 function timeBars(host,snapshot,display){
   const figure=n('figure',undefined,'scope-time'),track=n('div',undefined,'scope-time-track');
   const valueKey=display.value||'count',field=snapshot.fields.find(item=>item.key===valueKey);
@@ -113,7 +113,7 @@ function timeBars(host,snapshot,display){
     const value=values[index],cell=row.cells?.[valueKey],state=timeState(row,valueKey,value),button=n('button',undefined,'scope-time-interval');button.type='button';button.dataset.key=row.key;button.dataset.state=state;button.dataset.cellState=value.state;button.dataset.valueKind=valueKey==='count'?'count':'measure';button.dataset.knownZero=String(value.coordinate===0);
     button.style.left=percent(start-from)+'%';button.style.width=percent(end-start)+'%';
     const range=utc(row.values.fromMs)+' → '+utc(row.values.toMs),meaning=valueKey==='count'&&row.state==='unknown'?'Unknown coverage':formatCell(field,row.values[valueKey],cell);
-    button.title=range+' · '+meaning+' · '+exactText(field,row.values[valueKey],cell,fractionFacts(snapshot,row,valueKey))+(value.reason?' · '+value.reason:'')+' · ['+row.values.fromMs+', '+row.values.toMs+') ms';button.setAttribute('aria-label','Select '+range+' · '+field.label+': '+meaning+(isFraction(field)?' · '+fractionContextText(fractionFacts(snapshot,row,valueKey)):'')+(supportText(cell)?' · '+supportText(cell):''));
+    button.title=range+' · '+meaning+' · '+exactText(field,row.values[valueKey],cell,fractionFacts(snapshot,row,valueKey))+(value.reason?' · '+value.reason:'')+' · ['+row.values.fromMs+', '+row.values.toMs+') ms';button.setAttribute('aria-label','Select '+range+' · '+field.label+': '+meaning+(isFraction(field)?' · '+fractionContextText(fractionFacts(snapshot,row,valueKey)):'')+(isRate(field)&&cell?.rate?' · '+rateContextText(cell.rate):'')+(supportText(cell)?' · '+supportText(cell):''));
     const fill=n('span',undefined,'scope-time-fill');fill.setAttribute('aria-hidden','true');fill.style.height=(value.coordinate!==null&&max?value.coordinate/max*100:0)+'%';button.append(fill);
     if(state==='observed'){const count=n('span',formatCell(field,row.values[valueKey],cell),'scope-time-count');count.setAttribute('aria-hidden','true');button.append(count)}
     button.onclick=event=>{if(track.isConnected&&host.contains(track)&&!track._rangeGesture?.ignoreClick(event))emit(host,'goo-select',selectionIntent(snapshot,row.key))};track.append(button);
@@ -162,7 +162,7 @@ function bars(host,snapshot,display,rows=displayRows(snapshot,display)){
     button.append(n('span',categoryLabel(snapshot.fields.find(field=>field.key===display.category),row.values[display.category]),'scope-view-label'),n('span',formatCell(field,row.values[display.value],cell)+(share?.ok?' · '+share.percent:''),'scope-view-value'));
     if(value.coordinate!==null){const track=n('span',undefined,'scope-view-track'),fill=n('span',undefined,'scope-view-fill');track.setAttribute('aria-hidden','true');fill.style.width=(share?.ok?share.coordinate:max?value.coordinate/max*100:0)+'%';track.append(fill);button.append(track)}
     button.title=exactText(field,row.values[display.value],cell,fractionFacts(snapshot,row,display.value))+(share?.ok?' · '+share.fraction+' captured records (exact share)':'')+(value.reason?' · '+value.reason:'');
-    button.setAttribute('aria-label','Select '+categoryLabel(snapshot.fields.find(field=>field.key===display.category),row.values[display.category])+': '+formatCell(field,row.values[display.value],cell)+(share?.ok?' · '+share.percent+' of captured population':'')+(isFraction(field)?' · '+fractionContextText(fractionFacts(snapshot,row,display.value)):'')+(supportText(cell)?' · '+supportText(cell):''));button.onclick=()=>emit(host,'goo-select',selectionIntent(snapshot,row.key));list.append(button);
+    button.setAttribute('aria-label','Select '+categoryLabel(snapshot.fields.find(field=>field.key===display.category),row.values[display.category])+': '+formatCell(field,row.values[display.value],cell)+(share?.ok?' · '+share.percent+' of captured population':'')+(isFraction(field)?' · '+fractionContextText(fractionFacts(snapshot,row,display.value)):'')+(isRate(field)&&cell?.rate?' · '+rateContextText(cell.rate):'')+(supportText(cell)?' · '+supportText(cell):''));button.onclick=()=>emit(host,'goo-select',selectionIntent(snapshot,row.key));list.append(button);
   }
   return list;
 }

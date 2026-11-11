@@ -22708,28 +22708,51 @@
                   "origin"
                 ],
                 "not": {
-                  "properties": {
-                    "fields": {
-                      "contains": {
-                        "properties": {
-                          "key": {
-                            "enum": [
-                              "status.error",
-                              "status.ok",
-                              "status.unset",
-                              "status.unknown",
-                              "status.error_fraction"
+                  "anyOf": [
+                    {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "enum": [
+                                  "status.error",
+                                  "status.ok",
+                                  "status.unset",
+                                  "status.unknown",
+                                  "status.error_fraction"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "key"
                             ]
                           }
-                        },
-                        "required": [
-                          "key"
-                        ]
+                        }
+                      },
+                      "required": [
+                        "fields"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "fields"
+                      ],
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "required": [
+                              "key"
+                            ],
+                            "properties": {
+                              "key": {
+                                "const": "record.rate"
+                              }
+                            }
+                          }
+                        }
                       }
                     }
-                  },
-                  "required": [
-                    "fields"
                   ]
                 }
               }
@@ -22782,28 +22805,51 @@
                   "origin"
                 ],
                 "not": {
-                  "properties": {
-                    "fields": {
-                      "contains": {
-                        "properties": {
-                          "key": {
-                            "enum": [
-                              "status.error",
-                              "status.ok",
-                              "status.unset",
-                              "status.unknown",
-                              "status.error_fraction"
+                  "anyOf": [
+                    {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "enum": [
+                                  "status.error",
+                                  "status.ok",
+                                  "status.unset",
+                                  "status.unknown",
+                                  "status.error_fraction"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "key"
                             ]
                           }
-                        },
-                        "required": [
-                          "key"
-                        ]
+                        }
+                      },
+                      "required": [
+                        "fields"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "fields"
+                      ],
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "required": [
+                              "key"
+                            ],
+                            "properties": {
+                              "key": {
+                                "const": "record.rate"
+                              }
+                            }
+                          }
+                        }
                       }
                     }
-                  },
-                  "required": [
-                    "fields"
                   ]
                 }
               }
@@ -36929,7 +36975,8 @@
               "numeric",
               "duration",
               "span-status",
-              "ratio"
+              "ratio",
+              "rate"
             ]
           },
           "kind": {
@@ -36941,7 +36988,8 @@
               "max",
               "quantile",
               "count",
-              "fraction"
+              "fraction",
+              "records-per-second"
             ]
           },
           "method": {
@@ -37392,6 +37440,38 @@
                 }
               ]
             }
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "rate"
+              },
+              "kind": {
+                "const": "records-per-second"
+              },
+              "method": {
+                "const": "exact-rational"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "quantile"
+                  ]
+                },
+                {
+                  "required": [
+                    "numerator"
+                  ]
+                },
+                {
+                  "required": [
+                    "denominator"
+                  ]
+                }
+              ]
+            }
           }
         ]
       },
@@ -37464,6 +37544,9 @@
       },
       "scopedview.Cell": {
         "properties": {
+          "rate": {
+            "$ref": "#/components/schemas/scopedview.RateFacts"
+          },
           "state": {
             "type": "string",
             "enum": [
@@ -37505,8 +37588,17 @@
             },
             "then": {
               "not": {
-                "required": [
-                  "support"
+                "anyOf": [
+                  {
+                    "required": [
+                      "support"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "rate"
+                    ]
+                  }
                 ]
               }
             }
@@ -37516,6 +37608,23 @@
       "scopedview.CellInput": {
         "additionalProperties": false,
         "properties": {
+          "rate": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/scopedview.RateFactsInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "state": {
             "anyOf": [
               {
@@ -37675,7 +37784,7 @@
           "fields": {
             "type": "array",
             "minItems": 1,
-            "maxItems": 18,
+            "maxItems": 19,
             "items": {
               "$ref": "#/components/schemas/scopedview.Field"
             }
@@ -38828,7 +38937,7 @@
               },
               "fields": {
                 "minItems": 3,
-                "maxItems": 18,
+                "maxItems": 19,
                 "prefixItems": [
                   {
                     "allOf": [
@@ -38934,7 +39043,8 @@
                             "status.ok",
                             "status.unset",
                             "status.unknown",
-                            "status.error_fraction"
+                            "status.error_fraction",
+                            "record.rate"
                           ]
                         }
                       }
@@ -39125,6 +39235,15 @@
                               "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
                               "maxLength": 1024,
                               "description": "Exact Error/count subset fraction in [0,1], not a percentage or ratio of averages. Runtime checks named operands. A zero denominator is unavailable, never a healthy zero."
+                            },
+                            "record.rate": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact nonnegative captured-record count times1000 divided by actual elapsed milliseconds. It is records/s, not a bounded fraction or complete upstream throughput."
                             }
                           },
                           "additionalProperties": false
@@ -39970,7 +40089,7 @@
               },
               "fields": {
                 "minItems": 1,
-                "maxItems": 16,
+                "maxItems": 17,
                 "prefixItems": [
                   {
                     "allOf": [
@@ -40023,7 +40142,8 @@
                             "status.ok",
                             "status.unset",
                             "status.unknown",
-                            "status.error_fraction"
+                            "status.error_fraction",
+                            "record.rate"
                           ]
                         }
                       }
@@ -40204,6 +40324,15 @@
                               "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
                               "maxLength": 1024,
                               "description": "Exact Error/count subset fraction in [0,1], not a percentage or ratio of averages. Runtime checks named operands. A zero denominator is unavailable, never a healthy zero."
+                            },
+                            "record.rate": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                              "maxLength": 1024,
+                              "description": "Exact nonnegative captured-record count times1000 divided by actual elapsed milliseconds. It is records/s, not a bounded fraction or complete upstream throughput."
                             }
                           },
                           "additionalProperties": false
@@ -41920,6 +42049,212 @@
           },
           {
             "if": {
+              "required": [
+                "fields"
+              ],
+              "properties": {
+                "fields": {
+                  "contains": {
+                    "required": [
+                      "key"
+                    ],
+                    "properties": {
+                      "key": {
+                        "const": "record.rate"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "shape": {
+                  "enum": [
+                    "summary",
+                    "time-series"
+                  ]
+                },
+                "scope": {
+                  "properties": {
+                    "signal": {
+                      "enum": [
+                        "logs",
+                        "spans"
+                      ]
+                    },
+                    "selector": {
+                      "properties": {
+                        "signal": {
+                          "enum": [
+                            "logs",
+                            "spans"
+                          ]
+                        },
+                        "groupBy": {
+                          "maxItems": 0
+                        },
+                        "numericHistogram": {
+                          "type": "null"
+                        },
+                        "reportedEdge": {
+                          "type": "null"
+                        },
+                        "groupTimeSeries": {
+                          "const": false
+                        }
+                      }
+                    }
+                  }
+                },
+                "rows": {
+                  "items": {
+                    "properties": {
+                      "values": {
+                        "required": [
+                          "record.rate"
+                        ]
+                      },
+                      "cells": {
+                        "required": [
+                          "record.rate"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "fields"
+              ],
+              "properties": {
+                "fields": {
+                  "contains": {
+                    "required": [
+                      "key"
+                    ],
+                    "properties": {
+                      "key": {
+                        "const": "record.rate"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "rows": {
+                  "items": {
+                    "if": {
+                      "required": [
+                        "state"
+                      ],
+                      "properties": {
+                        "state": {
+                          "const": "unknown"
+                        }
+                      }
+                    },
+                    "then": {
+                      "properties": {
+                        "cells": {
+                          "properties": {
+                            "record.rate": {
+                              "properties": {
+                                "state": {
+                                  "const": "unknown"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "else": {
+                      "properties": {
+                        "cells": {
+                          "properties": {
+                            "record.rate": {
+                              "properties": {
+                                "state": {
+                                  "const": "derived"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "rows"
+              ],
+              "properties": {
+                "rows": {
+                  "contains": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "values"
+                        ],
+                        "properties": {
+                          "values": {
+                            "required": [
+                              "record.rate"
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "required": [
+                          "cells"
+                        ],
+                        "properties": {
+                          "cells": {
+                            "required": [
+                              "record.rate"
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "fields"
+              ],
+              "properties": {
+                "fields": {
+                  "contains": {
+                    "required": [
+                      "key"
+                    ],
+                    "properties": {
+                      "key": {
+                        "const": "record.rate"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
               "properties": {
                 "fields": {
                   "contains": {
@@ -42600,7 +42935,8 @@
               "status.ok",
               "status.unset",
               "status.unknown",
-              "status.error_fraction"
+              "status.error_fraction",
+              "record.rate"
             ]
           },
           "label": {
@@ -43382,6 +43718,49 @@
           },
           {
             "if": {
+              "required": [
+                "key"
+              ],
+              "properties": {
+                "key": {
+                  "const": "record.rate"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "aggregation",
+                "unit",
+                "nullable"
+              ],
+              "properties": {
+                "type": {
+                  "const": "rational"
+                },
+                "unit": {
+                  "const": "records/s"
+                },
+                "nullable": {
+                  "const": true
+                },
+                "aggregation": {
+                  "properties": {
+                    "family": {
+                      "const": "rate"
+                    },
+                    "kind": {
+                      "const": "records-per-second"
+                    },
+                    "method": {
+                      "const": "exact-rational"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
               "properties": {
                 "key": {
                   "enum": [
@@ -44130,11 +44509,62 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/scopedview.Quality"
       },
+      "scopedview.RateFacts": {
+        "properties": {
+          "count": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          },
+          "elapsedMs": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$",
+            "maxLength": 16,
+            "description": "Positive actual elapsed duration in milliseconds, encoded as a canonical decimal string."
+          }
+        },
+        "required": [
+          "count",
+          "elapsedMs"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/scopedview.RateFacts",
+        "additionalProperties": false,
+        "description": "Exact operands for captured-record activity rate. Runtime verifies count against the row count, elapsedMs against the full fixed summary window or actual clipped interval, and reduced rational arithmetic."
+      },
+      "scopedview.RateFactsInput": {
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "elapsedMs": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/scopedview.RateFacts"
+      },
       "scopedview.Row": {
         "properties": {
           "cells": {
             "type": "object",
-            "maxProperties": 15,
+            "maxProperties": 16,
             "propertyNames": {
               "enum": [
                 "numeric.mean",
@@ -44152,7 +44582,8 @@
                 "status.ok",
                 "status.unset",
                 "status.unknown",
-                "status.error_fraction"
+                "status.error_fraction",
+                "record.rate"
               ]
             },
             "additionalProperties": {
@@ -45920,6 +46351,111 @@
                       "values": {
                         "properties": {
                           "status.error_fraction": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "values"
+              ],
+              "properties": {
+                "values": {
+                  "required": [
+                    "record.rate"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "record.rate"
+                  ],
+                  "properties": {
+                    "record.rate": {
+                      "$ref": "#/components/schemas/exploration.RecordRateViewCell"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "cells"
+              ],
+              "properties": {
+                "cells": {
+                  "required": [
+                    "record.rate"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "values": {
+                  "required": [
+                    "record.rate"
+                  ]
+                },
+                "cells": {
+                  "properties": {
+                    "record.rate": {
+                      "$ref": "#/components/schemas/exploration.RecordRateViewCell"
+                    }
+                  }
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "cells": {
+                        "properties": {
+                          "record.rate": {
+                            "properties": {
+                              "state": {
+                                "const": "derived"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "record.rate": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$",
+                            "maxLength": 1024,
+                            "description": "Exact nonnegative captured-record count times1000 divided by actual elapsed milliseconds. It is records/s, not a bounded fraction or complete upstream throughput."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "values": {
+                        "properties": {
+                          "record.rate": {
                             "type": "null"
                           }
                         }
@@ -48968,6 +49504,7 @@
                                       "items": {
                                         "enum": [
                                           "count",
+                                          "record.rate",
                                           "duration.mean",
                                           "duration.min",
                                           "duration.max",
@@ -49695,6 +50232,97 @@
                       "signal",
                       "spanStatus"
                     ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "summary"
+                            ],
+                            "properties": {
+                              "summary": {
+                                "properties": {
+                                  "display": {
+                                    "required": [
+                                      "fields"
+                                    ],
+                                    "properties": {
+                                      "fields": {
+                                        "contains": {
+                                          "const": "record.rate"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "required": [
+                              "timeline"
+                            ],
+                            "properties": {
+                              "timeline": {
+                                "properties": {
+                                  "display": {
+                                    "required": [
+                                      "value"
+                                    ],
+                                    "properties": {
+                                      "value": {
+                                        "const": "record.rate"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "signal": {
+                        "enum": [
+                          "logs",
+                          "spans"
+                        ]
+                      },
+                      "groupBy": {
+                        "maxItems": 0
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      }
+                    }
                   }
                 }
               }
@@ -50135,6 +50763,7 @@
                                       "items": {
                                         "enum": [
                                           "count",
+                                          "record.rate",
                                           "duration.mean",
                                           "duration.min",
                                           "duration.max",
@@ -50862,6 +51491,97 @@
                       "signal",
                       "spanStatus"
                     ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "summary"
+                            ],
+                            "properties": {
+                              "summary": {
+                                "properties": {
+                                  "display": {
+                                    "required": [
+                                      "fields"
+                                    ],
+                                    "properties": {
+                                      "fields": {
+                                        "contains": {
+                                          "const": "record.rate"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "required": [
+                              "timeline"
+                            ],
+                            "properties": {
+                              "timeline": {
+                                "properties": {
+                                  "display": {
+                                    "required": [
+                                      "value"
+                                    ],
+                                    "properties": {
+                                      "value": {
+                                        "const": "record.rate"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "properties": {
+                      "signal": {
+                        "enum": [
+                          "logs",
+                          "spans"
+                        ]
+                      },
+                      "groupBy": {
+                        "maxItems": 0
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      }
+                    }
                   }
                 }
               }
@@ -53899,6 +54619,7 @@
             "items": {
               "enum": [
                 "count",
+                "record.rate",
                 "numeric.mean",
                 "numeric.sum",
                 "numeric.min",
@@ -53941,6 +54662,7 @@
             "items": {
               "enum": [
                 "count",
+                "record.rate",
                 "numeric.mean",
                 "numeric.sum",
                 "numeric.min",
@@ -54037,7 +54759,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.TimelineViewDeclaration",
         "additionalProperties": false,
-        "description": "Fixed record counts or query-supported raw-span mean/p95 duration over explicit bounded buckets. The grouped-count-v1 profile consumes one ordinary typed group by fixed interval, with small multiples, Table or Heatmap (at most32 intervals). Grouping, width, exact clipped bounds, zero/unknown state and completeness are checked against the parent query and supplied dataset. No rates, population shares or averaged percentiles.",
+        "description": "Fixed record counts or query-supported raw-span mean/p95 duration over explicit bounded buckets. The grouped-count-v1 profile consumes one ordinary typed group by fixed interval, with small multiples, Table or Heatmap (at most32 intervals). Grouping, width, exact clipped bounds, zero/unknown state and completeness are checked against the parent query and supplied dataset. Ordinary ungrouped record.rate uses supplied exact count/exposure facts in records/s; grouped rates, population shares and averaged percentiles remain unsupported.",
         "allOf": [
           {
             "if": {
@@ -54093,6 +54815,36 @@
                       "const": ""
                     },
                     "order": {
+                      "const": ""
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "display"
+              ],
+              "properties": {
+                "display": {
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "const": "record.rate"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "display": {
+                  "properties": {
+                    "profile": {
                       "const": ""
                     }
                   }
@@ -54229,7 +54981,7 @@
           "kind",
           "display"
         ],
-        "description": "Fixed record counts or query-supported raw-span mean/p95 duration over explicit bounded buckets. The grouped-count-v1 profile consumes one ordinary typed group by fixed interval, with small multiples, Table or Heatmap (at most32 intervals). Grouping, width, exact clipped bounds, zero/unknown state and completeness are checked against the parent query and supplied dataset. No rates, population shares or averaged percentiles.",
+        "description": "Fixed record counts or query-supported raw-span mean/p95 duration over explicit bounded buckets. The grouped-count-v1 profile consumes one ordinary typed group by fixed interval, with small multiples, Table or Heatmap (at most32 intervals). Grouping, width, exact clipped bounds, zero/unknown state and completeness are checked against the parent query and supplied dataset. Ordinary ungrouped record.rate uses supplied exact count/exposure facts in records/s; grouped rates, population shares and averaged percentiles remain unsupported.",
         "allOf": [
           {
             "if": {
@@ -54285,6 +55037,36 @@
                       "const": ""
                     },
                     "order": {
+                      "const": ""
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "display"
+              ],
+              "properties": {
+                "display": {
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "const": "record.rate"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "display": {
+                  "properties": {
+                    "profile": {
                       "const": ""
                     }
                   }
@@ -54394,6 +55176,7 @@
             "type": "string",
             "enum": [
               "count",
+              "record.rate",
               "duration.mean",
               "duration.p95"
             ]
@@ -54477,6 +55260,7 @@
             ],
             "enum": [
               "count",
+              "record.rate",
               "duration.mean",
               "duration.p95"
             ]
@@ -58093,6 +58877,13 @@
             "$ref": "#/components/schemas/scopedview.Cell"
           },
           {
+            "not": {
+              "required": [
+                "rate"
+              ]
+            }
+          },
+          {
             "if": {
               "properties": {
                 "state": {
@@ -58224,8 +59015,17 @@
           },
           {
             "not": {
-              "required": [
-                "support"
+              "anyOf": [
+                {
+                  "required": [
+                    "support"
+                  ]
+                },
+                {
+                  "required": [
+                    "rate"
+                  ]
+                }
               ]
             }
           },
@@ -58249,8 +59049,17 @@
           },
           {
             "not": {
-              "required": [
-                "support"
+              "anyOf": [
+                {
+                  "required": [
+                    "support"
+                  ]
+                },
+                {
+                  "required": [
+                    "rate"
+                  ]
+                }
               ]
             }
           },
@@ -58267,6 +59076,55 @@
           }
         ],
         "description": "Exact operand-bound subset fraction, unavailable for an empty denominator, or unknown. Its named count operands replace numeric-validity support."
+      },
+      "exploration.RecordRateViewCell": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/scopedview.Cell"
+          },
+          {
+            "not": {
+              "required": [
+                "support"
+              ]
+            }
+          },
+          {
+            "properties": {
+              "state": {
+                "enum": [
+                  "derived",
+                  "unknown"
+                ]
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "derived"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "required": [
+                "rate"
+              ]
+            },
+            "else": {
+              "not": {
+                "required": [
+                  "rate"
+                ]
+              }
+            }
+          }
+        ],
+        "description": "Known captured-record rate, including zero, has exact count/exposure operands; unknown rates have neither value nor operands."
       },
       "scopedview.Values": {
         "type": "object",

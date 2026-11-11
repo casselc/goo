@@ -10,6 +10,8 @@ Apply. Only **Run** reads the destination's telemetry.
 The first arm contains exactly one summary and one records child. Summary facts
 use the existing supplied population dataset: count, requested span duration and
 requested recorded-status measures. Selected field order and title are reusable.
+[Captured records/s](CAPTURED_RECORD_RATES.md) can also be selected; it is computed
+from the destination count and window after explicit Run, not copied from the donor.
 Numeric measure bindings, grouping, aggregate/timeline/facet/comparison children and
 specialized sources remain outside this arm. A summary is not computed from the
 visible row page; unavailable values remain distinct from zero.

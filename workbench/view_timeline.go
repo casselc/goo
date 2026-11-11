@@ -82,7 +82,7 @@ func (d TimelineViewDeclaration) Validate(q exploration.Query) error {
 	if err := q.Validate(); err != nil {
 		return err
 	}
-	available := d.Display.Value == "count"
+	available := d.Display.Value == "count" || d.Display.Value == exploration.RecordRateKey && exploration.RecordRateQuery(q)
 	if q.Signal == "spans" && q.Summary == "span-duration" && (d.Display.Value == "duration.mean" || d.Display.Value == "duration.p95") {
 		for _, field := range exploration.ViewMeasureFields(q) {
 			if field.Key == d.Display.Value && field.Aggregation != nil && field.Aggregation.Family == "duration" {
@@ -92,7 +92,7 @@ func (d TimelineViewDeclaration) Validate(q exploration.Query) error {
 		}
 	}
 	if !available {
-		return errors.New("choose count or a mean/p95 duration supplied by the checked span query")
+		return errors.New("choose count, captured record rate or a mean/p95 duration supplied by the checked span query")
 	}
 	if !text(d.Display.Title, 120, d.Display.Title != "", false) {
 		return errors.New("timeline title must be bounded valid text")

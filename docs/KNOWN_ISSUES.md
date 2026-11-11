@@ -20,6 +20,13 @@ across 50 legal literals. The [405 review](reviews/ROADMAP_RECONCILIATION_405.md
 adopts observed-record rates, authored numeric histograms and passive grammar
 exports/examples as the next finite cadence.
 
+[Captured-record rates](CAPTURED_RECORD_RATES.md) (406) supplies exact count/window
+or count/clipped-interval rates in fixed ordinary summaries and ungrouped timelines.
+Rates remain an explicit presentation choice. Grouped rates, live-buffer rates
+and rate comparisons are excluded. Authored numeric histograms (407) and passive
+grammar exports/examples (408) remain next. Design review noted nonblocking narrow
+chart-label truncation and inherited stacked metadata for later product review.
+
 390 delivers [data-first native composition](NATIVE_DATA_FIRST.md) across ordinary
 Measurements, service-expanded native data and saved evidence. Successful reads
 collapse authoring; plots/first items precede full identity and provenance.

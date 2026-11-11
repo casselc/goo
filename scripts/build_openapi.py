@@ -449,7 +449,7 @@ for suffix in ('', 'Input'):
  sk['properties'].update(name={'const':'measure-summary'},version={'const':1})
  sd=schemas['workbench.SummaryViewDisplay'+suffix]
  sd.update(additionalProperties=False,required=['fields'])
- summary_keys=['count','numeric.mean','numeric.sum','numeric.min','numeric.max','duration.mean','duration.min','duration.max','duration.p50','duration.p95','duration.p99','status.error','status.ok','status.unset','status.unknown','status.error_fraction']
+ summary_keys=['count','record.rate','numeric.mean','numeric.sum','numeric.min','numeric.max','duration.mean','duration.min','duration.max','duration.p50','duration.p95','duration.p99','status.error','status.ok','status.unset','status.unknown','status.error_fraction']
  sd['properties']['fields']={'type':'array','minItems':1,'maxItems':6,'uniqueItems':True,'items':{'enum':summary_keys}}
  sd['properties']['title']={'type':'string','maxLength':120,'description':'At most120 UTF-8 bytes, valid Unicode with no controls; runtime enforces byte budget and nonblank nonempty text.'}
  summary['allOf']=[{'if':{'required':['display'],'properties':{'display':{'required':['fields'],'properties':{'fields':{'contains':{'enum':[key for key in summary_keys if key.startswith(('duration.','status.'))]}}}}}},'then':{'properties':{'scope':{'properties':{'signal':{'const':'spans'}}}}}}]
@@ -484,11 +484,11 @@ for suffix in ('', 'Input'):
  timeline['properties']['version']['const']='goo.view/1'
  for field in ('scope','kind','display'):timeline['properties'][field]['type']='object'
  timeline['properties']['scope']['required']=['kind','signal']
- timeline['description']='Fixed record counts or query-supported raw-span mean/p95 duration over explicit bounded buckets. The grouped-count-v1 profile consumes one ordinary typed group by fixed interval, with small multiples, Table or Heatmap (at most32 intervals). Grouping, width, exact clipped bounds, zero/unknown state and completeness are checked against the parent query and supplied dataset. No rates, population shares or averaged percentiles.'
+ timeline['description']='Fixed record counts or query-supported raw-span mean/p95 duration over explicit bounded buckets. The grouped-count-v1 profile consumes one ordinary typed group by fixed interval, with small multiples, Table or Heatmap (at most32 intervals). Grouping, width, exact clipped bounds, zero/unknown state and completeness are checked against the parent query and supplied dataset. Ordinary ungrouped record.rate uses supplied exact count/exposure facts in records/s; grouped rates, population shares and averaged percentiles remain unsupported.'
  kind=schemas['workbench.TimelineViewKind'+suffix];kind['additionalProperties']=False;kind['required']=['name','version']
  kind['properties']['name']['enum']=['time-bar','table','small-multiples','heatmap'];kind['properties']['version']['const']=1
  display=schemas['workbench.TimelineViewDisplay'+suffix];display['additionalProperties']=False;display['required']=['value']
- display['properties']['value']['enum']=['count','duration.mean','duration.p95'];display['properties']['title']['maxLength']=120
+ display['properties']['value']['enum']=['count','record.rate','duration.mean','duration.p95'];display['properties']['title']['maxLength']=120
  display['properties']['requiresComplete']['type']='boolean'
  display['properties']['profile']['enum']=['','grouped-count-v1','grouped-duration-mean-v1']
  display['properties']['title'].pop('anyOf',None);display['properties']['title']['type']='string'
@@ -496,6 +496,7 @@ for suffix in ('', 'Input'):
  display['properties']['order']['enum']=['','source','label']
  grouped_profile={'required':['profile'],'properties':{'profile':{'enum':['grouped-count-v1','grouped-duration-mean-v1']}}}
  timeline.setdefault('allOf',[]).append({'if':{'required':['display'],'properties':{'display':grouped_profile}},'then':{'properties':{'kind':{'properties':{'name':{'enum':['small-multiples','heatmap','table']}}}}},'else':{'properties':{'kind':{'properties':{'name':{'enum':['time-bar','table']}}},'display':{'properties':{'query':{'const':''},'order':{'const':''}}}}}})
+ timeline.setdefault('allOf',[]).append({'if':{'required':['display'],'properties':{'display':{'required':['value'],'properties':{'value':{'const':'record.rate'}}}}},'then':{'properties':{'display':{'properties':{'profile':{'const':''}}}}}})
  for profile,value in [('grouped-count-v1','count'),('grouped-duration-mean-v1','duration.mean')]:
   required={'display':{'properties':{'value':{'const':value}}}}
   if profile=='grouped-duration-mean-v1':required['scope']={'properties':{'signal':{'const':'spans'}}}
@@ -557,6 +558,11 @@ for suffix in ('', 'Input'):
    name='summary' if family=='duration.' else 'spanStatus'
    query.update(required=['signal',name]);query['properties'].update(signal={'const':'spans'},**{name:{'const':'span-duration' if family=='duration.' else True}})
   view['allOf'].append({'if':present,'then':{'properties':{'queries':{'items':query}}}})
+ # Rate is supplied only for ordinary ungrouped summaries and ungrouped timelines.
+ rate_child={'anyOf':[{'required':['summary'],'properties':{'summary':{'properties':{'display':{'required':['fields'],'properties':{'fields':{'contains':{'const':'record.rate'}}}}}}}},{'required':['timeline'],'properties':{'timeline':{'properties':{'display':{'required':['value'],'properties':{'value':{'const':'record.rate'}}}}}}}]}
+ rate_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':rate_child}}}}}
+ rate_query={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}
+ view.setdefault('allOf',[]).append({'if':rate_composition,'then':{'properties':{'queries':{'items':rate_query}}}})
  view.setdefault('allOf',[]).append({'if':raw_composition,'then':{'properties':{'queries':{'items':{'properties':{'signal':{'enum':['logs','spans']},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}}}}})
 
 # Immutable selected observations, independent of source and annotation storage.
@@ -650,13 +656,19 @@ for key in measure_values:
   if key!='duration.mean':measure_values[key]['maxLength']=20
 for name in ('Aggregation','Cell','Support'):schemas['scopedview.'+name]['additionalProperties']=False
 aggregation=schemas['scopedview.Aggregation'];agg_props=aggregation['properties']
-agg_props['family']['enum']=['numeric','duration','span-status','ratio'];agg_props['kind']['enum']=['mean','sum','min','max','quantile','count','fraction'];agg_props['method']['enum']=['exact-rational','exact','quantilesExactHigh'];agg_props['quantile']['enum']=['0.5','0.95','0.99']
+agg_props['family']['enum']=['numeric','duration','span-status','ratio','rate'];agg_props['kind']['enum']=['mean','sum','min','max','quantile','count','fraction','records-per-second'];agg_props['method']['enum']=['exact-rational','exact','quantilesExactHigh'];agg_props['quantile']['enum']=['0.5','0.95','0.99']
 agg_props['numerator']={'type':'string','const':'status.error'};agg_props['denominator']={'type':'string','const':'count'}
 aggregation['oneOf']=[]
 for spec in measure_specs.values():
  optional=('quantile','numerator','denominator')
  present=[key for key in optional if key in spec];absent=[key for key in optional if key not in spec]
  aggregation['oneOf'].append({'properties':{key:{'const':value} for key,value in spec.items()},**({'required':present} if present else {}),**({'not':{'anyOf':[{'required':[key]} for key in absent]}} if absent else {})})
+rate_spec={'family':'rate','kind':'records-per-second','method':'exact-rational'}
+aggregation['oneOf'].append({'properties':{key:{'const':value} for key,value in rate_spec.items()},'not':{'anyOf':[{'required':[key]} for key in ('quantile','numerator','denominator')]}})
+rate_value={**rational_value,'type':['string','null'],'pattern':'^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$','description':'Exact nonnegative captured-record count times1000 divided by actual elapsed milliseconds. It is records/s, not a bounded fraction or complete upstream throughput.'}
+rate_facts=schemas['scopedview.RateFacts'];rate_facts.update(type='object',additionalProperties=False,required=['count','elapsedMs'])
+rate_facts['properties']={'count':copy.deepcopy(exact_count),'elapsedMs':{**epoch_ms,'pattern':'^[1-9][0-9]*$','description':'Positive actual elapsed duration in milliseconds, encoded as a canonical decimal string.'}}
+rate_facts['description']='Exact operands for captured-record activity rate. Runtime verifies count against the row count, elapsedMs against the full fixed summary window or actual clipped interval, and reduced rational arithmetic.'
 # Different keys may share identical aggregation descriptions; de-duplicate the
 # candidates so oneOf expresses semantic alternatives rather than field names.
 aggregation['oneOf']=list({json.dumps(x,sort_keys=True):x for x in aggregation['oneOf']}.values())
@@ -670,10 +682,12 @@ supported_cell_rules=[
  {'if':{'properties':{'state':{'const':'no_data'}},'required':['state']},'then':{'properties':{'support':{'properties':{key:{'const':'0'} for key in ('total','valid','missing','empty','invalid')}}}}},
  {'if':{'properties':{'state':{'const':'no_valid_values'}},'required':['state']},'then':{'properties':{'support':{'properties':{'valid':{'const':'0'},'total':{**exact_count,'pattern':'^[1-9][0-9]*$'}}}}}}
 ]
-cell['allOf']=[{'if':{'properties':{'state':{'const':'unknown'}},'required':['state']},'then':{'not':{'required':['support']}}}]
-schemas['exploration.SupportedViewCell']={'allOf':[ref('scopedview.Cell'),*supported_cell_rules],'description':'Numeric/duration availability retains its exact supporting-record validity partition.'}
-schemas['exploration.StatusCountViewCell']={'allOf':[ref('scopedview.Cell'),{'not':{'required':['support']}},{'properties':{'state':{'enum':['derived','unknown']}}}],'description':'Exact captured span-status count, including known zero, or an explicitly unknown interval. No numeric-validity support partition is fabricated.'}
-schemas['exploration.FractionViewCell']={'allOf':[ref('scopedview.Cell'),{'not':{'required':['support']}},{'properties':{'state':{'enum':['derived','no_data','unknown']}}}],'description':'Exact operand-bound subset fraction, unavailable for an empty denominator, or unknown. Its named count operands replace numeric-validity support.'}
+cell['properties']['rate']=ref('scopedview.RateFacts')
+cell['allOf']=[{'if':{'properties':{'state':{'const':'unknown'}},'required':['state']},'then':{'not':{'anyOf':[{'required':['support']},{'required':['rate']}]}}}]
+schemas['exploration.SupportedViewCell']={'allOf':[ref('scopedview.Cell'),{'not':{'required':['rate']}},*supported_cell_rules],'description':'Numeric/duration availability retains its exact supporting-record validity partition.'}
+schemas['exploration.StatusCountViewCell']={'allOf':[ref('scopedview.Cell'),{'not':{'anyOf':[{'required':['support']},{'required':['rate']}]}},{'properties':{'state':{'enum':['derived','unknown']}}}],'description':'Exact captured span-status count, including known zero, or an explicitly unknown interval. No numeric-validity support partition is fabricated.'}
+schemas['exploration.FractionViewCell']={'allOf':[ref('scopedview.Cell'),{'not':{'anyOf':[{'required':['support']},{'required':['rate']}]}},{'properties':{'state':{'enum':['derived','no_data','unknown']}}}],'description':'Exact operand-bound subset fraction, unavailable for an empty denominator, or unknown. Its named count operands replace numeric-validity support.'}
+schemas['exploration.RecordRateViewCell']={'allOf':[ref('scopedview.Cell'),{'not':{'required':['support']}},{'properties':{'state':{'enum':['derived','unknown']}}},{'if':{'properties':{'state':{'const':'derived'}},'required':['state']},'then':{'required':['rate']},'else':{'not':{'required':['rate']}}}],'description':'Known captured-record rate, including zero, has exact count/exposure operands; unknown rates have neither value nor operands.'}
 schemas['scopedview.Values']={'type':'object','additionalProperties':{'type':['string','null'],'maxLength':1024},'description':'Exact strings or explicit missing values. Dataset fields and shape constrain every cell; no vendor-specific opaque payload.'}
 view=schemas['scopedview.Dataset'];view_props=view['properties']
 view_props['partition']=ref('scopedview.Partition')
@@ -682,14 +696,14 @@ view_props['version']['const']='goo.dataset/1';view_props['shape']['enum']=['ran
 view_props['id']['pattern']='^[a-f0-9]{64}:(groups|intervals|grouped-intervals|summary|bins|native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*):bins|native-window:(0|[1-9][0-9]*):bins)$';view_props['revision']['pattern']='^[a-f0-9]{64}$';view_props['capturedAt']['format']='date-time'
 view_props['origin']['enum']=['source-read','browser-held']
 view_props['sourceBasis'].update(minLength=1,maxLength=128,description='Unverified caller-claimed source basis, separate from the content-hashed held revision. Not a signed receipt.')
-view_props['fields']={'type':'array','minItems':2,'maxItems':18,'items':ref('scopedview.Field')}
+view_props['fields']={'type':'array','minItems':2,'maxItems':19,'items':ref('scopedview.Field')}
 view_props['rows']={'type':'array','maxItems':1920,'items':ref('scopedview.Row')}
 view_props['dimensions']={'type':'array','minItems':1,'maxItems':2,'uniqueItems':True,'items':{'enum':['category','category1']}}
 view_scope=schemas['scopedview.Scope']['properties']
 for name in ('id','generation'):view_scope[name]['pattern']='^[a-f0-9]{64}$'
 view_scope['id']['pattern']='^[a-f0-9]{64}(:native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)|:native-window:(0|[1-9][0-9]*))?$'
 view_scope['signal']['enum']=['logs','spans','metrics'];view_scope['selector']={'oneOf':[ref('exploration.Query'),ref('measurements.HistogramViewSelector'),ref('measurements.HistogramTimeViewSelector'),ref('measurements.HistogramWindowViewSelector')]}
-view_field=schemas['scopedview.Field']['properties'];view_field['key']['enum']=['category','category1','count','fromMs','toMs','from','to']+list(measure_specs);view_field['type']['enum']=['string','number','timestamp','rational','histogram-bound']
+view_field=schemas['scopedview.Field']['properties'];view_field['key']['enum']=['category','category1','count','fromMs','toMs','from','to']+list(measure_specs)+['record.rate'];view_field['type']['enum']=['string','number','timestamp','rational','histogram-bound']
 view_field['format']['enum']=['','log-pattern-v1']
 view_field['format']['description']='Finite supplied category semantics, not a renderer registry. log-pattern-v1 carries canonical lp1 identities; readable labels are derived by the pinned decoder and never replace identity. Runtime requires the matching count-only log-pattern selector.'
 schemas['scopedview.Field']['allOf']=[]
@@ -697,6 +711,7 @@ schemas['scopedview.Field']['allOf'].append({'if':{'required':['format'],'proper
 for key,spec in measure_specs.items():
  unit={'const':'ns'} if spec['family']=='duration' else {'const':'records'} if spec['family']=='span-status' else {'const':'1'} if spec['family']=='ratio' else {'type':'string','minLength':1}
  schemas['scopedview.Field']['allOf'].append({'if':{'properties':{'key':{'const':key}},'required':['key']},'then':{'required':['aggregation','unit','nullable'],'properties':{'nullable':{'const':True},'type':{'const':'number' if spec['family']=='span-status' else 'rational'},'unit':unit,'aggregation':{'type':'object','properties':{k:{'const':v} for k,v in spec.items()}}}}})
+schemas['scopedview.Field']['allOf'].append({'if':{'required':['key'],'properties':{'key':{'const':'record.rate'}}},'then':{'required':['aggregation','unit','nullable'],'properties':{'type':{'const':'rational'},'unit':{'const':'records/s'},'nullable':{'const':True},'aggregation':{'properties':{key:{'const':value} for key,value in rate_spec.items()}}}}})
 schemas['scopedview.Field']['allOf'].append({'if':{'properties':{'key':{'enum':['category','category1','count','fromMs','toMs']}},'required':['key']},'then':{'not':{'required':['aggregation']}}})
 view_quality=schemas['scopedview.Quality']['properties'];view_quality['extent']['enum']=['complete','unknown']
 for name,value in [('basis','captured-query'),('value','derived'),('sampling','unknown'),('freshness','fixed')]:view_quality[name]['const']=value
@@ -711,7 +726,7 @@ for name in ('fromMs','toMs'):interval_props[name]=copy.deepcopy(epoch_ms)
 interval_props['bucketMs']={'type':'string','enum':['1000','10000','60000','300000']}
 row=schemas['scopedview.Row'];row['properties']['state']['enum']=['observed','no_data','unknown']
 row['properties']['key'].update(minLength=1,maxLength=128,description='Stable snapshot row identity; never a source-record member reference.')
-row['properties']['cells']={'type':'object','maxProperties':15,'propertyNames':{'enum':list(measure_specs)},'additionalProperties':ref('scopedview.Cell')}
+row['properties']['cells']={'type':'object','maxProperties':16,'propertyNames':{'enum':list(measure_specs)+['record.rate']},'additionalProperties':ref('scopedview.Cell')}
 row['allOf']=[]
 for key,spec in measure_specs.items():
  cell_schema=ref('exploration.StatusCountViewCell' if spec['family']=='span-status' else 'exploration.FractionViewCell' if spec['family']=='ratio' else 'exploration.SupportedViewCell')
@@ -722,6 +737,9 @@ for key,spec in measure_specs.items():
   'allOf':[{'if':{'properties':{'cells':{'properties':{key:{'properties':{'state':{'enum':['derived','estimated']}}}}}}},
    'then':{'properties':{'values':{'properties':{key:known}}}},
    'else':{'properties':{'values':{'properties':{key:{'type':'null'}}}}}}]}})
+
+row['allOf'].append({'if':{'required':['values'],'properties':{'values':{'required':['record.rate']}}},'then':{'required':['cells'],'properties':{'cells':{'required':['record.rate'],'properties':{'record.rate':ref('exploration.RecordRateViewCell')}}}}})
+row['allOf'].append({'if':{'required':['cells'],'properties':{'cells':{'required':['record.rate']}}},'then':{'properties':{'values':{'required':['record.rate']},'cells':{'properties':{'record.rate':ref('exploration.RecordRateViewCell')}}},'allOf':[{'if':{'properties':{'cells':{'properties':{'record.rate':{'properties':{'state':{'const':'derived'}}}}}}},'then':{'properties':{'values':{'properties':{'record.rate':{**rate_value,'type':'string'}}}}},'else':{'properties':{'values':{'properties':{'record.rate':{'type':'null'}}}}}}]}})
 
 
 def view_field_spec(key,kind,unit=None,nullable=False):
@@ -747,7 +765,7 @@ for dims in (['category'],['category','category1']):
 pattern_field={'allOf':[ref('scopedview.Field'),{'required':['format'],'properties':{'key':{'const':'category'},'type':{'const':'string'},'format':{'const':'log-pattern-v1'},'nullable':{'const':False}},'not':{'required':['aggregation']}}]}
 pattern_selector={'properties':{'signal':{'const':'logs'},'groupBy':{'const':[{'kind':'column','key':'body_pattern_v1'}]},'groupTimeSeries':{'const':False},'spanStatus':{'const':False},'summary':{'const':''}},'required':['signal','groupBy'],'not':{'anyOf':[{'required':[key]} for key in ['numeric','numericHistogram','reportedEdge']]}}
 ranked.append({'required':['dimensions'],'properties':{'dimensions':{'const':['category']},'scope':{'properties':{'signal':{'const':'logs'},'selector':pattern_selector}},'fields':{'minItems':2,'maxItems':2,'prefixItems':[pattern_field,view_field_spec('count','number','records')]},'rows':{'items':{'allOf':[copy.deepcopy(ranked[0]['properties']['rows']['items']),{'properties':{'values':{'properties':{'category':{'type':'string','pattern':'^lp1:(e|o|u|p:[0-9a-fn]*)$'}}}}}]}}}})
-time_values={'type':'object','required':['fromMs','toMs'],'properties':{'fromMs':epoch_ms,'toMs':epoch_ms,'count':{'type':['string','null']},**measure_values},'additionalProperties':False}
+time_values={'type':'object','required':['fromMs','toMs'],'properties':{'fromMs':epoch_ms,'toMs':epoch_ms,'count':{'type':['string','null']},**measure_values,'record.rate':rate_value},'additionalProperties':False}
 time_states=[{'properties':{'state':{'const':'observed'},'values':{'required':['count'],'properties':{'count':{**exact_count,'pattern':'^[1-9][0-9]*$'}}}}},{'properties':{'state':{'const':'no_data'},'values':{'required':['count'],'properties':{'count':{'const':'0'}}}}},{'properties':{'state':{'const':'unknown'},'values':{'properties':{'count':{'type':'null'}}}}}]
 time_fields=[view_field_spec('fromMs','timestamp','ms'),view_field_spec('toMs','timestamp','ms'),view_field_spec('count','number','records',nullable=True)]
 ranked_shape={'properties':{'shape':{'const':'ranked'},'id':{'pattern':'^[a-f0-9]{64}:groups$'},'completeness':{'properties':{'aspects':{'const':['groups']}}}},'not':{'required':['interval']},'oneOf':ranked}
@@ -757,7 +775,7 @@ time_row={'allOf':[ref('scopedview.Row'),{
  'oneOf':time_states}]}
 time_shape={'required':['interval'],'not':{'anyOf':[{'required':['dimensions']},{'required':['partition']}]},'properties':{
  'shape':{'const':'time-series'},'id':{'pattern':'^[a-f0-9]{64}:intervals$'},'interval':{'type':'object'},
- 'fields':{'minItems':3,'maxItems':18,'prefixItems':time_fields,'items':{'allOf':[ref('scopedview.Field'),{'properties':{'key':{'enum':list(measure_specs)}}}]}},
+ 'fields':{'minItems':3,'maxItems':19,'prefixItems':time_fields,'items':{'allOf':[ref('scopedview.Field'),{'properties':{'key':{'enum':list(measure_specs)+['record.rate']}}}]}},
  'rows':{'maxItems':240,'items':time_row},
  'completeness':{'properties':{'aspects':{'const':['intervals']}}}}}
 # Grouped intervals have their own Cartesian coverage, not an unsplit timeline
@@ -785,12 +803,12 @@ gm_row['allOf'][1]['properties']['values']=gm_values
 gm_row['allOf'][1]['required']+=['cells']
 gm_row['allOf'][1]['properties']['cells']={'type':'object','required':['duration.sum','duration.mean'],'additionalProperties':False,'properties':{key:ref('exploration.SupportedViewCell') for key in ['duration.sum','duration.mean']}}
 gm['rows']['items']=gm_row
-summary_values={'type':'object','required':['count'],'properties':{'count':exact_count,**measure_values},'additionalProperties':False}
+summary_values={'type':'object','required':['count'],'properties':{'count':exact_count,**measure_values,'record.rate':rate_value},'additionalProperties':False}
 summary_row={'allOf':[ref('scopedview.Row'),{'not':{'required':['state']},'properties':{'key':{'const':'population'},'values':summary_values}}]}
 summary_fields=[view_field_spec('count','number','records')]
 summary_shape={'not':{'anyOf':[{'required':['dimensions']},{'required':['interval']},{'required':['partition']}]},'properties':{
  'shape':{'const':'summary'},'id':{'pattern':'^[a-f0-9]{64}:summary$'},
- 'fields':{'minItems':1,'maxItems':16,'prefixItems':summary_fields,'items':{'allOf':[ref('scopedview.Field'),{'properties':{'key':{'enum':list(measure_specs)}}}]}},
+ 'fields':{'minItems':1,'maxItems':17,'prefixItems':summary_fields,'items':{'allOf':[ref('scopedview.Field'),{'properties':{'key':{'enum':list(measure_specs)+['record.rate']}}}]}},
  'rows':{'minItems':1,'maxItems':1,'items':summary_row},
  'completeness':{'properties':{'aspects':{'const':['summary']}}}}}
 view_props['fields']['minItems']=1
@@ -862,6 +880,14 @@ view['allOf'].append({'if':{'properties':{'shape':{'const':'grouped-time-series'
 
 view['allOf'].append({'if':{'properties':{'scope':{'properties':{'signal':{'const':'metrics'}}}}},'then':{'properties':{'shape':{'const':'histogram'},'histogram':{'properties':{'kind':{'const':'otel-explicit'}}},'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}:(native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)|native-window:(0|[1-9][0-9]*))$'}}}}},'else':{'properties':{'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}$'},'selector':ref('exploration.Query')}}}}})
 
+rate_present={'required':['fields'],'properties':{'fields':{'contains':{'required':['key'],'properties':{'key':{'const':'record.rate'}}}}}}
+rate_selector={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}
+view['allOf'].append({'if':rate_present,'then':{'properties':{'shape':{'enum':['summary','time-series']},'scope':{'properties':{'signal':{'enum':['logs','spans']},'selector':rate_selector}},'rows':{'items':{'properties':{'values':{'required':['record.rate']},'cells':{'required':['record.rate']}}}}}}})
+# A supplied rate uses the same known/unknown interval boundary as its count.
+rate_row_states={'if':{'required':['state'],'properties':{'state':{'const':'unknown'}}},'then':{'properties':{'cells':{'properties':{'record.rate':{'properties':{'state':{'const':'unknown'}}}}}}},'else':{'properties':{'cells':{'properties':{'record.rate':{'properties':{'state':{'const':'derived'}}}}}}}}
+view['allOf'].append({'if':rate_present,'then':{'properties':{'rows':{'items':rate_row_states}}}})
+rate_in_rows={'required':['rows'],'properties':{'rows':{'contains':{'anyOf':[{'required':['values'],'properties':{'values':{'required':['record.rate']}}},{'required':['cells'],'properties':{'cells':{'required':['record.rate']}}}]}}}}
+view['allOf'].append({'if':rate_in_rows,'then':rate_present})
 status_keys=[key for key in measure_specs if key.startswith('status.')]
 status_counts=[key for key in status_keys if key!='status.error_fraction']
 status_present={'properties':{'fields':{'contains':{'properties':{'key':{'enum':status_keys}},'required':['key']}}},'required':['fields']}
@@ -903,7 +929,7 @@ comparison['description']='Independent browser-held summary snapshots with exact
 comparison['description']+=' Requested span-status comparisons use the separate existing percentage-point response; this canonical envelope is withheld for that profile.'
 cmp_props=comparison['properties'];cmp_props['version']['const']='goo.comparison/1';cmp_props['state']['enum']=['observed','no_data','diagnostic','incompatible']
 for side in ('baseline','selection'):
- cmp_props[side]={'allOf':[ref('scopedview.Dataset'),{'properties':{'shape':{'const':'summary'},'origin':{'const':'browser-held'}},'required':['origin'],'not':status_present}]}
+ cmp_props[side]={'allOf':[ref('scopedview.Dataset'),{'properties':{'shape':{'const':'summary'},'origin':{'const':'browser-held'}},'required':['origin'],'not':{'anyOf':[status_present,rate_present]}}]}
 cmp_props['reason'].update(minLength=1,maxLength=128)
 cmp_props['changes']={'type':'object','minProperties':1,'maxProperties':11,'propertyNames':{'enum':['count']+[key for key in measure_specs if not key.startswith('status.')]},'additionalProperties':ref('exploration.ViewChange')}
 comparison['allOf']=[{'if':{'properties':{'state':{'enum':['diagnostic','incompatible']}},'required':['state']},'then':{'properties':{'changes':{'additionalProperties':{'properties':{'state':{'const':'unavailable'}}}}}},'else':{'properties':{'changes':{'properties':{'count':{'properties':{'state':{'const':'derived'}}}},'required':['count']}}}}]

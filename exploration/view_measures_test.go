@@ -173,8 +173,11 @@ func TestViewMeasuresTimeClipNoDataUnknownAndCoherence(t *testing.T) {
 	raw, _ := json.Marshal(map[string]any{"from_ms": "1000", "count": "3", "numeric": n, "sum_ns": d.SumNS, "min_ns": d.MinNS, "max_ns": d.MaxNS, "quantiles_ns": []string{d.P50NS, d.P95NS, d.P99NS}})
 	r := timeViewFixture(t, q, []json.RawMessage{raw})
 	snapshot := timeViewDataset(r, true)
-	if snapshot == nil || snapshot.Completeness == nil || len(snapshot.Fields) != 13 || *snapshot.Rows[0].Values["numeric.mean"] != "1/50" || *snapshot.Rows[0].Values["duration.mean"] != "2" || *snapshot.Rows[2].Values["toMs"] != "3500" {
+	if snapshot == nil || snapshot.Completeness == nil || len(snapshot.Fields) != 14 || *snapshot.Rows[0].Values["numeric.mean"] != "1/50" || *snapshot.Rows[0].Values["duration.mean"] != "2" || *snapshot.Rows[2].Values["toMs"] != "3500" {
 		t.Fatal(snapshot)
+	}
+	if *snapshot.Rows[2].Values[RecordRateKey] != "0" || snapshot.Rows[2].Cells[RecordRateKey].State != "derived" || snapshot.Rows[2].Cells[RecordRateKey].Rate.ElapsedMS != "500" {
+		t.Fatal("captured rate must preserve exact zero independently of numeric/duration no_data")
 	}
 	for _, key := range []string{"numeric.sum", "duration.p95"} {
 		if snapshot.Rows[2].Values[key] != nil || snapshot.Rows[2].Cells[key].State != "no_data" || snapshot.Rows[2].Cells[key].Support.Total != "0" {

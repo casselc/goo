@@ -10,7 +10,8 @@ an existing span question with `summary: "span-duration"`; changing presentation
 never silently requests that summary or reads telemetry. The existing focused-signal
 workflow makes recent span questions available for this authoring path.
 
-Counts are captured records, not rates or an assertion of health. Duration values
+Counts are captured records. The optional [Captured records/s measure](CAPTURED_RECORD_RATES.md)
+uses exact counts and actual interval duration; neither measure establishes health. Duration values
 come from raw spans evaluated per interval, not averages of stored percentiles.
 Labels use human duration units; exact values, sample support and the empirical
 quantile method remain available in tooltips and the exact table. An authored title
@@ -74,8 +75,8 @@ configuration contains no rows, witnesses, cursors or action authority. Hidden,
 detached or retired mounts cannot stage windows. The checked action owner derives
 bounds from contiguous known supplied rows rather than component milliseconds.
 
-This profile is fixed-window and single-query. Numeric/native metric timelines,
-rates, grouped time series, live subscriptions and arbitrary nested layouts remain
+This profile is fixed-window and single-query. Numeric/native metric timelines, grouped time series, live subscriptions and
+arbitrary nested layouts remain
 separate work. The HTTP service template keeps its two-child default.
 
 

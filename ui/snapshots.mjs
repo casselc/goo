@@ -133,6 +133,8 @@ function sourceQuestion(raw,question){
   if(question.numericHistogram?.binning!=='powers-of-two'||!q||JSON.stringify([b.field.kind,b.field.key,b.type,b.unit,b.parse,b.scale??0])!==JSON.stringify([q.field.kind,q.field.key,q.type,q.unit,q.parse,q.scale??0]))fail('source-question','Source histogram does not match its requested numeric binding');
   return;
  }
+ const rates=raw.fields.filter(field=>field.key==='record.rate'||field.aggregation?.family==='rate');
+ if(rates.length&&(!['summary','time-series'].includes(raw.shape)||(question.groupBy?.length??0)!==0||question.groupTimeSeries||question.numericHistogram||question.reportedEdge))fail('source-question','Captured record rate requires an ordinary ungrouped fixed window');
  const statusKeys=['status.error','status.ok','status.unset','status.unknown'];
  const statuses=raw.fields.filter(field=>field.aggregation?.family==='span-status'),fraction=raw.fields.find(field=>field.key==='status.error_fraction');
  if(question.spanStatus===true&&(question.signal!=='spans'||statuses.length!==4||!statusKeys.every(key=>statuses.some(field=>field.key===key))||fraction?.aggregation?.family!=='ratio'||fraction.aggregation.kind!=='fraction'||fraction.aggregation.numerator!=='status.error'||fraction.aggregation.denominator!=='count'))fail('source-question','Source span-status profile requires all classes and the recorded error fraction');

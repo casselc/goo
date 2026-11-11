@@ -164,6 +164,9 @@ func timeViewDataset(r *Result, exhaustiveIntervals bool) *ViewDataset {
 	d.Fields = []ViewField{{Key: "fromMs", Label: "Interval start", Type: "timestamp", Unit: "ms"}, {Key: "toMs", Label: "Interval end", Type: "timestamp", Unit: "ms"}, {Key: "count", Label: "Captured records", Type: "number", Unit: "records", Nullable: true}}
 	d.Fields = append(d.Fields, ViewMeasureFields(q)...)
 	previousEnd := q.FromMS
+	if RecordRateQuery(q) {
+		d.Fields = append(d.Fields, recordRateField(q))
+	}
 	for _, p := range r.TimeSeries {
 		if p.FromMS < previousEnd || p.FromMS < q.FromMS || p.FromMS >= q.ToMS || (p.FromMS-q.FromMS)%q.BucketMS != 0 || p.ToMS != min(p.FromMS+q.BucketMS, q.ToMS) {
 			return nil
@@ -189,11 +192,18 @@ func timeViewDataset(r *Result, exhaustiveIntervals bool) *ViewDataset {
 		if !ok {
 			return nil
 		}
-		d.Rows = append(d.Rows, ViewRow{Key: "interval:" + from + ":" + to, State: p.State, Values: values, Cells: cells})
+		row := ViewRow{Key: "interval:" + from + ":" + to, State: p.State, Values: values, Cells: cells}
+		if RecordRateQuery(q) && !addRecordRate(&row, p.ToMS-p.FromMS, p.State == "unknown") {
+			return nil
+		}
+		d.Rows = append(d.Rows, row)
 		previousEnd = p.ToMS
 	}
 	if exhaustiveIntervals && r.State != "changed_between_reads" && ValidateTimeSeries(q, r.TimeSeries) == nil {
 		attestView(d, "intervals")
+	}
+	if ValidateRecordRateDataset(d) != nil {
+		return nil
 	}
 	return d
 }

@@ -59,7 +59,7 @@ test('display entry imports a closed passive graph without publishing namespaces
   const summaryURL = new URL('../ui/summary-declaration.mjs', import.meta.url);
   assert.ok(visited.has(summaryURL.href));
   const summary = await import(summaryURL.href);
-  assert.deepEqual(summary.availableFields({signal:'logs'}), ['count']);
+  assert.deepEqual(summary.availableFields({signal:'logs'}), ['count','record.rate']);
   assert.equal(visited.size, 60);
 });
 

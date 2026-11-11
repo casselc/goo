@@ -3,7 +3,7 @@ import {comparisonRoleLabels} from './comparison-role-labels.mjs';
 import {validateSnapshot,measureValue,fractionFacts} from './view-model.mjs';
 import {validateComparison} from './view-comparison.mjs';
 import {signedScale} from './comparison-visual.mjs';
-import {formatCell,exactText} from './view-values.mjs';
+import {formatCell,exactText,defaultSummaryFields} from './view-values.mjs';
 import {asSnapshot,asComparison,parseSnapshotJSON,parseComparisonJSON} from './snapshots.mjs';
 import './chart-frame.mjs';
 
@@ -39,7 +39,7 @@ function options(display,fields,{comparison=false}={}){
   if(Object.keys(display).some(key=>!allowed.includes(key)))throw TypeError('Unsupported display option.');
   if(display.title!==undefined&&(typeof display.title!=='string'||display.title.length>512))throw TypeError('Use a short display title.');
   if(display.compact!==undefined&&typeof display.compact!=='boolean')throw TypeError('compact must be boolean.');
-  const keys=display.fields??fields.filter(numeric).map(field=>field.key);
+  const keys=display.fields??defaultSummaryFields(fields).map(field=>field.key);
   if(!Array.isArray(keys)||!keys.length||keys.length>64||new Set(keys).size!==keys.length||keys.some(key=>!fields.some(field=>field.key===key&&numeric(field))))throw TypeError('Choose distinct supplied numeric measures.');
   return {...display,...(comparison?{labels:comparisonRoleLabels(display.labels)}:{}),fields:keys,compact:display.compact!==false,configured:display.fields!==undefined};
 }
