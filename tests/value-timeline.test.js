@@ -31,3 +31,7 @@ test('brush geometry uses exact supplied timestamps, clamps no invalid inputs an
 });
 
 test('supplied role identifiers and stable full-series domain preserve page/focus geometry and reject clipping',()=>{const d={fromNS:'0',toNS:'100',domain:{min:'0',max:'4'},scaleLabel:'0 to 4 cores',points:[{...point('usage','1','20'),series:'usage'}]},before=structuredClone(d),m=model(d);assert.equal(m.points[0].y,25);assert.equal(m.points[0].series,'usage');assert.equal(m.max,'4');assert.deepEqual(d,before);for(const edit of [v=>v.domain.max='0.5',v=>v.domain.min='1',v=>v.domain.max='NaN',v=>v.points[0].series='bad role',v=>v.scaleLabel='x'.repeat(257)]){const bad=structuredClone(d);edit(bad);assert.equal(model(bad).state,'unavailable')}const tiny='0.'+'0'.repeat(307)+'1';assert.equal(model({...d,domain:{min:'0',max:tiny},points:[point('tiny',tiny,'20')]}).points[0].y,100)});
+
+test('UTC endpoint labels retain supplied nanosecond precision in exact accessible context',()=>{
+ const {timeBounds}=require('../ui/value-timeline.mjs'),data={fromNS:'900719925474099300',toNS:'900719925474099400'},before=structuredClone(data),bounds=timeBounds(data);assert.equal(bounds.length,2);assert.equal(bounds[0].exact,'1998-07-17T23:58:45.474099300Z');assert.equal(bounds[1].exact,'1998-07-17T23:58:45.474099400Z');assert.equal(bounds[0].text,'23:58:45.474 UTC');assert(bounds[0].title.includes(data.fromNS+' ns'));assert.deepEqual(data,before);for(const invalid of [null,{fromNS:'x',toNS:'100'},{fromNS:'1',toNS:'1'},{fromNS:'100',toNS:'0'}])assert.deepEqual(timeBounds(invalid),[]);
+});

@@ -40,3 +40,19 @@ test('mean summary shares independent operand facts and exact supplied support w
  assert.equal(shown.root.attributes.get('aria-label'),'Mean duration comparison');assert.deepEqual(shown.summary.display.fields,['duration.mean']);assert.equal(shown.groups,null);assert.equal(shown.nodes.chrome.controls.hidden,true);assert.equal(shown.nodes.chrome.operands.firstChild.children[1].textContent,'9007199254740993 duration contributors');assert.equal(shown.nodes.chrome.operands.lastChild.children[1].textContent,'3 duration contributors');
  shown.viewSelect.value='groups';shown.viewSelect.onchange();assert.deepEqual(calls,[]);assert.equal(shown.viewSelect.value,'summary');
 }));
+
+test('result-first pair has one collapsed source context and preserves exact supplied identity without acquiring data',()=>dom(()=>{
+ const input=fixture('132','168'),before=structuredClone(input),host=new Element('main');host.connected=true;
+ const shown=V.countPair(host,input),chrome=shown.nodes.chrome;
+ assert.equal(chrome.scope.open,false);
+ assert.equal(chrome.operands.parent,chrome.scope);
+ assert.equal(shown.root.children.includes(chrome.operands),false);
+ assert.equal(shown.summary.attributes.has('data-first'),true);
+ assert.equal(shown.summary.attributes.has('external-context'),true);
+ const rows=chrome.scopeBody.firstChild.children[1].children;
+ for(const [label,value]of [['Dataset','baseline'],['Revision','baseline'],['Origin','browser-held'],['Extent','unknown'],['Sampling','unknown'],['Source basis','basis-baseline']]){
+  const row=rows.find(row=>row.children[0].textContent===label);assert(row,label);assert.equal(row.children[1].textContent,value);
+ }
+ assert.equal(chrome.notice.textContent,'Independent populations · upstream coverage unknown.');
+ assert.deepEqual(input,before);
+}));

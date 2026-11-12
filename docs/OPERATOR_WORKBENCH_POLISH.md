@@ -84,3 +84,10 @@ explicit Pause row alignment, accessible service identities and resource tabs,
 contrast, and 320px record-table containment. Explicit Pause aligns the viewport
 only; inspection pauses retain their existing behavior. Close reveals its opener,
 and held navigation restores the captured observation window and viewport.
+
+## Result presentation follow-up
+
+The [refinement after 415](RESULT_PRESENTATION_POLISH.md) applies the same
+result-first hierarchy to shared comparisons, service timelines, metric rows and
+Recent/Pinned recall. Repeated operand metadata is consolidated; unknown markers
+remain precise and keyboard-accessible without overlapping glyphs.

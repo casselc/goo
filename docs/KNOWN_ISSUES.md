@@ -32,6 +32,11 @@ deployment attribution and cross-window version selection are not added.
 Discovery requires coherent complete bounded version groups, independently read
 from the retained parent overview.
 
+[Result presentation refinement](RESULT_PRESENTATION_POLISH.md) consolidates
+comparison provenance, aligns narrow paired values, quiets dense unknown timeline
+markers and restructures scope recall. Native focus and exact read/scope facts
+remain available; the review is bounded to the exercised Chromium surfaces.
+
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 

@@ -45,3 +45,10 @@ With `GOO_SERVICE_VERSIONS_BOMBADIL=1`, a 45-second campaign independently opens
 stored inventory scope, discovers versions, chooses cohorts, runs a comparison
 and returns to the retained service. It rejects unexpected source fanout,
 publication and replacement of the held parent evidence.
+
+The presentation refinement also checks primary values at 1440/390/320px: paired
+numbers align even when labels wrap, chart chrome stays bounded, exact read facts
+remain keyboard-accessible, and calling the folded baseline-refresh handler cannot
+read telemetry. Additional 390/320px comparison frames complement the picker
+frames. The shared timeline retains all exact unknown intervals without repeated
+question-mark glyphs.

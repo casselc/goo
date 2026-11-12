@@ -1849,16 +1849,22 @@ input::placeholder,textarea::placeholder {color:var(--muted);opacity:1}
 .scope-history>summary{width:fit-content;font-size:.8125rem;color:var(--muted);padding:.25rem 0}
 .scope-history>div:not(.controls){display:grid;gap:.5rem;max-height:24rem;overflow:auto;overscroll-behavior:contain}
 .scope-history section{min-width:0}
-.scope-history h3{font-size:.75rem;margin:.5rem 0 .25rem;color:var(--muted)}
-.scope-history-row{display:flex;flex-wrap:wrap;align-items:center;gap:.25rem;padding:.375rem 0;border-bottom:1px solid var(--border)}
-.scope-history-row>span{flex:1 1 22rem;min-width:0;overflow-wrap:anywhere;font-size:.8125rem;line-height:1.4}
-.scope-history-row>button{font-size:.75rem;padding:.25rem .5rem;min-height:1.875rem}
-.scope-history section>[data-visit-id]{display:block;max-width:100%;margin:.25rem 0;text-align:left;overflow-wrap:anywhere;white-space:normal}
+.scope-history h3{font-size:.6875rem;letter-spacing:.04em;text-transform:uppercase;margin:.5rem 0 .25rem;color:var(--muted)}
+.scope-history-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.5rem 1rem;padding:.5rem 0;border-bottom:1px solid var(--border)}
+.scope-history-summary{display:grid;gap:.2rem;min-width:0;overflow-wrap:anywhere;font-size:.8125rem;line-height:1.35}
+.scope-history-title{font-weight:550;color:var(--ink)}
+.scope-history-meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem .5rem;color:var(--muted);font-size:.75rem}
+.scope-history-policy{font-size:.6875rem;border:1px solid var(--border);border-radius:3px;padding:0 .25rem;white-space:nowrap}
+.scope-history-window,.scope-history-visit{color:var(--muted);font-size:.6875rem;font-variant-numeric:tabular-nums}
+.scope-history-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.25rem}
+.scope-history-actions>button{font-size:.75rem;padding:.25rem .5rem;min-height:1.875rem}
+.scope-history-held .scope-history-visit{font-weight:600;color:var(--muted)}
 .scope-history>.controls{margin:.5rem 0;gap:.375rem;flex-wrap:wrap}
 .scope-history>label{display:flex;align-items:center;gap:.375rem;font-size:.8125rem}
 .scope-history>small{display:block;font-size:.75rem;max-width:75ch;color:var(--muted);margin-top:.25rem}
 .scope-history>[role=status]:empty{display:none}
-@media(max-width:480px){.scope-history>div:not(.controls){max-height:26rem}.scope-history-row>span{flex-basis:100%}.scope-history>.controls>button{font-size:.75rem;padding:.3rem .45rem}}
+@media(max-width:480px){.scope-history>div:not(.controls){max-height:26rem}.scope-history-row{grid-template-columns:minmax(0,1fr);gap:.375rem}.scope-history>.controls>button{font-size:.75rem;padding:.3rem .45rem}}
+
 
 /* Guided comparison uses native controls within the existing widget. */
 .service-version-comparison{margin-top:.5rem;min-width:0;max-width:100%}
@@ -1874,3 +1880,19 @@ input::placeholder,textarea::placeholder {color:var(--muted);opacity:1}
 .service-version-comparison .evidence-summary-details dt{color:var(--muted)}
 .service-version-comparison .evidence-summary-details dd{margin:0;overflow-wrap:anywhere;min-width:0}
 .service-version-comparison pre{max-width:100%;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* Service overview: one compact metric row and a single action footer. */
+.dashboard-widget>.ui-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem 1rem;margin:.65rem 0 .4rem}
+.dashboard-widget>.ui-stats dt{font-size:.75rem;line-height:1.35}
+.dashboard-widget>.ui-stats dd{font-size:1.125rem;font-weight:600;margin-top:.2rem}
+.dashboard-widget .ui-latency{border-top:0;padding-top:.25rem;margin-block:.4rem}
+.dashboard-widget .dashboard-record-rate{font-size:.75rem;color:var(--muted);margin:.3rem 0}
+.dashboard-widget-footer{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.35rem .75rem;margin-top:.5rem;padding-top:.4rem;border-top:1px solid var(--border)}
+.dashboard-widget-footer>.ui-actions{margin:0}
+.dashboard-widget-footer>.dashboard-widget-evidence{margin:0;border:0;padding:0}
+.dashboard-widget .service-version-comparison{padding-top:.4rem;border-top:0}
+.population-comparison-pair .count-pair-facts{font-size:.75rem}
+.population-comparison-pair .count-pair-facts>div{min-width:0}
+.population-comparison-pair .count-pair-facts dl{font-size:.75rem;overflow-wrap:anywhere}
+.population-comparison-pair .count-pair-facts .evidence-note{font-size:.75rem;color:var(--muted);background:none;border:0;padding:0}
+@media(max-width:480px){.dashboard-widget>.ui-stats{gap:.4rem .65rem}.dashboard-widget>.ui-stats dd{font-size:1rem}.dashboard-widget>.ui-stats dt{font-size:.6875rem}}

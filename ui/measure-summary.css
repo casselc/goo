@@ -42,3 +42,32 @@ goo-measure-comparison{container-type:inline-size}
  .measure-comparison-provenance{grid-template-columns:1fr;gap:8px}
 }
 @media(prefers-reduced-motion:reduce){:is(goo-measure-summary,goo-measure-comparison) *{scroll-behavior:auto;animation-duration:0s!important;transition-duration:0s!important}}
+/* Result-first comparison composition. Context stays in a native disclosure;
+   the standalone default still includes both operand provenance sections. */
+.measure-comparison-data-first{padding:12px}
+.measure-comparison-data-first>.chart-frame-header{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:10px}
+.measure-comparison-data-first>.chart-frame-header>.chart-frame-title{font-size:14px;margin:0}
+.measure-comparison-data-first>.chart-frame-header>.chart-frame-meta{flex:none;font-size:11px}
+.measure-comparison-data-first>goo-table{border:0;border-radius:0;background:transparent;padding:0;margin:0}
+.measure-comparison-data-first .measure-comparison{margin:0;border:0}
+.measure-comparison-data-first .measure-comparison>caption{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.measure-comparison-data-first .measure-comparison>thead th{font-size:10px;line-height:1.4;padding-top:6px;padding-bottom:8px}
+.measure-comparison-data-first .measure-comparison>tbody th{font-size:12px;text-transform:none;letter-spacing:normal}
+.measure-comparison-data-first .measure-comparison>tbody td{padding-top:12px;padding-bottom:10px;vertical-align:top}
+.measure-comparison-data-first .measure-comparison .measure-value{font-size:20px;font-weight:600;line-height:1.25;letter-spacing:-.02em}
+.measure-comparison-data-first .measure-comparison-track{height:9px;margin:8px 0 4px;border-radius:2px}
+.measure-comparison-data-first .measure-comparison-fill{background:var(--comparison-baseline,#79aafa);border-radius:2px}
+.measure-comparison-data-first .measure-comparison-fill[data-side=selection]{background:var(--comparison-selection,#70d8c2)}
+.measure-comparison-data-first .measure-exact>summary{font-size:10px}
+.measure-comparison-data-first .measure-read-facts{font-size:11px;margin-top:8px}
+.measure-comparison-data-first .measure-read-facts>.measure-comparison-provenance{margin-top:10px}
+@container(max-width:520px){
+ .measure-comparison-data-first{padding:10px}
+ .measure-comparison-data-first .measure-comparison>tbody td{padding-top:8px;padding-bottom:8px}
+ .measure-comparison-data-first .measure-comparison>tbody tr>td[data-side=change]{align-items:baseline}
+ .measure-comparison-data-first .measure-comparison>tbody tr>td[data-side=change] .measure-side-label{font-size:11px}
+ .measure-comparison-data-first .measure-side-label{font-size:11px}
+}
+@container (max-width:500px){
+ .measure-comparison-data-first .measure-side-label{min-height:3em;line-height:1.5}
+}

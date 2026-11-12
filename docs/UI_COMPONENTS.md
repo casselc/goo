@@ -2054,3 +2054,13 @@ facts; shared validation checks the result against the row and fixed window.
 formatting and disclosures. Default summaries exclude the optional field; owners
 provide the explicit summary/timeline measure choice. No component reads or
 calculates a source rate. See [captured-record rates](CAPTURED_RECORD_RATES.md).
+
+### Data-first comparison embedding
+
+`goo-measure-comparison[data-first]` presents paired values before provenance.
+It retains a native Read facts disclosure for standalone use. A composing host
+can add `external-context` in that profile when it renders the validated operand
+facts itself; the population comparison wrapper uses this to avoid duplicate
+scope/clock panels. The supplied model, SSR attributes, detached property updates
+and passive event/source contract stay unchanged. See
+[result presentation](RESULT_PRESENTATION_POLISH.md) for examples and checks.

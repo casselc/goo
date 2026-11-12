@@ -32,3 +32,8 @@ actual API/SQL calls and local-action read budgets. With `GOO_SCOPE_HISTORY_BOMB
 unpins and forgets a real staged question without reading telemetry. Its unique
 trace directory stays beside the report. Runtime cleanup occurs in
 `finally`; the telemetry source and existing stored evidence are preserved.
+
+The presentation refinement gives reusable and held scopes the same filter,
+identity and compact UTC hierarchy. Return/Stage actions keep contextual accessible
+descriptions; exact bounds remain in tooltip/accessible detail. The executable
+journey regenerates the desktop/390/320px frames with unchanged local read budgets.

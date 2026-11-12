@@ -124,7 +124,7 @@ function comparisonBody(comparison,display){
 }
 
 class Supplied extends (globalThis.HTMLElement||class {}){
-  static get observedAttributes(){return ['snapshot','comparison','display','data-first']}
+  static get observedAttributes(){return ['snapshot','comparison','display','data-first','external-context']}
   connectedCallback(){for(const key of ['snapshot','comparison','display'])if(Object.hasOwn(this,key)){const value=this[key];delete this[key];this[key]=value}this.render()}
   attributeChangedCallback(){this.render()}
   normalize(key,value){return key==='snapshot'?asSnapshot(value):key==='comparison'?asComparison(value):frozenConfig(value)}
@@ -155,7 +155,14 @@ class Comparison extends Supplied{
     const comparison=this.comparison,valid=validateComparison(comparison);if(!valid.ok){this.refuse(this._inputErrors?.comparison?[this._inputErrors.comparison]:valid.reasons);return}
     const fields=[...new Map([...comparison.baseline.fields,...comparison.selection.fields].map(field=>[field.key,field])).values()],display=options(this.display,fields,{comparison:true});
     const root=n('goo-chart-frame',undefined,'measure-frame'),provenances=n('div',undefined,'measure-comparison-provenance');root.data={title:display.title||'Population comparison',state:comparison.state==='diagnostic'?'unknown':comparison.state};
-    provenances.append(provenance(comparison.baseline,display.labels[0]),provenance(comparison.selection,display.labels[1]));root.append(provenances,comparisonBody(comparison,display));this.replaceChildren(root);
+    provenances.append(provenance(comparison.baseline,display.labels[0]),provenance(comparison.selection,display.labels[1]));
+    if(this.hasAttribute('data-first')){
+      root.classList.add('measure-comparison-data-first');root.setAttribute('density','compact');
+      root.append(comparisonBody(comparison,display));
+      // Explicit host-context embedding changes chrome only. The composing host
+      // supplies the validated operand facts in its own native disclosure.
+      if(!this.hasAttribute('external-context')){const facts=n('details',undefined,'measure-read-facts');facts.append(n('summary','Read facts'),provenances);root.append(facts);}
+    }else root.append(provenances,comparisonBody(comparison,display));this.replaceChildren(root);
   }catch(error){this.refuse([error instanceof SyntaxError?'Invalid comparison JSON.':error.message||'Comparison unavailable.'])}}
 }
 

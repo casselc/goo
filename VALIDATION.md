@@ -1,5 +1,57 @@
 # Validation record
 
+## Shared result presentation refinement after 415
+
+The [visual refinement](docs/RESULT_PRESENTATION_POLISH.md) applies the earlier
+operator-workbench polish to shared comparison figures, service timelines and
+scope recall. [Independent review](docs/reviews/RESULT_PRESENTATION_REVIEW.md)
+records acceptance and its limits. The functional roadmap remains at 416 next.
+
+- Final frontend suite: **1,561 passed**, zero failures/skips. Focused shared
+  comparison, dense unknown timeline and recall tests: **20 passed**. New checks
+  preserve exact operand facts and caller inputs, UTC/nanosecond endpoint detail,
+  all 60 unknown interval targets, numeric zero, and contextual recall identity.
+- **Three real-source journeys pass** (2.1m): previous-window service comparison,
+  Recent/Pinned recall, and guided version comparisons. Counts, full-population
+  totals, stored configuration, exact scope and held Back budgets remain checked.
+  Version comparison now records **18 facts** including native keyboard access
+  to consolidated read facts and zero reads from a retained closed-refresh handler.
+- At **1440/390/320px**, the primary comparison table starts **99.7/97.7/132.4px**
+  below the comparison section start. Both values align at identical vertical positions at
+  each width, the primary chart is contained, and ordinary provenance is folded.
+  The initial geometry check caught a 16.5px narrow-label misalignment. The final
+  simple label slot passes; the experimental nested subgrid was removed.
+- Bombadil campaigns completed: **488 snapshots** for the 45-second service
+  comparison workflow; **582 snapshots** for 30-second recall, with no extra
+  source/SQL reads from local recall actions. Page errors and forbidden actor
+  publications remain zero. The final compact trail-status adjustment was then
+  rechecked with the real recall journey (19.0s) and regenerated all recall frames.
+- The actual updated comparison read ledger passes the unchanged native Quint
+  checker and mutated local-read rejection (**5.677s**, no skip). Measurement
+  models, source adapters and query schemas are unchanged; historical generated
+  property families were not rerun for these presentation-only changes.
+- The standalone Go embedded UI/metadata check passes. Existing comparison,
+  service and recall screenshots were regenerated, including
+  new 390/320px comparison frames. Standalone, server-rendered and detached
+  display contracts retain frontend coverage. Chromium viewport/keyboard checks
+  are not screen-reader or cross-engine certification.
+
+The passive comparison's explicit `data-first`/`external-context` host profile
+retains one validated Scope/read-facts disclosure instead of repeating metadata
+inside and outside the figure. Failure/incompatible states remain visible.
+Unknown timeline marks remain exact keyboard targets without overlapping question
+mark glyphs. The visible trail uses compact UTC; exact scope remains in its title.
+
+Final browser-tested binary SHA-256:
+`a99fc5750270479e4b07bc54a98542e60fbe276d4b3143dbfc0cae4314725210`.
+Only `packages --no-deps` was refreshed; both 8088/8089 endpoints byte-match
+all ten changed UI assets. Existing telemetry services, volumes, streams and
+XTDB were preserved.
+
+Reports remain ignored under `artifacts/`; the completed recall actor report is
+retained as `artifacts/recent-pinned-scopes/actor-report.json` alongside its trace.
+
+
 ## Guided service-version comparisons — milestone 415
 
 Delivered [version comparisons](docs/SERVICE_VERSION_COMPARISONS.md), with an

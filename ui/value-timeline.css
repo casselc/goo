@@ -28,3 +28,13 @@ goo-value-timeline>.value-timeline-unavailable>.value-timeline-unavailable-plot>
 goo-value-timeline>.value-timeline-unavailable>.value-timeline-unavailable-plot>.value-timeline-mark[data-interval=false]{transform:translateX(-50%);border-radius:50%}
 goo-value-timeline>.value-timeline-unavailable>.value-timeline-unavailable-plot>.value-timeline-mark[aria-pressed=true]{outline:2px solid var(--accent,#67ddbb);outline-offset:2px;z-index:2}
 goo-value-timeline>.value-timeline-unavailable>.value-timeline-unavailable-plot>.value-timeline-mark:focus-visible{outline:3px solid var(--warning,#f5b85d);outline-offset:3px;z-index:3}
+
+/* Dense unavailable intervals keep their exact hit regions and labels without
+   overflowing a question-mark glyph into neighbouring time positions. */
+goo-value-timeline>.value-timeline-unavailable>.value-timeline-unavailable-plot>.value-timeline-mark{border:0;border-radius:0;background:transparent;min-height:20px;line-height:1}
+goo-value-timeline>.value-timeline-unavailable>.value-timeline-unavailable-plot>.value-timeline-mark::before{content:'';position:absolute;inset:7px 1px auto;height:5px;min-width:1px;border:1px dashed var(--muted,#98a8bf);background:var(--surface,#17202c)}
+goo-value-timeline>.value-timeline-unavailable>.value-timeline-unavailable-plot>.value-timeline-mark[data-interval=false]::before{inset:7px 5px auto;border-radius:50%}
+goo-value-timeline[data-numeric=false]>.value-timeline-plot{height:24px;margin-block:4px;background:repeating-linear-gradient(135deg,transparent,transparent 5px,var(--border,#2b3545) 6px);border-bottom-style:dashed}
+goo-value-timeline[data-numeric=false]>.value-timeline-unavailable{margin-bottom:4px}
+goo-value-timeline>.value-timeline-axis{display:flex;justify-content:space-between;gap:12px;min-width:0;margin:3px 0 6px;color:var(--muted,#98a8bf);font-size:10px;font-variant-numeric:tabular-nums}
+goo-value-timeline>.value-timeline-axis>time{min-width:0;white-space:nowrap;cursor:help}

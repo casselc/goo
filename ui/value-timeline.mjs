@@ -20,6 +20,12 @@ const global = globalThis;
  }
  // Pixel fractions choose supplied time bounds; all timestamp arithmetic remains exact.
  function brushRange(data,start,end){if(!data||!ns(data.fromNS)||!ns(data.toNS)||BigInt(data.toNS)<=BigInt(data.fromNS)||![start,end].every(x=>Number.isFinite(x)&&x>=0&&x<=1))return null;const a=BigInt(Math.round(Math.min(start,end)*1000000)),b=BigInt(Math.round(Math.max(start,end)*1000000)),from=BigInt(data.fromNS),width=BigInt(data.toNS)-from;const lo=from+width*a/1000000n,hi=from+width*b/1000000n;return hi>lo?{fromNS:String(lo),toNS:String(hi)}:null}
+ // Two endpoint labels keep time readable without repeating a label per sample.
+ // Full UTC precision and the supplied nanoseconds stay inspectable.
+ function timeBounds(data){
+  if(!data||!ns(data.fromNS)||!ns(data.toNS)||BigInt(data.toNS)<=BigInt(data.fromNS))return [];
+  return [data.fromNS,data.toNS].map((value,index)=>{const n=BigInt(value),milliseconds=new Date(Number(n/1000000n)).toISOString(),exact=milliseconds.replace(/\.\d{3}Z$/,'.'+String(n%1000000000n).padStart(9,'0')+'Z');return {text:milliseconds.slice(11,23)+' UTC',exact,title:(index?'Window end':'Window start')+' · '+exact+' · '+value+' ns'};});
+ }
  function node(tag,text,cls){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e}
  if(global.customElements&&global.HTMLElement){
   class GooValueTimeline extends global.HTMLElement {
@@ -32,12 +38,13 @@ const global = globalThis;
    disconnectedCallback(){this._cancelBrush?.()}
    syncSelection(){for(const mark of this.querySelectorAll('.value-timeline-mark'))mark.setAttribute('aria-pressed',String(mark.dataset.key===this.selectedKey))}
    render(){
-    this._cancelBrush?.();const m=model(this.data);this.replaceChildren();this.dataset.state=m.state;
+    this._cancelBrush?.();const m=model(this.data);this.replaceChildren();this.dataset.state=m.state;this.dataset.numeric=String(m.numeric===true);
     if(m.state!=='observed'){this.append(node('p',m.state==='no_data'?'No retained observations. Absence is not zero.':'Timeline unavailable.'));return}
-    const scale=node('p',m.numeric?(this.data.scaleLabel||m.min+' to '+m.max+' · dashed baseline is zero'):'No numeric observations to scale','value-timeline-scale'),plot=node('div',undefined,'value-timeline-plot'),zero=node('div',undefined,'value-timeline-zero');zero.style.top=(100-m.zeroY)+'%';zero.hidden=!m.numeric;zero.setAttribute('aria-hidden','true');plot.append(zero);scale.title=m.min+' to '+m.max+' · exact displayed domain';
+    const scale=node('p',m.numeric?(this.data.scaleLabel||m.min+' to '+m.max+' · dashed baseline is zero'):'No numeric observations to scale','value-timeline-scale'),plot=node('div',undefined,'value-timeline-plot'),zero=node('div',undefined,'value-timeline-zero');zero.style.top=(100-m.zeroY)+'%';zero.hidden=!m.numeric;zero.setAttribute('aria-hidden','true');plot.append(zero);scale.title=m.min+' to '+m.max+' · exact displayed domain';scale.hidden=!m.numeric;
     const unavailable=node('section',undefined,'value-timeline-unavailable'),rail=node('div',undefined,'value-timeline-unavailable-plot');unavailable.append(node('p','Unavailable observations · no numeric value'),rail);rail.setAttribute('aria-label','Unavailable observations positioned by time');
-    for(const p of m.points){const mark=node('button',p.y===null?'?':'','value-timeline-mark');mark.type='button';mark.dataset.key=p.key;if(p.series!==undefined)mark.dataset.series=p.series;mark.dataset.state=p.state;mark.dataset.fromNs=p.fromNS;mark.dataset.toNs=p.toNS;if(p.value!==null)mark.dataset.value=p.value;mark.dataset.interval=String(p.fromNS!==p.toNS);mark.style.left=p.left+'%';mark.style.width=p.width+'%';if(p.y!==null)mark.style.top=(100-p.y)+'%';mark.setAttribute('aria-label',p.label);mark.title=p.label;mark.setAttribute('aria-pressed',String(this.selectedKey===p.key));mark.onclick=()=>this.dispatchEvent(new CustomEvent('goo-timeline-select',{bubbles:true,detail:{key:p.key}}));(p.y===null?rail:plot).append(mark)}
+    for(const p of m.points){const mark=node('button','','value-timeline-mark');mark.type='button';mark.dataset.key=p.key;if(p.series!==undefined)mark.dataset.series=p.series;mark.dataset.state=p.state;mark.dataset.fromNs=p.fromNS;mark.dataset.toNs=p.toNS;if(p.value!==null)mark.dataset.value=p.value;mark.dataset.interval=String(p.fromNS!==p.toNS);mark.style.left=p.left+'%';mark.style.width=p.width+'%';if(p.y!==null)mark.style.top=(100-p.y)+'%';mark.setAttribute('aria-label',p.label);mark.title=p.label;mark.setAttribute('aria-pressed',String(this.selectedKey===p.key));mark.onclick=()=>this.dispatchEvent(new CustomEvent('goo-timeline-select',{bubbles:true,detail:{key:p.key}}));(p.y===null?rail:plot).append(mark)}
     this.append(scale,plot);if(rail.childNodes.length)this.append(unavailable);
+    const axis=node('div',undefined,'value-timeline-axis');for(const bound of timeBounds(this.data)){const time=node('time',bound.text);time.dateTime=bound.exact;time.title=bound.title;time.setAttribute('aria-label',bound.title);axis.append(time)}this.append(axis);
     if(this.hasAttribute('brush'))this.bindBrush(plot);
 
    }
@@ -56,4 +63,4 @@ const global = globalThis;
   }
   if(!global.customElements.get('goo-value-timeline'))global.customElements.define('goo-value-timeline',GooValueTimeline);
  }
- export {decimal,model,brushRange};
+ export {decimal,model,brushRange,timeBounds};
