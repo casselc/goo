@@ -142,6 +142,8 @@ without inventing a grouping. Inspect/Apply keeps the destination query; Run is 
 ungrouped timeline measure, using exact counts and the actual window or bucket duration.
 [Reuse numeric histograms beside records](docs/AUTHORED_NUMERIC_HISTOGRAMS.md)
 with Histogram/Table views and exact numeric-binding compatibility.
+[Compact shared histogram surfaces](docs/QUANTITATIVE_VIEW_COMPOSITION.md) retain
+authored titles, read facts and exact values with keyboard scrolling on narrow screens.
 [Open an inspected trace as a view](docs/TRACE_AS_VIEW.md) to edit and save its presentation.
 [Add a breakdown](docs/ADD_BREAKDOWN.md) to grow a records view into a chart, then
 [compare a selected cohort](docs/AUTHORED_COHORTS.md) with its held parent or rest.
@@ -160,7 +162,7 @@ these views through the same saved-view catalog.
 to an explicitly chosen Goo server.
 [Record paging](docs/RECORD_PAGE_PROFILE.md) retains any held aggregate and timeline.
 
-[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_11_CHECKPOINT_408.md) ·
+[Capture summary correction](docs/CAPTURE_CATALOG_SEARCH.md) · [Roadmap and active backlog](docs/ROADMAP_2026_11_12_CHECKPOINT_411.md) ·
 [Actual validation](VALIDATION.md) · [Known limits](docs/KNOWN_ISSUES.md) ·
 [Go/frontend library review and proposal](docs/LIBRARY_REFACTOR_PLAN_2026_10_28.md)
 
@@ -624,7 +626,7 @@ For supplied native observations, `measurements.Evaluate(question, rows, at)` is
 storage-free. Lifecycle custody/correction uses `measurements.ObserveLifecycle`
 explicitly. See [the Go evaluation boundary](docs/MEASUREMENT_PACKAGES.md#go-evaluation-and-lifecycle-observation).
 
-The [active roadmap](docs/ROADMAP_2026_11_11_CHECKPOINT_408.md) follows delivered outgoing HTTP
+The [active roadmap](docs/ROADMAP_2026_11_12_CHECKPOINT_411.md) follows delivered outgoing HTTP
 (385), gauge display reuse (386), [capture-family consolidation](docs/CAPTURE_FAMILY_ADMISSION.md)
 (387) and [records around a gauge observation](docs/GAUGE_OBSERVATION_CONTEXT.md)
 (388), [counter display reuse](docs/NATIVE_COUNTER_VIEW_REUSE.md) (389) and
@@ -773,7 +775,7 @@ scope/data/quality, charts/tables/lists/waterfalls and scope-bound controls, a b
 chart with a restricted Plotly adapter, and shared declarative/visual authoring.
 Complete-only widgets and explicit uncertainty semantics are core requirements;
 all current widgets/screens must be expressible. The app is prerelease, with no
-legacy-format or API compatibility floor. [The active roadmap](docs/ROADMAP_2026_11_11_CHECKPOINT_408.md) separates proposed work from
+legacy-format or API compatibility floor. [The active roadmap](docs/ROADMAP_2026_11_12_CHECKPOINT_411.md) separates proposed work from
 implemented capabilities; the supporting reports include pinned research sources.
 
 Single-group count breakdowns now share a [scoped display contract](docs/SCOPED_VIEW_PILOT.md):

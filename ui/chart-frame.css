@@ -17,3 +17,11 @@ goo-chart-frame[density=compact]>.chart-frame-header>.chart-frame-title{font-siz
 goo-chart-frame[density=compact]>.chart-frame-header>.chart-frame-meta{font-size:11px;gap:4px 10px;line-height:1.4}
 goo-chart-frame[density=compact]>.chart-frame-header>.chart-frame-note{font-size:11px;line-height:1.4;margin-top:4px}
 @media(max-width:650px){goo-chart-frame[density=compact]{padding:8px}}
+
+/* Embedded views share their owner's surface while retaining their own title,
+   unit, read clock and state. This is presentation only; supplied children stay
+   in place and retain focus and interaction ownership. */
+goo-chart-frame[appearance=embedded]{border:0;border-radius:0;padding:0;background:transparent}
+goo-chart-frame[appearance=embedded]>.chart-frame-header{margin-bottom:6px}
+goo-chart-frame[appearance=embedded]>.chart-frame-header>.chart-frame-title{font-size:13px;margin-bottom:4px}
+goo-chart-frame[appearance=embedded]>.chart-frame-header>.chart-frame-meta{font-size:11px;gap:4px 10px;line-height:1.4}

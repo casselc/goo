@@ -1,5 +1,5 @@
 import * as Explanation from './explanation.mjs';
-import {actionVisible,revealFocus,nativeControlReady} from './dom-visibility.mjs';
+import {actionVisible,revealFocus,nativeControlReady,completionControlReady} from './dom-visibility.mjs';
 import {renderRefusal} from './source-refusal-view.mjs';
 import * as SourceRefusal from './source-refusal.mjs';
 import {retainedDefinitionControls,definitionControlState,restoreDefinitionControlState} from './retained-definition-controls.mjs';
@@ -588,7 +588,7 @@ function mount(host,{current,table,controlsHost=host,visibility=()=>{},onRestore
    const current=()=>localPresentationCurrent('histogram',data,target,'histogram')&&g===generation&&compositionReady()&&!countPending&&!reusePending&&!results.some(entry=>entry.pagePending);
    const actions=createActionContext({epoch:()=>generation,active:()=>active()&&!childOwner,canStage:()=>current()});
    const binding=sourceCurrent?actions.bind({role:'current',slot:'histogram',epoch:g,snapshot,question:data.question,coherent:data.state!=='changed_between_reads'}):null;
-   const adapter=NumericDistribution.mount(target,data,{declaration,rangePaused:!sourceCurrent,canAct:current,resolveRange:sourceCurrent?intent=>actions.histogram(binding,intent):undefined,open:(q,baseline,rest,opener)=>{if(!current()||!opener||!actionVisible(opener)||opener.closest('[inert]'))return;openChild([q],opener,rest?'Selected numeric comparison':'Selected numeric population',rest?{breakdowns:{[q.signal]:{baseline:rest}}}:{recent:false,title,composition:Composition.validate(composition,q)})},onPresentation:next=>{if(!current())return;composition=Composition.setHistogram(composition,next,queries[0]);markDraft()}});
+   const adapter=NumericDistribution.mount(target,data,{declaration,rangePaused:!sourceCurrent,canAct:current,resolveRange:sourceCurrent?intent=>actions.histogram(binding,intent):undefined,open:(q,baseline,rest,opener)=>{if(!current()||!completionControlReady(opener))return;openChild([q],opener,rest?'Selected numeric comparison':'Selected numeric population',rest?{breakdowns:{[q.signal]:{baseline:rest}}}:{recent:false,title,composition:Composition.validate(composition,q)})},onPresentation:next=>{if(!current())return;composition=Composition.setHistogram(composition,next,queries[0]);markDraft()}});
    if(!sourceCurrent)target.append(node('small','Held bins · Run to select a range.','evidence-note'));if(adapter)views.set('histogram',{host:target,data,authored:true,adapter});box.append(target);
   }
   function renderSummary(box,data){

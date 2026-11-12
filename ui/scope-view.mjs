@@ -135,7 +135,7 @@ function histogram(host,snapshot){
  if(facts.represented==='0'){figure.append(n('p',facts.total==='0'?(native?'No instrument observations. The evaluated buckets are known empty.':'No captured records. The fixed bins are known empty.'):'No valid numeric values. Empty bins do not imply an empty captured population.','scope-view-empty'));return figure}
  const all=snapshot.rows,first=all.findIndex(row=>row.values.count!=='0');let last=all.length-1;while(last>first&&all[last].values.count==='0')last--;
  const rows=h.kind==='span-duration'||native?all:all.slice(first,last+1),ceiling=all.reduce((n,row)=>BigInt(row.values.count)>n?BigInt(row.values.count):n,0n).toString();
- const scroll=n('div',undefined,'scope-histogram-scroll'),bars=n('goo-time-bars');bars.style.minWidth=(h.kind==='span-duration'||native?Math.max(native?Math.min(440,rows.length*32):0,rows.length*8):Math.max(440,rows.length*8))+'px';if(!native)bars.setAttribute('range-select','');scroll.append(bars);
+ const scroll=n('div',undefined,'scope-histogram-scroll'),bars=n('goo-time-bars');scroll.setAttribute('role','region');scroll.setAttribute('aria-label',native?'Instrument observation histogram buckets':h.kind==='span-duration'?'Captured span duration histogram buckets':'Captured numeric histogram buckets');scroll.tabIndex=0;bars.style.minWidth=(h.kind==='span-duration'||native?Math.max(native?Math.min(440,rows.length*32):0,rows.length*8):Math.max(440,rows.length*8))+'px';if(!native)bars.setAttribute('range-select','');scroll.append(bars);
  bars.data={title:native?'Instrument observation distribution':h.kind==='span-duration'?'Captured span duration distribution':'Captured numeric distribution',unit:native?'observations':h.kind==='span-duration'?'spans':'records',ceiling,interactive:!native,fromLabel:histogramBoundText(h,rows[0].values.from),toLabel:histogramBoundText(h,rows.at(-1).values.to),points:rows.map(row=>({key:row.key,label:histogramRangeText(h,row.values.from,row.values.to)+' · '+row.values.count+(native?' instrument observations':h.kind==='span-duration'?' captured spans':' captured records'),value:row.values.count,state:row.state}))};
  const range=(fromKey,toKey)=>emit(host,'goo-histogram-range',histogramIntent(snapshot,fromKey,toKey));
  if(!native){bars.addEventListener('goo-time-range',event=>{event.stopPropagation();range(event.detail.fromKey,event.detail.toKey)});
@@ -208,7 +208,15 @@ class SuppliedElement extends (globalThis.HTMLElement||class {}) {
 }
 
 class Chart extends SuppliedElement {
-  static get observedAttributes(){return [...super.observedAttributes,'mobile-layout']}
+  static get observedAttributes(){return [...super.observedAttributes,'mobile-layout','embedded']}
+  attributeChangedCallback(name,previous,value){
+    if(name==='embedded'){
+      const frame=Array.from(this.children).find(child=>child.localName==='goo-chart-frame');
+      if(frame){if(this.hasAttribute('embedded'))frame.setAttribute('appearance','embedded');else frame.removeAttribute('appearance')}
+      return;
+    }
+    super.attributeChangedCallback(name,previous,value);
+  }
   set display(value){this.setInput('display',value)}
   get display(){return this.read('display')}
   clearRange(){this.querySelector('goo-time-bars')?.clearRange();this.querySelector('.scope-time-track')?._rangeGesture?.clear()}
@@ -221,13 +229,13 @@ class Chart extends SuppliedElement {
       const checked=validateDisplay(snapshot,display);if(!checked.ok){
         const rawDisplay={...display,scale:'max',requiresComplete:false};
         if(display.scale==='population'&&!display.requiresComplete&&snapshot.shape==='ranked'&&['bar','table'].includes(display.kind)&&validateDisplay(snapshot,rawDisplay).ok){
-          const frame=n('goo-chart-frame',undefined,'scope-view');frame.data={title:display.title||'Scoped breakdown',window:capturedClock(snapshot.capturedAt),state:'unavailable'};
+          const frame=n('goo-chart-frame',undefined,'scope-view');if(this.hasAttribute('embedded'))frame.setAttribute('appearance','embedded');frame.data={title:display.title||'Scoped breakdown',window:capturedClock(snapshot.capturedAt),state:'unavailable'};
           const status=n('p',checked.reasons.join('; '),'scope-view-unavailable');status.setAttribute('role','status');const values=table(this,snapshot,{...rawDisplay,kind:'table'});values.querySelector('caption').textContent='Supplied values · shares unavailable';frame.append(quality(snapshot),status,values,readFacts(snapshot,factsOpen));this.replaceChildren(frame);if(factsFocused)frame.querySelector('.scope-view-read-facts>summary')?.focus({preventScroll:true});return;
         }
         this.refuse(checked.reasons);return;
       }
       const rows=snapshot.shape==='ranked'?displayRows(snapshot,display):snapshot.rows;
-      const root=n('goo-chart-frame',undefined,'scope-view');root.data={title:display.title||(snapshot.shape==='histogram'?(snapshot.histogram.kind==='otel-explicit'?'Instrument observation distribution':snapshot.histogram.kind==='span-duration'?'Captured span duration distribution':'Captured numeric distribution'):snapshot.shape==='grouped-time-series'?(display.value==='duration.mean'?'Mean duration by group over time':'Captured records by group over time'):snapshot.shape==='time-series'?'Captured records over time':snapshot.shape==='summary'?'Population summary':'Scoped breakdown'),window:capturedClock(snapshot.capturedAt),state:snapshot.quality.extent==='unknown'||snapshot.quality.value==='unknown'?'unknown':snapshot.quality.extent==='partial'?'partial':!snapshot.rows.length||snapshot.shape==='histogram'&&histogramFacts(snapshot).total==='0'||snapshot.shape==='summary'&&snapshot.rows[0].values.count==='0'?'no_data':'observed'};root.dataset.valueKnowledge=snapshot.quality.value;if(snapshot.shape==='grouped-time-series')root.setAttribute('density','compact');root.append(quality(snapshot));
+      const root=n('goo-chart-frame',undefined,'scope-view');if(this.hasAttribute('embedded'))root.setAttribute('appearance','embedded');root.data={title:display.title||(snapshot.shape==='histogram'?(snapshot.histogram.kind==='otel-explicit'?'Instrument observation distribution':snapshot.histogram.kind==='span-duration'?'Captured span duration distribution':'Captured numeric distribution'):snapshot.shape==='grouped-time-series'?(display.value==='duration.mean'?'Mean duration by group over time':'Captured records by group over time'):snapshot.shape==='time-series'?'Captured records over time':snapshot.shape==='summary'?'Population summary':'Scoped breakdown'),window:capturedClock(snapshot.capturedAt),state:snapshot.quality.extent==='unknown'||snapshot.quality.value==='unknown'?'unknown':snapshot.quality.extent==='partial'?'partial':!snapshot.rows.length||snapshot.shape==='histogram'&&histogramFacts(snapshot).total==='0'||snapshot.shape==='summary'&&snapshot.rows[0].values.count==='0'?'no_data':'observed'};root.dataset.valueKnowledge=snapshot.quality.value;if(snapshot.shape==='grouped-time-series')root.setAttribute('density','compact');root.append(quality(snapshot));
       if(snapshot.shape==='grouped-time-series')root.append(renderGroupedTimeline(snapshot,display,{onSelect:hasGuarantee(snapshot,'grouped-intervals')?(key=>emit(this,'goo-select',selectionIntent(snapshot,key))):undefined}));
       else if(!snapshot.rows.length&&display.kind!=='time-bar')root.append(n('p',snapshot.shape==='time-series'?'No supplied intervals. Coverage is unknown.':'No supplied groups.','scope-view-empty'));
       else if(!rows.length&&snapshot.shape==='ranked')root.append(n('p','No matching groups. '+snapshot.rows.length+' groups remain in this result.','scope-view-empty'));

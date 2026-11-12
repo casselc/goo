@@ -17,7 +17,7 @@ Implemented: [service-window comparisons](SERVICE_WINDOW_COMPARISONS.md) now
 stage the existing fixed pair from an accepted widget, preserving exact population
 scope and the held service return. See the executable
 [journey](../journeys/409-service-count-comparison-storyboard.md) and [validation](../VALIDATION.md).
-410 is also implemented below. Next is **411 consolidation**.
+410 and 411 are also implemented below. The [411 checkpoint](ROADMAP_2026_11_12_CHECKPOINT_411.md) now owns the next finite queue.
 
 User task: “Has this service's captured activity changed from the preceding
 window?” Add a contextual action to supported ordinary log/span widgets that
@@ -48,7 +48,7 @@ Implemented: [incoming HTTP response context](INCOMING_HTTP_RESPONSES.md) adds
 one independent literal-response grouping under the existing current Server-span
 population, with guarded record continuations and held return. See the executable
 [journey](../journeys/410-http-server-responses-storyboard.md) and [validation](../VALIDATION.md).
-Proceed to **411 quantitative view consolidation**, then whole-product review.
+411 quantitative view consolidation and the whole-product review are delivered below.
 
 User task: “Which reported response codes make up this service's incoming HTTP
 population?” Adapt the outgoing HTTP context pattern to the finite current OTel
@@ -68,6 +68,13 @@ and held Back. Reuse source adapters, existing grouping/selection grammar and
 shared attribute/record displays. Keep labels compact and avoid another wizard.
 
 ## 411 — consolidation: compact quantitative view composition
+
+Implemented: [compact histogram composition](QUANTITATIVE_VIEW_COMPOSITION.md)
+retains authored titles and exact values, adds named native scrolling and shares
+invocation/completion readiness without renewing held source authority. The
+[actual storyboard](journeys/411-quantitative-chrome.md) and [validation](../VALIDATION.md)
+record acceptance. [Whole-product review](reviews/ROADMAP_RECONCILIATION_411.md)
+adopts the next [412–414 queue](ROADMAP_2026_11_12_CHECKPOINT_411.md).
 
 User task: “Read the chart and its scope without stepping through repeated
 headings, borders and instructions.” Consolidate repeated chrome in a bounded

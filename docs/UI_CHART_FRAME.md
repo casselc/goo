@@ -28,6 +28,21 @@ caller-owned children. It works in server HTML and through `setAttribute` on
 detached or attached SPA elements. It does not change the plot's scale, data,
 uncertainty, heading semantics or action authority.
 
+Use `appearance="embedded"` when a surrounding composition already owns the
+surface. It removes the frame's border, background and padding while retaining
+its visible title, state, unit and read clock. This presentation attribute is
+separate from `.data`, and does not change child ownership. Toggling
+`goo-chart embedded` patches its frame in place, retaining selection, disclosure
+and focus. A supplied
+`goo-chart embedded` forwards this appearance to its internal frame. Keep a
+meaningful chart title; remove equivalent headings in the surrounding composition
+rather than hiding authored titles.
+
+Histogram plots keep their exact count scale and unit visible. Their horizontal
+bucket region has a name and keyboard focus, so narrow layouts can use native
+scrolling; the inner plot caption remains available to assistive technology
+without repeating the surrounding visual heading.
+
 The element supplies `role="figure"` and an accessible label unless authored by
 the caller. Heading levels 2–6 are supported, defaulting to 3. A metadata update
 does not replace, move, query, hide or disable caller children; focused actions

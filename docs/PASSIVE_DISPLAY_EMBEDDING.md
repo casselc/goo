@@ -42,6 +42,11 @@ flowchart LR
   Owner -->|Checks current scope; explicit action| Source[Existing source path]
 ```
 
+When a surrounding composition already owns the surface, set `embedded` on
+`goo-chart`. Its authored title, state and read facts remain visible; changing
+this presentation attribute retains chart selection, focus and exact disclosures.
+See [quantitative composition](QUANTITATIVE_VIEW_COMPOSITION.md).
+
 Load feature styles separately (`components.css`, `chart-frame.css`,
 `scope-view.css`, `measure-summary.css` for this reference). Page layout stays
 outside reusable component styles. No framework, bundler, registry or executable

@@ -140,7 +140,7 @@ function renderCounterDisplay(host,s,r,options){
 function renderNativeHistogram(details,r,s,index,options){
   let built=false;details.addEventListener('toggle',()=>{if(!details.open||built)return;built=true;try{
    const snapshot=nativeHistogramSnapshot(r,s,index,options);if(!snapshot)throw Error('The selected interval has no known evaluated distribution.');
-   const chart=node('goo-chart'),label=node('label','Display '),picker=node('select');picker.setAttribute('aria-label','Native histogram display');
+   const chart=node('goo-chart'),label=node('label','Display '),picker=node('select');chart.setAttribute('embedded','');picker.setAttribute('aria-label','Native histogram display');
    for(const [value,text]of[['histogram','Histogram'],['table','Table']]){const option=node('option',text);option.value=value;picker.append(option)}
    if(options.nativeDisplay&&!options.bucketed)picker.value=NativeViewDeclaration.declaration(options.nativeDisplay,r.question).kind.name;
    label.className='native-time-view';label.append(picker);chart.snapshot=snapshot;chart.className='native-interval-histogram';

@@ -1,5 +1,51 @@
 # Validation record
 
+## Compact quantitative composition — 411
+
+[Numeric and selected native histograms](docs/QUANTITATIVE_VIEW_COMPOSITION.md)
+share an embedded passive surface, one visible title, named keyboard scrolling
+and exact values. Invocation/completion readiness is shared while original-read
+and current-owner checks remain in the application adapters.
+
+- Frontend: **1,503 passed / zero skips / 21.357 s**. Behavioral checks cover
+  authored titles, unchanged exact big counts and uncertainty, embedded toggles
+  retaining frame/plot/selection/disclosure/focus, and zero action emissions.
+  Readiness tests cover transient own-disabled completion, withdrawn controls,
+  nested disabled fieldsets and native first-legend exemptions.
+- Actual same-bank OTel comparison: before **21.3 s**, final after **16.7 s**.
+  At 390px numeric plot width increased **216 → 276px**, native **224 → 284px**;
+  chart-to-plot offset decreased **191.6 → 121.6px**. Desktop widths increased
+  **846 → 914px** and **854 → 922px**, with offset **138.6 → 88.6px**.
+  Both titles reduced from two visible headings to one, inner bordered frames
+  from one to zero. No page overflow; named regions accept focus and ArrowRight.
+  Exact bins, fields, selectors, histogram semantics and raw OTel observations
+  match the baseline. Independent reads retain their own clocks.
+- Numeric/native viewport, keyboard and exact-value operations add **zero SQL
+  queries or API POSTs**. An independent explicit capture uses a declared
+  100-record page; reopened Saved Space/Enter highlighting is visible and local,
+  leaves its entire frozen snapshot unchanged and exposes no source-range action.
+- Existing authored histogram acceptance passed **25.2 s**, including **21 budget
+  boundaries**, held local controls, retired range actions, exact selected reads,
+  template reuse and literal scope. Native reuse passed **10.7 s**, including
+  nine operation boundaries, unknown exports, stale metadata and canceled source
+  publication. Its actor now opens the current native Save display disclosure.
+- Existing mobile Bombadil acceptance passed **35.5 s**: **588 snapshots / six
+  phases**, one explicit source Run, one template expansion and zero publications.
+  Ownership and actual-frame design reviews found no blocker. Canonical frames
+  reset horizontal scroll after testing it, keeping sparse first bins visible.
+- Embedded Go UI/metadata asset checks passed **0.040 s** on Go **1.27.3**,
+  verifying exact served asset bytes for generic and lab profiles.
+- Compose configuration and the single product-image build passed. Only
+  `packages` was refreshed; existing stores, telemetry and XTDB were preserved.
+  Running image `bf0af7fa5638` serves all seven changed UI assets byte-for-byte
+  with the reviewed sources; `/capabilities` responds normally.
+- These are targeted component/owner and integration checks. No new API/query
+  semantics, Hegel/Quint model, schema regeneration or full Go campaign was added.
+  The [storyboard](docs/journeys/411-quantitative-chrome.md), diagram, component
+  contract and current capability index are synchronized. The reconciled
+  [roadmap](docs/ROADMAP_2026_11_12_CHECKPOINT_411.md) schedules contextual task
+  discovery, adjacent captured occurrences and shared record-action consolidation.
+
 ## Incoming HTTP response context — 410
 
 [Incoming response context](docs/INCOMING_HTTP_RESPONSES.md) adds one ordinary

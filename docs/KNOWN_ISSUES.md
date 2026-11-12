@@ -1,7 +1,7 @@
 # Known issues and gaps
 
 Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
-status and the [active roadmap](ROADMAP_2026_11_11_CHECKPOINT_408.md) for priorities.
+status and the [active roadmap](ROADMAP_2026_11_12_CHECKPOINT_411.md) for priorities.
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 
@@ -27,10 +27,11 @@ and rate comparisons are excluded. [Authored numeric histograms](AUTHORED_NUMERI
 (407) and [passive embedding examples](PASSIVE_DISPLAY_EMBEDDING.md) (408) are delivered.
 [Service-window count comparison entry](SERVICE_WINDOW_COMPARISONS.md) (409) is delivered.
 [Incoming HTTP response context](INCOMING_HTTP_RESPONSES.md) (410) is delivered;
-quantitative view consolidation remains next. Design review noted nonblocking narrow
-chart-label truncation and inherited stacked metadata for later product review.
-407 review also noted nested chart borders/headings and weak horizontal-scroll
-affordance on narrow screens. These are review candidates, not added execution tasks.
+[quantitative view consolidation](QUANTITATIVE_VIEW_COMPOSITION.md) (411) removes
+inner histogram framing and repeated visual captions, with named keyboard scrolling.
+Nonblocking narrow chart-label truncation remains an evidence-driven refinement.
+The nested framing and weak scrolling noted in the 407 review are addressed by
+411; broader screen-density work remains bounded by the current roadmap.
 
 390 delivers [data-first native composition](NATIVE_DATA_FIRST.md) across ordinary
 Measurements, service-expanded native data and saved evidence. Successful reads
