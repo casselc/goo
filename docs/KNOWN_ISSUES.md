@@ -6,6 +6,12 @@ status and the [active roadmap](ROADMAP_2026_11_12_CHECKPOINT_411.md) for priori
 record/attribute inspection and service-discovery improvements. Mobile service-card
 layout and further contextual action discovery remain bounded refinements.
 
+The [independent UX/accessibility/standards review](reviews/INDEPENDENT_INTERFACE_REVIEW_2026_11_12.md)
+records six open findings: docked operation-name readability, service disclosure
+names, resource tab/panel relationships, text/placeholder contrast, a hidden-caption
+320px overflow defect and partially clipped paused rows. These are review findings;
+remediation has not been implemented.
+
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 

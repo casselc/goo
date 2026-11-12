@@ -1,5 +1,28 @@
 # Validation record
 
+## Independent interface review — November 12, 2026
+
+Three fresh specialist reviewers independently assessed product commit `837bce4d`.
+The [reconciliation and individual reports](docs/reviews/INDEPENDENT_INTERFACE_REVIEW_2026_11_12.md)
+record **four medium and two low findings**, all open. This entry records a review,
+not a new implementation or a WCAG conformance claim.
+
+- Serial Chromium probes confirmed service disclosure names, incomplete resource
+  tab/panel relationships and working arrow navigation; actual styles establish
+  the two reported contrast ratios. No physical screen reader was exercised.
+- Native field-menu Enter/Tab, Plot initial focus/Cancel return, nonmodal traversal
+  and a 1440×500 inspector remained usable in the measured paths. Synthetic
+  composing Escape retained the Activity inspector and focused input.
+- Activity/Hosts fit the sampled 320px viewport. Populated fixed records measured
+  332px document width at 320px; an isolated browser-only caption sizing change
+  restored 320px and confirmed the CSS cascade cause. No product source was changed.
+- Forced-colors/reduced-motion checks cover the captured table frame, not every
+  chart/state/browser. Target measurements exclude closed disclosures and do not
+  presume a failure without spacing/visibility analysis.
+- Review evidence is in `artifacts/independent-ui-review/`. This review did not
+  rerun the full frontend/Go/model suites or change application code, images,
+  telemetry, persistent captures or the backend/API contract.
+
 ## Operator workbench polish — November 12, 2026
 
 [Shared shell, record/attribute inspection and service polish](docs/OPERATOR_WORKBENCH_POLISH.md)
