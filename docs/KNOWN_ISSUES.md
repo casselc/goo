@@ -15,8 +15,11 @@ these targeted checks are not a whole-product accessibility certification.
 
 [Fleet service triage](SERVICE_TRIAGE.md) (412) now delivers bounded cross-service
 Server-span summaries and preceding-window count changes. Other span roles,
-monitoring/SLOs and inferred health remain outside this feature. Next is log
-volume/severity context in Activity; deeper labeling is a deferred track.
+monitoring/SLOs and inferred health remain outside this feature.
+[Log volume in Activity](ACTIVITY_LOG_CONTEXT.md) (413) now adds full-query volume
+and literal text-severity context with an exact held-window explanation. Numeric
+severity classification/stacked time-series and persisted strip/cadence state are
+not added. Next is recent/pinned scope consolidation; labeling remains deferred.
 
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.

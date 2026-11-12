@@ -28,21 +28,22 @@ const global = globalThis;
    clearRange(){this._clearRange?.();this.selectedKey=null}
    syncSelection(){for(const bar of this.querySelectorAll(':scope > .time-bars-figure > .time-bars > .time-bar')){const selected=this.selectedKey===bar.dataset.key;if(bar.tagName==='BUTTON')bar.setAttribute('aria-pressed',String(selected));else if(bar.tagName==='A'){if(selected)bar.setAttribute('aria-current','true');else bar.removeAttribute('aria-current')}}}
    render(){
+    const revision=this._renderRevision=(this._renderRevision||0)+1;
     this._rangeGesture?.clear();
     this.onpointerdown=this.onpointermove=this.onpointerup=this.onpointercancel=this.onkeydown=null;this._ignoreClick=false;this._rangeGesture=null;this._clearRange=null;const m=model(this.data);this.replaceChildren();this.dataset.state=m.state;
     if(m.state!=='observed'){this.append(node('p','Time chart unavailable.','time-bars-unavailable'));return}
-    const figure=node('figure',undefined,'time-bars-figure'),caption=node('figcaption',m.title),scale=node('p','0–'+(m.ceilingLabel||m.ceiling+' '+m.unit)+' · supplied scale','time-bars-scale'),bars=node('div',undefined,'time-bars');
+    const figure=node('figure',undefined,'time-bars-figure'),caption=node('figcaption',m.title),scale=node('p','0–'+(m.ceilingLabel||m.ceiling+' '+m.unit),'time-bars-scale'),bars=node('div',undefined,'time-bars');
     for(const p of m.points){const href=safeHref(p.href),tag=href?'a':m.interactive?'button':'span',bar=node(tag,undefined,'time-bar');if(tag==='button')bar.type='button';if(href)bar.href=href;
      bar.dataset.key=p.key;bar.dataset.state=p.state;bar.dataset.positive=String(p.positive);if(p.value!==null)bar.dataset.count=p.value;bar.style.setProperty('--bar-height',p.height+'%');bar.setAttribute('aria-label',p.label);bar.title=p.label;
      if(tag==='span'){bar.setAttribute('role','img')}
-     if(tag==='button'){bar.setAttribute('aria-pressed',String(this.selectedKey===p.key));bar.addEventListener('click',e=>{if(!this.isConnected||!this.contains(bar))return;if(this._rangeGesture?.ignoreClick(e)){return}this.dispatchEvent(new CustomEvent('goo-time-select',{bubbles:true,detail:{key:p.key}}))})}else if(href&&this.selectedKey===p.key)bar.setAttribute('aria-current','true');
+     if(tag==='button'){bar.setAttribute('aria-pressed',String(this.selectedKey===p.key));bar.addEventListener('click',e=>{if(revision!==this._renderRevision||!this.isConnected||!this.contains(bar)||this.querySelector(':scope > .time-bars-figure > .time-bars')!==bars||bar.parentElement!==bars)return;if(this._rangeGesture?.ignoreClick(e)){return}this.dispatchEvent(new CustomEvent('goo-time-select',{bubbles:true,detail:{key:p.key}}))})}else if(href&&this.selectedKey===p.key)bar.setAttribute('aria-current','true');
      if(p.state==='no_data')bar.classList.add('no-data');bars.append(bar)
     }
-    const axis=node('div',undefined,'time-axis');axis.append(node('span',m.fromLabel),node('span',m.toLabel));figure.append(caption,scale,bars,axis);this.append(figure);if(m.interactive&&this.hasAttribute('range-select')&&!m.points.some(p=>p.href))this.bindRange(m);
+    const axis=node('div',undefined,'time-axis');axis.append(node('span',m.fromLabel),node('span',m.toLabel));figure.append(caption,scale,bars,axis);this.append(figure);if(m.interactive&&this.hasAttribute('range-select')&&!m.points.some(p=>p.href))this.bindRange(m,revision);
    }
 
-   bindRange(m){
-    this._rangeGesture=bindIntervalRange(this,{plot:()=>this.querySelector(':scope > .time-bars-figure > .time-bars'),items:()=>[...(this.querySelector(':scope > .time-bars-figure > .time-bars')?.children||[])],keys:m.points.map(point=>point.key),onRange:(fromKey,toKey)=>this.dispatchEvent(new CustomEvent('goo-time-range',{bubbles:true,detail:{fromKey,toKey}}))});
+   bindRange(m,revision){
+    this._rangeGesture=bindIntervalRange(this,{plot:()=>this.querySelector(':scope > .time-bars-figure > .time-bars'),items:()=>[...(this.querySelector(':scope > .time-bars-figure > .time-bars')?.children||[])],keys:m.points.map(point=>point.key),onRange:(fromKey,toKey)=>{if(revision===this._renderRevision)this.dispatchEvent(new CustomEvent('goo-time-range',{bubbles:true,detail:{fromKey,toKey}}))}});
     this._clearRange=()=>this._rangeGesture.clear();
    }
 

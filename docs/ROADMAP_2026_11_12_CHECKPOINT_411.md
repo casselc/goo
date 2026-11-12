@@ -33,9 +33,9 @@ independent source/count/status/duration checks, fixed four-SQL budget for two
 windows, no local-sort/search/return reads, stale/canceled response refusal,
 accessible compact desktop/mobile frames, Hegel properties and observed Quint
 trace validation with rejecting controls. Actual commands and outcomes are in
-[validation](../VALIDATION.md). **Next: 413**, log volume/severity context.
+[validation](../VALIDATION.md).
 
-### 413 — depth: log volume and severity in Activity
+### 413 — depth: log volume and severity in Activity (delivered)
 
 “Is this burst unusual?” Extend Activity with a compact optional full-query log
 volume/severity timeline and brush into its existing fixed explanation. Reuse the
@@ -44,6 +44,16 @@ counts remain separate. Severity number and reported text remain distinct.
 Pause updates on interaction and retain the original window/Back path. No new
 stream engine or statistical anomaly claim. Scope and read-budget design precede
 implementation.
+
+Delivered as [log volume in Activity](ACTIVITY_LOG_CONTEXT.md): three aggregate
+reads per explicit refresh, six count buckets and a separate full-window literal
+severity-text breakdown. Numeric severity remains independent. Source-free brush
+and explanation entry bind the displayed window even after stream advancement.
+A tiny pure read gate is now shared with span latency; display components retain
+no source authority. [Independent acceptance](reviews/ACTIVITY_LOG_CONTEXT_REVIEW_413.md)
+and [validation](../VALIDATION.md) record real-source, accessibility/density,
+Hegel state/property, Quint ledger and Bombadil checks. **Next: 414**, recent and
+pinned scope consolidation; do not add another log widget before that work.
 
 ### 414 — consolidation: recent and pinned scopes
 

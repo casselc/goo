@@ -5,7 +5,7 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-412, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
+413, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
 [fleet service triage](SERVICE_TRIAGE.md).
 The [active roadmap](ROADMAP_2026_11_12_CHECKPOINT_411.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
@@ -15,7 +15,7 @@ below are research inputs, not additional backlogs or claims of vendor parity.
 
 | User task | Delivered path | Boundary to keep visible |
 | --- | --- | --- |
-| See what is happening now | [Live Activity](LIVE_ACTIVITY.md), scoped log/span streams, inspection and [contextual investigation actions](ACTIVITY_NAVIGATION.md) | A bounded live buffer is not the full population; disconnects, gaps and pauses remain explicit. |
+| See what is happening now | [Live Activity](LIVE_ACTIVITY.md), scoped log/span streams, optional [log volume and literal severity-text context](ACTIVITY_LOG_CONTEXT.md), inspection and [contextual investigation actions](ACTIVITY_NAVIGATION.md) | A bounded live buffer is not the full population; disconnects, gaps and pauses remain explicit. |
 | Narrow and inspect ordinary telemetry | [Typed filters](FILTER_EDITOR.md), [counted field values](FILTER_VALUES.md), structured attributes and [qualified field presentation](FIELD_PRESENTATION.md) | Missing and present-empty values differ. A displayed page does not define total counts. |
 | Inspect captured activity over time | [Exact captured-record rates](CAPTURED_RECORD_RATES.md) in fixed summaries and ungrouped timelines | Count/window rates describe captured records, not unsampled traffic or application throughput. Clipped buckets use their actual duration. |
 | Compare populations | [Population workspace](POPULATION_WORKSPACE.md), distributions, baseline/selection comparisons and [fresh-window comparisons](FRESH_COMPARISON.md) | Independent reads can disagree. Ranked differences are leads, not statistical significance or cause. |
@@ -58,8 +58,8 @@ whole-population facts with no forced grouping. [Retained gauge context](RETAINE
 [Shared quantitative chrome](QUANTITATIVE_VIEW_COMPOSITION.md) (411) consolidates
 numeric and selected native histogram surfaces and action readiness.
 [Fleet service triage](SERVICE_TRIAGE.md) (412) is delivered.
-Next: log volume/severity in Activity (413), then recent/pinned scope consolidation
-(414). Captured-example task discovery and adjacent labeling are deferred. Delivered
+[Log volume/severity-text context](ACTIVITY_LOG_CONTEXT.md) (413) is delivered.
+Next: recent/pinned scope consolidation (414). Captured-example task discovery and adjacent labeling are deferred. Delivered
 capabilities and remaining boundaries are distinguished below.
 
 | Area | Remaining gap or decision | Current reference |

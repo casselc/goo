@@ -1,0 +1,14 @@
+spec: activitylogs.qnt
+module: activitylogs
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  show: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}
+  complete: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}
+  refresh: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}
+  freeze: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}
+  choose_interval: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}
+  explain: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}
+  return_parent: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}
+  retire: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}
+  late_result: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}

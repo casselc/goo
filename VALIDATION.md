@@ -1,5 +1,60 @@
 # Validation record
 
+## Activity log volume — milestone 413
+
+Delivered the depth item after fleet triage, reusing existing aggregate execution,
+passive time bars and explanation. See the [contract](docs/ACTIVITY_LOG_CONTEXT.md),
+[storyboard](docs/journeys/activity-log-context.md) and
+[independent acceptance](docs/reviews/ACTIVITY_LOG_CONTEXT_REVIEW_413.md).
+
+- Final frontend suite: **1,547 passed**, zero failures/skips. Focused coverage
+  includes exact data/selection, pinned explanation, visible focus, queued timer
+  retirement, dirty local closure, and shared span-latency gate behavior.
+- **Two actual OTLP/ClickHouse browser journeys pass**: full log context and a
+  separate six-span latency regression after the gate extraction. The log test
+  independently checks **624 matching records versus 100 retained occurrences**,
+  four literal severity-text groups of 156 records and all six bucket counts.
+  Empty text and conflicting numeric/text severities remain distinct meanings.
+- Show/Refresh each use **one aggregate API request/three SQL statements**. Source
+  counts, text groups and time buckets match an independent raw-row oracle. No
+  record/field projection is substituted. Pointer and keyboard selection, severity
+  disclosure, cadence choice, explanation staging/Close and held return add no
+  source reads in their quiescent checks.
+- Real pointer gestures cancel a held refresh, retain the displayed old window and
+  refuse late adoption. A newer stream window cannot change the chart's fixed
+  explanation bounds. The test executes the explanation, refines a side question
+  and restores the original retained rows/window. Upstream failure leaves no
+  actionable chart; overlapping/retired callbacks do not restart work.
+- The actual **30-second Bombadil campaign completes with 493 snapshots**, no
+  implicit extra aggregate reads, no writes and no page errors. Actor runs use
+  unique artifact directories. Rolling-window fixtures are created after app
+  bootstrap; an expired pre-bootstrap fixture was a driver failure, not a source
+  or product-health conclusion. Go's omitted/default JSON fields are compared
+  through the existing semantic question identity.
+- Isolated verification with the actual browser report passes all three tests
+  without skips (**30.435s**): strict Quint protocol (21.84s), observed read-ledger
+  replay (2.22s), and **64 Hegel cases** of actual JS projection plus **60 generated
+  shared-gate commands per case** against independent Go arithmetic/state oracles
+  (6.36s). Missing Quint fails the required gate. Read/fan-out/late-adoption and
+  poisoned-scope/count/bucket controls are rejected. The protocol model is not
+  exhaustive UI-state verification; owner/browser checks cover actual lifetimes.
+- Independent review accepted the compact 1440/390/320px frames, exact-window
+  handoff and focus behavior. Shared chart callbacks now bind a render revision;
+  tests reattach an old bar and an entire old plot without restoring intent
+  authority. Single selection clears prior range highlights. No screen-reader or
+  cross-engine conformance claim is implied.
+
+The Go embedded UI/metadata check passes. Rebuilt/refreshed only `packages`
+with `--no-deps`; both 8088/8089 endpoints byte-match all eight changed/new UI
+assets. The running app returns the same 624-log/four-text/six-bucket aggregate.
+Existing telemetry services, volumes, streams and XTDB were retained.
+
+Reviewed binary SHA-256:
+`cb8d15240fd6f42f94ff0b56b0413bea6beafc7e23f2673f167aad4b08393728`.
+Ignored evidence: `artifacts/activity-log-context/` and the separate span smoke.
+No endpoint, source adapter, dependencies or backend schema were added. Next:
+**414 — recent and pinned scope consolidation**.
+
 ## Fleet service triage — milestone 412
 
 Delivered the first breadth item of the adopted operator cadence. The

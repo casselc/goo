@@ -90,3 +90,8 @@ existing quint-go drilldown model with rejecting controls.
 [Captured baseline comparison](ACTIVITY_BASELINE.md) now adds a collapsed Baseline picker, stored-capture/link selection and shared normalized shape comparison to each successful Activity read. It adds no source timer and preserves the selected capture unchanged. Capture this window opens the existing explicit reread-and-save dialog.
 
 An optional [saved baseline reference](SAVED_ACTIVITY_BASELINE.md) now accompanies Activity view scope/layout. It resolves only after explicit Start and Show latency; panel/cadence remain ephemeral and old views retain their original IDs.
+
+The optional log-volume reader now shares the pure
+[aggregate read gate](../ui/aggregate-read-gate.mjs) with this controller.
+[Log volume](ACTIVITY_LOG_CONTEXT.md) retains its own count/text-severity meaning;
+span duration bins and baseline behavior are unchanged.

@@ -2896,3 +2896,12 @@ held parent return, fresh focus and refusal of retired controls.
 service identities, adjacent-window summaries, local ranking/search, retained
 service return, source failure and stale-read refusal. Actual desktop/mobile frames
 and Bombadil/Hegel/Quint results are recorded in [validation](../../VALIDATION.md).
+
+## 413 — Activity log volume and exact window explanation
+
+[Storyboard](activity-log-context.md) ·
+[executable](../../journeys/activity-log-context.spec.js) ·
+[contract](../ACTIVITY_LOG_CONTEXT.md). Actual OTLP logs validate full-window
+counts versus retained occurrences, exact text severity, three-SQL refreshes,
+old-window selection, pending-refresh freeze, source faults and held return.
+A separate six-span smoke checks the shared gate's existing latency consumer.

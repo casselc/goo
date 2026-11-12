@@ -1828,3 +1828,18 @@ input::placeholder,textarea::placeholder {color:var(--muted);opacity:1}
  .service-triage goo-table[mobile-layout=stacked]>.service-triage-table>tbody>tr>td:last-child::before {display:none}
  .service-triage .service-triage-table td:last-child>button {min-height:32px;padding:4px 8px}
 }
+
+/* Optional Activity volume stays a compact supplied-data strip above the stream. */
+.activity-log-context{padding:5px 8px;border-bottom:1px solid var(--border);min-width:0}
+.activity-log-controls{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.activity-log-controls :is(button,select){font-size:11px;padding:3px 6px;min-height:28px}
+.activity-log-context goo-time-bars{--time-bars-height:48px;margin-top:3px}
+.activity-log-status,.activity-log-context>details{font-size:11px;color:var(--muted);margin:2px 0;overflow-wrap:anywhere}
+.activity-log-context>details>div{overflow:auto;max-height:240px}
+.activity-log-context table{width:100%;font-size:11px;border-collapse:collapse}
+.activity-log-context :is(th,td){padding:4px 6px;text-align:left;vertical-align:top;font-variant-numeric:tabular-nums}
+.activity-log-context code{white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink)}
+.activity-log-context pre{max-width:100%;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+
+.activity-log-context goo-time-bars>.time-bars-figure>figcaption{margin:0}
+.activity-log-context goo-time-bars .time-axis{margin-top:3px}

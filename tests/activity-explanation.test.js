@@ -8,3 +8,16 @@ test('saved baseline uses exact immutable explore scope, same signal and environ
 test('ordinary omitted logs signal normalizes explicitly and corrupt stored scope is rejected',()=>{assert.equal(a.windowQuestion({...c,selector:{environment:'prod'}}).signal,'logs');const q=a.windowQuestion(c),id='c'.repeat(64);assert.throws(()=>a.savedScope({receipt:{id,capturedAt:'2026-10-24T00:00:00Z',question:{kind:'explore',explore:q}},explore:{question:{...q,toMs:q.toMs+1}}},id,q));});
 
 test('saved typed explanation scope reuses receipt intent with canonical defaults and stored paging differences',()=>{const E=require('../ui/record-environment.mjs');for(const scope of [{mode:'named',value:'prod'},{mode:'empty'},{mode:'unreported'}]){const q={signal:'spans',environmentSelector:E.effective(scope),fromMs:1000,toMs:61000,limit:2,offset:0,spanStatus:false,where:{field:{kind:'attribute',key:'tenant'},op:'eq',value:''}},actual={...structuredClone(q),environment:'',limit:100,offset:100};delete actual.spanStatus;const id='b'.repeat(64),page={receipt:{id,capturedAt:'2026-11-04T00:00:00Z',question:{kind:'explore',explore:q}},explore:{question:actual,count:'999'}},before=structuredClone(page),loaded=a.savedScope(page,id,{...q,fromMs:120000,toMs:180000});assert.deepEqual(loaded,q);assert.deepEqual(page,before);loaded.where.value='mutated';assert.equal(page.receipt.question.explore.where.value,'');assert.throws(()=>a.savedScope(page,id,{...q,environmentSelector:E.current('prod')}));const bad=structuredClone(page);bad.explore.question.toMs++;assert.throws(()=>a.savedScope(bad,id,q));}});
+
+test('aggregate explanation pins its old window while preserving the exact active selector',()=>{
+ const old=a.windowQuestion(c),latest={...structuredClone(c),readWindow:{fromMs:130000,toMs:190000}},selection=a.selectWindow(old,160000,180000),value={parent:old,selection};
+ const pinned=a.pinnedWindow(latest,value);assert.deepEqual(pinned.parent,old);assert.deepEqual(pinned.selection,selection);assert.equal(a.sameParent(latest,old,true),true);assert.equal(a.sameParent(latest,old,false),false);
+ assert.equal(a.sameParent({...latest,selector:{...latest.selector,environment:'other'}},old,true),false);
+ for(const bad of [{...value,extra:true},{parent:{...old,fromMs:131000,toMs:191000},selection},{parent:{...old,limit:1},selection},{parent:old,selection:{...selection,where:undefined}},{parent:old,selection:{...selection,toMs:180001}},{parent:{...old,groupBy:[{kind:'column',key:'severity'}]},selection}])assert.throws(()=>a.pinnedWindow(latest,bad));
+ pinned.parent.where.value='mutated';assert.equal(old.where.value,'west');
+});
+test('pinned aggregate scopes normalize Go empty predicate values without changing actual missing semantics',()=>{
+ const context={...c,selector:{...c.selector,where:{field:{kind:'attribute',key:'empty'},op:'eq',value:''}}},parent=a.windowQuestion(context);delete parent.where.value;const latest={...context,readWindow:{fromMs:130000,toMs:190000}};
+ assert.deepEqual(a.pinnedWindow(latest,{parent,selection:{...structuredClone(parent),fromMs:160000,toMs:180000}}).parent,a.windowQuestion(context));
+ assert.throws(()=>a.pinnedWindow(latest,{parent:{...parent,where:{field:{kind:'attribute',key:'empty'},op:'missing'}},selection:parent}));
+});

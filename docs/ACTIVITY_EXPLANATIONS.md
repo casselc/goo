@@ -123,3 +123,12 @@ Saved scope admission shares the receipt/result scope validator with stored
 exploration admission, without promoting saved counts into explanation evidence.
 Typed side questions use the checked shared-link protocol and retain their actual
 operand window and policy. Opening stages; explicit Run reads telemetry.
+
+## Entry from measured log volume
+
+[Log volume](ACTIVITY_LOG_CONTEXT.md) may supply an admitted full-window parent
+and a selected subwindow. That source-free entry pins the displayed aggregate
+window and requires the same current selector and typed environment; newer stream
+windows cannot reinterpret it. Normal Explain-this-window entry still uses the
+last completed stream window. Run remains explicit, and new-entry Close restores
+the volume action without a source read.

@@ -145,6 +145,9 @@ with Histogram/Table views and exact numeric-binding compatibility.
 [Fleet service triage](docs/SERVICE_TRIAGE.md) adds a compact Services summary:
 captured Server spans and changes, recorded Error fraction and mean duration,
 with local ranking and exact namespace-aware service drilldown.
+[Log volume in Activity](docs/ACTIVITY_LOG_CONTEXT.md) adds optional measured
+count bars and severity-text context; select an interval to stage its exact
+fixed-window explanation while retaining the stream.
 [Operator workbench polish](docs/OPERATOR_WORKBENCH_POLISH.md) unifies compact records,
 contextual inspection, field actions and service discovery across desktop/mobile.
 [Independent follow-up acceptance](docs/reviews/INDEPENDENT_INTERFACE_REVIEW_2026_11_12.md#remediation-acceptance)
