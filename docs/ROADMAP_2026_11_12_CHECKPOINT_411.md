@@ -10,6 +10,22 @@ and service discovery before this queue. Do not repeat that work in 414: its
 remaining scope is consistency around capture/review decisions and pending
 publication as the new review workflow becomes available.
 
+## Product-gap review recommendation — November 12
+
+The [quick competitive gap analysis](reviews/PRODUCT_GAP_ANALYSIS_2026_11_12.md)
+recommends prioritizing general operator workflows ahead of deeper labeling:
+**fleet service triage → log volume/severity context in Activity → recent/pinned
+scope consolidation**, followed by guided version comparisons, recurring error
+groups and a separately gated monitoring/alerting track. These extend existing
+queries, views and investigation owners rather than adding another engine.
+
+This is a proposed reprioritization, not implementation or a silently renumbered
+queue. Items 412–414 below remain documented; task discovery and adjacent labeling
+would move to a deferred review track if the recommendation is adopted. The shared
+UI polish and independent six-finding remediation are delivered; do not repeat
+them as a new consolidation milestone. Monitoring, tenancy and unsupported native
+semantics still require their separate gates.
+
 ## 412 — breadth: contextual review-task discovery
 
 User task: “Use an existing labeling vocabulary for this captured example without finding and copying its artifact ID.” Add a bounded, source-free task catalogue and chooser inside the existing **Review example** disclosure. Keep exact-ID loading available. Reuse the existing workbench file-store scan bounds and validated immutable task loader; catalogue presentation is not a new task store or a source query.
