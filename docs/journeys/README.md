@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Recent/pinned scope recall](recent-pinned-scopes.md) (414) distinguishes fixed
+configuration, rolling Activity intent and held results. The real-source journey
+checks explicit Run/Start, no-read local actions, opt-in reload and narrow frames.
+
+
 [Journey364](364-saved-native-context.md) follows a saved current-only counter and
 effective-policy histogram interval into exact logs/spans context. Stage reads
 nothing; explicit Run acquires fresh records, and Return restores the same saved

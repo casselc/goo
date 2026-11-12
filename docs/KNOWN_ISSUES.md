@@ -1,7 +1,7 @@
 # Known issues and gaps
 
 Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
-status and the [active roadmap](ROADMAP_2026_11_12_CHECKPOINT_411.md) for priorities.
+status and the [active roadmap](ROADMAP_2026_11_12_CHECKPOINT_414.md) for priorities.
 [Operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) delivers shared shell,
 record/attribute inspection and service-discovery improvements. Mobile service-card
 layout and further contextual action discovery remain bounded refinements.
@@ -19,7 +19,11 @@ monitoring/SLOs and inferred health remain outside this feature.
 [Log volume in Activity](ACTIVITY_LOG_CONTEXT.md) (413) now adds full-query volume
 and literal text-severity context with an exact held-window explanation. Numeric
 severity classification/stacked time-series and persisted strip/cadence state are
-not added. Next is recent/pinned scope consolidation; labeling remains deferred.
+not added. [Recent/pinned scope recall](RECENT_PINNED_SCOPES.md) (414) keeps
+configuration local by default, with explicit browser persistence. It is not
+authenticated personal history; shared deployment still needs identity/source
+authorization. Arbitrary native/trace-search/composed views are not added to this
+ordinary-record history. Labeling remains deferred.
 
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.

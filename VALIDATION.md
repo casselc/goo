@@ -1,5 +1,52 @@
 # Validation record
 
+## Recent and pinned scopes — milestone 414
+
+Delivered [configuration recall](docs/RECENT_PINNED_SCOPES.md), with the
+[real-source storyboard](docs/journeys/recent-pinned-scopes.md) and
+[independent acceptance](docs/reviews/RECENT_PINNED_SCOPES_REVIEW_414.md).
+
+- Final frontend suite: **1,553 passed**, zero failures/skips, including Journal
+  and picker ownership/focus tests. Existing log-volume and nonempty span-latency
+  browser regressions both pass; their affected documentation frames were refreshed.
+  The standalone Go embedded UI/metadata check passes.
+- Real OTLP/ClickHouse journey passes: **624** matching logs and a **156**-record
+  INFO subset, independently selected from raw source rows. Each explicit fixed
+  Run uses one POST/three SQL statements; explicit stream Start adds one POST/one
+  completed source query before Pause.
+- All **18** recorded local facts preserve their declared read budgets, including
+  fixed and rolling Stage, pin/unpin, dirty Activity refusal, held current-visit
+  return from Activity, browser persistence/reload and clear. Reload opens a fresh
+  staged fixed view with no retained rows; it does not read telemetry.
+- **30-second Bombadil** campaign: **534 snapshots**, completed Pin → Stage →
+  Unpin → Forget, zero additional POST/SQL reads and zero page errors. Actual
+  desktop/390px/320px frames and distinct held-visit labels were independently
+  reviewed. Native disclosure, contextual descriptions, redraw focus fallback and
+  retired/reattached controls have focused coverage; no screen-reader or
+  cross-engine certification is claimed.
+- Isolated `go test ./scopehistory -count=1 -v` passes **64 Hegel cases** in
+  **8.163s**. Each forces pin-cap/expiry/reload boundaries then generates 100
+  commands against the actual source-denied JS Journal and an independent Go
+  oracle. Nine root/nested poisoning controls prove unsupported data is refused.
+  The first run found a zero-ms test-bridge encoding bug, corrected before this
+  successful run; no product clock substitution was made.
+- Browser persistence is explicit, path-scoped and bounded; config predicates
+  can contain sensitive values. It is not authenticated personal isolation.
+  Results, receipts and read tokens are excluded. No backend or dependency was
+  added. Native/composed/trace-search history remains outside this record slice.
+
+Refreshed only `packages --no-deps`; both 8088/8089 endpoints byte-match all
+seven changed/new UI assets. Existing telemetry, volumes, streams and XTDB were
+preserved. Browser-tested binary SHA-256:
+`6274cda78dec279eabef0dd35d6f6f0c92a496e81981d06c586b0ffe30176154`.
+
+Raw reports are ignored under `artifacts/recent-pinned-scopes/`; only useful
+journey documentation frames are tracked. Independent product/architecture review
+sets the [next finite roadmap](docs/ROADMAP_2026_11_12_CHECKPOINT_414.md): guided
+service-version comparison, query-only exception groups, then strict record-intent
+admission consolidation.
+
+
 ## Activity log volume — milestone 413
 
 Delivered the depth item after fleet triage, reusing existing aggregate execution,

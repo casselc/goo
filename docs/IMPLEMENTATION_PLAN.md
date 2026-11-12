@@ -1,14 +1,13 @@
 # Implementation plan
 
-> Active execution order: [411 product checkpoint](ROADMAP_2026_11_12_CHECKPOINT_411.md),
-> reconciled across [architecture, design and product reviews](reviews/ROADMAP_RECONCILIATION_411.md).
-> The 406 captured-record rates, 407 authored numeric histograms and 408 passive
-> display exports/reference cadence is delivered. **409 service-window captured-count
-> comparisons**, **410 incoming HTTP response context** and **411 quantitative
-> view consolidation** are delivered and reviewed. Next: **412 contextual review-task
-> discovery → 413 adjacent captured occurrences → 414 shared record operations**.
-> The user-requested [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md)
-> follows 411 and covers shared record actions/inspection ahead of that queue.
+> Active execution order: [414 product checkpoint](ROADMAP_2026_11_12_CHECKPOINT_414.md),
+> reconciled across the independent product/architecture reviews summarized there.
+> The adopted operator cadence delivered **412 fleet service triage** and
+> **413 Activity log volume**. **414 recent and pinned scope
+> consolidation** completes that cycle. Next is **415 guided service-version
+> comparison → 416 recurring exception groups → 417 record-intent admission**
+> following independent product and architecture review. The older labeling queue
+> below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped
 > P95, host sample context and broader platform work remain deferred.
 > 367 reusable current RPC views, 368 exact service native interval context,

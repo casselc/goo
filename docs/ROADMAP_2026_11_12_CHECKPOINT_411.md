@@ -52,10 +52,10 @@ and explanation entry bind the displayed window even after stream advancement.
 A tiny pure read gate is now shared with span latency; display components retain
 no source authority. [Independent acceptance](reviews/ACTIVITY_LOG_CONTEXT_REVIEW_413.md)
 and [validation](../VALIDATION.md) record real-source, accessibility/density,
-Hegel state/property, Quint ledger and Bombadil checks. **Next: 414**, recent and
-pinned scope consolidation; do not add another log widget before that work.
+Hegel state/property, Quint ledger and Bombadil checks. The following **414**
+recent/pinned scope consolidation is delivered below.
 
-### 414 — consolidation: recent and pinned scopes
+### 414 — consolidation: recent and pinned scopes (delivered)
 
 “Return to my useful scope without rebuilding it.” Consolidate existing question,
 Activity-view and retained-visit entry through a compact shared Recent/Pinned
@@ -63,6 +63,12 @@ picker. Durable recent configuration is distinct from retained results. Reopenin
 stages intent; Run and capture reopen retain separate authority. Bound retention,
 clear history and protect personal isolation before shared deployment. Do not add
 a new workspace or persist telemetry bodies in query history.
+
+Delivered as [recent/pinned scope recall](RECENT_PINNED_SCOPES.md), with bounded
+configuration-only retention, opt-in browser persistence, explicit staging and
+source-free held-visit recall. Independent reviews and actual checks are linked
+in the contract. The [414 checkpoint](ROADMAP_2026_11_12_CHECKPOINT_414.md) now
+sets the next finite queue.
 
 Review the product again after this breadth/depth/consolidation cycle. Guided
 version comparisons, recurring exception groups and a gated monitoring/alerting

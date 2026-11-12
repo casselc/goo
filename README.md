@@ -236,6 +236,9 @@ no data. Inspect the actual ClickHouse table DDL when choosing retention.
 ## Follow an investigation
 
 1. **Explore** opens recent Activity logs. Choose Logs/Spans and an environment.
+   **Recent / Pinned** recalls fixed questions or rolling Activity scopes; Stage
+   reads nothing. Held visits return to tab-local results. Browser persistence is
+   opt-in. See [scope recall](docs/RECENT_PINNED_SCOPES.md).
 2. Use record attributes, field choices or chart selections to stage a narrower
    scope, then **Apply scope**. Configure columns to keep useful context visible.
 3. **Pause** to inspect a record and its reported trace/span ancestry. Supplied
