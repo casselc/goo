@@ -1,5 +1,57 @@
 # Validation record
 
+## Operator workbench polish — November 12, 2026
+
+[Shared shell, record/attribute inspection and service polish](docs/OPERATOR_WORKBENCH_POLISH.md)
+delivers compact controls, explicit surfaces, readable records, contextual detail
+and accepted-scope discovery. Sources remain application-owned. The
+[storyboard](docs/journeys/operator-polish.md) includes actual before/after frames.
+
+- Final frontend: **1,510 passed / zero skips / 68.362 s**. New checks cover
+  compact summaries with full UTC/exact values retained, fresh/cached inspector
+  focus, current-owner refusal, closed/hidden/inert/disabled field actions,
+  stable menu-summary origins for dialogs/trace handoffs, 14 keyboard states
+  including IME/native editor cancellation, accepted discovery
+  folding and optional-registry absence without blocking ordinary telemetry.
+- Same fixed OTel bank, **30 spans plus 30 logs across three services**:
+  baseline workflow passed **16.3 s**, final operator workflow **24.2 s**.
+  Exact record IDs, UTC times, durations, reported statuses, service membership
+  and fixed scope match. Activity uses a separate fresh bank per pass because
+  its server-clock window is live; no same-data claim is made for those frames.
+- Desktop fixed results: first row **500.4 → 330px**, row height **123.5 → 42.5px**,
+  **four → fifteen** fully visible rows. Saved shows **fourteen instead of three**.
+  Mobile fixed first row **550.4 → 421px**. Services first row **772.6 → 370.3px**
+  desktop and **1021.5 → 482.4px** mobile. All eight scene/viewport combinations
+  have no page overflow. Mobile Activity deliberately allocates more height to
+  readable full-width messages; density is not improved by squeezing text.
+- Navigation with an inspector left open restores the next workspace’s full
+  width; retained hidden inspectors do not reserve a phantom side column.
+- Activity Inspect/search/Close, fixed inspection and Saved reload add **zero
+  API POSTs or SQL queries**. Capture remains an explicit independent source read.
+  The service response-context regression passed **12.1 s**, retaining exact
+  literal/missing/empty grouping, independent span status and held return.
+- Structured inspection plus real Bombadil passed **50.2 s**. Checks cover literal
+  unsafe text, preserved whitespace, exact large-string clipboard values, Plot
+  dialog Cancel restoring the visible field-menu origin, current grouping and
+  literal/missing/empty filters, trace/waterfall selection and mobile keyboard
+  return. **493 Bombadil snapshots** complete both the waterfall and field-menu
+  open/Escape phases with invariants intact. Three other field-action drivers
+  now open native disclosures rather than invoking hidden controls.
+- Compose configuration and the final Go image build pass. Only `packages`
+  was refreshed; telemetry, stores and XTDB remain intact. Running image
+  `6018a9fa0718` serves all **14 modified UI assets** byte-for-byte with the
+  reviewed sources, and `/capabilities` responds normally.
+- This exercise found and fixed a real collapsed-editor bug: **Break down and
+  run** previously reran the ungrouped question. It now executes the requested
+  grouping through the existing guarded editor pipeline. The actual response
+  retains the original question exactly except for the chosen `groupBy`.
+- Embedded Go UI/metadata asset checks passed **0.058 s** on Go **1.27.3**. No
+  backend API/schema, source representation or measurement-model changes were
+  introduced; this is not a full Go/model or every historical browser campaign.
+  Actual design review found no remaining visual blocker. Updated component
+  contracts, diagram, storyboards and the roadmap record what this pass covers;
+  later capture/review action consolidation must not duplicate delivered work.
+
 ## Compact quantitative composition — 411
 
 [Numeric and selected native histograms](docs/QUANTITATIVE_VIEW_COMPOSITION.md)

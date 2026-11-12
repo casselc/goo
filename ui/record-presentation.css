@@ -1,6 +1,6 @@
 /* Passive record content; consuming applications own tables, actions and viewports. */
 goo-record-summary{display:block;min-width:0;overflow-wrap:anywhere}
-goo-record-summary .record-label,goo-record-summary .record-duration{font-size:11px;color:var(--muted,#98a8bf)}
+goo-record-summary .record-label,goo-record-summary .record-duration{font-size:12px;color:var(--muted,#98a8bf)}
 goo-record-summary .record-label[data-tone=error]{color:var(--danger,#f59a9a)}
 goo-record-summary .record-label[data-tone=warn]{color:var(--warn,#e1bd77)}
 goo-record-summary .record-message{white-space:pre-wrap;overflow-wrap:anywhere}
@@ -16,11 +16,25 @@ goo-record-context>details{padding-top:4px;margin-top:4px}
 goo-record-context .record-reference{display:inline-block;margin:4px 6px 4px 0;border:1px solid var(--border,#334155);border-radius:4px;padding:2px 5px;overflow-wrap:anywhere}
 .record-detail>goo-record-summary{margin-bottom:6px}
 
+/* Shared application controls keep a row a row; the inspection owner retains all
+   action callbacks and selection positions. No hover-only or nested row targets. */
+.record-row-actions{display:inline-flex;align-items:center;gap:4px;flex-wrap:nowrap;vertical-align:middle}
+.record-row-actions>button{display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:3px 8px;margin:0;font-size:12px;white-space:nowrap}
+.record-row-actions>input[type=checkbox]{flex:0 0 16px;inline-size:16px;block-size:16px;min-height:16px;margin:0 6px 0 0;padding:0;accent-color:var(--accent,#79ddc6)}
+.record-row-actions>.record-identity-missing{font-size:12px;color:var(--muted,#98a8bf);max-width:12em;line-height:1.4}
+.record-row-actions>button[aria-pressed=true]{border-color:var(--accent,#79ddc6);color:var(--accent,#79ddc6);background:var(--accent-dark,#1d4842)}
+@media(pointer:coarse){.record-row-actions>button{min-height:44px}.record-row-actions>input[type=checkbox]{inline-size:22px;block-size:22px;min-height:22px;flex-basis:22px;margin-inline:7px}}
+
 .record-time-short{display:none}
 
 /* Opt-in supplied record rows, shared by SSR tables and application adapters. */
 @media(min-width:701px){
- goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=summary]>goo-record-summary[compact]{margin-inline-end:6px}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=summary]>goo-record-summary[compact]{display:flex;margin-inline-end:6px}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=summary]>goo-record-summary[compact]>.record-message{display:block;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-height:1lh}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=context]{white-space:nowrap;width:1%}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=utc]{white-space:nowrap;width:1%;font-size:12px;font-variant-numeric:tabular-nums}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=service]{font-size:12px}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=summary]{max-width:36rem}
 }
 @media(max-width:700px){
  goo-table[record-layout=compact] .record-time-full{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
@@ -36,13 +50,19 @@ goo-record-context .record-reference{display:inline-block;margin:4px 6px 4px 0;b
  goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core],goo-table[record-layout=compact]>table>tbody>tr>td[data-record-field]{min-width:0;max-width:100%;padding:0;border:0;white-space:normal;overflow-wrap:anywhere}
  goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core]{display:block}
  goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core]::before{content:none}
- goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=utc]{grid-column:1;grid-row:1;white-space:nowrap;font-size:11px}
- goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=service]{grid-column:2;grid-row:1;font-size:11px}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=utc]{grid-column:1;grid-row:1;white-space:nowrap;font-size:12px}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=service]{grid-column:2;grid-row:1;font-size:12px}
  goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=summary],goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=context]{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
  goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core]>goo-record-summary{flex:1 1 100%;min-width:0}
- goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core]>button{display:inline-flex;width:auto;min-height:28px;min-width:28px;margin:0;padding:3px 8px;font-size:11px;align-items:center;justify-content:center}
- goo-table[record-layout=compact]>table>tbody>tr>td[data-record-field]{grid-column:1/-1;display:flex;gap:4px 8px;align-items:baseline;flex-wrap:wrap;font-size:11px}
- goo-table[record-layout=compact]>table>tbody>tr>td[data-record-field]::before{content:attr(data-label);color:var(--muted,#98a8bf);font-size:10px}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core]>button{display:inline-flex;width:auto;min-height:28px;min-width:28px;margin:0;padding:3px 8px;font-size:12px;align-items:center;justify-content:center}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-field]{grid-column:1/-1;display:flex;gap:4px 8px;align-items:baseline;flex-wrap:wrap;font-size:12px}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-field]::before{content:attr(data-label);color:var(--muted,#98a8bf);font-size:12px}
+ .record-row-actions{flex-wrap:wrap;gap:4px}
  goo-table[record-layout=compact] goo-record-summary{display:flex;gap:2px 6px;flex-wrap:wrap;align-items:baseline}
  goo-table[record-layout=compact] goo-record-summary>.record-message{flex:1 1 60%;min-width:0}
 }
+
+/* The result owner already supplies count/scope; retain the table caption for AT. */
+.telemetry-table>caption {position:absolute;inline-size:1px;block-size:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.telemetry-table>tbody>.record-row:hover {background:color-mix(in srgb,var(--accent,#8ab9ff) 4%,transparent)}
+.telemetry-table>tbody>.record-row:has([data-inspect-record][aria-pressed=true]) {background:color-mix(in srgb,var(--accent,#8ab9ff) 9%,transparent)}

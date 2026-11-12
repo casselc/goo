@@ -15,3 +15,24 @@ test('loaded span Find includes human duration/status/parent IDs but never absen
 test('chosen Find fields use actual strings not synthetic quotes, Null or empty placeholders',()=>{const P=require('../ui/record-presentation.mjs'),r={Body:'ordinary',LogAttributes:{literal:'null',quoted:'"null"',nothing:null,empty:'',number:'9007199254740993'}},field=key=>[{kind:'attribute',key}];assert.equal(P.matchesLoaded(r,'logs',field('literal'),'null'),true);assert.equal(P.matchesLoaded(r,'logs',field('literal'),'"null"'),false);assert.equal(P.matchesLoaded(r,'logs',field('quoted'),'"null"'),true);for(const key of ['nothing','empty','missing'])for(const query of ['null','Missing','Present empty string'])assert.equal(P.matchesLoaded(r,'logs',field(key),query),false);assert.equal(P.matchesLoaded(r,'logs',field('number'),'9007199254740993'),true);});
 test('loaded Find validates bounded well-formed text and deterministic Unicode casing without mutations',()=>{const P=require('../ui/record-presentation.mjs'),r={Body:'İΣx [literal]',LogAttributes:{secret:'token'}},before=structuredClone(r);assert.equal(P.findQuery('İΣ'),'i̇ς');assert.equal(P.matchesLoaded(r,'logs',[],'Σ'),true);assert.equal(P.findQuery(' '.repeat(256)),' '.repeat(256));assert.equal(P.findQuery('🚀'.repeat(128)).length,256);for(const query of ['x'.repeat(257),'🚀'.repeat(129),'\ud800',null,{},12])assert.throws(()=>P.findQuery(query));assert.deepEqual(r,before);});
 test('loaded Find accepts the exact visible compact UTC timestamp with sub-millisecond source precision',()=>{const P=require('../ui/record-presentation.mjs'),r={Body:'timed record',timestamp_ns:'1790000000123456789'},before=structuredClone(r),time=P.describe(r,'logs').time;assert.equal(time.compact,'14:13:20.123Z');assert.equal(P.matchesLoaded(r,'logs',[],time.compact),true);assert.equal(P.matchesLoaded(r,'logs',[],time.exact),true);assert.equal(P.matchesLoaded(r,'logs',[],time.text),true);assert.equal(P.matchesLoaded(r,'logs',[],'1790000000123456789'),false);assert.deepEqual(r,before)});
+
+test('compact summaries retain full UTC cells and full source messages for inspection',t=>{
+ const previous=globalThis.document;
+ class Element{
+  constructor(tag){this.localName=tag;this.children=[];this.attributes=new Map();this.dataset={};this.textContent=''}
+  append(...children){this.children.push(...children)}
+  replaceChildren(...children){this.children=[...children]}
+  setAttribute(name,value){this.attributes.set(name,String(value))}
+  getAttribute(name){return this.attributes.get(name)??null}
+ }
+ globalThis.document={createElement:tag=>new Element(tag)};
+ t.after(()=>{if(previous===undefined)delete globalThis.document;else globalThis.document=previous});
+ const P=require('../ui/record-presentation.mjs'),record={Body:'Full message '.repeat(100),ServiceName:'api',timestamp_ns:'1790000000123456789'},before=structuredClone(record),table=P.table({signal:'logs',summaryCompact:true,mobileCompact:true});
+ const item=table.row(record),timestamp=item.cells[0].children[0],summary=item.cells[2].children[0];
+ assert.equal(summary.getAttribute('compact'),'');assert.equal(summary.record.Body,record.Body);
+ assert.equal(timestamp.children[0].textContent,P.describe(record,'logs').time.text);
+ assert.equal(timestamp.children[1].textContent,'14:13:20.123Z');assert.equal(timestamp.children[1].getAttribute('aria-hidden'),'true');
+ assert.equal(timestamp.dateTime,'2026-09-21T14:13:20.123456789Z');assert(timestamp.title.includes(timestamp.dateTime));
+ assert.deepEqual(record,before);
+ const full=P.table({signal:'logs'}).row(record).cells[2].children[0];assert.equal(full.getAttribute('compact'),null);
+});

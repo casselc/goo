@@ -46,7 +46,7 @@ function surface(target,rows,signal,options){
    append(){},finish(){}
   };
  }
- const records=RecordPresentation.table({signal,mobileCompact:true,caption:'Captured '+signal+' · inspection page; full totals shown separately',label:'Captured '+signal+' inspection page'});
+ const records=RecordPresentation.table({signal,summaryCompact:true,mobileCompact:true,labels:['UTC','Service',signal==='spans'?'Span / duration':'Severity / body','Actions'],caption:'Captured '+signal+' · inspection page; full totals shown separately',label:'Captured '+signal+' inspection page'});
  records.element.className='telemetry-table';records.header.className='record-columns';
  const rowElements=[];
  return {...records,rowElements,current:()=>true,
@@ -74,6 +74,10 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
   onPlot:originalOptions.onPlot?((field,button)=>{if(actions.canPlot())originalOptions.onPlot(field,button)}):undefined
  };
  const panel=node('section'),inspect=UI.inspector(panel,{onClose:()=>{for(const extension of inspectorOwners.values())extension.suspend?.();const row=panel.closest('.record-detail-row');if(row)row.hidden=true;for(const button of target.querySelectorAll('[data-inspect-record]'))button.setAttribute('aria-pressed','false')}});
+ // Opening a record is an explicit application navigation gesture. Keep the
+ // supplied inspector passive; only this current owner moves focus into detail.
+ const inspectionHeading=panel.querySelector('.ui-inspector-heading')?.querySelector('h4');
+ function focusInspection(opener){if(!inspectionHeading||!canUseRecord()||panel.hidden||!UI.actionVisible(opener))return;inspectionHeading.tabIndex=-1;inspectionHeading.focus({preventScroll:true});inspectionHeading.scrollIntoView({block:'nearest',inline:'nearest'});}
  const selection=createSelection(rows.length),selectionState=selection.state,inputs=new Map(),recordSelection=node('section',undefined,'record-selection');
  recordSelection.hidden=true;recordSelection.setAttribute('aria-label','Selected '+signal+' records');
  const layoutHost=node('div',undefined,'record-fields-toolbar');
@@ -106,7 +110,7 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
   selectionChanged();options.onSelectionStart?.();renderSelection();
  }
  for(const [index,row]of rows.entries()){
-  const item=records.row(row,index),tr=item.row,cell=item.actions;tr.classList.add('record-row');tr.dataset.recordIndex=String(index);
+  const item=records.row(row,index),tr=item.row,cell=node('div',undefined,'record-row-actions');cell.setAttribute('role','group');cell.setAttribute('aria-label','Record actions');item.actions.append(cell);tr.classList.add('record-row');tr.dataset.recordIndex=String(index);
   if(signal==='logs'){
    if(target===surround.target&&Discovery.sameLog(row,surround.anchor)){tr.classList.add('log-anchor');item.time.append(node('span','Anchor fields match','anchor-badge'))}
    const nearby=node('button','Surrounding logs');nearby.setAttribute('aria-label','Surrounding logs for '+row.ServiceName+' at '+row.timestamp_ns);
@@ -128,7 +132,7 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
    item.detailRow.hidden=false;item.detailCell.append(panel);body.scrollTop=scroll;
    for(const button of target.querySelectorAll('[data-inspect-record]'))button.setAttribute('aria-pressed',String(button===inspectButton));
    const key=String(index),description=RecordPresentation.description(row);
-   if(inspect.has(key)){inspect.show({key,title:signal==='logs'?'Selected log':'Selected span record',description,opener:inspectButton});inspectorOwners.get(key)?.resume?.();return}
+   if(inspect.has(key)){inspect.show({key,title:signal==='logs'?'Selected log':'Selected span record',description,opener:inspectButton});inspectorOwners.get(key)?.resume?.();focusInspection(inspectButton);return}
    const content=RecordPresentation.detail(row,signal,actions,rows),scope=node('details');
    scope.append(node('summary','Record scope and evidence basis'),node('p','Retained record inspection. Trace expansion and surrounding logs are separate reads.'),node('pre',JSON.stringify({question:origin,basis},null,2)));content.append(scope);
    const follow=[...cell.querySelectorAll('button')].filter(button=>button!==inspectButton).map(button=>{
@@ -137,7 +141,7 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
    });
    if(signal==='spans'&&actions.onTraceSearch){const find=node('button','Find traces with this operation');find.type='button';find.disabled=actions.canTraceSearch?.()===false;find.onclick=()=>{if(!canUseRecord()||actions.canTraceSearch?.()===false||!Visuals.actionVisible(find))return;try{actions.onTraceSearch(TraceSearch.seedFromRow(row),find)}catch(error){find.title=error.message}};follow.push(find)}
    const extension=options.onInspectRecord?.({content,index,opener:inspectButton,current:()=>canUseRecord()&&inspectButton.getAttribute('aria-pressed')==='true'&&!item.detailRow.hidden&&panel.dataset.key===key});if(extension?.dispose)inspectorOwners.set(key,extension);
-   inspect.show({key,title:signal==='logs'?'Selected log':'Selected span record',description,content,actions:follow,opener:inspectButton});
+   inspect.show({key,title:signal==='logs'?'Selected log':'Selected span record',description,content,actions:follow,opener:inspectButton});focusInspection(inspectButton);
   };
   const input=inputs.get(index);if(!item.timingButton){if(input)input.after(inspectButton);else cell.prepend(inspectButton)}
   records.append(tr);records.append(item.detailRow);

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {test,mock} from 'node:test';
+let focused=null;
 class Element{
  constructor(tag='div'){this.tagName=tag;this.children=[];this.dataset={};this.attributes={};this.isConnected=true;this.title='';this.scrollTop=0;this.listeners=new Map();this.classList={add:(...names)=>{this.className=[this.className||'',...names].join(' ')}};}
  append(...nodes){for(const node of nodes){node.remove?.();node.parentElement=this;this.children.push(node)}}
@@ -12,13 +13,14 @@ class Element{
  matches(selector){if(selector.startsWith('.'))return(this.className||'').split(' ').includes(selector.slice(1));if(selector.startsWith('[data-')){const key=selector.slice(6,-1).replace(/-([a-z])/g,(_,letter)=>letter.toUpperCase());return Object.hasOwn(this.dataset,key)}return this.tagName===selector}
  querySelectorAll(selector){return this.children.flatMap(child=>[...(child.matches?.(selector)?[child]:[]),...(child.querySelectorAll?.(selector)||[])])}querySelector(selector){return this.querySelectorAll(selector)[0]||null}
  closest(selector){return this.matches(selector)?this:this.parentElement?.closest(selector)||null}
+ focus(){focused=this}scrollIntoView(){this.scrolled=true}
  addEventListener(type,listener){this.listeners.set(type,listener)}dispatch(type){this.listeners.get(type)?.({type})}
 }
 const node=(tag,text,className)=>{const element=new Element(tag);element.textContent=text;if(className)element.className=className;return element};
 let inspected,shared;
 mock.module('../ui/attributes.mjs',{exports:{mountShared:(_host,_records,options)=>{shared=options}}});
 mock.module('../ui/record-presentation.mjs',{exports:{table(){const element=node('table'),viewport=node('div'),header=node('thead'),body=node('tbody');element.append(header,body);viewport.append(element);return {element,viewport,header,body,row(){const row=node('tr'),cells=Array.from({length:4},()=>node('td'));row.append(...cells);return{row,cells}}}},description:()=>'',detail:(_row,_signal,options)=>{inspected=options;return node('section')}}});
-mock.module('../ui/components.mjs',{exports:{node,inspector(panel){const body=node('div',undefined,'ui-inspector-body');panel.append(body);return {has:()=>false,show(){}}}}});
+mock.module('../ui/components.mjs',{exports:{node,actionVisible:element=>element.isConnected&&element.visible!==false,inspector(panel){const header=node('div',undefined,'ui-inspector-heading'),heading=node('h4'),body=node('div',undefined,'ui-inspector-body'),cache=new Set();header.append(heading);panel.append(header,body);panel.hidden=true;return {has:key=>cache.has(key),show({key}){cache.add(key);panel.hidden=false}}}}});
 mock.module('../ui/record-columns.mjs',{exports:{mount:()=>({update(){}})}});
 mock.module('../ui/kept-selection.mjs',{exports:{mount(){}}});
 for(const name of ['discovery','retention','trace-search','visualizations','record-list','record-span-waterfall'])mock.module('../ui/'+name+'.mjs',{exports:{}});
@@ -39,4 +41,13 @@ test('shared-field actions require an actual host and use the canonical attribut
   let calls=0;shared=null;const target=node('section'),options={resultToken:'opaque'},origin={signal:'logs',environmentSelector:{version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'named',value:'prod'}}},onFacet=()=>{calls++;return false};
   const owner=mount(target,[{Body:'ordinary'}],'logs',origin,'basis',options,{attributeOptions:()=>hasHost?{onFacet}:{}});const input=target.querySelector('[data-record-selection]');input.checked=true;input.onchange();const disclosure=target.querySelectorAll('details').find(element=>element.children[0]?.textContent==='Fields shared by selected records');disclosure.open=true;disclosure.dispatch('toggle');assert(shared);if(hasHost){assert.equal(shared.onFacet({},'value','include'),false);assert.equal(calls,1)}else{assert.equal(shared.onFacet,undefined);assert.equal(calls,0)}owner.dispose();
  }
+});
+
+
+test('explicit record opening focuses details for fresh and cached inspection only while current and visible',()=>{
+ let active=true;const target=node('section'),owner=mount(target,[{Body:'ordinary'}],'logs',{signal:'logs'},'basis',{}, {active:()=>active}),opener=target.querySelector('[data-inspect-record]'),heading=target.querySelector('.ui-inspector-heading').querySelector('h4');
+ for(const cached of [false,true]){focused=null;opener.onclick();assert.equal(focused,heading,cached?'cached selection':'fresh selection');assert.equal(heading.tabIndex,-1);assert.equal(heading.scrolled,true)}
+ focused=null;opener.visible=false;opener.onclick();assert.equal(focused,null,'a nonvisible opener cannot move keyboard focus');
+ opener.visible=true;active=false;opener.onclick();assert.equal(focused,null,'a paused host cannot move keyboard focus');
+ active=true;owner.dispose();opener.onclick();assert.equal(focused,null,'a retired owner cannot move keyboard focus');
 });

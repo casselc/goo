@@ -1,9 +1,10 @@
+.visually-hidden {position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
 goo-latency,goo-stat-list,goo-metric-comparison{display:block;min-width:0}
 /* Component styles use product tokens; components never own page layout or query state. */
 .ui-stats{display:flex;flex-wrap:wrap;gap:12px 28px;margin:8px 0;font-variant-numeric:tabular-nums}
 .ui-stats>div{min-width:0}.ui-stats dt,.ui-stats small{color:var(--muted,#98a8bf);font-size:12px}.ui-stats dd{margin:2px 0 0;font-size:17px;overflow-wrap:anywhere}.ui-stats small{display:block}
 .ui-disclosure{margin:8px 0}.ui-disclosure>summary{color:var(--muted,#98a8bf);font-size:12px;cursor:pointer}.ui-disclosure[open]>summary{margin-bottom:10px}.ui-disclosure>p{font-size:12px;color:var(--muted,#98a8bf)}
-.ui-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}.ui-action-menu{position:relative;margin:0}.ui-action-menu>summary{padding:7px 10px;border:1px solid var(--border,#2b3545);border-radius:7px;font-size:13px;color:var(--ink,#e3e9f3)}
+.ui-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0}.ui-action-menu{position:relative;margin:0}.ui-action-menu>summary{padding:5px 9px;min-height:32px;box-sizing:border-box;border:1px solid var(--border,#2b3545);border-radius:5px;font-size:12px;color:var(--ink,#e3e9f3)}
 .ui-actions-body{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0}.ui-actions-body button{font-size:12px}
 .ui-latency{min-width:0;margin:12px 0;padding:12px 0}.ui-latency-title{font-size:13px;margin:0 0 8px}.ui-latency-body{display:flex;align-items:start;gap:24px;min-width:0}.ui-latency-mean{margin:0;min-width:100px}.ui-latency-mean dd{font-size:23px}
 .ui-quantiles{flex:1;min-width:0}.ui-quantiles>.ui-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0}.ui-quantiles dd{font-size:15px;white-space:nowrap}.ui-quantiles>small{display:block;color:var(--muted,#98a8bf);font-size:10px;margin-top:5px}
@@ -57,23 +58,29 @@ goo-categorical-facet,goo-facet-list,goo-field-value,goo-attribute-list{display:
 goo-facet-list>[data-facet-item][hidden]{display:none}
 goo-facet-list>[data-facet-item]{min-width:0}
 goo-field-value .attribute-type{display:inline-block;margin:4px 0 0;padding:1px 5px;border:1px solid var(--border,#2b3545);border-radius:4px;font:10px/1.5 system-ui,sans-serif;color:var(--muted,#98a8bf)}
-.attribute-viewer {min-width:0;border:1px solid var(--border,#2b3545);border-radius:8px;background:#111a24;padding:14px;margin-top:5px;text-align:left}
+.attribute-viewer {min-width:0;border:1px solid var(--border,#2b3545);border-radius:6px;background:var(--surface,#151a23);padding:12px;margin-top:5px;text-align:left}
 .attribute-tools {display:flex;gap:12px;align-items:end;margin-bottom:12px;flex-wrap:wrap}
 .attribute-tools>label:first-child {flex:1;min-width:140px}
 .attribute-tools>label {min-width:110px}
 .attribute-tools input,.attribute-tools select {width:100%;min-height:33px;padding:5px 8px}
-.attribute-count {font-size:11px;color:var(--muted,#98a8bf);padding-bottom:7px;white-space:nowrap}
-.attribute-group h4 {font-size:11px;color:var(--muted,#98a8bf);font-weight:600;margin:18px 0 5px;padding-bottom:7px;border-bottom:1px solid var(--border,#2b3545);display:flex;gap:10px}
+.attribute-count {font-size:12px;color:var(--muted,#98a8bf);padding-bottom:7px;white-space:nowrap}
+.attribute-group h4 {font-size:12px;color:var(--muted,#98a8bf);font-weight:600;margin:18px 0 5px;padding-bottom:7px;border-bottom:1px solid var(--border,#2b3545);display:flex;gap:10px}
 .attribute-group-count {color:var(--muted,#98a8bf);font-weight:400}
-.attribute-row {display:grid;grid-template-columns:minmax(130px,29%) minmax(0,1fr) auto;gap:12px;padding:9px 0;border-bottom:1px solid #233041;align-items:start;font-size:12px;min-width:0}
+.attribute-row {display:grid;grid-template-columns:minmax(110px,25%) minmax(0,1fr) auto;gap:8px;padding:9px 0;border-bottom:1px solid #233041;align-items:start;font-size:12px;min-width:0}
 .attribute-row:last-child {border:0}
 .attribute-key {font-family:ui-monospace,monospace;color:#b8ccd9;overflow-wrap:anywhere;white-space:pre-wrap;min-width:0}
 .attribute-value {min-width:0;overflow-wrap:anywhere}
 .attribute-value-text {white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink,#e3e9f3);font-family:ui-monospace,monospace}
 .attribute-type {display:block;font-size:10px;color:#788ca4;margin-top:3px}
 .attribute-empty {font-family:inherit;color:#b7a1d8;background:#2c263b;border-radius:4px;padding:1px 5px;font-size:11px}
-.attribute-actions {display:flex;gap:4px;flex-wrap:wrap;max-width:190px}
-.attribute-actions button {background:transparent;font-size:10px;padding:3px 6px;color:#9fb6c5;border-color:transparent;min-height:26px}
+.attribute-actions {display:flex;gap:4px;flex-wrap:wrap;max-width:190px;min-width:0}
+.attribute-actions>.ui-actions {align-items:start;gap:4px;margin:0}
+.attribute-actions .ui-action-menu>summary {display:flex;align-items:center;justify-content:center;list-style:none;font-size:18px;line-height:1;min-height:30px;min-width:30px;padding:4px 7px;white-space:nowrap}
+.attribute-actions .ui-action-menu>summary::-webkit-details-marker {display:none}
+.attribute-actions .ui-actions-body {display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:4px 0;max-width:190px}
+.attribute-actions .ui-actions-body>button {text-align:left;justify-content:start;white-space:normal;overflow-wrap:anywhere}
+.attribute-actions button {background:transparent;font-size:12px;padding:4px 6px;color:#9fb6c5;border-color:transparent;min-height:30px}
+@media(pointer:coarse){.attribute-actions button,.attribute-actions .ui-action-menu>summary{min-height:44px;min-width:44px}}
 .attribute-actions button:hover:not(:disabled),.attribute-actions button:focus-visible {border-color:#4c6b77;color:var(--accent,#79ddc6)}
 .attribute-feedback {font-size:11px;margin:8px 0 0;color:var(--accent,#79ddc6)}
 .attribute-feedback:empty {display:none}

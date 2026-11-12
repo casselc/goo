@@ -450,7 +450,11 @@ No telemetry string is inserted as HTML. Upgrading a field starts no source read
 `goo-attribute-list` is a passive child-preserving display shell. The existing
 `GooAttributes.mount/disclosure` adapter owns physical-to-semantic field mapping,
 scope grouping, local key/value search, clipboard feedback, and explicit filter/
-breakdown actions. It composes these elements in Explore, trace/log context and
+breakdown actions. Copy is visible; secondary operations use the native **Field
+actions** ellipsis disclosure. Invocation checks native availability; closing a
+menu withdraws its actions. Dialog/trace handoffs retain the visible summary as
+their return origin, without transferring source authority. See the
+[operator workbench](OPERATOR_WORKBENCH_POLISH.md). It composes these elements in Explore, trace/log context and
 native metric identity displays. The component does not assume that string values
 are queryable, map OTel keys, or construct a question. Missing fields are not
 invented by the adapter; the standalone value API can display explicitly supplied

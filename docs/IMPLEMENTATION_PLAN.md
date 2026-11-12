@@ -7,6 +7,8 @@
 > comparisons**, **410 incoming HTTP response context** and **411 quantitative
 > view consolidation** are delivered and reviewed. Next: **412 contextual review-task
 > discovery → 413 adjacent captured occurrences → 414 shared record operations**.
+> The user-requested [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md)
+> follows 411 and covers shared record actions/inspection ahead of that queue.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped
 > P95, host sample context and broader platform work remain deferred.
 > 367 reusable current RPC views, 368 exact service native interval context,

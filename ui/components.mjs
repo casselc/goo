@@ -14,6 +14,13 @@ const global = globalThis;
   host.classList.add('ui-inspector');host.setAttribute('role','region');host.setAttribute('aria-label','Selected item details');host.hidden=true;close.type='button';close.setAttribute('aria-label','Close selected item details');header.append(heading,close);host.append(header,summary,body,controls);
   function remember(){if(!host.hidden&&active!==null&&cache.has(active))cache.get(active).scroll=body.scrollTop}
   close.onclick=()=>{remember();host.hidden=true;const restore=onClose(active,opener)!==false;if(restore&&opener?.isConnected)opener.focus({preventScroll:true})};
+  host.addEventListener('keydown',event=>{
+   if(event.key!=='Escape'||event.defaultPrevented||event.isComposing||event.keyCode===229||host.hidden)return;
+   // Native editors own cancellation before the surrounding detail surface.
+   if(event.target.closest('textarea,select,[contenteditable]:not([contenteditable="false"]),[role="combobox"],[role="listbox"]'))return;
+   const input=event.target.closest('input');if(input&&(input.type!=='search'||input.value!==''))return;
+   event.preventDefault();event.stopPropagation();close.click();
+  });
   return {has:key=>cache.has(key),show({key,title,description,content,actions=[],opener:origin}){if(typeof key!=='string'||!key)throw Error('Inspector requires an opaque selection key');remember();if(!cache.has(key)){if(!(content instanceof Node))throw Error('Inspector requires caller-owned content');cache.set(key,{content,actions,description,scroll:0});if(cache.size>32)cache.delete(cache.keys().next().value)}const entry=cache.get(key);cache.delete(key);cache.set(key,entry);heading.textContent=title;const text=description??entry.description??'';summary.replaceChildren();if(text instanceof Node)summary.append(text);else summary.textContent=text;if(active!==key||body.firstChild!==entry.content){body.replaceChildren(entry.content);controls.replaceChildren(...entry.actions)}active=key;opener=origin;host.dataset.key=key;host.hidden=false;body.scrollTop=entry.scroll;},clear(){active=null;opener=null;cache.clear();body.replaceChildren();controls.replaceChildren();summary.replaceChildren();heading.textContent='';delete host.dataset.key;host.hidden=true}};
  }
  function parseAttribute(element,name){try{const value=element.getAttribute(name);return value&&value.length<=65536?JSON.parse(value):null}catch{return null}}

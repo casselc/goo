@@ -6,7 +6,10 @@ export { noUncaughtExceptions, noUnhandledPromiseRejections } from '@antithesish
 const inspection = extract(({ document }) => ({
   version:'goo.inspection.v2',
   waterfallStage: document.documentElement.dataset.gooWaterfallStage || 'initial',
-  traceAvailable: [...document.querySelectorAll<HTMLButtonElement>('#exploreRows .record-row button')].some(b=>b.textContent?.startsWith('Expand trace ')),
+  traceAvailable: [...document.querySelectorAll<HTMLButtonElement>('#exploreRows [data-expand-trace]')].some(button=>button.getClientRects().length>0&&!button.disabled),
+  fieldMenuStage: document.documentElement.dataset.gooFieldMenuStage || 'initial',
+  fieldMenus: [...document.querySelectorAll<HTMLElement>('#exploreRows .ui-inspector:not([hidden]) .attribute-actions .ui-action-menu')].filter(menu=>menu.getClientRects().length>0).length,
+  fieldActionsAccessible: [...document.querySelectorAll<HTMLElement>('.attribute-actions>.ui-actions')].every(group=>group.children[0]?.getAttribute('aria-label')?.startsWith('Copy value for ')&&[...group.querySelectorAll('.ui-action-menu>summary')].every(summary=>summary.getAttribute('aria-label')==='Field actions')),
   waterfallRows: document.querySelectorAll('#exploreTrace goo-trace-waterfall .waterfall-row').length,
   waterfalls: [...document.querySelectorAll<any>('goo-trace-waterfall')].every(plot=>{
     const source=plot.data,rows=[...plot.querySelectorAll<HTMLButtonElement>('.waterfall-row')];
@@ -30,6 +33,7 @@ const inspection = extract(({ document }) => ({
 }));
 const recordDetails=extract(({document})=>{const root=document.getElementById('exploreRows');return !root||root.querySelectorAll('.record-attributes').length===0&&root.querySelectorAll('.ui-inspector:not([hidden])').length<=1&&[...root.querySelectorAll<HTMLElement>('.record-detail-row:not([hidden])')].every(row=>!!row.querySelector('.ui-inspector:not([hidden])'));});
 export const singleRecordDetail=always(()=>recordDetails.current);
+export const fieldActionsKeepAccessibleCopy=always(()=>inspection.current.fieldActionsAccessible);
 export const becomesReady = eventually(() => inspection.current.ready).within(10, 'seconds');
 export const oneContextInspector = always(() => !(inspection.current.trace && inspection.current.nearby));
 export const waterfallRowsMatchSuppliedEvidence = always(() => inspection.current.waterfalls);
@@ -47,7 +51,9 @@ const act = registerCustomAction('goo.inspect', async (document, _window, action
   if (action === 'open') {
     document.querySelector<HTMLButtonElement>('#exploreRows [data-inspect-record]')?.click();
   }
-  if (action === 'trace') [...document.querySelectorAll<HTMLButtonElement>('#exploreRows .record-row button')].find(b=>b.textContent?.startsWith('Expand trace '))?.click();
+  if (action === 'trace') [...document.querySelectorAll<HTMLButtonElement>('#exploreRows [data-expand-trace]')].find(button=>button.getClientRects().length>0&&!button.disabled)?.click();
+  if(action==='openFieldMenu'){const menu=[...document.querySelectorAll<HTMLDetailsElement>('#exploreRows .ui-inspector:not([hidden]) .attribute-actions .ui-action-menu')].find(menu=>menu.getClientRects().length>0);if(menu){menu.querySelector<HTMLElement>('summary')?.click();if(!menu.open)throw Error('Field actions failed to open');document.documentElement.dataset.gooFieldMenuStage='opened'}}
+  if(action==='closeFieldMenu'){const menu=document.querySelector<HTMLDetailsElement>('#exploreRows .ui-inspector:not([hidden]) .attribute-actions .ui-action-menu[open]');if(menu){const summary=menu.querySelector<HTMLElement>('summary');summary?.focus();summary?.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true}));if(menu.open||document.activeElement!==summary)throw Error('Field actions failed to close and restore focus');document.documentElement.dataset.gooFieldMenuStage='complete'}}
   if (action === 'select' || action === 'nextSpan') {
     const rows=[...document.querySelectorAll<HTMLButtonElement>('#exploreTrace goo-trace-waterfall .waterfall-row')];
     const selected=rows.findIndex(row=>row.getAttribute('aria-pressed')==='true');
@@ -82,11 +88,13 @@ export const inspect = actions(() => {
   if(s.waterfallStage==='opened')return s.trace&&s.waterfallRows?[act('select','selected')]:['Wait'];
   if(s.waterfallStage==='selected')return s.selected?[act('nextSpan','next')]:['Wait'];
   if(s.waterfallStage==='next')return s.selected?[act('verifyWaterfall','complete')]:['Wait'];
+  if(s.waterfallStage==='complete'&&s.fieldMenuStage==='initial'&&s.records){if(s.trace)return[act('close')];if(!s.viewer)return[act('record')];if(s.fieldMenus)return[act('openFieldMenu')]}
+  if(s.fieldMenuStage==='opened')return[act('closeFieldMenu')];
   const choices = [act('query'),act('signal')];
   if(s.nearbyAvailable)choices.push(act('nearby'));
   if(s.nearby)choices.push(act('radius'),act('closeNearby'));
   if (s.records) choices.push(act('open'), act('trace'),act('record'),act('closeRecord'));
-  if (s.viewer) choices.push(act('scope'), ...['service', 'missing-key', '<tag>', ''].map(q => act('search:' + q)));
+  if (s.viewer) choices.push(act('openFieldMenu'),act('closeFieldMenu'),act('scope'), ...['service', 'missing-key', '<tag>', ''].map(q => act('search:' + q)));
   if(s.trace){choices.push(act('close'));if(s.waterfallRows)choices.push(act('select'),act('nextSpan'));if(s.selected)choices.push(act('verifyWaterfall'))}
   return choices;
 });

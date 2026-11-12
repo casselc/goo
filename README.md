@@ -142,6 +142,8 @@ without inventing a grouping. Inspect/Apply keeps the destination query; Run is 
 ungrouped timeline measure, using exact counts and the actual window or bucket duration.
 [Reuse numeric histograms beside records](docs/AUTHORED_NUMERIC_HISTOGRAMS.md)
 with Histogram/Table views and exact numeric-binding compatibility.
+[Operator workbench polish](docs/OPERATOR_WORKBENCH_POLISH.md) unifies compact records,
+contextual inspection, field actions and service discovery across desktop/mobile.
 [Compact shared histogram surfaces](docs/QUANTITATIVE_VIEW_COMPOSITION.md) retain
 authored titles, read facts and exact values with keyboard scrolling on narrow screens.
 [Open an inspected trace as a view](docs/TRACE_AS_VIEW.md) to edit and save its presentation.

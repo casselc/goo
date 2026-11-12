@@ -4,6 +4,12 @@ The [408 cadence](ROADMAP_2026_11_11_CHECKPOINT_408.md) delivered service captur
 
 Keep the loop: **current ordinary telemetry → narrow a population → inspect or compare → preserve/reuse**. Review and annotation begin from a selected immutable captured occurrence; they do not replace Activity with a labeling workspace. Manifests remain optional. This prerelease requires no legacy formats or compatibility layer.
 
+The user-requested [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md)
+now delivers compact shared record actions, contextual inspection, field menus
+and service discovery before this queue. Do not repeat that work in 414: its
+remaining scope is consistency around capture/review decisions and pending
+publication as the new review workflow becomes available.
+
 ## 412 — breadth: contextual review-task discovery
 
 User task: “Use an existing labeling vocabulary for this captured example without finding and copying its artifact ID.” Add a bounded, source-free task catalogue and chooser inside the existing **Review example** disclosure. Keep exact-ID loading available. Reuse the existing workbench file-store scan bounds and validated immutable task loader; catalogue presentation is not a new task store or a source query.

@@ -23,7 +23,7 @@ test('29 inspect structured attributes, refine facets and navigate with keyboard
   const frames=path.resolve('docs/journeys/screenshots');await fs.mkdir(frames,{recursive:true});
   let reads=0;page.on('request',r=>{if(r.url().endsWith('/api/explore'))reads++});
   const run=async(selector='#exploreRun')=>{const response=page.waitForResponse(r=>r.url().endsWith('/api/explore')&&r.request().method()==='POST');await page.locator(selector).click();const r=await response;expect(r.ok()).toBe(true);return r.json()};
-  await page.goto(goo+'/#questions');await page.locator('#exploreEnvironment').fill(environment);await run();
+  await page.goto(goo+'/#questions');await page.locator('#exploreEnvironment').fill(environment);const originalResult=await run();
   await page.locator('#exploreRows [data-inspect-record]').first().click();const details=page.locator('#exploreRows .ui-inspector');await expect(page.locator('#exploreRows .record-attributes')).toHaveCount(0);
   const viewer=details.locator('.attribute-viewer'),search=viewer.getByRole('searchbox',{name:'Search attribute keys and values'});
   await expect(viewer).toBeVisible();await expect(details.locator('goo-attribute-list')).toHaveCount(1);await expect(viewer.locator('goo-field-value')).not.toHaveCount(0);await expect(details.locator('.raw-record')).not.toHaveAttribute('open','');
@@ -39,10 +39,18 @@ test('29 inspect structured attributes, refine facets and navigate with keyboard
   await search.fill('test.long');await viewer.locator('.attribute-long > summary').click();expect(await viewer.locator('.attribute-value-text').textContent()).toBe(long);
   await viewer.getByRole('button',{name:'Copy value for test.long',exact:true}).click();expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe(long);
   await search.fill('test.counter');await expect(viewer.locator('.attribute-value-text')).toHaveText('9007199254740993');await expect(viewer.locator('.attribute-type')).toHaveText('string');
+  const counterRow=viewer.locator('.attribute-row[data-key="test.counter"]'),fieldMenu=counterRow.locator('.ui-action-menu > summary');
+  await fieldMenu.click();await counterRow.getByRole('button',{name:'Plot values of attribute:test.counter',exact:true}).click();
+  const valuePlot=page.getByRole('dialog',{name:'Plot attribute values',exact:true});await expect(valuePlot).toBeVisible();
+  await valuePlot.getByRole('button',{name:'Cancel',exact:true}).click();await expect(valuePlot).not.toBeVisible();await expect(fieldMenu).toBeFocused();
   await search.fill('');expect(reads).toBe(before);
   await search.fill('same.key');await page.screenshot({path:path.join(frames,'29a-structured-attribute-inspection.png'),fullPage:true});
 
-  await search.fill('geo.region');await viewer.getByRole('button',{name:'Break down and run by attribute:geo.region',exact:true}).click();
+  await search.fill('geo.region');await viewer.locator('.attribute-row[data-key="geo.region"] .ui-action-menu > summary').click();
+  const groupedRead=page.waitForResponse(r=>r.url().endsWith('/api/explore')&&r.request().method()==='POST');
+  await viewer.getByRole('button',{name:'Break down and run by attribute:geo.region',exact:true}).click();
+  const groupedResponse=await groupedRead;expect(groupedResponse.ok()).toBe(true);const groupedResult=await groupedResponse.json();
+  expect(groupedResult.question.groupBy).toEqual([{kind:'attribute',key:'geo.region'}]);expect(groupedResult.count).toBe('6');const originalScope={...groupedResult.question};delete originalScope.groupBy;expect(originalScope).toEqual(originalResult.question);
   await expect(page.locator('#distributionContent .scope-view-bar')).toHaveCount(3);
   const facetReads=reads;await page.locator('#facetSearch').fill('no matching facet');await expect(page.locator('#facetStatus')).toContainText('0 of 3');expect(reads).toBe(facetReads);await page.locator('#facetSearch').fill('empty');await expect(page.locator('#distributionContent .scope-view-bar')).toHaveCount(1);await expect(page.locator('#facetStatus')).toContainText('1 of 3');await expect(page.locator('#exploreCount')).toContainText('6');
   const facetResponse=page.waitForResponse(r=>r.url().endsWith('/api/explore')&&r.request().method()==='POST');
@@ -69,6 +77,6 @@ test('29 inspect structured attributes, refine facets and navigate with keyboard
   await page.locator('#exploreRows [data-inspect-record]').first().click();const mobile=page.locator('#exploreRows .ui-inspector');await mobile.getByRole('searchbox',{name:'Search attribute keys and values'}).fill('test.multiline');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
   await mobile.scrollIntoViewIfNeeded();await page.screenshot({path:path.join(frames,'29d-mobile-attribute-inspection.png'),fullPage:true});
-  if(process.env.GOO_INSPECTION_BOMBADIL==='1'){const dir=path.resolve('artifacts/typed-inspection',environment);await fs.mkdir(dir,{recursive:true});const question={signal:'spans',environment,fromMs:now-60000,toMs:now+1000,limit:100,offset:0};const actor=await startBombadil({dir:path.join(dir,'bombadil'),url:goo+'/'+GooWorkspace.stepLink(GooWorkspace.recordStep(question)),specification:'verification/bombadil/inspection.ts',seconds:30});try{await actor.finish();const records=(await fs.readFile(path.join(dir,'bombadil/trace.jsonl'),'utf8')).trim().split('\n').map(JSON.parse),states=records.flatMap(r=>r.snapshots||[]).map(s=>s.value).filter(s=>s?.version==='goo.inspection.v2');expect(states.some(s=>s.waterfallStage==='complete')).toBe(true)}finally{await actor.stop()}}
+  if(process.env.GOO_INSPECTION_BOMBADIL==='1'){const dir=path.resolve('artifacts/typed-inspection',environment);await fs.mkdir(dir,{recursive:true});const question={signal:'spans',environment,fromMs:now-60000,toMs:now+1000,limit:100,offset:0};const actor=await startBombadil({dir:path.join(dir,'bombadil'),url:goo+'/'+GooWorkspace.stepLink(GooWorkspace.recordStep(question)),specification:'verification/bombadil/inspection.ts',seconds:30});try{await actor.finish();const records=(await fs.readFile(path.join(dir,'bombadil/trace.jsonl'),'utf8')).trim().split('\n').map(JSON.parse),states=records.flatMap(r=>r.snapshots||[]).map(s=>s.value).filter(s=>s?.version==='goo.inspection.v2');expect(states.some(s=>s.waterfallStage==='complete')).toBe(true);expect(states.some(s=>s.fieldMenuStage==='complete')).toBe(true)}finally{await actor.stop()}}
 
 });

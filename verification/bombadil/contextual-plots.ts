@@ -59,7 +59,7 @@ const step = registerCustomAction('goo.contextualPlot', async (document, window,
   }
   if (phase === 'parent-reading' || phase === 'plot-reading') document.getElementById('exploreRun').click();
   if (phase === 'inspecting') document.querySelector('#exploreRows [aria-label="Inspect record"]').click();
-  if (phase === 'opening' || phase === 'reopening') document.querySelector('#exploreRows [aria-label="Plot values of attribute:work.amount"]').click();
+  if (phase === 'opening' || phase === 'reopening') {const target=document.querySelector<HTMLButtonElement>('#exploreRows [aria-label="Plot values of attribute:work.amount"]')!;const menu=target.closest<HTMLDetailsElement>('.ui-action-menu');if(menu&&!menu.open)menu.querySelector<HTMLElement>('summary')!.click();target.click();}
   if (phase === 'declaring' || phase === 'restaging') {
     set('plotValuesnumericType', 'decimal64', 'change');
     set('plotValuesnumericUnit', 'USD', 'input');

@@ -1,15 +1,17 @@
 :root {
   color-scheme:dark;
-  --bg:#10141c;
-  --surface:#171d28;
-  --surface-raised:#1d2532;
-  --border:#2b3545;
-  --ink:#e3e9f3;
-  --muted:#98a8bf;
-  --accent:#79ddc6;
-  --accent-dark:#1d4842;
+  --bg:#0e1117;
+  --surface:#151a23;
+  --surface-raised:#1c2430;
+  --panel:var(--surface);
+  --danger:#ff9d9d;
+  --border:#2a3341;
+  --ink:#e6edf5;
+  --muted:#a4afbf;
+  --accent:#8ab9ff;
+  --accent-dark:#203759;
   --warn:#e1bd77;
-  font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font:13px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--ink);
   background:var(--bg);
 }
@@ -30,8 +32,9 @@ button,input,select,textarea {
   border:1px solid var(--border);
   background:var(--surface);
   color:var(--ink);
-  border-radius:7px;
-  padding:8px 11px;
+  border-radius:5px;
+  padding:5px 10px;
+  min-height:32px;
   max-width:100%;
 }
 button {
@@ -46,10 +49,10 @@ button:disabled {
   opacity:.4;
   cursor:default;
 }
-button.primary,#exploreRun,#runOperations,#captureSave {
+button.primary,#exploreRun,#runOperations,#captureSave,#inventoryRun,#measureRun,#captureDraftConfirm {
   background:var(--accent-dark);
-  border-color:#367b6e;
-  color:#d8fff5;
+  border-color:#426da5;
+  color:#e2efff;
   font-weight:600;
 }
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible {
@@ -57,7 +60,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   outline-offset:3px;
 }
 input,select {
-  min-height:38px;
+  min-height:32px;
 }
 a {
   color:var(--accent);
@@ -81,13 +84,13 @@ h1,h2,h3 {
   line-height:1.3;
 }
 h1 {
-  font-size:25px;
+  font-size:21px;
   letter-spacing:-.6px;
   margin:0;
   font-weight:650;
 }
 h2 {
-  font-size:17px;
+  font-size:16px;
   margin:0 0 10px;
   letter-spacing:-.2px;
 }
@@ -100,10 +103,10 @@ h3 {
 .app-sidebar {
   position:fixed;
   inset:0 auto 0 0;
-  width:208px;
+  width:184px;
   background:#0d1118;
   border-right:1px solid var(--border);
-  padding:27px 16px;
+  padding:20px 12px;
   display:flex;
   flex-direction:column;
   z-index:20;
@@ -113,10 +116,10 @@ h3 {
   align-items:center;
   gap:11px;
   color:var(--ink);
-  font-size:28px;
+  font-size:25px;
   font-weight:700;
   letter-spacing:-1px;
-  margin:0 12px 36px;
+  margin:0 10px 28px;
 }
 .brand-mark {
   width:26px;
@@ -124,7 +127,7 @@ h3 {
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:3px;
-  transform:rotate(-8deg);
+  transform:none;
 }
 .brand-mark i {
   background:var(--accent);
@@ -142,15 +145,15 @@ h3 {
 }
 .app-sidebar nav {
   display:grid;
-  gap:5px;
+  gap:3px;
 }
 .app-sidebar button {
   text-align:left;
   border:1px solid transparent;
   background:none;
   color:var(--muted);
-  padding:10px 12px;
-  border-radius:7px;
+  padding:8px 10px;
+  border-radius:5px;
   display:flex;
   gap:12px;
   align-items:center;
@@ -163,9 +166,9 @@ h3 {
   text-align:center;
 }
 .app-sidebar button[aria-current=page] {
-  color:#d5fff2;
-  background:#19312f;
-  border-color:#294c45;
+  color:#e3efff;
+  background:#20314a;
+  border-color:#304869;
 }
 .app-sidebar button[aria-current=page] .nav-icon {
   color:var(--accent);
@@ -183,14 +186,14 @@ h3 {
   color:#70819b;
 }
 .app-main {
-  margin-left:208px;
+  margin-left:184px;
   min-width:0;
   min-height:100vh;
 }
 .app-topbar {
-  height:62px;
+  height:44px;
   border-bottom:1px solid var(--border);
-  padding:0 32px;
+  padding:0 20px;
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -230,7 +233,7 @@ h3 {
   padding:4px 8px;
 }
 .workspace-header {
-  padding:29px 32px 20px;
+  padding:16px 20px 12px;
   display:flex;
   justify-content:space-between;
   gap:24px;
@@ -241,28 +244,25 @@ h3 {
   font-size:13px;
 }
 .workspace-content {
-  padding:0 32px 32px;
+  padding:0 20px 24px;
   max-width:1600px;
   margin:0 auto;
 }
-section,.card {
+/* Sections describe structure. Only explicit cards own a raised surface. */
+section {min-width:0}
+.card {
   border:1px solid var(--border);
   background:var(--surface);
-  border-radius:10px;
-  padding:20px;
-  margin-bottom:18px;
-}
-section section {
+  border-radius:6px;
   padding:16px;
-  background:#141b25;
+  margin-bottom:12px;
 }
-.workspace-panel>section {
-  box-shadow:0 2px 6px #0000000a;
-}
+.workspace-panel>section {margin-bottom:16px}
+
 details {
   border-top:1px solid var(--border);
-  margin-top:15px;
-  padding-top:12px;
+  margin-top:8px;
+  padding-top:8px;
 }
 summary {
   font-size:12px;
@@ -271,7 +271,7 @@ summary {
 }
 details[open]>summary {
   color:var(--ink);
-  margin-bottom:12px;
+  margin-bottom:8px;
 }
 pre {
   font:11px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;
@@ -288,10 +288,10 @@ textarea {
 }
 .controls {
   display:flex;
-  gap:12px;
+  gap:8px;
   align-items:end;
   flex-wrap:wrap;
-  margin:18px 0;
+  margin:10px 0;
 }
 .controls>label {
   max-width:100%;
@@ -464,14 +464,14 @@ td details {
   display:flex;
   gap:22px;
   border-bottom:1px solid var(--border);
-  margin:20px 0 16px;
+  margin:8px 0 12px;
 }
 .result-tabs button {
   background:transparent;
   border:0;
   border-bottom:2px solid transparent;
   border-radius:0;
-  padding:11px 0;
+  padding:7px 0;
   color:var(--muted);
 }
 .result-tabs button[aria-selected=true] {
@@ -513,9 +513,9 @@ td details {
 :is(#exploreContext,#savedexploreContext) {
   position:fixed;
   right:0;
-  top:62px;
+  top:44px;
   bottom:0;
-  height:calc(100dvh - 62px);
+  height:calc(100dvh - 44px);
   min-height:0;
   width:min(790px,calc(100vw - 230px));
   max-width:100%;
@@ -669,8 +669,8 @@ td details {
   .workspace-content {
     padding:0 16px 20px;
   }
-  section {
-    padding:16px;
+  .card {
+    padding:12px;
   }
   .controls {
     gap:10px;
@@ -779,7 +779,7 @@ td details {
 .facet-toolbar {display:flex;gap:18px;align-items:end;justify-content:space-between;padding:0 0 12px}
 .facet-toolbar label {flex:1;max-width:340px}
 #facetStatus {font-size:11px;color:var(--muted)}
-.telemetry-table .record-row>td {vertical-align:top;border-bottom:0;padding-bottom:5px}
+.telemetry-table .record-row>td {vertical-align:middle;border-bottom:1px solid var(--border);padding-block:6px}
 .record-detail-row>td {padding-top:0;padding-bottom:9px;max-width:none}
 .record-attributes {border:0;margin:0;padding:0}
 .record-attributes>summary {display:inline-block;font-size:11px;padding:4px 0;color:#9bb8c8}
@@ -833,11 +833,11 @@ td details {
 .severity-info {color:#a4d4e9;border-color:#426c80;background:#1c3241}
 .severity-debug {color:#b7abc9;border-color:#635372;background:#2e2638}
 .telemetry-table .record-row>td[data-record-core=context] {min-width:155px}
-@media(min-width:701px){.telemetry-table .record-row>td[data-record-core=context] button {display:block;margin:4px 0;max-width:100%}}
-@media(max-width:700px){goo-table:not([record-layout=compact])>.telemetry-table .record-row>td[data-record-core=context] button {display:block;margin:4px 0;max-width:100%}}
+
+
 .distribution-row.trace-discovery-row {grid-template-columns:minmax(180px,35%) minmax(0,1fr) 120px auto}
 .distribution-row.trace-discovery-row>button:last-child {font-size:12px;background:transparent;white-space:nowrap}
-:is(#surroundingContext,#savedsurroundingContext) {position:fixed;right:0;top:62px;bottom:0;width:min(850px,calc(100vw - 230px));max-width:100%;z-index:30;overflow:auto;margin:0;border-radius:0;border-width:0 0 0 1px;box-shadow:-15px 0 50px #0005;background:#151e2b;padding:24px}
+:is(#surroundingContext,#savedsurroundingContext) {position:fixed;right:0;top:44px;bottom:0;width:min(850px,calc(100vw - 230px));max-width:100%;z-index:30;overflow:auto;margin:0;border-radius:0;border-width:0 0 0 1px;box-shadow:-15px 0 50px #0005;background:#151e2b;padding:24px}
 :is(#surroundingStatus,#savedsurroundingStatus) {font-size:12px;color:var(--muted)}
 :is(#surroundingRows,#savedsurroundingRows) {max-height:none}
 .log-anchor {background:#193632}
@@ -946,7 +946,7 @@ td details {
 .instrument-catalog-table details p{font-size:12px}
 #metricInstruments:empty {display:none}
 #measurementDefinitionSearch {min-width:240px}
-#measureRun,#metricDiscover {background:var(--accent-dark);border-color:#367b6e;color:#d8fff5;font-weight:600}
+#measureRun,#metricDiscover {background:var(--accent-dark);border-color:#426da5;color:#e2efff;font-weight:600}
 #measureScope:empty {display:none}
 .native-measurement-workbench>h2 {font-size:16px;margin:0 0 6px}
 .native-measurement-workbench>.native-question-setup {margin:6px 0;padding-top:6px}
@@ -1312,26 +1312,26 @@ td details {
 .stream-entry-toolbar input{width:160px;max-width:100%;box-sizing:border-box}
 .stream-entry-toolbar select{width:100px}
 .entry-applied{font-size:12px;border:1px solid var(--border);border-radius:14px;padding:4px 8px;color:var(--accent)}
-.stream-entry-toolbar [role=status]{font-size:11px;color:var(--muted)}
+.stream-entry-toolbar [role=status]{font-size:12px;color:var(--muted)}
 .stream-entry .compact-tail{border:0;padding:0;margin:0}
 .stream-entry .compact-tail>.controls{margin:4px 0;gap:6px}
 .stream-entry .compact-tail>.controls button{padding:5px 9px;font-size:12px}
 .stream-entry .compact-tail>goo-table{max-height:60vh;min-height:160px;overflow:auto;display:block}
 .stream-entry .compact-tail table{table-layout:fixed;width:100%}
 .stream-entry .compact-tail td{padding:5px 7px;font-size:12px;vertical-align:top;overflow-wrap:anywhere}
-.stream-entry .compact-tail th[data-record-core=utc]{width:175px}
-.stream-entry .compact-tail th[data-record-core=service]{width:130px}
-.stream-entry .compact-tail td button{padding:2px 6px;font-size:11px;margin:3px 4px 0 0}
-.stream-entry .compact-tail td>.ui-actions{gap:4px;margin:3px 0 0}
-.stream-entry .compact-tail td>.ui-actions>button{margin:0}
+.stream-entry .compact-tail th[data-record-core=utc]{width:145px}
+.stream-entry .compact-tail th[data-record-core=service]{width:200px}
+.stream-entry .compact-tail td button{padding:3px 7px;font-size:12px;min-height:26px;margin:0 4px 0 0}
+.stream-entry .compact-tail .tail-record-line>.ui-actions{gap:4px;margin:0 0 0 auto;flex:0 0 auto}
+.stream-entry .compact-tail .tail-record-line>.ui-actions>button{margin:0}
 .stream-entry .compact-tail td[data-record-core=service] .ui-action-menu>summary{font-size:11px;padding:0;border:0;display:list-item;cursor:pointer}
 .stream-entry .compact-tail td[data-record-core=service] .ui-actions{margin:0;display:block}
 .stream-entry .compact-tail td[data-record-core=service] .ui-action-menu{margin-left:12px}
 .stream-entry .compact-tail td[data-record-core=service] .ui-actions-body{position:static;min-width:0}
 .stream-entry .attribute-actions>.ui-actions{gap:4px;align-items:center;margin:0}
 .stream-entry .attribute-actions .ui-action-menu>summary{font-size:11px;min-height:28px;display:flex;align-items:center;cursor:pointer}
-@media(pointer:coarse){.stream-entry .compact-tail td>.ui-actions>button,.stream-entry .compact-tail td[data-record-core=service] .ui-action-menu>summary{min-height:40px}}
-.stream-entry .tail-counts,.stream-entry goo-result-state{font-size:11px;margin:5px 0}
+@media(pointer:coarse){.stream-entry .compact-tail .tail-record-line>.ui-actions>button,.stream-entry .compact-tail td[data-record-core=service] .ui-action-menu>summary{min-height:40px}}
+.stream-entry .tail-counts,.stream-entry goo-result-state{font-size:12px;margin:4px 0}
 .entry-advanced{margin:14px 0;border-top:1px solid var(--border);padding-top:10px}
 .entry-advanced>summary{font-size:12px;cursor:pointer;color:var(--muted)}
 @media(max-width:700px){
@@ -1358,7 +1358,7 @@ td details {
 .live-entry-mode .workspace-header h1{font-size:20px;margin:0}
 .live-entry-mode .workspace-header p{display:none}
 .live-entry-mode .result-tabs{margin-block:0 8px}
-.stream-entry-toolbar{align-items:center;gap:6px;margin-bottom:4px}
+.stream-entry-toolbar{align-items:center;gap:8px;margin-bottom:8px;padding-bottom:10px;border-bottom:1px solid var(--border)}
 .stream-entry-toolbar .controls{margin:0;gap:4px}
 .stream-entry-toolbar input,.stream-entry-toolbar select{min-height:32px;padding:5px 8px;font-size:12px}
 .stream-entry-toolbar select{width:78px}
@@ -1619,7 +1619,7 @@ td details {
 .tail-record-tools>label{display:flex;align-items:center;flex-wrap:wrap;gap:4px;font-size:12px;margin:0;min-width:0}
 .tail-record-tools input[type=search]{min-width:140px;max-width:100%;width:210px;min-height:32px;padding:4px 6px;font-size:12px}
 .tail-record-tools>button{min-height:32px;padding:4px 8px;font-size:12px}
-.tail-record-tools>.tail-find-status,.tail-record-tools>small,.tail-hidden-selection{font-size:11px;color:var(--muted);margin:0}
+.tail-record-tools>.tail-find-status,.tail-record-tools>small,.tail-hidden-selection{font-size:12px;color:var(--muted);margin:0}
 @media(pointer:coarse){.tail-record-tools input[type=search],.tail-record-tools>button{min-height:44px}}
 .tail-match-selection:not([hidden]){display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px}
 .tail-match-selection>button{min-height:32px;padding:4px 8px;font-size:12px}
@@ -1738,3 +1738,63 @@ td details {
  #generalCaptureWorkspace[data-native-measurement="true"]>.section-heading button,.context-return button {min-height:44px}
  .native-question-setup>summary,.native-capture-context>summary {min-height:44px;box-sizing:border-box;align-content:center}
 }
+
+/* Operator workbench: consistent page chrome and contextual record detail. */
+.workspace-header p {max-width:70ch}
+.workspace-header:has(#workspaceDescription.visually-hidden) {align-items:center}
+.nav-icon svg {width:18px;height:18px;display:block;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.resource-tabs {display:flex;gap:18px;margin:0 0 12px;border-bottom:1px solid var(--border)}
+.resource-tabs>[role=tab] {border:0;border-radius:0;background:none;padding:8px 0;color:var(--muted);border-bottom:2px solid transparent}
+.resource-tabs>[aria-selected=true] {color:var(--ink);border-bottom-color:var(--accent)}
+.stream-entry-toolbar>label {position:relative}
+.stream-entry-toolbar>.entry-environment {display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}
+.stream-entry-toolbar>.entry-environment>span {padding-left:2px}
+.stream-entry-toolbar>details {border:0;padding:0;margin:0}
+.stream-entry-toolbar>details>summary {display:flex;align-items:center;min-height:32px;padding:5px 10px;border:1px solid var(--border);border-radius:5px;color:var(--ink);font-size:12px}
+.stream-entry-toolbar>details>summary::after {content:'⌄';margin-left:7px;color:var(--muted)}
+.stream-entry-toolbar>details[open] {flex-basis:100%;border:1px solid var(--border);border-radius:6px;padding:10px;background:var(--surface)}
+.stream-entry-toolbar>details[open]>summary {display:inline-flex;margin-bottom:8px;background:var(--surface-raised)}
+.stream-entry .tail-meta goo-result-state::before {content:'';display:inline-block;width:6px;height:6px;margin-right:7px;border-radius:50%;background:var(--accent)}
+.stream-entry .tail-meta goo-result-state:not([state=observed])::before {background:var(--muted)}
+.tail-record-tools {margin-block:8px;gap:6px 10px}
+.tail-record-tools>label {font-size:0}
+.tail-record-tools>small {display:none}
+.tail-record-tools>goo-record-columns {margin-left:auto}
+.stream-entry .compact-tail .tail-record-line {display:flex;align-items:center;gap:12px;min-height:28px}
+.stream-entry .compact-tail .tail-record-line>goo-record-summary {flex:1;min-width:0}
+.stream-entry .compact-tail td[data-record-core=summary] .record-message {font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.fixed-question>.query-workbench {margin-block:6px}
+.fixed-question>.question-state {padding-block:4px;margin-block:4px}
+.fixed-record-summary {display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px}
+.fixed-record-summary>.fixed-record-facts {margin-left:auto}
+.fixed-record-summary .fixed-record-window {margin:0}
+.fixed-record-summary>.fixed-record-limits {flex-basis:100%}
+.fixed-question>.exploration-scope {margin-block:4px}
+.fixed-question .question-result-actions {margin-block:4px}
+.saved-workspace .section-heading {align-items:center}
+.saved-workspace>.saved-task-actions {border-bottom:1px solid var(--border);padding-bottom:8px}
+@media(min-width:1440px){
+ .record-detail-row .ui-inspector:not([hidden]) {position:fixed;inset:56px 16px 16px auto;width:min(540px,44vw);margin:0;z-index:25;display:flex;flex-direction:column;box-shadow:0 12px 48px #0009;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+ .record-detail-row .ui-inspector>.ui-inspector-body {min-height:0;overflow:auto;max-height:none;flex:1}
+ .app-main:has(.record-detail-row .ui-inspector:not([hidden]):not([hidden] *)) .workspace-content {padding-right:calc(min(540px,44vw) + 32px)}
+ .record-detail-row:has(.ui-inspector:not([hidden]))>td {padding:0;border:0}
+}
+@media(max-width:700px){
+ .app-topbar {height:auto;min-height:40px;padding:6px 12px}
+ .workspace-header {padding:12px 12px 8px}
+ .workspace-content {padding-inline:12px}
+ .resource-tabs {gap:20px}
+ .stream-entry-toolbar {gap:6px;padding-bottom:8px}
+ .stream-entry .compact-tail .tail-record-line {flex-wrap:wrap;gap:4px;min-height:0}
+ .stream-entry .compact-tail .tail-record-line>goo-record-summary {flex:1 1 100%;width:100%}
+ .stream-entry .compact-tail .tail-record-line>.ui-actions {margin:2px 0 0}
+ .tail-record-tools>label {flex:1 1 100%;min-width:0}
+ .tail-record-tools input[type=search] {width:100%;min-width:0}
+ .tail-record-tools>goo-record-columns {margin-left:0}
+ .fixed-record-summary>.fixed-record-facts {margin-left:0}
+}
+@media(pointer:coarse){
+ button,input:not([type=checkbox]):not([type=radio]),select,.stream-entry-toolbar>details>summary {min-height:44px}
+ .stream-entry .compact-tail td button {min-height:44px}
+}
+@media(prefers-reduced-motion:reduce){button {transition:none}}

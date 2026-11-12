@@ -51,3 +51,21 @@ test('catalog row callbacks retain their rendered evidence lease across search, 
  current.inert=true;current.onclick();current.inert=false;assert.equal(opens.length,2);
  f.el('inventoryNamespace').value='missing';f.el('inventoryNamespace').onchange();pending=f.el('inventoryRun').onclick();finish(reads[1],[],[{...signal,service:'worker'}]);await pending;f.el('serviceCatalog').append(old);old.onclick();current.onclick();assert.equal(opens.length,2);rowButton().onclick();assert.equal(opens.length,3);assert.equal(opens.at(-1)[0],'worker');
 });
+
+test('accepted discovery folds scope while retaining exact environment, namespace and UTC window facts',async()=>{
+ const f=setup(),scope=f.el('inventoryScope');scope.open=true;const pending=f.el('inventoryRun').onclick();assert.equal(scope.open,true,'pending discovery keeps its scope controls available');
+ finish(reads[0],[],[{service:'api',signal:'spans',count:'4',firstMs:Date.parse(fixed.fromUTC),lastMs:Date.parse(fixed.fromUTC)}]);await pending;
+ assert.equal(scope.open,false);assert.equal(f.el('inventoryFromUTC').value,fixed.fromUTC);assert.equal(f.el('inventoryToUTC').value,fixed.toUTC);assert.equal(f.el('inventoryNamespace').value,'value');
+ const status=f.el('inventoryStatus').textContent;assert.match(status,/1 observed services · 1 shown/);assert.match(status,/prod/);assert.match(status,/namespace/i);assert.match(status,/2026-11-08 12:00:00\.001/);assert.match(status,/12:10:00/);assert.match(status,/UTC · coverage unknown/);assert.match(f.el('inventoryStatus').title,/service\/signal pairs/);
+ scope.open=true;scope.open=false;assert.equal(reads.length,1,'local disclosure does not acquire telemetry');
+});
+
+test('optional absent declarations disclose below ordinary OTel services without a blocking notice',async()=>{
+ const f=setup();globalThis.fetch=async()=>({ok:false,json:async()=>({error:'No registry configured',code:'capability_unconfigured',capability:'declared-operations'})});
+ const pending=f.el('inventoryRun').onclick();finish(reads[0],[],[{service:'api',signal:'logs',count:'3',firstMs:Date.parse(fixed.fromUTC),lastMs:Date.parse(fixed.fromUTC)}]);await pending;
+ assert.doesNotMatch(f.el('inventoryStatus').textContent,/declaration/i);assert(walk(f.el('serviceCatalog')).some(element=>element['aria-label']==='Open service api'));
+ assert(!f.el('serviceCatalog').children.some(element=>element.tag==='p'&&/declarations.*configured/i.test(element.textContent)));
+ const registry=walk(f.el('serviceCatalog')).find(element=>element.tag==='details'&&element.children.some(child=>child.tag==='summary'&&child.textContent==='Independent declaration registry read'));
+ assert(registry);assert.notEqual(registry.open,true);assert(walk(registry).some(element=>/available without manifests/.test(element.textContent)));assert(walk(registry).some(element=>/do not establish.*service health/.test(element.textContent)));
+ assert.equal(reads.length,1);
+});

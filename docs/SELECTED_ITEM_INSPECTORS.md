@@ -1,7 +1,7 @@
 # Shared selected-item inspectors
 
 Trace spans, span/log record inspection, and native chart observations, intervals
-and buckets now use the same compact inline shell. It groups the selected title,
+and buckets use the same compact shell. It groups the selected title,
 summary, scrollable detail body, explicit follow-up actions and close control.
 UTC timestamps and exact-value tooltips reuse the existing timestamp formatter;
 attributes reuse the typed attribute viewer. Selection itself stays in the owning
@@ -21,12 +21,21 @@ result. Older entries are evicted; new source results create a new inspector.
 Selecting another retained item does not rebuild chart/table controls or move
 focus. Close hides the details while retaining the controlled selection,
 and by default restores focus to a connected opener without scrolling the page.
-An `onClose` callback may return `false` when the application performs its own
+Escape from a heading, button or empty search uses the same Close path unless
+an inner control consumes it first. IME composition, nonempty search, other
+inputs, text areas and native selection/editing controls retain their own
+cancellation behavior. An `onClose` callback may return `false` when the application performs its own
 focus/return handoff. `show` and `clear` do not automatically acquire focus. Native
 charts fall back to the corresponding retained plot mark if a heatmap layout
 change removed the original cell. The shell never calls `scrollIntoView`, chooses
 a record or invents a relationship. It does not introduce a cross-query history
 or guarantee retention after source replacement.
+
+The [operator workbench](OPERATOR_WORKBENCH_POLISH.md) docks record inspection
+beside results at 1440px and wider, preserving the same detail DOM and owner.
+Smaller layouts keep it inline. The record application explicitly focuses the
+heading on a visible fresh or cached Inspect action; the passive `show` operation
+continues to leave focus management to its caller.
 
 ## Adoption and evidence boundaries
 
