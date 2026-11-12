@@ -459,6 +459,14 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 			break
 		}
 	}
+	if httpActive && signals["spans"] {
+		// Response status is an optional literal attribute, independent of span
+		// status. Keep absent and empty values in the full server-span population.
+		q := dashboardHTTPQuestion(DashboardRecordQuestion(in.Scope, in.Service, "spans"))
+		q.GroupBy = []Field{{Kind: "attribute", Key: "http.response.status_code"}}
+		q.Summary, q.SpanStatus = "span-duration", true
+		p.Widgets = append(p.Widgets, DashboardWidget{Key: "http-server-responses", Title: "Reported HTTP response status", State: "supported", Grain: "server-span-record", Family: "http-server", Query: &q, Reason: "Literal response-status values, including missing and empty; separate from recorded span Error, not an availability or universal HTTP failure policy"})
+	}
 	if httpClientActive {
 		// Each dimension is a separate ordinary typed question over the same full
 		// record population. An absent dimension remains a missing-value group.

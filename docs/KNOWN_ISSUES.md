@@ -26,7 +26,8 @@ Rates remain an explicit presentation choice. Grouped rates, live-buffer rates
 and rate comparisons are excluded. [Authored numeric histograms](AUTHORED_NUMERIC_HISTOGRAMS.md)
 (407) and [passive embedding examples](PASSIVE_DISPLAY_EMBEDDING.md) (408) are delivered.
 [Service-window count comparison entry](SERVICE_WINDOW_COMPARISONS.md) (409) is delivered.
-Incoming HTTP response context and quantitative view consolidation remain next. Design review noted nonblocking narrow
+[Incoming HTTP response context](INCOMING_HTTP_RESPONSES.md) (410) is delivered;
+quantitative view consolidation remains next. Design review noted nonblocking narrow
 chart-label truncation and inherited stacked metadata for later product review.
 407 review also noted nested chart borders/headings and weak horizontal-scroll
 affordance on narrow screens. These are review candidates, not added execution tasks.

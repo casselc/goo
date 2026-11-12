@@ -17,7 +17,7 @@ Implemented: [service-window comparisons](SERVICE_WINDOW_COMPARISONS.md) now
 stage the existing fixed pair from an accepted widget, preserving exact population
 scope and the held service return. See the executable
 [journey](../journeys/409-service-count-comparison-storyboard.md) and [validation](../VALIDATION.md).
-Next is **410 incoming HTTP response context**, followed by **411 consolidation**.
+410 is also implemented below. Next is **411 consolidation**.
 
 User task: “Has this service's captured activity changed from the preceding
 window?” Add a contextual action to supported ordinary log/span widgets that
@@ -43,6 +43,12 @@ retired and foreign-widget actions must refuse. Share controls/components and
 reuse existing semantic proofs; do not add another acquisition owner.
 
 ## 410 — depth: incoming HTTP response context
+
+Implemented: [incoming HTTP response context](INCOMING_HTTP_RESPONSES.md) adds
+one independent literal-response grouping under the existing current Server-span
+population, with guarded record continuations and held return. See the executable
+[journey](../journeys/410-http-server-responses-storyboard.md) and [validation](../VALIDATION.md).
+Proceed to **411 quantitative view consolidation**, then whole-product review.
 
 User task: “Which reported response codes make up this service's incoming HTTP
 population?” Adapt the outgoing HTTP context pattern to the finite current OTel

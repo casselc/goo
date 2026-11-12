@@ -4,8 +4,8 @@
 > reconciled across [architecture, design and product reviews](reviews/ROADMAP_RECONCILIATION_408.md).
 > The 406 captured-record rates, 407 authored numeric histograms and 408 passive
 > display exports/reference cadence is delivered. **409 service-window captured-count
-> comparisons** is delivered. Next: **410 incoming HTTP response context →
-> 411 quantitative view consolidation**, then whole-product review.
+> comparisons** and **410 incoming HTTP response context** are delivered. Next:
+> **411 quantitative view consolidation**, then whole-product review.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped
 > P95, host sample context and broader platform work remain deferred.
 > 367 reusable current RPC views, 368 exact service native interval context,

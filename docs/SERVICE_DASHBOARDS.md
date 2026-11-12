@@ -17,6 +17,10 @@ retains service observations. See [service templates](SERVICE_TEMPLATES.md).
 widgets against the previous equal-duration window. Widget actions stay source-free;
 Run reads each window independently and Back retains the service overview.
 
+[Incoming HTTP response context](INCOMING_HTTP_RESPONSES.md) groups literal
+current response codes separately from recorded span Error, including missing and
+empty values. Its compact disclosure retains each widget's independent read state.
+
 ## One planner, existing evaluators
 
 `POST /dashboards/plan` is a pure Go planning operation. Supplied observed signals,

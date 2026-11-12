@@ -1,5 +1,54 @@
 # Validation record
 
+## Incoming HTTP response context — 410
+
+[Incoming response context](docs/INCOMING_HTTP_RESPONSES.md) adds one ordinary
+`http-server-responses` widget under the existing Incoming HTTP population.
+Literal current response codes, missing and empty values remain separate from
+recorded span Error. The compact disclosure reuses existing grouping, record
+links, question save and capture. No classifier, new source client, evaluator,
+profile, API type or route was added.
+
+- Targeted Go HTTP/dashboard regressions passed **0.151 s** on Go **1.27.3**,
+  including native-only exclusion and response-field metadata absence. The isolated
+  Hegel planner package passed **0.306 s**, checking whole-plan transport/compilation,
+  exact scope and independent membership across environment/namespace/profile,
+  current/legacy methods, response literals and opposite recorded span statuses.
+  Activity's timeline projection and context's no-timeline question are checked
+  separately without manufacturing extra source reads.
+- Final frontend: **1,499 passed / zero skips / 23.166 s**. Focused owner checks
+  cover disclosure pending/refusal states and current-item, whole-dashboard and
+  outer-service-open readiness. Record links prevent navigation when unavailable;
+  hidden, inert and retired actions refuse. These are targeted Go checks, not a
+  full Go suite or a new unchanged-protocol model campaign.
+- Final actual Playwright acceptance passed **11.5 s** with **15 persisted OTel
+  spans / 9 admitted / 6 scope/kind/method controls**. Independent raw oracles
+  check groups **200:2 / 503:2 / missing:3 / empty:1 / 5xx:1**. A recorded Error
+  with 200 and recorded OK with 503 demonstrate the independent meanings. Legacy
+  response-only values remain missing-current-code observations.
+- All **13 interaction boundaries** retain their read/write budgets. Disclosure
+  opening, three exact group stages, held Services returns, question save and
+  evidence reopen read no telemetry. Each explicit group Run reads once through
+  **four existing SQL statements**; capture independently reads once and performs
+  its existing metadata writes. Empty equality remains explicit in the request;
+  response assertions account only for Go's omitted empty Predicate.Value.
+- Actual Bombadil acceptance passed **47.1 s** at 390 px: **799 snapshots / nine
+  phases**, one missing-code record drill, no publication and source-free held
+  return through the visible mobile Menu. Its actual response is checked against
+  the raw bank and exact staged scope; no hidden control is force-clicked.
+- Existing OpenAPI validation passes **113 operations / 489 fixture responses /
+  195 admitted requests / 28 mux refusals**, plus **36 parsed actual handler
+  responses**. No schema regeneration was necessary.
+- Updated contract/diagram, executable storyboard and actual desktop/390px frames.
+  Source/ownership and visual reviews found no remaining blocker. The mobile
+  frame explicitly brings Response context into view. Confined table scrolling
+  and repeated quantitative chrome remain the planned 411 consolidation scope.
+- Rebuilt/refreshed only the application service. Capabilities returns 200,
+  reviewed UI bytes match, and the running pure planner includes the response
+  widget without a source read. Image
+  `sha256:6ed5b855abfd782d30c90ae1a03a9f73dabbd993e9b6e8779224393406a973c8`.
+  Existing telemetry, stores and XTDB remain intact.
+
 ## Service previous-window captured-count entry — 409
 
 [Service-window comparisons](docs/SERVICE_WINDOW_COMPARISONS.md) adds **Compare

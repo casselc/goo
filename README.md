@@ -14,6 +14,8 @@ service before grouping limits; unrelated services cannot exhaust its budget.
 Saving inventory explicitly rereads that service's original scope.
 [Compare a service widget with its previous window](docs/SERVICE_WINDOW_COMPARISONS.md)
 using captured counts, explicit Run and a held service return.
+[Incoming HTTP response context](docs/INCOMING_HTTP_RESPONSES.md) keeps reported
+codes, missing/empty values and recorded span Error distinct.
 
 [Reusable question packages](docs/TYPED_PACKAGE_SCOPES.md) retain environment
 policy, filters and existing measure profiles, including from saved evidence.
