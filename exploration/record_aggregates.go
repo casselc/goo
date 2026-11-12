@@ -37,15 +37,17 @@ func ValidateRecordAggregatesQuery(q Query) error {
 	if e := q.Validate(); e != nil {
 		return e
 	}
-	if len(q.GroupBy) != 1 || q.Numeric != nil || q.NumericHistogram != nil || q.GroupTimeSeries || q.Offset != 0 || q.Summary != "" && q.Summary != "span-duration" {
-		return fmt.Errorf("record aggregates requires one string group, offset zero and supported duration/status/time projections only")
+	if (len(q.GroupBy) < 1 || len(q.GroupBy) > 2) || q.Numeric != nil || q.NumericHistogram != nil || q.GroupTimeSeries || q.Offset != 0 || q.Summary != "" && q.Summary != "span-duration" {
+		return fmt.Errorf("record aggregates requires one or two string groups, offset zero and supported duration/status/time projections only")
 	}
-	typ, e := q.GroupBy[0].Type(q.Signal)
-	if e != nil {
-		return e
-	}
-	if typ != "string" {
-		return fmt.Errorf("record aggregates requires a string group")
+	for _, field := range q.GroupBy {
+		typ, e := field.Type(q.Signal)
+		if e != nil {
+			return e
+		}
+		if typ != "string" {
+			return fmt.Errorf("record aggregates requires string groups")
+		}
 	}
 	return nil
 }

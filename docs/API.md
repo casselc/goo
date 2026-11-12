@@ -742,7 +742,8 @@ See [counted values](COUNTED_VALUES.md) for interpretation and UI behavior.
 record questions into aggregate-only service-dashboard results. It uses strict
 `RecordQuery` decoding, a 16 KiB request ceiling on both transports, a 55-second
 enclosing timeout and the shared query admission/cancellation owner. Requests
-require exactly one string group and zero offset. Optional `span-duration`,
+require one or two string groups and zero offset. Tuple fields `g0`/`g1` retain
+qualified identity, including missing versus present-empty namespaces. Optional `span-duration`,
 recorded span status and fixed time buckets are supported; numeric measures,
 numeric histograms and grouped time series are refused. Numeric predicates and
 reported-edge scope remain available. Invalid requests return 400 before reading

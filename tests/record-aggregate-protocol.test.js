@@ -25,3 +25,11 @@ test('projection capability preflight keeps numeric column cohorts on the existi
 });
 
 test('unrequested time receipts cannot enter a count/groups-only projection',()=>{const {widget,result}=aggregateFixture(),q={...widget.query};delete q.bucketMs;const data={...result,question:q};delete data.timeSeries;assert.throws(()=>P.recordAggregates(q,data),/Invalid record aggregates/);data.reads={count:result.reads.count,groups:result.reads.groups};assert.equal(P.recordAggregates(q,data),data);});
+
+test('two string dimensions admit qualified tuples rather than collapsing equal first values',()=>{
+ const {widget,result}=aggregateFixture(),q=clone(widget.query);delete q.bucketMs;q.summary='span-duration';q.groupBy=[{kind:'column',key:'service'},{kind:'resource',key:'service.namespace'}];const data=clone(result);data.question=clone(q);delete data.timeSeries;delete data.reads.timeSeries;data.groups[0].g0='api';data.groups[0].g1=null;
+ assert.equal(P.canRead(q),true);assert.equal(P.recordAggregates(q,data),data);
+ const extra=clone(data.groups[0]);extra.g1='';const diagnostic={...clone(data),state:'changed_between_reads',groups:[clone(data.groups[0]),extra]};assert.equal(P.recordAggregates(q,diagnostic),diagnostic);
+ for(const edit of [d=>delete d.groups[0].g1,d=>d.groups[0].g1=1,d=>d.groups.push(clone(d.groups[0]))]){const bad=clone(data);edit(bad);assert.throws(()=>P.recordAggregates(q,bad));}
+ assert.equal(P.canRead({...q,groupBy:[q.groupBy[0],{kind:'column',key:'duration_ns'}]}),false);assert.equal(P.canRead({...q,groupBy:[...q.groupBy,{kind:'attribute',key:'third'}]}),false);
+});

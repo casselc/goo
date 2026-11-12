@@ -1,5 +1,55 @@
 # Validation record
 
+## Fleet service triage — milestone 412
+
+Delivered the first breadth item of the adopted operator cadence. The
+[feature contract](docs/SERVICE_TRIAGE.md),
+[real-source storyboard](docs/journeys/service-triage.md) and
+[independent acceptance](docs/reviews/SERVICE_TRIAGE_REVIEW_412.md) distinguish
+captured Server spans from requests, fleet health and complete upstream traffic.
+
+- Full frontend suite: **1,530 passed**, no failures/skips, after the final compact
+  controls/mobile-card changes. Complete Go `./exploration` package passes;
+  targeted aggregate HTTP wire fixtures and embedded UI/metadata checks pass.
+- Real ordinary OTLP/ClickHouse journey passes in **49.4 seconds**, including a
+  **40-second Bombadil campaign, 837 snapshots** and no page errors. Raw records
+  establish 13 current/10 preceding Server spans and their exact qualified group
+  counts, reported Error numerators and nanosecond sums. Same service names in
+  missing, empty and named namespaces remain distinct; Client/environment
+  distractors are excluded. Log-only/metric-only and previous-only rows remain.
+- Measure: exactly **two aggregate API calls/four SQL statements**. Sorting,
+  searching, cached mode switching and settled service Back add no API POST/SQL.
+  An upstream failure publishes no rankable partial table; scope retirement and
+  retained callback invocation cannot adopt or restart abandoned work. A first
+  driver run measured Back before child dashboard reads settled; that driver was
+  corrected to await all real widget/request/source completions, not to waive
+  the zero-new-read assertion.
+- Isolated verification `go test ./servicetriage -count=1 -v` with the actual
+  browser report passes all three tests without skips: strict Quint protocol,
+  actual read-ledger replay, and **64 Hegel cases** against the real JavaScript
+  model and independent Go big.Int arithmetic. Scope/read/fan-out/late-adoption
+  mutations are rejected. This protocol model is not a substitute for actual UI
+  owner tests or stale-response browser checks.
+- OpenAPI rebuild/check passes: **113 operations**, 489 frozen responses,
+  195 admitted requests, 28 mux refusals and rejecting tuple/cardinality controls.
+  The embedded API documentation browser check also passes, including mobile.
+- Independent review corrected a reattached-control scope escape, wildcard
+  declaration zero/origin labeling, inconsistent search, focus restoration and
+  redundant controls before acceptance. Actual 1440/390/320px frames confirm
+  compact cards, qualified identity and contained layouts. No cross-engine or
+  full accessibility certification is implied.
+
+Running app refreshed with only `packages --no-deps`; both 8088/8089 endpoints
+byte-match all six changed/new UI assets. The deployed Go handler returns the
+actual 13-record/5-group current and 10-record/4-group prior summaries. Existing
+telemetry, volumes, streams and XTDB were retained.
+
+Reviewed binary SHA-256:
+`af4fb99e7d755d2d41b3622370ea3471aaddaeb34a1cb67eb57f808739308301`.
+Actual ignored evidence is under `artifacts/service-triage/`; no production user
+telemetry, store reset or broad cleanup was required. Next: **413 — log volume
+and severity context in Activity**, followed by recent/pinned scope consolidation.
+
 ## Interface review remediation — November 12, 2026
 
 Implemented all six findings from the prior independent review through shared

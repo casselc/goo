@@ -5,7 +5,8 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-411 plus the [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md).
+412, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
+[fleet service triage](SERVICE_TRIAGE.md).
 The [active roadmap](ROADMAP_2026_11_12_CHECKPOINT_411.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
 below are research inputs, not additional backlogs or claims of vendor parity.
@@ -23,6 +24,7 @@ below are research inputs, not additional backlogs or claims of vendor parity.
 | Reuse a cross-service search | [Saved trace-search questions](SAVED_TRACE_SEARCH_QUESTIONS.md) and [captured search evidence](CAPTURED_TRACE_SEARCH.md) | Saving intent reads no telemetry. Capture explicitly rereads; reopening evidence is source-free. A fresh child trace keeps its original citation and held Back path. |
 | Triage recorded errors and logs | [Error triage](ERROR_TRIAGE.md), [log patterns](LOG_PATTERNS.md), pattern timelines and [time comparisons](LOG_PATTERN_TIME_COMPARISONS.md) | Recorded status/exception evidence is not inferred application failure. Pattern populations retain unclassified coverage. |
 | Inspect discovered services and resources | [Service dashboards](SERVICE_DASHBOARDS.md), [incoming HTTP responses](INCOMING_HTTP_RESPONSES.md), [previous-window captured counts](SERVICE_WINDOW_COMPARISONS.md), [host observations](HOST_RESOURCES.md) and [Kubernetes resources](KUBERNETES_RESOURCES.md) | Reported associations do not prove topology, ownership or health. Only supported OTel profiles become executable widgets. |
+| Find a service to investigate | [Fleet service triage](SERVICE_TRIAGE.md): qualified Server-span count/change, recorded Error fraction and mean duration across adjacent windows | Four aggregate SQL reads, independent windows, complete bounded groups; captured spans are not unsampled requests or inferred health. |
 | Investigate outgoing web dependencies | [Outgoing HTTP observations](OUTGOING_HTTP.md), destination/context groups and ordinary saved questions/captures | Full Client-span record counts are not attempts or unique requests. Addresses do not establish callee identity or remote health; response status remains separate from recorded span Error. |
 | Work with native measurements | [Instrument discovery](NATIVE_INSTRUMENT_DISCOVERY.md), [measurement packages](MEASUREMENT_PACKAGES.md), [counters](NATIVE_COUNTERS.md) and [explicit histograms](NATIVE_HISTOGRAMS.md) and [reusable gauge displays](NATIVE_GAUGE_VIEW_REUSE.md) and [counter displays](NATIVE_COUNTER_VIEW_REUSE.md) | Units, temporality, resets and coverage remain typed. Unsupported instruments are visible metadata, not silently executable measurements. |
 | See native data before configuration | [Data-first native composition](NATIVE_DATA_FIRST.md) across ordinary, service-expanded and saved native views | Compact scope/state and real first data are visible at natural entry; detailed identity/provenance is disclosed. Source, custody and return owners remain separate. |
@@ -55,8 +57,9 @@ whole-population facts with no forced grouping. [Retained gauge context](RETAINE
 [Incoming HTTP response context](INCOMING_HTTP_RESPONSES.md) (410) is delivered.
 [Shared quantitative chrome](QUANTITATIVE_VIEW_COMPOSITION.md) (411) consolidates
 numeric and selected native histogram surfaces and action readiness.
-Next: contextual review-task discovery, adjacent captured occurrences and shared
-record-action consolidation. Delivered
+[Fleet service triage](SERVICE_TRIAGE.md) (412) is delivered.
+Next: log volume/severity in Activity (413), then recent/pinned scope consolidation
+(414). Captured-example task discovery and adjacent labeling are deferred. Delivered
 capabilities and remaining boundaries are distinguished below.
 
 | Area | Remaining gap or decision | Current reference |
@@ -64,7 +67,7 @@ capabilities and remaining boundaries are distinguished below.
 | Native context coverage | Ordinary Measurements gauge nearby-record context is delivered alongside existing counter/histogram interval context. Services/Saved gauge continuation is delivered in 401. Stock and broader resource contexts require their own retained-evidence admission. | [Gauge context contract](GAUGE_OBSERVATION_CONTEXT.md) |
 | Further density | [384](DATA_FIRST_FIXED_RESULTS.md) covers checked fixed/retained records; [390](NATIVE_DATA_FIRST.md) delivers actual first-item visibility in ordinary, service-expanded and saved native entry. Other screens and larger-label/population cases remain evidence-driven refinements, not another automatic redesign. | [Current native contract](NATIVE_DATA_FIRST.md) |
 | Native outgoing HTTP | The explicit Client-span lens is delivered; the exact seconds explicit-histogram `http.client.request.duration` discovered profile is delivered in 392. Generic duration execution/discovery does not grant Client-span lens authority. | [Outgoing HTTP contract](OUTGOING_HTTP.md) and [native duration contract](HTTP_CLIENT_NATIVE_DURATION.md) |
-| Training/review workflow | Contextual task discovery and adjacent captured-occurrence navigation are the next finite queue. A disjoint verified kept-occurrence review target remains deferred. Existing captured-record review and export are delivered. | [Review contract](CAPTURE_RECORD_REVIEW.md) and [next roadmap](ROADMAP_2026_11_12_CHECKPOINT_411.md) |
+| Training/review workflow | Contextual task discovery and adjacent captured-occurrence navigation are deferred behind the adopted operator cadence. A disjoint verified kept-occurrence review target remains deferred. Existing captured-record review and export are delivered. | [Review contract](CAPTURE_RECORD_REVIEW.md) and [next roadmap](ROADMAP_2026_11_12_CHECKPOINT_411.md) |
 | Display grammar coverage | Gauge, histogram and counter display reuse are delivered. Counter compatibility requires exact unit and matching integer/decimal domain; resource-bound counters, stocks and other grains remain outside that arm. [Checked count-only log-pattern display admission/reuse](LOG_PATTERN_DISPLAY_REUSE.md) is delivered in 391; pattern execution already exists. | [Counter contract](NATIVE_COUNTER_VIEW_REUSE.md) and [gauge/histogram contract](NATIVE_GAUGE_VIEW_REUSE.md) |
 | Exponential histograms | General execution is deferred until the source and mathematical representation preserve the required semantics. Discovery metadata does not grant evaluation support. | [Readiness decision](EXPONENTIAL_HISTOGRAM_READINESS.md) |
 | Broader customization | Checked templates and declarative displays exist. Arbitrary contributed executable kinds and a general WYSIWYG editor remain wider initiatives. | [Current authoring](AUTHORABLE_VIEW_TEMPLATES.md), [research](reviews/CUSTOMIZATION_RESEARCH_260.md) |

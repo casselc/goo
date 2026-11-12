@@ -1675,6 +1675,16 @@ def check(spec):
     aggregate=next(json.loads(c['response']) for c in aggregate_cases if c['name']=='success-rich-series')
     for wrong in ({**aggregate,'count':2},{**aggregate,'state':'healthy'},{**aggregate,'rows':[]},{**aggregate,'resultToken':'a'*64},{**aggregate,'groups':[{'g0':17,'count':'2'}]},{**aggregate,'groups':[{'g0':None,'count':'0'}]}):
         assert list(validator(spec,aggregate_shape).iter_errors(wrong)), 'Record aggregate negative control accepted'
+    qualified=copy.deepcopy(aggregate)
+    qualified['question']['groupBy'].append({'kind':'resource','key':'service.namespace'})
+    for group in qualified['groups']: group['g1']=None
+    validator(spec,aggregate_shape).validate(qualified)
+    missing_tuple=copy.deepcopy(qualified); del missing_tuple['groups'][0]['g1']
+    extra_tuple=copy.deepcopy(qualified); extra_tuple['groups'][0]['g2']='unrequested'
+    unrequested_tuple=copy.deepcopy(aggregate); unrequested_tuple['groups'][0]['g1']='unrequested'
+    overflow_groups=copy.deepcopy(qualified); overflow_groups['groups']*=1001
+    for wrong in (missing_tuple,extra_tuple,unrequested_tuple,overflow_groups):
+        assert list(validator(spec,aggregate_shape).iter_errors(wrong)), 'Record aggregate tuple shape negative control accepted'
     pool_view_cases=json.loads((ROOT/'testdata/http/pool-view.json').read_text())['cases']
     pool_view=next(json.loads(c['response']) for c in pool_view_cases if c['name']=='validated-count-capacity-wait')
     pool_view_shape={'$ref':'#/components/schemas/PoolView'}

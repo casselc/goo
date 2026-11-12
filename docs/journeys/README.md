@@ -2888,3 +2888,11 @@ held parent return, fresh focus and refusal of retired controls.
 - [306: validate repository YAML offline and explicitly import through the CLI](306-view-cli.md).
 
 - [307: compare authored cohorts with held parent or rest](307-authored-cohorts.md).
+
+## 412 — Fleet service triage
+
+[Storyboard](service-triage.md) · [executable](../../journeys/service-triage.spec.js) ·
+[feature contract](../SERVICE_TRIAGE.md). Ordinary OTLP data exercises qualified
+service identities, adjacent-window summaries, local ranking/search, retained
+service return, source failure and stale-read refusal. Actual desktop/mobile frames
+and Bombadil/Hegel/Quint results are recorded in [validation](../../VALIDATION.md).

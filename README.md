@@ -142,6 +142,9 @@ without inventing a grouping. Inspect/Apply keeps the destination query; Run is 
 ungrouped timeline measure, using exact counts and the actual window or bucket duration.
 [Reuse numeric histograms beside records](docs/AUTHORED_NUMERIC_HISTOGRAMS.md)
 with Histogram/Table views and exact numeric-binding compatibility.
+[Fleet service triage](docs/SERVICE_TRIAGE.md) adds a compact Services summary:
+captured Server spans and changes, recorded Error fraction and mean duration,
+with local ranking and exact namespace-aware service drilldown.
 [Operator workbench polish](docs/OPERATOR_WORKBENCH_POLISH.md) unifies compact records,
 contextual inspection, field actions and service discovery across desktop/mobile.
 [Independent follow-up acceptance](docs/reviews/INDEPENDENT_INTERFACE_REVIEW_2026_11_12.md#remediation-acceptance)

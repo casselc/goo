@@ -15,7 +15,7 @@ selection. A missing witness remains unknown.
 ## Execution contract
 
 The exact original `exploration.Query` is retained. The narrow execution accepts
-one string grouping, offset zero, optional span-duration/status summaries and an
+one or two string groupings, offset zero, optional span-duration/status summaries and an
 optional overall bucket width. It rejects numeric result/histogram and split-series
 projections; typed numeric **WHERE predicates** and reported-edge scope remain
 supported. Existing compiler, source adapters and parameter binding apply.

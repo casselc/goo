@@ -13,6 +13,11 @@ cover docked readability, service names, tab relationships, contrast, 320px
 caption containment and explicit Pause alignment. Review limits remain documented;
 these targeted checks are not a whole-product accessibility certification.
 
+[Fleet service triage](SERVICE_TRIAGE.md) (412) now delivers bounded cross-service
+Server-span summaries and preceding-window count changes. Other span roles,
+monitoring/SLOs and inferred health remain outside this feature. Next is log
+volume/severity context in Activity; deeper labeling is a deferred track.
+
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 

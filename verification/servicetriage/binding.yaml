@@ -1,0 +1,12 @@
+spec: triage.qnt
+module: triage
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  catalog: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}
+  measure: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}
+  sort: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}
+  search: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}
+  return_catalog: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}
+  retire: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}
+  late_result: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and adoptions == {{.obs.adoptions}}'}

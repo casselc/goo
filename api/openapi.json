@@ -20036,6 +20036,7 @@
           },
           "groups": {
             "type": "array",
+            "maxItems": 1000,
             "items": {
               "$ref": "#/components/schemas/RecordAggregateGroup"
             }
@@ -20109,7 +20110,61 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.RecordAggregatesResult",
         "additionalProperties": false,
-        "description": "Aggregate-only record projection: exactly count and groups reads plus one optional time-series read. Separate clocks/content bases do not establish a transactional snapshot. Changed aggregates are diagnostic and non-actionable. Never includes source rows, fields, plan, pagination or retention token."
+        "allOf": [
+          {
+            "properties": {
+              "question": {
+                "required": [
+                  "groupBy"
+                ],
+                "properties": {
+                  "groupBy": {
+                    "minItems": 1,
+                    "maxItems": 2
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "question": {
+                  "properties": {
+                    "groupBy": {
+                      "minItems": 2
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "groups": {
+                  "items": {
+                    "required": [
+                      "g1"
+                    ]
+                  }
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "groups": {
+                  "items": {
+                    "not": {
+                      "required": [
+                        "g1"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "description": "Aggregate-only record projection with one or two string grouping dimensions: exactly count and groups reads plus one optional time-series read. Separate clocks/content bases do not establish a transactional snapshot. Changed aggregates are diagnostic and non-actionable. Never includes source rows, fields, plan, pagination or retention token."
       },
       "exploration.RecordMeasure": {
         "properties": {
@@ -60145,6 +60200,12 @@
               "null"
             ]
           },
+          "g1": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "count": {
             "type": "string",
             "pattern": "^[1-9][0-9]*$"
@@ -60156,7 +60217,7 @@
             "$ref": "#/components/schemas/exploration.SpanStatusSummary"
           }
         },
-        "additionalProperties": true
+        "additionalProperties": false
       },
       "RuntimeCapabilityState": {
         "type": "object",

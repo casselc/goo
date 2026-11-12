@@ -4,29 +4,62 @@ The [408 cadence](ROADMAP_2026_11_11_CHECKPOINT_408.md) delivered service captur
 
 Keep the loop: **current ordinary telemetry → narrow a population → inspect or compare → preserve/reuse**. Review and annotation begin from a selected immutable captured occurrence; they do not replace Activity with a labeling workspace. Manifests remain optional. This prerelease requires no legacy formats or compatibility layer.
 
-The user-requested [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md)
-now delivers compact shared record actions, contextual inspection, field menus
-and service discovery before this queue. Do not repeat that work in 414: its
-remaining scope is consistency around capture/review decisions and pending
-publication as the new review workflow becomes available.
+The [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and independent
+six-finding remediation are delivered. Shared actions, contextual inspection and
+accessible compact layouts are the foundation for this queue, not another
+polish milestone to repeat.
 
-## Product-gap review recommendation — November 12
+## Adopted operator cadence — November 12
 
-The [quick competitive gap analysis](reviews/PRODUCT_GAP_ANALYSIS_2026_11_12.md)
-recommends prioritizing general operator workflows ahead of deeper labeling:
-**fleet service triage → log volume/severity context in Activity → recent/pinned
-scope consolidation**, followed by guided version comparisons, recurring error
-groups and a separately gated monitoring/alerting track. These extend existing
-queries, views and investigation owners rather than adding another engine.
+The [competitive gap review](reviews/PRODUCT_GAP_ANALYSIS_2026_11_12.md) is adopted
+following the user's instruction to continue. General-purpose operator workflows
+now precede deeper labeling. The shared UI polish and independent six-finding
+remediation are delivered; do not repeat them as a new consolidation milestone.
+The former labeling queue is retained below as a deferred track, not an active
+parallel backlog.
 
-This is a proposed reprioritization, not implementation or a silently renumbered
-queue. Items 412–414 below remain documented; task discovery and adjacent labeling
-would move to a deferred review track if the recommendation is adopted. The shared
-UI polish and independent six-finding remediation are delivered; do not repeat
-them as a new consolidation milestone. Monitoring, tenancy and unsupported native
-semantics still require their separate gates.
+### 412 — breadth: fleet service triage (delivered)
 
-## 412 — breadth: contextual review-task discovery
+“Which observed service should I investigate?” Add an explicit bounded summary
+in the existing Services catalog for captured Server-kind spans, recorded Error
+fraction, mean duration and changes in captured count against one equal preceding
+window. Qualified service/namespace identities remain exact; log-only, metric-only
+and declared services remain visible. Reuse the Go aggregate compiler with two
+string groups and the existing service handoff. No dashboard fan-out, inferred
+health score or new query engine. See [contract](SERVICE_TRIAGE.md).
+
+Delivered and [independently accepted](reviews/SERVICE_TRIAGE_REVIEW_412.md): real ordinary telemetry with missing/empty/duplicate namespace cases,
+independent source/count/status/duration checks, fixed four-SQL budget for two
+windows, no local-sort/search/return reads, stale/canceled response refusal,
+accessible compact desktop/mobile frames, Hegel properties and observed Quint
+trace validation with rejecting controls. Actual commands and outcomes are in
+[validation](../VALIDATION.md). **Next: 413**, log volume/severity context.
+
+### 413 — depth: log volume and severity in Activity
+
+“Is this burst unusual?” Extend Activity with a compact optional full-query log
+volume/severity timeline and brush into its existing fixed explanation. Reuse the
+current aggregate owner/cadence semantics; buffer counts and measured population
+counts remain separate. Severity number and reported text remain distinct.
+Pause updates on interaction and retain the original window/Back path. No new
+stream engine or statistical anomaly claim. Scope and read-budget design precede
+implementation.
+
+### 414 — consolidation: recent and pinned scopes
+
+“Return to my useful scope without rebuilding it.” Consolidate existing question,
+Activity-view and retained-visit entry through a compact shared Recent/Pinned
+picker. Durable recent configuration is distinct from retained results. Reopening
+stages intent; Run and capture reopen retain separate authority. Bound retention,
+clear history and protect personal isolation before shared deployment. Do not add
+a new workspace or persist telemetry bodies in query history.
+
+Review the product again after this breadth/depth/consolidation cycle. Guided
+version comparisons, recurring exception groups and a gated monitoring/alerting
+track follow only after that review. Authentication/source authorization and
+coverage/denominator contracts remain prerequisites where applicable.
+
+## Deferred review track — contextual review-task discovery
 
 User task: “Use an existing labeling vocabulary for this captured example without finding and copying its artifact ID.” Add a bounded, source-free task catalogue and chooser inside the existing **Review example** disclosure. Keep exact-ID loading available. Reuse the existing workbench file-store scan bounds and validated immutable task loader; catalogue presentation is not a new task store or a source query.
 
@@ -34,7 +67,7 @@ Show useful task titles and vocabulary context while keeping immutable task iden
 
 Acceptance: real captured-record entry, bounded catalogue admission, duplicate task names with distinct immutable IDs, explicit selection, and no telemetry reads. Slow, failed or departed responses cannot adopt into a closed/replaced inspector or overwrite a newer choice. Preserve uncertainty, abstention, explicit Save, pending-publication recovery and unverified local attribution. Update the HTTP/OpenAPI contract and relevant store/property/actor checks for the new metadata operation.
 
-## 413 — depth: adjacent occurrences in one immutable capture
+## Deferred review track — adjacent occurrences in one immutable capture
 
 User task: “Review the next captured example without repeatedly closing and reopening the record inspector.” Add Previous/Next within the current immutable capture through the existing Saved record/inspection owner. Keep the selected task only through an explicit, visible continuation policy; judgments and publication targets belong to individual occurrences.
 
@@ -42,7 +75,7 @@ Use validated absolute retained indices, not visual row order or reported trace/
 
 Acceptance: actual adjacent retained logs/spans, repeated reported IDs remaining distinct, first/last boundaries, original absolute indices including nonzero captured offsets, explicit task continuity and draft/pending handling. Navigation performs only existing stored-evidence/metadata reads, never telemetry acquisition. Retired callbacks cannot publish or adopt into the replacement occurrence. A reviewed subset is not an exhaustive training set, and absence of a decision remains unlabeled.
 
-## 414 — consolidation: compact shared record operations
+## Deferred review track — compact review and publication operations
 
 User task: “Inspect and act on a record without a stack of competing buttons and repeated explanations.” Consolidate record-action hierarchy across Activity, record detail, captured evidence and review entry using the existing shared record interactions and passive disclosure components. Keep the primary inspection flow prominent; group secondary investigation and preservation commands where operators naturally look for them.
 
