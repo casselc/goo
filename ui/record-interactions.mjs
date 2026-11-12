@@ -110,15 +110,19 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
   selectionChanged();options.onSelectionStart?.();renderSelection();
  }
  for(const [index,row]of rows.entries()){
-  const item=records.row(row,index),tr=item.row,cell=node('div',undefined,'record-row-actions');cell.setAttribute('role','group');cell.setAttribute('aria-label','Record actions');item.actions.append(cell);tr.classList.add('record-row');tr.dataset.recordIndex=String(index);
+  const item=records.row(row,index),tr=item.row,cell=node('div',undefined,'record-row-actions'),secondary=[];
+  // The shared menu closes after activation; its summary remains a visible
+  // return-focus origin. Admission still belongs to the actual clicked button.
+  let secondaryOpener=null;
+  const secondaryAction=(button,run)=>{secondary.push({button,run});button.onclick=()=>{if(canUseRecord()&&!button.disabled&&UI.actionVisible(button))run(secondaryOpener)};cell.append(button)};cell.setAttribute('role','group');cell.setAttribute('aria-label','Record actions');item.actions.append(cell);tr.classList.add('record-row');tr.dataset.recordIndex=String(index);
   if(signal==='logs'){
    if(target===surround.target&&Discovery.sameLog(row,surround.anchor)){tr.classList.add('log-anchor');item.time.append(node('span','Anchor fields match','anchor-badge'))}
    const nearby=node('button','Surrounding logs');nearby.setAttribute('aria-label','Surrounding logs for '+row.ServiceName+' at '+row.timestamp_ns);
-   nearby.onclick=()=>{if(canUseRecord())openSurrounding(target===surround.target?surround.origin:origin,row,target===surround.target?surround.basis:basis,nearby,origin,basis)};cell.append(nearby);
+   secondaryAction(nearby,opener=>openSurrounding(target===surround.target?surround.origin:origin,row,target===surround.target?surround.basis:basis,opener,origin,basis));
   }
   if(typeof row.TraceId==='string'&&/^[a-f0-9]{32}$/.test(row.TraceId)&&!/^0+$/.test(row.TraceId)){
    const expand=node('button','Expand trace');expand.dataset.expandTrace=String(index);expand.setAttribute('aria-label','Expand trace '+row.TraceId);expand.title='Trace '+row.TraceId;
-   expand.onclick=()=>{if(canUseRecord())openTrace(origin,row.TraceId,row.SpanId,basis,expand,{...(options.onOpenTraceView?{onOpenView:(view,opener)=>canUseRecord()?options.onOpenTraceView(view,opener):false,canOpenView:()=>canUseRecord()&&options.canOpenTraceView?.()!==false}:{})})};cell.append(expand);
+   secondaryAction(expand,opener=>openTrace(origin,row.TraceId,row.SpanId,basis,opener,{...(options.onOpenTraceView?{onOpenView:(view,opener)=>canUseRecord()?options.onOpenTraceView(view,opener):false,canOpenView:()=>canUseRecord()&&options.canOpenTraceView?.()!==false}:{})}));
   }else cell.append(node('span','No valid reported trace ID','record-identity-missing'));
   if(options.onFacet||options.resultToken||readOnly&&savedPage()&&target===primary()){
    const input=node('input');input.type='checkbox';input.dataset.recordSelection='true';input.setAttribute('aria-label','Select captured record '+(index+1));input.onchange=()=>selectRecord(index,input);inputs.set(index,input);cell.prepend(input);
@@ -135,15 +139,16 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
    if(inspect.has(key)){inspect.show({key,title:signal==='logs'?'Selected log':'Selected span record',description,opener:inspectButton});inspectorOwners.get(key)?.resume?.();focusInspection(inspectButton);return}
    const content=RecordPresentation.detail(row,signal,actions,rows),scope=node('details');
    scope.append(node('summary','Record scope and evidence basis'),node('p','Retained record inspection. Trace expansion and surrounding logs are separate reads.'),node('pre',JSON.stringify({question:origin,basis},null,2)));content.append(scope);
-   const follow=[...cell.querySelectorAll('button')].filter(button=>button!==inspectButton).map(button=>{
+   const follow=secondary.map(({button,run})=>{
     const action=node('button',button.textContent);if(button.hasAttribute('aria-label'))action.setAttribute('aria-label',button.getAttribute('aria-label'));if(button.title)action.title=button.title;
-    action.onclick=()=>{if(canUseRecord())button.click()};return action;
+    action.onclick=()=>{if(canUseRecord()&&!action.disabled&&UI.actionVisible(action))run(action)};return action;
    });
    if(signal==='spans'&&actions.onTraceSearch){const find=node('button','Find traces with this operation');find.type='button';find.disabled=actions.canTraceSearch?.()===false;find.onclick=()=>{if(!canUseRecord()||actions.canTraceSearch?.()===false||!Visuals.actionVisible(find))return;try{actions.onTraceSearch(TraceSearch.seedFromRow(row),find)}catch(error){find.title=error.message}};follow.push(find)}
    const extension=options.onInspectRecord?.({content,index,opener:inspectButton,current:()=>canUseRecord()&&inspectButton.getAttribute('aria-pressed')==='true'&&!item.detailRow.hidden&&panel.dataset.key===key});if(extension?.dispose)inspectorOwners.set(key,extension);
    inspect.show({key,title:signal==='logs'?'Selected log':'Selected span record',description,content,actions:follow,opener:inspectButton});focusInspection(inspectButton);
   };
   const input=inputs.get(index);if(!item.timingButton){if(input)input.after(inspectButton);else cell.prepend(inspectButton)}
+  if(secondary.length){const menu=UI.actions([],secondary.map(({button})=>button),{label:'More'});secondaryOpener=menu.querySelector('summary');secondaryOpener.setAttribute('aria-label','More record actions');cell.append(menu)}
   records.append(tr);records.append(item.detailRow);
  }
  const layoutKey=(target.id||'records')+':'+signal,layout=options.recordLayout||layouts.get(layoutKey)||initialLayout||undefined;

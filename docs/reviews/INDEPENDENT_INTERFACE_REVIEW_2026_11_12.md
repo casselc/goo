@@ -1,7 +1,9 @@
 # Independent interface review — reconciliation
 
 Reviewed product commit: `837bce4d94e25feae077f87240b512f3935caebb`.
-Status: review only; the findings below are **open**, not implemented fixes.
+Status: the table below preserves the original review findings.
+Remediation and independent follow-up acceptance are recorded below; the original
+individual reports remain historical assessments of the reviewed commit.
 
 Three fresh reviewers assessed UX, accessibility and web standards separately,
 without authoring the implementation or seeing one another's conclusions.
@@ -54,3 +56,20 @@ caption isolation changed only a temporary browser DOM style; application
 source, telemetry and stored evidence were not modified. No scanner or physical
 screen reader was run, and small targets were not classified as failures without
 considering visibility and spacing exceptions.
+
+## Remediation acceptance
+
+The shared UI changes address all six findings: readable docked operations,
+qualified service disclosure names, resource tab/panel relationships, text and
+placeholder contrast, compact-caption containment, and explicit Pause alignment.
+The [executable storyboard](../journeys/review-remediation.md) covers real telemetry
+at 1440, 390 and 320 pixels, including source-free local interactions and retained
+window return. Follow-up reviewers did not author the fixes:
+
+- [UX follow-up](INTERFACE_REMEDIATION_UX.md)
+- [Accessibility follow-up](INTERFACE_REMEDIATION_ACCESSIBILITY.md)
+- [Web standards follow-up](INTERFACE_REMEDIATION_WEB_STANDARDS.md)
+
+A More-menu return-focus regression found during follow-up was corrected before
+acceptance. The bounded Chromium checks do not establish whole-product or
+cross-engine accessibility conformance.

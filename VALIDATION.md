@@ -1,10 +1,42 @@
 # Validation record
 
+## Interface review remediation — November 12, 2026
+
+Implemented all six findings from the prior independent review through shared
+record, disclosure, layout and theme primitives. Follow-up acceptance is linked
+in the [review reconciliation](docs/reviews/INDEPENDENT_INTERFACE_REVIEW_2026_11_12.md#remediation-acceptance).
+
+- Final frontend suite: **1,513 passed**, zero failures/skips. Targeted Go embedded
+  UI/metadata startup check passes (`TestEmbeddedUIAndMetadataWithoutSource`).
+- Final remediation journey passes in **58.8 seconds**, with 42 recorded facts
+  and zero application JavaScript errors. Reviewed Go binary SHA-256:
+  `00ad462fee45c9067010993ae20862ac39cf1c5c4467b0eeee20fd342676cc67`.
+- Real OTLP/ClickHouse browser regression covers docked operation-name differences,
+  full UTC/exact time retention, keyboard/focus, explicit Pause and held return,
+  exact service disclosure names, resource tab semantics, and fixed/Saved/service
+  record containment at 320px. The [storyboard](docs/journeys/review-remediation.md)
+  and actual screenshots describe each checked gesture.
+- Computed default-theme contrast: navigation label **8.521:1**, enabled local
+  search placeholder **7.860:1**, opacity 1. Resource tabs expose named panels in
+  Chromium's accessibility tree; tab switching and local inspection acquire no
+  new telemetry. No physical screen reader or cross-engine certification is claimed.
+- Independent review caught two remediation defects before acceptance: trace
+  return focus targeted a closed menu's child, and mobile Pause counted invisible
+  header-cell boxes. Durable More-summary focus and a clipped-header exclusion
+  correct these, with dedicated regressions and actual frame inspection.
+- Rebuilt and refreshed only the `packages` app container. Both local endpoints
+  (8088 and 8089) byte-match the five changed embedded UI assets. Existing
+  telemetry services, stores, streams and the separate XTDB container were retained.
+- The existing inspection journey and a 30-second Bombadil campaign pass
+  (445 inspection snapshots; field-menu and waterfall journeys both complete).
+  The actor and browser driver now reveal the native More disclosure before
+  requesting secondary record reads.
+
 ## Independent interface review — November 12, 2026
 
 Three fresh specialist reviewers independently assessed product commit `837bce4d`.
 The [reconciliation and individual reports](docs/reviews/INDEPENDENT_INTERFACE_REVIEW_2026_11_12.md)
-record **four medium and two low findings**, all open. This entry records a review,
+record **four medium and two low findings**, open at the time of that review. This entry records a review,
 not a new implementation or a WCAG conformance claim.
 
 - Serial Chromium probes confirmed service disclosure names, incomplete resource

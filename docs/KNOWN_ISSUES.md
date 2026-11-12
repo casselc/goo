@@ -7,10 +7,11 @@ record/attribute inspection and service-discovery improvements. Mobile service-c
 layout and further contextual action discovery remain bounded refinements.
 
 The [independent UX/accessibility/standards review](reviews/INDEPENDENT_INTERFACE_REVIEW_2026_11_12.md)
-records six open findings: docked operation-name readability, service disclosure
-names, resource tab/panel relationships, text/placeholder contrast, a hidden-caption
-320px overflow defect and partially clipped paused rows. These are review findings;
-remediation has not been implemented.
+identified six interface findings. Their shared-component remediation and
+[independent follow-up reports](reviews/INDEPENDENT_INTERFACE_REVIEW_2026_11_12.md#remediation-acceptance)
+cover docked readability, service names, tab relationships, contrast, 320px
+caption containment and explicit Pause alignment. Review limits remain documented;
+these targeted checks are not a whole-product accessibility certification.
 
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.

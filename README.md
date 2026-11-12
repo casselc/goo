@@ -144,6 +144,9 @@ ungrouped timeline measure, using exact counts and the actual window or bucket d
 with Histogram/Table views and exact numeric-binding compatibility.
 [Operator workbench polish](docs/OPERATOR_WORKBENCH_POLISH.md) unifies compact records,
 contextual inspection, field actions and service discovery across desktop/mobile.
+[Independent follow-up acceptance](docs/reviews/INDEPENDENT_INTERFACE_REVIEW_2026_11_12.md#remediation-acceptance)
+covers readable docked operations, accessible controls and contained 320px records;
+the [real-telemetry storyboard](docs/journeys/review-remediation.md) exercises the fixes.
 [Compact shared histogram surfaces](docs/QUANTITATIVE_VIEW_COMPOSITION.md) retain
 authored titles, read facts and exact values with keyboard scrolling on narrow screens.
 [Open an inspected trace as a view](docs/TRACE_AS_VIEW.md) to edit and save its presentation.

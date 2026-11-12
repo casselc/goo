@@ -17,10 +17,10 @@ class Element{
  addEventListener(type,listener){this.listeners.set(type,listener)}dispatch(type){this.listeners.get(type)?.({type})}
 }
 const node=(tag,text,className)=>{const element=new Element(tag);element.textContent=text;if(className)element.className=className;return element};
-let inspected,shared;
+let inspected,shared,inspectedActions;
 mock.module('../ui/attributes.mjs',{exports:{mountShared:(_host,_records,options)=>{shared=options}}});
 mock.module('../ui/record-presentation.mjs',{exports:{table(){const element=node('table'),viewport=node('div'),header=node('thead'),body=node('tbody');element.append(header,body);viewport.append(element);return {element,viewport,header,body,row(){const row=node('tr'),cells=Array.from({length:4},()=>node('td'));row.append(...cells);return{row,cells}}}},description:()=>'',detail:(_row,_signal,options)=>{inspected=options;return node('section')}}});
-mock.module('../ui/components.mjs',{exports:{node,actionVisible:element=>element.isConnected&&element.visible!==false,inspector(panel){const header=node('div',undefined,'ui-inspector-heading'),heading=node('h4'),body=node('div',undefined,'ui-inspector-body'),cache=new Set();header.append(heading);panel.append(header,body);panel.hidden=true;return {has:key=>cache.has(key),show({key}){cache.add(key);panel.hidden=false}}}}});
+mock.module('../ui/components.mjs',{exports:{node,actions(primary,secondary,{label}){const group=node('div'),details=node('details'),summary=node('summary',label);details.append(summary,...secondary);group.append(...primary,details);return group},actionVisible:element=>{if(!element.isConnected||element.visible===false)return false;for(let parent=element.parentElement;parent;parent=parent.parentElement)if(parent.tagName==='details'&&!parent.open)return false;return true},inspector(panel){const header=node('div',undefined,'ui-inspector-heading'),heading=node('h4'),body=node('div',undefined,'ui-inspector-body'),cache=new Set();header.append(heading);panel.append(header,body);panel.hidden=true;return {has:key=>cache.has(key),show({key,actions=[]}){cache.add(key);panel.hidden=false;inspectedActions=actions;panel.append(...actions)}}}}});
 mock.module('../ui/record-columns.mjs',{exports:{mount:()=>({update(){}})}});
 mock.module('../ui/kept-selection.mjs',{exports:{mount(){}}});
 for(const name of ['discovery','retention','trace-search','visualizations','record-list','record-span-waterfall'])mock.module('../ui/'+name+'.mjs',{exports:{}});
@@ -50,4 +50,17 @@ test('explicit record opening focuses details for fresh and cached inspection on
  focused=null;opener.visible=false;opener.onclick();assert.equal(focused,null,'a nonvisible opener cannot move keyboard focus');
  opener.visible=true;active=false;opener.onclick();assert.equal(focused,null,'a paused host cannot move keyboard focus');
  active=true;owner.dispose();opener.onclick();assert.equal(focused,null,'a retired owner cannot move keyboard focus');
+});
+
+
+test('secondary record reads require an open row menu or a visible inspector action and retain the owner',()=>{
+ const target=node('section'),reads=[],row={SpanName:'/operations/shared-prefix/settlement',TraceId:'a'.repeat(32),SpanId:'b'.repeat(16)};
+ const owner=mount(target,[row],'spans',{signal:'spans'},'fixed-basis',{}, {openTrace:(...args)=>reads.push(args)});
+ const expand=target.querySelector('[data-expand-trace]'),menu=expand.parentElement,inspect=target.querySelector('[data-inspect-record]');
+ assert.equal(menu.tagName,'details');assert.equal(menu.querySelector('summary').getAttribute('aria-label'),'More record actions');
+ expand.onclick();assert.equal(reads.length,0);
+ menu.open=true;expand.disabled=true;expand.onclick();assert.equal(reads.length,0);expand.disabled=false;expand.onclick();assert.equal(reads.length,1);assert.equal(reads[0][4],menu.querySelector('summary'),'closed row menu returns focus to its persistent summary');assert.equal(reads[0][1],row.TraceId);
+ menu.open=false;inspect.onclick();assert.equal(reads.length,1);assert.equal(inspect.getAttribute('aria-pressed'),'true');
+ const footer=inspectedActions[0];footer.onclick();assert.equal(reads.length,2);assert.equal(reads[1][4],footer);assert.equal(reads[1][3],'fixed-basis');
+ owner.dispose();menu.open=true;expand.onclick();footer.onclick();assert.equal(reads.length,2);
 });

@@ -14,10 +14,13 @@ new acquisition path or a second inspection owner.
   controls leave more space for data. Routine page descriptions and repeated
   coverage disclaimers no longer compete with the result. Scope, uncertainty,
   units and read facts remain available in their appropriate result context.
-- Record tables use inline actions and compact previews, retaining the original
+- Record tables keep Inspect and selection visible; a native More disclosure holds
+  separate trace/surrounding reads and is their return-focus target. Compact previews retain the original
   full message, UTC timestamp and exact timestamp tooltip. Hover is not required
   to discover inspection or selection.
-- At 1440px and wider, selected record details dock beside the results. Smaller
+- At 1440px and wider, selected record details use a 440px dock beside the results.
+  Repeated visible dates condense while full accessible UTC and exact tooltips
+  remain; operation names wrap to preserve distinguishing path segments. Smaller
   layouts retain inline details. The original row, inspector cache, source
   identity and owner remain in place; CSS changes the presentation. Opening
   record inspection focuses its heading. Close and Escape restore the opener.
@@ -73,3 +76,11 @@ desktop/mobile frames. Activity uses fresh observations in each pass because its
 server-clock window is live. See [validation](../VALIDATION.md) for the checks
 actually run and their limits. The original query, custody and held-return
 contracts continue to apply.
+
+## Independent review follow-up
+
+The [remediation journey](journeys/review-remediation.md) exercises dock readability,
+explicit Pause row alignment, accessible service identities and resource tabs,
+contrast, and 320px record-table containment. Explicit Pause aligns the viewport
+only; inspection pauses retain their existing behavior. Close reveals its opener,
+and held navigation restores the captured observation window and viewport.

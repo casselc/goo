@@ -63,6 +63,24 @@ goo-record-context .record-reference{display:inline-block;margin:4px 6px 4px 0;b
 }
 
 /* The result owner already supplies count/scope; retain the table caption for AT. */
-.telemetry-table>caption {position:absolute;inline-size:1px;block-size:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.telemetry-table>caption,
+goo-table[record-layout]>.telemetry-table>caption {position:absolute;width:1px;max-width:1px;height:1px;inline-size:1px;block-size:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 .telemetry-table>tbody>.record-row:hover {background:color-mix(in srgb,var(--accent,#8ab9ff) 4%,transparent)}
 .telemetry-table>tbody>.record-row:has([data-inspect-record][aria-pressed=true]) {background:color-mix(in srgb,var(--accent,#8ab9ff) 9%,transparent)}
+
+/* Secondary reads use the shared native disclosure; Inspect and selection remain
+   visible. Opening the menu expands its row instead of overlaying neighboring data. */
+.record-row-actions>.ui-actions {margin:0;gap:0;align-self:flex-start}
+.record-row-actions .ui-action-menu>summary {min-height:30px;padding:3px 8px;white-space:nowrap}
+.record-row-actions .ui-actions-body {display:grid;gap:4px;padding:4px 0;max-width:9rem;white-space:normal}
+.record-row-actions .ui-actions-body>button {margin:0;min-height:30px;padding:3px 8px;font-size:12px;white-space:normal;text-align:left}
+@media(pointer:coarse){.record-row-actions .ui-action-menu>summary,.record-row-actions .ui-actions-body>button{min-height:44px}}
+@media(min-width:1440px){
+ /* The full UTC remains the accessible time text and exact nanoseconds remain
+    in datetime/title; only the repeated visible date is condensed beside detail. */
+ .app-main:has(.record-detail-row .ui-inspector:not([hidden]):not([hidden] *)) goo-table[record-layout=compact] .record-time-full {position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+ .app-main:has(.record-detail-row .ui-inspector:not([hidden]):not([hidden] *)) goo-table[record-layout=compact] .record-time-short {display:inline}
+ .app-main:has(.record-detail-row .ui-inspector:not([hidden]):not([hidden] *)) goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=summary]:has(>goo-record-summary[data-signal=spans]) {min-width:13rem}
+ .app-main:has(.record-detail-row .ui-inspector:not([hidden]):not([hidden] *)) goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=summary]>goo-record-summary[compact][data-signal=spans] {display:flex;flex-wrap:wrap;margin:0}
+ .app-main:has(.record-detail-row .ui-inspector:not([hidden]):not([hidden] *)) goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=summary]>goo-record-summary[compact][data-signal=spans]>.record-message {flex:1 1 100%;order:-1;white-space:pre-wrap;overflow:visible;text-overflow:clip;max-height:none;overflow-wrap:anywhere}
+}

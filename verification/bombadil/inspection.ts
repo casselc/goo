@@ -44,14 +44,15 @@ export const attributeCountsAreExplicit = always(() => inspection.current.counts
 const act = registerCustomAction('goo.inspect', async (document, _window, action: string,stage?: string) => {
   const click = (selector: string) => document.querySelector<HTMLElement>(selector)?.click();
   if (action === 'signal') { const select=document.querySelector<HTMLSelectElement>('#exploreSignal'); if(select){select.value=select.value==='spans'?'logs':'spans';select.dispatchEvent(new Event('change'));} }
-  if (action === 'nearby') click('#exploreRows button[aria-label^="Surrounding logs for"]');
+  const recordRead=(selector:string)=>{const button=document.querySelector<HTMLButtonElement>(selector),menu=button?.closest<HTMLDetailsElement>('details');if(!button||button.disabled)return;if(menu&&!menu.open)menu.querySelector<HTMLElement>(':scope>summary')?.click();if(!menu||menu.open)button.click()};
+  if (action === 'nearby') recordRead('#exploreRows button[aria-label^="Surrounding logs for"]');
   if (action === 'closeNearby') click('#surroundingClose');
   if (action === 'radius') {const select=document.querySelector<HTMLSelectElement>('#surroundingRadius');if(select){select.selectedIndex=(select.selectedIndex+1)%select.options.length;select.dispatchEvent(new Event('change'));}}
   if (action === 'query') click('#exploreRun');
   if (action === 'open') {
     document.querySelector<HTMLButtonElement>('#exploreRows [data-inspect-record]')?.click();
   }
-  if (action === 'trace') [...document.querySelectorAll<HTMLButtonElement>('#exploreRows [data-expand-trace]')].find(button=>button.getClientRects().length>0&&!button.disabled)?.click();
+  if (action === 'trace') recordRead('#exploreRows [data-expand-trace]');
   if(action==='openFieldMenu'){const menu=[...document.querySelectorAll<HTMLDetailsElement>('#exploreRows .ui-inspector:not([hidden]) .attribute-actions .ui-action-menu')].find(menu=>menu.getClientRects().length>0);if(menu){menu.querySelector<HTMLElement>('summary')?.click();if(!menu.open)throw Error('Field actions failed to open');document.documentElement.dataset.gooFieldMenuStage='opened'}}
   if(action==='closeFieldMenu'){const menu=document.querySelector<HTMLDetailsElement>('#exploreRows .ui-inspector:not([hidden]) .attribute-actions .ui-action-menu[open]');if(menu){const summary=menu.querySelector<HTMLElement>('summary');summary?.focus();summary?.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true}));if(menu.open||document.activeElement!==summary)throw Error('Field actions failed to close and restore focus');document.documentElement.dataset.gooFieldMenuStage='complete'}}
   if (action === 'select' || action === 'nextSpan') {
