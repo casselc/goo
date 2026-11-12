@@ -1859,3 +1859,18 @@ input::placeholder,textarea::placeholder {color:var(--muted);opacity:1}
 .scope-history>small{display:block;font-size:.75rem;max-width:75ch;color:var(--muted);margin-top:.25rem}
 .scope-history>[role=status]:empty{display:none}
 @media(max-width:480px){.scope-history>div:not(.controls){max-height:26rem}.scope-history-row>span{flex-basis:100%}.scope-history>.controls>button{font-size:.75rem;padding:.3rem .45rem}}
+
+/* Guided comparison uses native controls within the existing widget. */
+.service-version-comparison{margin-top:.5rem;min-width:0;max-width:100%}
+.service-version-comparison>summary{font-size:.8125rem}
+.service-version-comparison>.controls{display:flex;flex-wrap:wrap;align-items:end;gap:.375rem;margin:.5rem 0;min-width:0}
+.service-version-comparison label{display:flex;flex:1 1 10rem;flex-direction:column;gap:.2rem;min-width:0;font-size:.75rem}
+.service-version-comparison select{width:100%;min-width:0;max-width:100%}
+.service-version-comparison button{font-size:.75rem;padding:.3rem .5rem}
+.service-version-comparison>[role=status]{font-size:.75rem;line-height:1.4;margin:.375rem 0;overflow-wrap:anywhere}
+.service-version-comparison>[role=status]:empty{display:none}
+.service-version-comparison .evidence-summary-details{font-size:.75rem;max-width:100%;min-width:0}
+.service-version-comparison .evidence-summary-details>div{margin:.375rem 0;min-width:0}
+.service-version-comparison .evidence-summary-details dt{color:var(--muted)}
+.service-version-comparison .evidence-summary-details dd{margin:0;overflow-wrap:anywhere;min-width:0}
+.service-version-comparison pre{max-width:100%;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}

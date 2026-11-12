@@ -25,6 +25,13 @@ authenticated personal history; shared deployment still needs identity/source
 authorization. Arbitrary native/trace-search/composed views are not added to this
 ordinary-record history. Labeling remains deferred.
 
+[Guided service-version comparisons](SERVICE_VERSION_COMPARISONS.md) (415)
+use reported resource versions in one exact service scope. Count and mean span
+duration are supported; recorded Error fractions, percentile comparison,
+deployment attribution and cross-window version selection are not added.
+Discovery requires coherent complete bounded version groups, independently read
+from the retained parent overview.
+
 This file retains checkpoint delivery history; lower historical “current” or
 “next” claims do not override the linked current contracts.
 

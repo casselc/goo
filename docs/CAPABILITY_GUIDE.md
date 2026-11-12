@@ -5,7 +5,7 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-414, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
+415, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
 [fleet service triage](SERVICE_TRIAGE.md).
 The [active roadmap](ROADMAP_2026_11_12_CHECKPOINT_411.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
@@ -60,7 +60,8 @@ numeric and selected native histogram surfaces and action readiness.
 [Fleet service triage](SERVICE_TRIAGE.md) (412) is delivered.
 [Log volume/severity-text context](ACTIVITY_LOG_CONTEXT.md) (413) is delivered.
 [Recent/pinned scope recall](RECENT_PINNED_SCOPES.md) (414) consolidates browser configuration and held-visit entry.
-Next: guided service-version comparison (415), following the [414 checkpoint](ROADMAP_2026_11_12_CHECKPOINT_414.md). Captured-example task discovery and adjacent labeling are deferred. Delivered
+[Guided service-version comparisons](SERVICE_VERSION_COMPARISONS.md) (415) now reuse count/mean comparisons from an exact fixed service scope.
+Next: recurring exception groups (416), following the [414 checkpoint](ROADMAP_2026_11_12_CHECKPOINT_414.md). Captured-example task discovery and adjacent labeling are deferred. Delivered
 capabilities and remaining boundaries are distinguished below.
 
 | Area | Remaining gap or decision | Current reference |

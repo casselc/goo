@@ -1,5 +1,60 @@
 # Validation record
 
+## Guided service-version comparisons — milestone 415
+
+Delivered [version comparisons](docs/SERVICE_VERSION_COMPARISONS.md), with an
+[executable storyboard](docs/journeys/service-versions.md) and
+[independent acceptance](docs/reviews/SERVICE_VERSION_COMPARISON_REVIEW_415.md).
+
+- Final frontend suite: **1,557 passed**, zero failures/skips. New pure and actual
+  dashboard-controller checks cover exact scope/group preservation, no default
+  pair, missing/empty/literal identities, unsupported choices, previous-window
+  independence, read retirement and fresh discovery provenance.
+- Real ordinary OTLP/ClickHouse journey passes: **320** matching Server spans,
+  reported resource versions **132 / 168**, **12** present-empty and **8** missing.
+  Namespace, current/legacy environment precedence, kind, service, time-boundary
+  and similarly named span-attribute distractors are independently checked.
+  Comparison rows remain capped at 100 per side; measured totals remain full.
+- All **16** recorded action facts match their budgets. Discover/recover each
+  use one source request/**two SQL** reads. Count and mean Run each use two source
+  requests plus one pure comparison request/**six SQL** reads. Opening, choosing,
+  Read details, staging, retired stage and held Back add no source reads. Failed
+  and canceled discovery each record the one attempted count SQL separately;
+  old choices/receipts are withdrawn and departed results cannot adopt.
+- **45-second Bombadil** campaign completes with **915 snapshots**, no forbidden
+  publication and no page errors. Actual 1440/390/320px frames, shared comparison
+  bars, keyboard Read details and expanded receipt containment are checked.
+  Exact discovery clocks are distinct from retained overview receipts. This is
+  bounded Chromium evidence, not a screen-reader/cross-engine certification.
+- Isolated `GOO_SERVICE_VERSIONS_REPORT=... go test ./serviceversions -count=1 -v`
+  passes **all three gates, no skips**, in **67.566s**: native Quint protocol and
+  rejecting read/fanout/order controls (58.66s), actual recorded ledger replay
+  with a mutated local-read control (3.69s), and **32 Hegel seeds × 6 typed scopes**
+  (5.20s). The actual source-denied JS helpers produce 192 discovery questions
+  and 384 count/mean views, checked against independent Go scope/side oracles,
+  query compilation and view validation. Exact operation predicates and original
+  grouping survive; missing, empty, whitespace and Unicode values remain distinct.
+- The existing 409 service previous-window/saved-comparison journey passes
+  (16.4s); affected frames were refreshed. Standalone Go embedded UI/metadata
+  check passes. A separate exact-rational audit of the recorded mean result
+  confirms both population means and their delta from source-checked sums/counts.
+
+The first browser run reached both comparisons and a completed actor, then found
+an assertion that searched only visible buttons after failure correctly hid the
+choice panel. The final check explicitly verifies hidden **and** disabled controls.
+
+Browser-tested binary SHA-256:
+`61766225e1dac7708db88b9cac4781a2c91cd023579d8b404450aaeab3e8606d`.
+Only `packages --no-deps` was refreshed. Both 8088/8089 endpoints byte-match all
+three changed/new UI assets. Existing telemetry services, volumes, streams and
+XTDB were preserved.
+
+Ignored evidence is under `artifacts/service-versions415/`. No backend endpoint,
+source adapter, dependency or storage format was added. The guided picker offers
+count/mean only, not error fractions or percentile/deployment attribution.
+Next: **416 — recurring exception groups**, with its source/identity design gate.
+
+
 ## Recent and pinned scopes — milestone 414
 
 Delivered [configuration recall](docs/RECENT_PINNED_SCOPES.md), with the

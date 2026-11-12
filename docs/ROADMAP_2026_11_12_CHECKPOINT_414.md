@@ -9,7 +9,7 @@ Keep the product loop: **current ordinary telemetry → narrow a population → 
 or compare → preserve/reuse**. Activity remains the entry point. Do not add another
 workspace, chart family or history service to extend this cycle.
 
-## 415 — depth: guided service-version comparison
+## 415 — depth: guided service-version comparison (delivered)
 
 “Did version B differ from A?” Start from one exact service/namespace identity.
 Discover reported resource `service.version` values in a fixed window, explicitly
@@ -24,6 +24,12 @@ held Back. Discovery within one qualified service avoids adding service,
 namespace and version as three simultaneous groups. Explicit Run, bounded group
 admission, stale-action refusal, independent source checks and desktop/mobile
 journeys are required. No fleet percentile from averaged scalar percentiles.
+
+Delivered as [guided service-version comparisons](SERVICE_VERSION_COMPARISONS.md):
+explicit two-SQL discovery, distinct missing/empty groups, same-window count/mean
+cohorts preserving original operation grouping, separate source clocks and held
+Back. The linked contract records real-source, generated and model verification.
+Next is **416**; do not extend this slice into a deployment attribution system.
 
 ## 416 — breadth: recurring exception groups
 

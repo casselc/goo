@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Service-version comparisons](service-versions.md) (415) discovers reported
+resource versions in one qualified service, explicitly stages count/mean
+comparisons, and returns to retained service results without source reads.
+
+
 [Recent/pinned scope recall](recent-pinned-scopes.md) (414) distinguishes fixed
 configuration, rolling Activity intent and held results. The real-source journey
 checks explicit Run/Start, no-read local actions, opt-in reload and narrow frames.
