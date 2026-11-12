@@ -1,5 +1,49 @@
 # Validation record
 
+## Service previous-window captured-count entry — 409
+
+[Service-window comparisons](docs/SERVICE_WINDOW_COMPARISONS.md) adds **Compare
+captured records** to supported widget actions. A pure checked projection omits
+unused summary/status measures while retaining full predicates, environment/
+namespace policy, grouping, bounds, bucket width and delivery limit. It stages the
+existing preceding-window composition; only Run reads telemetry. No new source
+client, evaluator, route, schema or comparison execution protocol was introduced.
+
+- Final frontend: **1,496 passed / zero skips / 32.916 s**. Focused invoked tests
+  cover exact service context, foreign/incoherent results, native exclusions,
+  pending service/dashboard reads, hidden/inert/disabled and retired actions.
+- Isolated Hegel Go/JS projection/previous-window/store properties passed
+  **1.622 s** in `verification/servicecomparison`, without private numbered-helper
+  dependencies. Both signals and three environment policies retain typed numeric
+  filters beyond JavaScript safe integers; unsupported measures, continuation/
+  limit rewrites and underflow are refused. Existing Go workbench previous-window
+  checks passed **0.041 s** on Go **1.27.3**. These are targeted checks, not a full
+  Go suite or a new downstream model-campaign claim.
+- Actual Playwright acceptance passed **11.7 s**, with **18 persisted OTel spans**,
+  a native gauge, and independent raw membership/group oracles. Foreign namespace,
+  conflicting environment, Client-kind and service controls are excluded; the
+  effective-policy legacy row is admitted. Counts are **9 selected / 5 previous**,
+  with alpha **2→6**, beta **0→3**, gamma **3→0**. Each pair Run uses **two fresh
+  reads / eight existing SQL statements / one source-free comparison**.
+- All **eight interaction boundaries** preserve their read/write budgets. Staging,
+  departed callbacks, local group display, held Back and saved-definition reopen
+  read no telemetry. The main journey saves once and explicitly runs the pair twice;
+  the original service DOM/evidence identity is retained on return.
+- Actual Bombadil acceptance passed **46.9 s** at 390 px: **715 snapshots / eight
+  phases**, service discovery/overview followed by **one pair Run / one comparison /
+  no publication**. It independently checks source-free staging/return and the
+  full selected/baseline responses against the same raw bank.
+- OpenAPI checks pass for **113 existing operations / 489 fixture responses /
+  195 admitted requests / 28 mux refusals**, plus **27 actual handler responses**.
+- Updated contract/diagram, executable storyboard and real desktop/390px frames.
+  Architecture/ownership and visual review found no blocker. Mobile comparison
+  columns and repeated chrome remain within planned 411 polish; no health, request
+  identity, rate or statistical-significance inference is added.
+- Rebuilt/refreshed only the application service; capabilities returns 200 and
+  all three comparison-entry assets match reviewed source. Running image
+  `sha256:66e2edc23b7cb603fda6b46f96d28a2d535f5cf9460445f871169160999908ba`.
+  Existing telemetry, stores and XTDB remain intact.
+
 ## Passive display exports, embedding and product checkpoint — 408
 
 [Passive embedding](docs/PASSIVE_DISPLAY_EMBEDDING.md) completes the public

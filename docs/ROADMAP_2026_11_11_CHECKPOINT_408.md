@@ -13,6 +13,12 @@ this checkpoint); choose newer facilities for a demonstrated benefit, not novelt
 
 ## 409 — breadth: compare captured records from Services
 
+Implemented: [service-window comparisons](SERVICE_WINDOW_COMPARISONS.md) now
+stage the existing fixed pair from an accepted widget, preserving exact population
+scope and the held service return. See the executable
+[journey](../journeys/409-service-count-comparison-storyboard.md) and [validation](../VALIDATION.md).
+Next is **410 incoming HTTP response context**, followed by **411 consolidation**.
+
 User task: “Has this service's captured activity changed from the preceding
 window?” Add a contextual action to supported ordinary log/span widgets that
 stages the existing preceding-window comparison. Reuse the existing comparison

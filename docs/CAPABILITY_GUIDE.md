@@ -5,7 +5,7 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-408. The [active roadmap](ROADMAP_2026_11_11_CHECKPOINT_408.md) owns execution order;
+409. The [active roadmap](ROADMAP_2026_11_11_CHECKPOINT_408.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
 below are research inputs, not additional backlogs or claims of vendor parity.
 
@@ -21,7 +21,7 @@ below are research inputs, not additional backlogs or claims of vendor parity.
 | Continue a trace search | [Explicit ID-ordered pages](TRACE_SEARCH_CONTINUATION.md), exact scope-bound positions and current-page capture | Each page is a fresh read; full counts precede position filtering. No stable or complete page union is promised. |
 | Reuse a cross-service search | [Saved trace-search questions](SAVED_TRACE_SEARCH_QUESTIONS.md) and [captured search evidence](CAPTURED_TRACE_SEARCH.md) | Saving intent reads no telemetry. Capture explicitly rereads; reopening evidence is source-free. A fresh child trace keeps its original citation and held Back path. |
 | Triage recorded errors and logs | [Error triage](ERROR_TRIAGE.md), [log patterns](LOG_PATTERNS.md), pattern timelines and [time comparisons](LOG_PATTERN_TIME_COMPARISONS.md) | Recorded status/exception evidence is not inferred application failure. Pattern populations retain unclassified coverage. |
-| Inspect discovered services and resources | [Service dashboards](SERVICE_DASHBOARDS.md), [host observations](HOST_RESOURCES.md) and [Kubernetes resources](KUBERNETES_RESOURCES.md) | Reported associations do not prove topology, ownership or health. Only supported OTel profiles become executable widgets. |
+| Inspect discovered services and resources | [Service dashboards](SERVICE_DASHBOARDS.md), [previous-window captured counts](SERVICE_WINDOW_COMPARISONS.md), [host observations](HOST_RESOURCES.md) and [Kubernetes resources](KUBERNETES_RESOURCES.md) | Reported associations do not prove topology, ownership or health. Only supported OTel profiles become executable widgets. |
 | Investigate outgoing web dependencies | [Outgoing HTTP observations](OUTGOING_HTTP.md), destination/context groups and ordinary saved questions/captures | Full Client-span record counts are not attempts or unique requests. Addresses do not establish callee identity or remote health; response status remains separate from recorded span Error. |
 | Work with native measurements | [Instrument discovery](NATIVE_INSTRUMENT_DISCOVERY.md), [measurement packages](MEASUREMENT_PACKAGES.md), [counters](NATIVE_COUNTERS.md) and [explicit histograms](NATIVE_HISTOGRAMS.md) and [reusable gauge displays](NATIVE_GAUGE_VIEW_REUSE.md) and [counter displays](NATIVE_COUNTER_VIEW_REUSE.md) | Units, temporality, resets and coverage remain typed. Unsupported instruments are visible metadata, not silently executable measurements. |
 | See native data before configuration | [Data-first native composition](NATIVE_DATA_FIRST.md) across ordinary, service-expanded and saved native views | Compact scope/state and real first data are visible at natural entry; detailed identity/provenance is disclosed. Source, custody and return owners remain separate. |
@@ -50,8 +50,8 @@ whole-population facts with no forced grouping. [Retained gauge context](RETAINE
 [Captured-record rates](CAPTURED_RECORD_RATES.md) (406) are delivered.
 [Authored numeric histograms](AUTHORED_NUMERIC_HISTOGRAMS.md) (407) are delivered.
 [Passive exports and embedding examples](PASSIVE_DISPLAY_EMBEDDING.md) (408) are delivered.
-Next: service-window count comparisons, incoming HTTP response context and shared
-quantitative chrome consolidation. Delivered
+[Service-window captured-count comparisons](SERVICE_WINDOW_COMPARISONS.md) (409) are delivered.
+Next: incoming HTTP response context and shared quantitative chrome consolidation. Delivered
 capabilities and remaining boundaries are distinguished below.
 
 | Area | Remaining gap or decision | Current reference |

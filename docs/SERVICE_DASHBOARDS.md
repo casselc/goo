@@ -13,6 +13,10 @@ Widget actions. It stages the whole fixed question in the existing template
 catalogue. Inspect/Apply reuse configuration; Run reads explicitly and Back
 retains service observations. See [service templates](SERVICE_TEMPLATES.md).
 
+[Compare captured records](SERVICE_WINDOW_COMPARISONS.md) stages supported
+widgets against the previous equal-duration window. Widget actions stay source-free;
+Run reads each window independently and Back retains the service overview.
+
 ## One planner, existing evaluators
 
 `POST /dashboards/plan` is a pure Go planning operation. Supplied observed signals,

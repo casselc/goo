@@ -12,6 +12,8 @@ overview explicitly and return to the same paused rows.
 [Operation inventory](docs/SERVICE_OPERATION_INVENTORY.md) reads the selected
 service before grouping limits; unrelated services cannot exhaust its budget.
 Saving inventory explicitly rereads that service's original scope.
+[Compare a service widget with its previous window](docs/SERVICE_WINDOW_COMPARISONS.md)
+using captured counts, explicit Run and a held service return.
 
 [Reusable question packages](docs/TYPED_PACKAGE_SCOPES.md) retain environment
 policy, filters and existing measure profiles, including from saved evidence.

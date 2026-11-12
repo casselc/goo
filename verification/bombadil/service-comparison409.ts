@@ -1,0 +1,35 @@
+// Real Services -> fixed count comparison -> held Services return.
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document})=>{
+ const w=document.defaultView as any,o=w.__service409,calls=o?.calls||[],visible=(e:any)=>!!e?.getClientRects().length&&!e.closest('[hidden],[inert]'),d=document.querySelector('.service-dashboard'),button=d?.querySelector<HTMLButtonElement>('[data-widget=spans] .dashboard-compare-records'),pop=[...document.querySelectorAll<HTMLElement>('.population-workspace')].find(visible),source=calls.filter((c:any)=>c.source).length;
+ const preserved=!o?.held||o.held.every((x:any)=>x.node.isConnected&&x.node.querySelector('.dashboard-widget-evidence pre')?.textContent===x.evidence);
+ const selected=calls.findLast((c:any)=>c.path==='/api/explore'),baseline=calls.findLast((c:any)=>c.path==='/api/record-aggregates'&&c.request?.fromMs===o?.baseline?.fromMs),pair=calls.findLast((c:any)=>c.path==='/api/compare');
+ return{version:'goo.serviceComparison409Actor/1',phase:o?.phase||'initial',ready:visible(document.getElementById('captureGeneralLive')),catalogReady:[...document.querySelectorAll('#serviceCatalog button')].some(e=>e.getAttribute('aria-label')==='Open service '+o?.namespace+' / '+o?.service),serviceReady:visible(d)&&['loaded','partial'].includes(d?.getAttribute('data-state')||'')&&!d?.querySelector('[aria-busy=true]')&&!!button&&!button.disabled,population:pop?.dataset.phase||null,pairReady:visible(pop?.querySelector('.population-comparison-pair')),backReady:[...document.querySelectorAll('button')].some(e=>e.textContent==='Back to service'&&visible(e)&&!e.disabled),returned:visible(d)&&preserved,sourceSafe:!o||o.stageBefore===undefined||o.phase!=='staged'||source===o.stageBefore,returnSafe:!o||o.returnBefore===undefined||o.phase!=='complete'||source===o.returnBefore,preserved,sources:source,compares:calls.filter((c:any)=>c.path==='/api/compare').length,forbidden:o?.forbidden||[],calls:calls.map((c:any)=>({path:c.path,method:c.method,status:c.status})),...(o?.phase==='running'&&selected?.response&&baseline?.response&&pair?.response?{observed:{selected,baseline,pair}}:{})};
+});
+export const completes=eventually(()=>state.current.phase==='complete'&&state.current.returned).within(40,'seconds');
+export const scopeSafe=always(()=>state.current.sourceSafe&&state.current.returnSafe&&state.current.preserved&&state.current.forbidden.length===0);
+const act=registerCustomAction('goo.serviceComparison409',async(document,window,command:string)=>{
+ const w=window as any,visible=(e:any)=>!!e?.getClientRects().length&&!e.closest('[hidden],[inert]'),open=(e:any)=>{const parents=[];for(let p=e?.parentElement;p;p=p.parentElement)if(p.localName==='details')parents.unshift(p);for(const p of parents as any[])if(!p.open)p.querySelector(':scope>summary')?.click()},click=(e:any)=>{open(e);if(!e||e.disabled||!visible(e))throw Error('Missing current service comparison action');e.scrollIntoView({block:'center',behavior:'instant'});e.focus();e.click()};
+ if(command==='init'){
+  const expected=JSON.parse(new URL(window.location.href).searchParams.get('expected')||'null'),o=w.__service409={phase:'capture',...expected,calls:[],forbidden:[]},original=window.fetch.bind(window);
+  window.fetch=async(input:any,init:any)=>{const u=new URL(typeof input==='string'?input:input.url,window.location.href),method=String(init?.method||input?.method||'GET').toUpperCase(),source=method==='POST'&&['/api/discovery','/api/inventory','/api/metric-discovery','/api/record-aggregates','/api/explore','/api/explore/page','/api/measurements','/api/tail'].includes(u.pathname),call:any={path:u.pathname,method,source};if(init?.body)try{call.request=JSON.parse(init.body)}catch{}if(u.pathname.startsWith('/api/'))o.calls.push(call);if(method==='POST'&&['/api/captures','/api/documents','/api/exploration-views'].includes(u.pathname))o.forbidden.push(u.pathname);const response=await original(input,init);call.status=response.status;try{call.response=await response.clone().json()}catch{}return response};return;
+ }
+ const o=w.__service409,source=()=>o.calls.filter((c:any)=>c.source).length,pop=()=>[...document.querySelectorAll<HTMLElement>('.population-workspace')].find(visible)!;
+ if(command==='browse'){click(document.getElementById('captureGeneralLive'));o.phase='browsing'}
+ if(command==='service'){click([...document.querySelectorAll('#serviceCatalog button')].find(e=>e.getAttribute('aria-label')==='Open service '+o.namespace+' / '+o.service));o.phase='service'}
+ if(command==='stage'){
+  const d=document.querySelector('.service-dashboard')!;if(d.querySelector('[data-widget^=native-] .dashboard-compare-records'))throw Error('Native widget gained record comparison');
+  o.held=[...d.querySelectorAll('.dashboard-widget')].map(e=>({node:e,evidence:e.querySelector('.dashboard-widget-evidence pre')?.textContent}));o.stageBefore=source();click(d.querySelector('[data-widget=spans] .dashboard-compare-records'));o.phase='staged';
+ }
+ if(command==='run'){if(pop().querySelector('goo-measure-comparison'))throw Error('Staging borrowed widget evidence');click(pop().querySelector('.population-run'));o.phase='running'}
+ if(command==='back'){
+  const stable=(x:any):any=>Array.isArray(x)?x.map(stable):x&&typeof x==='object'?Object.fromEntries(Object.keys(x).sort().map(k=>[k,stable(x[k])])):x,same=(a:any,b:any)=>JSON.stringify(stable(a))===JSON.stringify(stable(b)),selected=o.calls.findLast((c:any)=>c.path==='/api/explore'),baseline=o.calls.findLast((c:any)=>c.path==='/api/record-aggregates'&&c.request?.fromMs===o.baseline.fromMs),pair=o.calls.findLast((c:any)=>c.path==='/api/compare');
+  if(!same(selected?.request,o.selected)||!same(baseline?.request,o.baseline)||selected.response.count!=='9'||baseline.response.count!=='5'||pair?.response.viewComparison.changes.count.value!=='4')throw Error('Service comparison changed projected scope or independent whole counts');
+  if(source()!==o.stageBefore+2||o.calls.filter((c:any)=>c.path==='/api/compare').length!==1)throw Error('Comparison acquired extra source data');
+  o.returnBefore=source();click([...document.querySelectorAll('button')].find(e=>e.textContent==='Back to service'&&visible(e)));o.phase='returning';
+ }
+ if(command==='complete'){o.phase='complete'}
+});
+export const journey=actions(()=>{const s=state.current;if(s.phase==='initial')return s.ready?[act('init')]:['Wait'];if(s.phase==='capture')return[act('browse')];if(s.phase==='browsing')return s.catalogReady?[act('service')]:['Wait'];if(s.phase==='service')return s.serviceReady?[act('stage')]:['Wait'];if(s.phase==='staged')return s.population==='staged'?[act('run')]:['Wait'];if(s.phase==='running')return s.population==='applied'&&s.pairReady&&s.backReady&&s.observed?[act('back')]:['Wait'];if(s.phase==='returning')return s.returned?[act('complete')]:['Wait'];return['Wait']});
