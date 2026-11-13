@@ -1,7 +1,7 @@
 import * as PatternIdentity from './log-pattern-identity.mjs';
 /* Record-field display only. Validation, query ownership and native bindings stay separate. */
 const global=globalThis;
- const operators={eq:'=',ne:'≠',gte:'≥',lte:'≤',gt:'>',lt:'<',valid:'is valid',empty:'is empty',invalid:'is invalid',contains:'contains',exists:'is present',missing:'is missing'},columns={service:'Service',duration_ns:'Span duration (ns)',timestamp_ns:'Event time (UTC)',status:'Recorded status',body_pattern_v1:'Log body pattern v1',body:'Log message',severity:'Severity',severity_number:'OTel severity number',exception_event:'Reported exception event',exception_type:'Reported exception type',exception_type_state:'Exception type reporting'};
+ const operators={eq:'=',ne:'≠',gte:'≥',lte:'≤',gt:'>',lt:'<',valid:'is valid',empty:'is empty',invalid:'is invalid',contains:'contains',exists:'is present',missing:'is missing'},columns={service:'Service',duration_ns:'Span duration (ns)',timestamp_ns:'Event time (UTC)',status:'Recorded status',body_pattern_v1:'Log body pattern v1',body:'Log message',severity:'Severity',severity_number:'OTel severity number',exception_event:'Reported exception event',exception_type:'Reported exception type',exception_type_state:'Exception type reporting',exception_fingerprint_v1:'Exception signature v1'};
  // Curated display hints, checked against OTel semconv v1.43.0 (legacy spellings
  // against earlier SDK registries). Exact namespace/key lookup; no alias rewriting.
  const conventions=new Map([
@@ -31,6 +31,7 @@ const global=globalThis;
   ['column','exception_event','Reported exception event','Exception','Whether a span reports an event named exception. Event presence alone does not establish failure or uncaught behavior.'],
   ['column','exception_type','Reported exception type','Exception','One distinct exception.type reported by matching span exception events. Repeated types count once per record; unreported or multiple types have no unique value, and a present empty type remains empty.'],
   ['column','exception_type_state','Exception type reporting','Exception','unreported, single, empty or multiple distinct reported exception types. A single reported type does not imply every exception event supplied a type.'],
+  ['column','exception_fingerprint_v1','Exception signature v1','Exception','Exact versioned reported type + stack identity at record grain. Logs use structured attributes; spans require identical complete tuples on all named exception events. Unclassified reasons remain explicit.'],
   ['column','body_pattern_v1','Log body pattern v1','Log','Deterministic maximal ASCII digit-run normalization over at most 256 UTF-8 body bytes. Inferred text shape, not an issue or cause; exact versioned identity is retained.'],
   ['column','severity_number','OTel severity number','Log','Exporter-reported numeric OTel severity. Numbers 17–24 represent Error through Fatal; 0 is unspecified. Raw severity text is preserved separately.'],
   ['attribute','http.method','HTTP request method','HTTP','Earlier HTTP method spelling; kept as its own exact field.',true],

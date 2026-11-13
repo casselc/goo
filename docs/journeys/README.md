@@ -1,5 +1,8 @@
 # User journeys and storyboards
 
+[Exception groups](exception-groups.md) (416) follows ordinary logs and span exception
+events through explicit grouping, exact signature inspection and held record drill-down.
+
 [Service-version comparisons](service-versions.md) (415) discovers reported
 resource versions in one qualified service, explicitly stages count/mean
 comparisons, and returns to retained service results without source reads.

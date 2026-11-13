@@ -31,6 +31,7 @@ func Register(mux *http.ServeMux, source exploration.Source, snapshots *explorat
 	registerRead(mux, "/environment-scopes/records", exploration.AdoptionRecordsQuestion.Validate, source.PreviewAdoptionRecords)
 	registerRead(mux, "/inventory", exploration.InventoryQuestion.Validate, source.Inventory)
 	registerRead(mux, "/discovery", exploration.ValidateServiceDiscoveryQuestion, source.DiscoverServices)
+	registerRead(mux, "/exception-groups", exploration.ValidateExceptionGroupsQuery, source.FetchExceptionGroups)
 	registerRead(mux, "/record-aggregates", exploration.ValidateRecordAggregatesQuery, source.FetchRecordAggregates)
 	registerRead(mux, "/explore/counted-values", exploration.ValidateCountedValuesQuery, source.FetchCountedValues)
 	registerRead(mux, "/trace-search", func(request exploration.TraceSearchRequest) error {

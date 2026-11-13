@@ -5,7 +5,7 @@
 > The adopted operator cadence delivered **412 fleet service triage** and
 > **413 Activity log volume**. **414 recent and pinned scope
 > consolidation** completes that cycle. **415 guided service-version comparison**
-> is delivered. Next is **416 recurring exception groups → 417 record-intent admission**
+> and **416 recurring exception groups** are delivered. Next is **417 record-intent admission**
 > following independent product and architecture review. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped

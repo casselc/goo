@@ -55,6 +55,12 @@ func TestRecordSpanWaterfallHTTPConfigurationHasNoSourceRead(t *testing.T) {
 	target.Offset = 100
 	target.GroupBy = []exploration.Field{{Kind: "attribute", Key: "zone"}}
 	response = call("POST", "/view-templates/expand", workbench.ViewTemplateExpansionRequest{Source: &loaded, Query: &target})
+	if response.Code != 400 || !strings.Contains(response.Body.String(), "page-zero root") || reads != 0 {
+		t.Fatal("continuation was rewritten or accessed a source", response.Code, response.Body.String(), reads)
+	}
+	// Choose a page-zero destination explicitly before applying presentation.
+	target.Offset = 0
+	response = call("POST", "/view-templates/expand", workbench.ViewTemplateExpansionRequest{Source: &loaded, Query: &target})
 	if response.Code != 200 {
 		t.Fatal(response.Code, response.Body.String())
 	}
@@ -62,7 +68,6 @@ func TestRecordSpanWaterfallHTTPConfigurationHasNoSourceRead(t *testing.T) {
 	if err := json.Unmarshal(response.Body.Bytes(), &expanded); err != nil {
 		t.Fatal(err)
 	}
-	target.Offset = 0
 	if !reflect.DeepEqual(expanded.View.Queries[0], target) || !reflect.DeepEqual(expanded.View.Composition, source.Composition) {
 		t.Fatal("waterfall imported query or changed presentation")
 	}

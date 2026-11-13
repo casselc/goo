@@ -1,0 +1,15 @@
+spec: exceptiongroups.qnt
+module: exceptiongroups
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  scope: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}}'}
+  read_groups: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}}'}
+  failed_read: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}}'}
+  refused_groups: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}}'}
+  local_intent: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}}'}
+  stage_group: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}}'}
+  run_group: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}}'}
+  held_back: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}}'}
+  pending_read: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}}'}
+  retire: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}}'}

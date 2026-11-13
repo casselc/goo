@@ -29,6 +29,9 @@ func (c *compiler) param(value, typ string) string {
 }
 func (c *compiler) field(f Field) (value, present string) {
 	if f.Kind == "column" {
+		if f.Key == "exception_fingerprint_v1" {
+			return exceptionFingerprintSQL(c.signal), "1"
+		}
 		if f.Key == "body_pattern_v1" {
 			return logPatternSQL(), "1"
 		}

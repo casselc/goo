@@ -165,7 +165,7 @@ func TestRecordPageValidationAndFailureNeverBecomeHealthy(t *testing.T) {
 }
 
 func TestRecordPagePreservesOriginalDerivedProjection289(t *testing.T) {
-	for _, tc := range []struct{ signal, key string }{{"spans", "exception_type"}, {"logs", "body_pattern_v1"}, {"logs", "severity_number"}} {
+	for _, tc := range []struct{ signal, key string }{{"spans", "exception_fingerprint_v1"}, {"logs", "exception_fingerprint_v1"}, {"spans", "exception_type"}, {"logs", "body_pattern_v1"}, {"logs", "severity_number"}} {
 		t.Run(tc.key, func(t *testing.T) {
 			q := basic()
 			q.Signal = tc.signal

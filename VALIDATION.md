@@ -1,11 +1,43 @@
 # Validation record
 
+## 416 — query-only exception groups
+
+[Contract](docs/EXCEPTION_GROUPS.md), [executable storyboard](docs/journeys/exception-groups.md),
+and [independent review](docs/reviews/EXCEPTION_GROUPS_REVIEW_416.md).
+
+- Affected Go packages pass: `go test -p2 ./exploration ./internal/recordhttp ./cmd/goo -count=1`.
+  Direct-Go HTTP fixtures include 13 new exception-group cases. Five older dashboard
+  fixtures were refreshed only for the already-delivered response-context widget;
+  two template tests now assert the documented page-zero-only expansion policy.
+- Frontend: **1,569 passed, zero failures/skips** with experimental module mocks.
+  This includes strict result admission, stale-action retirement, exact scope staging,
+  unprojected fingerprint display and the shared module dependency checks.
+- Real ClickHouse/OTLP browser journey and **45-second Bombadil** campaign pass
+  (1.3m), with **24 observed facts**, zero page errors, and both log/span paths.
+  Each path checks 144 matching group records versus 100 displayed drill rows,
+  36 affected qualified contexts versus an explicitly limited first 32, exact
+  independent fingerprints/membership/times, no-read local actions, held focus,
+  source refusal/recovery and pending-read retirement. Captured frames: 1440/390/320px.
+- Native verification: all exception-group tests pass (19.680s), with no skips.
+  This includes 20 actual ClickHouse differential cases/40 reads, 32-seed Hegel
+  identity properties, 32-seed × six scope projections through real JS and Go,
+  native Quint protocol checks and replay of the actual 24-fact browser ledger,
+  including rejecting source-read and state-order mutants.
+- OpenAPI: 114 operations; 501 fixture responses, 202 admitted requests and 29
+  mux refusals, including negative controls and SSE contracts.
+- Rebuilt and refreshed only the `packages` application container; stores, collector,
+  streams and XTDB were preserved. Both 8088/8089 serve byte-identical embedded
+  exception-group JavaScript, product CSS and OpenAPI from this revision.
+- Independent review caught table row headers uppercasing literal signature text;
+  the scoped fix is included in the final generated screenshots.
+
+
 ## Shared result presentation refinement after 415
 
 The [visual refinement](docs/RESULT_PRESENTATION_POLISH.md) applies the earlier
 operator-workbench polish to shared comparison figures, service timelines and
 scope recall. [Independent review](docs/reviews/RESULT_PRESENTATION_REVIEW.md)
-records acceptance and its limits. The functional roadmap remains at 416 next.
+records acceptance and its limits. The functional roadmap now continues with 417 record-intent admission.
 
 - Final frontend suite: **1,561 passed**, zero failures/skips. Focused shared
   comparison, dense unknown timeline and recall tests: **20 passed**. New checks

@@ -8,7 +8,7 @@ import * as LogPatternIdentity from './log-pattern-identity.mjs';
 import * as QuestionProtocol from './question-protocol.mjs';
 import * as UI from './components.mjs';
 const global=globalThis;
-const columns=['service','trace_id','span_id','scope','scope_version','name','kind','status','duration_ns','timestamp_ns','duration_bucket','status_class','body','severity','severity_number','exception_event','exception_type','exception_type_state','body_pattern_v1'];
+const columns=['service','trace_id','span_id','scope','scope_version','name','kind','status','duration_ns','timestamp_ns','duration_bucket','status_class','body','severity','severity_number','exception_event','exception_type','exception_type_state','exception_fingerprint_v1','body_pattern_v1'];
 const uintColumn=key=>['duration_ns','timestamp_ns','severity_number'].includes(key),columnTypeLabel=key=>key==='severity_number'?'Unsigned integer · OTel severity':uintColumn(key)?'Unsigned integer · nanoseconds':'String · column';
 const protocol=()=>QuestionProtocol;
 const presentation=()=>FieldPresentation;

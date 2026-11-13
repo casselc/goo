@@ -5,7 +5,7 @@ import {nativeControlReady} from './dom-visibility.mjs';
 const global=globalThis;
  const presentation=()=>FieldPresentation;
  const maps=new Set(['ResourceAttributes','Attributes','SpanAttributes','LogAttributes']);
- const columns={ServiceName:'service',SpanName:'name',TraceId:'trace_id',SpanId:'span_id',ScopeName:'scope',ScopeVersion:'scope_version',StatusCode:'status',SpanKind:'kind',duration_ns:'duration_ns',duration_bucket:'duration_bucket',Body:'body',body_pattern_v1:'body_pattern_v1',SeverityText:'severity',severity_number:'severity_number',exception_event:'exception_event',exception_type:'exception_type',exception_type_state:'exception_type_state'};
+ const columns={ServiceName:'service',SpanName:'name',TraceId:'trace_id',SpanId:'span_id',ScopeName:'scope',ScopeVersion:'scope_version',StatusCode:'status',SpanKind:'kind',duration_ns:'duration_ns',duration_bucket:'duration_bucket',Body:'body',body_pattern_v1:'body_pattern_v1',SeverityText:'severity',severity_number:'severity_number',exception_event:'exception_event',exception_type:'exception_type',exception_type_state:'exception_type_state',exception_fingerprint_v1:'exception_fingerprint_v1'};
  // A native action menu closes after dispatch. Dialog/child return belongs to its
  // still-visible summary, after the actual clicked control has been admitted.
  const returnOrigin=button=>button.closest('.ui-action-menu')?.querySelector(':scope > summary')||button;

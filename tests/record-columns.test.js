@@ -48,3 +48,10 @@ test('column changes are admitted before mutating layout or projected headers',(
   allowed=true;picker.listeners.get('goo:record-columns')({detail:next});assert.deepEqual(control.layout(),next);assert.equal(changes,1);assert.equal(head.children[0].textContent,'Summary');assert.equal(head.children[1].textContent,'UTC');assert.equal(head.children.at(-1).textContent,'attribute:region');
  }finally{global.document=oldDocument}
 });
+
+test('unrequested exception fingerprints are unavailable, not missing telemetry',()=>{
+ const C=require('../ui/record-columns.mjs'),field={kind:'column',key:'exception_fingerprint_v1'},record={Body:'ordinary log'};
+ const absent=C.presentation(record,field);assert.equal(absent.state,'unavailable');assert.equal(absent.type,'unavailable');assert.equal(absent.text,'Not projected');assert.match(absent.title,/not requested/);assert.deepEqual(C.value(record,field),{present:false});
+ assert.equal(C.presentation({...record,exception_fingerprint_v1:'ef1:u:both-missing'},field).state,'present');assert.equal(C.presentation({...record,exception_fingerprint_v1:'ef1:u:both-missing'},field).text,'ef1:u:both-missing');
+ assert.equal(C.presentation(record,{kind:'attribute',key:'exception_fingerprint_v1'}).state,'missing');assert.equal(C.fields([record]).some(f=>f.kind==='column'&&f.key==='exception_fingerprint_v1'),false);
+});

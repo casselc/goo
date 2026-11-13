@@ -917,7 +917,7 @@ def check_source_refusals(spec):
             {'error':reason,'refusal':{**good['refusal'],'retry':'never'}},
         ]:
             assert not check.is_valid(bad),'invalid source refusal admitted'
-    for path in ('/explore','/explore/page','/explore/counted-values','/record-aggregates'):
+    for path in ('/explore','/explore/page','/explore/counted-values','/record-aggregates','/exception-groups'):
         operation=spec['paths'][path]['post']
         assert operation['responses']['502']['content']['application/json']['schema']['$ref'].endswith('/SourceReadFailure')
         assert operation['responses']['400']['content']['application/json']['schema']['$ref'].endswith('/Error')
@@ -1650,7 +1650,7 @@ def check(spec):
                     accepted.append((shape, request))
     # Native histogram discovery adds five actual successful GET responses
     # to the prior 471/186/28 fixture baseline.
-    assert responses == 489 and requests == 195 and mux_refusals == 28, (responses, requests, mux_refusals)
+    assert responses == 501 and requests == 202 and mux_refusals == 29, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -1685,6 +1685,17 @@ def check(spec):
     overflow_groups=copy.deepcopy(qualified); overflow_groups['groups']*=1001
     for wrong in (missing_tuple,extra_tuple,unrequested_tuple,overflow_groups):
         assert list(validator(spec,aggregate_shape).iter_errors(wrong)), 'Record aggregate tuple shape negative control accepted'
+    exception_shape={'$ref':'#/components/schemas/ExceptionGroupsResult'}
+    exception_cases=json.loads((ROOT/'testdata/http/exception-groups.json').read_text())['cases']
+    exception=next(json.loads(c['response']) for c in exception_cases if c['status']==200 and json.loads(c['response']).get('state')=='observed')
+    validator(spec,exception_shape).validate(exception)
+    for change in ({'count':2},{'count':'02'},{'state':'healthy'},{'basis':'bad'},{'rows':[]}):
+        assert not validator(spec,exception_shape).is_valid({**exception,**change}), 'Exception grouping negative control accepted'
+    for change in ({'fingerprint':'ef1:c:NOT-CANONICAL'},{'count':'0'},{'firstNS':1},{'affected':[]},{'affectedCount':'0'},{'state':'healthy'}):
+        wrong=copy.deepcopy(exception);wrong['groups'][0].update(change)
+        assert not validator(spec,exception_shape).is_valid(wrong), 'Exception group metadata negative control accepted'
+    wrong=copy.deepcopy(exception);wrong['groups']*=1001
+    assert not validator(spec,exception_shape).is_valid(wrong), 'Unbounded exception groups accepted'
     pool_view_cases=json.loads((ROOT/'testdata/http/pool-view.json').read_text())['cases']
     pool_view=next(json.loads(c['response']) for c in pool_view_cases if c['name']=='validated-count-capacity-wait')
     pool_view_shape={'$ref':'#/components/schemas/PoolView'}

@@ -29,9 +29,12 @@ Delivered as [guided service-version comparisons](SERVICE_VERSION_COMPARISONS.md
 explicit two-SQL discovery, distinct missing/empty groups, same-window count/mean
 cohorts preserving original operation grouping, separate source clocks and held
 Back. The linked contract records real-source, generated and model verification.
-Next is **416**; do not extend this slice into a deployment attribution system.
+416 is also delivered; next is **417**; do not extend this slice into a deployment attribution system.
 
-## 416 — breadth: recurring exception groups
+## 416 — breadth: recurring exception groups (delivered)
+
+Delivered contract and verification: [exception groups](EXCEPTION_GROUPS.md),
+[storyboard](journeys/exception-groups.md), and [independent review](reviews/EXCEPTION_GROUPS_REVIEW_416.md).
 
 “Which repeated exception should I inspect?” Add query-only deterministic,
 versioned fingerprints over explicitly reported exception data. Reuse Errors &

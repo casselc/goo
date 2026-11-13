@@ -1,0 +1,190 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "empty",
+      "method": "POST",
+      "path": "/exception-groups",
+      "body": "",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"EOF\"}\n"
+    },
+    {
+      "name": "unknown",
+      "method": "POST",
+      "path": "/exception-groups",
+      "body": "{\"extra\":true}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"extra\\\"\"}\n"
+    },
+    {
+      "suffix": " {}",
+      "name": "trailing",
+      "method": "POST",
+      "path": "/exception-groups",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "unsupported-projection",
+      "method": "POST",
+      "path": "/exception-groups",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0,\"groupBy\":[{\"kind\":\"column\",\"key\":\"service\"}]}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"exception groups require an ordinary page-zero log/span scope without display projections\"}\n"
+    },
+    {
+      "name": "source-unavailable",
+      "method": "POST",
+      "path": "/exception-groups",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
+    },
+    {
+      "name": "exact-size",
+      "method": "POST",
+      "path": "/exception-groups",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}",
+      "padTo": 16384,
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
+    },
+    {
+      "name": "oversize",
+      "method": "POST",
+      "path": "/exception-groups",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}",
+      "padTo": 16385,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"expected one JSON object\"}\n"
+    },
+    {
+      "name": "success-observed",
+      "method": "POST",
+      "path": "/exception-groups",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"basis\":\"27e704339d8615d0f4fd1f9f175f0ffe7b428da8e005c264e32b312904ea3bca\",\"capturedAt\":\"2026-11-13T00:00:00Z\",\"count\":\"2\",\"groups\":[{\"affected\":[{\"namespace\":null,\"service\":\"worker\",\"version\":\"v1\"}],\"affectedCount\":\"1\",\"affectedLimited\":false,\"count\":\"2\",\"fingerprint\":\"ef1:c:d5db5baea9b68e9c8b5cee734eab863b78dde2716ac4ded96dccfaa410cb605e\",\"firstNS\":\"1000000001\",\"inputs\":{\"stacktrace\":\"at worker:42\",\"type\":\"TypeError\"},\"lastNS\":\"1000000002\",\"reason\":\"\",\"state\":\"classified\"}],\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"limit\":100,\"offset\":0,\"signal\":\"logs\",\"toMs\":61000},\"reads\":{\"count\":{\"basis\":\"7117fbcc2d124c7bbac44e977d24168cb28986e4087397e597cc160f6e40c7d1\",\"readAt\":\"2026-11-13T00:00:00Z\"},\"groups\":{\"basis\":\"b06b86a497d3b7943f6bcca79aa646d267f20f1e94a210feb50966ae48dd3ab6\",\"readAt\":\"2026-11-13T00:00:00Z\"}},\"state\":\"observed\",\"version\":\"goo/exception-groups/v1\",\"warnings\":[\"Matching captured records, not exception-event counts or complete upstream traffic.\",\"First/last are matching record timestamps within the searched window; independent reads do not form a transactional snapshot.\"]}\n"
+    },
+    {
+      "name": "success-no-data",
+      "method": "POST",
+      "path": "/exception-groups",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"basis\":\"2d21a7e244817a09d8cf21c618db5e66d472d1e684a1a9c4d0273348c105b8e9\",\"capturedAt\":\"2026-11-13T00:00:00Z\",\"count\":\"0\",\"groups\":[],\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"limit\":100,\"offset\":0,\"signal\":\"logs\",\"toMs\":61000},\"reads\":{\"count\":{\"basis\":\"59fbab4bac7cb12eee5b33c7df3f95e89686eb8f430c84695e63c7557c702414\",\"readAt\":\"2026-11-13T00:00:00Z\"},\"groups\":{\"basis\":\"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\",\"readAt\":\"2026-11-13T00:00:00Z\"}},\"state\":\"no_data\",\"version\":\"goo/exception-groups/v1\",\"warnings\":[\"Matching captured records, not exception-event counts or complete upstream traffic.\",\"First/last are matching record timestamps within the searched window; independent reads do not form a transactional snapshot.\"]}\n"
+    },
+    {
+      "name": "success-changed",
+      "method": "POST",
+      "path": "/exception-groups",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"basis\":\"38bf94aafad1c011b050d13fa908605128157507608f6bbb586118734117f06e\",\"capturedAt\":\"2026-11-13T00:00:00Z\",\"count\":\"3\",\"groups\":[{\"affected\":[{\"namespace\":null,\"service\":\"worker\",\"version\":\"v1\"}],\"affectedCount\":\"1\",\"affectedLimited\":false,\"count\":\"2\",\"fingerprint\":\"ef1:c:d5db5baea9b68e9c8b5cee734eab863b78dde2716ac4ded96dccfaa410cb605e\",\"firstNS\":\"1000000001\",\"inputs\":{\"stacktrace\":\"at worker:42\",\"type\":\"TypeError\"},\"lastNS\":\"1000000002\",\"reason\":\"\",\"state\":\"classified\"}],\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"limit\":100,\"offset\":0,\"signal\":\"logs\",\"toMs\":61000},\"reads\":{\"count\":{\"basis\":\"ece123f9c231a1b466bc71a1394bae360a81cf11a6b5eb940fb73f98ac9f4547\",\"readAt\":\"2026-11-13T00:00:00Z\"},\"groups\":{\"basis\":\"b06b86a497d3b7943f6bcca79aa646d267f20f1e94a210feb50966ae48dd3ab6\",\"readAt\":\"2026-11-13T00:00:00Z\"}},\"state\":\"changed_between_reads\",\"version\":\"goo/exception-groups/v1\",\"warnings\":[\"Matching captured records, not exception-event counts or complete upstream traffic.\",\"First/last are matching record timestamps within the searched window; independent reads do not form a transactional snapshot.\",\"Independent count/group reads disagree; groups are diagnostic and cannot authorize drilldown.\"]}\n"
+    },
+    {
+      "name": "late-groups-unavailable",
+      "method": "POST",
+      "path": "/exception-groups",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
+    },
+    {
+      "name": "malformed-groups",
+      "method": "POST",
+      "path": "/exception-groups",
+      "body": "{\"signal\":\"logs\",\"environment\":\"prod\",\"fromMs\":1000,\"toMs\":61000,\"limit\":100,\"offset\":0}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"Source response rejected.\",\"refusal\":{\"kind\":\"malformed\",\"detail\":\"The source returned invalid or unsupported record data. No partial result was admitted.\"}}\n"
+    },
+    {
+      "name": "method",
+      "method": "GET",
+      "path": "/exception-groups",
+      "body": "",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    }
+  ]
+}

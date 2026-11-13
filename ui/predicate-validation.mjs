@@ -1,7 +1,8 @@
+import * as ExceptionFingerprint from './exception-fingerprint-identity.mjs';
 /* Pure record-predicate validation shared by owners and resource contexts. */
 import {validateNumericPredicate} from './numeric-predicate.mjs';
 import * as LogPatternIdentity from './log-pattern-identity.mjs';
-const columns=['service','trace_id','span_id','scope','scope_version','name','kind','status','duration_ns','timestamp_ns','duration_bucket','status_class','body','severity','severity_number','exception_event','exception_type','exception_type_state','body_pattern_v1'];
+const columns=['service','trace_id','span_id','scope','scope_version','name','kind','status','duration_ns','timestamp_ns','duration_bucket','status_class','body','severity','severity_number','exception_event','exception_type','exception_type_state','exception_fingerprint_v1','body_pattern_v1'];
 const bytes=s=>new TextEncoder().encode(s).length;
 const uintColumn=key=>['duration_ns','timestamp_ns','severity_number'].includes(key);
 function validate(where,signal='logs'){
@@ -18,6 +19,7 @@ function validate(where,signal='logs'){
    if(typeof v!=='string'||bytes(v)>1024||v.includes('\0'))throw Error('Use a value up to 1024 bytes.');
    if(!['eq','ne','contains','gte','lte','exists','missing'].includes(p.op)||numeric&&p.op==='contains'||!numeric&&['gte','lte'].includes(p.op))throw Error('Operator does not match the field type.');
    if(f.kind==='column'&&f.key==='body_pattern_v1'){if(!['eq','ne','exists','missing'].includes(p.op))throw Error('Pattern identities support exact equals/not-equals or presence only.');if(['eq','ne'].includes(p.op))(LogPatternIdentity||(null)).decode(v)}
+   if(f.kind==='column'&&f.key==='exception_fingerprint_v1'){if(!['eq','ne','exists','missing'].includes(p.op))throw Error('Exception fingerprints support exact identity or presence only.');if(['eq','ne'].includes(p.op))ExceptionFingerprint.decode(v);}
    if(['exists','missing'].includes(p.op)){if(v!=='')throw Error('Presence checks have no value.');return}
    if(numeric&&(!/^[0-9]+$/.test(v)||BigInt(v)>18446744073709551615n))throw Error('Use an unsigned 64-bit decimal integer.');
   }

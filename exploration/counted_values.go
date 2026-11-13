@@ -144,6 +144,11 @@ func (s Source) FetchCountedValues(ctx context.Context, q Query) (result *Counte
 		if value == nil && !field.CanBeMissing() {
 			return nil, fmt.Errorf("nonnullable counted-values column is missing")
 		}
+		if value != nil && field == (Field{Kind: "column", Key: "exception_fingerprint_v1"}) {
+			if e := ValidateExceptionFingerprint(*value); e != nil {
+				return nil, e
+			}
+		}
 		if value != nil && field.Kind == "column" && field.Key == "body_pattern_v1" {
 			if _, e := DecodeLogPattern(*value); e != nil {
 				return nil, e

@@ -16,6 +16,10 @@ Saving inventory explicitly rereads that service's original scope.
 using captured counts, explicit Run and a held service return.
 [Incoming HTTP response context](docs/INCOMING_HTTP_RESPONSES.md) keeps reported
 codes, missing/empty values and recorded span Error distinct.
+[Recurring exception groups](docs/EXCEPTION_GROUPS.md) in Activity → Investigate →
+Errors & exceptions count exact type/stack signatures over the full searched population.
+Inspect inputs and affected services, then stage matching records without losing the held view.
+
 
 [Reusable question packages](docs/TYPED_PACKAGE_SCOPES.md) retain environment
 policy, filters and existing measure profiles, including from saved evidence.

@@ -4924,6 +4924,147 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/exception-groups": {
+      "post": {
+        "operationId": "post_exception_groups",
+        "summary": "POST /exception-groups",
+        "tags": [
+          "exception-groups"
+        ],
+        "description": "Explicit query-only exact exception signature groups over a fixed ordinary log/span scope. Exactly two source reads, 1000 complete groups maximum, 8 MiB result budget, 32 shown qualified service/version identities per group with exact distinct total and limited flag. Span grain is records, not event occurrences; every named event must report the same complete type/stack tuple to classify. First/last are record timestamps within the query window.",
+        "x-go-source": "internal/recordhttp/routes.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionGroupsResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceReadFailure"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RecordQuery"
+                  },
+                  {
+                    "properties": {
+                      "groupBy": {
+                        "type": [
+                          "array",
+                          "null"
+                        ],
+                        "maxItems": 0
+                      },
+                      "offset": {
+                        "enum": [
+                          0,
+                          null
+                        ]
+                      },
+                      "summary": {
+                        "enum": [
+                          "",
+                          null
+                        ]
+                      },
+                      "spanStatus": {
+                        "enum": [
+                          false,
+                          null
+                        ]
+                      },
+                      "groupTimeSeries": {
+                        "enum": [
+                          false,
+                          null
+                        ]
+                      },
+                      "bucketMs": {
+                        "enum": [
+                          0,
+                          null
+                        ]
+                      },
+                      "numeric": {
+                        "type": "null"
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 16384,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/explore": {
       "post": {
         "operationId": "post_explore",
@@ -8565,6 +8706,9 @@
       },
       "EvidenceContent": {
         "$ref": "#/components/schemas/retention.EvidenceContent"
+      },
+      "ExceptionGroupsResult": {
+        "$ref": "#/components/schemas/exploration.ExceptionGroupsResult"
       },
       "ExplanationFilterRequest": {
         "anyOf": [
@@ -14729,6 +14873,269 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.EvidenceSide"
+      },
+      "exploration.ExceptionAffectedIdentity": {
+        "properties": {
+          "namespace": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "service": {
+            "type": "string"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "service",
+          "namespace",
+          "version"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ExceptionAffectedIdentity",
+        "additionalProperties": false
+      },
+      "exploration.ExceptionGroup": {
+        "properties": {
+          "affected": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "items": {
+              "$ref": "#/components/schemas/exploration.ExceptionAffectedIdentity"
+            }
+          },
+          "affectedCount": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "affectedLimited": {
+            "type": "boolean"
+          },
+          "count": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "fingerprint": {
+            "type": "string",
+            "pattern": "^ef1:(c:[a-f0-9]{64}|u:(none|both-missing|missing-type|missing-stack|both-empty|empty-type|empty-stack|multiple|oversize|invalid-utf8))$"
+          },
+          "firstNS": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "inputs": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.ExceptionInputs"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lastNS": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "",
+              "none",
+              "both-missing",
+              "missing-type",
+              "missing-stack",
+              "both-empty",
+              "empty-type",
+              "empty-stack",
+              "multiple",
+              "oversize",
+              "invalid-utf8"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "classified",
+              "unclassified"
+            ]
+          }
+        },
+        "required": [
+          "fingerprint",
+          "state",
+          "reason",
+          "count",
+          "firstNS",
+          "lastNS",
+          "inputs",
+          "affected",
+          "affectedCount",
+          "affectedLimited"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ExceptionGroup",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "classified"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "fingerprint": {
+                  "pattern": "^ef1:c:[a-f0-9]{64}$"
+                },
+                "reason": {
+                  "const": ""
+                },
+                "inputs": {
+                  "$ref": "#/components/schemas/exploration.ExceptionInputs"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "fingerprint": {
+                  "pattern": "^ef1:u:"
+                },
+                "reason": {
+                  "minLength": 1
+                },
+                "inputs": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "exploration.ExceptionGroupsReads": {
+        "properties": {
+          "count": {
+            "$ref": "#/components/schemas/exploration.CountedValuesRead"
+          },
+          "groups": {
+            "$ref": "#/components/schemas/exploration.CountedValuesRead"
+          }
+        },
+        "required": [
+          "count",
+          "groups"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ExceptionGroupsReads",
+        "additionalProperties": false
+      },
+      "exploration.ExceptionGroupsResult": {
+        "properties": {
+          "basis": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "capturedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "count": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "groups": {
+            "type": "array",
+            "maxItems": 1000,
+            "items": {
+              "$ref": "#/components/schemas/exploration.ExceptionGroup"
+            }
+          },
+          "question": {
+            "$ref": "#/components/schemas/exploration.Query"
+          },
+          "reads": {
+            "$ref": "#/components/schemas/exploration.ExceptionGroupsReads"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "no_data",
+              "changed_between_reads"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/exception-groups/v1"
+          },
+          "warnings": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "capturedAt",
+          "basis",
+          "count",
+          "state",
+          "groups",
+          "warnings",
+          "reads"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ExceptionGroupsResult",
+        "additionalProperties": false,
+        "description": "Two independent count/group reads over one fixed ordinary record scope. Exact v1 reported type/stack signatures at log/span record grain; unclassified reasons remain distinct. First/last are matching record timestamps in the searched window. Affected identities are a deterministic bounded set with explicit total/limited facts. Coverage and causality remain unknown."
+      },
+      "exploration.ExceptionInputs": {
+        "properties": {
+          "stacktrace": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "type",
+          "stacktrace"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ExceptionInputs",
+        "additionalProperties": false,
+        "description": "Exact reported UTF-8 bytes, no normalization or message fallback. Runtime limits: type 256 bytes, stack 8192 bytes. Fingerprint framing includes domain/version and each input byte length."
       },
       "exploration.ExplanationFieldRead": {
         "properties": {
@@ -52156,7 +52563,8 @@
                           "body_pattern_v1",
                           "exception_event",
                           "exception_type",
-                          "exception_type_state"
+                          "exception_type_state",
+                          "exception_fingerprint_v1"
                         ]
                       }
                     }
@@ -52264,7 +52672,8 @@
                           "body_pattern_v1",
                           "exception_event",
                           "exception_type",
-                          "exception_type_state"
+                          "exception_type_state",
+                          "exception_fingerprint_v1"
                         ]
                       }
                     }

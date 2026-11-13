@@ -728,6 +728,9 @@
   "EvidenceContent": {
     "$ref": "#/components/schemas/retention.EvidenceContent"
   },
+  "ExceptionGroupsResult": {
+    "$ref": "#/components/schemas/exploration.ExceptionGroupsResult"
+  },
   "ExplanationFilterRequest": {
     "anyOf": [
       {
@@ -6060,6 +6063,201 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.EvidenceSide"
+  },
+  "exploration.ExceptionAffectedIdentity": {
+    "properties": {
+      "namespace": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "service": {
+        "type": "string"
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "service",
+      "namespace",
+      "version"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExceptionAffectedIdentity"
+  },
+  "exploration.ExceptionGroup": {
+    "properties": {
+      "affected": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.ExceptionAffectedIdentity"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "affectedCount": {
+        "type": "string"
+      },
+      "affectedLimited": {
+        "type": "boolean"
+      },
+      "count": {
+        "type": "string"
+      },
+      "fingerprint": {
+        "type": "string"
+      },
+      "firstNS": {
+        "type": "string"
+      },
+      "inputs": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.ExceptionInputs"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "lastNS": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "fingerprint",
+      "state",
+      "reason",
+      "count",
+      "firstNS",
+      "lastNS",
+      "inputs",
+      "affected",
+      "affectedCount",
+      "affectedLimited"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExceptionGroup"
+  },
+  "exploration.ExceptionGroupsReads": {
+    "properties": {
+      "count": {
+        "$ref": "#/components/schemas/exploration.CountedValuesRead"
+      },
+      "groups": {
+        "$ref": "#/components/schemas/exploration.CountedValuesRead"
+      }
+    },
+    "required": [
+      "count",
+      "groups"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExceptionGroupsReads"
+  },
+  "exploration.ExceptionGroupsResult": {
+    "properties": {
+      "basis": {
+        "type": "string"
+      },
+      "capturedAt": {
+        "type": "string"
+      },
+      "count": {
+        "type": "string"
+      },
+      "groups": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.ExceptionGroup"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "question": {
+        "$ref": "#/components/schemas/exploration.Query"
+      },
+      "reads": {
+        "$ref": "#/components/schemas/exploration.ExceptionGroupsReads"
+      },
+      "state": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      },
+      "warnings": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "capturedAt",
+      "basis",
+      "count",
+      "state",
+      "groups",
+      "warnings",
+      "reads"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExceptionGroupsResult"
+  },
+  "exploration.ExceptionInputs": {
+    "properties": {
+      "stacktrace": {
+        "type": "string"
+      },
+      "type": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "type",
+      "stacktrace"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.ExceptionInputs"
   },
   "exploration.ExplanationFieldRead": {
     "properties": {

@@ -74,6 +74,11 @@ func (f Field) CanBeMissing() bool {
 	return f.Kind == "attribute" || f.Kind == "resource" || f.Kind == "column" && f.Key == "exception_type"
 }
 func validateGroupDimension(f Field, value *string) error {
+	if value != nil && f == (Field{Kind: "column", Key: "exception_fingerprint_v1"}) {
+		if e := ValidateExceptionFingerprint(*value); e != nil {
+			return e
+		}
+	}
 	if value != nil && f.Kind == "column" && f.Key == "body_pattern_v1" {
 		if _, err := DecodeLogPattern(*value); err != nil {
 			return fmt.Errorf("invalid body_pattern_v1 group: %w", err)
@@ -115,6 +120,9 @@ func queryReferencesColumn(q Query, key string) bool {
 }
 func (c *compiler) requestedDerivedColumns(q Query) string {
 	out := ""
+	if queryReferencesColumn(q, "exception_fingerprint_v1") {
+		out += ", " + exceptionFingerprintSQL(q.Signal) + " AS exception_fingerprint_v1"
+	}
 	if q.Signal == "spans" {
 		for _, key := range []string{"exception_event", "exception_type", "exception_type_state"} {
 			if queryReferencesColumn(q, key) {

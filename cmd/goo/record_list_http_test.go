@@ -68,13 +68,19 @@ func TestRecordListHTTPConfigurationRoundTripHasNoSourceRead(t *testing.T) {
 	query.GroupBy = []exploration.Field{{Kind: "resource", Key: "region"}}
 	query.Offset = 100
 	response = call("POST", "/view-templates/expand", workbench.ViewTemplateExpansionRequest{Source: &loaded, Query: &query})
+	if response.Code != 400 || !strings.Contains(response.Body.String(), "page-zero root") || reads != 0 {
+		t.Fatal("continuation was rewritten or accessed a source", response.Code, response.Body.String(), reads)
+	}
+	// Reusing a view requires an explicit page-zero destination. Configuration
+	// expansion cannot silently turn a continuation into a different question.
+	query.Offset = 0
+	response = call("POST", "/view-templates/expand", workbench.ViewTemplateExpansionRequest{Source: &loaded, Query: &query})
 	if response.Code != 200 {
 		t.Fatal(response.Code, response.Body.String())
 	}
 	if err = json.Unmarshal(response.Body.Bytes(), &expansion); err != nil {
 		t.Fatal(err)
 	}
-	query.Offset = 0
 	if !reflect.DeepEqual(expansion.View.Queries[0], query) {
 		t.Fatal("list expansion changed target scope")
 	}
