@@ -1,3 +1,4 @@
+import {rateEligible as summaryRateEligible} from './summary-declaration.mjs';
 import {validateGrouped,groupedMeanQuery} from './grouped-timeline-schema.mjs';
 import {validateMeasurementIntervalSelector,binary64Rational,nativeRationalCoordinate} from './measurement-scope.mjs';
 import {categoryText,categoryLabel} from './view-values.mjs';
@@ -188,7 +189,7 @@ function validateRecordRate(snapshot,fields,reasons){
  if(!rates.length)return;
  const q=snapshot.scope?.selector;
  let profile=true;try{validateRecordQuestion(q)}catch{profile=false}
- if(snapshot.quality?.freshness!=='fixed'||!profile||!['logs','spans'].includes(q?.signal)||q.signal!==snapshot.scope.signal||!Number.isSafeInteger(q.fromMs)||!Number.isSafeInteger(q.toMs)||q.toMs<=q.fromMs||(q.groupBy?.length??0)!==0||q.groupTimeSeries||q.numericHistogram||q.reportedEdge||!['summary','time-series'].includes(snapshot.shape)||rates.length!==1){reasons.push('Captured rate requires its declared ordinary fixed record window');return}
+ if(snapshot.quality?.freshness!=='fixed'||!profile||!summaryRateEligible(q)||q.signal!==snapshot.scope.signal||snapshot.shape==='time-series'&&(q.groupBy?.length??0)!==0||!['summary','time-series'].includes(snapshot.shape)||rates.length!==1){reasons.push('Captured rate requires its declared ordinary fixed record window');return}
  for(const row of snapshot.rows){
   const cell=row?.cells?.['record.rate'],value=row?.values?.['record.rate'],count=row?.values?.count;
   let elapsed=BigInt(q.toMs)-BigInt(q.fromMs);

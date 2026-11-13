@@ -9,6 +9,11 @@ from go_http_routes import route_sources
 
 ROOT = Path(__file__).resolve().parents[1]
 ref = lambda name: {'$ref': '#/components/schemas/' + name}
+# Summary rates can reuse the ordinary one-group count profile; interval rates
+# retain their original ungrouped contract. Arithmetic stays runtime-owned.
+record_rate_ungrouped418={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}
+record_rate_grouped418={'required':['groupBy'],'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'type':'array','minItems':1,'maxItems':1,'items':{'not':{'required':['kind','key'],'properties':{'kind':{'const':'column'},'key':{'enum':['body_pattern_v1','duration_bucket']}}}}},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'spanStatus':{'const':False},'groupTimeSeries':{'const':False},'summary':{'enum':['','span-duration']}}}
+record_rate_summary418={'anyOf':[record_rate_ungrouped418,record_rate_grouped418]}
 schemas = json.loads((ROOT / 'api/go-schemas.json').read_text())
 # Reported exemplars are bounded source metadata, independent from numeric bins.
 exemplars = schemas['measurements.HistogramExemplarReport']
@@ -493,12 +498,13 @@ for suffix in ('', 'Input'):
  comparison['properties']['baselineCapture'].update(type='string',pattern='^[a-f0-9]{64}$')
  for field in ('scope','kind','display'):comparison['properties'][field]['type']='object'
  comparison['properties']['scope']['required']=['kind','signal']
- comparison['description']='Count comparison or summary mean-duration comparison (fresh span-duration queries only; no ordering or group means) with either one exact immutable capture or a fixed baseline query. Query operands require the same checked environment, grouping and measure profile with page zero; predicates may differ. Windows must be identical or the baseline must be the immediately preceding adjacent equal-duration window. Go checks this cross-field arithmetic after validating both questions. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority.'
+ comparison['description']='Captured count or exact count/exposure rate comparison (rate is summary-only, without ordering or group rates), or summary mean-duration comparison (fresh span-duration queries only; no ordering or group means) with either one exact immutable capture or a fixed baseline query. Query operands require the same checked environment, grouping and measure profile with page zero; predicates may differ. Windows must be identical or the baseline must be the immediately preceding adjacent equal-duration window. Go checks this cross-field arithmetic after validating both questions. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority.'
  kind=schemas['workbench.CountComparisonViewKind'+suffix];kind['additionalProperties']=False;kind['required']=['name','version']
  kind['properties']['name']['enum']=['captured-count-comparison','query-count-comparison'];kind['properties']['version']['const']=1
  display=schemas['workbench.CountComparisonViewDisplay'+suffix];display['additionalProperties']=False;display['required']=['value']
- display['properties']['value']['enum']=['count','duration.mean'];display['properties']['title']['maxLength']=120
+ display['properties']['value']['enum']=['count','record.rate','duration.mean'];display['properties']['title']['maxLength']=120
  comparison.setdefault('allOf',[]).append({'if':{'properties':{'display':{'properties':{'value':{'const':'duration.mean'}},'required':['value']}},'required':['display']},'then':{'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}},'scope':{'properties':{'signal':{'const':'spans'}}},'baselineQuery':{'properties':{'signal':{'const':'spans'},'summary':{'const':'span-duration'}},'required':['signal','summary']},'display':{'properties':{'view':{'enum':['','summary']},'order':{'const':''}}}},'required':['baselineQuery']}})
+ comparison.setdefault('allOf',[]).append({'if':{'required':['display'],'properties':{'display':{'required':['value'],'properties':{'value':{'const':'record.rate'}}}}},'then':{'required':['baselineCapture'],'not':{'required':['baselineQuery']},'properties':{'kind':{'properties':{'name':{'const':'captured-count-comparison'}}},'display':{'properties':{'view':{'enum':['','summary']},'order':{'const':''}}}}}})
  display['properties']['view']['enum']=['','summary','groups'];display['properties']['order']['enum']=['','change','label']
  timeline=schemas['workbench.TimelineViewDeclaration'+suffix];timeline['additionalProperties']=False
  timeline['required']=['version','scope','kind','display']
@@ -582,11 +588,13 @@ for suffix in ('', 'Input'):
    name='summary' if family=='duration.' else 'spanStatus'
    query.update(required=['signal',name]);query['properties'].update(signal={'const':'spans'},**{name:{'const':'span-duration' if family=='duration.' else True}})
   view['allOf'].append({'if':present,'then':{'properties':{'queries':{'items':query}}}})
- # Rate is supplied only for ordinary ungrouped summaries and ungrouped timelines.
- rate_child={'anyOf':[{'required':['summary'],'properties':{'summary':{'properties':{'display':{'required':['fields'],'properties':{'fields':{'contains':{'const':'record.rate'}}}}}}}},{'required':['timeline'],'properties':{'timeline':{'properties':{'display':{'required':['value'],'properties':{'value':{'const':'record.rate'}}}}}}}]}
- rate_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':rate_child}}}}}
- rate_query={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}
- view.setdefault('allOf',[]).append({'if':rate_composition,'then':{'properties':{'queries':{'items':rate_query}}}})
+ # Whole-population grouped summary rates do not create grouped interval rates.
+ for role,query_profile in [('summary',record_rate_summary418),('timeline',record_rate_ungrouped418),('comparison',record_rate_grouped418)]:
+  display_field='fields' if role=='summary' else 'value'
+  rate_value_shape={'contains':{'const':'record.rate'}} if role=='summary' else {'const':'record.rate'}
+  rate_child={'required':[role],'properties':{role:{'properties':{'display':{'required':[display_field],'properties':{display_field:rate_value_shape}}}}}}
+  rate_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':rate_child}}}}}
+  view.setdefault('allOf',[]).append({'if':rate_composition,'then':{'properties':{'queries':{'items':copy.deepcopy(query_profile)}}}})
  view.setdefault('allOf',[]).append({'if':raw_composition,'then':{'properties':{'queries':{'items':{'properties':{'signal':{'enum':['logs','spans']},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}}}}})
 
 # Immutable selected observations, independent of source and annotation storage.
@@ -905,8 +913,10 @@ view['allOf'].append({'if':{'properties':{'shape':{'const':'grouped-time-series'
 view['allOf'].append({'if':{'properties':{'scope':{'properties':{'signal':{'const':'metrics'}}}}},'then':{'properties':{'shape':{'const':'histogram'},'histogram':{'properties':{'kind':{'const':'otel-explicit'}}},'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}:(native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)|native-window:(0|[1-9][0-9]*))$'}}}}},'else':{'properties':{'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}$'},'selector':ref('exploration.Query')}}}}})
 
 rate_present={'required':['fields'],'properties':{'fields':{'contains':{'required':['key'],'properties':{'key':{'const':'record.rate'}}}}}}
-rate_selector={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}
+rate_selector={'properties':{'signal':{'enum':['logs','spans']},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}
 view['allOf'].append({'if':rate_present,'then':{'properties':{'shape':{'enum':['summary','time-series']},'scope':{'properties':{'signal':{'enum':['logs','spans']},'selector':rate_selector}},'rows':{'items':{'properties':{'values':{'required':['record.rate']},'cells':{'required':['record.rate']}}}}}}})
+for shape,profile in [('summary',record_rate_summary418),('time-series',record_rate_ungrouped418)]:
+ view['allOf'].append({'if':{'allOf':[rate_present,{'required':['shape'],'properties':{'shape':{'const':shape}}}]},'then':{'properties':{'scope':{'properties':{'selector':copy.deepcopy(profile)}}}}})
 # A supplied rate uses the same known/unknown interval boundary as its count.
 rate_row_states={'if':{'required':['state'],'properties':{'state':{'const':'unknown'}}},'then':{'properties':{'cells':{'properties':{'record.rate':{'properties':{'state':{'const':'unknown'}}}}}}},'else':{'properties':{'cells':{'properties':{'record.rate':{'properties':{'state':{'const':'derived'}}}}}}}}
 view['allOf'].append({'if':rate_present,'then':{'properties':{'rows':{'items':rate_row_states}}}})
@@ -949,22 +959,22 @@ change['properties']['state']['enum']=['derived','unavailable'];change['properti
 change['properties']['unit'].update(minLength=1,maxLength=128)
 change['allOf']=[{'if':{'properties':{'state':{'const':'derived'}},'required':['state']},'then':{'properties':{'value':rational_value}},'else':{'required':['reason'],'properties':{'reason':{'minLength':1},'value':{'type':'null'}}}}]
 comparison=schemas['exploration.ViewComparison'];comparison['additionalProperties']=False
-comparison['description']='Independent browser-held summary snapshots with exact selection-minus-baseline differences. No combined population, normalized rate, signed source authority, pooled percentile or invented shared capture clock.'
+comparison['description']='Independent browser-held summary snapshots with exact selection-minus-baseline differences. Rates use each independent exact captured count and fixed-window exposure; their signed changes remain records/s. No combined population, unsampled-throughput claim, signed source authority, pooled percentile or invented shared capture clock.'
 comparison['description']+=' Requested span-status comparisons use the separate existing percentage-point response; this canonical envelope is withheld for that profile.'
 cmp_props=comparison['properties'];cmp_props['version']['const']='goo.comparison/1';cmp_props['state']['enum']=['observed','no_data','diagnostic','incompatible']
 for side in ('baseline','selection'):
- cmp_props[side]={'allOf':[ref('scopedview.Dataset'),{'properties':{'shape':{'const':'summary'},'origin':{'const':'browser-held'}},'required':['origin'],'not':{'anyOf':[status_present,rate_present]}}]}
+ cmp_props[side]={'allOf':[ref('scopedview.Dataset'),{'properties':{'shape':{'const':'summary'},'origin':{'const':'browser-held'}},'required':['origin'],'not':status_present}]}
 cmp_props['reason'].update(minLength=1,maxLength=128)
-cmp_props['changes']={'type':'object','minProperties':1,'maxProperties':11,'propertyNames':{'enum':['count']+[key for key in measure_specs if not key.startswith('status.')]},'additionalProperties':ref('exploration.ViewChange')}
+cmp_props['changes']={'type':'object','minProperties':1,'maxProperties':12,'propertyNames':{'enum':['count','record.rate']+[key for key in measure_specs if not key.startswith('status.')]},'additionalProperties':ref('exploration.ViewChange')}
 comparison['allOf']=[{'if':{'properties':{'state':{'enum':['diagnostic','incompatible']}},'required':['state']},'then':{'properties':{'changes':{'additionalProperties':{'properties':{'state':{'const':'unavailable'}}}}}},'else':{'properties':{'changes':{'properties':{'count':{'properties':{'state':{'const':'derived'}}}},'required':['count']}}}}]
-for key in ['count']+[key for key in measure_specs if not key.startswith('status.')]:
+for key in ['count','record.rate']+[key for key in measure_specs if not key.startswith('status.')]:
  has_field={'anyOf':[{'properties':{side:{'properties':{'fields':{'contains':{'properties':{'key':{'const':key}},'required':['key']}}}}},'required':[side]} for side in ('baseline','selection')]}
  comparison['allOf'].append({'if':has_field,'then':{'properties':{'changes':{'required':[key]}}},'else':{'properties':{'changes':{'not':{'required':[key]}}}}})
  if key=='count':
   delta={'properties':{'unit':{'const':'records'}},'not':{'required':['aggregation']}}
  else:
-  spec=measure_specs[key]
-  delta={'required':['aggregation'],'properties':{'aggregation':{'type':'object','properties':{k:{'const':v} for k,v in spec.items()}},**({'unit':{'const':'ns'}} if spec['family']=='duration' else {})}}
+  spec=rate_spec if key=='record.rate' else measure_specs[key]
+  delta={'required':['aggregation'],'properties':{'aggregation':{'type':'object','properties':{k:{'const':v} for k,v in spec.items()}},**({'unit':{'const':'ns'}} if spec['family']=='duration' else {'unit':{'const':'records/s'}} if spec['family']=='rate' else {})}}
  comparison['allOf'].append({'properties':{'changes':{'properties':{key:delta}}}})
 
 # Counted values are two explicit observations, never a transactional snapshot.

@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+[Captured-rate comparisons](CAPTURED_RATE_COMPARISONS.md) support ordinary captured
+baselines with summary presentation. Fresh-query rates and grouped interval rates
+remain outside this slice; captured counts/s do not establish unsampled throughput
+or service health. Capture references remain store-local and are not portable exports.
+
 [Record-intent admission](RECORD_INTENT_ADMISSION.md) now shares strict configuration
 checks across staging, links and recall. Carrier byte limits remain distinct;
 a legal query can be too large for a URL or request. Invalid links preserve held

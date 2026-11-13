@@ -72,7 +72,7 @@ func TestNumericComparisonIntentHTTP(t *testing.T) {
 		t.Fatal("explicit count-only question refused", w.Code, w.Body.String())
 	}
 	var counts exploration.CohortComparison
-	if err := json.Unmarshal(w.Body.Bytes(), &counts); err != nil || counts.Measures != nil || counts.ViewComparison == nil || len(counts.ViewComparison.Baseline.Fields) != 1 || counts.ViewComparison.Baseline.Fields[0].Key != "count" {
+	if err := json.Unmarshal(w.Body.Bytes(), &counts); err != nil || counts.Measures != nil || counts.ViewComparison == nil || len(counts.ViewComparison.Baseline.Fields) != 2 || counts.ViewComparison.Baseline.Fields[0].Key != "count" || counts.ViewComparison.Baseline.Fields[1].Key != "record.rate" {
 		t.Fatal("count-only recipe acquired a numeric family", w.Body.String(), err)
 	}
 }

@@ -22892,51 +22892,28 @@
                   "origin"
                 ],
                 "not": {
-                  "anyOf": [
-                    {
-                      "properties": {
-                        "fields": {
-                          "contains": {
-                            "properties": {
-                              "key": {
-                                "enum": [
-                                  "status.error",
-                                  "status.ok",
-                                  "status.unset",
-                                  "status.unknown",
-                                  "status.error_fraction"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "key"
+                  "properties": {
+                    "fields": {
+                      "contains": {
+                        "properties": {
+                          "key": {
+                            "enum": [
+                              "status.error",
+                              "status.ok",
+                              "status.unset",
+                              "status.unknown",
+                              "status.error_fraction"
                             ]
                           }
-                        }
-                      },
-                      "required": [
-                        "fields"
-                      ]
-                    },
-                    {
-                      "required": [
-                        "fields"
-                      ],
-                      "properties": {
-                        "fields": {
-                          "contains": {
-                            "required": [
-                              "key"
-                            ],
-                            "properties": {
-                              "key": {
-                                "const": "record.rate"
-                              }
-                            }
-                          }
-                        }
+                        },
+                        "required": [
+                          "key"
+                        ]
                       }
                     }
+                  },
+                  "required": [
+                    "fields"
                   ]
                 }
               }
@@ -22945,10 +22922,11 @@
           "changes": {
             "type": "object",
             "minProperties": 1,
-            "maxProperties": 11,
+            "maxProperties": 12,
             "propertyNames": {
               "enum": [
                 "count",
+                "record.rate",
                 "numeric.mean",
                 "numeric.sum",
                 "numeric.min",
@@ -22989,51 +22967,28 @@
                   "origin"
                 ],
                 "not": {
-                  "anyOf": [
-                    {
-                      "properties": {
-                        "fields": {
-                          "contains": {
-                            "properties": {
-                              "key": {
-                                "enum": [
-                                  "status.error",
-                                  "status.ok",
-                                  "status.unset",
-                                  "status.unknown",
-                                  "status.error_fraction"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "key"
+                  "properties": {
+                    "fields": {
+                      "contains": {
+                        "properties": {
+                          "key": {
+                            "enum": [
+                              "status.error",
+                              "status.ok",
+                              "status.unset",
+                              "status.unknown",
+                              "status.error_fraction"
                             ]
                           }
-                        }
-                      },
-                      "required": [
-                        "fields"
-                      ]
-                    },
-                    {
-                      "required": [
-                        "fields"
-                      ],
-                      "properties": {
-                        "fields": {
-                          "contains": {
-                            "required": [
-                              "key"
-                            ],
-                            "properties": {
-                              "key": {
-                                "const": "record.rate"
-                              }
-                            }
-                          }
-                        }
+                        },
+                        "required": [
+                          "key"
+                        ]
                       }
                     }
+                  },
+                  "required": [
+                    "fields"
                   ]
                 }
               }
@@ -23063,7 +23018,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewComparison",
         "additionalProperties": false,
-        "description": "Independent browser-held summary snapshots with exact selection-minus-baseline differences. No combined population, normalized rate, signed source authority, pooled percentile or invented shared capture clock. Requested span-status comparisons use the separate existing percentage-point response; this canonical envelope is withheld for that profile.",
+        "description": "Independent browser-held summary snapshots with exact selection-minus-baseline differences. Rates use each independent exact captured count and fixed-window exposure; their signed changes remain records/s. No combined population, unsampled-throughput claim, signed source authority, pooled percentile or invented shared capture clock. Requested span-status comparisons use the separate existing percentage-point response; this canonical envelope is withheld for that profile.",
         "allOf": [
           {
             "if": {
@@ -23197,6 +23152,110 @@
                       "required": [
                         "aggregation"
                       ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "record.rate"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "record.rate"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "record.rate"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "record.rate"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "record.rate": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "rate"
+                          },
+                          "kind": {
+                            "const": "records-per-second"
+                          },
+                          "method": {
+                            "const": "exact-rational"
+                          }
+                        }
+                      },
+                      "unit": {
+                        "const": "records/s"
+                      }
                     }
                   }
                 }
@@ -42275,9 +42334,6 @@
                             "spans"
                           ]
                         },
-                        "groupBy": {
-                          "maxItems": 0
-                        },
                         "numericHistogram": {
                           "type": "null"
                         },
@@ -42303,6 +42359,198 @@
                         "required": [
                           "record.rate"
                         ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "allOf": [
+                {
+                  "required": [
+                    "fields"
+                  ],
+                  "properties": {
+                    "fields": {
+                      "contains": {
+                        "required": [
+                          "key"
+                        ],
+                        "properties": {
+                          "key": {
+                            "const": "record.rate"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "required": [
+                    "shape"
+                  ],
+                  "properties": {
+                    "shape": {
+                      "const": "summary"
+                    }
+                  }
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "properties": {
+                    "selector": {
+                      "anyOf": [
+                        {
+                          "properties": {
+                            "signal": {
+                              "enum": [
+                                "logs",
+                                "spans"
+                              ]
+                            },
+                            "groupBy": {
+                              "maxItems": 0
+                            },
+                            "numericHistogram": {
+                              "type": "null"
+                            },
+                            "reportedEdge": {
+                              "type": "null"
+                            },
+                            "groupTimeSeries": {
+                              "const": false
+                            }
+                          }
+                        },
+                        {
+                          "required": [
+                            "groupBy"
+                          ],
+                          "properties": {
+                            "signal": {
+                              "enum": [
+                                "logs",
+                                "spans"
+                              ]
+                            },
+                            "groupBy": {
+                              "type": "array",
+                              "minItems": 1,
+                              "maxItems": 1,
+                              "items": {
+                                "not": {
+                                  "required": [
+                                    "kind",
+                                    "key"
+                                  ],
+                                  "properties": {
+                                    "kind": {
+                                      "const": "column"
+                                    },
+                                    "key": {
+                                      "enum": [
+                                        "body_pattern_v1",
+                                        "duration_bucket"
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "numeric": {
+                              "type": "null"
+                            },
+                            "numericHistogram": {
+                              "type": "null"
+                            },
+                            "reportedEdge": {
+                              "type": "null"
+                            },
+                            "spanStatus": {
+                              "const": false
+                            },
+                            "groupTimeSeries": {
+                              "const": false
+                            },
+                            "summary": {
+                              "enum": [
+                                "",
+                                "span-duration"
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "allOf": [
+                {
+                  "required": [
+                    "fields"
+                  ],
+                  "properties": {
+                    "fields": {
+                      "contains": {
+                        "required": [
+                          "key"
+                        ],
+                        "properties": {
+                          "key": {
+                            "const": "record.rate"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "required": [
+                    "shape"
+                  ],
+                  "properties": {
+                    "shape": {
+                      "const": "time-series"
+                    }
+                  }
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "properties": {
+                    "selector": {
+                      "properties": {
+                        "signal": {
+                          "enum": [
+                            "logs",
+                            "spans"
+                          ]
+                        },
+                        "groupBy": {
+                          "maxItems": 0
+                        },
+                        "numericHistogram": {
+                          "type": "null"
+                        },
+                        "reportedEdge": {
+                          "type": "null"
+                        },
+                        "groupTimeSeries": {
+                          "const": false
+                        }
                       }
                     }
                   }
@@ -48557,7 +48805,7 @@
             }
           }
         ],
-        "description": "Count comparison or summary mean-duration comparison (fresh span-duration queries only; no ordering or group means) with either one exact immutable capture or a fixed baseline query. Query operands require the same checked environment, grouping and measure profile with page zero; predicates may differ. Windows must be identical or the baseline must be the immediately preceding adjacent equal-duration window. Go checks this cross-field arithmetic after validating both questions. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority.",
+        "description": "Captured count or exact count/exposure rate comparison (rate is summary-only, without ordering or group rates), or summary mean-duration comparison (fresh span-duration queries only; no ordering or group means) with either one exact immutable capture or a fixed baseline query. Query operands require the same checked environment, grouping and measure profile with page zero; predicates may differ. Windows must be identical or the baseline must be the immediately preceding adjacent equal-duration window. Go checks this cross-field arithmetic after validating both questions. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority.",
         "allOf": [
           {
             "if": {
@@ -48624,6 +48872,57 @@
               "required": [
                 "baselineQuery"
               ]
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "display"
+              ],
+              "properties": {
+                "display": {
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "const": "record.rate"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "baselineCapture"
+              ],
+              "not": {
+                "required": [
+                  "baselineQuery"
+                ]
+              },
+              "properties": {
+                "kind": {
+                  "properties": {
+                    "name": {
+                      "const": "captured-count-comparison"
+                    }
+                  }
+                },
+                "display": {
+                  "properties": {
+                    "view": {
+                      "enum": [
+                        "",
+                        "summary"
+                      ]
+                    },
+                    "order": {
+                      "const": ""
+                    }
+                  }
+                }
+              }
             }
           }
         ]
@@ -48758,7 +49057,7 @@
             }
           }
         ],
-        "description": "Count comparison or summary mean-duration comparison (fresh span-duration queries only; no ordering or group means) with either one exact immutable capture or a fixed baseline query. Query operands require the same checked environment, grouping and measure profile with page zero; predicates may differ. Windows must be identical or the baseline must be the immediately preceding adjacent equal-duration window. Go checks this cross-field arithmetic after validating both questions. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority.",
+        "description": "Captured count or exact count/exposure rate comparison (rate is summary-only, without ordering or group rates), or summary mean-duration comparison (fresh span-duration queries only; no ordering or group means) with either one exact immutable capture or a fixed baseline query. Query operands require the same checked environment, grouping and measure profile with page zero; predicates may differ. Windows must be identical or the baseline must be the immediately preceding adjacent equal-duration window. Go checks this cross-field arithmetic after validating both questions. Fixed query pairs cannot become templates or presentation reuse. Neither arm carries captured results or source authority.",
         "allOf": [
           {
             "if": {
@@ -48826,6 +49125,57 @@
                 "baselineQuery"
               ]
             }
+          },
+          {
+            "if": {
+              "required": [
+                "display"
+              ],
+              "properties": {
+                "display": {
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "const": "record.rate"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "baselineCapture"
+              ],
+              "not": {
+                "required": [
+                  "baselineQuery"
+                ]
+              },
+              "properties": {
+                "kind": {
+                  "properties": {
+                    "name": {
+                      "const": "captured-count-comparison"
+                    }
+                  }
+                },
+                "display": {
+                  "properties": {
+                    "view": {
+                      "enum": [
+                        "",
+                        "summary"
+                      ]
+                    },
+                    "order": {
+                      "const": ""
+                    }
+                  }
+                }
+              }
+            }
           }
         ]
       },
@@ -48847,6 +49197,7 @@
             "type": "string",
             "enum": [
               "count",
+              "record.rate",
               "duration.mean"
             ]
           },
@@ -48906,6 +49257,7 @@
             ],
             "enum": [
               "count",
+              "record.rate",
               "duration.mean"
             ]
           },
@@ -50608,52 +50960,153 @@
                   "properties": {
                     "children": {
                       "contains": {
-                        "anyOf": [
-                          {
-                            "required": [
-                              "summary"
-                            ],
+                        "required": [
+                          "summary"
+                        ],
+                        "properties": {
+                          "summary": {
                             "properties": {
-                              "summary": {
+                              "display": {
+                                "required": [
+                                  "fields"
+                                ],
                                 "properties": {
-                                  "display": {
-                                    "required": [
-                                      "fields"
-                                    ],
-                                    "properties": {
-                                      "fields": {
-                                        "contains": {
-                                          "const": "record.rate"
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          },
-                          {
-                            "required": [
-                              "timeline"
-                            ],
-                            "properties": {
-                              "timeline": {
-                                "properties": {
-                                  "display": {
-                                    "required": [
-                                      "value"
-                                    ],
-                                    "properties": {
-                                      "value": {
-                                        "const": "record.rate"
-                                      }
+                                  "fields": {
+                                    "contains": {
+                                      "const": "record.rate"
                                     }
                                   }
                                 }
                               }
                             }
                           }
-                        ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "properties": {
+                          "signal": {
+                            "enum": [
+                              "logs",
+                              "spans"
+                            ]
+                          },
+                          "groupBy": {
+                            "maxItems": 0
+                          },
+                          "numericHistogram": {
+                            "type": "null"
+                          },
+                          "reportedEdge": {
+                            "type": "null"
+                          },
+                          "groupTimeSeries": {
+                            "const": false
+                          }
+                        }
+                      },
+                      {
+                        "required": [
+                          "groupBy"
+                        ],
+                        "properties": {
+                          "signal": {
+                            "enum": [
+                              "logs",
+                              "spans"
+                            ]
+                          },
+                          "groupBy": {
+                            "type": "array",
+                            "minItems": 1,
+                            "maxItems": 1,
+                            "items": {
+                              "not": {
+                                "required": [
+                                  "kind",
+                                  "key"
+                                ],
+                                "properties": {
+                                  "kind": {
+                                    "const": "column"
+                                  },
+                                  "key": {
+                                    "enum": [
+                                      "body_pattern_v1",
+                                      "duration_bucket"
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "numeric": {
+                            "type": "null"
+                          },
+                          "numericHistogram": {
+                            "type": "null"
+                          },
+                          "reportedEdge": {
+                            "type": "null"
+                          },
+                          "spanStatus": {
+                            "const": false
+                          },
+                          "groupTimeSeries": {
+                            "const": false
+                          },
+                          "summary": {
+                            "enum": [
+                              "",
+                              "span-duration"
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "timeline"
+                        ],
+                        "properties": {
+                          "timeline": {
+                            "properties": {
+                              "display": {
+                                "required": [
+                                  "value"
+                                ],
+                                "properties": {
+                                  "value": {
+                                    "const": "record.rate"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
                       }
                     }
                   }
@@ -50682,6 +51135,106 @@
                       },
                       "groupTimeSeries": {
                         "const": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "comparison"
+                        ],
+                        "properties": {
+                          "comparison": {
+                            "properties": {
+                              "display": {
+                                "required": [
+                                  "value"
+                                ],
+                                "properties": {
+                                  "value": {
+                                    "const": "record.rate"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "required": [
+                      "groupBy"
+                    ],
+                    "properties": {
+                      "signal": {
+                        "enum": [
+                          "logs",
+                          "spans"
+                        ]
+                      },
+                      "groupBy": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 1,
+                        "items": {
+                          "not": {
+                            "required": [
+                              "kind",
+                              "key"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "const": "column"
+                              },
+                              "key": {
+                                "enum": [
+                                  "body_pattern_v1",
+                                  "duration_bucket"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "numeric": {
+                        "type": "null"
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "spanStatus": {
+                        "const": false
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      },
+                      "summary": {
+                        "enum": [
+                          "",
+                          "span-duration"
+                        ]
                       }
                     }
                   }
@@ -52049,52 +52602,153 @@
                   "properties": {
                     "children": {
                       "contains": {
-                        "anyOf": [
-                          {
-                            "required": [
-                              "summary"
-                            ],
+                        "required": [
+                          "summary"
+                        ],
+                        "properties": {
+                          "summary": {
                             "properties": {
-                              "summary": {
+                              "display": {
+                                "required": [
+                                  "fields"
+                                ],
                                 "properties": {
-                                  "display": {
-                                    "required": [
-                                      "fields"
-                                    ],
-                                    "properties": {
-                                      "fields": {
-                                        "contains": {
-                                          "const": "record.rate"
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          },
-                          {
-                            "required": [
-                              "timeline"
-                            ],
-                            "properties": {
-                              "timeline": {
-                                "properties": {
-                                  "display": {
-                                    "required": [
-                                      "value"
-                                    ],
-                                    "properties": {
-                                      "value": {
-                                        "const": "record.rate"
-                                      }
+                                  "fields": {
+                                    "contains": {
+                                      "const": "record.rate"
                                     }
                                   }
                                 }
                               }
                             }
                           }
-                        ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "properties": {
+                          "signal": {
+                            "enum": [
+                              "logs",
+                              "spans"
+                            ]
+                          },
+                          "groupBy": {
+                            "maxItems": 0
+                          },
+                          "numericHistogram": {
+                            "type": "null"
+                          },
+                          "reportedEdge": {
+                            "type": "null"
+                          },
+                          "groupTimeSeries": {
+                            "const": false
+                          }
+                        }
+                      },
+                      {
+                        "required": [
+                          "groupBy"
+                        ],
+                        "properties": {
+                          "signal": {
+                            "enum": [
+                              "logs",
+                              "spans"
+                            ]
+                          },
+                          "groupBy": {
+                            "type": "array",
+                            "minItems": 1,
+                            "maxItems": 1,
+                            "items": {
+                              "not": {
+                                "required": [
+                                  "kind",
+                                  "key"
+                                ],
+                                "properties": {
+                                  "kind": {
+                                    "const": "column"
+                                  },
+                                  "key": {
+                                    "enum": [
+                                      "body_pattern_v1",
+                                      "duration_bucket"
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "numeric": {
+                            "type": "null"
+                          },
+                          "numericHistogram": {
+                            "type": "null"
+                          },
+                          "reportedEdge": {
+                            "type": "null"
+                          },
+                          "spanStatus": {
+                            "const": false
+                          },
+                          "groupTimeSeries": {
+                            "const": false
+                          },
+                          "summary": {
+                            "enum": [
+                              "",
+                              "span-duration"
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "timeline"
+                        ],
+                        "properties": {
+                          "timeline": {
+                            "properties": {
+                              "display": {
+                                "required": [
+                                  "value"
+                                ],
+                                "properties": {
+                                  "value": {
+                                    "const": "record.rate"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
                       }
                     }
                   }
@@ -52123,6 +52777,106 @@
                       },
                       "groupTimeSeries": {
                         "const": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "comparison"
+                        ],
+                        "properties": {
+                          "comparison": {
+                            "properties": {
+                              "display": {
+                                "required": [
+                                  "value"
+                                ],
+                                "properties": {
+                                  "value": {
+                                    "const": "record.rate"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "required": [
+                      "groupBy"
+                    ],
+                    "properties": {
+                      "signal": {
+                        "enum": [
+                          "logs",
+                          "spans"
+                        ]
+                      },
+                      "groupBy": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 1,
+                        "items": {
+                          "not": {
+                            "required": [
+                              "kind",
+                              "key"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "const": "column"
+                              },
+                              "key": {
+                                "enum": [
+                                  "body_pattern_v1",
+                                  "duration_bucket"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "numeric": {
+                        "type": "null"
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "spanStatus": {
+                        "const": false
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      },
+                      "summary": {
+                        "enum": [
+                          "",
+                          "span-duration"
+                        ]
                       }
                     }
                   }

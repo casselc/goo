@@ -5,7 +5,7 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-417, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
+418, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
 [fleet service triage](SERVICE_TRIAGE.md).
 The [active roadmap](ROADMAP_2026_11_13_CHECKPOINT_417.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
@@ -16,6 +16,9 @@ signatures across logs or spans, with explicit unclassified records and ordinary
 
 [Shared record-intent admission](RECORD_INTENT_ADMISSION.md) preserves exact queries
 across staging, links and recall; refused links retain held evidence.
+
+[Captured-rate comparisons](CAPTURED_RATE_COMPARISONS.md) normalize captured counts
+by each operand's own fixed exposure, including unequal windows and known zero.
 
 ## What users can do
 
@@ -67,7 +70,8 @@ numeric and selected native histogram surfaces and action readiness.
 [Log volume/severity-text context](ACTIVITY_LOG_CONTEXT.md) (413) is delivered.
 [Recent/pinned scope recall](RECENT_PINNED_SCOPES.md) (414) consolidates browser configuration and held-visit entry.
 [Guided service-version comparisons](SERVICE_VERSION_COMPARISONS.md) (415) now reuse count/mean comparisons from an exact fixed service scope.
-Next: ordinary captured-rate comparisons (418), version recorded-Error context (419),
+[Ordinary captured-rate comparisons](CAPTURED_RATE_COMPARISONS.md) (418) are delivered.
+Next: version recorded-Error context (419),
 and contextual action consistency (420), following the [417 checkpoint](ROADMAP_2026_11_13_CHECKPOINT_417.md). Captured-example task discovery and adjacent labeling are deferred. Delivered
 capabilities and remaining boundaries are distinguished below.
 

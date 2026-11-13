@@ -11,7 +11,11 @@ preserve/reuse**. Existing Activity counted facets, brushing, traces, service
 inventories, native measurements, declarative views and captured evidence are
 foundations to extend. Historical vendor research does not make them new gaps.
 
-## 418 — breadth: ordinary captured-rate comparisons
+## 418 — breadth: ordinary captured-rate comparisons (delivered)
+
+Delivered contract: [captured-rate comparisons](CAPTURED_RATE_COMPARISONS.md),
+[storyboard](journeys/captured-rates.md), and [review](reviews/CAPTURED_RATES_REVIEW_418.md).
+Next is 419, then the bounded 420 consolidation.
 
 Compare captured activity fairly across unequal fixed windows. Promote existing
 `record.rate` count/exposure facts into ordinary supplied-summary comparisons,

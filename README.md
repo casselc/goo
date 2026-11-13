@@ -22,6 +22,8 @@ Inspect inputs and affected services, then stage matching records without losing
 
 [Shared record-intent admission](docs/RECORD_INTENT_ADMISSION.md) keeps staged, linked
 and recalled queries consistent; malformed links preserve held results.
+[Compare captured rates](docs/CAPTURED_RATE_COMPARISONS.md) across different window
+lengths with exact count/exposure facts and an explicit Count or records/s choice.
 
 
 [Reusable question packages](docs/TYPED_PACKAGE_SCOPES.md) retain environment

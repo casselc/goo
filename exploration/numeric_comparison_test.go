@@ -119,7 +119,7 @@ func TestNumericComparisonRequiresIntentBindingAndConservation(t *testing.T) {
 	countOnly := detached(missing)
 	countOnly.Question.Numeric = nil
 	result, err := CompareCohorts(ComparisonRequest{Baseline: countOnly, Selection: countOnly})
-	if err != nil || result.Measures != nil || result.ViewComparison == nil || len(result.ViewComparison.Baseline.Fields) != 1 {
+	if err != nil || result.Measures != nil || result.ViewComparison == nil || len(result.ViewComparison.Baseline.Fields) != 2 || result.ViewComparison.Baseline.Fields[1].Key != RecordRateKey || result.ViewComparison.Changes[RecordRateKey].Value == nil || *result.ViewComparison.Changes[RecordRateKey].Value != "0" {
 		t.Fatal("explicit count-only recipe refused or acquired numeric fields", result, err)
 	}
 }

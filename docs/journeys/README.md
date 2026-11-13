@@ -1,5 +1,8 @@
 # User journeys and storyboards
 
+[Captured-rate comparisons](captured-rates.md) (418) compare 120 records/60s with
+240/120s, switch count/rate locally, and retain exact zero/diagnostic semantics.
+
 [Record-intent admission](record-intent.md) (417) follows exact configuration through
 links, recall and explicit Run; invalid links retain held evidence without reads.
 

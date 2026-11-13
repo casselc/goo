@@ -17,6 +17,15 @@ const RecordRateKey = "record.rate"
 func RecordRateQuery(q Query) bool {
 	return (q.Signal == "logs" || q.Signal == "spans") && len(q.GroupBy) == 0 && !q.GroupTimeSeries && q.NumericHistogram == nil && q.ReportedEdge == nil && q.Validate() == nil
 }
+
+// RecordRateSummaryQuery also admits the existing ordinary categorical count
+// profile. A population summary uses the whole count and query-window exposure;
+// its grouping does not turn the rate into a per-category or interval measure.
+// Timeline admission remains the narrower RecordRateQuery contract.
+func RecordRateSummaryQuery(q Query) bool {
+	return RecordRateQuery(q) || ValidateCapturedCountQuery(q) == nil
+}
+
 func recordRateField(q Query) ViewField {
 	label := "Captured log records/s"
 	if q.Signal == "spans" {
@@ -92,8 +101,11 @@ func ValidateRecordRateDataset(d *ViewDataset) error {
 		return nil
 	}
 	var q Query
-	if json.Unmarshal(d.Scope.Selector, &q) != nil || !RecordRateQuery(q) || d.Scope.Signal != q.Signal || d.Quality.Freshness != "fixed" || (d.Shape != "summary" && d.Shape != "time-series") || !reflect.DeepEqual(*rate, recordRateField(q)) {
+	if json.Unmarshal(d.Scope.Selector, &q) != nil || d.Scope.Signal != q.Signal || d.Quality.Freshness != "fixed" || (d.Shape != "summary" && d.Shape != "time-series") || !reflect.DeepEqual(*rate, recordRateField(q)) {
 		return errors.New("rate requires its ordinary fixed record profile")
+	}
+	if d.Shape == "summary" && !RecordRateSummaryQuery(q) || d.Shape == "time-series" && !RecordRateQuery(q) {
+		return errors.New("rate requires its supported summary or interval profile")
 	}
 	for _, row := range d.Rows {
 		elapsed := q.ToMS - q.FromMS

@@ -56,3 +56,8 @@ test('result-first pair has one collapsed source context and preserves exact sup
  assert.equal(chrome.notice.textContent,'Independent populations · upstream coverage unknown.');
  assert.deepEqual(input,before);
 }));
+
+test('one empty captured operand scopes its notice rather than labeling the whole comparison No data',()=>dom(()=>{
+ const input=fixture('0','9'),before=structuredClone(input),host=new Element('main');host.connected=true;const shown=V.countPair(host,input);
+ assert.equal(shown.nodes.chrome.notice.textContent,'Previous window has no records · Independent populations · upstream coverage unknown.');assert.equal(shown.nodes.chrome.notice.dataset.state,'observed');assert.deepEqual(input,before);assert.equal(input.comparison.state,'no_data');
+}));

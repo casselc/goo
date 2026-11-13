@@ -1,0 +1,13 @@
+spec: model.qnt
+module: capturedrates
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  stage_view: {expect: 'source == {{.obs.source}} and compares == {{.obs.compares}}'}
+  read_population: {expect: 'source == {{.obs.source}} and compares == {{.obs.compares}}'}
+  local_display: {expect: 'source == {{.obs.source}} and compares == {{.obs.compares}}'}
+  choose_baseline: {expect: 'source == {{.obs.source}} and compares == {{.obs.compares}}'}
+  prepare_baseline: {expect: 'source == {{.obs.source}} and compares == {{.obs.compares}}'}
+  diagnostic_compare: {expect: 'source == {{.obs.source}} and compares == {{.obs.compares}}'}
+  stage_operand: {expect: 'source == {{.obs.source}} and compares == {{.obs.compares}}'}
+  read_operand: {expect: 'source == {{.obs.source}} and compares == {{.obs.compares}}'}

@@ -4,6 +4,12 @@ import {validateSnapshot,isCanonicalRational} from './view-schema.mjs';
 const record=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const own=(value,key)=>Object.prototype.hasOwnProperty.call(value,key);
 const text=value=>typeof value==='string'&&value.length>0&&value.length<=1024;
+const clock=value=>{
+ if(typeof value!=='string')return false;
+ const parts=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.exec(value);if(!parts||!Number.isFinite(Date.parse(value)))return false;
+ const [year,month,day,hour,minute,second]=parts.slice(1).map(Number),leap=year%4===0&&(year%100!==0||year%400===0),days=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31];
+ return month>=1&&month<=12&&day>=1&&day<=days[month-1]&&hour<24&&minute<60&&second<60;
+};
 const gcd=(a,b)=>{a=a<0n?-a:a;while(b){const rest=a%b;a=b;b=rest}return a};
 function difference(baseline,selection){
  const [an,ad='1']=baseline.split('/'),[bn,bd='1']=selection.split('/');
@@ -26,7 +32,9 @@ export function validateComparison(comparison){
  for(const key of ['scope','basis','capturedAt','quality'])if(own(comparison,key))reasons.push('Comparison provenance belongs to each independent snapshot');
  for(const role of ['baseline','selection']){const result=validateSnapshot(comparison[role]);if(!result.ok)reasons.push(...result.reasons.map(reason=>role+': '+reason));if(comparison[role]?.shape!=='summary')reasons.push(role+': comparison requires a population summary')}
  if(reasons.length)return {ok:false,reasons};
- if([comparison.baseline,comparison.selection].some(snapshot=>snapshot.fields.some(field=>['span-status','ratio','rate'].includes(field.aggregation?.family))))return {ok:false,reasons:['This comparison view does not support status-count, fraction or rate measures.']};
+ const operands=[comparison.baseline,comparison.selection];
+ if(operands.some(snapshot=>snapshot.fields.some(field=>field.aggregation?.family==='rate'))&&operands.some(snapshot=>snapshot.capturedAt!==undefined&&!clock(snapshot.capturedAt)))return {ok:false,reasons:['Captured-rate source read clocks must be valid RFC3339 timestamps when supplied.']};
+ if([comparison.baseline,comparison.selection].some(snapshot=>snapshot.fields.some(field=>['span-status','ratio'].includes(field.aggregation?.family))))return {ok:false,reasons:['This comparison view does not support status-count or fraction measures.']};
  const a=comparison.baseline,b=comparison.selection,ar=a.rows[0],br=b.rows[0],fields=new Map([...a.fields,...b.fields].map(field=>[field.key,field]));
  if(!record(comparison.changes))return {ok:false,reasons:['Comparison changes must cover the declared field union']};
  const changeKeys=Object.keys(comparison.changes);
@@ -48,4 +56,14 @@ export function validateComparison(comparison){
   if(change.state!=='derived'||!isCanonicalRational(change.value)||change.value!==difference(av,bv))reasons.push('Comparison change must equal exact selection minus baseline for '+key);
  }
  return {ok:reasons.length===0,reasons:[...new Set(reasons)]};
+}
+
+// Comparison-wide chrome must not turn one empty operand into an empty result.
+// Callers first admit the supplied comparison; its source state is unchanged.
+export function comparisonPresentation(comparison,labels=['Baseline','Selection']){
+ if(comparison.state==='diagnostic')return {state:'unknown',notice:'Diagnostic comparison'};
+ if(comparison.state==='incompatible')return {state:'incompatible',notice:'Incompatible comparison'};
+ if(comparison.state!=='no_data')return {state:comparison.state,notice:''};
+ const empty=[comparison.baseline,comparison.selection].map((side,index)=>side.rows[0].values.count==='0'?index:null).filter(index=>index!==null);
+ return empty.length===2?{state:'no_data',notice:'Neither population has captured records'}:{state:'observed',notice:empty.length?labels[empty[0]]+' has no records':''};
 }

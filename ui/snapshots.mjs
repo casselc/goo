@@ -1,3 +1,4 @@
+import {rateEligible as summaryRateEligible} from './summary-declaration.mjs';
 import {validateMeasurementIntervalSelector,canonicalNativeJSON} from './measurement-scope.mjs';
 /* Immutable data admission. Source adapters are trusted host extension points,
    not authentication or proof that an arbitrary HTTP response is authoritative. */
@@ -134,7 +135,7 @@ function sourceQuestion(raw,question){
   return;
  }
  const rates=raw.fields.filter(field=>field.key==='record.rate'||field.aggregation?.family==='rate');
- if(rates.length&&(!['summary','time-series'].includes(raw.shape)||(question.groupBy?.length??0)!==0||question.groupTimeSeries||question.numericHistogram||question.reportedEdge))fail('source-question','Captured record rate requires an ordinary ungrouped fixed window');
+ if(rates.length&&(!['summary','time-series'].includes(raw.shape)||!summaryRateEligible(question)||raw.shape==='time-series'&&(question.groupBy?.length??0)!==0))fail('source-question','Captured record rate requires a supported fixed summary or ungrouped interval window');
  const statusKeys=['status.error','status.ok','status.unset','status.unknown'];
  const statuses=raw.fields.filter(field=>field.aggregation?.family==='span-status'),fraction=raw.fields.find(field=>field.key==='status.error_fraction');
  if(question.spanStatus===true&&(question.signal!=='spans'||statuses.length!==4||!statusKeys.every(key=>statuses.some(field=>field.key===key))||fraction?.aggregation?.family!=='ratio'||fraction.aggregation.kind!=='fraction'||fraction.aggregation.numerator!=='status.error'||fraction.aggregation.denominator!=='count'))fail('source-question','Source span-status profile requires all classes and the recorded error fraction');

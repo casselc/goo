@@ -1,7 +1,7 @@
 import {comparisonRoleLabels} from './comparison-role-labels.mjs';
 /* Passive population summaries. Go owns aggregates, comparison changes and their basis. */
 import {validateSnapshot,measureValue,fractionFacts} from './view-model.mjs';
-import {validateComparison} from './view-comparison.mjs';
+import {validateComparison,comparisonPresentation} from './view-comparison.mjs';
 import {signedScale} from './comparison-visual.mjs';
 import {formatCell,exactText,defaultSummaryFields} from './view-values.mjs';
 import {asSnapshot,asComparison,parseSnapshotJSON,parseComparisonJSON} from './snapshots.mjs';
@@ -67,6 +67,10 @@ function valueCell(field,row,{delta,snapshot,labels}={}){
   const body=n('div',undefined,'measure-cell');body.dataset.state=delta?.state||cell?.state||'recorded';
   const text=delta&&delta.state!=='derived'?'Unavailable':field?formatCell(field,raw,cell):'Unavailable';
   body.append(n('span',text,'measure-value'));
+  if(!delta&&field?.aggregation?.family==='rate'&&cell?.rate){
+    const exposure=n('div',undefined,'measure-rate-exposure');exposure.append(n('small',cell.rate.count+' records / '+String(Number(cell.rate.elapsedMs)/1000)+' s'));
+    exposure.title=cell.rate.count+' captured records over exactly '+cell.rate.elapsedMs+' ms';body.append(exposure);
+  }
   const details=n('details',undefined,'measure-exact'),status=delta?delta.state:cell?.state;
   details.append(n('summary',status?(cell?.support?`${status} · ${cell.support.valid}/${cell.support.total} valid`:status):'Exact value'));
   details.append(n('p',delta?(delta.state==='derived'?exactText({...field,aggregation:undefined},raw):delta.reason||'Change is unavailable.'):field?exactText(field,raw,cell,snapshot?fractionFacts(snapshot,row,field.key):null):'Measure not supplied.'));
@@ -154,7 +158,7 @@ class Comparison extends Supplied{
   render(){try{
     const comparison=this.comparison,valid=validateComparison(comparison);if(!valid.ok){this.refuse(this._inputErrors?.comparison?[this._inputErrors.comparison]:valid.reasons);return}
     const fields=[...new Map([...comparison.baseline.fields,...comparison.selection.fields].map(field=>[field.key,field])).values()],display=options(this.display,fields,{comparison:true});
-    const root=n('goo-chart-frame',undefined,'measure-frame'),provenances=n('div',undefined,'measure-comparison-provenance');root.data={title:display.title||'Population comparison',state:comparison.state==='diagnostic'?'unknown':comparison.state};
+    const root=n('goo-chart-frame',undefined,'measure-frame'),provenances=n('div',undefined,'measure-comparison-provenance');root.data={title:display.title||'Population comparison',state:comparisonPresentation(comparison,display.labels).state};
     provenances.append(provenance(comparison.baseline,display.labels[0]),provenance(comparison.selection,display.labels[1]));
     if(this.hasAttribute('data-first')){
       root.classList.add('measure-comparison-data-first');root.setAttribute('density','compact');

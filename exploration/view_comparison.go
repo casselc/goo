@@ -59,7 +59,7 @@ func summaryViewDataset(r *Result, exhaustiveSummary bool) *ViewDataset {
 		return nil
 	}
 	row := ViewRow{Key: "population", Values: values, Cells: cells}
-	if RecordRateQuery(r.Question) {
+	if RecordRateSummaryQuery(r.Question) {
 		d.Fields = append(d.Fields, recordRateField(r.Question))
 		if !addRecordRate(&row, r.Question.ToMS-r.Question.FromMS, false) {
 			return nil
@@ -118,18 +118,6 @@ func heldSummaryView(c Cohort) *ViewDataset {
 	d := summaryViewDataset(r, false)
 	if d == nil {
 		return nil
-	}
-	// Rate comparisons are outside the initial fixed summary/timeline profile.
-	fields := d.Fields[:0]
-	for _, field := range d.Fields {
-		if field.Key != RecordRateKey {
-			fields = append(fields, field)
-		}
-	}
-	d.Fields = fields
-	for i := range d.Rows {
-		delete(d.Rows[i].Values, RecordRateKey)
-		delete(d.Rows[i].Cells, RecordRateKey)
 	}
 	d.Origin = "browser-held"
 	d.SourceBasis = canonical.Basis

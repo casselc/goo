@@ -774,6 +774,36 @@ def check_view_summary_comparison(spec, ranked):
     incompatible = copy.deepcopy(diagnostic)
     incompatible.update(state='incompatible', reason='incompatible-fields')
     check_comparison.validate(incompatible)
+    # Ordinary summary rates preserve independent count/exposure facts. Grouped
+    # summary support must not leak into grouped intervals or ratio changes.
+    rate_field={'key':'record.rate','label':'Captured log records/s','type':'rational','unit':'records/s','nullable':True,
+                'aggregation':{'family':'rate','kind':'records-per-second','method':'exact-rational'}}
+    rate_comparison={'version':'goo.comparison/1','state':'observed','changes':{
+        'count':{'state':'derived','value':'5','unit':'records','reason':'absolute-count-difference-not-normalized-rate'},
+        'record.rate':{'state':'derived','value':'0','unit':'records/s','aggregation':copy.deepcopy(rate_field['aggregation'])}}}
+    for role,count,elapsed,start in [('baseline','5',1000,1000),('selection','10',2000,3000)]:
+        operand=copy.deepcopy(held)
+        operand['scope']['signal']='logs'
+        operand['scope']['selector']={'signal':'logs','environment':'prod','fromMs':start,'toMs':start+elapsed,'limit':100,'offset':0,'groupBy':[{'kind':'column','key':'service'}]}
+        operand['fields']=[{'key':'count','label':'Captured records','type':'number','unit':'records'},copy.deepcopy(rate_field)]
+        operand['rows']=[{'key':'population','values':{'count':count,'record.rate':'5'},'cells':{'record.rate':{'state':'derived','rate':{'count':count,'elapsedMs':str(elapsed)}}}}]
+        check_snapshot.validate(operand);rate_comparison[role]=operand
+    check_comparison.validate(rate_comparison)
+    empty_rate=copy.deepcopy(rate_comparison);empty_rate['state']='no_data'
+    empty_rate['baseline']['rows'][0].update(values={'count':'0','record.rate':'0'},cells={'record.rate':{'state':'derived','rate':{'count':'0','elapsedMs':'1000'}}})
+    empty_rate['changes']['count']['value']='10';empty_rate['changes']['record.rate']['value']='5'
+    check_comparison.validate(empty_rate)
+    unknown_rate=copy.deepcopy(rate_comparison);unknown_rate.update(state='diagnostic',reason='source-reads-disagree')
+    for change in unknown_rate['changes'].values():change.update(state='unavailable',value=None,reason='source-reads-disagree')
+    check_comparison.validate(unknown_rate)
+    for mutate in (lambda x:x['changes'].pop('record.rate'),
+                   lambda x:x['changes']['record.rate'].update(unit='records'),
+                   lambda x:x['changes']['record.rate']['aggregation'].update(family='ratio'),
+                   lambda x:x['baseline']['rows'][0]['cells']['record.rate'].pop('rate'),
+                   lambda x:x['baseline']['scope']['selector'].update(groupBy=[{'kind':'column','key':'service'},{'kind':'attribute','key':'region'}]),
+                   lambda x:x['baseline']['scope']['selector'].update(numeric={'field':{'kind':'attribute','key':'size'},'type':'uint64','unit':'1','parse':'canonical-decimal'})):
+        bad=copy.deepcopy(rate_comparison);mutate(bad)
+        assert not check_comparison.is_valid(bad),'invalid ordinary captured-rate comparison accepted'
     signed = copy.deepcopy(comparison)
     signed['changes']['duration.p95']['value'] = '-3'
     signed['changes']['duration.mean']['value'] = '-11/3'
@@ -1003,6 +1033,22 @@ def check_fixed_query_count_views(spec):
         vc=validator(spec,{'$ref':'#/components/schemas/workbench.ExplorationView'+suffix})
         ac=validator(spec,{'$ref':'#/components/schemas/workbench.ViewArtifact'+suffix})
         cc.validate(comparison);vc.validate(view)
+        captured_rate={'version':'goo.view/1','scope':scope,'kind':{'name':'captured-count-comparison','version':1},'baselineCapture':'a'*64,'display':{'value':'record.rate','view':'summary'}}
+        cc.validate(captured_rate)
+        captured_view=copy.deepcopy(view);captured_view['composition']['children'][2]['comparison']=copy.deepcopy(captured_rate)
+        vc.validate(captured_view)
+        assert not ac.is_valid({'version':'goo.view-artifact/1','namespace':'platform','name':'captured-rate','revision':'v1','view':captured_view}), 'portable rate view retained a store-local baseline capture'
+        for changes in ({'numeric':{'field':{'kind':'attribute','key':'size'},'type':'uint64','unit':'1','parse':'canonical-decimal'}},
+                        {'spanStatus':True},{'groupBy':[{'kind':'column','key':'body_pattern_v1'}]}):
+            bad=copy.deepcopy(captured_view);bad['queries'][0].update(changes)
+            assert not vc.is_valid(bad),('captured rate comparison acquired unsupported parent profile',changes)
+        for mutate in (lambda x:x['display'].update(view='groups'),lambda x:x['display'].update(order='change'),
+                       lambda x:x.update(baselineQuery=copy.deepcopy(q)),
+                       lambda x:x['kind'].update(name='query-count-comparison')):
+            bad=copy.deepcopy(captured_rate);mutate(bad)
+            assert not cc.is_valid(bad),'captured rate admitted an unsupported group/order/fresh-query arm'
+        fresh_rate=copy.deepcopy(comparison);fresh_rate['display']['value']='record.rate'
+        assert not cc.is_valid(fresh_rate),'fresh query declaration gained rate support'
         mean=copy.deepcopy(comparison)
         mean['scope']['signal']='spans'
         mean['baselineQuery'].update(signal='spans',summary='span-duration')
@@ -1277,12 +1323,21 @@ def check_record_rates406(spec):
         for changes in ({'groupBy':[{'kind':'column','key':'service'}]},{'groupTimeSeries':True}):
             bad=copy.deepcopy(source);bad['queries'][0].update(changes)
             assert not view.is_valid(bad), ('grouped record rate accepted',changes)
+        grouped_summary=copy.deepcopy(source);grouped_summary['composition']['children'].pop(1)
+        grouped_summary['queries'][0]['groupBy']=[{'kind':'column','key':'service'}]
+        view.validate(grouped_summary)
+        for changes in ({'groupBy':[{'kind':'column','key':'service'},{'kind':'attribute','key':'region'}]},
+                        {'groupBy':[{'kind':'column','key':'body_pattern_v1'}]},
+                        {'numeric':{'field':{'kind':'attribute','key':'size'},'type':'uint64','unit':'1','parse':'canonical-decimal'}},
+                        {'spanStatus':True},{'reportedEdge':{'parent':{},'child':{}}}):
+            bad=copy.deepcopy(grouped_summary);bad['queries'][0].update(changes)
+            assert not view.is_valid(bad),('grouped summary rate gained unsupported profile',changes)
         bad=copy.deepcopy(source);bad['composition']['children'][1]['timeline']['display']['profile']='grouped-count-v1'
         assert not view.is_valid(bad), 'record rate gained a grouped profile'
         template=copy.deepcopy(source);template['composition']['children'].pop(1)
         template['template']={'version':'goo.template/1','group':'none','profile':'ordinary-summary'}
         view.validate(template)
-    print('Record rates406: typed rate operands, ordinary declarations and closed summary template pass; exact count/window arithmetic remains runtime-owned')
+    print('Record rates406/418: exact operands, grouped summary/captured comparison arms and ungrouped-only intervals pass; fresh-query rate remains refused and arithmetic remains runtime-owned')
 
 
 def check_summary_template_bindings404(spec):

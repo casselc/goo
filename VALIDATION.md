@@ -1,5 +1,47 @@
 # Validation record
 
+## 418 — captured record-rate comparisons
+
+[Contract and diagram](docs/CAPTURED_RATE_COMPARISONS.md),
+[storyboard](docs/journeys/captured-rates.md), and
+[source review](docs/reviews/CAPTURED_RATES_REVIEW_418.md).
+
+- **1,584 frontend tests pass**, zero failures/skips. The shared summary-rate
+  profile admits ordinary single-group captured counts while timeline rates
+  remain ungrouped. Rates are opt-in; source adapters and declaration admission
+  use the same profile. Counts and each positive window retain exact rational
+  support; invalid support, clocks and arithmetic refuse.
+- Affected Go packages `exploration`, `workbench` and `cmd/goo` pass. Four
+  successful comparison wire fixtures now carry rate witnesses and signed
+  rate changes. Existing capture references remain store-local and refuse
+  portable artifact export.
+- OpenAPI passes: **114 operations, 759 schemas; 501 fixture responses,
+  202 admitted requests and 29 mux refusals**, including negative controls and
+  SSE checks. Fresh-query rate declarations remain refused.
+- Real OTLP/ClickHouse journey and **35-second Bombadil campaign pass** (1.1 min).
+  Baseline 120/60s and selection 240/120s render equal rates and equal bars;
+  Count/Rate switching, a changed baseline, known zero, controlled diagnostic
+  withholding, keyboard disclosures and opening the whole baseline question pass.
+  The fourteen observed facts record **two source acquisitions, six pure
+  comparisons, six stored-baseline reads and zero publication**. The separate
+  actor completed across 514 snapshots with one source acquisition and one
+  comparison; retained IDs are checked against the source oracle. API acquisition
+  counts are not SQL counts. The diagnostic case deliberately changes supplied
+  state and does not claim a real source inconsistency.
+- Isolated Hegel/native Quint suite passes **20.291s with no skips**: 32 seeds
+  exercise exact independent count/exposure arithmetic beyond 2^53, known zero,
+  diagnostic withholding and corrupt-input rejection. Native protocol checks
+  replay the actual fourteen-fact browser ledger and reject hidden source reads,
+  early preparation and mismatched state transitions.
+- Four regenerated desktop/mobile frames have independent visual acceptance.
+  Review caught misleading whole-comparison “No data” for a zero baseline; the
+  shared presentation now identifies the empty side while preserving raw states,
+  exact zero and the valid selection. Both-empty and diagnostic regressions pass.
+- Rebuilt/refreshed only the application. Both 8088/8089 serve byte-identical final
+  comparison, snapshot and presentation modules; telemetry services, streams,
+  capture stores, volumes and XTDB were preserved.
+
+
 ## 417 — shared ordinary record-intent admission
 
 [Contract and diagram](docs/RECORD_INTENT_ADMISSION.md), [storyboard](docs/journeys/record-intent.md),
