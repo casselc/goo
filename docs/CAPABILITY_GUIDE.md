@@ -5,9 +5,9 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-422, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
+423, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
 [fleet service triage](SERVICE_TRIAGE.md).
-The [active roadmap](ROADMAP_2026_11_13_CHECKPOINT_417.md) owns execution order;
+The [active roadmap](ROADMAP_2026_11_13_CHECKPOINT_423.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
 below are research inputs, not additional backlogs or claims of vendor parity.
 
@@ -74,8 +74,9 @@ numeric and selected native histogram surfaces and action readiness.
 Recorded Error context (419) and [contextual action consistency](CONTEXTUAL_ACTIONS.md)
 (420) are delivered. [Contextual Activity facet entry](ACTIVITY_FACET_ENTRY.md)
 (421) reuses existing counted values. [Multi-value selection](MULTI_VALUE_FACETS.md)
-(422) stages atomic OR choices within the retained scope. Next is render/scope
-snapshot consolidation (423); see the [active roadmap](ROADMAP_2026_11_13_CHECKPOINT_417.md).
+(422) stages atomic OR choices within the retained scope. [Measured render/scope
+snapshot consolidation](ACTIVITY_SCOPE_SNAPSHOTS.md) (423) is delivered. Next is explicit contextual field-
+constraint editing (424); see the [active roadmap](ROADMAP_2026_11_13_CHECKPOINT_423.md).
 Captured-example task discovery and adjacent labeling remain deferred. Delivered
 capabilities and remaining boundaries are distinguished below.
 

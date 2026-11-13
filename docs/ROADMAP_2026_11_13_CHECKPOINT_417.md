@@ -1,5 +1,7 @@
 # Roadmap after the 417 checkpoint
 
+The completed cycle now continues in the [423 checkpoint](ROADMAP_2026_11_13_CHECKPOINT_423.md).
+
 The completed cycle delivers guided service-version comparisons (415), query-only
 exception groups (416), and shared record-intent admission (417). The subsequent
 interface refinement keeps configuration out of the way of group inspection.
@@ -138,7 +140,7 @@ Require actual-source scope conservation, exact generated predicate semantics,
 stale-action controls and updated executable storyboards before broadening the
 workflow to other data families.
 
-## 423 — next consolidation: Activity render and scope snapshots
+## 423 — consolidation: Activity render and scope snapshots (delivered)
 
 Profile field inspection and counted-selection interaction with a full retained
 buffer and many attributes. Source review found that render-time availability

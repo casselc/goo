@@ -24,8 +24,13 @@ window, which may differ from the inspected record window. [Multi-value selectio
 within the original applied scope; replacing existing same-field constraints or
 broadening that scope is not implicit. Numeric columns use numeric exploration.
 
+[Activity scope snapshots](ACTIVITY_SCOPE_SNAPSHOTS.md) remove measured repeated
+row-copy work from metadata checks. Timing samples are executor-specific; full
+rows remain explicit for ancestry, suggestions and held explanation. This does
+not claim every interaction became faster.
+
 Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
-status and the [active roadmap](ROADMAP_2026_11_13_CHECKPOINT_417.md) for priorities.
+status and the [active roadmap](ROADMAP_2026_11_13_CHECKPOINT_423.md) for priorities.
 [Operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) delivers shared shell,
 record/attribute inspection and service-discovery improvements. Mobile service-card
 layout and further contextual action discovery remain bounded refinements.

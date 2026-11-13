@@ -1,5 +1,46 @@
 # Validation record
 
+## 423 — measured Activity scope snapshots
+
+[Contract/diagram and measurements](docs/ACTIVITY_SCOPE_SNAPSHOTS.md),
+[compact evidence](docs/evidence/activity-snapshots-423.json),
+[independent acceptance](docs/reviews/ACTIVITY_SNAPSHOT_REVIEW_423.md), and
+[product/architecture checkpoint](docs/reviews/PRODUCT_FLOW_CHECKPOINT_423.md).
+
+- **1,618 frontend tests pass**, zero failures/skips (22.833s). Product changes
+  are limited to fresh detached `Tail.scope()` metadata and Activity adoption.
+  Full snapshots remain explicit for ancestry, field suggestions and held Activity
+  explanation. Current owner/epoch/source-generation/native guards remain fresh;
+  there is no cached permission or new source read.
+- Actual OTLP/ClickHouse baseline passes (25.3s) on the unchanged 422 binary.
+  Matched candidate profile plus real public API conformance pass **28.1s**.
+  Both fixtures retain 100 logs: normal 43,968 record-JSON bytes, wide 364,568
+  with 48 extra attributes. Each normal inspection copies **5,200 → 200** retained
+  items; wide inspection copies **24,400 → 200**. All measured local non-inspection
+  actions copy **zero** candidate items, preserving zero source/SQL effects.
+  Each explicit counted read remains one acquisition/two SQL reads.
+- Five-sample instrumented synchronous inspection medians are **150 → 61.2ms**
+  normal and **824.2 → 277.1ms** wide. Timing is informational, not a production
+  percentile or universal speedup: Stage is slower in both candidate samples.
+  JSON bytes describe fixtures, not physical heap allocation. The default candidate
+  profile enforces copy budgets (inspection at most 200, other local actions zero);
+  actual recorded candidate metrics also pass those guards. The profile leaves
+  row-consuming explanation closed; its full-row behavior remains supported.
+- Public API conformance uses the actual Tail component and 12 source logs:
+  `scope()` copies zero items, full snapshot copies 12, selector/window/rows stay
+  detached, staged/reset/restaged/live metadata stays current, and Start is the
+  only telemetry acquisition. No private helper export or mock replaces the API.
+- All three real 421/422 regression journeys pass **1.8 min**, including both
+  35-second actors: 598 entry snapshots, 624 multi-value snapshots, zero page
+  errors, eleven continuous facts per workflow and the 112-span check. Existing
+  desktop/mobile documentation frames were regenerated; presentation is unchanged.
+  Runtime cleanup is confirmed. Both isolated Hegel/native Quint suites replay
+  the fresh ledgers and generated properties with **no skips**: entry **28.688s**,
+  multi-value **29.935s**.
+- Rebuilt/refreshed only the app using Go 1.27.3. Product Go, API schemas and SQL
+  generation are unchanged; no additional backend/API regression run is claimed.
+  Telemetry services, streams, stores, captures and volumes remain intact.
+
 ## 422 — atomic multi-value counted facets
 
 [Contract and diagram](docs/MULTI_VALUE_FACETS.md),

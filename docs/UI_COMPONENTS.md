@@ -2085,3 +2085,10 @@ from its live owner lease. The editor checks the signal, sole field and unchange
 base predicate before committing; the pure helper validates the entire OR/AND
 expression. Native checkboxes describe their original-scope counts and preserve
 choices hidden by search. See [multi-value facets](MULTI_VALUE_FACETS.md).
+
+Activity scope-only owners now use fresh detached `Tail.scope()` metadata;
+`snapshot()` explicitly includes copied observations. Availability/current leases
+must not require rows or a mounted inspector during construction. Ancestry,
+observed-field discovery and held explanation still request rows explicitly.
+See [scope snapshots](ACTIVITY_SCOPE_SNAPSHOTS.md) for measured copy budgets and
+public API conformance; this is no new cache or global action registry.

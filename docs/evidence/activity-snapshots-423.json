@@ -1,0 +1,300 @@
+{
+  "version": "goo.activityScopeSnapshots423/1",
+  "measured_at_utc": "2026-11-13T17:45:03.990474+00:00",
+  "method": {
+    "driver": "journeys/activity-snapshot-profile.spec.js",
+    "instrumentation": "journeys/support/activity-snapshot-profile.js",
+    "runtime": "isolated Go application backed by actual OTLP and ClickHouse",
+    "retained_rows_per_fixture": 100,
+    "inspection_samples_per_fixture": 5,
+    "timing": "synchronous native event handling in Chromium; informational, no latency threshold",
+    "copy_counter": "structuredClone inputs containing retained Tail items directly, as arrays, or in rows containers",
+    "bytes": "JSON encoding of retained record values, computed outside measured actions; not allocated bytes"
+  },
+  "runs": {
+    "baseline": {
+      "status": "passed",
+      "report_sha256": "cc4a0b6a7abace82db478427de8df155d64a50aa536ae4e55748418e8363f94c",
+      "binary_sha256": "39cfe330d4a113134f8162c358b1b21eaa813debd144b859cf12764910b6b1c1",
+      "runtime_cleanup": true
+    },
+    "candidate": {
+      "status": "passed",
+      "report_sha256": "91c6839a03a918e10d81fd84eddfe916a03f6dacbfeb5bd505049c5aac2e354a",
+      "binary_sha256": "2c1df4040aa580b3ecd4236a83d89b67a83aa94ce2ca95da24d5802a5e6da751",
+      "runtime_cleanup": true
+    }
+  },
+  "fixtures": [
+    {
+      "extra_attributes_per_record": 0,
+      "extra_attribute_filler_bytes": 0,
+      "retained_records": 100,
+      "retained_record_json_bytes": 43968,
+      "inspection": {
+        "baseline": {
+          "retained_rows_copied_per_action": [
+            5200,
+            5200,
+            5200,
+            5200,
+            5200
+          ],
+          "synchronous_ms": [
+            173.9,
+            164.4,
+            150,
+            92.2,
+            146.8
+          ],
+          "median_synchronous_ms": 150
+        },
+        "candidate": {
+          "retained_rows_copied_per_action": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ],
+          "synchronous_ms": [
+            61.2,
+            47.1,
+            84.7,
+            124.7,
+            48.3
+          ],
+          "median_synchronous_ms": 61.2
+        }
+      },
+      "local_action_columns": [
+        "action",
+        "baseline_row_copies",
+        "candidate_row_copies",
+        "baseline_sync_ms",
+        "candidate_sync_ms"
+      ],
+      "local_actions": [
+        [
+          "facet-entry",
+          2700,
+          0,
+          69,
+          28.9
+        ],
+        [
+          "select-missing",
+          200,
+          0,
+          4.1,
+          18.1
+        ],
+        [
+          "select-empty",
+          200,
+          0,
+          3,
+          1.3
+        ],
+        [
+          "search-loaded",
+          200,
+          0,
+          3.7,
+          2.5
+        ],
+        [
+          "clear-search",
+          200,
+          0,
+          3.4,
+          2.3
+        ],
+        [
+          "clear-selection",
+          200,
+          0,
+          2.5,
+          2.4
+        ],
+        [
+          "reselect-missing",
+          200,
+          0,
+          3.4,
+          1.3
+        ],
+        [
+          "reselect-empty",
+          200,
+          0,
+          4,
+          1
+        ],
+        [
+          "stage-union",
+          1600,
+          0,
+          56,
+          130.7
+        ]
+      ],
+      "explicit_counted_read": {
+        "baseline": {
+          "retained_rows_copied": 3400,
+          "elapsed_ms_including_network": 661.9,
+          "source_acquisitions": 1,
+          "sql_reads": 2,
+          "captured_count": "100"
+        },
+        "candidate": {
+          "retained_rows_copied": 100,
+          "elapsed_ms_including_network": 532.3,
+          "source_acquisitions": 1,
+          "sql_reads": 2,
+          "captured_count": "100"
+        }
+      },
+      "all_local_source_and_sql_deltas_zero": true
+    },
+    {
+      "extra_attributes_per_record": 48,
+      "extra_attribute_filler_bytes": 32,
+      "retained_records": 100,
+      "retained_record_json_bytes": 364568,
+      "inspection": {
+        "baseline": {
+          "retained_rows_copied_per_action": [
+            24400,
+            24400,
+            24400,
+            24400,
+            24400
+          ],
+          "synchronous_ms": [
+            824.2,
+            858.8,
+            1340.6,
+            722.1,
+            682.3
+          ],
+          "median_synchronous_ms": 824.2
+        },
+        "candidate": {
+          "retained_rows_copied_per_action": [
+            200,
+            200,
+            200,
+            200,
+            200
+          ],
+          "synchronous_ms": [
+            514.1,
+            277.1,
+            332.6,
+            157.5,
+            138.9
+          ],
+          "median_synchronous_ms": 277.1
+        }
+      },
+      "local_action_columns": [
+        "action",
+        "baseline_row_copies",
+        "candidate_row_copies",
+        "baseline_sync_ms",
+        "candidate_sync_ms"
+      ],
+      "local_actions": [
+        [
+          "facet-entry",
+          12300,
+          0,
+          466.2,
+          325.3
+        ],
+        [
+          "select-missing",
+          200,
+          0,
+          7.4,
+          1.5
+        ],
+        [
+          "select-empty",
+          200,
+          0,
+          5.3,
+          1.6
+        ],
+        [
+          "search-loaded",
+          200,
+          0,
+          6.2,
+          2.3
+        ],
+        [
+          "clear-search",
+          200,
+          0,
+          5.2,
+          2.1
+        ],
+        [
+          "clear-selection",
+          200,
+          0,
+          5,
+          2.4
+        ],
+        [
+          "reselect-missing",
+          200,
+          0,
+          5.6,
+          1.2
+        ],
+        [
+          "reselect-empty",
+          200,
+          0,
+          5,
+          6.9
+        ],
+        [
+          "stage-union",
+          1600,
+          0,
+          81.2,
+          117.4
+        ]
+      ],
+      "explicit_counted_read": {
+        "baseline": {
+          "retained_rows_copied": 13000,
+          "elapsed_ms_including_network": 987.1,
+          "source_acquisitions": 1,
+          "sql_reads": 2,
+          "captured_count": "100"
+        },
+        "candidate": {
+          "retained_rows_copied": 100,
+          "elapsed_ms_including_network": 1185.4,
+          "source_acquisitions": 1,
+          "sql_reads": 2,
+          "captured_count": "100"
+        }
+      },
+      "all_local_source_and_sql_deltas_zero": true
+    }
+  ],
+  "limitations": [
+    "Two controlled log fixtures in one managed Chromium environment; not cross-browser or production percentile evidence.",
+    "Structured-clone counts describe copied row objects, not V8 physical allocation, transferred bytes, source completeness or health.",
+    "Inspection has five synchronous samples; other local actions have one sample per fixture.",
+    "Some candidate timings, including Stage, are slower; no claim that every interaction became faster.",
+    "Explicit counted-read elapsed time includes network/source work and is not an isolated frontend latency comparison.",
+    "Source authorization, current-owner leases, read budgets and supplied-data provenance remain separate from metadata projection."
+  ]
+}

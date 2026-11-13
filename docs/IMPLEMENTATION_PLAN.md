@@ -1,6 +1,6 @@
 # Implementation plan
 
-> Active execution order: [417 product checkpoint](ROADMAP_2026_11_13_CHECKPOINT_417.md),
+> Active execution order: [423 product checkpoint](ROADMAP_2026_11_13_CHECKPOINT_423.md),
 > reconciled across the independent product/architecture reviews summarized there.
 > The adopted operator cadence delivered **412 fleet service triage** and
 > **413 Activity log volume**. **414 recent and pinned scope
@@ -8,7 +8,9 @@
 > and **416 recurring exception groups** are delivered. **417 record-intent admission** is delivered. **418 ordinary captured-rate comparisons** is delivered. **419 version recorded-Error context** is delivered.
 > **420 contextual action consistency** completes that cycle.
 > **421 contextual Activity facet entry** and **422 bounded multi-value facets**
-> are delivered. Next is **423 Activity render/scope snapshot consolidation**,
+> are delivered; **423 measured Activity scope snapshots** completes that cycle.
+> Next is **424 contextual field-constraint editing**, then 425 comparison entry
+> and 426 preserve/recall/return conformance,
 > following the whole-product checkpoint. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped

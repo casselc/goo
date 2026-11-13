@@ -164,6 +164,8 @@ action or record-inspector control while retaining its existing evidence.
 Filters and explicit full-scope counted-value read.
 [Select several counted values](docs/MULTI_VALUE_FACETS.md), then Stage once with
 OR within the field and the original scope retained.
+[Activity scope snapshots](docs/ACTIVITY_SCOPE_SNAPSHOTS.md) remove repeated
+retained-row copying from scope checks while preserving fresh owner guards.
 [Log volume in Activity](docs/ACTIVITY_LOG_CONTEXT.md) adds optional measured
 count bars and severity-text context; select an interval to stage its exact
 fixed-window explanation while retaining the stream.
