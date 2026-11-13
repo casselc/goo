@@ -65,7 +65,10 @@ Use shared journey gestures for native disclosure ancestry, keyboard/mobile
 checks and explicit source budgets. This is a finite adoption/conformance pass,
 not a global eligibility registry or whole-app rewrite.
 
-## 421 — next breadth: contextual Activity facet entry
+## 421 — breadth: contextual Activity facet entry (delivered)
+
+[Contract](ACTIVITY_FACET_ENTRY.md), [storyboard](journeys/activity-facet-entry.md),
+and [independent review](reviews/ACTIVITY_FACET_ENTRY_REVIEW_421.md).
 
 After the bounded 420 acceptance gates, expose existing counted-value exploration
 from a field the operator is already inspecting. This is an entry-point adoption,
@@ -106,6 +109,31 @@ This proposal follows the breadth/depth/consolidation cadence. Choose the next
 depth item after this entry improvement is exercised; it does not move deferred
 monitor delivery, tenancy, classifier training or warehouse work through their
 separate gates.
+
+## 422 — next depth: select several counted values
+
+Deepen the counted-facet workflow after 421 with explicit multi-value selection
+within one qualified field. Use OR among the selected values and AND with the
+retained applied scope; two country choices must never silently become US AND DE.
+Reuse the existing counted-values source and shared facet/list controls. No new
+query engine, inferred field taxonomy or persisted selection format is needed.
+
+Selection stays local over one immutable counted result. An explicit Stage
+selected action builds the checked predicate; Apply scope acquires a new
+observation. Keep missing, present-empty and literal lookalikes distinct, enforce
+predicate size/depth/value bounds before staging, and label counts as belonging
+to the original applied window. Selecting values does not compute a new
+population total, refresh counts or grant coverage. Changed/retired read scope
+withdraws selection authority. Existing context entry and native return behavior
+must remain cohesive across keyboard/mobile interaction.
+
+This follows actual 421 usability and source review: the current individual
+counted-value action stages immediately and invalidates the lookup. Merely
+allowing two sequential clicks would compose contradictory AND predicates;
+selection needs its own explicit local draft and one atomic predicate handoff.
+Require actual-source scope conservation, exact generated predicate semantics,
+stale-action controls and updated executable storyboards before broadening the
+workflow to other data families.
 
 ## Reconciliation and boundaries
 

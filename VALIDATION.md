@@ -1,5 +1,51 @@
 # Validation record
 
+## 421 — contextual Activity facet entry
+
+[Contract and diagram](docs/ACTIVITY_FACET_ENTRY.md),
+[storyboard](docs/journeys/activity-facet-entry.md), and
+[independent review](docs/reviews/ACTIVITY_FACET_ENTRY_REVIEW_421.md).
+
+- **1,608 frontend tests pass**, zero failures/skips (22.560s with bounded test
+  concurrency). Field intent reuses attribute actions and the existing Filters/
+  counted-values controls. Entry/focus acquire no telemetry; selected Load
+  controls retain exact scope/current-owner leases. Numeric columns refuse before
+  projection; long observed values do not hide an otherwise valid field action.
+  Native/stale load and counted-value staging guards are covered.
+- Generated Hegel checks against actual query/result/entry helpers pass (3.961s
+  initial run): qualified fields, exact selectors/predicates/windows, missing/
+  empty values, large counts, malformed partitions and superseded-response
+  cancellation. Switching contextual fields invalidates the prior lookup without
+  acquiring another one.
+- Real OTLP/ClickHouse logs and spans journeys plus **35-second Bombadil campaign
+  pass** (two tests, 58.7s). The main journey records eleven continuous facts and
+  zero page errors. Each explicit counted-value load uses **one acquisition/two
+  SQL reads**; entry, native return, search and staging add no reads. Actual source
+  counts are 261 logs beyond a retained 100-row buffer and 112 spans. The rare
+  canary is absent from those retained logs and present in the full-scope result.
+  Resource/attribute namespaces, missing/empty values, typed environment policy,
+  full predicate and UTC bounds match the independent oracle.
+- The separate actor completes across **686 snapshots** with one lookup, 261
+  records, 100 source-checked retained IDs, held observations preserved and no
+  publication. It runs after all main facts. Both isolated runtimes stop cleanly.
+- Full isolated Hegel/native Quint suite passes **29.806s with no skips**: 32
+  generated seeds exercise exact scope/count semantics and late cancellation;
+  native checks replay the actual eleven-fact ledger and reject implicit or
+  excessive reads and invalid pending transitions.
+- Six regenerated 1440/390/320-pixel frames have independent visual acceptance.
+  Live checks caught an availability guard evaluated before inspector mount and
+  a four-pixel flex overflow; both were fixed before acceptance. Scope preview is
+  readable shared-component text associated with Load through `aria-describedby`.
+  Repeated inspection, native close-to-opener return and changed-scope Apply focus
+  are browser assertions. Driver row-budget, quoted-selector and normalized-record
+  identity fixes retain the full source oracle rather than weakening it.
+- Compiled the app using Go 1.27.3 and refreshed only its container. Both 8088/8089
+  serve byte-identical final facet/Activity/editor modules. Go product code, API
+  schemas and SQL generation are unchanged; no new backend/API regression run is
+  claimed. Retention cleanup removed expired browser diagnostics and unused Docker
+  build cache, recovering about 14 GiB free space while retaining services,
+  telemetry, captures, models and current documentation frames.
+
 ## 420 — contextual actions and retained return
 
 [Contract and diagram](docs/CONTEXTUAL_ACTIONS.md),

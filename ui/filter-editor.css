@@ -1,0 +1,13 @@
+/* Shared fixed-scope preview; the owning page controls editor placement. */
+.filter-editor .filter-observations .filter-facet-scope {
+  display: block;
+  margin-block: 6px;
+  margin-inline: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}

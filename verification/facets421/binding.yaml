@@ -1,0 +1,13 @@
+spec: facets.qnt
+module: facets
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  local: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  inspect: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  facet: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  load: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  stage: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  begin_load: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  finish_load: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  retire: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}

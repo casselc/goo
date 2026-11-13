@@ -2069,3 +2069,12 @@ Contextual action owners share native invocation/completion checks and opt-in
 retained disclosure/focus return. Service widgets and record inspection adopt
 these without moving source ownership into components. See
 [contextual actions](CONTEXTUAL_ACTIONS.md) for the bounded contract and checks.
+
+Activity facet entry reuses attribute intent and the existing filter editor. The
+optional `onFacetValues(field, opener)` returns acceptance feedback; its
+`canFacetValues(field)` availability callback must be safe before mount. The
+application callback separately checks the current inspector/native-action lease.
+`focusField(field, {label, current})` reveals an observed categorical field and
+returns its existing Load button; it never calls the source loader. Its shared
+scope preview is associated with Load through `aria-describedby` and styled in
+`filter-editor.css`. See [Activity facet entry](ACTIVITY_FACET_ENTRY.md).

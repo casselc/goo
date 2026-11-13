@@ -18,8 +18,10 @@ or 8 MiB, and affected contexts show an explicit deterministic first 32.
 
 [Contextual actions](CONTEXTUAL_ACTIONS.md) now share native guards and retained
 focus return across service widgets and record inspection. This is a bounded
-two-owner adoption, not a whole-app action or accessibility audit. Direct Activity
-facet entry remains next; full-scope counted values already exist in Filters.
+two-owner adoption, not a whole-app action or accessibility audit. [Activity facet entry](ACTIVITY_FACET_ENTRY.md) now reveals existing full-scope
+counted values from inspected fields. Its scope is the latest completed Activity
+window, which may differ from the inspected record window. Multi-value facet
+selection remains next; numeric columns use numeric exploration.
 
 Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
 status and the [active roadmap](ROADMAP_2026_11_13_CHECKPOINT_417.md) for priorities.

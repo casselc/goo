@@ -160,6 +160,8 @@ count, mean duration or recorded Error comparison. Error fractions retain exact
 count support and unset status. Run stays explicit; Back restores the held service.
 [Contextual action return](docs/CONTEXTUAL_ACTIONS.md) restores the clicked service
 action or record-inspector control while retaining its existing evidence.
+[Facet an inspected Activity field](docs/ACTIVITY_FACET_ENTRY.md) through the existing
+Filters and explicit full-scope counted-value read.
 [Log volume in Activity](docs/ACTIVITY_LOG_CONTEXT.md) adds optional measured
 count bars and severity-text context; select an interval to stage its exact
 fixed-window explanation while retaining the stream.
