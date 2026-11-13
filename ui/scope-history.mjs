@@ -1,28 +1,22 @@
+import {object,array} from './intent-shape.mjs';
 /* Configuration only: no telemetry, source authority or retained results. */
 import * as Protocol from './question-protocol.mjs';
 import * as Session from './question-session.mjs';
 import * as Environment from './record-environment.mjs';
 import * as Columns from './record-columns.mjs';
 const day=86400000,maximum=20;
-const closed=(v,keys)=>v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).every(k=>keys.includes(k));
-function fields(q){
- const check=(v,keys)=>{if(!closed(v,keys))throw Error('Unsupported scope fields.');};
- const field=v=>check(v,['kind','key']);
- const numeric=v=>{check(v,['field','type','unit','parse','scale']);field(v.field);};
- const pred=v=>{if(v.all||v.any){check(v,[v.all?'all':'any']);(v.all||v.any).forEach(pred);}else{check(v,v.numeric?['numeric','op','value']:['field','op','value']);if(v.numeric)numeric(v.numeric);else field(v.field);}};
- if(q.environmentSelector)Environment.normalize(q.environmentSelector);
- if(q.where)pred(q.where);if(q.groupBy)q.groupBy.forEach(field);if(q.numeric)numeric(q.numeric);if(q.numericHistogram)check(q.numericHistogram,['binning']);
- if(q.reportedEdge){check(q.reportedEdge,['parent','child','discoveryNamespace']);for(const side of [q.reportedEdge.parent,q.reportedEdge.child]){check(side,['service','namespace']);check(side.namespace,['mode','value']);}if(q.reportedEdge.discoveryNamespace)check(q.reportedEdge.discoveryNamespace,['mode','value']);}
-}
+const closed=(v,keys)=>{try{object(v,keys);return true}catch{return false}};
+const budget=value=>{if(new TextEncoder().encode(JSON.stringify(value)).length>16384)throw Error('Scope configuration exceeds 16 KiB.');};
 export function normalizeIntent(raw){
- if(new TextEncoder().encode(JSON.stringify(raw)).length>16384)throw Error('Scope configuration exceeds 16 KiB.');
+ object(raw,['kind','question','view','selector','columns','fieldColumns','baselineCapture'],'Invalid scope configuration.');
  if(!closed(raw,raw?.kind==='question'?['kind','question','view']:['kind','selector','columns','fieldColumns','baselineCapture']))throw Error('Invalid scope configuration.');
- if(raw.kind==='question'){Protocol.validateRecordQuestion(raw.question,raw.view||'Records');fields(raw.question);const question=structuredClone(raw.question);question.offset=0;return {kind:'question',question,view:raw.view||'Records'};}
+ if(raw.kind==='question'){const view=raw.view===undefined?'Records':raw.view;Protocol.validateRecordQuestion(raw.question,view);budget(raw);const question=structuredClone(raw.question);return {kind:'question',question,view};}
  if(raw.kind!=='activity'||!closed(raw.selector,['signal','environment','environmentSelector','where'])||!['logs','spans'].includes(raw.selector.signal))throw Error('Invalid Activity scope.');
- Protocol.validateRecordQuestion({...raw.selector,fromMs:0,toMs:60000});fields(raw.selector);for(const field of raw.fieldColumns||[])if(!closed(field,['kind','key']))throw Error('Invalid field columns.');
+ if(raw.columns!==undefined)array(raw.columns);if(raw.fieldColumns!==undefined)array(raw.fieldColumns);
+ Protocol.validateRecordQuestion({...raw.selector,fromMs:0,toMs:60000,limit:100,offset:0});for(const field of raw.fieldColumns||[])if(!closed(field,['kind','key']))throw Error('Invalid field columns.');
  const layout=Columns.validate({columns:raw.columns,fieldColumns:raw.fieldColumns||[]},['utc','service','summary']);
- if(raw.baselineCapture!==undefined&&(!/^[a-f0-9]{64}$/.test(raw.baselineCapture)||raw.selector.signal!=='spans'))throw Error('Invalid baseline reference.');
- return {kind:'activity',selector:structuredClone(raw.selector),...layout,...(raw.baselineCapture?{baselineCapture:raw.baselineCapture}:{})};
+ if(raw.baselineCapture!==undefined&&(typeof raw.baselineCapture!=='string'||!/^[a-f0-9]{64}$/.test(raw.baselineCapture)||raw.selector.signal!=='spans'))throw Error('Invalid baseline reference.');
+ budget(raw);return {kind:'activity',selector:structuredClone(raw.selector),...layout,...(raw.baselineCapture?{baselineCapture:raw.baselineCapture}:{})};
 }
 export function identity(raw){const v=normalizeIntent(raw);return v.kind==='question'?v.kind+Session.identity(v.question)+v.view:v.kind+Session.identity({...v.selector,fromMs:0,toMs:60000})+JSON.stringify([v.columns,v.fieldColumns,v.baselineCapture||'']);}
 export function describe(raw){const v=normalizeIntent(raw),q=v.question||v.selector;return (v.kind==='activity'?'Activity':'Fixed question')+' · '+q.signal+' · '+Environment.questionLabel(q);}

@@ -1118,7 +1118,7 @@
       "valid": false
     },
     {
-      "name": "nullable numeric member legacy alias",
+      "name": "null numeric arm refused",
       "predicate": {
         "field": {
           "kind": "attribute",
@@ -1128,7 +1128,7 @@
         "op": "eq",
         "value": "eu"
       },
-      "valid": true,
+      "valid": false,
       "canonical": {
         "field": {
           "kind": "attribute",

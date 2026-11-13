@@ -1400,7 +1400,7 @@ schemas['TailBatch']['allOf']=[{'if':{'properties':{'membershipState':{'const':'
 # Exception grouping accepts only an ordinary record scope; shaping directives are refused.
 exception_op=spec['paths']['/exception-groups']['post']
 exception_op['description']='Explicit query-only exact exception signature groups over a fixed ordinary log/span scope. Exactly two source reads, 1000 complete groups maximum, 8 MiB result budget, 32 shown qualified service/version identities per group with exact distinct total and limited flag. Span grain is records, not event occurrences; every named event must report the same complete type/stack tuple to classify. First/last are record timestamps within the query window.'
-exception_op['requestBody']['content']['application/json']['schema']={'allOf':[ref('RecordQuery'),{'properties':{'groupBy':{'type':['array','null'],'maxItems':0},'offset':{'enum':[0,None]},'summary':{'enum':['',None]},'spanStatus':{'enum':[False,None]},'groupTimeSeries':{'enum':[False,None]},'bucketMs':{'enum':[0,None]},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'}}}]}
+# The final strict record contract below supplies this route's closed scope shape.
 tail=spec['paths']['/tail']['post']
 tail['responses']['200']={'description':'SSE frames: per-connection numeric id, event (reset/batch/gap), JSON data, blank line. POST via fetch, not browser EventSource. No resumable cursor or replay guarantee.','headers':{'Cache-Control':{'schema':{'const':'no-store'}},'X-Accel-Buffering':{'schema':{'const':'no'}}},'content':{'text/event-stream':{'schema':{'type':'string'},'example':'id: 1\nevent: reset\ndata: {"connection":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","windowMs":60000,"selector":{"environment":"prod"},"continuity":"unknown","replay":false}\n\n'}}}
 tail['x-sse-events']={'reset':ref('TailReset'),'batch':ref('TailBatch'),'gap':ref('TailGap')}
@@ -1528,5 +1528,75 @@ def capture_review_contract():
    op['x-go-response-limit-bytes']=4194304
 
 capture_review_contract()
+def strict_record_input_contract417():
+ """Close only Query's reachable input graph; other families retain their own null policies."""
+ prefix='recordintent.'
+ cloned={}
+ def clone_input(name):
+  if name in cloned:return cloned[name]
+  target=prefix+name;cloned[name]=target;schemas[target]={}
+  schemas[target]=nonnull(copy.deepcopy(schemas[name]))
+  return target
+ def nonnull(value):
+  if isinstance(value,list):return [nonnull(item) for item in value]
+  if not isinstance(value,dict):return value
+  if value.get('type')=='null':return False
+  out={key:nonnull(item) for key,item in value.items()}
+  if '$ref' in out:
+   name=out['$ref'].removeprefix('#/components/schemas/')
+   if name.endswith('Input') and name in schemas:out['$ref']=ref(clone_input(name))['$ref']
+  if isinstance(out.get('type'),list):out['type']=[kind for kind in out['type'] if kind!='null']
+  if 'anyOf' in out:
+   choices=[item for item in out.pop('anyOf') if item is not False]
+   if not choices:return False
+   if len(choices)==1:return {'allOf':[choices[0],out]} if out else choices[0]
+   out['anyOf']=choices
+  return out
+ root_name=clone_input('exploration.QueryInput')
+ def model(name):return schemas[cloned[name]]
+ def strict_ref(name):return ref(cloned[name])
+ literal={'type':'string','pattern':r'^[^\u0000\uD800-\uDFFF]*$'}
+ def text(limit,minimum=0):return {**literal,'minLength':minimum,'maxLength':limit,'x-go-max-utf8-bytes':limit}
+ field=model('exploration.FieldInput');field.update(required=['kind','key'],additionalProperties=False)
+ field['properties'].update(kind={'enum':['column','attribute','resource']},key=text(128,1))
+ columns=['service','trace_id','span_id','scope','scope_version','name','kind','status','duration_ns','timestamp_ns','duration_bucket','status_class','body','severity','severity_number','exception_event','exception_type','exception_type_state','exception_fingerprint_v1','body_pattern_v1']
+ field.setdefault('allOf',[]).append({'if':{'required':['kind'],'properties':{'kind':{'const':'column'}}},'then':{'properties':{'key':{'enum':columns}}}})
+ binding=model('exploration.NumericBindingInput');binding.update(required=['field','type','unit','parse'],additionalProperties=False)
+ binding['properties'].update(field={'allOf':[strict_ref('exploration.FieldInput'),{'properties':{'kind':{'enum':['attribute','resource']}}}]},type={'enum':['int64','uint64','decimal64']},parse={'const':'canonical-decimal'},unit={**text(64,1),'pattern':r'^[^\s\u0000-\u001f\u007f-\u009f\uD800-\uDFFF]+$'},scale={'type':'integer','minimum':0,'maximum':9})
+ binding.setdefault('allOf',[]).append({'if':{'required':['type'],'properties':{'type':{'const':'decimal64'}}},'then':{'required':['scale'],'properties':{'scale':{'minimum':1}}},'else':{'properties':{'scale':{'const':0}}}})
+ histogram=model('exploration.NumericHistogramSpecInput');histogram.update(required=['binning'],additionalProperties=False);histogram['properties']['binning']={'const':'powers-of-two'}
+ predicate_name=cloned['exploration.PredicateInput']
+ pred_ref=ref(predicate_name)
+ def branch(key):return {'type':'object','additionalProperties':False,'required':[key],'properties':{key:{'type':'array','minItems':1,'maxItems':31,'items':copy.deepcopy(pred_ref)}}}
+ string_leaf={'type':'object','additionalProperties':False,'required':['field','op'],'properties':{'field':strict_ref('exploration.FieldInput'),'op':{'enum':['eq','ne','contains','gte','lte','exists','missing']},'value':text(1024)}}
+ string_leaf['allOf']=[{'if':{'properties':{'op':{'enum':['exists','missing']}}},'then':{'properties':{'value':{'const':''}}}}]
+ numeric_leaf={'type':'object','additionalProperties':False,'required':['numeric','op'],'properties':{'numeric':strict_ref('exploration.NumericBindingInput'),'op':{'enum':['eq','ne','gt','gte','lt','lte','valid','missing','empty','invalid']},'value':text(32)}}
+ numeric_leaf['allOf']=[{'if':{'properties':{'op':{'enum':['valid','missing','empty','invalid']}}},'then':{'properties':{'value':{'const':''}}},'else':{'required':['value']}}]
+ schemas[predicate_name]={'oneOf':[branch('all'),branch('any'),string_leaf,numeric_leaf],'description':'One closed branch or typed leaf. Go enforces total 32 nodes, depth 4, exact UTF-8 byte bounds, field/operator compatibility and numeric thresholds. Explicit empty op/value padding is not allowed on branches.','x-go-max-predicate-nodes':32,'x-go-max-predicate-depth':4}
+ namespace=model('identity.NamespaceInput');namespace.update(required=['mode'],additionalProperties=False)
+ namespace['properties'].update(mode={'enum':['missing','value']},value=text(128))
+ namespace.setdefault('allOf',[]).append({'if':{'properties':{'mode':{'const':'missing'}}},'then':{'properties':{'value':{'const':''}}}})
+ service=model('exploration.EdgeServiceInput');service.update(required=['service','namespace'],additionalProperties=False);service['properties']['service']=text(128)
+ edge=model('exploration.ReportedEdgeInput');edge.update(required=['parent','child'],additionalProperties=False)
+ selected=model('identity.EnvironmentSelectorInput');selected.update(required=['version','policy','scope'],additionalProperties=False)
+ selected['properties']['scope']['properties']['value'].update(text(128))
+ query=schemas[root_name];query.update(required=['signal','fromMs','toMs','limit'],additionalProperties=False)
+ props=query['properties'];props.update(signal={'enum':['logs','spans']},environment=text(128),fromMs={'type':'integer','minimum':0,'maximum':4102444800000},toMs={'type':'integer','minimum':1,'maximum':4102444800000},limit={'type':'integer','minimum':1,'maximum':100},offset={'type':'integer','minimum':0,'maximum':1000},bucketMs={'enum':[0,1000,10000,60000,300000]},summary={'enum':['','span-duration']},spanStatus={'type':'boolean'},groupTimeSeries={'type':'boolean'},groupBy={'type':'array','maxItems':2,'uniqueItems':True,'items':strict_ref('exploration.FieldInput')})
+ query['oneOf']=[{'required':['environment'],'not':{'required':['environmentSelector']},'properties':{'environment':{'minLength':1}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''}}}]
+ query.setdefault('allOf',[]).extend([
+  {'if':{'required':['summary'],'properties':{'summary':{'const':'span-duration'}}},'then':{'properties':{'signal':{'const':'spans'}}}},
+  {'if':{'required':['spanStatus'],'properties':{'spanStatus':{'const':True}}},'then':{'properties':{'signal':{'const':'spans'}}}},
+  {'if':{'required':['groupTimeSeries'],'properties':{'groupTimeSeries':{'const':True}}},'then':{'required':['groupBy','bucketMs'],'properties':{'groupBy':{'minItems':1},'bucketMs':{'enum':[1000,10000,60000,300000]}}}},
+  {'if':{'required':['numericHistogram']},'then':{'required':['numeric']}}
+ ])
+ query['description']='Strict ordinary record intent: exact case-sensitive nested field names, no explicit nulls, one closed predicate arm and an explicit environment policy. Missing zero-valued presentation/offset defaults remain permitted. Go additionally enforces a positive half-open window up to 120 minutes, 240 buckets, 32 predicate nodes/depth 4, UTF-8 byte bounds, exact identities and field/signal/operator semantics. No carrier gets permission to drop unsupported intent.'
+ spec['x-contract-notes'].append('Ordinary record Query input is a closed non-null graph: exact field names and one predicate arm; missing zero defaults remain permitted. Other input families retain their independently documented null policies.')
+ schemas['exploration.QueryInput']=ref(root_name)
+ schemas['RecordQuery']=ref(root_name)
+ op=spec['paths']['/exception-groups']['post']
+ op['requestBody']['content']['application/json']['schema']={'allOf':[ref('RecordQuery'),{'not':{'anyOf':[{'required':[key]} for key in ('numeric','numericHistogram','reportedEdge')]},'properties':{'groupBy':{'type':'array','maxItems':0},'offset':{'const':0},'summary':{'const':''},'spanStatus':{'const':False},'groupTimeSeries':{'const':False},'bucketMs':{'const':0}}}]}
+
+strict_record_input_contract417()
+
 (ROOT/'api/openapi.json').write_text(json.dumps(spec,indent=2,ensure_ascii=False)+'\n')
 print(f'Built OpenAPI: {sum(len(p) for p in spec["paths"].values())} operations, {len(schemas)} schemas')

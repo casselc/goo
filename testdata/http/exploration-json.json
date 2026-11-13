@@ -770,7 +770,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"signal must be spans or logs\"}\n"
+      "response": "{\"error\":\"record question requires known non-null fields\"}\n"
     },
     {
       "name": "/explore/array",
@@ -784,7 +784,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: cannot unmarshal array into Go value of type exploration.Query\"}\n"
+      "response": "{\"error\":\"record question requires known non-null fields\"}\n"
     },
     {
       "name": "/explore/truncated",
@@ -812,7 +812,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: unknown field \\\"sql\\\"\"}\n"
+      "response": "{\"error\":\"record question requires known non-null fields\"}\n"
     },
     {
       "name": "/explore/nested-invalid",
@@ -826,7 +826,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: unknown field \\\"unknown\\\"\"}\n"
+      "response": "{\"error\":\"record question requires known non-null fields\"}\n"
     },
     {
       "name": "/explore/second-value",
@@ -971,7 +971,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field Query.fromMs of type int64\"}\n"
+      "response": "{\"error\":\"json: cannot unmarshal number 9007199254740993.5 into Go struct field wire.fromMs of type int64\"}\n"
     }
   ]
 }

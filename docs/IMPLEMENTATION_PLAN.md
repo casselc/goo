@@ -1,12 +1,13 @@
 # Implementation plan
 
-> Active execution order: [414 product checkpoint](ROADMAP_2026_11_12_CHECKPOINT_414.md),
+> Active execution order: [417 product checkpoint](ROADMAP_2026_11_13_CHECKPOINT_417.md),
 > reconciled across the independent product/architecture reviews summarized there.
 > The adopted operator cadence delivered **412 fleet service triage** and
 > **413 Activity log volume**. **414 recent and pinned scope
 > consolidation** completes that cycle. **415 guided service-version comparison**
-> and **416 recurring exception groups** are delivered. Next is **417 record-intent admission**
-> following independent product and architecture review. The older labeling queue
+> and **416 recurring exception groups** are delivered. **417 record-intent admission** is delivered. Next is **418 ordinary captured-rate
+> comparisons → 419 version recorded-Error context → 420 contextual action consistency**,
+> following the whole-product checkpoint. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped
 > P95, host sample context and broader platform work remain deferred.

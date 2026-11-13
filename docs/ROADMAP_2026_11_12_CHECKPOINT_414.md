@@ -1,5 +1,7 @@
 # Roadmap after the 414 checkpoint
 
+This cycle is delivered. Continue with the [417 checkpoint](ROADMAP_2026_11_13_CHECKPOINT_417.md).
+
 The preceding breadth/depth/consolidation cycle delivered fleet service triage
 (412), full-query log volume (413), and configuration recall (414). See [scope recall](RECENT_PINNED_SCOPES.md) and
 [validation](../VALIDATION.md) for its actual status. This queue follows
@@ -48,7 +50,9 @@ stack identity. Bound affected service/version summaries and define behavior whe
 source data is incomplete. Do not silently coalesce missing/empty values.
 Defer persistent issue lifecycle, resolution state and cross-deployment deduplication.
 
-## 417 — consolidate: ordinary record-intent admission
+## 417 — consolidate: ordinary record-intent admission (delivered)
+
+Delivered as [shared record-intent admission](RECORD_INTENT_ADMISSION.md).
 
 Share one pure strict configuration admission contract across link, staging and
 history boundaries. Current question-link, predicate-editor and history checks

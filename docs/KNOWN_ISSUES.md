@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+[Record-intent admission](RECORD_INTENT_ADMISSION.md) now shares strict configuration
+checks across staging, links and recall. Carrier byte limits remain distinct;
+a legal query can be too large for a URL or request. Invalid links preserve held
+results. This prerelease does not repair older null/default-based saved intent.
+
 [Exception groups](EXCEPTION_GROUPS.md) are query-only exact type/stack signatures,
 not normalized issues or lifetime history. Raw paths, addresses and runtime headers
 can split signatures. Incomplete/conflicting span events remain unclassified;
@@ -7,7 +12,7 @@ read/count disagreement disables staging. Results refuse more than 1,000 groups
 or 8 MiB, and affected contexts show an explicit deterministic first 32.
 
 Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
-status and the [active roadmap](ROADMAP_2026_11_12_CHECKPOINT_414.md) for priorities.
+status and the [active roadmap](ROADMAP_2026_11_13_CHECKPOINT_417.md) for priorities.
 [Operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) delivers shared shell,
 record/attribute inspection and service-discovery improvements. Mobile service-card
 layout and further contextual action discovery remain bounded refinements.

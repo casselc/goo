@@ -20,6 +20,68 @@ def validator(spec, schema):
     return Draft202012Validator({'allOf': [schema], 'components': spec['components']})
 
 
+def check_record_intent417(spec):
+    """Ordinary query input is a closed non-null graph, distinct from other DTOs."""
+    shapes=[{'$ref':'#/components/schemas/RecordQuery'},
+            {'$ref':'#/components/schemas/exploration.QueryInput'}]
+    shapes.extend(spec['paths'][path]['post']['requestBody']['content']['application/json']['schema']
+                  for path in ('/explore','/explore/page','/explore/counted-values','/record-aggregates'))
+    base={'signal':'logs','environment':'prod','fromMs':0,'toMs':60000,'limit':100}
+    leaf={'field':{'kind':'attribute','key':'custom.field'},'op':'eq','value':''}
+    numeric={'field':{'kind':'attribute','key':'amount'},'type':'decimal64','scale':2,'unit':'USD','parse':'canonical-decimal'}
+    selector={'version':'goo/environment-selector/v1','policy':'effective','scope':{'mode':'empty'}}
+    good=[base,{**base,'offset':0,'spanStatus':False,'groupTimeSeries':False,'bucketMs':0,'summary':'','groupBy':[]},
+          {**base,'where':leaf},
+          {**base,'where':{'all':[leaf,{'numeric':numeric,'op':'gte','value':'1.00'}]}},
+          {**base,'numeric':numeric,'numericHistogram':{'binning':'powers-of-two'}},
+          {**{key:value for key,value in base.items() if key!='environment'},'environmentSelector':selector},
+          {**base,'environment':'','environmentSelector':selector}]
+    invalid=[None,[],{}, {key:value for key,value in base.items() if key!='limit'},
+             {**base,'Signal':'spans'},{**base,'unknown':True},{**base,'limit':101},
+             {**base,'summary':'span-duration'},{**base,'spanStatus':True},{**base,'groupTimeSeries':True},
+             {**base,'where':{'all':[leaf],'op':''}},{**base,'where':{'any':[leaf],'value':''}},
+             {**base,'where':{'all':[leaf],'any':[]}},
+             {**base,'where':{**leaf,'numeric':numeric}},
+             {**base,'where':{**leaf,'unknown':True}},
+             {**base,'where':{**leaf,'value':None}},
+             {**base,'where':{**leaf,'value':'a\x00b'}},
+             {**base,'where':{**leaf,'field':{**leaf['field'],'unknown':True}}},
+             {**base,'where':{'Field':leaf['field'],'op':'eq','value':'x'}},
+             {**base,'where':{'all':[None]}},
+             {**base,'groupBy':[{'kind':'column'}]},
+             {**base,'groupBy':[{'kind':'column','key':'service','Unknown':True}]},
+             {**base,'numeric':{**numeric,'unit':None}},
+             {**base,'numeric':{**numeric,'field':{**numeric['field'],'unknown':True}}},
+             {**base,'numericHistogram':{'binning':'powers-of-two'}},
+             {**base,'environment':'prod','environmentSelector':None}]
+    for key in ('environment','signal','fromMs','toMs','limit','offset','where','groupBy','numeric',
+                'numericHistogram','reportedEdge','summary','spanStatus','bucketMs','groupTimeSeries'):
+        invalid.append({**base,key:None})
+    for shape in shapes:
+        check=validator(spec,shape)
+        for request in good:check.validate(request)
+        for request in invalid:assert not check.is_valid(request), ('strict record intent accepted',shape,request)
+    check=validator(spec,shapes[0])
+    edge={'parent':{'service':'api','namespace':{'mode':'missing'}},
+          'child':{'service':'worker','namespace':{'mode':'value','value':''}}}
+    spans={**base,'signal':'spans','reportedEdge':edge,'summary':'span-duration','spanStatus':True}
+    check.validate(spans)
+    for parent in ({'namespace':{'mode':'missing'}},{'service':'api'},
+                   {'service':'api','namespace':{'mode':'missing','unknown':True}}):
+        assert not check.is_valid({**spans,'reportedEdge':{**edge,'parent':parent}}), 'incomplete/unknown edge identity accepted'
+    # The ordinary-input hardening must not mutate nullable FieldInput used by
+    # other independently governed request families.
+    validator(spec,{'$ref':'#/components/schemas/exploration.FieldInput'}).validate({'kind':'attribute','key':None})
+    exception=validator(spec,spec['paths']['/exception-groups']['post']['requestBody']['content']['application/json']['schema'])
+    exception.validate(base)
+    exception.validate({**base,'groupBy':[],'offset':0,'summary':'','spanStatus':False,'groupTimeSeries':False,'bucketMs':0})
+    for fields in ({'numeric':None},{'numeric':numeric},{'numericHistogram':None},{'reportedEdge':None},
+                   {'groupBy':None},{'groupBy':[leaf['field']]},{'offset':None},{'offset':1},
+                   {'summary':None},{'spanStatus':None},{'groupTimeSeries':None},{'bucketMs':None}):
+        assert not exception.is_valid({**base,**fields}), ('exception shaping directive admitted',fields)
+    print('Record intent417: closed non-null recursive input, explicit selection, zero defaults, predicate unions and exception-scope refusals pass')
+
+
 def check_capture_reviews(spec):
     """The new review surface is strict metadata/custody, not a telemetry query."""
     routes=[('post','/record-reviews/tasks'),('get','/record-reviews/tasks/{id}'),
@@ -856,7 +918,13 @@ def check_record_only_compositions(spec):
         bad=copy.deepcopy(composition);bad['children'].append({'comparison':{'version':'goo.view/1','scope':record['scope'],'kind':{'name':'captured-count-comparison','version':1},'baselineCapture':'a'*64,'display':{'value':'count'}}});invalid.append(bad)
         for bad in invalid:
             assert not cc.is_valid(bad),'invalid record-only shape admitted'
-        unused=copy.deepcopy(view);unused['queries'][0].update(numeric=None,numericHistogram=None,reportedEdge=None,groupTimeSeries=False);vc.validate(unused)
+        defaults=copy.deepcopy(view);defaults['queries'][0].update(groupTimeSeries=False,spanStatus=False,bucketMs=0,summary='',groupBy=[]);vc.validate(defaults)
+        # Input Query now refuses explicit null arms; the separate historical
+        # output DTO graph is not the request-admission contract.
+        if suffix=='Input':
+            for key in ('numeric','numericHistogram','reportedEdge'):
+                unused=copy.deepcopy(view);unused['queries'][0][key]=None
+                assert not vc.is_valid(unused), ('null record-only query directive admitted',key)
         for field,value in [('numeric',{'field':{'kind':'attribute','key':'work'},'type':'int64','unit':'items','parse':'canonical-decimal'}),('numericHistogram',{'binning':'powers-of-two'}),('reportedEdge',{'parent':{'service':'api'},'child':{'service':'worker'}}),('groupTimeSeries',True)]:
             bad=copy.deepcopy(view);bad['queries'][0][field]=value
             assert not vc.is_valid(bad),'specialized record-only profile admitted'
@@ -1490,6 +1558,7 @@ def check_http_client_profile385(spec):
     print('Outgoing HTTP385: exact profile enum, nullable generic selection and native/alias refusal shape pass')
 
 def check(spec):
+    check_record_intent417(spec)
     review_responses,review_accepted=check_capture_reviews(spec)
     check_package_scopes(spec)
     check_typed_reported_edges(spec)
@@ -1527,7 +1596,10 @@ def check(spec):
         if path == '/explore':
             base.update(fromMs=100000,toMs=160000,limit=100,offset=0)
         check_body.validate({**base,'environment':'prod'})
-        check_body.validate({**base,'environment':'prod','environmentSelector':None})
+        if path == '/tail':
+            check_body.validate({**base,'environment':'prod','environmentSelector':None})
+        else:
+            assert not check_body.is_valid({**base,'environment':'prod','environmentSelector':None}), 'ordinary record intent cannot erase explicit null selection'
         for case in bank['cases']:
             check_body.validate({**base,'environmentSelector':case['selector']})
             check_body.validate({**base,'environment':'','environmentSelector':case['selector']})

@@ -1,6 +1,7 @@
+import {object as closed} from './intent-shape.mjs';
 /* Pure exact numeric-predicate admission. No DOM or source reads. */
 function validateNumericPredicate(p){
-  const object=(v,keys)=>v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).every(k=>keys.includes(k)),bytes=v=>new TextEncoder().encode(v).length;
+  const object=(v,keys)=>{try{closed(v,keys);return true}catch{return false}},bytes=v=>new TextEncoder().encode(v).length;
   if(!object(p,['numeric','op','value'])||!object(p.numeric,['field','type','unit','parse','scale']))throw Error('Use one numeric binding per condition, without an untyped field or group.');
   const b=p.numeric,f=b.field,wellFormed=s=>![...s].some(c=>{const n=c.codePointAt(0);return n>=0xD800&&n<=0xDFFF});
   if(!object(f,['kind','key'])||!['attribute','resource'].includes(f.kind)||typeof f.key!=='string'||!f.key||!wellFormed(f.key)||bytes(f.key)>128||f.key.includes('\0'))throw Error('Choose an attribute or resource numeric field (up to 128 bytes).');

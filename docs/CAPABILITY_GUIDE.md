@@ -5,14 +5,17 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-416, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
+417, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
 [fleet service triage](SERVICE_TRIAGE.md).
-The [active roadmap](ROADMAP_2026_11_12_CHECKPOINT_414.md) owns execution order;
+The [active roadmap](ROADMAP_2026_11_13_CHECKPOINT_417.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
 below are research inputs, not additional backlogs or claims of vendor parity.
 
 [Query-only exception groups](EXCEPTION_GROUPS.md) identify exact reported type/stack
 signatures across logs or spans, with explicit unclassified records and ordinary drill-down.
+
+[Shared record-intent admission](RECORD_INTENT_ADMISSION.md) preserves exact queries
+across staging, links and recall; refused links retain held evidence.
 
 ## What users can do
 
@@ -64,7 +67,8 @@ numeric and selected native histogram surfaces and action readiness.
 [Log volume/severity-text context](ACTIVITY_LOG_CONTEXT.md) (413) is delivered.
 [Recent/pinned scope recall](RECENT_PINNED_SCOPES.md) (414) consolidates browser configuration and held-visit entry.
 [Guided service-version comparisons](SERVICE_VERSION_COMPARISONS.md) (415) now reuse count/mean comparisons from an exact fixed service scope.
-Next: recurring exception groups (416), following the [414 checkpoint](ROADMAP_2026_11_12_CHECKPOINT_414.md). Captured-example task discovery and adjacent labeling are deferred. Delivered
+Next: ordinary captured-rate comparisons (418), version recorded-Error context (419),
+and contextual action consistency (420), following the [417 checkpoint](ROADMAP_2026_11_13_CHECKPOINT_417.md). Captured-example task discovery and adjacent labeling are deferred. Delivered
 capabilities and remaining boundaries are distinguished below.
 
 | Area | Remaining gap or decision | Current reference |

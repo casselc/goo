@@ -47,7 +47,8 @@ test('records-only admission refuses absent records, hidden sole records and agg
  assert.throws(()=>C.validate({...record,children:[...record.children,{timeline}]},grouped));assert.equal(C.recordOnly(full),false);
 });
 test('records-only preserves unused ordinary directives without permitting specialized profiles',()=>{
- const q={...query(),groupBy:[{kind:'column',key:'service'},{kind:'attribute',key:'team'}],bucketMs:1000,spanStatus:true,numeric:null,numericHistogram:null,reportedEdge:null,groupTimeSeries:false};
+ const q={...query(),groupBy:[{kind:'column',key:'service'},{kind:'attribute',key:'team'}],bucketMs:1000,spanStatus:true,groupTimeSeries:false};
+ for(const key of ['numeric','numericHistogram','reportedEdge'])assert.throws(()=>C.createRecords({...q,[key]:null}));
  const before=structuredClone(q),c=C.createRecords(q);assert.deepEqual(C.view({version:1,title:'Exact records',queries:[q],composition:c}).queries,[before]);assert.deepEqual(q,before);
  const timeline=require('../ui/timeline-declaration.mjs').create({...q,groupBy:[{kind:'column',key:'service'}]});
  assert.throws(()=>C.validate({...c,children:[...c.children,{timeline}]},{...q,groupBy:[{kind:'column',key:'service'}]}),/Records-only/);

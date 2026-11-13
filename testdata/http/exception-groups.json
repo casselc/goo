@@ -27,7 +27,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: unknown field \\\"extra\\\"\"}\n"
+      "response": "{\"error\":\"record question requires known non-null fields\"}\n"
     },
     {
       "suffix": " {}",

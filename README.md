@@ -20,6 +20,9 @@ codes, missing/empty values and recorded span Error distinct.
 Errors & exceptions count exact type/stack signatures over the full searched population.
 Inspect inputs and affected services, then stage matching records without losing the held view.
 
+[Shared record-intent admission](docs/RECORD_INTENT_ADMISSION.md) keeps staged, linked
+and recalled queries consistent; malformed links preserve held results.
+
 
 [Reusable question packages](docs/TYPED_PACKAGE_SCOPES.md) retain environment
 policy, filters and existing measure profiles, including from saved evidence.

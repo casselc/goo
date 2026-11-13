@@ -27,7 +27,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: unknown field \\\"unexpected\\\"\"}\n"
+      "response": "{\"error\":\"record question requires known non-null fields\"}\n"
     },
     {
       "name": "trailing",

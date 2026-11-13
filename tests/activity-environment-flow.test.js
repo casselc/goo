@@ -23,10 +23,10 @@ test('tail response identity handles Go omission defaults without erasing select
  assert.notEqual(T.transportIdentity({environment:'prod'}),T.transportIdentity({environmentSelector:E.current('prod')}));
  assert.notEqual(T.transportIdentity({environmentSelector:E.effective({mode:'empty'})}),T.transportIdentity({environmentSelector:E.effective({mode:'unreported'})}));
  assert.throws(()=>T.transportIdentity({environment:'prod',environmentSelector:E.current('prod')}));
- const q={signal:'spans',environmentSelector:E.current('prod'),fromMs:1,toMs:2,reportedEdge:{parent:{},child:{}}};assert.throws(()=>P.validateRecordQuestion(q),/Invalid reported edge identity/);
+ const q={signal:'spans',environmentSelector:E.current('prod'),fromMs:1,toMs:2,limit:100,offset:0,reportedEdge:{parent:{},child:{}}};assert.throws(()=>P.validateRecordQuestion(q),/Invalid edge service/);
 });
 test('invalid selector starts leave the retained session unchanged and never reinterpret empty legacy names',()=>{
- const s=new S.Session(),q={signal:'logs',environment:'prod',fromMs:1,toMs:2},token=s.start(q);s.publish(token,{question:q});const before=s.snapshot();
- for(const bad of [{environment:''},{environment:'prod',environmentSelector:E.effective({mode:'empty'})},{environmentSelector:{version:'future',policy:'effective',scope:{mode:'empty'}}}]){const next={signal:'logs',fromMs:1,toMs:2,...bad};assert.throws(()=>s.start(next));assert.deepEqual(s.snapshot(),before);assert.throws(()=>P.validateRecordQuestion(next));}
+ const s=new S.Session(),q={signal:'logs',environment:'prod',fromMs:1,toMs:2,limit:100,offset:0},token=s.start(q);s.publish(token,{question:q});const before=s.snapshot();
+ for(const bad of [{environment:''},{environment:'prod',environmentSelector:E.effective({mode:'empty'})},{environmentSelector:{version:'future',policy:'effective',scope:{mode:'empty'}}}]){const next={signal:'logs',fromMs:1,toMs:2,limit:100,offset:0,...bad};assert.throws(()=>s.start(next));assert.deepEqual(s.snapshot(),before);assert.throws(()=>P.validateRecordQuestion(next));}
  const old={environment:'prod'},explicit={environment:'',environmentSelector:E.current('prod')};assert.ok(E.sameQuestionEnvironment(old,explicit));assert.notEqual(S.identity(old),S.identity(explicit));
 });

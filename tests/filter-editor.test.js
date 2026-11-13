@@ -15,7 +15,7 @@ test('typed numeric editor rejects invalid drafts without mutating or dropping t
  validate(numericLeaf('ne','-9223372036854775808','int64'));validate(numericLeaf('gt','9007199254740993'));validate(numericLeaf('lte','0'));
 });
 
-test('explicit null numeric envelope preserves a legacy string predicate as omitted numeric',()=>{const p={...leaf('eq','canary'),numeric:null};validate(p);assert.deepEqual(normalize(p),leaf('eq','canary'))});
+test('explicit null numeric envelope is refused without erasing the authored string condition',()=>{const p={...leaf('eq','canary'),numeric:null},before=structuredClone(p);assert.throws(()=>validate(p));assert.deepEqual(p,before);validate(leaf('eq','canary'));assert.deepEqual(normalize(leaf('eq','canary')),leaf('eq','canary'))});
 
 // Retained incompatible predicates must identify the repairable field.
 test('signal-specific refusal names the qualified field without changing the tree',()=>{

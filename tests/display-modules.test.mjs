@@ -71,7 +71,9 @@ test('display entry imports a closed passive graph without publishing namespaces
   for (const name of ['scope-view', 'measure-summary', 'grouped-timeline-view'])
     assert.ok(visited.has(new URL('../ui/' + name + '.mjs', import.meta.url).href));
   assert.ok(visited.has(new URL('../ui/exception-fingerprint-identity.mjs', import.meta.url).href));
-  assert.equal(visited.size, 65);
+  assert.ok(visited.has(new URL('../ui/record-intent.mjs', import.meta.url).href));
+  assert.ok(visited.has(new URL('../ui/intent-shape.mjs', import.meta.url).href));
+  assert.equal(visited.size, 67);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

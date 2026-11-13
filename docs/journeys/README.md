@@ -1,5 +1,8 @@
 # User journeys and storyboards
 
+[Record-intent admission](record-intent.md) (417) follows exact configuration through
+links, recall and explicit Run; invalid links retain held evidence without reads.
+
 [Exception groups](exception-groups.md) (416) follows ordinary logs and span exception
 events through explicit grouping, exact signature inspection and held record drill-down.
 

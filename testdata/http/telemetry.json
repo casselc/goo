@@ -97,7 +97,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: unknown field \\\"unknown\\\"\"}\n"
+      "response": "{\"error\":\"record question requires known non-null fields\"}\n"
     },
     {
       "name": "/telemetry-packages/draft/second-value",
@@ -340,7 +340,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: unknown field \\\"unknown\\\"\"}\n"
+      "response": "{\"error\":\"record question requires known non-null fields\"}\n"
     },
     {
       "name": "/telemetry-packages/numeric-plan/second-value",

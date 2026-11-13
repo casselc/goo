@@ -1,7 +1,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),{rangeQueries,definition}=require('../ui/population-workspace.mjs');
 
 test('recent entry resolves fresh bounds once without changing selectors, signal or source',()=>{
- const {recentQuestion}=require('../ui/population-workspace.mjs'),q={signal:'logs',environment:'prod',fromMs:1,toMs:2,offset:100,where:{any:[{field:{kind:'resource',key:'region'},op:'missing'},{field:{kind:'resource',key:'region'},op:'eq',value:''}]}},before=structuredClone(q),out=recentQuestion(q,1000000,5);
+ const {recentQuestion}=require('../ui/population-workspace.mjs'),q={signal:'logs',environment:'prod',fromMs:1,toMs:2,limit:100,offset:100,where:{any:[{field:{kind:'resource',key:'region'},op:'missing'},{field:{kind:'resource',key:'region'},op:'eq',value:''}]}},before=structuredClone(q),out=recentQuestion(q,1000000,5);
  assert.deepEqual(q,before);assert.equal(out.fromMs,700000);assert.equal(out.toMs,1000000);assert.equal(out.offset,0);assert.equal(out.signal,'logs');assert.deepEqual(out.where,q.where);assert.deepEqual(out.groupBy,[{kind:'column',key:'service'}]);out.where=null;assert.deepEqual(q,before);
  for(const [now,minutes] of [[NaN,5],[1000000,0],[1000000,121],[1000000,1.5],[1,5]])assert.throws(()=>recentQuestion(q,now,minutes));assert.throws(()=>recentQuestion({...q,environment:''},1000000,5));assert.throws(()=>recentQuestion({...q,signal:'metrics'},1000000,5));
 });

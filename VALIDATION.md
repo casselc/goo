@@ -1,5 +1,48 @@
 # Validation record
 
+## 417 — shared ordinary record-intent admission
+
+[Contract and diagram](docs/RECORD_INTENT_ADMISSION.md), [storyboard](docs/journeys/record-intent.md),
+[independent review](docs/reviews/RECORD_INTENT_REVIEW_417.md), and
+[whole-product checkpoint](docs/ROADMAP_2026_11_13_CHECKPOINT_417.md).
+
+- **1,575 frontend tests pass**, zero failures/skips. Shared admission now covers
+  protocol constructors/links, lifecycle stage/start, fixed execution and history.
+  Explicit selector adapters supply query defaults; full questions require their
+  own limit. Tests reject executable properties before copying/serialization,
+  preserve applied lifecycle state on refusal, retain continuation paging, and
+  distinguish missing/empty namespaces through known Go omission defaults.
+- All affected Go packages pass: `exploration`, `internal/recordhttp`, `workbench`,
+  and `cmd/goo`. Strict raw decoding rejects 39 controlled refusal cases, covering malformed/null/
+  unknown input and mixed predicate arms, preserves last-member replacement, and leaves
+  typed Query.Validate limits unchanged. HTTP refusal fixtures were updated for
+  the new pre-decode errors; status and source-effect budgets are unchanged.
+- Real OTLP/ClickHouse journey plus **35-second Bombadil campaign pass** (45.5s):
+  exact UTF-8 boundaries, 32 nodes/depth four, typed predicates, four link/history
+  round trips, 11 refusal cases across four boundaries, and an explicit 140-record
+  result with 100 displayed rows. Every bad link retains all 100 actual row contents
+  and applied phase without another POST. The final query deliberately omits offset;
+  Go's explicit zero response is adopted without rewriting the authored question.
+  The actor independently checks source/DOM IDs, held refusal, valid restaging,
+  mobile containment, completion and no publication. A Fetch boolean-method typo
+  in its initial driver was corrected before the passing campaign.
+- Isolated Hegel/native Quint suite passes **15.450s with no skips**: 32 generated
+  seeds, Go strict-wire/JavaScript admission parity, explicit source-free protocol,
+  the actual five-fact browser ledger, and rejecting read/held-state mutants.
+- OpenAPI passes: **114 operations, 759 schemas; 501 fixture responses,
+  202 admitted requests and 29 mux refusals**. Ordinary input has a separate
+  closed non-null graph; unrelated families retain their own null policies.
+  Negative controls cover recursive fields, nulls, case aliases, branch padding,
+  exact edge identities and exception-scope restrictions.
+- Rebuilt/refreshed only the application. Both 8088/8089 serve byte-identical
+  final admission modules and OpenAPI; a live missing-edge-service request returns
+  the expected strict 400 refusal. Telemetry services, streams, stores and XTDB remain intact.
+- The completed 415/416/417 cycle was reviewed across product/architecture and
+  usability. Next: **418 ordinary captured-rate comparisons**, **419 version
+  recorded-Error context**, **420 contextual action consistency**. Existing
+  Activity counted facets and specialized log-pattern rates are not relisted as gaps.
+
+
 ## Exception-group UI polish after 416
 
 The [presentation refinement](docs/EXCEPTION_GROUPS.md#presentation-refinement)

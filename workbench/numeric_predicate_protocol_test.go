@@ -1,7 +1,6 @@
 package workbench
 
 import (
-	"bytes"
 	"encoding/json"
 	"os"
 	"os/exec"
@@ -41,11 +40,11 @@ func TestTypedNumericPredicateProtocolFixtures(t *testing.T) {
 	}
 	for i, c := range fixture.Cases {
 		t.Run(c.Name, func(t *testing.T) {
-			var predicate exploration.Predicate
-			decoder := json.NewDecoder(bytes.NewReader(c.Predicate))
-			decoder.DisallowUnknownFields()
-			e := decoder.Decode(&predicate)
-			q := exploration.Query{Signal: "spans", Environment: "test", FromMS: 1000, ToMS: 61000, Limit: 100, Where: &predicate}
+			// Decode the whole wire question so explicit null cannot be lost before admission.
+			wireQuestion := append([]byte(`{"signal":"spans","environment":"test","fromMs":1000,"toMs":61000,"limit":100,"where":`), c.Predicate...)
+			wireQuestion = append(wireQuestion, '}')
+			var q exploration.Query
+			e := json.Unmarshal(wireQuestion, &q)
 			valid := e == nil && q.Validate() == nil
 			if valid != c.Valid || browser[i].Valid != c.Valid {
 				t.Fatalf("numeric Go/browser validity differs: Go=%v browser=%v expected=%v error=%v", valid, browser[i].Valid, c.Valid, e)
@@ -53,7 +52,7 @@ func TestTypedNumericPredicateProtocolFixtures(t *testing.T) {
 			if !c.Valid {
 				return
 			}
-			wire, _ := json.Marshal(predicate)
+			wire, _ := json.Marshal(q.Where)
 			var a, b any
 			json.Unmarshal(wire, &a)
 			json.Unmarshal(c.Canonical, &b)

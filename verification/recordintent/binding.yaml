@@ -1,0 +1,9 @@
+spec: model.qnt
+module: recordintent
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  local_intent: {expect: 'phase == {{.obs.phase}} and reads == {{.obs.reads}} and held == {{.obs.held}}'}
+  stage_intent: {expect: 'phase == {{.obs.phase}} and reads == {{.obs.reads}} and held == {{.obs.held}}'}
+  run_intent: {expect: 'phase == {{.obs.phase}} and reads == {{.obs.reads}} and held == {{.obs.held}}'}
+  refuse_intent: {expect: 'phase == {{.obs.phase}} and reads == {{.obs.reads}} and held == {{.obs.held}}'}

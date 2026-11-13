@@ -5,9 +5,9 @@ function view(){const q={signal:'spans',environment:'prod',fromMs:1000,toMs:6100
 const result=artifact=>({artifact,yaml:'version: goo.view-artifact/1\n'});
 test('portable transport preserves a checked definition and accepts only known Go wire omissions',()=>{
  const v=view(),before=structuredClone(v),artifact=A.artifact(v,labels),wire=structuredClone(artifact);delete wire.view.composition.children[0].aggregate.display.query;delete wire.view.composition.children[0].aggregate.display.requiresComplete;delete wire.view.composition.children[1].records.display.fieldColumns;
- const optional=structuredClone(artifact);delete optional.view.queries[0].limit;const canonical=structuredClone(optional);canonical.view.queries[0].limit=100;assert.doesNotThrow(()=>A.response(result(canonical),optional));
+ const missingLimit=structuredClone(artifact);delete missingLimit.view.queries[0].limit;assert.throws(()=>A.artifact(missingLimit.view,labels));assert.throws(()=>A.response(result(missingLimit),artifact));
  assert.deepEqual(A.response(result(wire),artifact).artifact,wire);assert.deepEqual(v,before);artifact.view.title='Changed';assert.deepEqual(v,before);
- const typed={...v.queries[0],environment:'',environmentSelector:{version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'named',value:'prod'}},numeric:null,groupTimeSeries:false};const source=A.artifact({...v,queries:[typed]},labels),omitted=structuredClone(source);delete omitted.view.queries[0].numeric;delete omitted.view.queries[0].groupTimeSeries;delete omitted.view.queries[0].environment;assert.doesNotThrow(()=>A.response(result(omitted),source));
+ const typed={...v.queries[0],environment:'',environmentSelector:{version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'named',value:'prod'}},groupTimeSeries:false};assert.throws(()=>A.artifact({...v,queries:[{...typed,numeric:null}]},labels));const source=A.artifact({...v,queries:[typed]},labels),omitted=structuredClone(source);delete omitted.view.queries[0].groupTimeSeries;delete omitted.view.queries[0].environment;assert.doesNotThrow(()=>A.response(result(omitted),source));
 });
 test('codec response cannot substitute fixed scope or authored display intent',()=>{
  const expected=A.artifact(view(),labels);
@@ -31,9 +31,10 @@ test('fixed query comparisons travel as configuration while capture references r
 });
 test('fixed comparison transport accepts only known display and baseline-query wire omissions',()=>{
  const P=require('../ui/captured-count-comparison.mjs'),q={...view().queries[0],environmentSelector:{version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'named',value:'prod'}}};delete q.environment;
- const baseline={...structuredClone(q),environment:'',bucketMs:0,summary:'',spanStatus:false,groupTimeSeries:false,numeric:null,numericHistogram:null,reportedEdge:null,where:{field:{kind:'column',key:'service'},op:'ne',value:'api'}};
+ const baseline={...structuredClone(q),environment:'',bucketMs:0,summary:'',spanStatus:false,groupTimeSeries:false,where:{field:{kind:'column',key:'service'},op:'ne',value:'api'}};
+ for(const key of ['numeric','numericHistogram','reportedEdge'])assert.throws(()=>P.createQuery(q,{...baseline,[key]:null}));
  const comparison={...P.createQuery(q,baseline),display:{value:'count',title:'',view:'',order:''}},v={version:1,title:'Two fixed queries',queries:[q],composition:C.setComparison(C.create(q,D.create(q)),comparison,q)},expected=A.artifact(v,labels),wire=structuredClone(expected),child=wire.view.composition.children.find(x=>x.comparison).comparison;
- for(const key of ['title','view','order'])delete child.display[key];for(const key of ['bucketMs','summary','spanStatus','groupTimeSeries','numeric','numericHistogram','reportedEdge'])delete child.baselineQuery[key];wire.view.queries[0].environment='';
+ for(const key of ['title','view','order'])delete child.display[key];for(const key of ['bucketMs','summary','spanStatus','groupTimeSeries'])delete child.baselineQuery[key];wire.view.queries[0].environment='';
  assert.doesNotThrow(()=>A.response(result(wire),expected));
  for(const mutate of [x=>x.baselineQuery.where.value='changed',x=>x.baselineQuery.fromMs=2000,x=>x.baselineQuery.groupBy=[{kind:'column',key:'name'}],x=>x.display.view='groups',x=>x.display.title='Changed']){const changed=structuredClone(wire);mutate(changed.view.composition.children.find(x=>x.comparison).comparison);assert.throws(()=>A.response(result(changed),expected));}
 });

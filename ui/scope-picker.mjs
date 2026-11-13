@@ -15,7 +15,7 @@ export function scopeSummary(intent){
   window=from.slice(0,10)===to.slice(0,10)?from.slice(0,10)+' · '+from.slice(11,19)+'–'+to.slice(11,19)+' UTC':from.slice(0,19).replace('T',' ')+' → '+to.slice(0,19).replace('T',' ')+' UTC';
   exactWindow='['+from+', '+to+') · end excluded';
  }
- return {primary,meta:kind+' · '+signal+' · '+environment,policy:selection.policy==='effective'?'Current / legacy':'Current key',window,exactWindow,exact:primary+' · '+Environment.questionLabel(q)+' · '+exactWindow};
+ return {primary,meta:kind+' · '+signal+' · '+environment+(intent.kind==='question'&&q.offset>0?' · from record '+(q.offset+1):''),policy:selection.policy==='effective'?'Current / legacy':'Current key',window,exactWindow,exact:primary+' · '+Environment.questionLabel(q)+' · '+exactWindow};
 }
 
 export function mount(host,{journal,current,onStage,visits=()=>[],onVisit=()=>{}}){

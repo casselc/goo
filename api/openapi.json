@@ -5007,52 +5007,44 @@
                     "$ref": "#/components/schemas/RecordQuery"
                   },
                   {
+                    "not": {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "numeric"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "numericHistogram"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "reportedEdge"
+                          ]
+                        }
+                      ]
+                    },
                     "properties": {
                       "groupBy": {
-                        "type": [
-                          "array",
-                          "null"
-                        ],
+                        "type": "array",
                         "maxItems": 0
                       },
                       "offset": {
-                        "enum": [
-                          0,
-                          null
-                        ]
+                        "const": 0
                       },
                       "summary": {
-                        "enum": [
-                          "",
-                          null
-                        ]
+                        "const": ""
                       },
                       "spanStatus": {
-                        "enum": [
-                          false,
-                          null
-                        ]
+                        "const": false
                       },
                       "groupTimeSeries": {
-                        "enum": [
-                          false,
-                          null
-                        ]
+                        "const": false
                       },
                       "bucketMs": {
-                        "enum": [
-                          0,
-                          null
-                        ]
-                      },
-                      "numeric": {
-                        "type": "null"
-                      },
-                      "numericHistogram": {
-                        "type": "null"
-                      },
-                      "reportedEdge": {
-                        "type": "null"
+                        "const": 0
                       }
                     }
                   }
@@ -9436,14 +9428,7 @@
         "$ref": "#/components/schemas/exploration.RecordPageResult"
       },
       "RecordQuery": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/exploration.QueryInput"
-          },
-          {
-            "type": "null"
-          }
-        ]
+        "$ref": "#/components/schemas/recordintent.exploration.QueryInput"
       },
       "RecordResult": {
         "$ref": "#/components/schemas/exploration.Result"
@@ -19875,270 +19860,7 @@
         ]
       },
       "exploration.QueryInput": {
-        "additionalProperties": false,
-        "properties": {
-          "bucketMs": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "environment": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "environmentSelector": {
-            "anyOf": [
-              {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "fromMs": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "groupBy": {
-            "anyOf": [
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/components/schemas/exploration.FieldInput"
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "groupTimeSeries": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "limit": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "numeric": {
-            "anyOf": [
-              {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/exploration.NumericBindingInput"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "numericHistogram": {
-            "anyOf": [
-              {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/exploration.NumericHistogramSpecInput"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "offset": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "reportedEdge": {
-            "anyOf": [
-              {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/exploration.ReportedEdgeInput"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "signal": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "spanStatus": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "summary": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "toMs": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "where": {
-            "anyOf": [
-              {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/exploration.PredicateInput"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.Query",
-        "required": [],
-        "oneOf": [
-          {
-            "required": [
-              "environment"
-            ],
-            "properties": {
-              "environment": {
-                "type": "string",
-                "minLength": 1
-              },
-              "environmentSelector": {
-                "type": "null"
-              }
-            }
-          },
-          {
-            "required": [
-              "environmentSelector"
-            ],
-            "properties": {
-              "environment": {
-                "const": ""
-              },
-              "environmentSelector": {
-                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
-              }
-            }
-          }
-        ],
-        "description": "Choose a current-key-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge span questions apply the same checked environment policy to parent ownership and child membership.",
-        "allOf": [
-          {
-            "if": {
-              "required": [
-                "reportedEdge"
-              ],
-              "properties": {
-                "reportedEdge": {
-                  "not": {
-                    "type": "null"
-                  }
-                }
-              }
-            },
-            "then": {
-              "properties": {
-                "signal": {
-                  "const": "spans"
-                }
-              }
-            }
-          }
-        ]
+        "$ref": "#/components/schemas/recordintent.exploration.QueryInput"
       },
       "exploration.QuestionScope": {
         "properties": {
@@ -60981,6 +60703,730 @@
           "record": {}
         },
         "additionalProperties": false
+      },
+      "recordintent.exploration.QueryInput": {
+        "additionalProperties": false,
+        "properties": {
+          "bucketMs": {
+            "enum": [
+              0,
+              1000,
+              10000,
+              60000,
+              300000
+            ]
+          },
+          "environment": {
+            "type": "string",
+            "pattern": "^[^\\u0000\\uD800-\\uDFFF]*$",
+            "minLength": 0,
+            "maxLength": 128,
+            "x-go-max-utf8-bytes": 128
+          },
+          "environmentSelector": {
+            "$ref": "#/components/schemas/recordintent.identity.EnvironmentSelectorInput"
+          },
+          "fromMs": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4102444800000
+          },
+          "groupBy": {
+            "type": "array",
+            "maxItems": 2,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/components/schemas/recordintent.exploration.FieldInput"
+            }
+          },
+          "groupTimeSeries": {
+            "type": "boolean"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "numeric": {
+            "$ref": "#/components/schemas/recordintent.exploration.NumericBindingInput"
+          },
+          "numericHistogram": {
+            "$ref": "#/components/schemas/recordintent.exploration.NumericHistogramSpecInput"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "reportedEdge": {
+            "$ref": "#/components/schemas/recordintent.exploration.ReportedEdgeInput"
+          },
+          "signal": {
+            "enum": [
+              "logs",
+              "spans"
+            ]
+          },
+          "spanStatus": {
+            "type": "boolean"
+          },
+          "summary": {
+            "enum": [
+              "",
+              "span-duration"
+            ]
+          },
+          "toMs": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4102444800000
+          },
+          "where": {
+            "$ref": "#/components/schemas/recordintent.exploration.PredicateInput"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.Query",
+        "required": [
+          "signal",
+          "fromMs",
+          "toMs",
+          "limit"
+        ],
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "not": {
+              "required": [
+                "environmentSelector"
+              ]
+            },
+            "properties": {
+              "environment": {
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              }
+            }
+          }
+        ],
+        "description": "Strict ordinary record intent: exact case-sensitive nested field names, no explicit nulls, one closed predicate arm and an explicit environment policy. Missing zero-valued presentation/offset defaults remain permitted. Go additionally enforces a positive half-open window up to 120 minutes, 240 buckets, 32 predicate nodes/depth 4, UTF-8 byte bounds, exact identities and field/signal/operator semantics. No carrier gets permission to drop unsupported intent.",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "reportedEdge"
+              ],
+              "properties": {
+                "reportedEdge": {
+                  "not": false
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "const": "spans"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "summary"
+              ],
+              "properties": {
+                "summary": {
+                  "const": "span-duration"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "const": "spans"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "spanStatus"
+              ],
+              "properties": {
+                "spanStatus": {
+                  "const": true
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "const": "spans"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "groupTimeSeries"
+              ],
+              "properties": {
+                "groupTimeSeries": {
+                  "const": true
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "groupBy",
+                "bucketMs"
+              ],
+              "properties": {
+                "groupBy": {
+                  "minItems": 1
+                },
+                "bucketMs": {
+                  "enum": [
+                    1000,
+                    10000,
+                    60000,
+                    300000
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "numericHistogram"
+              ]
+            },
+            "then": {
+              "required": [
+                "numeric"
+              ]
+            }
+          }
+        ]
+      },
+      "recordintent.identity.EnvironmentSelectorInput": {
+        "properties": {
+          "policy": {
+            "type": "string",
+            "enum": [
+              "current-only",
+              "effective"
+            ]
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode"
+            ],
+            "properties": {
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "named",
+                  "empty",
+                  "unreported"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "maxLength": 128,
+                "description": "At most 128 UTF-8 bytes; runtime enforces the byte limit.",
+                "pattern": "^[^\\u0000\\uD800-\\uDFFF]*$",
+                "minLength": 0,
+                "x-go-max-utf8-bytes": 128
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "mode": {
+                      "const": "named"
+                    }
+                  },
+                  "required": [
+                    "mode"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "minLength": 1
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "value": {
+                      "const": ""
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "version": {
+            "type": "string",
+            "const": "goo/environment-selector/v1"
+          }
+        },
+        "required": [
+          "version",
+          "policy",
+          "scope"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/identity.EnvironmentSelector",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "policy": {
+                  "const": "current-only"
+                }
+              },
+              "required": [
+                "policy"
+              ]
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "properties": {
+                    "mode": {
+                      "const": "named"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "recordintent.exploration.FieldInput": {
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[^\\u0000\\uD800-\\uDFFF]*$",
+            "minLength": 1,
+            "maxLength": 128,
+            "x-go-max-utf8-bytes": 128
+          },
+          "kind": {
+            "enum": [
+              "column",
+              "attribute",
+              "resource"
+            ]
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.Field",
+        "required": [
+          "kind",
+          "key"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "kind"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "column"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "key": {
+                  "enum": [
+                    "service",
+                    "trace_id",
+                    "span_id",
+                    "scope",
+                    "scope_version",
+                    "name",
+                    "kind",
+                    "status",
+                    "duration_ns",
+                    "timestamp_ns",
+                    "duration_bucket",
+                    "status_class",
+                    "body",
+                    "severity",
+                    "severity_number",
+                    "exception_event",
+                    "exception_type",
+                    "exception_type_state",
+                    "exception_fingerprint_v1",
+                    "body_pattern_v1"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "recordintent.exploration.NumericBindingInput": {
+        "additionalProperties": false,
+        "properties": {
+          "field": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/recordintent.exploration.FieldInput"
+              },
+              {
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "attribute",
+                      "resource"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "parse": {
+            "const": "canonical-decimal"
+          },
+          "scale": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9
+          },
+          "type": {
+            "enum": [
+              "int64",
+              "uint64",
+              "decimal64"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "pattern": "^[^\\s\\u0000-\\u001f\\u007f-\\u009f\\uD800-\\uDFFF]+$",
+            "minLength": 1,
+            "maxLength": 64,
+            "x-go-max-utf8-bytes": 64
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.NumericBinding",
+        "required": [
+          "field",
+          "type",
+          "unit",
+          "parse"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "type"
+              ],
+              "properties": {
+                "type": {
+                  "const": "decimal64"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "scale"
+              ],
+              "properties": {
+                "scale": {
+                  "minimum": 1
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "scale": {
+                  "const": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "recordintent.exploration.NumericHistogramSpecInput": {
+        "additionalProperties": false,
+        "properties": {
+          "binning": {
+            "const": "powers-of-two"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.NumericHistogramSpec",
+        "required": [
+          "binning"
+        ]
+      },
+      "recordintent.exploration.ReportedEdgeInput": {
+        "additionalProperties": false,
+        "properties": {
+          "child": {
+            "$ref": "#/components/schemas/recordintent.exploration.EdgeServiceInput"
+          },
+          "discoveryNamespace": {
+            "$ref": "#/components/schemas/recordintent.identity.NamespaceInput"
+          },
+          "parent": {
+            "$ref": "#/components/schemas/recordintent.exploration.EdgeServiceInput"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.ReportedEdge",
+        "required": [
+          "parent",
+          "child"
+        ]
+      },
+      "recordintent.exploration.EdgeServiceInput": {
+        "additionalProperties": false,
+        "properties": {
+          "namespace": {
+            "$ref": "#/components/schemas/recordintent.identity.NamespaceInput"
+          },
+          "service": {
+            "type": "string",
+            "pattern": "^[^\\u0000\\uD800-\\uDFFF]*$",
+            "minLength": 0,
+            "maxLength": 128,
+            "x-go-max-utf8-bytes": 128
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.EdgeService",
+        "required": [
+          "service",
+          "namespace"
+        ]
+      },
+      "recordintent.identity.NamespaceInput": {
+        "additionalProperties": false,
+        "properties": {
+          "mode": {
+            "enum": [
+              "missing",
+              "value"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "pattern": "^[^\\u0000\\uD800-\\uDFFF]*$",
+            "minLength": 0,
+            "maxLength": 128,
+            "x-go-max-utf8-bytes": 128
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/identity.Namespace",
+        "required": [
+          "mode"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "mode": {
+                  "const": "missing"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "value": {
+                  "const": ""
+                }
+              }
+            }
+          }
+        ]
+      },
+      "recordintent.exploration.PredicateInput": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "all"
+            ],
+            "properties": {
+              "all": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 31,
+                "items": {
+                  "$ref": "#/components/schemas/recordintent.exploration.PredicateInput"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "any"
+            ],
+            "properties": {
+              "any": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 31,
+                "items": {
+                  "$ref": "#/components/schemas/recordintent.exploration.PredicateInput"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "field",
+              "op"
+            ],
+            "properties": {
+              "field": {
+                "$ref": "#/components/schemas/recordintent.exploration.FieldInput"
+              },
+              "op": {
+                "enum": [
+                  "eq",
+                  "ne",
+                  "contains",
+                  "gte",
+                  "lte",
+                  "exists",
+                  "missing"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "pattern": "^[^\\u0000\\uD800-\\uDFFF]*$",
+                "minLength": 0,
+                "maxLength": 1024,
+                "x-go-max-utf8-bytes": 1024
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "op": {
+                      "enum": [
+                        "exists",
+                        "missing"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "value": {
+                      "const": ""
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "numeric",
+              "op"
+            ],
+            "properties": {
+              "numeric": {
+                "$ref": "#/components/schemas/recordintent.exploration.NumericBindingInput"
+              },
+              "op": {
+                "enum": [
+                  "eq",
+                  "ne",
+                  "gt",
+                  "gte",
+                  "lt",
+                  "lte",
+                  "valid",
+                  "missing",
+                  "empty",
+                  "invalid"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "pattern": "^[^\\u0000\\uD800-\\uDFFF]*$",
+                "minLength": 0,
+                "maxLength": 32,
+                "x-go-max-utf8-bytes": 32
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "op": {
+                      "enum": [
+                        "valid",
+                        "missing",
+                        "empty",
+                        "invalid"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "value": {
+                      "const": ""
+                    }
+                  }
+                },
+                "else": {
+                  "required": [
+                    "value"
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "description": "One closed branch or typed leaf. Go enforces total 32 nodes, depth 4, exact UTF-8 byte bounds, field/operator compatibility and numeric thresholds. Explicit empty op/value padding is not allowed on branches.",
+        "x-go-max-predicate-nodes": 32,
+        "x-go-max-predicate-depth": 4
       }
     }
   },
@@ -60991,6 +61437,7 @@
     "Operation GET validation uses http.Error text/plain with JSON-looking text; /api preserves that status, type and body.",
     "Tail early JSON errors omit Cache-Control; streaming responses set no-store and X-Accel-Buffering: no.",
     "Health is process liveness only; it does not query ClickHouse or certify telemetry ingestion.",
-    "No generated handlers, semantic validator replacement, API stability guarantee or new authorization layer is introduced."
+    "No generated handlers, semantic validator replacement, API stability guarantee or new authorization layer is introduced.",
+    "Ordinary record Query input is a closed non-null graph: exact field names and one predicate arm; missing zero defaults remain permitted. Other input families retain their independently documented null policies."
   ]
 }

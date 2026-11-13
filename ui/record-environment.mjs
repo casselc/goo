@@ -1,7 +1,8 @@
+import {object as closed} from './intent-shape.mjs';
 /* Pure wire/selection helpers. No reads, navigation, state, or publication. */
 const version='goo/environment-selector/v1',currentKey='deployment.environment.name',legacyKey='deployment.environment';
 const own=(object,key)=>Object.prototype.hasOwnProperty.call(object,key);
-function object(value,keys){if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).some(key=>!keys.includes(key)))throw Error('Invalid environment selector fields.');return value}
+function object(value,keys){return closed(value,keys,'Invalid environment selector fields.')}
 function normalizeScope(value){object(value,['mode','value']);if(!['named','empty','unreported'].includes(value.mode)||own(value,'value')&&typeof value.value!=='string')throw Error('Invalid environment scope.');const name=value.value??'';if(value.mode==='named'){if(!name||name.includes('\0')||!name.isWellFormed()||new TextEncoder().encode(name).length>128)throw Error('Invalid environment name.');return {mode:'named',value:name}}if(name!=='')throw Error('Only named scope accepts a value.');return {mode:value.mode}}
 function normalize(value){object(value,['version','policy','scope']);if(value.version!==version||!['current-only','effective'].includes(value.policy))throw Error('Unsupported environment selector.');const scope=normalizeScope(value.scope);if(value.policy==='current-only'&&scope.mode!=='named')throw Error('Current-only selection requires a name.');return {version,policy:value.policy,scope}}
 function effective(scope){return normalize({version,policy:'effective',scope})}
