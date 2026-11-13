@@ -42,9 +42,10 @@ authorization. Arbitrary native/trace-search/composed views are not added to thi
 ordinary-record history. Labeling remains deferred.
 
 [Guided service-version comparisons](SERVICE_VERSION_COMPARISONS.md) (415)
-use reported resource versions in one exact service scope. Count and mean span
-duration are supported; recorded Error fractions, percentile comparison,
-deployment attribution and cross-window version selection are not added.
+use reported resource versions in one exact service scope. Count, mean span
+duration and recorded Error counts/fractions are supported. Status comparisons
+are fresh summary-only; percentile comparison, deployment attribution and
+cross-window version selection are not added.
 Discovery requires coherent complete bounded version groups, independently read
 from the retained parent overview.
 

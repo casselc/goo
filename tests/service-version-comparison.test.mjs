@@ -22,3 +22,18 @@ test('415 refuses wrong namespace, widget mismatch, incomplete/disagreeing disco
  for(const [a,b,m]of [['a','a','count'],['no','b','count'],['a','b','error.rate']])assert.throws(()=>Versions.comparison(q,data(query),a,b,m));
  assert.equal(Versions.valueLabel(null),'Not reported');assert.equal(Versions.valueLabel(''),'Present empty');assert.equal(Versions.valueLabel('Not reported'),'"Not reported"');assert.equal(Versions.choiceReason('normal'),'');assert(Versions.choiceReason('x'.repeat(4097)));
 });
+
+test('419 recorded Error choices preserve cohort intent and request explicit status support',()=>{
+ const before=structuredClone(q),query=Versions.discoveryQuestion({query:q},{question:q,state:'observed'},context);
+ for(const metric of ['status.error','status.error_fraction']){
+  const view=Versions.comparison(q,data(query),'a','b',metric),selected=view.queries[0],declaration=Composition.comparison(view.composition),baseline=declaration.baselineQuery;
+  assert.equal(selected.spanStatus,true);assert.equal(baseline.spanStatus,true);assert.equal(selected.summary,undefined);
+  assert.deepEqual(selected.where.all[0],q.where);assert.deepEqual(baseline.where.all[0],q.where);assert.deepEqual(selected.groupBy,q.groupBy);
+  assert.equal(selected.fromMs,q.fromMs);assert.equal(selected.toMs,q.toMs);assert.equal(selected.environment,q.environment);
+  assert.equal(declaration.display.value,metric);assert.equal(declaration.display.view,'summary');
+  assert.throws(()=>Composition.setComparison(view.composition,{...declaration,display:{...declaration.display,view:'groups'}},selected));
+  assert.throws(()=>Composition.setComparison(view.composition,{...declaration,baselineQuery:{...baseline,spanStatus:false}},selected));
+  assert.throws(()=>Composition.setComparison(view.composition,{...declaration,kind:{name:'captured-count-comparison',version:1},baselineCapture:'a'.repeat(64),baselineQuery:undefined},selected));
+ }
+ assert.deepEqual(q,before);
+});

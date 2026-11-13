@@ -3,7 +3,7 @@ import {comparisonRoleLabels} from './comparison-role-labels.mjs';
 import {validateSnapshot,measureValue,fractionFacts} from './view-model.mjs';
 import {validateComparison,comparisonPresentation} from './view-comparison.mjs';
 import {signedScale} from './comparison-visual.mjs';
-import {formatCell,exactText,defaultSummaryFields} from './view-values.mjs';
+import {formatCell,formatComparisonChange,exactText,defaultSummaryFields} from './view-values.mjs';
 import {asSnapshot,asComparison,parseSnapshotJSON,parseComparisonJSON} from './snapshots.mjs';
 import './chart-frame.mjs';
 
@@ -65,16 +65,24 @@ function provenance(snapshot,label){
 function valueCell(field,row,{delta,snapshot,labels}={}){
   const cell=delta?undefined:row?.cells?.[field?.key],raw=delta?delta.value:row?.values?.[field?.key];
   const body=n('div',undefined,'measure-cell');body.dataset.state=delta?.state||cell?.state||'recorded';
-  const text=delta&&delta.state!=='derived'?'Unavailable':field?formatCell(field,raw,cell):'Unavailable';
+  const text=delta?formatComparisonChange(field,delta):field?formatCell(field,raw,cell):'Unavailable';
   body.append(n('span',text,'measure-value'));
   if(!delta&&field?.aggregation?.family==='rate'&&cell?.rate){
     const exposure=n('div',undefined,'measure-rate-exposure');exposure.append(n('small',cell.rate.count+' records / '+String(Number(cell.rate.elapsedMs)/1000)+' s'));
     exposure.title=cell.rate.count+' captured records over exactly '+cell.rate.elapsedMs+' ms';body.append(exposure);
   }
+  const facts=!delta&&snapshot&&field?fractionFacts(snapshot,row,field.key==='status.error'?'status.error_fraction':field.key):null;
+  if(facts){
+    const support=n('div',undefined,'measure-fraction-support'),count=fact=>fact.value===null?'unknown':fact.value;
+    support.append(n('small',count(facts.numerator)+' / '+count(facts.denominator)+(snapshot.scope.signal==='spans'?' spans':' records')));
+    const remaining=facts.partition.filter(fact=>['status.unset','status.unknown'].includes(fact.field));
+    if(remaining.length)support.append(n('br'),n('small',remaining.map(fact=>fact.label+': '+count(fact)).join(' · ')));
+    body.append(support);
+  }
   const details=n('details',undefined,'measure-exact'),status=delta?delta.state:cell?.state;
   details.append(n('summary',status?(cell?.support?`${status} · ${cell.support.valid}/${cell.support.total} valid`:status):'Exact value'));
   details.append(n('p',delta?(delta.state==='derived'?exactText({...field,aggregation:undefined},raw):delta.reason||'Change is unavailable.'):field?exactText(field,raw,cell,snapshot?fractionFacts(snapshot,row,field.key):null):'Measure not supplied.'));
-  if(delta?.state==='derived')details.append(n('p',(labels||comparisonRoleLabels())[1]+' − '+(labels||comparisonRoleLabels())[0]+' · exact supplied change'));
+  if(delta?.state==='derived')details.append(n('p',(labels||comparisonRoleLabels())[1]+' − '+(labels||comparisonRoleLabels())[0]+' · exact supplied change'+(field?.aggregation?.family==='ratio'?' · percentage points = exact fraction difference × 100':'')));
   body.append(details);return body;
 }
 
@@ -115,7 +123,7 @@ function comparisonBody(comparison,display){
     if(plot){const axis=n('small','Shared scale','measure-axis-label');axis.title=domain.min+' → '+domain.max+(field.unit?' '+field.unit:'')+' · signed zero axis';name.append(axis)}
     for(let side=0;side<2;side++){
       const cell=n('td');cell.dataset.side=side?'selection':'baseline';cell.setAttribute('role','cell');cell.setAttribute('headers',name.id+' '+prefix+'-column-'+(side+1));
-      const label=n('span',display.labels[side],'measure-side-label');label.setAttribute('aria-hidden','true');cell.append(label,valueCell(fields[side],rows[side]));
+      const label=n('span',display.labels[side],'measure-side-label');label.setAttribute('aria-hidden','true');cell.append(label,valueCell(fields[side],rows[side],{snapshot:snapshots[side]}));
       if(plot){
         const track=n('div',undefined,'measure-comparison-track');track.dataset.min=domain.min;track.dataset.max=domain.max;track.style.setProperty('--measure-zero',domain.zero+'%');track.setAttribute('aria-hidden','true');
         const bar=domain.bars[side];if(bar){const fill=n('span',undefined,'measure-comparison-fill');fill.dataset.side=side?'selection':'baseline';fill.style.left=bar.start+'%';fill.style.width=bar.width+'%';track.append(fill)}else track.dataset.unavailable='true';cell.querySelector('.measure-value').after(track);

@@ -79,3 +79,18 @@ export function exactText(field,value,cell,facts){
   const support=supportText(cell);if(support)parts.push(support);
   return parts.join(' · ');
 }
+
+// A difference of fractions is signed and is not another bounded subset fraction.
+// Percentage points are a display scale only; the supplied change remains unit 1.
+export function formatComparisonChange(field,change){
+  if(change?.state!=='derived')return 'Unavailable';
+  if(isFraction(field)){
+    const value=fraction(change.value);if(!value)return 'Unavailable';
+    const negative=value.n<0n,formatted=percent(negative?-value.n:value.n,value.d).replace('%',' pp');
+    if(!negative)return formatted;
+    if(formatted.startsWith('<'))return '> −'+formatted.slice(1);
+    if(formatted.startsWith('>'))return '< −'+formatted.slice(1);
+    return formatted.startsWith('≈ ')?'≈ −'+formatted.slice(2):'−'+formatted;
+  }
+  return formatCell(field,change.value);
+}

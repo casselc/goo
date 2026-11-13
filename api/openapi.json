@@ -22890,39 +22890,14 @@
                 },
                 "required": [
                   "origin"
-                ],
-                "not": {
-                  "properties": {
-                    "fields": {
-                      "contains": {
-                        "properties": {
-                          "key": {
-                            "enum": [
-                              "status.error",
-                              "status.ok",
-                              "status.unset",
-                              "status.unknown",
-                              "status.error_fraction"
-                            ]
-                          }
-                        },
-                        "required": [
-                          "key"
-                        ]
-                      }
-                    }
-                  },
-                  "required": [
-                    "fields"
-                  ]
-                }
+                ]
               }
             ]
           },
           "changes": {
             "type": "object",
             "minProperties": 1,
-            "maxProperties": 12,
+            "maxProperties": 17,
             "propertyNames": {
               "enum": [
                 "count",
@@ -22937,7 +22912,12 @@
                 "duration.max",
                 "duration.p50",
                 "duration.p95",
-                "duration.p99"
+                "duration.p99",
+                "status.error",
+                "status.ok",
+                "status.unset",
+                "status.unknown",
+                "status.error_fraction"
               ]
             },
             "additionalProperties": {
@@ -22965,32 +22945,7 @@
                 },
                 "required": [
                   "origin"
-                ],
-                "not": {
-                  "properties": {
-                    "fields": {
-                      "contains": {
-                        "properties": {
-                          "key": {
-                            "enum": [
-                              "status.error",
-                              "status.ok",
-                              "status.unset",
-                              "status.unknown",
-                              "status.error_fraction"
-                            ]
-                          }
-                        },
-                        "required": [
-                          "key"
-                        ]
-                      }
-                    }
-                  },
-                  "required": [
-                    "fields"
-                  ]
-                }
+                ]
               }
             ]
           },
@@ -23018,7 +22973,7 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ViewComparison",
         "additionalProperties": false,
-        "description": "Independent browser-held summary snapshots with exact selection-minus-baseline differences. Rates use each independent exact captured count and fixed-window exposure; their signed changes remain records/s. No combined population, unsampled-throughput claim, signed source authority, pooled percentile or invented shared capture clock. Requested span-status comparisons use the separate existing percentage-point response; this canonical envelope is withheld for that profile.",
+        "description": "Independent browser-held summary snapshots with exact selection-minus-baseline differences. Rates use each independent exact captured count and fixed-window exposure; their signed changes remain records/s. No combined population, unsampled-throughput claim, signed source authority, pooled percentile or invented shared capture clock. Requested span status retains exact Error/OK/Unset/unknown counts and Error/count fractions. Signed fraction changes have ratio/difference descriptors and unit 1 (display may use percentage points); empty denominators withhold that change.",
         "allOf": [
           {
             "if": {
@@ -24397,6 +24352,613 @@
                       "unit": {
                         "const": "ns"
                       }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "status.error"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "status.error"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "status.error"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "status.error"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "status.error": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "span-status"
+                          },
+                          "kind": {
+                            "const": "count"
+                          },
+                          "method": {
+                            "const": "exact"
+                          }
+                        }
+                      },
+                      "unit": {
+                        "const": "records"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "status.ok"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "status.ok"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "status.ok"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "status.ok"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "status.ok": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "span-status"
+                          },
+                          "kind": {
+                            "const": "count"
+                          },
+                          "method": {
+                            "const": "exact"
+                          }
+                        }
+                      },
+                      "unit": {
+                        "const": "records"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "status.unset"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "status.unset"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "status.unset"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "status.unset"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "status.unset": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "span-status"
+                          },
+                          "kind": {
+                            "const": "count"
+                          },
+                          "method": {
+                            "const": "exact"
+                          }
+                        }
+                      },
+                      "unit": {
+                        "const": "records"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "status.unknown"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "status.unknown"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "status.unknown"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "status.unknown"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "status.unknown": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "span-status"
+                          },
+                          "kind": {
+                            "const": "count"
+                          },
+                          "method": {
+                            "const": "exact"
+                          }
+                        }
+                      },
+                      "unit": {
+                        "const": "records"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "status.error_fraction"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "baseline"
+                  ]
+                },
+                {
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "fields": {
+                          "contains": {
+                            "properties": {
+                              "key": {
+                                "const": "status.error_fraction"
+                              }
+                            },
+                            "required": [
+                              "key"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "selection"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "required": [
+                    "status.error_fraction"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "changes": {
+                  "not": {
+                    "required": [
+                      "status.error_fraction"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "changes": {
+                "properties": {
+                  "status.error_fraction": {
+                    "required": [
+                      "aggregation"
+                    ],
+                    "properties": {
+                      "aggregation": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "const": "ratio"
+                          },
+                          "kind": {
+                            "const": "difference"
+                          },
+                          "method": {
+                            "const": "exact-rational"
+                          },
+                          "numerator": {
+                            "const": "status.error"
+                          },
+                          "denominator": {
+                            "const": "count"
+                          }
+                        }
+                      },
+                      "unit": {
+                        "const": "1"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "required": [
+                    "baseline"
+                  ],
+                  "properties": {
+                    "baseline": {
+                      "properties": {
+                        "rows": {
+                          "contains": {
+                            "properties": {
+                              "values": {
+                                "required": [
+                                  "status.error_fraction"
+                                ],
+                                "properties": {
+                                  "status.error_fraction": {
+                                    "type": "null"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "required": [
+                    "selection"
+                  ],
+                  "properties": {
+                    "selection": {
+                      "properties": {
+                        "rows": {
+                          "contains": {
+                            "properties": {
+                              "values": {
+                                "required": [
+                                  "status.error_fraction"
+                                ],
+                                "properties": {
+                                  "status.error_fraction": {
+                                    "type": "null"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "changes": {
+                  "properties": {
+                    "status.error_fraction": {
+                      "properties": {
+                        "state": {
+                          "const": "unavailable"
+                        },
+                        "value": {
+                          "type": "null"
+                        }
+                      },
+                      "required": [
+                        "reason"
+                      ]
                     }
                   }
                 }
@@ -37232,6 +37794,7 @@
               "quantile",
               "count",
               "fraction",
+              "difference",
               "records-per-second"
             ]
           },
@@ -37681,6 +38244,34 @@
                     "quantile"
                   ]
                 }
+              ]
+            }
+          },
+          {
+            "properties": {
+              "family": {
+                "const": "ratio"
+              },
+              "kind": {
+                "const": "difference"
+              },
+              "method": {
+                "const": "exact-rational"
+              },
+              "numerator": {
+                "const": "status.error"
+              },
+              "denominator": {
+                "const": "count"
+              }
+            },
+            "required": [
+              "numerator",
+              "denominator"
+            ],
+            "not": {
+              "required": [
+                "quantile"
               ]
             }
           },
@@ -48924,6 +49515,146 @@
                 }
               }
             }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "required": [
+                    "baselineQuery"
+                  ],
+                  "properties": {
+                    "baselineQuery": {
+                      "required": [
+                        "spanStatus"
+                      ],
+                      "properties": {
+                        "spanStatus": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "required": [
+                    "display"
+                  ],
+                  "properties": {
+                    "display": {
+                      "required": [
+                        "value"
+                      ],
+                      "properties": {
+                        "value": {
+                          "enum": [
+                            "status.error",
+                            "status.error_fraction"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "then": {
+              "required": [
+                "baselineQuery"
+              ],
+              "properties": {
+                "kind": {
+                  "properties": {
+                    "name": {
+                      "const": "query-count-comparison"
+                    }
+                  }
+                },
+                "scope": {
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
+                    }
+                  }
+                },
+                "baselineQuery": {
+                  "required": [
+                    "groupBy",
+                    "signal",
+                    "spanStatus"
+                  ],
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
+                    },
+                    "groupBy": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 1,
+                      "items": {
+                        "not": {
+                          "required": [
+                            "kind",
+                            "key"
+                          ],
+                          "properties": {
+                            "kind": {
+                              "const": "column"
+                            },
+                            "key": {
+                              "enum": [
+                                "body_pattern_v1",
+                                "duration_bucket"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "numeric": {
+                      "type": "null"
+                    },
+                    "numericHistogram": {
+                      "type": "null"
+                    },
+                    "reportedEdge": {
+                      "type": "null"
+                    },
+                    "spanStatus": {
+                      "const": true
+                    },
+                    "groupTimeSeries": {
+                      "const": false
+                    },
+                    "summary": {
+                      "enum": [
+                        "",
+                        "span-duration"
+                      ]
+                    },
+                    "offset": {
+                      "const": 0
+                    },
+                    "limit": {
+                      "maximum": 100
+                    }
+                  }
+                },
+                "display": {
+                  "properties": {
+                    "view": {
+                      "enum": [
+                        "",
+                        "summary"
+                      ]
+                    },
+                    "order": {
+                      "const": ""
+                    }
+                  }
+                }
+              }
+            }
           }
         ]
       },
@@ -49176,6 +49907,146 @@
                 }
               }
             }
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "required": [
+                    "baselineQuery"
+                  ],
+                  "properties": {
+                    "baselineQuery": {
+                      "required": [
+                        "spanStatus"
+                      ],
+                      "properties": {
+                        "spanStatus": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "required": [
+                    "display"
+                  ],
+                  "properties": {
+                    "display": {
+                      "required": [
+                        "value"
+                      ],
+                      "properties": {
+                        "value": {
+                          "enum": [
+                            "status.error",
+                            "status.error_fraction"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "then": {
+              "required": [
+                "baselineQuery"
+              ],
+              "properties": {
+                "kind": {
+                  "properties": {
+                    "name": {
+                      "const": "query-count-comparison"
+                    }
+                  }
+                },
+                "scope": {
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
+                    }
+                  }
+                },
+                "baselineQuery": {
+                  "required": [
+                    "groupBy",
+                    "signal",
+                    "spanStatus"
+                  ],
+                  "properties": {
+                    "signal": {
+                      "const": "spans"
+                    },
+                    "groupBy": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 1,
+                      "items": {
+                        "not": {
+                          "required": [
+                            "kind",
+                            "key"
+                          ],
+                          "properties": {
+                            "kind": {
+                              "const": "column"
+                            },
+                            "key": {
+                              "enum": [
+                                "body_pattern_v1",
+                                "duration_bucket"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "numeric": {
+                      "type": "null"
+                    },
+                    "numericHistogram": {
+                      "type": "null"
+                    },
+                    "reportedEdge": {
+                      "type": "null"
+                    },
+                    "spanStatus": {
+                      "const": true
+                    },
+                    "groupTimeSeries": {
+                      "const": false
+                    },
+                    "summary": {
+                      "enum": [
+                        "",
+                        "span-duration"
+                      ]
+                    },
+                    "offset": {
+                      "const": 0
+                    },
+                    "limit": {
+                      "maximum": 100
+                    }
+                  }
+                },
+                "display": {
+                  "properties": {
+                    "view": {
+                      "enum": [
+                        "",
+                        "summary"
+                      ]
+                    },
+                    "order": {
+                      "const": ""
+                    }
+                  }
+                }
+              }
+            }
           }
         ]
       },
@@ -49198,7 +50069,9 @@
             "enum": [
               "count",
               "record.rate",
-              "duration.mean"
+              "duration.mean",
+              "status.error",
+              "status.error_fraction"
             ]
           },
           "view": {
@@ -49258,7 +50131,9 @@
             "enum": [
               "count",
               "record.rate",
-              "duration.mean"
+              "duration.mean",
+              "status.error",
+              "status.error_fraction"
             ]
           },
           "view": {
@@ -50961,6 +51836,350 @@
                     "children": {
                       "contains": {
                         "required": [
+                          "comparison"
+                        ],
+                        "properties": {
+                          "comparison": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "display"
+                                ],
+                                "properties": {
+                                  "display": {
+                                    "required": [
+                                      "value"
+                                    ],
+                                    "properties": {
+                                      "value": {
+                                        "enum": [
+                                          "status.error",
+                                          "status.error_fraction"
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "required": [
+                                  "baselineQuery"
+                                ],
+                                "properties": {
+                                  "baselineQuery": {
+                                    "required": [
+                                      "spanStatus"
+                                    ],
+                                    "properties": {
+                                      "spanStatus": {
+                                        "const": true
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "required": [
+                      "groupBy",
+                      "signal",
+                      "spanStatus"
+                    ],
+                    "properties": {
+                      "signal": {
+                        "const": "spans"
+                      },
+                      "groupBy": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 1,
+                        "items": {
+                          "not": {
+                            "required": [
+                              "kind",
+                              "key"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "const": "column"
+                              },
+                              "key": {
+                                "enum": [
+                                  "body_pattern_v1",
+                                  "duration_bucket"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "numeric": {
+                        "type": "null"
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "spanStatus": {
+                        "const": true
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      },
+                      "summary": {
+                        "enum": [
+                          "",
+                          "span-duration"
+                        ]
+                      },
+                      "offset": {
+                        "const": 0
+                      },
+                      "limit": {
+                        "maximum": 100
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "allOf": [
+                {
+                  "required": [
+                    "composition"
+                  ],
+                  "properties": {
+                    "composition": {
+                      "properties": {
+                        "children": {
+                          "contains": {
+                            "required": [
+                              "comparison"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "required": [
+                    "queries"
+                  ],
+                  "properties": {
+                    "queries": {
+                      "contains": {
+                        "required": [
+                          "spanStatus"
+                        ],
+                        "properties": {
+                          "spanStatus": {
+                            "const": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "required": [
+                      "groupBy",
+                      "signal",
+                      "spanStatus"
+                    ],
+                    "properties": {
+                      "signal": {
+                        "const": "spans"
+                      },
+                      "groupBy": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 1,
+                        "items": {
+                          "not": {
+                            "required": [
+                              "kind",
+                              "key"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "const": "column"
+                              },
+                              "key": {
+                                "enum": [
+                                  "body_pattern_v1",
+                                  "duration_bucket"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "numeric": {
+                        "type": "null"
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "spanStatus": {
+                        "const": true
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      },
+                      "summary": {
+                        "enum": [
+                          "",
+                          "span-duration"
+                        ]
+                      },
+                      "offset": {
+                        "const": 0
+                      },
+                      "limit": {
+                        "maximum": 100
+                      }
+                    }
+                  }
+                },
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "items": {
+                        "properties": {
+                          "comparison": {
+                            "required": [
+                              "baselineQuery"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "properties": {
+                                  "name": {
+                                    "const": "query-count-comparison"
+                                  }
+                                }
+                              },
+                              "baselineQuery": {
+                                "required": [
+                                  "groupBy",
+                                  "signal",
+                                  "spanStatus"
+                                ],
+                                "properties": {
+                                  "signal": {
+                                    "const": "spans"
+                                  },
+                                  "groupBy": {
+                                    "type": "array",
+                                    "minItems": 1,
+                                    "maxItems": 1,
+                                    "items": {
+                                      "not": {
+                                        "required": [
+                                          "kind",
+                                          "key"
+                                        ],
+                                        "properties": {
+                                          "kind": {
+                                            "const": "column"
+                                          },
+                                          "key": {
+                                            "enum": [
+                                              "body_pattern_v1",
+                                              "duration_bucket"
+                                            ]
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "numeric": {
+                                    "type": "null"
+                                  },
+                                  "numericHistogram": {
+                                    "type": "null"
+                                  },
+                                  "reportedEdge": {
+                                    "type": "null"
+                                  },
+                                  "spanStatus": {
+                                    "const": true
+                                  },
+                                  "groupTimeSeries": {
+                                    "const": false
+                                  },
+                                  "summary": {
+                                    "enum": [
+                                      "",
+                                      "span-duration"
+                                    ]
+                                  },
+                                  "offset": {
+                                    "const": 0
+                                  },
+                                  "limit": {
+                                    "maximum": 100
+                                  }
+                                }
+                              },
+                              "display": {
+                                "properties": {
+                                  "view": {
+                                    "enum": [
+                                      "",
+                                      "summary"
+                                    ]
+                                  },
+                                  "order": {
+                                    "const": ""
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
                           "summary"
                         ],
                         "properties": {
@@ -52587,6 +53806,350 @@
                       "signal",
                       "spanStatus"
                     ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "composition"
+              ],
+              "properties": {
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "contains": {
+                        "required": [
+                          "comparison"
+                        ],
+                        "properties": {
+                          "comparison": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "display"
+                                ],
+                                "properties": {
+                                  "display": {
+                                    "required": [
+                                      "value"
+                                    ],
+                                    "properties": {
+                                      "value": {
+                                        "enum": [
+                                          "status.error",
+                                          "status.error_fraction"
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "required": [
+                                  "baselineQuery"
+                                ],
+                                "properties": {
+                                  "baselineQuery": {
+                                    "required": [
+                                      "spanStatus"
+                                    ],
+                                    "properties": {
+                                      "spanStatus": {
+                                        "const": true
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "required": [
+                      "groupBy",
+                      "signal",
+                      "spanStatus"
+                    ],
+                    "properties": {
+                      "signal": {
+                        "const": "spans"
+                      },
+                      "groupBy": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 1,
+                        "items": {
+                          "not": {
+                            "required": [
+                              "kind",
+                              "key"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "const": "column"
+                              },
+                              "key": {
+                                "enum": [
+                                  "body_pattern_v1",
+                                  "duration_bucket"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "numeric": {
+                        "type": "null"
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "spanStatus": {
+                        "const": true
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      },
+                      "summary": {
+                        "enum": [
+                          "",
+                          "span-duration"
+                        ]
+                      },
+                      "offset": {
+                        "const": 0
+                      },
+                      "limit": {
+                        "maximum": 100
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "allOf": [
+                {
+                  "required": [
+                    "composition"
+                  ],
+                  "properties": {
+                    "composition": {
+                      "properties": {
+                        "children": {
+                          "contains": {
+                            "required": [
+                              "comparison"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "required": [
+                    "queries"
+                  ],
+                  "properties": {
+                    "queries": {
+                      "contains": {
+                        "required": [
+                          "spanStatus"
+                        ],
+                        "properties": {
+                          "spanStatus": {
+                            "const": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "queries": {
+                  "items": {
+                    "required": [
+                      "groupBy",
+                      "signal",
+                      "spanStatus"
+                    ],
+                    "properties": {
+                      "signal": {
+                        "const": "spans"
+                      },
+                      "groupBy": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 1,
+                        "items": {
+                          "not": {
+                            "required": [
+                              "kind",
+                              "key"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "const": "column"
+                              },
+                              "key": {
+                                "enum": [
+                                  "body_pattern_v1",
+                                  "duration_bucket"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "numeric": {
+                        "type": "null"
+                      },
+                      "numericHistogram": {
+                        "type": "null"
+                      },
+                      "reportedEdge": {
+                        "type": "null"
+                      },
+                      "spanStatus": {
+                        "const": true
+                      },
+                      "groupTimeSeries": {
+                        "const": false
+                      },
+                      "summary": {
+                        "enum": [
+                          "",
+                          "span-duration"
+                        ]
+                      },
+                      "offset": {
+                        "const": 0
+                      },
+                      "limit": {
+                        "maximum": 100
+                      }
+                    }
+                  }
+                },
+                "composition": {
+                  "properties": {
+                    "children": {
+                      "items": {
+                        "properties": {
+                          "comparison": {
+                            "required": [
+                              "baselineQuery"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "properties": {
+                                  "name": {
+                                    "const": "query-count-comparison"
+                                  }
+                                }
+                              },
+                              "baselineQuery": {
+                                "required": [
+                                  "groupBy",
+                                  "signal",
+                                  "spanStatus"
+                                ],
+                                "properties": {
+                                  "signal": {
+                                    "const": "spans"
+                                  },
+                                  "groupBy": {
+                                    "type": "array",
+                                    "minItems": 1,
+                                    "maxItems": 1,
+                                    "items": {
+                                      "not": {
+                                        "required": [
+                                          "kind",
+                                          "key"
+                                        ],
+                                        "properties": {
+                                          "kind": {
+                                            "const": "column"
+                                          },
+                                          "key": {
+                                            "enum": [
+                                              "body_pattern_v1",
+                                              "duration_bucket"
+                                            ]
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "numeric": {
+                                    "type": "null"
+                                  },
+                                  "numericHistogram": {
+                                    "type": "null"
+                                  },
+                                  "reportedEdge": {
+                                    "type": "null"
+                                  },
+                                  "spanStatus": {
+                                    "const": true
+                                  },
+                                  "groupTimeSeries": {
+                                    "const": false
+                                  },
+                                  "summary": {
+                                    "enum": [
+                                      "",
+                                      "span-duration"
+                                    ]
+                                  },
+                                  "offset": {
+                                    "const": 0
+                                  },
+                                  "limit": {
+                                    "maximum": 100
+                                  }
+                                }
+                              },
+                              "display": {
+                                "properties": {
+                                  "view": {
+                                    "enum": [
+                                      "",
+                                      "summary"
+                                    ]
+                                  },
+                                  "order": {
+                                    "const": ""
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }

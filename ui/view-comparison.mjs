@@ -34,7 +34,7 @@ export function validateComparison(comparison){
  if(reasons.length)return {ok:false,reasons};
  const operands=[comparison.baseline,comparison.selection];
  if(operands.some(snapshot=>snapshot.fields.some(field=>field.aggregation?.family==='rate'))&&operands.some(snapshot=>snapshot.capturedAt!==undefined&&!clock(snapshot.capturedAt)))return {ok:false,reasons:['Captured-rate source read clocks must be valid RFC3339 timestamps when supplied.']};
- if([comparison.baseline,comparison.selection].some(snapshot=>snapshot.fields.some(field=>['span-status','ratio'].includes(field.aggregation?.family))))return {ok:false,reasons:['This comparison view does not support status-count or fraction measures.']};
+ if(operands.some(snapshot=>snapshot.fields.some(field=>field.aggregation?.family==='ratio'&&(field.key!=='status.error_fraction'||field.aggregation.numerator!=='status.error'||field.aggregation.denominator!=='count'||!snapshot.fields.some(ref=>ref.key==='status.error'&&ref.aggregation?.family==='span-status')))))return {ok:false,reasons:['Comparison fractions require the recorded span Error/count profile.']};
  const a=comparison.baseline,b=comparison.selection,ar=a.rows[0],br=b.rows[0],fields=new Map([...a.fields,...b.fields].map(field=>[field.key,field]));
  if(!record(comparison.changes))return {ok:false,reasons:['Comparison changes must cover the declared field union']};
  const changeKeys=Object.keys(comparison.changes);
@@ -49,7 +49,8 @@ export function validateComparison(comparison){
   const bound=field.aggregation?.family!=='numeric'||numericA&&numericB&&equal(numericA,numericB)&&numericA.unit===af?.unit&&numericB.unit===bf?.unit;
   const known=key==='count'||ar.cells?.[key]?.state==='derived'&&br.cells?.[key]?.state==='derived';
   const usable=!blocked&&same&&bound&&known&&a.scope.signal===b.scope.signal;
-  if(change.aggregation!==undefined&&!equal(change.aggregation,field.aggregation))reasons.push('Comparison aggregation metadata disagrees with its field');
+  const expectedAggregation=field.aggregation?.family==='ratio'?{...field.aggregation,kind:'difference'}:field.aggregation;
+  if(field.aggregation?.family==='ratio'?!equal(change.aggregation,expectedAggregation):change.aggregation!==undefined&&!equal(change.aggregation,expectedAggregation))reasons.push('Comparison aggregation metadata disagrees with its field');
   if(!usable){if(change.state!=='unavailable'||change.value!==null||!text(change.reason))reasons.push('Unavailable comparison values require null and an explicit reason for '+key);continue}
   const av=ar.values[key],bv=br.values[key];
   if(typeof av!=='string'||typeof bv!=='string'||!isCanonicalRational(av)||!isCanonicalRational(bv)){reasons.push('Comparison operands require exact canonical rational strings');continue}

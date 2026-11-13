@@ -28,5 +28,11 @@ test('fixed baseline owns its request and refuses aborted or late fulfillment wi
  const data=fixture(),q=structuredClone(data.question),controller=new AbortController();let finish,body,calls=0;
  const pending=readFixedCountBaseline(q,controller.signal,{post:(path,request,signal)=>{calls++;body=request;assert.equal(signal,controller.signal);return new Promise(resolve=>finish=resolve)}});q.environment='changed';assert.equal(body.environment,'prod');controller.abort();finish({ok:true,data});await assert.rejects(pending,{name:'AbortError'});assert.equal(calls,1);
  await assert.rejects(()=>readFixedCountBaseline(data.question,controller.signal,{post:async()=>{calls++}}),{name:'AbortError'});assert.equal(calls,1);
- await assert.rejects(()=>readFixedCountBaseline({...data.question,spanStatus:true},undefined,{post:async()=>{calls++}}));assert.equal(calls,1);
+ await assert.rejects(()=>readFixedCountBaseline({...data.question,numericHistogram:{field:{kind:'attribute',key:'amount'}}},undefined,{post:async()=>{calls++}}));assert.equal(calls,1);
+});
+
+test('419 fixed status baseline uses aggregate read and preserves conserved status support',async()=>{
+ const {result}=aggregateFixture();result.question.summary='span-duration';let calls=0;
+ const actual=await readFixedCountBaseline(result.question,undefined,{post:async(path,question)=>{calls++;assert.equal(path,'/api/record-aggregates');assert.deepEqual(question,result.question);return {ok:true,data:result}}});
+ assert.equal(calls,1);assert.deepEqual(actual.spanStatus,result.spanStatus);
 });

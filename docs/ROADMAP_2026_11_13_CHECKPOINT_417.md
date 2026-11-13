@@ -15,7 +15,7 @@ foundations to extend. Historical vendor research does not make them new gaps.
 
 Delivered contract: [captured-rate comparisons](CAPTURED_RATE_COMPARISONS.md),
 [storyboard](journeys/captured-rates.md), and [review](reviews/CAPTURED_RATES_REVIEW_418.md).
-Next is 419, then the bounded 420 consolidation.
+419 adds recorded Error context; next is the bounded 420 consolidation.
 
 Compare captured activity fairly across unequal fixed windows. Promote existing
 `record.rate` count/exposure facts into ordinary supplied-summary comparisons,
@@ -31,7 +31,10 @@ same/adjacent-window compatibility unchanged in this slice. Verify equivalent
 rates across unequal exposure, zero/no-data cases, independent operand identity,
 whole-query staging and desktop/mobile comparison geometry.
 
-## 419 — depth: recorded Error context in version comparisons
+## 419 — depth: recorded Error context in version comparisons (delivered)
+
+[Contract](SERVICE_VERSION_COMPARISONS.md), [storyboard](journeys/service-versions.md),
+and [review](reviews/RECORDED_ERROR_VERSION_REVIEW_419.md).
 
 Extend the existing guided service-version flow with recorded Error counts and
 fractions alongside count/mean duration. Reuse typed span status aggregates and

@@ -17,6 +17,17 @@ func ValidateCapturedCountQuery(q Query) error {
 	return nil
 }
 
+// ValidateCountCohortQuery extends fresh ordinary comparisons with the typed
+// span-status summary. It does not widen stored-capture/template reuse or
+// authorize per-group status comparisons.
+func ValidateCountCohortQuery(q Query) error {
+	if err := q.Validate(); err != nil {
+		return err
+	}
+	q.SpanStatus = false
+	return ValidateCapturedCountQuery(q)
+}
+
 // CompatibleCapturedCountQueries disregards only fixed windows and documented
 // delivery paging. Environment equality is typed and checked before removing its
 // representation; predicates, grouping and every measure directive remain exact.
@@ -33,10 +44,14 @@ func CompatibleCountCohortQueries(a, b Query) error {
 }
 
 func compatibleCountQueries(a, b Query, independentPredicates bool) error {
-	if err := ValidateCapturedCountQuery(a); err != nil {
+	validate := ValidateCapturedCountQuery
+	if independentPredicates {
+		validate = ValidateCountCohortQuery
+	}
+	if err := validate(a); err != nil {
 		return err
 	}
-	if err := ValidateCapturedCountQuery(b); err != nil {
+	if err := validate(b); err != nil {
 		return err
 	}
 	if !a.SameEnvironment(b) {

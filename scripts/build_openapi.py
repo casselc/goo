@@ -502,9 +502,16 @@ for suffix in ('', 'Input'):
  kind=schemas['workbench.CountComparisonViewKind'+suffix];kind['additionalProperties']=False;kind['required']=['name','version']
  kind['properties']['name']['enum']=['captured-count-comparison','query-count-comparison'];kind['properties']['version']['const']=1
  display=schemas['workbench.CountComparisonViewDisplay'+suffix];display['additionalProperties']=False;display['required']=['value']
- display['properties']['value']['enum']=['count','record.rate','duration.mean'];display['properties']['title']['maxLength']=120
+ display['properties']['value']['enum']=['count','record.rate','duration.mean','status.error','status.error_fraction'];display['properties']['title']['maxLength']=120
  comparison.setdefault('allOf',[]).append({'if':{'properties':{'display':{'properties':{'value':{'const':'duration.mean'}},'required':['value']}},'required':['display']},'then':{'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}},'scope':{'properties':{'signal':{'const':'spans'}}},'baselineQuery':{'properties':{'signal':{'const':'spans'},'summary':{'const':'span-duration'}},'required':['signal','summary']},'display':{'properties':{'view':{'enum':['','summary']},'order':{'const':''}}}},'required':['baselineQuery']}})
  comparison.setdefault('allOf',[]).append({'if':{'required':['display'],'properties':{'display':{'required':['value'],'properties':{'value':{'const':'record.rate'}}}}},'then':{'required':['baselineCapture'],'not':{'required':['baselineQuery']},'properties':{'kind':{'properties':{'name':{'const':'captured-count-comparison'}}},'display':{'properties':{'view':{'enum':['','summary']},'order':{'const':''}}}}}})
+ status_query419=copy.deepcopy(record_rate_grouped418)
+ status_query419['required']+=['signal','spanStatus']
+ status_query419['properties'].update(signal={'const':'spans'},spanStatus={'const':True},offset={'const':0},limit={'maximum':100})
+ status_display419={'properties':{'view':{'enum':['','summary']},'order':{'const':''}}}
+ status_baseline419={'required':['baselineQuery'],'properties':{'baselineQuery':{'required':['spanStatus'],'properties':{'spanStatus':{'const':True}}}}}
+ status_measure419={'required':['display'],'properties':{'display':{'required':['value'],'properties':{'value':{'enum':['status.error','status.error_fraction']}}}}}
+ comparison.setdefault('allOf',[]).append({'if':{'anyOf':[status_baseline419,status_measure419]},'then':{'required':['baselineQuery'],'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}},'scope':{'properties':{'signal':{'const':'spans'}}},'baselineQuery':copy.deepcopy(status_query419),'display':status_display419}}})
  display['properties']['view']['enum']=['','summary','groups'];display['properties']['order']['enum']=['','change','label']
  timeline=schemas['workbench.TimelineViewDeclaration'+suffix];timeline['additionalProperties']=False
  timeline['required']=['version','scope','kind','display']
@@ -588,6 +595,14 @@ for suffix in ('', 'Input'):
    name='summary' if family=='duration.' else 'spanStatus'
    query.update(required=['signal',name]);query['properties'].update(signal={'const':'spans'},**{name:{'const':'span-duration' if family=='duration.' else True}})
   view['allOf'].append({'if':present,'then':{'properties':{'queries':{'items':query}}}})
+ # Status comparison context is a fresh summary pair; captures retain their narrower profile.
+ status_child419={'required':['comparison'],'properties':{'comparison':{'anyOf':[status_measure419,status_baseline419]}}}
+ status_composition419={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':status_child419}}}}}
+ view.setdefault('allOf',[]).append({'if':status_composition419,'then':{'properties':{'queries':{'items':copy.deepcopy(status_query419)}}}})
+ comparison_child419={'required':['comparison']}
+ any_comparison419={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':comparison_child419}}}}}
+ parent_status419={'required':['queries'],'properties':{'queries':{'contains':{'required':['spanStatus'],'properties':{'spanStatus':{'const':True}}}}}}
+ view.setdefault('allOf',[]).append({'if':{'allOf':[any_comparison419,parent_status419]},'then':{'properties':{'queries':{'items':copy.deepcopy(status_query419)},'composition':{'properties':{'children':{'items':{'properties':{'comparison':{'required':['baselineQuery'],'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}},'baselineQuery':copy.deepcopy(status_query419),'display':status_display419}}}}}}}}}})
  # Whole-population grouped summary rates do not create grouped interval rates.
  for role,query_profile in [('summary',record_rate_summary418),('timeline',record_rate_ungrouped418),('comparison',record_rate_grouped418)]:
   display_field='fields' if role=='summary' else 'value'
@@ -688,13 +703,15 @@ for key in measure_values:
   if key!='duration.mean':measure_values[key]['maxLength']=20
 for name in ('Aggregation','Cell','Support'):schemas['scopedview.'+name]['additionalProperties']=False
 aggregation=schemas['scopedview.Aggregation'];agg_props=aggregation['properties']
-agg_props['family']['enum']=['numeric','duration','span-status','ratio','rate'];agg_props['kind']['enum']=['mean','sum','min','max','quantile','count','fraction','records-per-second'];agg_props['method']['enum']=['exact-rational','exact','quantilesExactHigh'];agg_props['quantile']['enum']=['0.5','0.95','0.99']
+agg_props['family']['enum']=['numeric','duration','span-status','ratio','rate'];agg_props['kind']['enum']=['mean','sum','min','max','quantile','count','fraction','difference','records-per-second'];agg_props['method']['enum']=['exact-rational','exact','quantilesExactHigh'];agg_props['quantile']['enum']=['0.5','0.95','0.99']
 agg_props['numerator']={'type':'string','const':'status.error'};agg_props['denominator']={'type':'string','const':'count'}
 aggregation['oneOf']=[]
 for spec in measure_specs.values():
  optional=('quantile','numerator','denominator')
  present=[key for key in optional if key in spec];absent=[key for key in optional if key not in spec]
  aggregation['oneOf'].append({'properties':{key:{'const':value} for key,value in spec.items()},**({'required':present} if present else {}),**({'not':{'anyOf':[{'required':[key]} for key in absent]}} if absent else {})})
+status_difference419={'family':'ratio','kind':'difference','method':'exact-rational','numerator':'status.error','denominator':'count'}
+aggregation['oneOf'].append({'properties':{key:{'const':value} for key,value in status_difference419.items()},'required':['numerator','denominator'],'not':{'required':['quantile']}})
 rate_spec={'family':'rate','kind':'records-per-second','method':'exact-rational'}
 aggregation['oneOf'].append({'properties':{key:{'const':value} for key,value in rate_spec.items()},'not':{'anyOf':[{'required':[key]} for key in ('quantile','numerator','denominator')]}})
 rate_value={**rational_value,'type':['string','null'],'pattern':'^(0|[1-9][0-9]*)(/[1-9][0-9]*)?$','description':'Exact nonnegative captured-record count times1000 divided by actual elapsed milliseconds. It is records/s, not a bounded fraction or complete upstream throughput.'}
@@ -960,22 +977,27 @@ change['properties']['unit'].update(minLength=1,maxLength=128)
 change['allOf']=[{'if':{'properties':{'state':{'const':'derived'}},'required':['state']},'then':{'properties':{'value':rational_value}},'else':{'required':['reason'],'properties':{'reason':{'minLength':1},'value':{'type':'null'}}}}]
 comparison=schemas['exploration.ViewComparison'];comparison['additionalProperties']=False
 comparison['description']='Independent browser-held summary snapshots with exact selection-minus-baseline differences. Rates use each independent exact captured count and fixed-window exposure; their signed changes remain records/s. No combined population, unsampled-throughput claim, signed source authority, pooled percentile or invented shared capture clock.'
-comparison['description']+=' Requested span-status comparisons use the separate existing percentage-point response; this canonical envelope is withheld for that profile.'
+comparison['description']+=' Requested span status retains exact Error/OK/Unset/unknown counts and Error/count fractions. Signed fraction changes have ratio/difference descriptors and unit 1 (display may use percentage points); empty denominators withhold that change.'
 cmp_props=comparison['properties'];cmp_props['version']['const']='goo.comparison/1';cmp_props['state']['enum']=['observed','no_data','diagnostic','incompatible']
 for side in ('baseline','selection'):
- cmp_props[side]={'allOf':[ref('scopedview.Dataset'),{'properties':{'shape':{'const':'summary'},'origin':{'const':'browser-held'}},'required':['origin'],'not':status_present}]}
+ cmp_props[side]={'allOf':[ref('scopedview.Dataset'),{'properties':{'shape':{'const':'summary'},'origin':{'const':'browser-held'}},'required':['origin']}]}
 cmp_props['reason'].update(minLength=1,maxLength=128)
-cmp_props['changes']={'type':'object','minProperties':1,'maxProperties':12,'propertyNames':{'enum':['count','record.rate']+[key for key in measure_specs if not key.startswith('status.')]},'additionalProperties':ref('exploration.ViewChange')}
+cmp_props['changes']={'type':'object','minProperties':1,'maxProperties':17,'propertyNames':{'enum':['count','record.rate']+list(measure_specs)},'additionalProperties':ref('exploration.ViewChange')}
 comparison['allOf']=[{'if':{'properties':{'state':{'enum':['diagnostic','incompatible']}},'required':['state']},'then':{'properties':{'changes':{'additionalProperties':{'properties':{'state':{'const':'unavailable'}}}}}},'else':{'properties':{'changes':{'properties':{'count':{'properties':{'state':{'const':'derived'}}}},'required':['count']}}}}]
-for key in ['count','record.rate']+[key for key in measure_specs if not key.startswith('status.')]:
+for key in ['count','record.rate']+list(measure_specs):
  has_field={'anyOf':[{'properties':{side:{'properties':{'fields':{'contains':{'properties':{'key':{'const':key}},'required':['key']}}}}},'required':[side]} for side in ('baseline','selection')]}
  comparison['allOf'].append({'if':has_field,'then':{'properties':{'changes':{'required':[key]}}},'else':{'properties':{'changes':{'not':{'required':[key]}}}}})
  if key=='count':
   delta={'properties':{'unit':{'const':'records'}},'not':{'required':['aggregation']}}
  else:
-  spec=rate_spec if key=='record.rate' else measure_specs[key]
-  delta={'required':['aggregation'],'properties':{'aggregation':{'type':'object','properties':{k:{'const':v} for k,v in spec.items()}},**({'unit':{'const':'ns'}} if spec['family']=='duration' else {'unit':{'const':'records/s'}} if spec['family']=='rate' else {})}}
+  spec=rate_spec if key=='record.rate' else status_difference419 if key=='status.error_fraction' else measure_specs[key]
+  delta={'required':['aggregation'],'properties':{'aggregation':{'type':'object','properties':{k:{'const':v} for k,v in spec.items()}},**({'unit':{'const':'ns'}} if spec['family']=='duration' else {'unit':{'const':'records/s'}} if spec['family']=='rate' else {'unit':{'const':'records'}} if spec['family']=='span-status' else {'unit':{'const':'1'}} if spec['family']=='ratio' else {})}}
  comparison['allOf'].append({'properties':{'changes':{'properties':{key:delta}}}})
+
+
+# A missing/empty status denominator cannot manufacture a derived zero change.
+empty_status419={'anyOf':[{'required':[side],'properties':{side:{'properties':{'rows':{'contains':{'properties':{'values':{'required':['status.error_fraction'],'properties':{'status.error_fraction':{'type':'null'}}}}}}}}}} for side in ('baseline','selection')]}
+comparison['allOf'].append({'if':empty_status419,'then':{'properties':{'changes':{'properties':{'status.error_fraction':{'properties':{'state':{'const':'unavailable'},'value':{'type':'null'}},'required':['reason']}}}}}})
 
 # Counted values are two explicit observations, never a transactional snapshot.
 counted=schemas['exploration.CountedValuesResult']['properties']

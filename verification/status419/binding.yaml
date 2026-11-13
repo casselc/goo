@@ -1,0 +1,14 @@
+spec: serviceversions.qnt
+module: serviceversions
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  discover: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  failed_discovery: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  local_intent: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  stage_pair: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  run_pair: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  return_service: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  pending_discovery: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  retire: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  supplied_compare: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}

@@ -34,11 +34,11 @@ export function admit(question,data){
 }
 export function comparison(parentQuestion,discovery,baselineValue,selectedValue,measure='count'){
  const q=parent(parentQuestion),discoveryQuery=projected(parentQuestion);admit(discoveryQuery,discovery);
- if(!['count','duration.mean'].includes(measure)||baselineValue===selectedValue||![baselineValue,selectedValue].every(value=>discovery.groups.some(g=>g.g0===value)))throw Error('Choose two distinct discovered versions and a supported measure.');
- function cohort(value){const out=clone(q),leaf={field:clone(versionField),op:value===null?'missing':'eq',...(value===null?{}:{value})};out.where={all:[...(q.where?[clone(q.where)]:[]),leaf]};if(measure==='duration.mean')out.summary='span-duration';validateRecordQuestion(out);validatePredicate(out.where,out.signal);return out;}
+ if(!['count','duration.mean','status.error','status.error_fraction'].includes(measure)||baselineValue===selectedValue||![baselineValue,selectedValue].every(value=>discovery.groups.some(g=>g.g0===value)))throw Error('Choose two distinct discovered versions and a supported measure.');
+ function cohort(value){const out=clone(q),leaf={field:clone(versionField),op:value===null?'missing':'eq',...(value===null?{}:{value})};out.where={all:[...(q.where?[clone(q.where)]:[]),leaf]};if(measure==='duration.mean')out.summary='span-duration';if(measure.startsWith('status.'))out.spanStatus=true;validateRecordQuestion(out);validatePredicate(out.where,out.signal);return out;}
  const selected=cohort(selectedValue),baseline=cohort(baselineValue),declaration=Comparison.createQuery(selected,baseline,measure);
  const short=value=>{let text=valueLabel(value);if(new TextEncoder().encode(text).length<=40)return text;while(new TextEncoder().encode(text+'…').length>40)text=Array.from(text).slice(0,-1).join('');return text+'…';};
- const title='Comparison '+short(selectedValue)+' · baseline '+short(baselineValue);declaration.display.title=title;
+ const title='Comparison '+short(selectedValue)+' · baseline '+short(baselineValue);declaration.display.title=title;if(measure.startsWith('status.'))declaration.display.view='summary';
  const composition=Composition.setComparison(Composition.create(selected,Declaration.create(selected)),declaration,selected);
  return Composition.view({version:1,title,queries:[selected],composition});
 }
@@ -52,7 +52,7 @@ export function mount(host,{widget,data,context,signal,current=()=>true,ready=()
  let generation=0,controller=null,snapshot=null,busy=false,retired=false;
  const valid=()=>!retired&&!signal?.aborted&&current()&&root.isConnected&&host.contains(root),action=control=>valid()&&root.open&&nativeControlReady(control);
  const baseline=n('select'),selection=n('select'),measure=n('select');baseline.setAttribute('aria-label','Baseline version');selection.setAttribute('aria-label','Comparison version');measure.setAttribute('aria-label','Version comparison measure');
- for(const [value,label]of [['count','Captured count'],['duration.mean','Mean span duration']]){const option=n('option',label);option.value=value;measure.append(option);}measure.value='count';for(const [control,text]of [[baseline,'Baseline version'],[selection,'Comparison version'],[measure,'Measure']]){const label=n('label',text);label.append(control);pair.append(label);}pair.append(stage);
+ for(const [value,label]of [['count','Captured count'],['duration.mean','Mean span duration'],['status.error','Recorded Error count'],['status.error_fraction','Recorded Error fraction']]){const option=n('option',label);option.value=value;measure.append(option);}measure.value='count';for(const [control,text]of [[baseline,'Baseline version'],[selection,'Comparison version'],[measure,'Measure']]){const label=n('label',text);label.append(control);pair.append(label);}pair.append(stage);
  function update(){stage.disabled=busy||!snapshot||!baseline.value||!selection.value||baseline.value===selection.value||!ready();discover.disabled=busy||!ready();}
  function cancel(){generation++;controller?.abort();controller=null;if(busy){busy=false;onPendingChange(false);}update();}
  function retire(){retired=true;cancel();}

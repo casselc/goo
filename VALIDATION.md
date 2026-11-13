@@ -1,5 +1,57 @@
 # Validation record
 
+## 419 — recorded Error context in service-version comparisons
+
+[Contract and diagram](docs/SERVICE_VERSION_COMPARISONS.md),
+[storyboard](docs/journeys/service-versions.md), and
+[independent review](docs/reviews/RECORDED_ERROR_VERSION_REVIEW_419.md).
+
+- **1,591 frontend tests pass**, zero failures/skips (51.097s with bounded test
+  concurrency). Shared comparisons admit the typed four-class span-status
+  partition and exact Error/count fractions. Signed changes carry a distinct
+  ratio/difference descriptor and render percentage points; tiny negative bounds
+  preserve their correct inequality. Both Error modes expose numerator,
+  denominator, unset and unknown context. Source-free staging, stale controls,
+  conserved aggregate baseline adoption and fixed-query profile refusal remain
+  covered. New tests use the canonical `span-duration` fixture directive.
+- All affected Go packages pass: `exploration` (5.765s), `workbench` (2.144s),
+  `cmd/goo` (9.784s). Count conservation, exact signed changes, empty denominators,
+  diagnostic withholding and fresh summary-only declarations are checked.
+- OpenAPI passes: **114 operations, 759 schemas; 501 fixture responses,
+  202 admitted requests and 29 mux refusals**, plus negative controls and SSE.
+  Captured-status/grouped-status declarations remain refused; generic ratios
+  do not gain status-comparison admission.
+- Real OTLP/ClickHouse service-version journey and **45-second Bombadil campaign
+  pass** (1.3 min): four explicit comparison runs, 27 continuous main-journey facts,
+  zero page errors, held Back, failed discovery withdrawal and retired pending
+  discovery. Each comparison Run acquires two populations and executes six SQL
+  reads. Full status partitions match the source oracle; 22/132 versus 42/168
+  yields exact fractions 1/6 and 1/4, with exact difference 1/12. An explicitly
+  supplied empty-baseline control adds one pure comparison and no source/SQL
+  reads; it does not claim a source-empty version was discovered.
+- The separate actor completes across **816 snapshots**, preserves held parent
+  widgets/evidence and publishes nothing. It runs after the main ledger because
+  its SQL uses the same proxy. Native replay initially rejected the unexplained
+  actor SQL gap between main facts; ordering the independent campaign afterward
+  fixes the harness while retaining strict continuity and read budgets.
+- Isolated Hegel/native Quint suite passes **83.498s with no skips**. Thirty-two
+  deterministic generated examples exercise large exact status partitions beyond
+  2^53, zero Error versus zero population, all-Error, signed differences and
+  diagnostic withholding. The Go-to-JavaScript bridge rejects corrupted support,
+  partition and delta metadata without granting completeness. Native checks replay
+  all 27 actual facts with strict continuity and reject excess source/SQL effects.
+- Four new fraction/zero frames at 1440/390/320 pixels have independent visual
+  acceptance. Error-count rendering has source-level review and real-journey
+  assertions; no separate count-mode visual audit is claimed. Existing picker/
+  count frames were also regenerated. Review caught and fixed missing denominator
+  context in Error-count mode and incorrect inequality signs in tiny negative
+  percentage-point formatting.
+- Rebuilt/refreshed only the application. Both app ports serve byte-identical
+  final comparison and service-version modules. The isolated real-source runtime
+  used the same image binary and stopped cleanly. Telemetry services, streams,
+  capture stores, volumes and XTDB were preserved.
+
+
 ## 418 — captured record-rate comparisons
 
 [Contract and diagram](docs/CAPTURED_RATE_COMPARISONS.md),

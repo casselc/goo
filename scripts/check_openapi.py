@@ -517,6 +517,50 @@ def check_view_status(spec, ranked, intervals):
     assert not check_view.is_valid(unknown_zero), 'Unknown interval manufactured a status count'
 
 
+    # Exact status summary comparisons retain all four classes and distinguish
+    # an operand fraction from its signed percentage-point-compatible change.
+    compare = validator(spec, {'$ref': '#/components/schemas/exploration.ViewComparison'})
+    pair = {'version':'goo.comparison/1','state':'observed','changes':{}}
+    for role in ('baseline','selection'):
+        operand=copy.deepcopy(summary)
+        operand.update(origin='browser-held',sourceBasis='unverified-caller-claim')
+        operand['quality']['extent']='unknown';operand.pop('completeness',None)
+        operand['scope']['signal']='spans'
+        operand['scope']['selector']={'signal':'spans','environment':'prod','fromMs':1000,'toMs':61000,'limit':100,'offset':0,'groupBy':[{'kind':'column','key':'service'}],'spanStatus':True}
+        operand['fields']=[{'key':'count','label':'Captured records','type':'number','unit':'records'}]+copy.deepcopy(fields)
+        operand['rows']=[{'key':'population','values':{'count':'4',**{key:'1' for key in keys},ratio:'1/4'},'cells':{key:{'state':'derived'} for key in keys+[ratio]}}]
+        pair[role]=operand
+    for field in pair['baseline']['fields']:
+        change={'state':'derived','value':'0','unit':field['unit']}
+        if 'aggregation' in field:change['aggregation']=copy.deepcopy(field['aggregation'])
+        if field['key']==ratio:change['aggregation']['kind']='difference'
+        pair['changes'][field['key']]=change
+    compare.validate(pair)
+    signed=copy.deepcopy(pair);signed['changes'][ratio]['value']='-1/4'
+    compare.validate(signed) # Runtime independently checks subtraction.
+    empty_pair=copy.deepcopy(pair);empty_pair['state']='no_data'
+    empty_pair['baseline']['rows'][0]['values'].update(count='0',**{key:'0' for key in keys},**{ratio:None})
+    empty_pair['baseline']['rows'][0]['cells'][ratio]={'state':'no_data'}
+    empty_pair['changes'][ratio].update(state='unavailable',value=None,reason='empty-population')
+    compare.validate(empty_pair)
+    diagnostic_pair=copy.deepcopy(pair);diagnostic_pair['state']='diagnostic'
+    for change in diagnostic_pair['changes'].values():change.update(state='unavailable',value=None,reason='source-reads-disagree')
+    compare.validate(diagnostic_pair)
+    for mutate in (
+        lambda x:x['changes'][ratio]['aggregation'].update(kind='fraction'),
+        lambda x:x['changes'][ratio]['aggregation'].update(numerator='status.ok'),
+        lambda x:x['changes'][ratio].update(unit='pp'),
+        lambda x:x['changes'].pop('status.unset'),
+        lambda x:x['baseline']['rows'][0]['values'].pop('status.unknown'),
+        lambda x:x['baseline']['fields'][-1]['aggregation'].update(kind='difference'),
+        lambda x:x['changes']['status.error'].update(unit='1'),
+    ):
+        bad=copy.deepcopy(pair);mutate(bad)
+        assert not compare.is_valid(bad),'invalid recorded-status comparison accepted'
+    bad=copy.deepcopy(empty_pair);bad['changes'][ratio].update(state='derived',value='0');bad['changes'][ratio].pop('reason')
+    assert not compare.is_valid(bad),'empty denominator manufactured a derived comparison fraction'
+
+
 def check_status_observed(spec, path):
     fixtures = json.loads(Path(path).read_text())
     assert set(fixtures) == {'ranked', 'intervals', 'summary', 'empty-ranked', 'empty-summary', 'unknown-intervals'}, 'Expected all six Go status-view DTOs'
@@ -1061,6 +1105,35 @@ def check_fixed_query_count_views(spec):
             elif path in ('view','order'):bad['display'][path]=value
             else:bad['baselineQuery'][path]=value
             assert not cc.is_valid(bad),f'mean comparison admitted invalid {path}'
+        for value in ('status.error','status.error_fraction','count','duration.mean'):
+            status=copy.deepcopy(comparison);status['scope']['signal']='spans'
+            status['baselineQuery'].update(signal='spans',spanStatus=True)
+            if value=='duration.mean':status['baselineQuery']['summary']='span-duration'
+            status['display']={'value':value,'view':'summary'}
+            cc.validate(status)
+            status_view=copy.deepcopy(view);status_view['queries'][0].update(signal='spans',spanStatus=True)
+            if value=='duration.mean':status_view['queries'][0]['summary']='span-duration'
+            for child in status_view['composition']['children']:
+                for role in ('aggregate','records'):
+                    if role in child:child[role]['scope']['signal']='spans'
+            status_view['composition']['children'][2]['comparison']=copy.deepcopy(status)
+            vc.validate(status_view)
+            for mutate in (lambda x:x['display'].update(view='groups'),lambda x:x['display'].update(order='change'),
+                           lambda x:x['baselineQuery'].update(spanStatus=False),
+                           lambda x:x['baselineQuery'].update(groupBy=[{'kind':'column','key':'service'},{'kind':'column','key':'name'}])):
+                bad=copy.deepcopy(status);mutate(bad)
+                # count/duration without the status directive have ordinary
+                # counterparts; parent/baseline profile equality is checked by Go.
+                if bad['baselineQuery'].get('spanStatus') is False and value in ('count','duration.mean'):continue
+                assert not cc.is_valid(bad),'status comparison admitted unsupported profile/display'
+            bad=copy.deepcopy(status_view);bad['queries'][0]['spanStatus']=False
+            assert not vc.is_valid(bad),'status baseline lost the matching parent directive'
+            bad=copy.deepcopy(status);bad['kind']['name']='captured-count-comparison';bad.pop('baselineQuery');bad['baselineCapture']='a'*64
+            if value.startswith('status.'):
+                assert not cc.is_valid(bad),'captured comparison gained status measures'
+            bad=copy.deepcopy(status_view);bad['composition']['children'][2]['comparison']=bad['composition']['children'][2]['comparison'].copy()
+            captured=bad['composition']['children'][2]['comparison'];captured['kind']={'name':'captured-count-comparison','version':1};captured.pop('baselineQuery');captured['baselineCapture']='a'*64
+            assert not vc.is_valid(bad),'captured comparison gained a status-enabled parent'
         paired_facet=copy.deepcopy(view)
         paired_facet['composition']['children'].append({'facet':{'version':'goo.view/1','scope':scope,'kind':{'name':'categorical-facet','version':1},'field':{'kind':'attribute','key':'http.request.method'},'display':{'basis':'applied'}}})
         vc.validate(paired_facet)

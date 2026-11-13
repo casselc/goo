@@ -134,11 +134,11 @@ func TestViewStatusPreservesNumericAndDurationProfiles(t *testing.T) {
 	}
 }
 
-func TestViewStatusComparisonRetainsLegacyPercentagePointsExplicitly(t *testing.T) {
+func TestViewStatusComparisonRetainsExactFractionDifference(t *testing.T) {
 	a := measuredCohort([]uint64{10, 20}, SpanStatusSummary{"2", "1", "0", "1", "0"})
 	b := measuredCohort([]uint64{30, 50, 100}, SpanStatusSummary{"3", "1", "1", "0", "1"})
 	result, err := CompareCohorts(ComparisonRequest{Baseline: a, Selection: b})
-	if err != nil || result.ViewComparison != nil || result.Measures == nil || result.Measures.ErrorDifferencePP != "-16.67" {
+	if err != nil || result.ViewComparison == nil || result.ViewComparison.Changes["status.error_fraction"].Value == nil || *result.ViewComparison.Changes["status.error_fraction"].Value != "-1/6" || result.ViewComparison.Changes["status.error_fraction"].Aggregation.Kind != "difference" || result.Measures == nil || result.Measures.ErrorDifferencePP != "-16.67" {
 		t.Fatal("status comparison was mislabeled as a bounded fraction or lost PP behavior", result, err)
 	}
 	withoutStatus := detached(a)
@@ -147,7 +147,7 @@ func TestViewStatusComparisonRetainsLegacyPercentagePointsExplicitly(t *testing.
 		withoutStatus.Groups[i].SpanStatus = nil
 	}
 	mixed, err := CompareCohorts(ComparisonRequest{Baseline: withoutStatus, Selection: b})
-	if err != nil || mixed.ViewComparison != nil || mixed.Measures.ErrorDifferencePP != "" {
+	if err != nil || mixed.ViewComparison == nil || mixed.ViewComparison.State != "incompatible" || mixed.ViewComparison.Changes["status.error_fraction"].State != "unavailable" || mixed.Measures.ErrorDifferencePP != "" {
 		t.Fatal("one status operand invented a comparative fraction", mixed, err)
 	}
 	held := heldSummaryView(a)

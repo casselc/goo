@@ -129,12 +129,6 @@ func heldSummaryView(c Cohort) *ViewDataset {
 }
 
 func cohortViewComparison(request ComparisonRequest) *ViewComparison {
-	// Status comparison retains the existing percentage-point presenter/API.
-	// A signed difference of fractions is not itself a bounded fraction, so do
-	// not label it with the current snapshot's ratio operation metadata.
-	if request.Baseline.Question.SpanStatus || request.Selection.Question.SpanStatus {
-		return nil
-	}
 	a, b := heldSummaryView(request.Baseline), heldSummaryView(request.Selection)
 	if a == nil || b == nil {
 		return nil
@@ -182,6 +176,12 @@ func cohortViewComparison(request ComparisonRequest) *ViewComparison {
 	ar, br := a.Rows[0], b.Rows[0]
 	for key, f := range fields {
 		change := ViewChange{State: "unavailable", Unit: f.Unit, Aggregation: detached(f.Aggregation)}
+		if f.Aggregation != nil && f.Aggregation.Family == "ratio" {
+			// A signed difference is not a bounded population fraction. Preserve
+			// its dimensionless unit and exact operand references while naming
+			// the different operation explicitly; percentage points are display.
+			change.Aggregation.Kind = "difference"
+		}
 		switch result.State {
 		case "incompatible":
 			change.Reason = "incompatible-fields"

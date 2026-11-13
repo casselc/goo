@@ -86,8 +86,13 @@ func (d *CountComparisonViewDisplay) UnmarshalJSON(data []byte) error {
 }
 
 func (d CountComparisonViewDeclaration) Validate(q exploration.Query) error {
-	if d.Version != "goo.view/1" || d.Scope.Kind != "record-query" || d.Scope.Signal != q.Signal || (d.Kind.Name != "captured-count-comparison" && d.Kind.Name != "query-count-comparison") || d.Kind.Version != 1 || (d.Display.Value != "count" && d.Display.Value != "duration.mean" && d.Display.Value != exploration.RecordRateKey) {
-		return errors.New("require a pinned ordinary count, captured-rate or mean-duration comparison display for the configured record query")
+	if d.Version != "goo.view/1" || d.Scope.Kind != "record-query" || d.Scope.Signal != q.Signal || (d.Kind.Name != "captured-count-comparison" && d.Kind.Name != "query-count-comparison") || d.Kind.Version != 1 || (d.Display.Value != "count" && d.Display.Value != "duration.mean" && d.Display.Value != exploration.RecordRateKey && d.Display.Value != "status.error" && d.Display.Value != "status.error_fraction") {
+		return errors.New("require a pinned ordinary count, captured-rate, mean-duration or recorded-status comparison display for the configured record query")
+	}
+	if q.SpanStatus || d.Display.Value == "status.error" || d.Display.Value == "status.error_fraction" {
+		if d.Kind.Name != "query-count-comparison" || q.Signal != "spans" || !q.SpanStatus || d.Display.View != "" && d.Display.View != "summary" || d.Display.Order != "" {
+			return errors.New("recorded-status comparison requires fresh span-status queries, summary view and no group ordering")
+		}
 	}
 	if d.Display.Value == exploration.RecordRateKey {
 		if d.Kind.Name != "captured-count-comparison" || !exploration.RecordRateSummaryQuery(q) || d.Display.View != "" && d.Display.View != "summary" || d.Display.Order != "" {
@@ -131,6 +136,9 @@ func (d CountComparisonViewDeclaration) Validate(q exploration.Query) error {
 	}
 	if d.Display.Order != "" && d.Display.Order != "change" && d.Display.Order != "label" {
 		return errors.New("comparison order requires change or label")
+	}
+	if d.Kind.Name == "query-count-comparison" {
+		return exploration.ValidateCountCohortQuery(q)
 	}
 	return exploration.ValidateCapturedCountQuery(q)
 }

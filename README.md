@@ -156,7 +156,8 @@ captured Server spans and changes, recorded Error fraction and mean duration,
 with local ranking and exact namespace-aware service drilldown.
 [Compare reported service versions](docs/SERVICE_VERSION_COMPARISONS.md) from a
 service span overview: discover versions, choose two, and stage the existing
-count/mean comparison. Run stays explicit; Back restores the held service.
+count, mean duration or recorded Error comparison. Error fractions retain exact
+count support and unset status. Run stays explicit; Back restores the held service.
 [Log volume in Activity](docs/ACTIVITY_LOG_CONTEXT.md) adds optional measured
 count bars and severity-text context; select an interval to stage its exact
 fixed-window explanation while retaining the stream.
