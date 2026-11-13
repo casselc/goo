@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Counted selected/rest comparison](counted-selection-comparison.md) (425) stages
+exact complementary fixed questions, explicitly reads both populations and returns
+to held Activity with the original selection and opener.
+
 [Contextual field constraints](field-constraints.md) (424) resolves exact clauses,
 stages safe AND removal and explicitly applies a broader Activity scope while
 retaining unrelated OR conditions.

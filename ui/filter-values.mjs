@@ -21,10 +21,19 @@ function result(request,data){
   items.sort((a,b)=>BigInt(a.count)===BigInt(b.count)?String(a.value).localeCompare(String(b.value)):BigInt(a.count)>BigInt(b.count)?-1:1);
   return {state:'ready',question:structuredClone(request),field:structuredClone(request.groupBy[0]),items,total:data.count,readAt:data.capturedAt,basis:data.basis,reads:structuredClone(data.reads),label:request.signal+' · '+(request.environmentSelector!=null?RecordEnvironment.label(request.environmentSelector):request.environment)+' · '+new Date(request.fromMs).toISOString()+' → '+new Date(request.toMs).toISOString()};
  }
-function mount(editor,{current,pause=()=>{}}){let generation=0,controller=null,bound=null,disposed=false;
-  const identity=()=>{try{const q=current();return q?protocol().identity(query(q,bound?.field||{kind:'column',key:'service'})):null}catch{return null}};
+function mount(editor,{current,retainedCurrent=current,pause=()=>{}}){let generation=0,controller=null,bound=null,disposed=false;
+  const scopeIdentity=provider=>{try{const q=provider();return q?protocol().identity(query(q,bound?.field||{kind:'column',key:'service'})):null}catch{return null}};
+  const identity=()=>scopeIdentity(retainedCurrent),activeIdentity=()=>scopeIdentity(current);
   function invalidate(){generation++;controller?.abort();controller=null;bound=null;editor.setCountedValues()}
-  async function load(field){pause();invalidate();if(disposed)return;let request;try{request=query(current(),field)}catch(e){editor.setCountedValues({state:'error',field,...SourceRefusal.failure(e)});return}bound={field:structuredClone(field),key:protocol().identity(request)};const own=++generation;controller=new AbortController();editor.setCountedValues({state:'loading',field});try{const response=await Queries.postJSON('/api/explore/counted-values',request,controller.signal),data=response.data;if(own!==generation||disposed)return;if(identity()!==bound.key){invalidate();return}if(!response.ok)throw SourceRefusal.responseError(response,'Counted values unavailable');editor.setCountedValues(result(request,data),{current:()=>own===generation&&!disposed&&!!bound&&identity()===bound.key})}catch(e){if(own===generation&&!disposed&&e.name!=='AbortError'){if(bound&&identity()!==bound.key){invalidate();return}editor.setCountedValues({state:'error',field,...SourceRefusal.failure(e)})}}}
+  async function load(field){
+   // Retention is descriptive custody, never permission to acquire or publish.
+   // Refused suspended callbacks must not replace the held result or its opener.
+   if(disposed||!current())return false;
+   pause();if(disposed)return false;
+   let request;try{request=query(current(),field)}catch(e){invalidate();editor.setCountedValues({state:'error',field,...SourceRefusal.failure(e)});return false}
+   invalidate();bound={field:structuredClone(field),key:protocol().identity(request)};const own=++generation;controller=new AbortController();editor.setCountedValues({state:'loading',field});
+   try{const response=await Queries.postJSON('/api/explore/counted-values',request,controller.signal),data=response.data;if(own!==generation||disposed)return;if(!bound||identity()!==bound.key||activeIdentity()!==bound.key){invalidate();return}if(!response.ok)throw SourceRefusal.responseError(response,'Counted values unavailable');editor.setCountedValues(result(request,data),{current:()=>own===generation&&!disposed&&!!bound&&identity()===bound.key&&activeIdentity()===bound.key})}catch(e){if(own===generation&&!disposed&&e.name!=='AbortError'){if(!bound||identity()!==bound.key||activeIdentity()!==bound.key){invalidate();return}editor.setCountedValues({state:'error',field,...SourceRefusal.failure(e)})}}
+  }
   editor.setValueLoader(load);
   return {invalidate,sync(){if(bound&&identity()!==bound.key)invalidate()},dispose(){disposed=true;invalidate();editor.setValueLoader(null)}};
  }

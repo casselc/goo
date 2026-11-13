@@ -1,0 +1,14 @@
+spec: comparison.qnt
+module: comparison
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  local: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}}'}
+  inspect: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}}'}
+  facet: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}}'}
+  load: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}}'}
+  choose_values: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}}'}
+  stage: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}}'}
+  execute_comparison: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}}'}
+  back: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}}'}
+  retire: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}}'}

@@ -4670,3 +4670,10 @@ application schedules or a claim of full source completeness.
 explicit source budgets with native Quint, the observed browser ledger and
 Hegel-driven properties over the production planner. Supply the completed
 `GOO_CONSTRAINTS424_REPORT`; required acceptance does not skip the model or ledger.
+
+## Counted selection comparison (425)
+
+[countedcompare425](countedcompare425/README.md) validates explicit read budgets,
+held return and exact categorical partitions through native Quint, actual browser
+ledger replay and Hegel-generated production-planner properties. Supply the
+completed `GOO_COUNTED_COMPARE425_REPORT` for acceptance.

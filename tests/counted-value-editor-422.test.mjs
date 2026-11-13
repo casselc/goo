@@ -1,6 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import * as Editor from '../ui/filter-editor.mjs';
+import {reason as comparisonReason} from '../ui/counted-selection-comparison.mjs';
 
 class Element{
  constructor(tag){this.localName=tag;this.children=[];this.attrs={};this.dataset={};this.style={};this.value='';this.textContent='';this.open=false;this.hidden=false;this.disabled=false;this.inert=false;this.root=false;}
@@ -25,7 +26,7 @@ const label=(host,text)=>walk(host).find(node=>node.getAttribute('aria-label')==
 function dom(fn){const before=globalThis.document;globalThis.document={hidden:false,createElement:tag=>new Element(tag)};try{return fn()}finally{globalThis.document=before}}
 const field={kind:'attribute',key:'region'},base={field:{kind:'column',key:'service'},op:'eq',value:'api'};
 const supplied=()=>({state:'ready',field,question:{signal:'logs',environment:'prod',fromMs:0,toMs:60000,limit:1,offset:0,groupBy:[field],where:base},label:'Original applied UTC window',total:'4',readAt:'2026-11-13T00:01:00Z',basis:'a'.repeat(64),items:[{value:'US',count:'1'},{value:'DE',count:'1'},{value:null,count:'1'},{value:'',count:'1'}]});
-function setup({data=supplied(),current=()=>true,where=data.question.where}={}){const host=new Element('section');host.root=true;const changes=[],editor=Editor.mount(host,{signal:'logs',where,onChange:(where,error)=>changes.push({where,error})});editor.setCountedValues(data,{current});const byText=text=>walk(host).find(e=>e.textContent===text),select=value=>label(host,'Select counted attribute:region '+(value===null?'Missing key':value===''?'Present empty string':JSON.stringify(value))),toggle=(value,checked=true)=>{const input=select(value);input.checked=checked;input.onchange();return input};return {host,editor,changes,byText,select,toggle,stage:byText('Stage selected values'),clear:label(host,'Clear selected values'),search:label(host,'Search counted values')}};
+function setup({data=supplied(),current=()=>true,where=data.question.where,onCompareCounted,compareCountedReason,canMutate}={}){const host=new Element('section');host.root=true;const changes=[],editor=Editor.mount(host,{signal:'logs',where,onCompareCounted,compareCountedReason,canMutate,onChange:(where,error)=>changes.push({where,error})});editor.setCountedValues(data,{current});const byText=text=>walk(host).find(e=>e.textContent===text),select=value=>label(host,'Select counted attribute:region '+(value===null?'Missing key':value===''?'Present empty string':JSON.stringify(value))),toggle=(value,checked=true)=>{const input=select(value);input.checked=checked;input.onchange();return input};return {host,editor,changes,byText,select,toggle,stage:byText('Stage selected values'),clear:label(host,'Clear selected values'),search:label(host,'Search counted values'),compare:byText('Compare with rest')}};
 test('422 selection/search remain local and Stage atomically ORs values within retained scope',()=>dom(()=>{
  const original=supplied(),f=setup({data:original});assert.equal(f.stage.disabled,true);const description=walk(f.host).find(e=>e.id===f.select('US').getAttribute('aria-describedby'));assert(description);assert(description.children.some(e=>e.textContent===' records in original scope'));f.toggle('US');f.search.value='DE';f.search.oninput();assert(walk(f.host).some(e=>e.textContent==='1 selected · 1 hidden by search'));f.toggle('DE');assert.equal(f.changes.length,0);assert.deepEqual(f.editor.snapshot(),base);f.stage.onclick();assert.equal(f.changes.length,1);assert.equal(f.changes[0].error,null);assert.deepEqual(f.editor.snapshot(),{all:[base,{any:[{field,op:'eq',value:'US'},{field,op:'eq',value:'DE'}]}]});f.stage.onclick();assert.equal(f.changes.length,1);assert.equal(f.select('US').disabled,true);assert.deepEqual(original,supplied());
 }));
@@ -44,4 +45,30 @@ test('422 invalid selections preserve tree and unsupported values remain visible
 
 test('422 an unfiltered applied scope can select and stage an OR predicate',()=>dom(()=>{
  const data=supplied();delete data.question.where;const f=setup({data});assert.equal(f.select('US').disabled,false);f.toggle('US');f.toggle('DE');assert.equal(f.changes.length,0);assert.equal(f.stage.disabled,false);f.stage.onclick();assert.deepEqual(f.editor.snapshot(),{any:[{field,op:'eq',value:'US'},{field,op:'eq',value:'DE'}]});assert.equal(f.changes.length,1);
+}));
+
+test('425 comparison stages one detached exact intent including hidden selections without mutating the draft or local selection',()=>dom(()=>{
+ const data=supplied(),before=structuredClone(data),calls=[],f=setup({data,onCompareCounted:(...args)=>calls.push(args),compareCountedReason:comparisonReason});
+ assert(f.compare);assert.equal(f.compare.disabled,true);f.compare.onclick();assert.equal(calls.length,0);
+ f.toggle(null);f.toggle('');f.search.value='US';f.search.oninput();assert.equal(f.compare.disabled,false);assert(walk(f.host).some(e=>e.textContent==='2 selected · 2 hidden by search'));
+ f.compare.onclick();assert.equal(calls.length,1);const [question,qualified,values,opener]=calls[0];assert.deepEqual(question,data.question);assert.deepEqual(qualified,field);assert.deepEqual(values,[null,'']);assert.equal(opener,f.compare);assert.equal(f.changes.length,0);assert.deepEqual(f.editor.snapshot(),base);assert.equal(f.select(null).checked,true);assert.equal(f.select('').checked,true);assert.equal(f.stage.disabled,false);
+ question.where.value='foreign';qualified.key='foreign';values.push('US');assert.deepEqual(data,before);f.compare.onclick();assert.equal(calls.length,2);assert.deepEqual(calls[1].slice(0,3),[before.question,field,[null,'']]);assert.deepEqual(f.editor.snapshot(),base);assert.equal(f.changes.length,0);
+}));
+
+test('425 contextual comparison refuses stale, suspended, withdrawn and retired callbacks',()=>dom(()=>{
+ let current=true,mutable=true;const calls=[],f=setup({current:()=>current,canMutate:()=>mutable,onCompareCounted:(...args)=>calls.push(args),compareCountedReason:comparisonReason});f.toggle('US');assert.equal(f.compare.disabled,false);
+ const compare=f.compare,handler=compare.onclick,focus={};document.activeElement=focus;
+ const denied=()=>{handler.call(compare);assert.equal(calls.length,0);assert.equal(f.changes.length,0);assert.deepEqual(f.editor.snapshot(),base);assert.equal(document.activeElement,focus);assert.equal(f.select('US').checked,true)};
+ for(const mode of ['hidden','inert','disabled']){compare[mode]=true;denied();compare[mode]=false;}
+ compare.setAttribute('aria-disabled','true');denied();compare.removeAttribute('aria-disabled');
+ for(const mode of ['hidden','inert']){f.host[mode]=true;denied();f.host[mode]=false;}
+ const disclosure=new Element('details');disclosure.root=true;f.host.root=false;disclosure.append(f.host);disclosure.open=false;denied();disclosure.open=true;
+ current=false;denied();current=true;mutable=false;denied();mutable=true;document.hidden=true;denied();document.hidden=false;
+ f.editor.setCountedValues(supplied(),{current:()=>current});handler.call(compare);assert.equal(calls.length,0);assert.equal(compare.disabled,true);assert.equal(f.changes.length,0);
+ const newer=walk(f.host).find(e=>e.textContent==='Compare with rest');label(f.host,'Select counted attribute:region "US"').checked=true;label(f.host,'Select counted attribute:region "US"').onchange();assert.equal(newer.disabled,false);f.editor.set(base);newer.onclick();assert.equal(calls.length,0);assert.equal(f.changes.length,0);assert.equal(newer.disabled,true);
+}));
+
+test('425 comparison-only refusal preserves valid Stage and current reason is checked again at invocation',()=>dom(()=>{
+ const data=supplied();data.question.where={all:Array.from({length:28},(_,i)=>({field:{kind:'attribute',key:'retained'+i},op:'exists'}))};const calls=[],f=setup({data,onCompareCounted:(...args)=>calls.push(args),compareCountedReason:comparisonReason});f.toggle('US');f.toggle('DE');assert.equal(f.stage.disabled,false);assert.equal(f.compare.disabled,true);assert.match(f.compare.title,/32|nested/);f.compare.onclick();assert.equal(calls.length,0);assert.equal(f.changes.length,0);assert.deepEqual(f.editor.snapshot(),data.question.where);
+ let reason='';const fresh=setup({onCompareCounted:(...args)=>calls.push(args),compareCountedReason:()=>reason});fresh.toggle('US');assert.equal(fresh.compare.disabled,false);reason='Comparison owner changed.';fresh.compare.onclick();assert.equal(calls.length,0);assert.equal(fresh.compare.disabled,true);assert.equal(fresh.stage.disabled,false);assert(walk(fresh.host).some(e=>e.textContent.includes('Comparison owner changed.')));assert.equal(fresh.changes.length,0);
 }));

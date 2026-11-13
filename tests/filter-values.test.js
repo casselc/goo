@@ -31,3 +31,27 @@ test('422 counted result owns its immutable question and a live source-generatio
   owner.dispose();assert.equal(second.options.current(),false);
  }finally{owner.dispose();global.GooQueries=old}
 });
+
+test('425 retained counted scope preserves ready DOM custody while suspended without acquisition authority',async()=>{
+ const {mount}=require('../ui/filter-values.mjs'),old=global.GooQueries;let loader,active=structuredClone(scope),retained=structuredClone(scope),reads=0,pauses=0;const states=[];
+ const editor={setValueLoader:f=>loader=f,setCountedValues:(data,options)=>states.push({data,options})};
+ global.GooQueries={post:async(_path,q)=>{reads++;return{ok:true,json:async()=>response(q)}}};
+ const owner=mount(editor,{current:()=>active,retainedCurrent:()=>retained,pause:()=>pauses++});try{
+  await loader(field);const ready=states.at(-1);assert.equal(ready.data.state,'ready');assert.equal(ready.options.current(),true);const count=states.length;
+  active=null;owner.sync();assert.equal(states.length,count,'suspension must not remove the retained result/opener');assert.equal(ready.options.current(),false,'held scope is not active authority');
+  assert.equal(await loader(field),false);assert.equal(states.length,count);assert.equal(reads,1);assert.equal(pauses,1,'withdrawn callbacks cannot pause or acquire');
+  active=structuredClone(scope);owner.sync();assert.equal(states.length,count);assert.equal(ready.options.current(),true,'return reuses the same completed generation');
+  retained={...scope,toMs:62000};assert.equal(ready.options.current(),false);owner.sync();assert.equal(states.at(-1).data,undefined);retained=structuredClone(scope);assert.equal(ready.options.current(),false,'scope replacement retires generation even after identical values return');
+ }finally{owner.dispose();global.GooQueries=old}
+});
+
+test('425 late counted completion during retained suspension never publishes hidden ready or error state',async()=>{
+ const {mount}=require('../ui/filter-values.mjs'),old=global.GooQueries;for(const ok of [true,false]){let loader,active=structuredClone(scope),resolve,request,reads=0;const states=[];
+ const editor={setValueLoader:f=>loader=f,setCountedValues:(data,options)=>states.push({data,options})};
+ global.GooQueries={post:(_path,q)=>{reads++;request=q;return new Promise(r=>resolve=r)}};
+ const owner=mount(editor,{current:()=>active,retainedCurrent:()=>scope});try{
+  const pending=loader(field);assert.equal(states.at(-1).data.state,'loading');active=null;owner.sync();resolve({ok,status:503,json:async()=>ok?response(request):{error:'Unavailable'}});await pending;
+  assert.equal(reads,1);assert.equal(states.at(-1).data,undefined);assert.equal(states.some(s=>['ready','error'].includes(s.data?.state)),false,'a retained selector cannot authorize hidden publication');
+  active=structuredClone(scope);owner.sync();assert.equal(states.at(-1).data,undefined,'return cannot revive a dropped pending read');
+ }finally{owner.dispose();global.GooQueries=old}}
+});

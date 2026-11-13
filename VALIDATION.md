@@ -1,5 +1,42 @@
 # Validation record
 
+## 425 — counted selections into selected/rest comparisons
+
+[Contract/diagram](docs/COUNTED_SELECTION_COMPARISONS.md),
+[executable storyboard and frames](docs/journeys/counted-selection-comparison.md),
+[integration/UX acceptance](docs/reviews/COUNTED_SELECTION_REVIEW_425.md).
+
+- **1,638 frontend tests pass**, no failures/skips (22.0s). Generated categorical
+  selection/complement questions retain namespaces, missing/empty/literal values,
+  parent filters, typed environment policy, grouping and exact fixed UTC window.
+  Both ASTs must validate before staging. Comparison-only refusals remain visible
+  while valid Stage actions remain usable; no counted total becomes an operand.
+- **Six real-source browser checks pass** on the final Go binary (2.0m): the new
+  selected/rest journey with its 35-second Bombadil actor, existing Activity field
+  entry/logs and span smoke, multi-value staging, contextual constraint editing
+  and Activity row-copy regression. Desktop/mobile captures are refreshed at
+  1440/390/320; the Compare action is content-sized on desktop and full-width on
+  narrow screens. Bounded independent source/frame UX/accessibility review accepts
+  the controls, operand order, exact facts and responsive layout.
+- Twelve continuous facts distinguish local selection/search/staging/retired
+  callbacks/Back (zero acquisitions/SQL), counted Load (one acquisition/two SQL)
+  and explicit comparison Run (**two acquisitions/six SQL reads/one compare**).
+  An independent raw-source oracle proves **2 selected / 259 rest** inside the
+  original 261-record scope; the literal `"Missing key"` belongs to rest while
+  missing and present-empty records belong to selected. The shared comparison
+  reports rest first, selected second, with exact change **−257 records**.
+- Back restores the same held rows, selected checkboxes hidden by search, search
+  text, original count scope and actual Compare opener, without source reads.
+  Completed counted custody is separate from active permission: hidden/stale
+  callbacks cannot acquire or mutate; suspended late completions cannot publish;
+  changed scope retires the generation even if identical values return. No
+  response is reused as a freshly read comparison operand.
+- Native Quint protocol/negative controls, actual observed-ledger replay and
+  Hegel-generated production-planner partition properties pass **36.1s**, no
+  skips. The model uses non-reserved action names, mapped explicitly from the
+  unchanged browser facts. No product API/grammar variant or dependency is added.
+
+
 ## 424 — contextual field-constraint editing
 
 [Contract/diagram](docs/CONTEXTUAL_FIELD_CONSTRAINTS.md),

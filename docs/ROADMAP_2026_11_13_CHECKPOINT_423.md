@@ -22,7 +22,7 @@ query workflow or displace the functional sequence below.
 
 Delivered: [contract and storyboard](CONTEXTUAL_FIELD_CONSTRAINTS.md), with
 [review](reviews/FIELD_CONSTRAINTS_REVIEW_424.md) and actual checks in
-[validation](../VALIDATION.md). The next feature is 425 below.
+[validation](../VALIDATION.md). The completed 425 depth slice follows below.
 
 From an inspected/faceted field, expose the exact applied constraints that keep
 other values out of view. Reuse the existing filter editor or stage a named
@@ -43,6 +43,10 @@ held population. Keep keyboard/mobile return and explicit source budgets.
 
 ## 425 — depth: counted selection into existing selected/rest comparison
 
+Delivered: [contract/storyboard](COUNTED_SELECTION_COMPARISONS.md),
+[integration and UX review](reviews/COUNTED_SELECTION_REVIEW_425.md), and
+[validation](../VALIDATION.md). The next milestone is 426 below.
+
 Offer a natural comparison handoff from the current categorical selection to the
 existing fixed selected/rest workflow. Derive the subset and its complement from
 bounded generated categorical intent within the original parent scope. Do not
@@ -60,6 +64,13 @@ Exercise the end-to-end brownfield loop through scoped stream, inspection,
 compound facet, explicit comparison, preservation and reopen. Reuse existing
 capture/recall/return owners. Keep query intent distinct from retained observations
 and immutable evidence; reopening or returning must not silently reread.
+
+Use the 425 custody/authority split consistently: retained scope identity is not
+permission to acquire, publish late responses or invoke hidden controls. Preserve
+the actual opener and selected state through held children, retire on source
+replacement, and refuse stale generations even after identical scope values
+return. Comparison operands remain explicit independent reads; counted values
+remain descriptive choices, never saved comparison evidence.
 
 Address demonstrated control/focus/prose drift in shared components rather than
 adding a new shell. Cover desktop and narrow keyboard workflows, exact scope/

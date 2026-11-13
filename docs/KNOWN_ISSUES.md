@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+[Counted selected/rest comparisons](COUNTED_SELECTION_COMPARISONS.md) currently
+start in Activity and support bounded ordinary categorical Count questions.
+Unsupported profiles or complements exceeding the AST budget refuse before
+staging. “Rest” stays inside the original parent filters and fixed window;
+independent reads do not establish unsampled coverage or a simultaneous census.
+
 [Contextual field constraints](CONTEXTUAL_FIELD_CONSTRAINTS.md) currently enter
 from an inspected Activity field. Exact OR clauses can be edited in context;
 one-click removal is limited to AND-only ancestry. Apply uses a fresh rolling

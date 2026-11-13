@@ -2107,3 +2107,11 @@ Its owner supplies a complete applied question and a live lease. Native clause
 actions resolve an exact authored path; AND-only removal stages one validated
 predicate through the existing owner callback. Read acquisition and Activity
 window policy remain in the adapter.
+
+[Counted selection comparisons](COUNTED_SELECTION_COMPARISONS.md) use an optional
+owner callback on the shared filter editor. The renderer supplies a detached
+question, exact field, selected values and actual opener; it never acquires
+comparison operands. The counted source owner separates optional `retainedCurrent`
+custody from active `current` permission. Completed data can survive a held child;
+loads, controls and late response publication still require fresh active authority.
+Scope replacement retires that generation even if an identical scope returns.

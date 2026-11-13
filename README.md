@@ -29,6 +29,9 @@ facet selections and comparison calculations compact, with exact read facts on d
 [Edit a field’s applied constraints](docs/CONTEXTUAL_FIELD_CONSTRAINTS.md) from
 its facet controls, or stage removal of one AND condition while retaining the
 other filters. Apply explicitly reads a fresh Activity window.
+[Compare counted selections](docs/COUNTED_SELECTION_COMPARISONS.md) with the rest
+of the same fixed scope. Run reads both independently; return to the held Activity
+with selections and focus intact.
 
 
 [Reusable question packages](docs/TYPED_PACKAGE_SCOPES.md) retain environment
