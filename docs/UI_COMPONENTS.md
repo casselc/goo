@@ -1,5 +1,16 @@
 # Display component library
 
+## Investigation preservation ownership (426)
+
+The population workspace owns source reads, persistence and navigation. Its
+optional `libraryHost` places the same saved-view library in fixed-question
+advanced tools before results exist, then moves it into View settings. Invalidate
+returns it to its home; dispose removes it. Moving the DOM performs no reads.
+Native controls must remain connected, visible and outside closed/inert carriers.
+A retained render owner survives child navigation; request generations still
+retire stale completions. Private pending-request cleanup must release busy state
+even when publication authority has been withdrawn.
+
 [Passive embedding examples](PASSIVE_DISPLAY_EMBEDDING.md), served at
 `/display-examples`, demonstrate the public `display.mjs` entry, including
 ScopeView and MeasureSummary, with attributes, detached properties and local

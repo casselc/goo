@@ -55,3 +55,39 @@ test('425 late counted completion during retained suspension never publishes hid
   active=structuredClone(scope);owner.sync();assert.equal(states.at(-1).data,undefined,'return cannot revive a dropped pending read');
  }finally{owner.dispose();global.GooQueries=old}}
 });
+
+
+test('426 a synchronous pause withdrawal cannot erase held counted data or start a read',async()=>{
+ const {mount}=require('../ui/filter-values.mjs'),old=global.GooQueries;let active=structuredClone(scope),loader,withdraw=false,reads=0,pauses=0;const states=[];
+ const editor={setValueLoader:f=>loader=f,setCountedValues:(data,options)=>states.push({data,options})};
+ global.GooQueries={post:async(_path,q)=>{reads++;return{ok:true,json:async()=>response(q)}}};
+ const owner=mount(editor,{current:()=>active,retainedCurrent:()=>scope,pause:()=>{pauses++;if(withdraw)active=null}});
+ try{
+  await loader(field);const held=states.at(-1),length=states.length;assert.equal(held.data.state,'ready');withdraw=true;
+  assert.equal(await loader(field),false);assert.equal(reads,1);assert.equal(pauses,2);assert.equal(states.length,length);assert.equal(held.options.current(),false);
+  active=structuredClone(scope);assert.equal(held.options.current(),true);assert.equal(states.at(-1),held);
+ }finally{owner.dispose();global.GooQueries=old}
+});
+
+test('426 unavailable active permission refuses before pause or held-state mutation',async()=>{
+ const {mount}=require('../ui/filter-values.mjs');let loader,pauses=0;const states=[],editor={setValueLoader:f=>loader=f,setCountedValues:data=>states.push(data)};
+ const owner=mount(editor,{current:()=>{throw Error('owner departed')},retainedCurrent:()=>scope,pause:()=>pauses++});
+ try{assert.equal(await loader(field),false);assert.equal(pauses,0);assert.deepEqual(states,[]);}finally{owner.dispose()}
+});
+
+
+test('426 pause-time scope replacement cannot retarget the clicked field read',async()=>{
+ const {mount}=require('../ui/filter-values.mjs'),old=global.GooQueries;let loader,active=structuredClone(scope),replace=false,reads=0;const states=[];
+ const editor={setValueLoader:f=>loader=f,setCountedValues:(data,options)=>states.push({data,options})};
+ global.GooQueries={post:async(_path,q)=>{reads++;return{ok:true,json:async()=>response(q)}}};
+ const owner=mount(editor,{current:()=>active,retainedCurrent:()=>active,pause:()=>{if(replace)active={...scope,toMs:scope.toMs+1000}}});
+ try{await loader(field);const held=states.at(-1),length=states.length;replace=true;assert.equal(await loader(field),false);assert.equal(reads,1);assert.equal(states.length,length);assert.equal(held.options.current(),false);owner.sync();assert.equal(states.at(-1).data,undefined);active=structuredClone(scope);assert.equal(held.options.current(),false);}finally{owner.dispose();global.GooQueries=old}
+});
+
+
+test('426 synchronous scope ABA during pause cannot revive the old load intent',async()=>{
+ const {mount}=require('../ui/filter-values.mjs'),old=global.GooQueries;let loader,active=structuredClone(scope),cycle=false,reads=0,owner;const states=[];
+ const editor={setValueLoader:f=>loader=f,setCountedValues:(data,options)=>states.push({data,options})};global.GooQueries={post:async(_path,q)=>{reads++;return{ok:true,json:async()=>response(q)}}};
+ owner=mount(editor,{current:()=>active,retainedCurrent:()=>active,pause:()=>{if(cycle){active={...scope,toMs:scope.toMs+1000};owner.sync();active=structuredClone(scope);owner.sync()}}});
+ try{await loader(field);const held=states.at(-1);cycle=true;assert.equal(await loader(field),false);assert.equal(reads,1);assert.equal(held.options.current(),false);assert.equal(states.at(-1).data,undefined);}finally{owner.dispose();global.GooQueries=old}
+});

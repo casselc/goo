@@ -1,0 +1,17 @@
+spec: reuse.qnt
+module: reuse
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  local: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}} and viewPosts == {{.obs.viewPosts}} and viewGets == {{.obs.viewGets}} and captures == {{.obs.captures}}'}
+  inspect: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}} and viewPosts == {{.obs.viewPosts}} and viewGets == {{.obs.viewGets}} and captures == {{.obs.captures}}'}
+  facet: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}} and viewPosts == {{.obs.viewPosts}} and viewGets == {{.obs.viewGets}} and captures == {{.obs.captures}}'}
+  load_values: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}} and viewPosts == {{.obs.viewPosts}} and viewGets == {{.obs.viewGets}} and captures == {{.obs.captures}}'}
+  choose_values: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}} and viewPosts == {{.obs.viewPosts}} and viewGets == {{.obs.viewGets}} and captures == {{.obs.captures}}'}
+  stage_comparison: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}} and viewPosts == {{.obs.viewPosts}} and viewGets == {{.obs.viewGets}} and captures == {{.obs.captures}}'}
+  execute_comparison: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}} and viewPosts == {{.obs.viewPosts}} and viewGets == {{.obs.viewGets}} and captures == {{.obs.captures}}'}
+  preserve_late: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}} and viewPosts == {{.obs.viewPosts}} and viewGets == {{.obs.viewGets}} and captures == {{.obs.captures}}'}
+  preserve_view: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}} and viewPosts == {{.obs.viewPosts}} and viewGets == {{.obs.viewGets}} and captures == {{.obs.captures}}'}
+  open_definition: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}} and viewPosts == {{.obs.viewPosts}} and viewGets == {{.obs.viewGets}} and captures == {{.obs.captures}}'}
+  return_held: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}} and viewPosts == {{.obs.viewPosts}} and viewGets == {{.obs.viewGets}} and captures == {{.obs.captures}}'}
+  retire_context: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}} and compares == {{.obs.compares}} and viewPosts == {{.obs.viewPosts}} and viewGets == {{.obs.viewGets}} and captures == {{.obs.captures}}'}

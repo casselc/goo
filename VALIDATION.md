@@ -1,5 +1,32 @@
 # Validation record
 
+## 426 — investigation preservation and retained return
+
+[Contract](docs/INVESTIGATION_CONSOLIDATION.md), [storyboard](docs/journeys/investigation-reuse.md),
+[acceptance reviews](docs/reviews/INVESTIGATION_CONSOLIDATION_426.md), and
+[revised roadmap](docs/ROADMAP_2026_11_13_CHECKPOINT_426.md).
+
+- **1,648 frontend tests pass**, zero failures/skips (22.0s), including native
+  preservation readiness, retained parent ownership, pending request cleanup,
+  pause-time scope withdrawal/replacement and the reusable library lifecycle.
+- The real-source investigation journey passes (about 1.2m), including a fresh
+  45-second Bombadil campaign. Seventeen continuous facts distinguish counted
+  Load (one source acquisition/two SQL), each explicit comparison Run (two
+  acquisitions/six SQL), saved-view writes and metadata-only reopen. Local
+  selection, staging, held Back and retired callbacks perform no source reads.
+- The strengthened portable-view journey passes (37.0s): an empty destination
+  imports and stages configuration before its first telemetry read. Native
+  portable replay passes; narrow importer frames cover 390px and 320px.
+  Attachment (1.3m), selected/rest comparison (14.2s), and Activity copy-budget
+  (16.8s) regressions also pass individually.
+- Native `verification/reuse426` passes all three mandatory Quint/Hegel checks
+  (27.5s, no skips), including observed ledger replay, negative controls and
+  generated transitions through the production counted-source controller.
+- Independent architecture and UX/accessibility follow-ups accept the final
+  behavior and rendered 1440/390/320 frames. Configuration reopen explicitly
+  requires Run; it does not imply frozen observations. A previously authorized
+  Save may finish server-side after closure, while stale UI adoption is suppressed.
+
 ## 425 — counted selections into selected/rest comparisons
 
 [Contract/diagram](docs/COUNTED_SELECTION_COMPARISONS.md),

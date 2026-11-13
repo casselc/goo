@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Investigation preserve, reopen and return](investigation-reuse.md) (426) follows
+counted selection through comparison, guarded Save, metadata-only reopen,
+explicit reacquisition and exact held Activity return, with desktop/mobile frames.
+
 [Counted selected/rest comparison](counted-selection-comparison.md) (425) stages
 exact complementary fixed questions, explicitly reads both populations and returns
 to held Activity with the original selection and opener.

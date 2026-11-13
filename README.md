@@ -1,5 +1,11 @@
 # goo — Grammar of Observability
 
+[Preserve and reopen investigations](docs/INVESTIGATION_CONSOLIDATION.md) saves
+complete view configuration, stages it without telemetry reads, and explicitly
+runs fresh questions. Portable views can be imported before the first query.
+See the [executable journey](docs/journeys/investigation-reuse.md) and
+[current roadmap](docs/ROADMAP_2026_11_13_CHECKPOINT_426.md).
+
 Start with what is happening now. Narrow logs and spans, inspect a population,
 compare evidence, and preserve an explanation you can revisit or reuse. Goo works
 with ordinary OpenTelemetry data; application manifests and Go annotations add

@@ -24,13 +24,15 @@ function result(request,data){
 function mount(editor,{current,retainedCurrent=current,pause=()=>{}}){let generation=0,controller=null,bound=null,disposed=false;
   const scopeIdentity=provider=>{try{const q=provider();return q?protocol().identity(query(q,bound?.field||{kind:'column',key:'service'})):null}catch{return null}};
   const identity=()=>scopeIdentity(retainedCurrent),activeIdentity=()=>scopeIdentity(current);
+  const activeScope=()=>{try{return current()}catch{return null}};
   function invalidate(){generation++;controller?.abort();controller=null;bound=null;editor.setCountedValues()}
   async function load(field){
    // Retention is descriptive custody, never permission to acquire or publish.
    // Refused suspended callbacks must not replace the held result or its opener.
-   if(disposed||!current())return false;
-   pause();if(disposed)return false;
-   let request;try{request=query(current(),field)}catch(e){invalidate();editor.setCountedValues({state:'error',field,...SourceRefusal.failure(e)});return false}
+   const origin=activeScope();if(disposed||!origin)return false;
+   let originKey;try{originKey=protocol().identity(query(origin,field))}catch(e){invalidate();editor.setCountedValues({state:'error',field,...SourceRefusal.failure(e)});return false}
+   const phase=generation;pause();const scope=activeScope();if(disposed||!scope||phase!==generation)return false;
+   let request;try{request=query(scope,field);if(protocol().identity(request)!==originKey)return false}catch{return false}
    invalidate();bound={field:structuredClone(field),key:protocol().identity(request)};const own=++generation;controller=new AbortController();editor.setCountedValues({state:'loading',field});
    try{const response=await Queries.postJSON('/api/explore/counted-values',request,controller.signal),data=response.data;if(own!==generation||disposed)return;if(!bound||identity()!==bound.key||activeIdentity()!==bound.key){invalidate();return}if(!response.ok)throw SourceRefusal.responseError(response,'Counted values unavailable');editor.setCountedValues(result(request,data),{current:()=>own===generation&&!disposed&&!!bound&&identity()===bound.key&&activeIdentity()===bound.key})}catch(e){if(own===generation&&!disposed&&e.name!=='AbortError'){if(!bound||identity()!==bound.key||activeIdentity()!==bound.key){invalidate();return}editor.setCountedValues({state:'error',field,...SourceRefusal.failure(e)})}}
   }

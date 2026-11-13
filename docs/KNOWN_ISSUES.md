@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+Fixed-comparison Preserve currently saves the full composition but shares or
+captures the selected question only, explicitly labeled. General paired captures
+already exist elsewhere; [428](ROADMAP_2026_11_13_CHECKPOINT_426.md) adopts that
+infrastructure here. Saved-view configuration is not frozen comparison evidence.
+Recent/Pinned exact saved-view references are the next breadth item (427).
+
 [Counted selected/rest comparisons](COUNTED_SELECTION_COMPARISONS.md) currently
 start in Activity and support bounded ordinary categorical Count questions.
 Unsupported profiles or complements exceeding the AST budget refuse before

@@ -1,5 +1,19 @@
 # Semantic properties and model conformance
 
+## Investigation preservation and return (426)
+
+`reuse426` checks the continuous browser ledger, mandatory native Quint protocol
+and Hegel transitions through the production counted-source controller. Run after
+the investigation-reuse journey:
+
+```sh
+GOO_REUSE426_REPORT=/workspace/goo/artifacts/investigation-consolidation426/report.json \
+  go test -p 1 ./reuse426 -count=1 -v
+```
+
+See [the binding and counter contract](reuse426/README.md). Configuration reads,
+telemetry reads, previously issued writes and UI adoption have distinct budgets.
+
 ## Native outgoing HTTP duration (392)
 
 The pinned v1.45.0 profile requires the exact `http.client.request.duration`

@@ -1,5 +1,9 @@
 # Roadmap after the 423 checkpoint
 
+The 424–426 sequence is delivered. Continue from the
+[426 checkpoint](ROADMAP_2026_11_13_CHECKPOINT_426.md), which reconciles exact
+saved-view recall, existing paired-capture adoption and subsequent consolidation.
+
 The latest cycle delivers contextual Activity facet entry (421), atomic
 multi-value staging (422), and measured scope-snapshot consolidation (423).
 [Validation](../VALIDATION.md) records execution;

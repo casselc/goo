@@ -1,6 +1,6 @@
 # Implementation plan
 
-> Active execution order: [423 product checkpoint](ROADMAP_2026_11_13_CHECKPOINT_423.md),
+> Active execution order: [426 product checkpoint](ROADMAP_2026_11_13_CHECKPOINT_426.md),
 > reconciled across the independent product/architecture reviews summarized there.
 > The adopted operator cadence delivered **412 fleet service triage** and
 > **413 Activity log volume**. **414 recent and pinned scope
@@ -12,8 +12,9 @@
 > A [shared presentation pass](UI_POLISH_AFTER_423.md) precedes the next feature.
 > **424 contextual field-constraint editing** is delivered.
 > **425 counted selection comparison entry** is delivered.
-> Next is **426 preserve/recall/return conformance**,
-> following the whole-product checkpoint. The older labeling queue
+> **426 preserve/recall/return conformance** is delivered.
+> Next: **427 exact saved-view recall**, **428 existing paired-capture adoption**,
+> then **429 preservation/scope/action consolidation**, per the revised checkpoint. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped
 > P95, host sample context and broader platform work remain deferred.

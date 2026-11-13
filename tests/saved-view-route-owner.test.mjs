@@ -36,3 +36,12 @@ test('workspace departure clears even a completed visit marker for intentional r
 });
 
 test('secondary entry controls retain identity while active population owns them, then return and dispose without orphans',async()=>{const f=fixture({externalControls:true});await tick();const controls=f.controlsHost.children[0],library=controls.children.find(el=>el.tagName==='details');assert(controls);assert(library);assert.equal(controls.parentElement,f.controlsHost);assert.equal(f.host.contains(controls),false);f.route(a);assert.equal(f.reads.length,1);assert.equal(controls.parentElement,f.host);assert.equal(f.controlsHost.contains(controls),false);assert.equal(f.host.children.indexOf(controls)<f.host.children.indexOf(f.panel()),true);assert.equal(controls.children.includes(library),true);f.owner.invalidate();assert.equal(controls.parentElement,f.controlsHost);assert.equal(f.host.contains(controls),false);assert.equal(controls.children.includes(library),true);assert(f.reads[0].signal.aborted);f.reads[0].resolve();await tick();assert.equal(controls.parentElement,f.controlsHost);assert.equal(f.adoptions.length,0);assert(f.reads.every(read=>read.method==='GET'&&read.url.startsWith('/api/exploration-views/')));f.owner.dispose();assert.equal(controls.parentElement,null);assert.equal(f.controlsHost.children.length,0);assert.deepEqual(f.host.children,[f.panel()]);assert.equal(f.panel().hidden,true);assert.equal(f.panel().children.length,0)});
+
+
+test('426 metadata catalog has an initial external home, returns there on invalidation and is removed on dispose',async()=>{
+ const f=fixture({externalControls:true,externalLibrary:true});await tick();const controls=f.controlsHost.children[0],library=f.libraryHost.children[0];assert(library);assert.equal(library.tagName,'details');assert.equal(controls.contains(library),false);assert.equal(f.reads.length,0);
+ f.owner.stage([structuredClone({signal:'logs',environment:'prod',fromMs:1,toMs:60000,limit:100,offset:0})],{recent:false});
+ assert.equal(f.libraryHost.children.length,0);assert(f.panel().contains(library));assert.equal(library.parentElement.tagName,'details');assert.equal(f.reads.length,0,'local stage does not load telemetry or metadata');
+ f.owner.invalidate();assert.equal(f.libraryHost.children[0],library);assert.equal(f.reads.length,0);assert.equal(f.panel().hidden,true);
+ f.owner.dispose();assert.equal(library.parentElement,null);assert.equal(f.libraryHost.children.length,0);assert.equal(f.controlsHost.children.length,0);assert.equal(f.reads.length,0);
+});
