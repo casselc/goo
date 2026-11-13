@@ -24,6 +24,8 @@ Inspect inputs and affected services, then stage matching records without losing
 and recalled queries consistent; malformed links preserve held results.
 [Compare captured rates](docs/CAPTURED_RATE_COMPARISONS.md) across different window
 lengths with exact count/exposure facts and an explicit Count or records/s choice.
+[Shared investigation controls](docs/UI_POLISH_AFTER_423.md) keep field search,
+facet selections and comparison calculations compact, with exact read facts on demand.
 
 
 [Reusable question packages](docs/TYPED_PACKAGE_SCOPES.md) retain environment

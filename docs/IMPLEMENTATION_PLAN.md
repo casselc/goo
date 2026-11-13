@@ -9,6 +9,7 @@
 > **420 contextual action consistency** completes that cycle.
 > **421 contextual Activity facet entry** and **422 bounded multi-value facets**
 > are delivered; **423 measured Activity scope snapshots** completes that cycle.
+> A [shared presentation pass](UI_POLISH_AFTER_423.md) precedes the next feature.
 > Next is **424 contextual field-constraint editing**, then 425 comparison entry
 > and 426 preserve/recall/return conformance,
 > following the whole-product checkpoint. The older labeling queue

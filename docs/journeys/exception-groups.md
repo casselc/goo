@@ -69,3 +69,7 @@ opens and closes it with the keyboard, checks control visibility and zero source
 reads, checks that a folded breakdown action cannot stage a question, and checks a native
 share meter before opening exact signature details.
 The compact header, toolbar and mobile cards use the same captured frames above.
+
+The [post-423 shared polish](../UI_POLISH_AFTER_423.md) refreshes these frames.
+Exact scope and read facts remain accessible through native disclosures; local
+presentation controls do not acquire telemetry.

@@ -12,6 +12,12 @@ questions, selected/rest comparisons, scope recall and stored evidence already
 exist. The gaps below concern reaching them naturally from the current
 investigation; they do not justify another query engine or dashboard.
 
+## Inserted presentation pass
+
+The [post-423 polish](UI_POLISH_AFTER_423.md) consolidates recently added facet,
+comparison and exception controls before 424. It does not add a new source or
+query workflow or displace the functional sequence below.
+
 ## 424 — breadth: explicit contextual field-constraint editing
 
 From an inspected/faceted field, expose the exact applied constraints that keep

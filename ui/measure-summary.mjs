@@ -62,7 +62,7 @@ function provenance(snapshot,label){
   root.append(details);return root;
 }
 
-function valueCell(field,row,{delta,snapshot,labels}={}){
+function valueCell(field,row,{delta,snapshot,labels,context}={}){
   const cell=delta?undefined:row?.cells?.[field?.key],raw=delta?delta.value:row?.values?.[field?.key];
   const body=n('div',undefined,'measure-cell');body.dataset.state=delta?.state||cell?.state||'recorded';
   const text=delta?formatComparisonChange(field,delta):field?formatCell(field,raw,cell):'Unavailable';
@@ -80,7 +80,9 @@ function valueCell(field,row,{delta,snapshot,labels}={}){
     body.append(support);
   }
   const details=n('details',undefined,'measure-exact'),status=delta?delta.state:cell?.state;
-  details.append(n('summary',status?(cell?.support?`${status} · ${cell.support.valid}/${cell.support.total} valid`:status):'Exact value'));
+  const summary=n('summary',status==='derived'?(cell?.support?`Calculation · ${cell.support.valid}/${cell.support.total} valid`:'Calculation'):status?(cell?.support?`${status} · ${cell.support.valid}/${cell.support.total} valid`:status):'Exact value');
+  summary.setAttribute('aria-label',summary.textContent+' · '+(field?.label||'Measure')+(context?' · '+context:''));details.append(summary);
+  if(status==='derived')details.append(n('p','Derived from the supplied captured values.'+(cell?.support?' '+cell.support.valid+' / '+cell.support.total+' valid.':'')));
   details.append(n('p',delta?(delta.state==='derived'?exactText({...field,aggregation:undefined},raw):delta.reason||'Change is unavailable.'):field?exactText(field,raw,cell,snapshot?fractionFacts(snapshot,row,field.key):null):'Measure not supplied.'));
   if(delta?.state==='derived')details.append(n('p',(labels||comparisonRoleLabels())[1]+' − '+(labels||comparisonRoleLabels())[0]+' · exact supplied change'+(field?.aggregation?.family==='ratio'?' · percentage points = exact fraction difference × 100':'')));
   body.append(details);return body;
@@ -123,14 +125,14 @@ function comparisonBody(comparison,display){
     if(plot){const axis=n('small','Shared scale','measure-axis-label');axis.title=domain.min+' → '+domain.max+(field.unit?' '+field.unit:'')+' · signed zero axis';name.append(axis)}
     for(let side=0;side<2;side++){
       const cell=n('td');cell.dataset.side=side?'selection':'baseline';cell.setAttribute('role','cell');cell.setAttribute('headers',name.id+' '+prefix+'-column-'+(side+1));
-      const label=n('span',display.labels[side],'measure-side-label');label.setAttribute('aria-hidden','true');cell.append(label,valueCell(fields[side],rows[side],{snapshot:snapshots[side]}));
+      const label=n('span',display.labels[side],'measure-side-label');label.setAttribute('aria-hidden','true');cell.append(label,valueCell(fields[side],rows[side],{snapshot:snapshots[side],context:display.labels[side]}));
       if(plot){
         const track=n('div',undefined,'measure-comparison-track');track.dataset.min=domain.min;track.dataset.max=domain.max;track.style.setProperty('--measure-zero',domain.zero+'%');track.setAttribute('aria-hidden','true');
         const bar=domain.bars[side];if(bar){const fill=n('span',undefined,'measure-comparison-fill');fill.dataset.side=side?'selection':'baseline';fill.style.left=bar.start+'%';fill.style.width=bar.width+'%';track.append(fill)}else track.dataset.unavailable='true';cell.querySelector('.measure-value').after(track);
       }
       tr.append(cell);
     }
-    const delta=n('td');delta.dataset.side='change';delta.setAttribute('role','cell');delta.setAttribute('headers',name.id+' '+prefix+'-column-3');const label=n('span','Change','measure-side-label');label.setAttribute('aria-hidden','true');delta.append(label,valueCell(field,null,{labels:display.labels,delta:comparison.changes[key]||{state:'unavailable',value:null,reason:'No supplied change.'}}));tr.append(delta);body.append(tr);
+    const delta=n('td');delta.dataset.side='change';delta.setAttribute('role','cell');delta.setAttribute('headers',name.id+' '+prefix+'-column-3');const label=n('span','Change','measure-side-label');label.setAttribute('aria-hidden','true');delta.append(label,valueCell(field,null,{labels:display.labels,context:'Change',delta:comparison.changes[key]||{state:'unavailable',value:null,reason:'No supplied change.'}}));tr.append(delta);body.append(tr);
   }
   table.append(head,body);viewport.append(table);return viewport;
 }

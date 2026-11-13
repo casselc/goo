@@ -1,5 +1,38 @@
 # Validation record
 
+## Shared investigation polish after 423
+
+[Presentation changes](docs/UI_POLISH_AFTER_423.md),
+[UX audit and acceptance](docs/reviews/UI_POLISH_AUDIT_2026_11_13.md), and
+[accessibility/standards audit](docs/reviews/UI_POLISH_ACCESSIBILITY_2026_11_13.md).
+
+- Final **1,618 frontend tests pass**, zero failures/skips (22.7s). Shared field
+  search, compact provenance, native calculation/signature names and selection
+  styling retain the existing owners and query contracts. A minimal DOM fixture
+  now supplies the shared native-disclosure helper.
+- Initial real-source run passes all **six Playwright journeys** in 5.3m, with
+  bounded Bombadil actors for Activity facets, multi-value facets, captured rates,
+  service versions and exception groups. Follow-up checks preserve explicit
+  source budgets, keyboard calculation access, missing/empty/literal distinctions,
+  exact UTC/read facts and no horizontal overflow at 1440/390/320 pixels.
+- The final layout assertions exposed the old observed-field search maximum-width
+  cap. The shared stylesheet now removes that cap. The final **five affected
+  browser/performance checks pass** (2.7m), including fresh 421/422 Bombadil
+  actors. Search fills the available width, provenance opens by keyboard,
+  selection controls fit, exact facts remain available and no horizontal
+  overflow occurs. Activity row-copy budgets and detached public scope API
+  conformance pass; no cached authority or extra source read is introduced.
+- Final captured-rate, exception and service-version journeys also pass after
+  the observation-disclosure/mobile-toolbar refinement. Actual 1440/390/320
+  screenshots and existing storyboards are refreshed. UX and accessibility/
+  standards follow-up reviews accept the bounded source/frame changes; they
+  distinguish visual review from the root-run keyboard and source checks.
+- Existing native model/property checks pass without skips against the final
+  observed 421/422 ledgers (28.6s/33.9s), including generated scopes, exact
+  selection meaning and protocol negative controls. No new model or product API
+  was needed for this presentation pass.
+
+
 ## 423 — measured Activity scope snapshots
 
 [Contract/diagram and measurements](docs/ACTIVITY_SCOPE_SNAPSHOTS.md),

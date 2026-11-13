@@ -66,3 +66,7 @@ separate actor completed across 514 snapshots with one acquisition/comparison.
 Four actual frames have independent visual acceptance. Native Quint replays the
 observed ledger; generated Hegel arithmetic and rejecting controls pass without
 skips (20.291s package run). See [validation](../../VALIDATION.md).
+
+The [post-423 shared polish](../UI_POLISH_AFTER_423.md) refreshes these frames.
+Exact scope and read facts remain accessible through native disclosures; local
+presentation controls do not acquire telemetry.

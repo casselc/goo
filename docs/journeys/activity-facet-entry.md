@@ -66,3 +66,7 @@ The 422 regression run passes both log/span checks and the 35-second actor in
 completes across 683 snapshots with held observations and source-free staging
 preserved. The 112-span source check and isolated-runtime cleanup also pass.
 These current frames use the shared checkbox/explicit-Stage controls.
+
+The [post-423 shared polish](../UI_POLISH_AFTER_423.md) refreshes these frames.
+Exact scope and read facts remain accessible through native disclosures; local
+presentation controls do not acquire telemetry.

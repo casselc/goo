@@ -2092,3 +2092,12 @@ must not require rows or a mounted inspector during construction. Ancestry,
 observed-field discovery and held explanation still request rows explicitly.
 See [scope snapshots](ACTIVITY_SCOPE_SNAPSHOTS.md) for measured copy budgets and
 public API conformance; this is no new cache or global action registry.
+
+## Investigation presentation refinement
+
+The [post-423 polish](UI_POLISH_AFTER_423.md) keeps counted-value search and
+selection styling in the shared filter editor. Its concise result summary keeps
+counts and unknown coverage visible; native Read details retains the exact scope
+and receipts. Shared measure summaries use contextual Calculation accessible
+names including measure and comparison side. Native disclosure interaction
+remains passive and never confers query authority.

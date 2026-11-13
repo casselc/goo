@@ -79,3 +79,7 @@ The independent actor runs after all main facts, keeping that ledger contiguous.
 The recorded per-gesture ledger distinguishes initial dashboard source reads
 from the comparison runs; native replay and independent visual acceptance are
 recorded in [validation](../../VALIDATION.md).
+
+The [post-423 shared polish](../UI_POLISH_AFTER_423.md) refreshes these frames.
+Exact scope and read facts remain accessible through native disclosures; local
+presentation controls do not acquire telemetry.

@@ -52,3 +52,7 @@ records and observing staged OR controls before completion. It performs one
 counted lookup and no publication. Five actual documentation frames are current;
 the isolated runtime stopped cleanly. Native replay and independent visual
 acceptance are recorded in validation.
+
+The [post-423 shared polish](../UI_POLISH_AFTER_423.md) refreshes these frames.
+Exact scope and read facts remain accessible through native disclosures; local
+presentation controls do not acquire telemetry.
