@@ -110,7 +110,10 @@ depth item after this entry improvement is exercised; it does not move deferred
 monitor delivery, tenancy, classifier training or warehouse work through their
 separate gates.
 
-## 422 — next depth: select several counted values
+## 422 — depth: select several counted values (delivered)
+
+[Contract](MULTI_VALUE_FACETS.md), [storyboard](journeys/multi-value-facets.md),
+and [independent review](reviews/MULTI_VALUE_FACETS_REVIEW_422.md).
 
 Deepen the counted-facet workflow after 421 with explicit multi-value selection
 within one qualified field. Use OR among the selected values and AND with the
@@ -134,6 +137,25 @@ selection needs its own explicit local draft and one atomic predicate handoff.
 Require actual-source scope conservation, exact generated predicate semantics,
 stale-action controls and updated executable storyboards before broadening the
 workflow to other data families.
+
+## 423 — next consolidation: Activity render and scope snapshots
+
+Profile field inspection and counted-selection interaction with a full retained
+buffer and many attributes. Source review found that render-time availability
+can repeatedly call `tail.snapshot()`, which clones retained rows although the
+checks need only scope/window metadata. This is a measured-performance hypothesis,
+not an established user-visible bottleneck. Establish the baseline before
+choosing a refactor, and do not add caching merely to reduce a synthetic metric.
+
+If confirmed, separate small current-scope snapshots from requested row copies
+and reuse one render snapshot for availability. Keep fresh invocation/commit
+checks and source-generation leases; a frozen render must never grant a stale
+click or pending handoff permission. Exercise first/second inspection, unfiltered
+scope, filtered multi-selection, and native return in the same shared components.
+No new global eligibility registry, persisted format or query engine is needed.
+Record performance/copy-count evidence and preserve current source/read budgets.
+Use the result to refresh the next breadth/depth roadmap rather than extending
+this into a whole-app rewrite.
 
 ## Reconciliation and boundaries
 

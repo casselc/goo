@@ -52,3 +52,17 @@ after those shared fixes. Driver corrections set an explicit raw-oracle row budg
 used literal-label matching for quoted values, and read the source adapter's
 normalized `Attributes` map for retained identity checks. Native replay and
 independent visual acceptance are recorded in validation.
+
+## Current counted-value selection
+
+The shared counted-values surface now uses local checkboxes and an explicit
+**Stage selected values** action. This journey selects the one empty-string value
+before staging it; the source-free entry, read windows, native return and original
+read budgets are unchanged. Multi-value semantics are exercised by the
+[422 storyboard](multi-value-facets.md).
+
+The 422 regression run passes both log/span checks and the 35-second actor in
+57.5 seconds. Its main eleven-fact ledger remains continuous, and the actor
+completes across 683 snapshots with held observations and source-free staging
+preserved. The 112-span source check and isolated-runtime cleanup also pass.
+These current frames use the shared checkbox/explicit-Stage controls.

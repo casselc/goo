@@ -14,8 +14,8 @@ lookup's population counts.
 
 Loading pauses Activity and reads independent full-scope count and group
 aggregates. Counts must conserve the whole population. Missing keys and present
-empty strings stay distinct. Search filters the loaded values locally; choosing
-one stages a predicate. **Apply scope** explicitly starts a new observation.
+empty strings stay distinct. Search filters the loaded values locally; select one or more and choose
+**Stage selected values** to stage one atomic predicate. **Apply scope** explicitly starts a new observation.
 Neither selecting a field nor staging a value automatically reads telemetry.
 
 Closing Filters returns to the original field action while that inspector/scope
@@ -51,3 +51,6 @@ not sampling completeness or service health.
 [Storyboard](journeys/activity-facet-entry.md),
 [independent review](reviews/ACTIVITY_FACET_ENTRY_REVIEW_421.md), and
 [validation](../VALIDATION.md) record actual checks and their limits.
+
+[Multi-value staging](MULTI_VALUE_FACETS.md) uses OR within the chosen field and
+AND with the retained applied scope. Selection alone does not edit that scope.

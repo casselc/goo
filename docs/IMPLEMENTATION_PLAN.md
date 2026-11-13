@@ -7,8 +7,8 @@
 > consolidation** completes that cycle. **415 guided service-version comparison**
 > and **416 recurring exception groups** are delivered. **417 record-intent admission** is delivered. **418 ordinary captured-rate comparisons** is delivered. **419 version recorded-Error context** is delivered.
 > **420 contextual action consistency** completes that cycle.
-> **421 contextual Activity facet entry** is delivered. Next is
-> **422 bounded multi-value facets**,
+> **421 contextual Activity facet entry** and **422 bounded multi-value facets**
+> are delivered. Next is **423 Activity render/scope snapshot consolidation**,
 > following the whole-product checkpoint. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped

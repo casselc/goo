@@ -19,3 +19,15 @@ test('lookup uses lean endpoint and ignores late completion after scope change o
  now=scope;const next=loader(field);owner.dispose();assert.equal(signal.aborted,true);resolve({ok:true,json:async()=>response(request.q)});await next;assert.equal(loader,null);assert.equal(states.at(-1),undefined);
  }finally{global.GooQueries=old}
 });
+
+test('422 counted result owns its immutable question and a live source-generation lease',async()=>{
+ const {mount}=require('../ui/filter-values.mjs'),old=global.GooQueries;let loader,now=structuredClone(scope);const ready=[];
+ const editor={setValueLoader:f=>loader=f,setCountedValues:(data,options)=>{if(data?.state==='ready')ready.push({data,options})}};
+ global.GooQueries={post:async(_path,q)=>({ok:true,json:async()=>response(q)})};
+ const owner=mount(editor,{current:()=>now});try{
+  await loader(field);const first=ready.at(-1);assert(first);assert.deepEqual(first.data.question,query(scope,field));assert.equal(first.options.current(),true);
+  now={...scope,environment:'other'};assert.equal(first.options.current(),false,'scope drift refuses before owner.sync');now=structuredClone(scope);owner.invalidate();assert.equal(first.options.current(),false);
+  await loader(field);const second=ready.at(-1);assert.equal(second.options.current(),true);assert.equal(first.options.current(),false,'identical scope cannot revive a retired generation');
+  owner.dispose();assert.equal(second.options.current(),false);
+ }finally{owner.dispose();global.GooQueries=old}
+});

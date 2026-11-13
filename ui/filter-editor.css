@@ -11,3 +11,45 @@
   line-height: 1.35;
   overflow-wrap: anywhere;
 }
+
+.filter-editor .filter-counted-selection {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-block: 8px;
+  min-inline-size: 0;
+}
+.filter-editor .filter-counted-selection-status {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.filter-editor .filter-counted-row .filter-counted-choice {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  min-inline-size: 0;
+  min-block-size: 36px;
+  margin: 0;
+  cursor: pointer;
+}
+.filter-editor .filter-counted-choice input[type=checkbox] {
+  flex: none;
+  inline-size: 16px;
+  width: 16px;
+  min-inline-size: 16px;
+  margin: 0;
+}
+.filter-editor .filter-counted-choice span {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.filter-editor .filter-counted-row > span {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}

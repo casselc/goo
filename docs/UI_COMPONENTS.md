@@ -2078,3 +2078,10 @@ application callback separately checks the current inspector/native-action lease
 returns its existing Load button; it never calls the source loader. Its shared
 scope preview is associated with Load through `aria-describedby` and styled in
 `filter-editor.css`. See [Activity facet entry](ACTIVITY_FACET_ENTRY.md).
+
+Counted filters now use a local multi-value draft and one atomic Stage action.
+`setCountedValues(data, {current})` keeps the cloneable original question separate
+from its live owner lease. The editor checks the signal, sole field and unchanged
+base predicate before committing; the pure helper validates the entire OR/AND
+expression. Native checkboxes describe their original-scope counts and preserve
+choices hidden by search. See [multi-value facets](MULTI_VALUE_FACETS.md).

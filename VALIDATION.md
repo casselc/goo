@@ -1,5 +1,47 @@
 # Validation record
 
+## 422 — atomic multi-value counted facets
+
+[Contract and diagram](docs/MULTI_VALUE_FACETS.md),
+[storyboard](docs/journeys/multi-value-facets.md), and
+[independent review](docs/reviews/MULTI_VALUE_FACETS_REVIEW_422.md).
+
+- **1,618 frontend tests pass**, zero failures/skips (22.886s with bounded test
+  concurrency). Shared counted controls use native checkboxes, local search/Clear
+  and one explicit Stage. Hidden choices stay selected with a visible count;
+  counts remain tied to the original scope. Predicate composition uses OR within
+  one qualified field and AND with the retained predicate, including same-field
+  constraints. Full validation precedes tree assignment and one change emission.
+- Tests cover missing/empty/literal values, unsupported choices, complete predicate
+  bounds, refusal without mutation, stale/native controls, live lease withdrawal,
+  source-generation ABA and an unfiltered scope. Ready data retains its immutable
+  original question; the ownership callback is a separate options argument.
+- Isolated Hegel/native Quint suite passes **33.788s with no skips**. Thirty-two
+  seeds exercise independent predicate truth across retained scopes and local
+  toggle/clear schedules, exact namespaces, same-field constraints, large source
+  counts, bounds, immutability and observed source-generation ABA. Native replay
+  validates all eleven actual facts and rejects implicit/excess reads.
+- Real OTLP/ClickHouse journey plus **35-second Bombadil campaign passes** (50.9s):
+  261 original records beyond the 100-row buffer, local selection/search/Clear,
+  hidden choices, atomic Stage and explicit Apply. Load uses one source
+  acquisition/two SQL reads; Apply uses one acquisition/one SQL read. The actual
+  union contains exactly the missing/empty observations and excludes the literal
+  `"Missing key"` control. Full typed environment and retained predicates match
+  the independent source oracle. The actor completes across **656 snapshots**,
+  observes staged DOM before completion, preserves held records and publishes
+  nothing. Its campaign follows the continuous main ledger.
+- Updated 421 entry log/span journeys and actor pass **57.5s**, with **683 actor
+  snapshots** and the independent 112-span full-count check. Its existing native
+  scope/read replay and generated properties also pass **28.291s, no skips**.
+  Five new and six regenerated entry frames/storyboards use the same shared
+  checkbox/Stage controls. Independent review accepts all five new frames at
+  desktop/390/320 widths, including hidden-selection feedback and applied OR.
+- Compiled/refreshed only the app on Go 1.27.3; telemetry, streams, captures and
+  stores remain intact. Product Go, API schemas and SQL generation are unchanged;
+  no additional backend/API regression run is claimed. Both isolated browser
+  runtimes stopped cleanly.
+
+
 ## 421 — contextual Activity facet entry
 
 [Contract and diagram](docs/ACTIVITY_FACET_ENTRY.md),
