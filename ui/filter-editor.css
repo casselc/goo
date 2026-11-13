@@ -89,3 +89,26 @@
     flex: 1;
   }
 }
+
+.filter-editor .filter-field-constraints {
+  margin-block: 6px;
+  min-inline-size: 0;
+  font-size: 12px;
+}
+.filter-editor .filter-field-constraint {
+  border-block-start: 1px solid var(--border);
+  padding-block: 6px;
+}
+.filter-editor .filter-field-constraint p {
+  display: grid;
+  gap: 3px;
+  margin-block: 0 6px;
+}
+.filter-editor .filter-field-constraint code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.filter-editor .filter-field-constraint .controls {
+  margin: 0;
+  gap: 6px;
+}

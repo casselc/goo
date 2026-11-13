@@ -26,6 +26,9 @@ and recalled queries consistent; malformed links preserve held results.
 lengths with exact count/exposure facts and an explicit Count or records/s choice.
 [Shared investigation controls](docs/UI_POLISH_AFTER_423.md) keep field search,
 facet selections and comparison calculations compact, with exact read facts on demand.
+[Edit a field’s applied constraints](docs/CONTEXTUAL_FIELD_CONSTRAINTS.md) from
+its facet controls, or stage removal of one AND condition while retaining the
+other filters. Apply explicitly reads a fresh Activity window.
 
 
 [Reusable question packages](docs/TYPED_PACKAGE_SCOPES.md) retain environment

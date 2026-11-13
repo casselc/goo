@@ -1,5 +1,10 @@
 # Known issues and gaps
 
+[Contextual field constraints](CONTEXTUAL_FIELD_CONSTRAINTS.md) currently enter
+from an inspected Activity field. Exact OR clauses can be edited in context;
+one-click removal is limited to AND-only ancestry. Apply uses a fresh rolling
+Activity window, while held rows and the original clause window remain distinct.
+
 [Captured-rate comparisons](CAPTURED_RATE_COMPARISONS.md) support ordinary captured
 baselines with summary presentation. Fresh-query rates and grouped interval rates
 remain outside this slice; captured counts/s do not establish unsampled throughput

@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Contextual field constraints](field-constraints.md) (424) resolves exact clauses,
+stages safe AND removal and explicitly applies a broader Activity scope while
+retaining unrelated OR conditions.
+
 [Captured-rate comparisons](captured-rates.md) (418) compare 120 records/60s with
 240/120s, switch count/rate locally, and retain exact zero/diagnostic semantics.
 

@@ -1,5 +1,39 @@
 # Validation record
 
+## 424 — contextual field-constraint editing
+
+[Contract/diagram](docs/CONTEXTUAL_FIELD_CONSTRAINTS.md),
+[executable storyboard and frames](docs/journeys/field-constraints.md), and
+[independent integration/UX review](docs/reviews/FIELD_CONSTRAINTS_REVIEW_424.md).
+
+- **1,628 frontend tests pass**, no failures/skips (29.2s). Exact field namespaces,
+  authored paths, duplicate conditions, numeric bindings, empty literals and
+  stale/withdrawn controls are covered. Source and rendered predicates share the
+  existing wire normalization before exact live clause resolution; explicit empty
+  values and numeric scale-zero defaults remain editable rather than refusing.
+- Actual OTLP logs/ClickHouse journey passes **48.8s**, including a separate
+  35-second Bombadil actor after its main ledger. Nine continuous facts distinguish
+  local inspection/disclosure/edit/remove/stale actions (zero acquisition/SQL),
+  explicit counted Load (one acquisition/two SQL reads) and Apply (one acquisition/
+  one SQL read). The raw-source oracle proves **258 → 260** matching records by
+  removing exactly one AND condition and preserving the mixed OR group, qualified
+  namespace, service and effective environment policy. A newly included canary
+  appears in the retained page; row limits never supply the population total.
+- Removal retains held rows, withdraws old counts, stages once and focuses Apply.
+  Edit focuses the exact second matching clause's existing operator. OR conditions
+  remain editable; they have no contextual removal action. Apply explicitly
+  resolves a new current Activity window with unchanged lookback; the original
+  completed window remains the intent lease and held observation until Apply.
+- Four existing real-source facet/span/multi-value/performance checks pass on the
+  same product binary. Activity copy budgets remain inspection at most 200 and
+  zero for measured non-inspection actions. New 1440/390/320 and staged mobile
+  frames are accepted in bounded source/frame UX/accessibility review.
+- Native Quint protocol, actual observed-ledger replay and Hegel-generated
+  production-planner transitions pass **31.6s**, no skips, including negative
+  controls for implicit reads, OR removal, stale intent and incorrect ordering.
+  The separate verification module adds no product dependency or API.
+
+
 ## Shared investigation polish after 423
 
 [Presentation changes](docs/UI_POLISH_AFTER_423.md),

@@ -2101,3 +2101,9 @@ counts and unknown coverage visible; native Read details retains the exact scope
 and receipts. Shared measure summaries use contextual Calculation accessible
 names including measure and comparison side. Native disclosure interaction
 remains passive and never confers query authority.
+
+The filter editor also supports [contextual applied constraints](CONTEXTUAL_FIELD_CONSTRAINTS.md).
+Its owner supplies a complete applied question and a live lease. Native clause
+actions resolve an exact authored path; AND-only removal stages one validated
+predicate through the existing owner callback. Read acquisition and Activity
+window policy remain in the adapter.

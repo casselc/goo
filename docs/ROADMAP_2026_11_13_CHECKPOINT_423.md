@@ -20,6 +20,10 @@ query workflow or displace the functional sequence below.
 
 ## 424 — breadth: explicit contextual field-constraint editing
 
+Delivered: [contract and storyboard](CONTEXTUAL_FIELD_CONSTRAINTS.md), with
+[review](reviews/FIELD_CONSTRAINTS_REVIEW_424.md) and actual checks in
+[validation](../VALIDATION.md). The next feature is 425 below.
+
 From an inspected/faceted field, expose the exact applied constraints that keep
 other values out of view. Reuse the existing filter editor or stage a named
 broader fixed question. Choosing an entry stays local; an explicit Apply/Run
@@ -30,7 +34,10 @@ Bind any removal/edit action to the original question lease and an exact clause
 path plus canonical content. When several conditions mention a field, make the
 choice explicit. A mixed-field Boolean group must not lose an arbitrary member
 or its first matching child. Preserve every unchosen constraint, qualified field
-namespace, typed environment policy and the stated window. Validate the full
+namespace, typed environment policy and window policy. Activity retains the
+original completed window for clause custody and held observations; explicit
+Apply resolves a new current window with the same lookback. Fixed-question
+planning preserves its fixed bounds. Validate the full
 result before atomic staging; stale/hidden actions refuse without changing the
 held population. Keep keyboard/mobile return and explicit source budgets.
 

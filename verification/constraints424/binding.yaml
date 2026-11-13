@@ -1,0 +1,14 @@
+spec: constraints.qnt
+module: constraints
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  local: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  inspect: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  context: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  edit: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  choose_or: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  load: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  remove: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  apply: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}
+  retire: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and counted == {{.obs.counted}}'}

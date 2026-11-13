@@ -4663,3 +4663,10 @@ Apply-read model control are rejected. The model reuses the existing finite
 read/history counter contract; raw membership, rates and display meanings are
 independently checked in Go. This is measured trace validation, not generated
 application schedules or a claim of full source completeness.
+
+## Contextual field constraints (424)
+
+[constraints424](constraints424/README.md) checks local clause editing and
+explicit source budgets with native Quint, the observed browser ledger and
+Hegel-driven properties over the production planner. Supply the completed
+`GOO_CONSTRAINTS424_REPORT`; required acceptance does not skip the model or ledger.
