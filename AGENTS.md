@@ -37,6 +37,13 @@ docs/journeys/screenshots are generated evidence, not hand-edited mockups.
 
 - Commit validated milestones promptly; do not let completed project work accumulate untracked. Review staged files, keep generated caches and secrets excluded, and report the commit ID.
 
+## Documentation entry points
+
+README.md is the concise product introduction and quick start. Do not prepend
+milestone reports, validation details or new feature links to it. Place task guides
+in docs/README.md, executed checks in VALIDATION.md and implementation details in
+their owning documents. See CONTRIBUTING.md for documentation conventions.
+
 ## Deliverables
 
 For each milestone, report concrete changes, checks, unresolved issues, and the next task. Keep README.md, VALIDATION.md, and the issue list consistent with code. Update RFC status when decisions change; do not rewrite the historical design snapshot to imply earlier implementation.

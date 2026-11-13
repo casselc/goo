@@ -1,4 +1,7 @@
-# Architecture
+# Detailed architecture contracts
+
+For the runtime and data flow, start with the [system overview](SYSTEM_OVERVIEW.md).
+This document retains feature-level implementation contracts and development context.
 
 [Counter display reuse](NATIVE_COUNTER_VIEW_REUSE.md) extends the same finite
 NativeView owner with evaluated counter intervals. Compatibility includes exact

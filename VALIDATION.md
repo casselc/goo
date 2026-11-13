@@ -1,5 +1,18 @@
 # Validation record
 
+## Documentation entry-point cleanup
+
+Documentation-only change: replaced the accumulated README with a product
+introduction, current screenshot, demo quick start and existing-data startup.
+Added task-oriented docs navigation, a system overview, local lab guide and
+contributor instructions. Preserved the previous README as labeled history and
+marked the original handoff as superseded for getting started.
+
+Checked 369 local links across the rewritten entry points and preserved snapshot:
+all target files exist. Startup flags and the Go version were cross-checked against
+source/configuration; `git diff --check` passes. No runtime code changed; product
+or browser suites were not rerun for this documentation-only change.
+
 ## 426 — investigation preservation and retained return
 
 [Contract](docs/INVESTIGATION_CONSOLIDATION.md), [storyboard](docs/journeys/investigation-reuse.md),

@@ -1,6 +1,8 @@
-# Grammar of Observability Codex handoff
+# Historical project handoff
 
-> Historical imported handoff. Current implemented behavior and startup are in
+> **For a first visit, use [README.md](README.md) and the [documentation index](docs/README.md).**
+> This imported handoff is historical; its immediate tasks and commands are superseded.
+> Current implemented behavior and startup are in
 > [README.md](README.md), with actual checks in [VALIDATION.md](VALIDATION.md).
 > [PROJECT_DIRECTION.md](PROJECT_DIRECTION.md) records the accepted Go/Rust and
 > YAML+CEL/KCL direction. [Shared measurement packages](docs/MEASUREMENT_PACKAGES.md)
@@ -17,7 +19,7 @@ The intended product lets application teams keep metrics, SLIs, SLOs, alarms, de
 Goo runs as one Go server with embedded UI/docs and typed API handlers. The local
 Compose lab provides independent sample applications and an OTel/ClickHouse
 pipeline. Python is used only by sample workloads and offline tooling/reference
-tests. See [single runtime](docs/SINGLE_GO_RUNTIME.md), [current roadmap](docs/ROADMAP_2026_11_08_CHECKPOINT_381.md)
+tests. See [single runtime](docs/SINGLE_GO_RUNTIME.md), [current roadmap](docs/ROADMAP_2026_11_13_CHECKPOINT_426.md)
 and [generic startup](docs/GENERIC_STARTUP.md).
 
 The sample path is HTTP → gRPC → Redis Streams → consumer, with OTel collection into baseline exporter tables. The default lab uses its own query interface. HyperDX can be added as an optional profile. The repository includes CI and executable browser/model journeys; production deployment hardening remains separate.
