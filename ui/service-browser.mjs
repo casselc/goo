@@ -47,7 +47,7 @@ function mount(host,{catalog}={}){
   function notify(action,extra={}){global.dispatchEvent(new CustomEvent('goo:service-browser-state',{detail:{action,generation,service:selected,scope:clone(selectedScope||scope),...extra}}))}
   function returnToService(origin){
    document.querySelector('[data-workspace="services"]').click();document.getElementById('entitiesServices')?.click();
-   ResourceReturn.restoreFocus(origin&&detail.contains(origin)?origin:null,detail.querySelector('h3'));notify('return');
+   ResourceReturn.restoreFocus(origin&&detail.contains(origin)?origin:null,detail.querySelector('h3'),{disclosures:true});notify('return');
   }
   function follow(question,origin){returnPath.show({title:identity.name(selected,selectedScope.namespace),question,backLabel:'Back to service',onBack:()=>returnToService(origin)});notify('question',{question:clone(question)});global.dispatchEvent(new CustomEvent('goo:open-question',{detail:question}))}
   function button(title,action){const b=node('button',title),owner=generation;b.onclick=()=>{if(owner!==generation||b.disabled||!Visuals.actionVisible(b))return;return action(b)};return b}

@@ -15,8 +15,16 @@ function completionControlReady(element){
  return true;
 }
 function nativeControlReady(element){return completionControlReady(element)&&!element.disabled&&!element.matches(':disabled')}
-function revealFocus(origin,fallback){
- const target=actionVisible(origin)?origin:fallback;
+// Explicit retained returns may reveal native disclosure ancestry. Invocation
+// never reveals controls, and hidden/inert/disabled owners remain withdrawn.
+function focusCandidate(element,{disclosures=false}={}){
+ if(!element?.isConnected||document.hidden||element.closest('[hidden], [aria-hidden="true"], [inert]')||element.disabled||element.matches(':disabled')||element.getAttribute('aria-disabled')==='true')return false;
+ for(let parent=element;parent;parent=parent.parentElement){const style=globalThis.getComputedStyle?.(parent);if(style?.display==='none'||['hidden','collapse'].includes(style?.visibility))return false;}
+ if(disclosures){const ancestors=[];for(let parent=element.parentElement;parent;parent=parent.parentElement)if(parent.matches('details:not([open])')&&!parent.querySelector(':scope > summary')?.contains(element))ancestors.push(parent);for(const details of ancestors.reverse())details.open=true;}
+ return nativeControlReady(element);
+}
+function revealFocus(origin,fallback,options){
+ const target=focusCandidate(origin,options)?origin:focusCandidate(fallback)?fallback:null;
  target?.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'});
  target?.focus({preventScroll:true});return target;
 }

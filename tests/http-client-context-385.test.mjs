@@ -9,10 +9,11 @@ class Element{
  replaceChildren(...nodes){for(const node of this.children)if(node&&typeof node==='object')node.parentElement=null;this.children=[];this.append(...nodes)}
  setAttribute(key,value){this.attributes[key]=String(value)}
  getAttribute(key){return this.attributes[key]??null}
+ matches(selector){if(selector===':disabled')return !!this.disabled;if(selector==='details:not([open])')return this.localName==='details'&&!this.open;return this.localName===selector}
  getClientRects(){return this.isConnected?[{}]:[]}
  contains(node){return node===this||this.children.some(child=>child&&typeof child==='object'&&child.contains(node))}
  querySelector(selector){return selector===':scope > summary'?this.children.find(child=>child.localName==='summary')||null:null}
- closest(selector){for(let node=this;node;node=node.parentElement){if(selector==='details:not([open])'&&node.localName==='details'&&!node.open)return node;if(selector.includes('hidden')&&(node.hidden||node.attributes['aria-hidden']==='true'))return node;if(selector==='[inert]'&&node.inert)return node}return null}
+ closest(selector){for(let node=this;node;node=node.parentElement){if(selector==='details:not([open])'&&node.localName==='details'&&!node.open)return node;if(selector==='fieldset:disabled'&&node.localName==='fieldset'&&node.disabled)return node;if(selector.includes('hidden')&&(node.hidden||node.attributes['aria-hidden']==='true'))return node;if(selector==='[inert]'&&node.inert)return node}return null}
 }
 const walk=host=>[host,...host.children.filter(x=>x&&typeof x==='object').flatMap(walk)];
 test('qualified context links refuse hidden and retired callbacks, while an explicit visible drill stages literal missing/empty values',t=>{

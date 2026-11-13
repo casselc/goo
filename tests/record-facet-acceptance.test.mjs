@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {test,mock} from 'node:test';
-let focused=null;
+let focused=null;let previousDocument;test.beforeEach(()=>{previousDocument=globalThis.document;globalThis.document={hidden:false}});test.afterEach(()=>{if(previousDocument===undefined)delete globalThis.document;else globalThis.document=previousDocument});
 class Element{
  constructor(tag='div'){this.tagName=tag;this.children=[];this.dataset={};this.attributes={};this.isConnected=true;this.title='';this.scrollTop=0;this.listeners=new Map();this.classList={add:(...names)=>{this.className=[this.className||'',...names].join(' ')}};}
  append(...nodes){for(const node of nodes){node.remove?.();node.parentElement=this;this.children.push(node)}}
@@ -10,9 +10,10 @@ class Element{
  after(node){const parent=this.parentElement;if(parent){node.remove?.();node.parentElement=parent;parent.children.splice(parent.children.indexOf(this)+1,0,node)}}
  contains(node){return node===this||this.children.some(child=>child.contains?.(node))}
  setAttribute(key,value){this.attributes[key]=value}hasAttribute(key){return Object.hasOwn(this.attributes,key)}getAttribute(key){return this.attributes[key]}
- matches(selector){if(selector.startsWith('.'))return(this.className||'').split(' ').includes(selector.slice(1));if(selector.startsWith('[data-')){const key=selector.slice(6,-1).replace(/-([a-z])/g,(_,letter)=>letter.toUpperCase());return Object.hasOwn(this.dataset,key)}return this.tagName===selector}
- querySelectorAll(selector){return this.children.flatMap(child=>[...(child.matches?.(selector)?[child]:[]),...(child.querySelectorAll?.(selector)||[])])}querySelector(selector){return this.querySelectorAll(selector)[0]||null}
+ matches(selector){if(selector===':disabled')return !!this.disabled||!!this.closest('fieldset:disabled');if(selector==='details:not([open])')return this.tagName==='details'&&!this.open;if(selector==='fieldset:disabled')return this.tagName==='fieldset'&&!!this.disabled;if(selector==='[inert]')return this.hasAttribute('inert');if(selector==='[hidden], [aria-hidden="true"]')return this.hidden||this.getAttribute('aria-hidden')==='true';if(selector.startsWith('.'))return(this.className||'').split(' ').includes(selector.slice(1));if(selector.startsWith('[data-')){const key=selector.slice(6,-1).replace(/-([a-z])/g,(_,letter)=>letter.toUpperCase());return Object.hasOwn(this.dataset,key)}return this.tagName===selector}
+ querySelectorAll(selector){return this.children.flatMap(child=>[...(child.matches?.(selector)?[child]:[]),...(child.querySelectorAll?.(selector)||[])])}querySelector(selector){if(selector===':scope > summary')return this.children.find(child=>child.tagName==='summary')||null;if(selector===':scope > legend')return this.children.find(child=>child.tagName==='legend')||null;return this.querySelectorAll(selector)[0]||null}
  closest(selector){return this.matches(selector)?this:this.parentElement?.closest(selector)||null}
+ getClientRects(){return this.visible===false?[]:[{}]}
  focus(){focused=this}scrollIntoView(){this.scrolled=true}
  addEventListener(type,listener){this.listeners.set(type,listener)}dispatch(type){this.listeners.get(type)?.({type})}
 }
@@ -63,4 +64,15 @@ test('secondary record reads require an open row menu or a visible inspector act
  menu.open=false;inspect.onclick();assert.equal(reads.length,1);assert.equal(inspect.getAttribute('aria-pressed'),'true');
  const footer=inspectedActions[0];footer.onclick();assert.equal(reads.length,2);assert.equal(reads[1][4],footer);assert.equal(reads[1][3],'fixed-basis');
  owner.dispose();menu.open=true;expand.onclick();footer.onclick();assert.equal(reads.length,2);
+});
+
+test('420 record inspection and follow-up source actions refuse native disabled, inert and closed owners',()=>{
+ const target=node('section'),fieldset=node('fieldset');fieldset.append(target);let calls=0;
+ const owner=mount(target,[{Body:'ordinary',TraceId:'1'.repeat(32),Attributes:{}}],'logs',{signal:'logs'},'basis',{}, {openTrace:()=>calls++});
+ const inspect=target.querySelector('[data-inspect-record]');inspected=null;fieldset.disabled=true;inspect.onclick();assert.equal(inspected,null);assert.equal(inspect.getAttribute('aria-pressed'),'false');
+ fieldset.disabled=false;target.setAttribute('inert','');inspect.onclick();assert.equal(inspected,null);delete target.attributes.inert;
+ inspect.disabled=true;inspect.onclick();assert.equal(inspected,null);inspect.disabled=false;inspect.onclick();assert(inspected);
+ const action=inspectedActions.find(button=>button.textContent==='Expand trace');assert(action);action.disabled=true;action.onclick();assert.equal(calls,0);action.disabled=false;fieldset.disabled=true;action.onclick();assert.equal(calls,0);fieldset.disabled=false;
+ const closed=node('details');target.append(closed);closed.append(action);action.onclick();assert.equal(calls,0);closed.open=true;action.onclick();assert.equal(calls,1);
+ owner.dispose();action.onclick();assert.equal(calls,1);
 });

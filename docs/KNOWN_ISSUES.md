@@ -16,6 +16,11 @@ can split signatures. Incomplete/conflicting span events remain unclassified;
 read/count disagreement disables staging. Results refuse more than 1,000 groups
 or 8 MiB, and affected contexts show an explicit deterministic first 32.
 
+[Contextual actions](CONTEXTUAL_ACTIONS.md) now share native guards and retained
+focus return across service widgets and record inspection. This is a bounded
+two-owner adoption, not a whole-app action or accessibility audit. Direct Activity
+facet entry remains next; full-scope counted values already exist in Filters.
+
 Use the [current capability/gap index](CAPABILITY_GUIDE.md) for present product
 status and the [active roadmap](ROADMAP_2026_11_13_CHECKPOINT_417.md) for priorities.
 [Operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) delivers shared shell,

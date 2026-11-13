@@ -20,8 +20,9 @@ export class Element {
  contains(node){return this===node||this.children.some(child=>child.contains(node))}
  setAttribute(name,value){this.attributes.set(name,String(value))}
  getAttribute(name){return this.attributes.get(name)??null}
- closest(selector){for(let node=this;node;node=node.parentElement){if(selector==='[inert]'&&node.inert)return node;if(selector==='[hidden], [aria-hidden="true"]'&&(node.hidden||node.getAttribute('aria-hidden')==='true'))return node;if(selector==='details:not([open])'&&node.localName==='details'&&!node.open)return node}return null}
- querySelector(selector){if(selector===':scope > summary')return this.children.find(child=>child.localName==='summary')||null;return this.querySelectorAll(selector)[0]||null}
+ matches(selector){if(selector===':disabled')return !!this.disabled;if(selector==='details:not([open])')return this.localName==='details'&&!this.open;if(selector==='fieldset:disabled')return this.localName==='fieldset'&&!!this.disabled;return this.localName===selector}
+ closest(selector){for(let node=this;node;node=node.parentElement){if(selector==='fieldset:disabled'&&node.localName==='fieldset'&&node.disabled)return node;if(selector==='[inert]'&&node.inert)return node;if(selector==='[hidden], [aria-hidden="true"]'&&(node.hidden||node.getAttribute('aria-hidden')==='true'))return node;if(selector==='details:not([open])'&&node.localName==='details'&&!node.open)return node}return null}
+ querySelector(selector){if(selector===':scope > summary')return this.children.find(child=>child.localName==='summary')||null;if(selector===':scope > legend')return this.children.find(child=>child.localName==='legend')||null;return this.querySelectorAll(selector)[0]||null}
  querySelectorAll(selector){return this.children.flatMap(child=>[...(child.localName===selector?[child]:[]),...child.querySelectorAll(selector)])}
  getClientRects(){return this.isConnected?[{}]:[]}
  focus(){document.activeElement=this}

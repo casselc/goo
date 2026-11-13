@@ -2064,3 +2064,8 @@ facts itself; the population comparison wrapper uses this to avoid duplicate
 scope/clock panels. The supplied model, SSR attributes, detached property updates
 and passive event/source contract stay unchanged. See
 [result presentation](RESULT_PRESENTATION_POLISH.md) for examples and checks.
+
+Contextual action owners share native invocation/completion checks and opt-in
+retained disclosure/focus return. Service widgets and record inspection adopt
+these without moving source ownership into components. See
+[contextual actions](CONTEXTUAL_ACTIONS.md) for the bounded contract and checks.

@@ -1,5 +1,45 @@
 # Validation record
 
+## 420 — contextual actions and retained return
+
+[Contract and diagram](docs/CONTEXTUAL_ACTIONS.md),
+[storyboard](docs/journeys/contextual-actions.md), and
+[independent review](docs/reviews/CONTEXTUAL_ACTIONS_REVIEW_420.md).
+
+- **1,601 frontend tests pass**, zero failures/skips (21.672s with bounded test
+  concurrency). Service-widget and record-inspector actions use native readiness
+  plus their current owner. Pending customization distinguishes disabled-self
+  completion from invocation and rechecks parent departure permission. Tests
+  cover hidden/inert/disabled/fieldset/ARIA controls, stale callbacks, permitted
+  completion, withdrawn completion and actual callback origins. Minimal DOM
+  fixtures now implement native selector methods used by these guards.
+- Shared retained-focus revelation is opt-in, opens only necessary native details
+  ancestors, preserves a closed menu when returning to its first summary, and
+  refuses withdrawn origins/fallbacks. Source and owner checks remain separate.
+  Generated Hegel checks against the actual helpers pass (1.859s initial run).
+- Real OTLP/ClickHouse journey and **35-second Bombadil campaign pass** (55.9s):
+  fifteen continuous main facts, zero page errors, keyboard activation, native
+  menu revelation, actual clicked-button focus, preserved parent nodes/evidence,
+  record-inspector return and intentional closed More-summary return. The selected
+  HTTP-route widget has no interval projection: comparison Run acquires two
+  populations/six SQL reads/one pure comparison; records Run uses one acquisition/
+  four SQL reads; each trace expansion uses two acquisitions/seven SQL reads.
+  Local guards, staging, disclosure, focus and Back add no telemetry reads.
+- The separate actor completes across **697 snapshots**, preserves held evidence
+  and publishes nothing. It runs after all main facts. Six actual desktop/mobile
+  frames have independent visual acceptance; exact focus identity and read counts
+  are browser assertions, not screenshot inferences.
+- Full isolated Hegel/native Quint suite passes **22.291s with no skips**. Generated
+  schedules cover 32 seeds against actual helper execution and an independent
+  oracle; native checks replay all fifteen observed facts and reject local reads,
+  wrong read budgets and invalid pending-operation transitions. Initial driver
+  expectations were corrected against the real boundary span and chosen query
+  profile; the final observed budget is anchored to the stored actual questions.
+- The application was compiled with the existing Go 1.27.3 toolchain and refreshed
+  alone. Both 8088/8089 serve byte-identical final readiness, record-context and
+  service-owner modules. Go product code, API schemas and source queries are
+  unchanged; this round does not claim another backend/API regression run.
+
 ## 419 — recorded Error context in service-version comparisons
 
 [Contract and diagram](docs/SERVICE_VERSION_COMPARISONS.md),

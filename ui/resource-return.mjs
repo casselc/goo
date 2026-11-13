@@ -28,5 +28,5 @@ function mount(parent,{className='',id}={}){
  const owner={show,clear,hold,dispose(){clear();bar.remove()}};return owner;
 }
 function hold(parent,question){return active.get(parent)?.hold(question)??null}
-function restoreFocus(origin,fallback){revealFocus(origin,fallback)}
+function restoreFocus(origin,fallback,options){return revealFocus(origin,fallback,options)}
 export {originEnvironment,mount,hold,restoreFocus};

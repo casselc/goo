@@ -15,11 +15,14 @@ class Element {
  replaceWith(node){const parent=this.parent;if(!parent)return;const i=parent.children.indexOf(this);parent.children.splice(i,1,node);node.parent=parent;this.parent=null;}
  remove(){if(this.parent){this.parent.children=this.parent.children.filter(x=>x!==this);this.parent=null}}
  set innerHTML(value){this.replaceChildren();for(const match of value.matchAll(/<(\w+)[^>]*\bid="([^"]+)"[^>]*>/g)){const el=new Element(match[1]);el.id=match[2];el.hidden=/\bhidden\b/.test(match[0]);el.disabled=/\bdisabled\b/.test(match[0]);el.value=el.id==='exploreLogScope'?'trace':el.id==='surroundingRadius'?'30000':'';this.append(el)}}
- querySelector(selector){const id=selector.startsWith('#')?selector.slice(1):null;for(const child of this.children){if(child.id===id)return child;const found=child.querySelector(selector);if(found)return found}return null}
+ querySelector(selector){if(selector===':scope > summary')return this.children.find(child=>child.tag==='summary')||null;if(selector===':scope > legend')return this.children.find(child=>child.tag==='legend')||null;const id=selector.startsWith('#')?selector.slice(1):null;for(const child of this.children){if(child.id===id)return child;const found=child.querySelector(selector);if(found)return found}return null}
  querySelectorAll(){return []}
  setAttribute(k,v){this.attributes.set(k,v)}
  addEventListener(){}
- closest(){return null}
+ get parentElement(){return this.parent}
+ getAttribute(key){return this.attributes.get(key)??null}
+ matches(selector){if(selector===':disabled')return this.disabled||!!this.closest('fieldset:disabled');if(selector==='details:not([open])')return this.tag==='details'&&!this.open;if(selector==='fieldset:disabled')return this.tag==='fieldset'&&this.disabled;if(selector==='[inert]')return this.attributes.has('inert');if(selector==='[hidden], [aria-hidden="true"]')return this.hidden||this.getAttribute('aria-hidden')==='true';return false}
+ closest(selector){for(let element=this;element;element=element.parent)if(element.matches(selector))return element;return null}
  contains(element){return element===this||this.children.some(child=>child.contains(element))}
  getClientRects(){return this.isConnected?[{}]:[]}
  focus(){document.activeElement=this}
@@ -145,4 +148,18 @@ test('surrounding page retry is exact and a closed or ABA-retired handler cannot
  const x=setup(t),selected={...origin,where:{all:[{field:{kind:'resource',key:'service.namespace'},op:'eq',value:'payments'},{field:{kind:'attribute',key:'http.request.method'},op:'eq',value:'GET'}]}},opening=x.owner.openTrace(selected,trace);
  const notice=x.el('exploreTraceScope'),text=notice.textContent;assert.equal(notice.hidden,false);assert(text.includes(trace));assert.match(text,/Service, namespace and population filters are omitted/);assert.match(text,/unique invocation, complete trace or causality/);assert(text.includes(new Date(selected.fromMs).toISOString()));assert(text.includes(new Date(selected.toMs).toISOString()));assert(!x.requests[0].q.where.all.some(p=>p.field.key==='service.namespace'||p.field.key==='http.request.method'));
  x.requests[0].reject(refusal('budget'));await opening;assert.equal(notice.textContent,text);const retry=x.el('exploreTraceRetry').onclick();assert.equal(notice.textContent,text);x.complete(1);await flush();x.complete(2);await retry;assert.equal(notice.textContent,text);assert.equal(x.requests.length,3);
+});
+
+test('420 context source controls refuse inert and disabled ancestors without retiring a valid pending read',async t=>{
+ const x=setup(t),opening=x.owner.openTrace(origin,trace);x.complete(0,{more:true});await flush();
+ const pendingLog=x.requests[1],count=x.requests.length,more=x.el('exploreTraceMore'),scope=x.el('exploreLogScope');
+ x.container.setAttribute('inert','');await more.onclick();await scope.onchange();x.el('exploreContextClose').onclick();assert.equal(x.requests.length,count);assert.equal(pendingLog.signal.aborted,false);assert.equal(x.el('exploreContext').hidden,false);
+ x.container.attributes.delete('inert');const fieldset=new Element('fieldset');fieldset.disabled=true;x.container.append(fieldset);more.parent.children=more.parent.children.filter(node=>node!==more);fieldset.append(more);await more.onclick();assert.equal(x.requests.length,count);
+ x.complete(1);await opening;assert.match(x.el('exploreLogStatus').textContent,/0 captured logs/);assert.equal(x.el('exploreContext').hidden,false);x.el('exploreContextClose').onclick();assert.equal(x.returns,1);
+});
+
+test('420 trace close returns to the actual inspector opener through permitted native disclosure ancestry',async t=>{
+ const x=setup(t),details=new Element('details'),summary=new Element('summary'),opener=new Element('button');details.append(summary,opener);x.container.append(details);details.open=true;
+ const opening=x.owner.openTrace(origin,trace,'',null,opener);details.open=false;x.el('exploreContextClose').onclick();assert.equal(x.requests[0].signal.aborted,true);assert.equal(details.open,true);assert.equal(document.activeElement,opener);assert.equal(x.returns,0);x.complete(0);await opening;
+ const next=x.owner.openTrace(origin,trace,'',null,opener);opener.disabled=true;x.el('exploreContextClose').onclick();assert.equal(x.returns,1);x.complete(1);await next;
 });

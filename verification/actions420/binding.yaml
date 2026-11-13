@@ -1,0 +1,19 @@
+spec: actions.qnt
+module: actions
+constants: {INITIAL: '0'}
+invariants: [safety]
+actions:
+  local: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  stage_compare: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  run_compare: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  return_service: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  stage_records: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  read_records: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  inspect_record: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  read_trace: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  return_trace: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  row_trace: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  return_row: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  begin_customize: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  complete_customize: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
+  retire_customize: {expect: 'reads == {{.obs.reads}} and sql == {{.obs.sql}} and pairs == {{.obs.pairs}}'}
