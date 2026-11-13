@@ -1,5 +1,30 @@
 # Validation record
 
+## Exception-group UI polish after 416
+
+The [presentation refinement](docs/EXCEPTION_GROUPS.md#presentation-refinement)
+keeps the effective rule/UTC window visible, folds population configuration into
+native details, and tightens the header, toolbar and mobile group cards. Exact
+counts accompany native share meters; full timestamp values remain accessible.
+[Independent follow-up review](docs/reviews/EXCEPTION_GROUPS_REVIEW_416.md)
+accepts the actual 1440/390/320px frames.
+
+- Frontend suite: **1,569 passed, zero failures/skips**.
+- Real-data log/span journey plus **45-second Bombadil campaign pass** (1.4m),
+  **24 observed facts**, zero page errors. Added checks cover default-folded
+  population settings, keyboard opening/closing without source reads, and native
+  share meters. Full-population drill, held focus and stale-read gates still pass.
+- Existing full type-breakdown journeys pass for spans/logs (**2 passed, 1.6m**);
+  stale-owner safety and the **55-second triage Bombadil** campaign also pass.
+  Driver updates follow the current selected-item inspector, disclosure ancestry,
+  actual held-return opener and explicit question editor before package saving.
+  Earlier runs exposed those stale driver assumptions; final reruns pass.
+- Final native Quint protocol and observed-ledger replay pass (**19.424s**, no skips).
+  The final frontend rerun also passes all 1,569 tests.
+- Query contracts and source semantics are unchanged; this is presentation work
+  before **417 record-intent admission**.
+
+
 ## 416 — query-only exception groups
 
 [Contract](docs/EXCEPTION_GROUPS.md), [executable storyboard](docs/journeys/exception-groups.md),

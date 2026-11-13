@@ -3,7 +3,9 @@
 Milestone 416 adds query-only exception grouping inside **Errors & exceptions**.
 [Validation](../VALIDATION.md) records actual checks and the independent review.
 
-Open Activity's **Investigate → Errors & exceptions**, choose the evidence rule,
+Open Activity's **Investigate → Errors & exceptions**. The effective evidence rule
+and UTC window stay visible; **Population options** contains rule changes, type
+breakdown configuration and the exact filter. Choose the evidence rule there,
 then explicitly **Read exception groups**. The current environment policy,
 selectors and fixed observation window are preserved. The signature profile uses
 standard reported `exception.type` and `exception.stacktrace`; a custom type-field
@@ -96,3 +98,16 @@ display and local controls reuse the shared components.
 See the [storyboard](journeys/exception-groups.md),
 [independent review](reviews/EXCEPTION_GROUPS_REVIEW_416.md) and
 [OpenAPI contract](../api/openapi.json).
+
+## Presentation refinement
+
+The triage heading, close control and effective population summary form one compact
+entry. Native Population options and Signature details disclosures keep technical
+configuration and exact source inputs available without delaying group inspection.
+The group toolbar combines profile metadata and explicit acquisition. Supplied
+record shares use native HTML meters alongside exact counts and percentages;
+they do not represent health. Narrow layouts pair context counts with the stage
+action and avoid repeating the same UTC date on both endpoints. Full endpoint
+values remain on semantic `time` elements with accessible labels and tooltips.
+These are application layouts over the shared compact table and native controls;
+no new query-owning display component is introduced.

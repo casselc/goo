@@ -58,8 +58,14 @@ All **24** recorded action facts preserve their declared source budgets. The
 classified population's **36 qualified contexts** returns the exact sorted first
 32 with an explicit limited flag. Held return restores the original row's focus.
 
-The 45-second actor completes with **371 snapshots**, zero page errors and no
+The 45-second actor completes with **615 snapshots**, zero page errors and no
 forbidden publication. The accompanying native model/property suite passes with
 no skips; commands and its execution times are recorded in
 [validation](../../VALIDATION.md). Final frames also preserve literal type casing
 in table row headers, including narrow layouts.
+
+The presentation refinement keeps Population options closed initially. The journey
+opens and closes it with the keyboard, checks control visibility and zero source
+reads, checks that a folded breakdown action cannot stage a question, and checks a native
+share meter before opening exact signature details.
+The compact header, toolbar and mobile cards use the same captured frames above.

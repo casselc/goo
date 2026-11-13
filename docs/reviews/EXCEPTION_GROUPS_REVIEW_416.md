@@ -77,3 +77,27 @@ controls. The observed fixture demonstrates 144 matching group records versus
 A passing native model/property family does not establish full UI accessibility
 or upstream telemetry completeness. Browser review is bounded to exercised
 Chromium surfaces; screen-reader/cross-engine certification is not claimed.
+
+## Follow-up interface polish
+
+Accepted after independent inspection of refreshed 1440, 390 and 320 pixel
+frames. A compact heading and visible effective rule/UTC window establish the
+scope; Population options folds the technical rule, field and exact filter.
+The group toolbar, shorter sort labels, native share meters and denser mobile
+cards improve hierarchy without hiding uncertainty or changing read authority.
+Literal signature case and visible disclosure focus are preserved. Same-day
+last timestamps omit the repeated date visually while retaining exact datetime,
+accessible label and tooltip. No blocking visual findings remain.
+
+The parent reran the actual journey and 45 second Bombadil campaign successfully
+in 1.4 minutes: the same 24 ledger facts passed with no page errors. Added checks
+exercise keyboard opening/closing of Population options without source reads,
+its default collapsed state and native share meters. This acceptance covers the
+reviewed surfaces and exercised interactions, not whole-product accessibility
+certification or the separate older type-breakdown regression journey.
+
+The parent subsequently confirmed both full older type-breakdown cases pass
+(1.6 minutes), along with stale-owner safety and the 55-second triage actor.
+Their driver updates follow the current inspector/disclosures and actual return
+opener. These are execution results supplied by the parent, separate from the
+independent visual inspection above.
