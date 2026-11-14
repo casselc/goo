@@ -3527,6 +3527,12 @@ against the actual lifecycle preparer. Six faithful schedules pass; qhegel
 shrinks the mutant to two necessary actions within its duplicate-noise generator.
 Production and existing verification module dependencies remain unchanged.
 
+The [current gotogether review](../docs/GOTOGETHER_CURRENT_REVIEW.md) checks
+`771dcce` against the latest upstream adapter/differential/compiled-model tests.
+It proposes one acquisition-journey shadow trial; no normal dependency migration
+has been made. Current gotogether requires Quint 0.33.1+, while this checkout
+still pins 0.32.0. See the review for tested scope and remaining replay limits.
+
 ### Compact pool view (journey198)
 
 `verification/pool_view_test.go` adds an independent reduced-rational oracle over actual raw adapter inputs. Twelve generated used/maximum pairs cross six clock/epoch/missing-value modes; zero epochs withhold the ratio even when both equal0. Independent identity mismatches refuse composition, clocks/bases remain separate and outputs cannot mutate caller evidence. This focused gate passed0.103s (`artifacts/pool-view-properties.txt`). A separate guaranteed table covers0/0,0/1,1/1,used>maximum and exact integers up to2^53−1; it passed0.017s (`artifacts/pool-view-boundaries.txt`). No old kernel or gotogether campaign was rerun.

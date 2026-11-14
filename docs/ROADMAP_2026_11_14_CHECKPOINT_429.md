@@ -127,6 +127,12 @@ when scope, slot/revision, presence semantics and acquisition authority match.
 Measure clarity and source work before adding controls. Preserve the operator's
 parent question and explicit Apply/Run, and refuse partial whole-filter conversion.
 
+The [current gotogether review](GOTOGETHER_CURRENT_REVIEW.md) proposes a bounded
+shadow trial for shared driver bookkeeping and compiled-model checks. Qualify its
+Quint/runtime requirements independently before changing the normal verification
+module. Differential model-driven sequences may support this consolidation;
+existing source/semantic oracles remain independent.
+
 ## Retained follow-ons
 
 Presence-safe resource/record string attribute helpers are delivered in 440.

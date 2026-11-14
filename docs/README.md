@@ -40,6 +40,7 @@ This index separates using Goo, extending it, and the development record.
 - [Measurement packages](MEASUREMENT_PACKAGES.md): code-managed measurement definitions.
 - [Shared UI components](UI_COMPONENTS.md): supplied-data display contracts.
 - [Contributing](../CONTRIBUTING.md): builds, tests and documentation conventions.
+- [Gotogether review](GOTOGETHER_CURRENT_REVIEW.md): current testing capabilities and a bounded adoption proposal.
 
 ## Project status and development record
 

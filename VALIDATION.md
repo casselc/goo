@@ -1,5 +1,27 @@
 # Validation record
 
+## Gotogether current-source review — 2026-11-14
+
+[Findings and bounded adoption proposal](docs/GOTOGETHER_CURRENT_REVIEW.md).
+Reviewed upstream `771dcce13fd24071d3ae2677c567540ad0ec79ff` in an isolated
+checkout. No Goo runtime, Go module, Hegel pin, installed skill or package lock
+changed; roadmap milestone 442 remains planned.
+
+- Focused upstream request/Playwright protocol tests pass **1.691s**;
+  Bombadil adapter **0.006s**; differential replay/input variation **5.579s**;
+  compiled-model unsupported/stale controls **14.619s**. Strict toolkit skips
+  enabled, zero skips. These validate upstream behavior, not Goo integration.
+- Gotogether requires Go 1.27.3 and stable Quint 0.33.1+. The initial differential
+  run correctly refused Goo's Quint 0.32.0. Final checks use isolated Quint 0.33.1
+  and the TypeScript backend. No Rust evaluator or live upstream browser campaign
+  was run. Candidate full CI status could not be checked: GitHub's check-runs API
+  returned `Forbidden` in this environment.
+- Source review identifies concrete uses for driver adapters, finished-journey
+  checks, compiled models and stateful compiler/source differential tests.
+  Reproduction, collection-watermark and unsupported-evaluator limits remain
+  explicit. Proposed next step is one shadow acquisition/retained-return journey;
+  existing domain/source oracles and native gate remain authoritative.
+
 ## 441 — reported sum observations
 
 [Contract and diagram](docs/RAW_SUM_OBSERVATIONS.md),
