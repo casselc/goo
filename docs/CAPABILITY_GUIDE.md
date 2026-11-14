@@ -5,7 +5,7 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-433a, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
+433, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
 [fleet service triage](SERVICE_TRIAGE.md).
 The [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
@@ -30,8 +30,10 @@ Pause/Resume. [Signal availability](SOURCE_CAPABILITIES.md) now separates schema
 bounded presence and supports partial-family catalogs. [Metric scope discovery](METRIC_SCOPE_DISCOVERY.md)
 adds metrics-only bootstrap; [quiet Activity recovery](ACTIVITY_SPARSE_RECOVERY.md)
 stages wider fixed searches. [Instrument preflight](INSTRUMENT_PREFLIGHT.md) shares
-Build/Preview readiness across Services and Measurements. Stable typed live-source
-refusal/retry remains next; see the [433 review](reviews/CONSOLIDATION_REVIEW_433.md).
+Build/Preview readiness across Services and Measurements. [Live-source recovery](ACTIVITY_SOURCE_RECOVERY.md)
+now separates explicit stable-source Retry from transient reconnect, retaining
+local inspection and selection. The next workflow is an explicit bridge from local
+Find to source log-message search; see the [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
 
 ## What users can do
 

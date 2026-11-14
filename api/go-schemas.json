@@ -1709,6 +1709,12 @@
   "SourceReadFailure": {
     "$ref": "#/components/schemas/sourcefailure.Response"
   },
+  "TailGap": {
+    "$ref": "#/components/schemas/tailprotocol.Gap"
+  },
+  "TailHTTPResponse": {
+    "$ref": "#/components/schemas/tailprotocol.Response"
+  },
   "TailIntent": {
     "anyOf": [
       {
@@ -26600,6 +26606,52 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/subjectfacts.Value"
+  },
+  "tailprotocol.Gap": {
+    "properties": {
+      "reason": {
+        "type": "string"
+      },
+      "refusal": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/sourcefailure.Refusal"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "retry": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "reason",
+      "retry"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/internal/tailprotocol.Gap"
+  },
+  "tailprotocol.Response": {
+    "properties": {
+      "error": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "retry": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "error",
+      "reason",
+      "retry"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/internal/tailprotocol.Response"
   },
   "workbench.ActivityView": {
     "properties": {

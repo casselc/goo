@@ -12,6 +12,7 @@ import (
 	"github.com/casselc/goo/annotations"
 	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/internal/sourcefailure"
+	"github.com/casselc/goo/internal/tailprotocol"
 	"github.com/casselc/goo/investigations"
 	"github.com/casselc/goo/measurements"
 	"github.com/casselc/goo/prebuilt"
@@ -137,6 +138,8 @@ func main() {
 	}
 	outputs := map[string]any{"ViewArtifactResult": workbench.ViewArtifactResult{}, "ViewTemplateExpansion": workbench.ViewTemplateExpansion{}, "KeptSearchPage": exploration.KeptSearchPage{}, "KeptRepairPage": exploration.KeptRepairPage{}, "KeptRecords": exploration.KeptRecords{}, "KeptObservations": exploration.KeptObservations{}, "SourceCapabilitiesResult": exploration.SourceCapabilitiesResult{}, "EnvironmentScopesResult": exploration.EnvironmentScopesResult{}, "AdoptionRecordsResult": exploration.AdoptionRecordsResult{}, "TraceSearchResult": exploration.TraceSearchResult{}, "PoolSignalsPlan": measurements.PoolSignalsPlan{}, "PoolView": measurements.PoolView{}, "ContainerMemoryView": measurements.ContainerMemoryView{}, "ContainerCPUView": measurements.ContainerCPUView{}, "ContainerResourceHistory": measurements.ContainerResourceHistory{}, "HostDiscovery": measurements.HostDiscovery{}, "PodDiscovery": exploration.PodDiscovery{}, "PodMetricDiscovery": measurements.PodMetricDiscovery{}, "PodDashboardPlan": measurements.PodDashboardPlan{}, "HostDashboardPlan": measurements.HostDashboardPlan{}, "RecordResult": exploration.Result{}, "RecordPageResult": exploration.RecordPageResult{}, "CountedValuesResult": exploration.CountedValuesResult{}, "RecordAggregatesResult": exploration.RecordAggregatesResult{}, "ExceptionGroupsResult": exploration.ExceptionGroupsResult{}, "ExplanationResult": exploration.ExplanationResult{}, "ExplanationPlan": exploration.ExplanationPlan{}, "InventoryResult": exploration.InventoryResult{}, "ServiceDiscovery": exploration.ServiceDiscovery{}, "CompareResult": exploration.CohortComparison{}, "PackagePlan": exploration.PackagePlan{}, "NumericPlan": exploration.NumericPlan{}, "SavedPackage": exploration.SavedPackage{}, "RecipePlan": exploration.RecipePlan{}, "DashboardPlan": exploration.DashboardPlan{}, "NativeResult": measurements.Result{}, "MetricScopesResult": measurements.MetricScopesResult{}, "MetricDiscoveryResult": measurements.DiscoveryResult{}, "CapturePage": exploration.CapturePage{}, "CaptureList": exploration.CaptureList{}, "CaptureSearchPage": exploration.CaptureSearchPage{}, "InvestigationCapture": investigations.Capture{}, "LiveOperations": annotations.LiveOperations{}, "LiveRates": annotations.LiveRates{}, "LiveHistograms": annotations.LiveHistograms{}, "LiveHTTPResult": prebuilt.LiveHTTPResult{}, "MeaningRevision": workbench.MeaningRevision{}, "Document": workbench.Document{}, "Deployment": workbench.Deployment{}, "RetainedReceipt": retention.Receipt{}, "CorrectionReceipt": retention.CorrectionReceipt{}, "RetainedCatalog": retention.CatalogPage{}, "PopulationPlan": exploration.PopulationPlan{}, "NumericHistogramSelection": exploration.NumericHistogramSelection{}, "TailRow": exploration.TailRow{}}
 	outputs["SourceReadFailure"] = sourcefailure.Response{}
+	outputs["TailGap"] = tailprotocol.Gap{}
+	outputs["TailHTTPResponse"] = tailprotocol.Response{}
 	for name, v := range outputs {
 		root(name, v, false)
 	}

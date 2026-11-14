@@ -5,9 +5,12 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/internal/httpjson"
+	"github.com/casselc/goo/internal/sourcefailure"
+	"github.com/casselc/goo/internal/tailprotocol"
 	"net/http"
 	"time"
 )
@@ -15,36 +18,40 @@ import (
 func registerTail(mux *http.ServeMux, source exploration.Source, bank *exploration.TailMembershipSnapshots) {
 	slots := make(chan struct{}, 4)
 	mux.HandleFunc("POST /tail", func(w http.ResponseWriter, r *http.Request) {
-		fail := func(code int, message string) {
+		fail := func(code int, failure tailprotocol.Response) {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(code)
-			json.NewEncoder(w).Encode(map[string]string{"error": message})
+			json.NewEncoder(w).Encode(failure)
+		}
+		if r.URL.RawQuery != "" {
+			fail(400, tailprotocol.InvalidSelector())
+			return
 		}
 		var selector exploration.TailSelector
 		if e := httpjson.Decode(w, r, &selector, 16384, "expected one JSON object"); e != nil {
-			fail(400, e.Error())
+			fail(400, tailprotocol.InvalidSelector())
 			return
 		}
 		if e := selector.Query(time.Now().UnixMilli()).Validate(); e != nil {
-			fail(400, e.Error())
+			fail(400, tailprotocol.InvalidSelector())
 			return
 		}
 		select {
 		case slots <- struct{}{}:
 			defer func() { <-slots }()
 		default:
-			fail(429, "tail capacity reached")
+			fail(429, tailprotocol.Capacity())
 			return
 		}
 		var connectionBytes [32]byte
 		if _, err := rand.Read(connectionBytes[:]); err != nil {
-			fail(500, "connection identity unavailable")
+			fail(500, tailprotocol.Unavailable())
 			return
 		}
 		connection := hex.EncodeToString(connectionBytes[:])
 		flush, ok := w.(http.Flusher)
 		if !ok {
-			fail(500, "streaming unavailable")
+			fail(500, tailprotocol.Unavailable())
 			return
 		}
 		w.Header().Set("Content-Type", "text/event-stream")
@@ -74,12 +81,23 @@ func registerTail(mux *http.ServeMux, source exploration.Source, bank *explorati
 			now := time.Now().UnixMilli()
 			rows, limited, e := source.PollTail(ctx, selector, now)
 			if e != nil {
-				send("gap", map[string]string{"reason": "source_unavailable"})
+				if r.Context().Err() != nil {
+					return
+				}
+				if ended, ok := tailprotocol.End(r.Context(), ctx); ok {
+					send("gap", ended)
+				} else {
+					send("gap", tailprotocol.Source(e))
+				}
 				return
 			}
 			observed, e := tracker.Observe(rows)
 			if e != nil {
-				send("gap", map[string]string{"reason": "identity_budget"})
+				if errors.Is(e, exploration.ErrTailIdentityBudget) {
+					send("gap", tailprotocol.IdentityBudget())
+				} else {
+					send("gap", tailprotocol.Source(sourcefailure.Protocol(e)))
+				}
 				return
 			}
 			observedAt := time.Now().UTC()
@@ -98,7 +116,9 @@ func registerTail(mux *http.ServeMux, source exploration.Source, bank *explorati
 			}
 			select {
 			case <-ctx.Done():
-				send("gap", map[string]string{"reason": "connection_ended"})
+				if ended, ok := tailprotocol.End(r.Context(), ctx); ok {
+					send("gap", ended)
+				}
 				return
 			case <-ticker.C:
 			}

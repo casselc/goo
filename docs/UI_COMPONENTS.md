@@ -2183,3 +2183,12 @@ kind/definition plus eligible, unevaluated server metadata. Stable native action
 labels remain disabled with a specific visible reason; detailed binding facts and
 caveats use native disclosures. Source exclusions retain a visible summary cue.
 No component infers readiness from the displayed subset or starts a source read.
+
+## Tail refusal presentation
+
+[Activity source recovery](ACTIVITY_SOURCE_RECOVERY.md) reuses the passive
+source-refusal renderer with an optional application label supplied by a closed
+tail-cause map. The shared five-kind vocabulary and default labels still serve
+other hosts. Native Technical details and Retry retain their familiar styling.
+The tail adapter owns retry policy, generation/scope guards, focus and timers;
+rendering a label or disclosure cannot acquire telemetry.

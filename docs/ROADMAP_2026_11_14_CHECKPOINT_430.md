@@ -4,7 +4,7 @@ The [four-expert review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) prioritizes re
 useful unfamiliar telemetry before more preservation depth. This checkpoint
 adopts that direction without renumbering the older pending 427–429 contracts.
 
-Status: **430–432 delivered and validated**. 433a preflight/identity consolidation is delivered and validated; next is 433b stable live-source refusal/retry.
+Status: **430–433 delivered and validated**. Next: 434 explicit local Find → source log-message search.
 
 ## 430 — first-use scope entry and interaction reliability
 
@@ -73,19 +73,31 @@ The [independent checkpoint review](reviews/CONSOLIDATION_REVIEW_433.md) accepts
 reuse boundary and keeps discovery controllers separate: their completeness,
 preview, source-presence and stream-custody contracts differ.
 
-**433b next — stable Activity source refusals:** preserve safe typed refusal state
-and held observations, distinguish transient reconnect from stable configuration/
-access/schema refusal, and offer explicit Retry for terminal failures. Never
-convert a failed source into empty-data recovery or automatically widen a query.
-Exercise missing/denied sources, transient loss, held inspection, retired actions
-and keyboard/mobile Retry. This remaining P1 prevents calling all of 433 complete.
+**433b delivered:** [Activity source recovery](ACTIVITY_SOURCE_RECOVERY.md) preserves
+typed refusal state and held observations, distinguishes transient reconnect from
+stable configuration/access/schema refusal, and offers explicit Retry. Failed
+reads cannot become empty-data recovery or automatic wider queries. The
+[acceptance review](reviews/TAIL_SOURCE_RECOVERY_433.md) covers strict protocol,
+virtual-time rollover, safe causes, held selection, and keyboard/mobile recovery.
 
-After 433b, adopt the review’s next bounded cycle: explicit local Find → fixed
-source log-message search (breadth), numeric OTel severity in the existing Activity
-volume strip (depth), then log-volume/span-latency selection and held-return
-consolidation. Existing generic filters, charts, dashboards and waterfalls are
-delivered capabilities, not additional missing primitives. These follow-ons remain
-planned, with their precise acceptance contracts to be frozen before implementation.
+## Next operator cycle
+
+- **434 breadth — explicit local Find → source log-message search.** Stage a literal
+  Body search in the applied selector and a visible fixed event-time window; Run
+  reads explicitly. Local Find still matches loaded text, IDs and selected fields.
+  The action must name the narrower source-message meaning rather than silently
+  reinterpret local matches or broaden the parent predicate. Reuse the ordinary
+  record-question editor/executor and held return. Freeze exact window/case/field
+  semantics and acceptance before implementation.
+- **435 depth — numeric OTel severity context.** Extend the existing Activity volume
+  strip with complete severity-band counts/time context and exact numeric filters.
+  Keep unspecified/invalid values explicit and SeverityText independent.
+- **436 consolidate — aggregate selection and held return.** Align log-volume and
+  span-latency gestures only where read-gate and passive intent contracts match;
+  refresh narrow/desktop flows and measure before claiming speedups.
+
+Existing filters, charts, dashboards and waterfalls are delivered capabilities,
+not additional missing primitives. The following boundaries remain in force.
 
 Generic resource/scope/instrument/attribute stream evaluation stays a separate
 architecture decision for gauges, counters, histograms and epochs. No synthetic

@@ -20,7 +20,8 @@ qualify. Pending scope edits withdraw the action.
 
 “No recent observations loaded” is not a claim that ingestion stopped or the
 service is healthy. The fixed result reports its own checked population state.
-Source refusal remains a failure rather than becoming a zero count.
+[Source refusal](ACTIVITY_SOURCE_RECOVERY.md) remains a failure with its own Retry
+rather than becoming a zero count.
 
 The recovery window is half-open and uses **event time**. Its end stays fixed at
 the last completed poll's end, even if the operator waits before staging or Run.

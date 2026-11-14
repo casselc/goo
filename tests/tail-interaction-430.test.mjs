@@ -8,7 +8,7 @@ function element(){return {hidden:false,disabled:false,dataset:{},attrs:{},write
 function controls({compact=true,onResume}={}){
  const document={activeElement:null},pause=element(),resume=element(),other=element(),calls={pause:0,connect:0,align:0};
  for(const control of [pause,resume,other])control.focus=()=>{document.activeElement=control};
- const context={document,pause,resume,compact,selector:{environment:'prod'},staged:false,onResume,viewport:{},header:{},body:{children:[]},pauseStream(){calls.pause++;pause.hidden=compact;resume.hidden=false},alignPausedRecords(){calls.align++},connect(){calls.connect++;resume.hidden=compact;pause.hidden=false}};
+ const context={terminalFailure:null,nativeControlReady:control=>!control.hidden&&!control.disabled,document,pause,resume,compact,selector:{environment:'prod'},staged:false,onResume,viewport:{},header:{},body:{children:[]},pauseStream(){calls.pause++;pause.hidden=compact;resume.hidden=false},alignPausedRecords(){calls.align++},connect(){calls.connect++;resume.hidden=compact;pause.hidden=false}};
  vm.runInNewContext(between('pause.onclick=','stop.onclick='),context);
  return {document,pause,resume,other,calls};
 }

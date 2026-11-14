@@ -28,3 +28,15 @@ test('passive refusal rendering shows a terse reason, collapsed literal detail a
   const ordinary=new Element('div');assert.equal(render(ordinary,{error:'Choose a valid field.'}),null);assert.equal(ordinary.textContent,'Choose a valid field.');
  }finally{globalThis.document=previousDocument;globalThis.fetch=previousFetch;}
 });
+
+test('shared labels remain canonical by default while a host can supply a presentation-only fixed label',async()=>{
+ const previous=globalThis.document;globalThis.document={createElement:tag=>new Element(tag)};
+ try{
+  for(const kind of Object.keys(reasons)){const error=new SourceReadError({kind,detail:'A bounded source diagnostic.'}),host=new Element('div');assert.equal(render(host,error).children[0].textContent,reasons[kind]);}
+  const {gap,malformed,sourceError,title}=await import('../ui/tail-recovery.mjs');
+  for(const [reason,detail,label]of [['source_missing','The requested record source is missing.','Source table missing.'],['source_access','The source refused access to the requested records.','Access denied.'],['source_schema','The record source does not match the supported exporter schema.','Source schema incompatible.']]){
+   const outcome=gap({reason,retry:'explicit',refusal:{kind:'unavailable',detail}}),shown=render(new Element('div'),sourceError(outcome),{label:title(outcome)});assert.equal(shown.children[0].textContent,label);assert.equal(shown.children[1].children[1].textContent,detail);assert.equal(shown.dataset.sourceRefusalKind,'unavailable');
+  }
+  const unknown=gap({reason:'raw SQL password',retry:'explicit',refusal:{kind:'unavailable',detail:'raw SQL password'}});assert.deepEqual(unknown,malformed());assert.equal(title({reason:'raw SQL password'}),'Source response rejected.');const shown=render(new Element('div'),sourceError(unknown),{label:title(unknown)});assert.equal(shown.children[0].textContent,'Source response rejected.');assert.doesNotMatch(shown.children[1].children[1].textContent,/SQL|password/);
+ }finally{globalThis.document=previous;}
+});

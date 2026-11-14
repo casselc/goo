@@ -4,5 +4,5 @@ data: {"connection":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
 id: 2
 event: gap
-data: {"reason":"source_unavailable"}
+data: {"reason":"source_unavailable","retry":"explicit","refusal":{"kind":"unavailable","detail":"The source request could not be completed."}}
 

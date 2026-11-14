@@ -18,7 +18,8 @@ healthy operation or an application failure. An empty successful read remains a
 different result. Successful changed-between-reads diagnostics also retain their
 existing meaning.
 
-Use the existing explicit Run, Read or affected-side Retry to acquire again.
+Fixed-question and comparison reads use explicit Run, Read or affected-side Retry
+to acquire again.
 The same question may succeed after an external source fix; no category promises
 permanent failure. A narrower scope may help with a budget refusal, but Goo does
 not silently shorten the window, discard values, increase limits or retry for you.
@@ -43,7 +44,7 @@ Page failures likewise do not replace held aggregate measurements with page coun
 
 ## API and coverage
 
-The fourteen routes using the shared source-read HTTP handler return runtime
+Source-read routes using the shared source-read HTTP handler return runtime
 failures as HTTP 502 with a closed envelope:
 
 ```json
@@ -59,12 +60,12 @@ failures as HTTP 502 with a closed envelope:
 Kinds are `timeout`, `cancelled`, `budget`, `malformed` and `unavailable`.
 The detail limit is 256 UTF-8 bytes; current details are fixed safe descriptions.
 There is no retry-policy field and no new read receipt on a failure. The shared
-browser parser recognizes the runtime envelope only on 502 and checks its
+fixed-read browser parser recognizes the runtime envelope only on 502 and checks its
 canonical reason/kind pairing. Ordinary population, record/page, fixed-baseline
 and counted-facet owners use the shared presentation. This does not promise
 specialized recovery gestures on every signal surface.
 
-The shared routes cover nine record reads (environment scopes and their record
+The original source-refusal slice covered nine record reads (environment scopes and their record
 preview, inventory, discovery, aggregates, counted values, trace search, record
 page and exploration) and five native reads (metric discovery, measurements,
 host discovery, pod-metric discovery and pod discovery). Native adapters without
@@ -80,3 +81,13 @@ See the [architecture review](reviews/SOURCE_REFUSAL_ARCHITECTURE_344.md),
 [HTTP boundaries](HTTP_BOUNDARIES.md) and [validation record](../VALIDATION.md).
 Code, live fault/recovery and desktop/narrow screenshot acceptance pass for 344.
 See the [executable storyboard](journeys/344-source-refusal.md).
+
+## Live Activity
+
+[Activity source recovery](ACTIVITY_SOURCE_RECOVERY.md) adds closed tail causes and
+an explicit retry disposition to the same five-kind vocabulary. Missing tables,
+access and schema refusal show specific fixed labels. Stable failures retain rows
+and stop for native Retry; transient transport/timeouts and expected rollover
+reconnect separately. Retry retains the selector but starts a new rolling window.
+It is not a fixed-question replay or a no-data result. Unknown protocol diagnostics
+stop rather than enabling an automatic retry loop.

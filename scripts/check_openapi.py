@@ -1891,7 +1891,90 @@ def check_source_capability_observations431(spec, path):
     print(f'Source readiness431: {count} actual wire responses conform')
 
 
+def check_tail_recovery433(spec):
+    """Closed retry decisions cannot be mutated into implicit source recovery."""
+    operation=spec['paths']['/tail']['post']
+    shape=operation['x-sse-events']['gap']
+    gap=validator(spec,shape)
+    kinds={
+        'source_missing':('unavailable',['explicit']),
+        'source_access':('unavailable',['explicit']),
+        'source_schema':('unavailable',['explicit']),
+        'source_unavailable':('unavailable',['explicit','automatic']),
+        'source_timeout':('timeout',['automatic']),
+        'source_cancelled':('cancelled',['explicit']),
+        'source_budget':('budget',['explicit']),
+        'source_malformed':('malformed',['explicit']),
+        'identity_budget':('budget',['explicit']),
+    }
+    good=[]
+    for reason,(kind,retries) in kinds.items():
+        for retry in retries:
+            value={'reason':reason,'retry':retry,'refusal':{'kind':kind,'detail':'Safe fixed source explanation.'}}
+            gap.validate(value);good.append(value)
+    ended={'reason':'connection_ended','retry':'automatic'}
+    gap.validate(ended);good.append(ended)
+    bad=[{'reason':'source_unavailable'},
+         {'reason':'healthy','retry':'automatic'},
+         {'reason':'connection_ended','retry':'explicit'},
+         {**ended,'refusal':{'kind':'unavailable','detail':'Safe detail.'}},
+         {'reason':'source_missing','retry':'automatic','refusal':{'kind':'unavailable','detail':'Safe detail.'}},
+         {'reason':'source_timeout','retry':'explicit','refusal':{'kind':'timeout','detail':'Safe detail.'}}]
+    for value in good:
+        bad.append({**value,'retry':'retry-whenever'})
+        bad.append({**value,'__unknown_contract_control__':True})
+        if 'refusal' in value:
+            missing=copy.deepcopy(value);missing.pop('refusal');bad.append(missing)
+            bad.append({**value,'refusal':None})
+            wrong=copy.deepcopy(value);wrong['refusal']['kind']='malformed' if value['refusal']['kind']!='malformed' else 'unavailable';bad.append(wrong)
+            for detail in ('','x'*257,'bad\ncontrol'):
+                wrong=copy.deepcopy(value);wrong['refusal']['detail']=detail;bad.append(wrong)
+    for value in bad:assert not gap.is_valid(value),f'Tail recovery gap mutant accepted: {value}'
+    http={400:('Invalid tail selector.','invalid_selector','explicit'),
+          429:('Live stream capacity reached.','capacity','automatic'),
+          500:('Live streaming unavailable.','server_unavailable','automatic')}
+    for status,(error,reason,retry) in http.items():
+        response=validator(spec,operation['responses'][str(status)]['content']['application/json']['schema'])
+        value={'error':error,'reason':reason,'retry':retry};response.validate(value)
+        validator(spec,{'$ref':'#/components/schemas/TailHTTPResponse'}).validate(value)
+        for wrong in ({'error':error},{**value,'retry':'explicit' if retry=='automatic' else 'automatic'},
+                      {**value,'error':'untrusted source prose'}, {**value,'reason':'source_unavailable'},
+                      {**value,'cause':'raw upstream error'}, {**value,'refusal':None}):
+            assert not response.is_valid(wrong),f'Tail HTTP{status} mutant accepted: {wrong}'
+    assert operation['x-sse-events']['reset']=={'$ref':'#/components/schemas/TailReset'}
+    assert operation['x-sse-events']['batch']=={'$ref':'#/components/schemas/TailBatch'}
+    print(f'Tail recovery433b: {len(good)} closed gap cases, {len(bad)} rejecting gap controls and three fixed HTTP refusals pass')
+
+
+def check_tail_observations433(spec,path):
+    """Validate completed real SSE streams or pre-stream HTTP response observations."""
+    report=json.loads(Path(path).read_text())
+    cases=report if isinstance(report,list) else report['streams']
+    operation=spec['paths']['/tail']['post'];count=events=0
+    for case in cases:
+        status=case.get('status',200)
+        if status==200:
+            validator(spec,operation['requestBody']['content']['application/json']['schema']).validate(case['request'])
+            frames=case['events'];assert frames and frames[0]['event']=='reset','Tail stream did not start with reset'
+            for ordinal,frame in enumerate(frames,1):
+                event=frame['event'];assert event in operation['x-sse-events'],'Unknown tail SSE event'
+                identifier=frame['id'];assert not isinstance(identifier,bool) and str(identifier)==str(ordinal),'Tail sequence is not connection-local and contiguous'
+                validator(spec,operation['x-sse-events'][event]).validate(frame['data'])
+                assert event!='reset' or ordinal==1,'Tail reset repeated inside connection'
+                assert event!='gap' or ordinal==len(frames),'Tail published after terminal gap'
+                if event=='gap' and 'refusal' in frame['data']:
+                    assert len(frame['data']['refusal']['detail'].encode())<=256,'Tail refusal exceeds UTF-8 budget'
+                events+=1
+        else:
+            assert status in (400,429,500),'Unexpected pre-stream tail status'
+            validator(spec,operation['responses'][str(status)]['content']['application/json']['schema']).validate(case['response'])
+        count+=1
+    assert count,'No completed tail observations supplied'
+    print(f'Tail recovery433b: {count} actual response observations and {events} SSE events conform')
+
+
 def check(spec):
+    check_tail_recovery433(spec)
     check_source_capabilities431(spec)
     check_metric_scopes432(spec)
     check_record_intent417(spec)
@@ -2068,7 +2151,7 @@ def check(spec):
     for event, shape in spec['paths']['/tail']['post']['x-sse-events'].items():
         value = {'reset': {'connection':'a'*64,'windowMs':60000,'selector':{'environment':'prod'},'continuity':'unknown','replay':False},
                  'batch': {'membershipState':'empty','rows':[],'limited':False,'fromMs':1000,'toMs':61000,'observedAt':'2026-10-22T00:00:00Z'},
-                 'gap': {'reason':'source_unavailable'}}[event]
+                 'gap': {'reason':'source_unavailable','retry':'explicit','refusal':{'kind':'unavailable','detail':'The source request could not be completed.'}}}[event]
         validator(spec, shape).validate(value)
         wrong = copy.deepcopy(value)
         wrong[{'reset':'replay','batch':'rows','gap':'reason'}[event]] = 123
@@ -2515,6 +2598,7 @@ if __name__ == '__main__':
     parser.add_argument('--observations')
     parser.add_argument('--source-capability-observations')
     parser.add_argument('--metric-scope-observations')
+    parser.add_argument('--tail-observations')
     parser.add_argument('--status-view-observations')
     parser.add_argument('--histogram-view-observations')
     parser.add_argument('--histogram-comparison-observations')
@@ -2542,6 +2626,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.tail_observations:
+        check_tail_observations433(spec,args.tail_observations)
     if args.metric_scope_observations:
         check_metric_scope_observations432(spec,args.metric_scope_observations)
     if args.source_capability_observations:

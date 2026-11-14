@@ -290,7 +290,36 @@ line. `x-sse-events` binds event names to schemas:
 | --- | --- |
 | `reset` | Connection ID, rolling window 60,000 ms, selector, unknown continuity, no replay |
 | `batch` | Supplied rows, limited flag, fixed poll bounds/observation time and explicit membership state; available batches carry an optional preservation capability |
-| `gap` | Source unavailable, identity budget exhausted, or connection ended |
+| `gap` | Closed cause, `retry: automatic` or `explicit`, and a shared safe source refusal except for normal connection rollover |
+
+Tail failures use a closed protocol distinct from source population state:
+
+| Gap cause | Shared refusal kind | Retry |
+| --- | --- | --- |
+| `source_missing`, `source_access`, `source_schema` | `unavailable` with fixed actionable detail | `explicit` |
+| `source_unavailable` | `unavailable` | `automatic` for recognized network failure; otherwise `explicit` |
+| `source_timeout` | `timeout` | `automatic` |
+| `source_cancelled` | `cancelled` | `explicit` |
+| `source_budget`, `identity_budget` | `budget` | `explicit` |
+| `source_malformed` | `malformed` | `explicit` |
+| `connection_ended` | No `refusal` field | `automatic` |
+
+All source/tracker refusal arms require a non-null `{kind,detail}`. Unknown causes,
+retry values, contradictory kind/retry combinations and additional fields refuse
+the protocol. The browser stops explicitly on malformed/unrecognized wire data;
+raw response text or error causes are not displayed. A stable refusal retains
+loaded observations and their original scope; Retry reads a new recent window.
+A failed poll never establishes an empty population or enables wider-window
+recovery.
+
+Before SSE headers, HTTP 400 returns exactly
+`{"error":"Invalid tail selector.","reason":"invalid_selector","retry":"explicit"}`;
+429 returns `Live stream capacity reached.` / `capacity` / `automatic`;
+500 returns `Live streaming unavailable.` / `server_unavailable` / `automatic`.
+Query parameters, unknown JSON fields, multiple JSON values and invalid selector
+semantics all use the same safe 400 body. Default mux method refusals remain
+separate. No source SQL, addresses, credentials or raw exception prose appear in
+these bodies.
 
 The Go stream has four local slots, a 60-second context, two-second polls and
 five-second write deadlines. There is no proxy socket or second streaming
@@ -302,10 +331,15 @@ can prevent delivery of a final frame. Successful streams set no-store and
 X-Accel-Buffering: no; early JSON errors omit no-store. Both path forms preserve
 these headers. The JSON response helper must not buffer SSE.
 
-Actual reset/source-unavailable gap bytes are frozen in
+Actual reset/typed explicit-source-refusal gap bytes are frozen in
 [testdata/http/tail.sse](../testdata/http/tail.sse) and executed by
 `TestAPITailSSEWireContract`. Batch schema examples and rejecting controls complement
-existing real-loopback batch/disconnect tests; they do not replace those tests.
+existing real-loopback batch/disconnect tests; they do not replace those tests. The checker also
+runs closed cause/retry/kind and HTTP refusal controls. `--tail-observations PATH`
+validates completed actual stream ledgers (`streams` containing `request`, `status`
+and `events:[{event,id,data}]`) or pre-stream responses (`response`); aborted
+incomplete stream bodies may be omitted. It checks event shapes and contiguous
+connection-local IDs, not physical event ordering or ingestion completeness.
 
 ## Prepared-fact component names (227)
 

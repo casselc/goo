@@ -10,7 +10,9 @@ identity bootstrap without a known environment/service. [432b Activity recovery]
 stages a wider fixed question from a quiet loaded buffer, with explicit Run and
 held paused return. This does not diagnose ingestion freshness, retention or skew.
 [433a instrument preflight](INSTRUMENT_PREFLIGHT.md) aligns discovery actions.
-[433b live-source refusal/retry](ROADMAP_2026_11_14_CHECKPOINT_430.md) remains next.
+[433b live-source refusal/retry](ACTIVITY_SOURCE_RECOVERY.md) now retains stable
+failures and held observations. Next is the explicit Find-to-source-search bridge
+in the [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
 Isolated logs-only, spans-only and gauge-only installations were exercised in 431;
 actual denied-user deployments remain covered by transport checks rather than a
 new database-user integration run.
@@ -27,10 +29,12 @@ metadata and newly arriving streams can still fail runtime validation. Generic
 resource/scope/instrument/attribute evaluation needs its own architecture decision;
 no missing instance IDs are synthesized.
 
-Activity currently reduces source errors to generic unavailable/status messages and
-reconnects every two seconds regardless of cause. Stable configuration/schema/access
-refusal and explicit Retry remain the next bounded reliability task. Failed reads
-must not become no-data claims or automatic wider-window searches.
+Live Activity now stops known stable source/protocol refusals for explicit Retry;
+proven transient failures and rollover still reconnect. Retry uses the same
+selector in a new rolling window, not the exact failed poll. Actual denied-user
+provisioning, browser-minute rollover, AT speech and cross-engine checks are not
+newly claimed; the [validation record](../VALIDATION.md) distinguishes proxy faults,
+real owned-source failures and virtual-time handler tests.
 
 Fixed-comparison Preserve currently saves the full composition but shares or
 captures the selected question only, explicitly labeled. General paired captures

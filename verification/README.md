@@ -4767,3 +4767,22 @@ report skips this artifact-dependent check; a supplied missing/invalid report or
 unavailable model tool fails. The native model checks local stage/Return budgets,
 exact scope and fixed windows, independent read clocks and rejecting mutations.
 It does not infer physical arrival order or source completeness from the tail.
+
+## Live source refusal/retry (433b)
+
+`TestHegelTailRefusal433` generates typed HTTP/code, DNS/timeout, cancellation,
+budget and malformed-source failures against the production classifier.
+`TestQuintObservedTailRefusal433` requires the completed real
+[journey report](../docs/journeys/tail-refusal.md):
+
+```sh
+go test -p 1 . -run '^TestHegelTailRefusal433$' -count=1 -v
+GOO_TAIL433_REPORT=/absolute/path/to/report.json \
+  go test -p 1 . -run '^TestQuintObservedTailRefusal433$' -count=1 -v
+```
+
+Required acceptance supplies the report and passes without skips. Ordinary test
+discovery without the artifact skips that replay; malformed supplied artifacts,
+unavailable Quint, invalid frame prefixes and counterexample admission fail.
+The model checks actual retry/read budgets, selector/held-row preservation and
+terminal-versus-transient probes. It does not infer ingestion completeness.

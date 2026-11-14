@@ -7645,7 +7645,7 @@
         "tags": [
           "tail"
         ],
-        "description": "Current owner: cmd/goo/tail_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits. Rolling 60-second event-time window; polling every 2 seconds; four local slots; 60-second Go lifetime; 5-second write deadlines. Disconnect releases slot. Last-Event-ID is not replay support. Gap frames after headers retain HTTP 200; abort can prevent a final frame.",
+        "description": "Current owner: cmd/goo/tail_http.go. Effect: source-read. See docs/HTTP_BOUNDARIES.md for lifecycle and limits. Rolling 60-second event-time window; polling every 2 seconds; four local slots; 60-second Go lifetime; 5-second write deadlines. Disconnect releases slot. Last-Event-ID is not replay support. Gap frames after headers retain HTTP 200. Closed reason/retry/refusal combinations distinguish explicit retry for stable source refusal from automatic transient reconnect or normal connection rollover. Abort can prevent a final frame.",
         "x-go-source": "cmd/goo/tail_http.go",
         "x-effects": "source-read",
         "parameters": [],
@@ -7674,31 +7674,31 @@
             }
           },
           "400": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Safe typed pre-stream refusal with closed retry disposition; no source error prose.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/TailInvalidSelector"
                 }
               }
             }
           },
           "429": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Safe typed pre-stream refusal with closed retry disposition; no source error prose.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/TailCapacity"
                 }
               }
             }
           },
           "500": {
-            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "description": "Safe typed pre-stream refusal with closed retry disposition; no source error prose.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/TailServerUnavailable"
                 }
               }
             }
@@ -9846,6 +9846,12 @@
       },
       "SourceReadFailure": {
         "$ref": "#/components/schemas/sourcefailure.Response"
+      },
+      "TailGap": {
+        "$ref": "#/components/schemas/tailprotocol.Gap"
+      },
+      "TailHTTPResponse": {
+        "$ref": "#/components/schemas/tailprotocol.Response"
       },
       "TailIntent": {
         "anyOf": [
@@ -50336,6 +50342,340 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/subjectfacts.Value"
       },
+      "tailprotocol.Gap": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reason",
+              "retry",
+              "refusal"
+            ],
+            "properties": {
+              "reason": {
+                "const": "source_missing"
+              },
+              "retry": {
+                "enum": [
+                  "explicit"
+                ]
+              },
+              "refusal": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/sourcefailure.Refusal"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "unavailable"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reason",
+              "retry",
+              "refusal"
+            ],
+            "properties": {
+              "reason": {
+                "const": "source_access"
+              },
+              "retry": {
+                "enum": [
+                  "explicit"
+                ]
+              },
+              "refusal": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/sourcefailure.Refusal"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "unavailable"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reason",
+              "retry",
+              "refusal"
+            ],
+            "properties": {
+              "reason": {
+                "const": "source_schema"
+              },
+              "retry": {
+                "enum": [
+                  "explicit"
+                ]
+              },
+              "refusal": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/sourcefailure.Refusal"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "unavailable"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reason",
+              "retry",
+              "refusal"
+            ],
+            "properties": {
+              "reason": {
+                "const": "source_unavailable"
+              },
+              "retry": {
+                "enum": [
+                  "explicit",
+                  "automatic"
+                ]
+              },
+              "refusal": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/sourcefailure.Refusal"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "unavailable"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reason",
+              "retry",
+              "refusal"
+            ],
+            "properties": {
+              "reason": {
+                "const": "source_timeout"
+              },
+              "retry": {
+                "enum": [
+                  "automatic"
+                ]
+              },
+              "refusal": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/sourcefailure.Refusal"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "timeout"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reason",
+              "retry",
+              "refusal"
+            ],
+            "properties": {
+              "reason": {
+                "const": "source_cancelled"
+              },
+              "retry": {
+                "enum": [
+                  "explicit"
+                ]
+              },
+              "refusal": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/sourcefailure.Refusal"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "cancelled"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reason",
+              "retry",
+              "refusal"
+            ],
+            "properties": {
+              "reason": {
+                "const": "source_budget"
+              },
+              "retry": {
+                "enum": [
+                  "explicit"
+                ]
+              },
+              "refusal": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/sourcefailure.Refusal"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "budget"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reason",
+              "retry",
+              "refusal"
+            ],
+            "properties": {
+              "reason": {
+                "const": "source_malformed"
+              },
+              "retry": {
+                "enum": [
+                  "explicit"
+                ]
+              },
+              "refusal": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/sourcefailure.Refusal"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "malformed"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reason",
+              "retry",
+              "refusal"
+            ],
+            "properties": {
+              "reason": {
+                "const": "identity_budget"
+              },
+              "retry": {
+                "enum": [
+                  "explicit"
+                ]
+              },
+              "refusal": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/sourcefailure.Refusal"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "budget"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reason",
+              "retry"
+            ],
+            "properties": {
+              "reason": {
+                "const": "connection_ended"
+              },
+              "retry": {
+                "enum": [
+                  "automatic"
+                ]
+              }
+            }
+          }
+        ],
+        "description": "One terminal SSE event. Explicit retry preserves the refusal until an operator retries; automatic retry permits a new recent connection, never replay or evidence of source emptiness."
+      },
+      "tailprotocol.Response": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TailInvalidSelector"
+          },
+          {
+            "$ref": "#/components/schemas/TailCapacity"
+          },
+          {
+            "$ref": "#/components/schemas/TailServerUnavailable"
+          }
+        ]
+      },
       "workbench.ActivityView": {
         "properties": {
           "baselineCapture": {
@@ -65007,18 +65347,63 @@
           }
         }
       },
-      "TailGap": {
+      "TailInvalidSelector": {
         "type": "object",
+        "additionalProperties": false,
         "required": [
-          "reason"
+          "error",
+          "reason",
+          "retry"
         ],
         "properties": {
+          "error": {
+            "const": "Invalid tail selector."
+          },
           "reason": {
-            "enum": [
-              "source_unavailable",
-              "identity_budget",
-              "connection_ended"
-            ]
+            "const": "invalid_selector"
+          },
+          "retry": {
+            "const": "explicit"
+          }
+        }
+      },
+      "TailCapacity": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "error",
+          "reason",
+          "retry"
+        ],
+        "properties": {
+          "error": {
+            "const": "Live stream capacity reached."
+          },
+          "reason": {
+            "const": "capacity"
+          },
+          "retry": {
+            "const": "automatic"
+          }
+        }
+      },
+      "TailServerUnavailable": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "error",
+          "reason",
+          "retry"
+        ],
+        "properties": {
+          "error": {
+            "const": "Live streaming unavailable."
+          },
+          "reason": {
+            "const": "server_unavailable"
+          },
+          "retry": {
+            "const": "automatic"
           }
         }
       },

@@ -1,5 +1,60 @@
 # Validation record
 
+## 433b — typed live-source failure and guarded recovery
+
+[Contract](docs/ACTIVITY_SOURCE_RECOVERY.md),
+[storyboard](docs/journeys/tail-refusal.md),
+[independent acceptance](docs/reviews/TAIL_SOURCE_RECOVERY_433.md) and
+[roadmap](docs/ROADMAP_2026_11_14_CHECKPOINT_430.md).
+
+- All root Go packages pass under Go 1.27.3; the final embedded binary builds.
+  Structured status/exception headers distinguish missing/access/schema failures;
+  unknown source HTTP failures stop conservatively. Network/timeouts and normal
+  rollover retain automatic recovery; known DNS name failure stops explicitly.
+  Tests verify safe fixed diagnostics, no error-prose leakage, direct/alias query
+  rejection before reads, source protocol failures and silent caller cancellation.
+- **1,693 frontend tests pass**, zero failures/skips (19.6s). Eight focused recovery
+  checks exercise actual connection/pause/retry/selection handlers: terminal versus
+  transient behavior, first-gap protocol rejection, stale/native/dirty/reentrant
+  guards, failed keyboard Retry, persistent disclosure DOM and held local matches.
+  Shared refusal rendering retains existing default labels with a tail-only closed
+  label override. Counts do not attribute held rows to a new connection.
+- The final real ClickHouse journey passes (**about 1.1 minutes**), including a
+  **30-second Bombadil actor**. Both logs and spans cover real owned absent tables,
+  incompatible schemas, explicit repair/Retry, later table loss, retained row/handle
+  inspection, open-details persistence, and local loaded-match selection with zero
+  source reads/writes. Dirty/hidden Retry callbacks cannot open a new stream.
+- An owned loopback proxy separately injects one upstream HTTP403 (explicit access
+  refusal) and one socket interruption (automatic reconnect). Successful requests
+  forward unchanged to the real exporter tables. This is not a newly provisioned
+  denied database user. The actor completes one tail open, observes a quiet interval
+  beyond the two-second cadence, and reports no forbidden reads/writes or overflow.
+- The byte-preserving observer records **10 actual stream responses / 22 SSE
+  events**, including eight refusal gaps. Observations conform to the generated
+  schema. Initial observer ID/abort-race problems were fixed before the final report
+  was admitted. The owned database, proxy and isolated runtime clean up; existing
+  telemetry and stores are retained.
+- **Hegel classifier properties pass** (0.02s). Native **Quint observed replay passes
+  without skips** (29.3s), including six rejecting controls per signal, actual
+  access/transport probes and rejection of a gap before reset. These model checks
+  do not substitute synthetic frames for the real browser trace.
+- A real-handler **testing/synctest** regression passes (0.008s): one blocked source
+  request advances 60 virtual seconds, emits reset then automatic connection-ended
+  gap, preserves the caller context and never mislabels rollover as source timeout.
+- The five-journey first-use regression matrix passes (**49.1s**): generic startup,
+  unfamiliar OTLP labels, partial-family installations, metric scope continuation
+  and sparse Activity recovery. Affected documentation frames are refreshed. Final
+  terminal loaded-selection integration is additionally covered by the new real
+  journey and frontend suite.
+- Full OpenAPI checks pass **116 operations**, 501 fixture responses, 202 admitted
+  requests and 29 mux refusals. Tail controls cover **11 valid / 88 rejecting gap
+  cases** plus the three fixed HTTP response arms. Generated schema count is 779;
+  reset/batch behavior retains its prior meaning.
+- Independent architecture, UX and standards reviews accept the bounded change and
+  final 1440/390/320 frames. Physical AT speech/cross-engine checks and deployment of
+  the shared lab image are not claimed. The full 433 consolidation cycle is closed;
+  next is the explicit local Find → source log-message search workflow.
+
 ## 433a — shared instrument readiness and semantic scope identity
 
 [Contract](docs/INSTRUMENT_PREFLIGHT.md),

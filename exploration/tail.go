@@ -6,8 +6,10 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/casselc/goo/identity"
+	"github.com/casselc/goo/internal/sourcefailure"
 	"strconv"
 	"strings"
 )
@@ -45,7 +47,7 @@ func (s Source) PollTail(ctx context.Context, selector TailSelector, now int64) 
 		return nil, false, e
 	}
 	if e = validateSelectedRows(q, rows); e != nil {
-		return nil, false, e
+		return nil, false, sourcefailure.Protocol(e)
 	}
 	limited := len(rows) > TailReadLimit
 	if limited {
@@ -73,6 +75,9 @@ type TailRow struct {
 	Record json.RawMessage `json:"record"`
 	Late   bool            `json:"late"`
 }
+
+// ErrTailIdentityBudget identifies a bounded connection tracking limit.
+var ErrTailIdentityBudget = errors.New("tail identity budget reached")
 
 // TailTracker tracks maximum observed multiplicity per canonical record within
 // one bounded connection. IDs are observation handles, not physical event IDs.
@@ -118,7 +123,7 @@ func (t *TailTracker) Observe(rows []json.RawMessage) ([]TailRow, error) {
 		}
 	}
 	if len(t.seen)+len(counts) > 20000 {
-		return nil, fmt.Errorf("tail identity budget reached; reconnect with a continuity gap")
+		return nil, ErrTailIdentityBudget
 	}
 	for key, n := range counts {
 		if n > t.seen[key] {

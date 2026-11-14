@@ -1,5 +1,8 @@
 # Discovery and recovery consolidation checkpoint
 
+> Follow-up: 433b is delivered. See [source-recovery acceptance](TAIL_SOURCE_RECOVERY_433.md).
+> The review below records the priorities adopted before that implementation.
+
 Independent architecture, product and UX reviews agree on the bounded 433a
 consolidation: all-observation service-instance preflight, shared supplied-plan
 readiness in Services and Measurements, compact disclosed metadata, and semantic

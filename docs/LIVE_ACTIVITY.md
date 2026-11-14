@@ -66,10 +66,14 @@ and exposes a continuity gap. The inspector is cleared on explicit resume so a
 cached connection-local observation key cannot masquerade as the new read.
 
 Reconnects retain last-good rows until a successful replacement batch arrives.
-HTTP/source failures remain stale/unavailable with a gap; retry does not present
-an empty healthy view. Compact mode offers Pause reconnecting as well as explicit
-resume. Scope replacement intentionally clears the old scope rather than mixing
-its rows under new labels.
+[Typed source recovery](ACTIVITY_SOURCE_RECOVERY.md) distinguishes stable source
+refusal from transient reconnect. Missing/access/schema and malformed/limit
+failures preserve the loaded rows, show a specific safe reason and offer explicit
+Retry. Transport interruptions, timeouts and expected rollover reconnect after
+two seconds. Failed reads never become empty healthy views. Inspect and local
+loaded-match selection remain available without source reads; the refusal and
+open details remain visible. Retry reads the same applied selector in a new rolling
+window; the first accepted new batch replaces the held buffer.
 
 This is a bounded recent-event-time monitor: 60-second lookback, 2-second polls,
 100-row/2 MiB display buffer, 1,000-row/512 KiB source-poll cap and four global

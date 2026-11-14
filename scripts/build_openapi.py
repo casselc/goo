@@ -1511,7 +1511,35 @@ for (method,path),(file,block) in sorted(route_source.items()):
  spec['paths'].setdefault(path,{})[method]=op
 
 schemas['TailReset']={'type':'object','required':['connection','windowMs','selector','continuity','replay'],'properties':{'connection':{'type':'string','pattern':'^[a-f0-9]{64}$'},'windowMs':{'const':60000},'selector':ref('TailSelector'),'continuity':{'const':'unknown'},'replay':{'const':False}}}
-schemas['TailGap']={'type':'object','required':['reason'],'properties':{'reason':{'enum':['source_unavailable','identity_budget','connection_ended']}}}
+# 433b: tail recovery is a closed event/HTTP protocol, separate from the shared
+# source refusal vocabulary. Retry disposition never turns failure into no_data.
+tail_gap_cases={
+ 'source_missing':('unavailable',['explicit']),
+ 'source_access':('unavailable',['explicit']),
+ 'source_schema':('unavailable',['explicit']),
+ 'source_unavailable':('unavailable',['explicit','automatic']),
+ 'source_timeout':('timeout',['automatic']),
+ 'source_cancelled':('cancelled',['explicit']),
+ 'source_budget':('budget',['explicit']),
+ 'source_malformed':('malformed',['explicit']),
+ 'identity_budget':('budget',['explicit']),
+}
+def tail_gap_arm(reason,kind,retry):
+ properties={'reason':{'const':reason},'retry':{'enum':retry}}
+ if kind:properties['refusal']={'allOf':[ref('sourcefailure.Refusal'),{'properties':{'kind':{'const':kind}}}]}
+ return {'type':'object','additionalProperties':False,'required':list(properties),'properties':properties}
+schemas['tailprotocol.Gap']={'oneOf':[tail_gap_arm(reason,kind,retry) for reason,(kind,retry) in tail_gap_cases.items()]+[tail_gap_arm('connection_ended',None,['automatic'])],
+ 'description':'One terminal SSE event. Explicit retry preserves the refusal until an operator retries; automatic retry permits a new recent connection, never replay or evidence of source emptiness.'}
+schemas['TailGap']=ref('tailprotocol.Gap')
+tail_http_cases={
+ '400':('TailInvalidSelector','Invalid tail selector.','invalid_selector','explicit'),
+ '429':('TailCapacity','Live stream capacity reached.','capacity','automatic'),
+ '500':('TailServerUnavailable','Live streaming unavailable.','server_unavailable','automatic'),
+}
+for status,(name,error,reason,retry) in tail_http_cases.items():
+ schemas[name]={'type':'object','additionalProperties':False,'required':['error','reason','retry'],'properties':{'error':{'const':error},'reason':{'const':reason},'retry':{'const':retry}}}
+schemas['tailprotocol.Response']={'oneOf':[ref(case[0]) for case in tail_http_cases.values()]}
+schemas['TailHTTPResponse']=ref('tailprotocol.Response')
 schemas['TailBatch']={'type':'object','required':['rows','limited','fromMs','toMs','observedAt','membershipState'],'properties':{'membershipState':{'enum':['available','unavailable','empty']},'membership':ref('TailMembershipCapability'),'rows':{'type':'array','items':ref('TailRow')},'limited':{'type':'boolean'},'fromMs':{'type':'integer'},'toMs':{'type':'integer'},'observedAt':{'type':'string','format':'date-time'}}}
 schemas['TailBatch']['allOf']=[{'if':{'properties':{'membershipState':{'const':'available'}}},'then':{'required':['membership']},'else':{'not':{'required':['membership']}}}]
 # Exception grouping accepts only an ordinary record scope; shaping directives are refused.
@@ -1521,8 +1549,10 @@ exception_op['description']='Explicit query-only exact exception signature group
 tail=spec['paths']['/tail']['post']
 tail['responses']['200']={'description':'SSE frames: per-connection numeric id, event (reset/batch/gap), JSON data, blank line. POST via fetch, not browser EventSource. No resumable cursor or replay guarantee.','headers':{'Cache-Control':{'schema':{'const':'no-store'}},'X-Accel-Buffering':{'schema':{'const':'no'}}},'content':{'text/event-stream':{'schema':{'type':'string'},'example':'id: 1\nevent: reset\ndata: {"connection":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","windowMs":60000,"selector":{"environment":"prod"},"continuity":"unknown","replay":false}\n\n'}}}
 tail['x-sse-events']={'reset':ref('TailReset'),'batch':ref('TailBatch'),'gap':ref('TailGap')}
+for status,(name,*_) in tail_http_cases.items():
+ tail['responses'][status]={'description':'Safe typed pre-stream refusal with closed retry disposition; no source error prose.','content':{'application/json':{'schema':ref(name)}}}
 tail['x-schema-coverage']='typed-events'
-tail['description']+=' Rolling 60-second event-time window; polling every 2 seconds; four local slots; 60-second Go lifetime; 5-second write deadlines. Disconnect releases slot. Last-Event-ID is not replay support. Gap frames after headers retain HTTP 200; abort can prevent a final frame.'
+tail['description']+=' Rolling 60-second event-time window; polling every 2 seconds; four local slots; 60-second Go lifetime; 5-second write deadlines. Disconnect releases slot. Last-Event-ID is not replay support. Gap frames after headers retain HTTP 200. Closed reason/retry/refusal combinations distinguish explicit retry for stable source refusal from automatic transient reconnect or normal connection rollover. Abort can prevent a final frame.'
 # Portable labels do not create a registry; the embedded view remains the
 # existing validation owner and cannot carry store-local capture references.
 for suffix in ('', 'Input'):

@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Live-source refusal and recovery](tail-refusal.md) (433b) stops stable failures
+for explicit Retry, preserves held inspection and selection, and distinguishes
+transient reconnect with actual source frames.
+
 [Instrument preflight](instrument-preflight.md) (433a) keeps incomplete instance
 identity visible while aligning disabled Build/Preview actions across Measurements
 and Services, including a bad stream beyond the displayed preview cap.

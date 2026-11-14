@@ -1161,3 +1161,25 @@ checked readonly record inspection. They share record admission/cancellation and
 4 KiB input / 15-second handler limits. General named Query/Tail/capture formats
 are unchanged. The app owner uses shared passive record/attribute/table widgets
 and disables unsupported continuations. See [the contract and flow](ENVIRONMENT_ADOPTION.md).
+
+## Live tail refusal and retry (433b)
+
+`registerTail` retains its own four-slot budget and streaming lifetime. Admission
+returns fixed closed JSON `{error,reason,retry}` for 400/429/500. Query parameters
+are rejected by the owner before source access; aliases share the same handler.
+Successful streams retain reset/batch frames and terminate through a closed typed
+`gap` from `internal/tailprotocol`, with `retry: explicit|automatic` and an optional
+shared source refusal. See [the wire table](API.md#tail-event-contract).
+
+Classification uses structured source status/ClickHouse exception codes and typed
+network/context errors. Missing source, access and incompatible schema use safe
+fixed details and explicit Retry; source response/tracker budget and malformed
+records also stop. Recognized transport timeout/network failure and normal
+60-second rollover permit reconnect. Caller cancellation remains silent, and
+connection lifetime expiry is not relabeled as a failed source poll.
+
+The protocol never publishes upstream error prose. Retry disposition describes a
+new read policy, not a claim of source emptiness, ingestion health or eventual
+success. Loaded observations remain held during refusal; their custody/read clocks
+are not replaced with the failed attempt. The browser's generation, selector and
+native-control checks continue to own whether an explicit retry may run.
