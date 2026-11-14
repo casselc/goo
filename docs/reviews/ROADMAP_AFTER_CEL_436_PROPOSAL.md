@@ -1,8 +1,9 @@
 # Proposed operator cycle after CEL consolidation
 
 Status: **adopted after 436.6 acceptance**, 2026-11-14. Subsequently,
-[427 exact recall](../EXACT_SAVED_VIEW_RECALL.md) was delivered and validated.
-428–429 remain planned. The proposal below records the original sequencing basis.
+[427 exact recall](../EXACT_SAVED_VIEW_RECALL.md) and
+[428 paired evidence](../PAIRED_COMPARISON_CAPTURE.md) were delivered and validated.
+429 remains planned. The proposal below records the original sequencing basis.
 436.6 completed actual Services/native record-context and held-return acceptance.
 The parent maintains executed results in [validation](../../VALIDATION.md).
 

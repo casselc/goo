@@ -1,5 +1,69 @@
 # Validation record
 
+## 428 — paired evidence from fixed comparison Preserve
+
+[Operator guide](docs/PAIRED_COMPARISON_CAPTURE.md),
+[real OTLP storyboard](docs/journeys/paired-capture.md),
+[independent architecture review](docs/reviews/PAIRED_CAPTURE_428.md) and
+[accessibility/web standards review](docs/reviews/PAIRED_CAPTURE_428_A11Y.md).
+
+- Added distinct **Capture comparison** and **Capture selected query** choices to
+  the existing population Preserve entry. Pure preflight preserves exact ordered
+  baseline/selection questions and refuses unsupported summary, status, numeric
+  and multi-query profiles before a capture request. The form reuses shared
+  evidence summaries, UTC formatting and native disclosures for full selectors.
+  The existing general Go pair capture store/API is unchanged; no new artifact
+  family or OpenAPI change is introduced.
+- Shared native confirmation now guards dialog visibility, disabled/pending
+  controls and the current origin. Cancel/Escape, busy state, retained callbacks
+  and late completion are covered. Attachment uses an evaluated navigation lease:
+  an already authorized mutation can finish after departure without taking over
+  the screen. Owned success focuses the selected destination: investigation title
+  for an attachment, saved heading for capture-only. Hidden empty-draft creation
+  initializes without a premature navigation.
+- Saved-pair presentation reuses existing external context with frozen baseline
+  and selected child IDs, source clocks, counts and bases. It hides the generic
+  browser-held projection labels without modifying stored results, issuing child
+  reads, guessing child custody times or asserting complete upstream coverage.
+- All root Go packages pass on Go 1.27.3. Final full frontend suite: **1,809
+  passing, zero failures/skips, 30.128s**. New Go regressions cover second-side
+  source refusal and an over-budget row response retaining the first child,
+  no-data/changed-between-reads semantics, and failed pair publication retaining
+  both children byte-identically. The publisher collision is a direct real
+  publisher test after real child acquisition, not a filesystem fault injected
+  inside the complete createComparison call. New tests use testing.T.Context.
+- Existing Hegel capture and comparison swarms pass in **10.28s**: 60 generated
+  capture sequences of 15 steps and 100 comparison sequences of 25 steps. They
+  cover immutable bank/refresh/reopen behavior and diagnostic withholding rather
+  than adding another property framework.
+- The real generic-runtime browser journey starts with a **3 rest / 2 canary**
+  comparison. A later OTLP arrival yields a fresh **3 / 3** pair. It verifies both
+  exact children, capture-card attachment, held return, cold stored reopen,
+  keyboard/mobile controls, actual source refusal and departed attachment without
+  route/focus adoption. Successful source results use real ClickHouse; refusal
+  and delayed delivery are explicitly controlled at the source/response boundary.
+- `TestQuintPairedCapture428Observed` independently verifies full stored pair and
+  child content IDs, ordered questions, raw membership/row banks, independent
+  clocks, unknown coverage, held/fresh decisions and source/store authority. It
+  reuses the existing population-drilldown model and rejects **eight** semantic/
+  authority mutants. First complete actual report: **14 steps, 423 Bombadil
+  snapshots, 35 owned source SQL requests** (29 main + 6 actor), native pass in
+  **13.43s**, zero skips. Calibration added only the existing store metadata
+  routes `/api/captures/search` and `/api/captures/{id}/receipt` to the exact
+  allowlist; no source budget or blanket GET authority was added. The browser
+  requires a passed report, cleanup and a non-skipped native verdict. Final
+  integrated run: **58.4s** (1.0m runner), **474 Bombadil snapshots**, native
+  **11.74s**, zero skips, all eight controls rejected. It also checks actual
+  frozen child context, exact IDs/clocks and absence of browser-held chrome.
+  Keyboard/destination/departed-focus checks pass, no browser errors, owned
+  runtime cleanup complete. Independent final source/frame/a11y review accepts
+  the result with **17 focused checks passing**, zero skips.
+- Six responsive preview/stored-pair frames are maintained at 1440/390/320.
+  The modal uses internal scrolling at narrow widths; Save/Cancel are reachable
+  with native keyboard controls. Physical AT and cross-engine checks are not
+  claimed. Capture-only destination controls remain a compactness opportunity for
+  **429 measured consolidation**, the next roadmap slice.
+
 ## 427 — exact saved investigations from Recent / Pinned
 
 [Contract](docs/EXACT_SAVED_VIEW_RECALL.md),

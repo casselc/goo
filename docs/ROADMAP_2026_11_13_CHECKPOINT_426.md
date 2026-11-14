@@ -1,7 +1,7 @@
 # Roadmap after the 426 investigation checkpoint
 
 **Superseded execution order:** use the [430 checkpoint](ROADMAP_2026_11_14_CHECKPOINT_430.md).
-The ad-hoc entry cycle is complete; **427 is now delivered**. **428–429 remain
+The ad-hoc entry cycle is complete; **427–428 are now delivered**. **429 remains
 pending**. The dated review and original planning basis below are historical.
 
 **2026-11-14 review:** the [ad-hoc live telemetry pass](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md)
@@ -83,6 +83,10 @@ browser persistence opt-in, capacity, exact ID rather than title identity,
 keyboard/narrow layout, withdrawn actions and late metadata responses.
 
 ## 428 — depth: preserve both fixed comparison questions as paired evidence
+
+**Delivered:** [paired capture contract](PAIRED_COMPARISON_CAPTURE.md),
+[storyboard](journeys/paired-capture.md) and [validation](../VALIDATION.md).
+The original acceptance contract below records the planning basis.
 
 Outcome: “Keep evidence for both sides of this comparison, then reopen and share
 it.” Adopt the existing pair-capture workflow from the fixed population

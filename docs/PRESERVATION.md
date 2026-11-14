@@ -8,6 +8,7 @@ keep different things; saving a definition does not freeze displayed telemetry.
 | Question | Fixed query, checked scope and selected question view | Share or stage an investigation card without reading; reopen requires Run |
 | View definition | All configured queries, components and presentation | Save configuration without reading; reopen requires Run |
 | Evidence | An independent bounded capture and its receipt | Opens the existing capture form; confirmation performs a new read |
+| Comparison evidence | Ordered baseline and selected captures plus their comparison | Confirmation independently rereads both fixed questions |
 
 In a fixed Activity analysis, Preserve is available without opening Edit question.
 Share question and Add question to investigation use the current checked fixed
@@ -40,6 +41,11 @@ without rereading telemetry. A question card, saved-view reference and capture c
 keep their own identities; association does not assert identical populations,
 causality or complete upstream telemetry.
 
+For a supported ordinary fixed Count comparison, **Capture comparison** preserves
+both questions through the existing general pair store. **Capture selected query**
+remains separate. The form previews both exact scopes; completed child captures
+can remain available if later work fails. See [paired capture](PAIRED_COMPARISON_CAPTURE.md).
+
 ```mermaid
 flowchart LR
   C[Current checked context] --> P[Preserve]
@@ -47,9 +53,11 @@ flowchart LR
   P --> V[Save full view definition]
   P --> D[Open capture confirmation]
   D -->|Confirm: new independent read| E[Stored evidence receipt]
+  D -->|Confirm comparison: two independent reads| C2[Stored baseline, selection and pair]
   Q --> I[Investigation draft]
   V -->|Attach exact saved ID| I
   E -->|Existing evidence destination| I
+  C2 -->|Existing capture-card reference| I
   I -->|Save revision| R[Immutable investigation revision]
   R -->|Open intent| S[Staged configuration: Run required]
   R -->|Open evidence| H[Held stored capture]

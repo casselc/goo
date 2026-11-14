@@ -85,8 +85,8 @@ automatically archived. See [comparison contract](ERROR_COMPARISONS.md).
   not a snapshot of a growing directory; new IDs before the cursor appear after a
   catalog refresh. Direct IDs remain reopenable if the catalog scan budget is hit.
 
-Python proxies these endpoints; Go owns validation, source execution, custody and
-paging. General captures live under `exploration/` in the existing investigations
+The single Go server serves these endpoints and owns validation, source execution,
+custody and paging. General captures live under `exploration/` in the existing investigations
 volume. Publication writes a private temporary file, syncs it, atomically links a
 complete immutable file and syncs the directory. Load checks its content digest,
 version and receipt shape; the maximum file size is 24 MiB. Catalog entries on a

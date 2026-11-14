@@ -41,10 +41,10 @@
 > Keep this one finite consolidation sequence; do not start a separate language
 > platform backlog or promise lossless conversion of unsupported visual predicates.
 > **427 exact saved-view recall from Recent / Pinned is delivered**; see
-> [exact recall](EXACT_SAVED_VIEW_RECALL.md). Next: **428 paired
-> evidence from existing Preserve**, then **429 measured scope/preservation
-> compactness and consolidation**. These remaining contracts are not marked
-> delivered by CEL integration or definition recall. The older labeling queue
+> [exact recall](EXACT_SAVED_VIEW_RECALL.md). **428 paired
+> evidence from existing Preserve is delivered**; see [paired capture](PAIRED_COMPARISON_CAPTURE.md).
+> Next: **429 measured scope/preservation compactness and consolidation**.
+> Definition recall and evidence capture retain separate semantics. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped
 > P95, host sample context and broader platform work remain deferred.

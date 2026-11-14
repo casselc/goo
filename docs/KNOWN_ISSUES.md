@@ -35,7 +35,8 @@ follow numeric OTel bands rather than producer text. Same-ID Discard now reloads
 its original definition, and a checked-source mismatch cannot silently erase
 metadata from an older held question. More general CEL vocabulary and native
 metric expression authoring remain unimplemented. [427 exact recall](EXACT_SAVED_VIEW_RECALL.md)
-is delivered; the next finite steps are 428 paired evidence and 429 compact shared scope/preservation;
+is delivered, as is [428 paired evidence](PAIRED_COMPARISON_CAPTURE.md).
+The next finite step is 429 compact shared scope/preservation;
 see the [adopted roadmap](reviews/ROADMAP_AFTER_CEL_436_PROPOSAL.md).
 
 [The ad-hoc telemetry review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) identifies
@@ -51,8 +52,9 @@ held paused return. This does not diagnose ingestion freshness, retention or ske
 [433b live-source refusal/retry](ACTIVITY_SOURCE_RECOVERY.md) now retains stable
 failures and held observations. [434 message search](ACTIVITY_MESSAGE_SEARCH.md)
 bridges local Find to explicit source Body search. [435 numeric severity](ACTIVITY_NUMERIC_SEVERITY.md)
-adds full-window band counts, local time context and exact numeric filters. Next
-is aggregate selection/held-return consolidation in the
+adds full-window band counts, local time context and exact numeric filters.
+Aggregate selection/held-return consolidation is delivered; the current next
+step is measured scope/preservation compactness in the
 [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
 Isolated logs-only, spans-only and gauge-only installations were exercised in 431;
 actual denied-user deployments remain covered by transport checks rather than a
@@ -92,10 +94,13 @@ provisioning, browser-minute rollover, AT speech and cross-engine checks are not
 newly claimed; the [validation record](../VALIDATION.md) distinguishes proxy faults,
 real owned-source failures and virtual-time handler tests.
 
-Fixed-comparison Preserve currently saves the full composition but shares or
-captures the selected question only, explicitly labeled. General paired captures
-already exist elsewhere; [428](ROADMAP_2026_11_13_CHECKPOINT_426.md) adopts that
-infrastructure here. Saved-view configuration is not frozen comparison evidence.
+Fixed-comparison Preserve now offers [paired capture](PAIRED_COMPARISON_CAPTURE.md)
+for ordinary single-group Count questions, separately from selected-query capture.
+Unsupported summary/status/numeric and multi-query profiles retain their existing
+capture paths. Confirmation rereads both questions; later failures can leave
+completed children in Saved. Saved-view configuration is not frozen comparison
+evidence. The shared capture dialog still exposes some irrelevant destination
+controls in Capture-only mode; measured simplification remains in 429.
 Recent/Pinned now resolves exact immutable saved-view references (427), preserving
 whole compositions and checked source. Stage loads metadata only; it does not
 create evidence. Desktop picker row actions could sit closer to their titles;

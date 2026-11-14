@@ -99,3 +99,19 @@ test('426 withdrawn preview and import completions release pending state without
   f.box.inert=false;pending=preview.onclick();f.env.resolve(f.response);await pending;assert.equal(save.disabled,false,'fresh preview restores explicit import after withdrawal');
  }finally{f.close()}}
 });
+
+
+test('428 pair preservation retains ordered fixed operands and only a current render may open confirmation',()=>{
+ const f=fixture();try{
+  const pair=f.button('Capture comparison');assert(pair);assert.equal(pair.disabled,false);pair.onclick();assert.equal(f.env.events.length,1);const detail=f.env.events[0].detail;
+  assert.equal(detail.question.kind,'comparison');assert.deepEqual(detail.question.comparison.selection,view.queries[0]);assert.deepEqual(detail.question.comparison.baseline,Composition.comparison(view.composition).baselineQuery);assert.equal(detail.opener,pair);assert.equal(detail.current(),true);
+  assert.deepEqual(Object.keys(detail.question).sort(),['comparison','kind']);f.env.draftRevision++;assert.equal(detail.current(),false);f.env.draftRevision--;f.env.generation++;assert.equal(detail.current(),false);f.env.generation--;f.env.preservationOwner={};pair.onclick();assert.equal(f.env.events.length,1);
+ }finally{f.close()}
+});
+
+test('428 pair actions obey pending, applied, native disclosure and ordinary-profile admission',()=>{
+ for(const mode of ['closed','inert','disabled','unapplied','busy','draft','unsupported']){const f=fixture();try{
+  const pair=f.button('Capture comparison');if(mode==='closed')f.saveBox.open=false;if(mode==='inert')f.saveBox.inert=true;if(mode==='disabled')pair.disabled=true;if(mode==='unapplied')f.env.results=[];if(mode==='busy')f.env.busy=true;if(mode==='draft')f.env.sourceErrors.add('logs');if(mode==='unsupported')f.env.queries[0].spanStatus=true;
+  pair.onclick();assert.equal(f.env.events.length,0,mode);assert.equal(f.env.writes.length,0,mode);
+ }finally{f.close()}}
+});

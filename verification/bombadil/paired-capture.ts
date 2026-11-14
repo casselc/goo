@@ -1,0 +1,28 @@
+// One explicit fresh comparison read, then source-inert pair preview/cancel guards.
+import {always,eventually} from '@antithesishq/bombadil';
+import {extract,actions,registerCustomAction} from '@antithesishq/bombadil/browser';
+export {noUncaughtExceptions,noUnhandledPromiseRejections} from '@antithesishq/bombadil/browser/defaults/properties';
+const state=extract(({document,window})=>{
+ const phase=Number(document.documentElement.dataset.pairCaptureStep||0),population=[...document.querySelectorAll<HTMLElement>('.population-workspace')].find(e=>!!e.getClientRects().length),preserve=population?.querySelector<HTMLDetailsElement>('.population-save'),dialog=document.querySelector<HTMLDialogElement>('#captureDialog');
+ const button=(text:string)=>[...population?.querySelectorAll<HTMLButtonElement>('button')||[]].find(e=>e.textContent===text),capture=button('Capture comparison');
+ const calls=((window as any).__pairCaptureCalls||[]) as {method:string,path:string}[],source=calls.filter(c=>c.method==='POST'&&['/api/explore','/api/record-aggregates'].includes(c.path)).length;
+ const forbidden=calls.filter(c=>c.method==='POST'&&!['/api/explore','/api/record-aggregates','/api/compare'].includes(c.path)&&!/^\/api\/queries\/[^/]+\/cancel$/.test(c.path)).length;
+ return {version:'goo.paired-capture-actor/1',phase,ready:!!population,applied:population?.dataset.phase==='applied',open:!!preserve?.open,captureReady:!!capture&&!capture.disabled&&!!capture.getClientRects().length,dialog:!!dialog?.open,preview:document.querySelector('#captureDraftScope')?.textContent||'',source,forbidden,requests:calls.length,beforeRetired:Number(document.documentElement.dataset.pairCaptureBeforeRetired||0),focusReturned:document.documentElement.dataset.pairCaptureFocusReturned==='true',overflow:document.documentElement.scrollWidth>innerWidth};
+});
+export const noPublication=always(()=>state.current.forbidden===0);
+export const onlyExplicitSourceReads=always(()=>state.current.source<=2);
+export const cancelledCallbackCannotCapture=always(()=>state.current.phase!==6||state.current.requests===state.current.beforeRetired);
+export const bothOperandsPreviewed=always(()=>state.current.phase!==3||state.current.preview.includes('Baseline')&&state.current.preview.includes('Selected'));
+export const fits=always(()=>!state.current.overflow);
+export const finished=eventually(()=>state.current.phase===6&&state.current.source===2&&state.current.focusReturned).within(22,'seconds');
+const begin=registerCustomAction('goo.pairCaptureRunExplicitly',async(document,window)=>{
+ const original=window.fetch,calls:{method:string,path:string}[]=[];(window as any).__pairCaptureCalls=calls;
+ window.fetch=function(input,options){const url=new URL(typeof input==='string'?input:input instanceof URL?input.href:input.url,location.href);calls.push({path:url.pathname,method:String(options?.method||(input instanceof Request?input.method:'GET')).toUpperCase()});return Reflect.apply(original,this,[input,options])};
+ const population=[...document.querySelectorAll<HTMLElement>('.population-workspace')].find(e=>!!e.getClientRects().length),run=population?.querySelector<HTMLButtonElement>('.population-run');if(!run||run.disabled)throw Error('Explicit Run unavailable');run.click();document.documentElement.dataset.pairCaptureStep='1';
+});
+const preserve=registerCustomAction('goo.pairCaptureOpenPreserve',async(document)=>{const population=[...document.querySelectorAll<HTMLElement>('.population-workspace')].find(e=>!!e.getClientRects().length),details=population?.querySelector<HTMLDetailsElement>('.population-save');if(!details)throw Error('Preserve unavailable');if(!details.open)details.querySelector<HTMLElement>(':scope>summary')?.click();document.documentElement.dataset.pairCaptureStep='2';});
+const preview=registerCustomAction('goo.pairCapturePreviewBothQuestions',async(document)=>{const population=[...document.querySelectorAll<HTMLElement>('.population-workspace')].find(e=>!!e.getClientRects().length),button=[...population?.querySelectorAll<HTMLButtonElement>('button')||[]].find(e=>e.textContent==='Capture comparison');if(!button||button.disabled)throw Error('Pair capture unavailable');button.click();document.documentElement.dataset.pairCaptureStep='3';});
+const cancel=registerCustomAction('goo.pairCaptureCancel',async(document,window)=>{const button=document.querySelector<HTMLButtonElement>('#captureDraftConfirm');if(!button||typeof button.onclick!=='function')throw Error('Confirm unavailable');(window as any).__pairCaptureRetiredConfirm={button,run:button.onclick};document.querySelector<HTMLButtonElement>('#captureDraftCancel')?.click();document.documentElement.dataset.pairCaptureStep='4';});
+const settle=registerCustomAction('goo.pairCaptureObserveCancelFocus',async(document)=>{const focused=document.activeElement;document.documentElement.dataset.pairCaptureFocusReturned=String(focused?.textContent==='Capture comparison');document.documentElement.dataset.pairCaptureStep='5';});
+const retired=registerCustomAction('goo.pairCaptureRetiredConfirm',async(document,window)=>{const old=(window as any).__pairCaptureRetiredConfirm;document.documentElement.dataset.pairCaptureBeforeRetired=String(((window as any).__pairCaptureCalls||[]).length);await old.run.call(old.button,new MouseEvent('click'));document.documentElement.dataset.pairCaptureStep='6';});
+export const choices=actions(()=>{const s=state.current;if(s.phase===0)return s.ready?[begin()]:['Wait'];if(s.phase===1)return s.applied?[preserve()]:['Wait'];if(s.phase===2)return s.captureReady?[preview()]:['Wait'];if(s.phase===3)return s.dialog?[cancel()]:['Wait'];if(s.phase===4)return !s.dialog?[settle()]:['Wait'];if(s.phase===5)return [retired()];return ['Wait'];});

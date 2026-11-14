@@ -1,6 +1,7 @@
 /* Contextual preservation choices. This module never reads or publishes data. */
 import {node} from './components.mjs';
 import {validateRecordQuestion} from './question-protocol.mjs';
+import * as CapturedCount from './captured-count-comparison.mjs';
 const meanings=Object.freeze({
  question:Object.freeze({title:'Question',note:'Fixed query and scope · no telemetry read.'}),
  view:Object.freeze({title:'View definition',note:'Queries and presentation · no telemetry read.'}),
@@ -22,4 +23,14 @@ export function availability({active=true,connected=true,busy=false,pending=fals
  if(pending)return 'Apply or clear pending selections and drafts first.';
  if(!applied)return 'Run this question before capturing evidence.';
  return '';
+}
+
+// General pair captures accept ordinary fixed cohorts; they are not saved comparison decisions.
+export function comparisonQuestion(queries,declaration){
+ if(!Array.isArray(queries)||queries.length!==1||!CapturedCount.queryVariant(declaration))throw Error('Choose one fixed-query comparison before capturing both sides.');
+ const selection=selectedQuestion(queries),baseline=structuredClone(declaration.baselineQuery);
+ CapturedCount.validate(declaration,selection);
+ if(declaration.display.value!=='count'||selection.summary||baseline.summary||!CapturedCount.eligible(selection)||!CapturedCount.eligible(baseline))throw Error('Capture comparison supports ordinary single-group Count questions.');
+ CapturedCount.queryCompatible(selection,baseline);
+ return {kind:'comparison',comparison:{baseline,selection}};
 }

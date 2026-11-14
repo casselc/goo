@@ -62,5 +62,5 @@ flowchart LR
 
 See [storyboard](journeys/saved-view-recall.md),
 [independent review](reviews/EXACT_VIEW_RECALL_427.md) and
-[validation](../VALIDATION.md). Paired evidence capture is the next bounded step;
-recalling a definition does not capture fresh evidence or complete that work.
+[validation](../VALIDATION.md). [Paired evidence capture](PAIRED_COMPARISON_CAPTURE.md)
+is a separate explicit workflow; recalling a definition does not capture evidence.

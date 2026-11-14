@@ -3022,3 +3022,12 @@ the observed ledger is complete; source totals exceed the displayed page.
 and composed comparison definitions, local pin/filter/forget, cold persistence,
 metadata-only Stage, exact YAML exports, explicit source reads, dirty recovery and
 late-response refusal. Native model validation follows the completed actual report.
+
+## 428 — fresh paired comparison evidence
+
+[Storyboard](paired-capture.md) and
+[real browser journey](../../journeys/paired-capture.spec.js) follow fixed
+canary/rest questions through a two-side preview, late telemetry, fresh pair
+capture, existing investigation attachment and stored pair/child reopen.
+Keyboard/narrow, source refusal, cancelled late attachment and bounded Bombadil
+checks feed mandatory native/model validation after runtime cleanup.

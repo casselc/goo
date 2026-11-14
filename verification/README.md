@@ -1,5 +1,35 @@
 # Semantic properties and model conformance
 
+## Paired population capture (428)
+
+`TestQuintPairedCapture428Observed` consumes `GOO_PAIRED_CAPTURE_428_REPORT`
+from the [real browser journey](../journeys/paired-capture.spec.js). It independently
+checks raw OTLP membership before/after late arrival, exact ordered fixed questions,
+Go content IDs of both stored children and pair, source/receipt clocks, complete
+child/cohort agreement, cold reopening and the general capture-card reference.
+All actual proxy SQL is owned by an observed step or the bounded actor's one Run;
+metadata-only disclosure/cancel/reopen cannot hide server-side reads. The existing
+population-drilldown Quint model replays the observed source/local trace, with eight
+negative controls. The journey requires this gate after a passed report and cleanup;
+a missing-report standalone skip is not acceptance.
+
+Reuse `TestHegelCaptureStateSwarm` (60 × 15 source/store operations) and
+`TestHegelErrorComparisonStateSwarm` (100 × 25 comparison operations) for stable
+stored banks, fresh successors, exact arithmetic and diagnostic withholding. Both
+passed for 428; no duplicate capture engine or property framework is introduced.
+Root-module `TestPairedCapture428*` adds actual source-fixture regressions for
+second-side refusal/budget, retained first child, no-data/diagnostic sides and
+non-rollback after a direct pair-publisher collision. The latter constructs a valid
+pair from real captured children and blocks its content-address path; it is not
+an injected filesystem fault inside `createComparison`.
+
+```sh
+GOO_PAIRED_CAPTURE_428_REPORT=/absolute/path/to/report.json \
+  go test . -run '^TestQuintPairedCapture428Observed$' -count=1 -v
+```
+
+Executed results and limits are recorded in [validation](../VALIDATION.md).
+
 ## Exact saved-view recall (427)
 
 `TestHegelExactViewRecall427JournalState` drives the production browser journal
