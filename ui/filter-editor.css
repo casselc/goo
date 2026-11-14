@@ -123,3 +123,7 @@
 @media (max-width: 480px) {
   .filter-editor .filter-counted-compare { inline-size: 100%; }
 }
+
+.filter-editor > .filter-conditions { border: 0; padding: 0; margin: 0; display: block; min-inline-size: 0; }
+.filter-editor > .filter-conditions > legend { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.filter-editor > .filter-conditions[hidden] { display: none; }

@@ -62,3 +62,6 @@ contract, owner bindings, Unicode diagnostics and source-free limits.
 
 [CEL representation and ownership](CEL_REPRESENTATION_OWNERSHIP.md) explains
 exact conversion coverage and the pure additional-condition owner before UI mounting.
+
+[Contextual CEL editing](CEL_CONTEXTUAL_EDITOR.md): optional Conditions /
+Expression inside Activity and fixed-question Filters; Check stages, Apply/Run reads.

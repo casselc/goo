@@ -67,3 +67,15 @@ test('actual loaded-match selection remains local for a stopped terminal failure
   if(enabled){state.refreshBatch();assert.equal(state.batchButton.disabled,true,'existing proof/membership plan prevents repeated selection');const old=button.onclick;state.generation++;state.refreshBatch();old();assert.equal(calls.add,1,'retired matching control cannot add again')}
  }
 });
+
+test('authoring blocks native tail start/retry and retained connect without reading or dropping held rows',async()=>{
+ const {state,calls,rows}=fixture(http(500,{error:'Live streaming unavailable.',reason:'server_unavailable',retry:'automatic'}));
+ const body=source.match(/setReadBlocked\(reason=''\)\{([^}]+)\}/)[1];
+ state.saving=false;vm.runInNewContext('this.block=function(reason=""){'+body+'}',state);
+ state.block('Check the expression before applying.');
+ assert.equal(state.resume.disabled,true);assert.equal(state.retry.disabled,true);
+ assert.equal(state.resume.title,'Check the expression before applying.');
+ await state.connect();assert.equal(calls.fetch,0);assert.equal(rows.length,1);assert.equal(calls.clear,0);
+ state.block('');assert.equal(state.resume.disabled,false);assert.equal(state.retry.disabled,false);
+ await state.connect();assert.equal(calls.fetch,1);
+});

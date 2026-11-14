@@ -4428,6 +4428,53 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/cel/context": {
+      "post": {
+        "operationId": "post_cel_context",
+        "summary": "POST /cel/context",
+        "tags": [
+          "cel"
+        ],
+        "description": "Validate complete ordinary base and static ClickHouse support, returning server-computed content identity and current authoring contract. No expression, source probe, execution, store write or server session.",
+        "x-go-source": "internal/celhttp/routes.go",
+        "x-effects": "pure-plan-or-supplied-summary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CELRecordContext"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CELPlanError"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CELContextRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 32768,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/cel/plan": {
       "post": {
         "operationId": "post_cel_plan",
@@ -8287,6 +8334,16 @@
           }
         ]
       },
+      "CELContextRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/querycel.ContextRequestInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "CELPlanError": {
         "$ref": "#/components/schemas/celhttp.ErrorResponse"
       },
@@ -8299,6 +8356,9 @@
             "type": "null"
           }
         ]
+      },
+      "CELRecordContext": {
+        "$ref": "#/components/schemas/querycel.RecordContext"
       },
       "CELRecordPlan": {
         "$ref": "#/components/schemas/querycel.RecordPlan"
@@ -39579,6 +39639,19 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/prebuilt.View"
       },
+      "querycel.ContextRequestInput": {
+        "additionalProperties": false,
+        "properties": {
+          "base": {
+            "$ref": "#/components/schemas/exploration.QueryInput"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/querycel.ContextRequest",
+        "required": [
+          "base"
+        ]
+      },
       "querycel.Diagnostic": {
         "properties": {
           "code": {
@@ -39760,6 +39833,38 @@
           "binding",
           "expression"
         ]
+      },
+      "querycel.RecordContext": {
+        "properties": {
+          "baseIdentity": {
+            "type": "string"
+          },
+          "compiler": {
+            "type": "string"
+          },
+          "library": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "profile": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "baseIdentity",
+          "operation",
+          "library",
+          "compiler",
+          "target",
+          "profile"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/querycel.RecordContext"
       },
       "querycel.RecordPlan": {
         "properties": {

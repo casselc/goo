@@ -1,0 +1,17 @@
+.cel-expression-editor { display:grid; gap:.5rem; min-inline-size:0; }
+.cel-expression-editor > label { font-size:.8rem; color:var(--muted,#aab5c6); }
+.cel-expression-editor > select { inline-size:fit-content; max-inline-size:100%; }
+.cel-expression-pane { display:grid; gap:.4rem; min-inline-size:0; }
+.cel-expression-pane[hidden] { display:none; }
+.cel-expression-pane label { font-size:.85rem; font-weight:600; }
+.cel-expression-pane textarea { box-sizing:border-box; inline-size:100%; min-inline-size:0; min-block-size:5.5rem; block-size:5.5rem; resize:vertical; font-family:var(--font-mono,ui-monospace,monospace); line-height:1.5; }
+.cel-expression-pane textarea[aria-invalid=true] { border-color:var(--danger,#f79090); }
+.cel-expression-pane textarea:focus-visible { outline:2px solid var(--focus,#83b5ff); outline-offset:2px; }
+.cel-expression-pane small,.cel-expression-scope,.cel-expression-diagnostic { margin:0; font-size:.8rem; color:var(--muted,#aab5c6); overflow-wrap:anywhere; }
+.cel-expression-editor > button { justify-self:start; }
+.cel-expression-editor .controls { flex-wrap:wrap; }
+@media(max-width:420px) { .cel-expression-editor > select { inline-size:100%; } }
+
+.cel-expression-diagnostic-details { min-inline-size:0; font-size:.8rem; }
+.cel-expression-diagnostic-details[hidden] { display:none; }
+.cel-expression-diagnostic-details pre { max-block-size:16rem; overflow:auto; margin:.5rem 0 0; white-space:pre-wrap; overflow-wrap:anywhere; }

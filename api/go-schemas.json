@@ -38,6 +38,16 @@
       }
     ]
   },
+  "CELContextRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/querycel.ContextRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
   "CELPlanError": {
     "$ref": "#/components/schemas/celhttp.ErrorResponse"
   },
@@ -50,6 +60,9 @@
         "type": "null"
       }
     ]
+  },
+  "CELRecordContext": {
+    "$ref": "#/components/schemas/querycel.RecordContext"
   },
   "CELRecordPlan": {
     "$ref": "#/components/schemas/querycel.RecordPlan"
@@ -24332,6 +24345,23 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/prebuilt.View"
   },
+  "querycel.ContextRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "base": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.QueryInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/querycel.ContextRequest"
+  },
   "querycel.Diagnostic": {
     "properties": {
       "code": {
@@ -24556,6 +24586,38 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/querycel.PlanRequest"
+  },
+  "querycel.RecordContext": {
+    "properties": {
+      "baseIdentity": {
+        "type": "string"
+      },
+      "compiler": {
+        "type": "string"
+      },
+      "library": {
+        "type": "string"
+      },
+      "operation": {
+        "type": "string"
+      },
+      "profile": {
+        "type": "string"
+      },
+      "target": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "baseIdentity",
+      "operation",
+      "library",
+      "compiler",
+      "target",
+      "profile"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/querycel.RecordContext"
   },
   "querycel.RecordPlan": {
     "properties": {

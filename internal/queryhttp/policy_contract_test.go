@@ -34,7 +34,7 @@ func TestFamilyPoliciesMatchPublishedAPIBoundaries(t *testing.T) {
 		lookup func(string, string) (queryhttp.Policy, bool)
 		count  int
 	}{
-		"cel":         {celhttp.PolicyFor, 1},
+		"cel":         {celhttp.PolicyFor, 2},
 		"record":      {recordhttp.PolicyFor, 13},
 		"native":      {nativehttp.PolicyFor, 8},
 		"explanation": {explanationhttp.PolicyFor, 3},

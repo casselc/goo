@@ -1,8 +1,10 @@
 # Known issues and gaps
 
 [CEL predicate authoring](CEL_PREDICATE_PILOT.md) is a delivered library/CLI pilot
-over fixed nonnullable fields. Attribute maps, presence guards, whole-query CEL,
-app text editing and a general third-party lowering registry remain unimplemented.
+over fixed nonnullable fields. Attribute maps, presence guards, whole-query CEL
+and a general third-party lowering registry remain unimplemented.
+[Contextual text editing](CEL_CONTEXTUAL_EDITOR.md) is available in Activity and
+fixed-question Filters over one additional condition.
 Unsupported expressions refuse before evaluation; no local record-page fallback
 is used. Reference evaluation requires every referenced field to be present and
 well typed, including short-circuited branches.
@@ -17,8 +19,11 @@ cloning and additive refinement, plus guarded aggregate handoffs. Additive
 refinement does not replace an edited slot. [436.2 checked planning](CEL_CHECKED_PLANNING.md) delivers typed diagnostics and
 a bounded pure compile transport. [436.3](CEL_REPRESENTATION_OWNERSHIP.md)
 adds exact bounded printing and a pure revision-safe additional-condition owner.
-The owner is not mounted yet; app expression editing and preserved authoring
-metadata remain planned. Source/readiness, native metric grain/units and historical custody remain
+[436.4](CEL_CONTEXTUAL_EDITOR.md) mounts that owner inside existing Filters.
+External scope changes retain the text but require explicit discard before a new
+condition can be adopted; they never guess which old branch to remove. Authored
+source/provenance preservation remains planned. Fixed analysis retains its
+existing service/message/severity controls; broader compactness is not claimed. Source/readiness, native metric grain/units and historical custody remain
 separate from language checking.
 
 [The ad-hoc telemetry review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) identifies

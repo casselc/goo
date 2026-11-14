@@ -109,3 +109,36 @@ func TestPlanRouteRefusesWithoutPartialPlan(t *testing.T) {
 		t.Fatal(w.Code)
 	}
 }
+
+func TestContextRouteBoundedAndSourceFree(t *testing.T) {
+	mux := http.NewServeMux()
+	Register(mux)
+	data := []byte(`{"base":{"signal":"logs","environment":"prod","fromMs":1000,"toMs":61000,"limit":20}}`)
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, httptest.NewRequest("POST", "/cel/context", bytes.NewReader(data)))
+	if w.Code != 200 {
+		t.Fatal(w.Code, w.Body.String())
+	}
+	var result querycel.RecordContext
+	if err := json.Unmarshal(w.Body.Bytes(), &result); err != nil || len(result.BaseIdentity) != 64 || result.Library != querycel.LibraryVersion {
+		t.Fatal(err, w.Body.String())
+	}
+	if policy, ok := PolicyFor("POST", "/cel/context"); !ok || policy.BodyLimit != BodyLimit {
+		t.Fatal(policy, ok)
+	}
+	for _, body := range []string{`null`, `{}`, `{"base":null}`, `{"base":{},"unknown":true}`, string(data) + ` {}`, `{"base":{}}`, strings.Repeat(" ", int(BodyLimit)) + string(data)} {
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, httptest.NewRequest("POST", "/cel/context", strings.NewReader(body)))
+		if w.Code != 400 || strings.Contains(w.Body.String(), `"baseIdentity"`) {
+			t.Fatal(w.Code, w.Body.String())
+		}
+	}
+	cancelled, cancel := context.WithCancel(context.Background())
+	cancel()
+	r := httptest.NewRequest("POST", "/cel/context", bytes.NewReader(data)).WithContext(cancelled)
+	w = httptest.NewRecorder()
+	mux.ServeHTTP(w, r)
+	if w.Code != 400 {
+		t.Fatal("cancelled request admitted", w.Code)
+	}
+}

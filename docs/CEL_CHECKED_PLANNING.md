@@ -52,7 +52,7 @@ Error envelopes do not echo the binding: callers correlate them with their
 originating request. HTTP transport
 alone cannot know whether a mounted editor has retired. No server session or
 slot-replacement reducer is introduced here. Rechecking an edit must use its
-original base, not repeatedly refine the last result. That owner is delivered in 436.3; mounting remains 436.4.
+original base, not repeatedly refine the last result. That owner is delivered in 436.3; 436.4 now mounts it in existing Filters.
 
 ## Diagnostics
 
@@ -77,8 +77,8 @@ Successful checks express static target support, never live source availability.
 
 ## Remaining work
 
-The app still has no CEL editor. 436.3 delivers honest representation coverage and
-revision-safe slot ownership; 436.4 mounts compact contextual editing. Existing
+436.3 delivers honest representation coverage and revision-safe slot ownership;
+[436.4](CEL_CONTEXTUAL_EDITOR.md) mounts compact contextual editing. Existing
 attribute predicates in the base remain intact, but attribute-map CEL expressions
 still need a presence contract. Native metrics retain their independent grammar.
 
@@ -91,4 +91,5 @@ See [integration design](CEL_PRODUCT_INTEGRATION.md),
 [436.3](CEL_REPRESENTATION_OWNERSHIP.md) adds bounded exact predicate printing and
 a pure authoring owner that consumes bound planning receipts. It correlates errors
 through their originating check tokens and independently validates result meaning.
-The owner is not a mounted editor or an execution controller.
+The owner remains separate from the mounted [editor](CEL_CONTEXTUAL_EDITOR.md)
+and the execution controller.

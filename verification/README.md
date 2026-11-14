@@ -4886,3 +4886,13 @@ The authoring model projects actual JavaScript owner snapshots and method result
 Go supplies actual planning receipts through the driver. Its zero-read observation
 counts intercepted `fetch` calls; source review establishes the pure module has no
 other IO. This is not browser interaction or a source-truth model.
+
+## 436.4 — mounted condition checks
+
+The real [editor journey](../journeys/cel-editor.spec.js) observes context/planning
+requests separately from telemetry reads and writes. Its numeric severity/source
+oracle is independent of rendered rows. The bounded `bombadil/cel-editor.ts` actor
+checks actual fetch invocation counters with positive context/check witnesses,
+invalid-draft primary gating, retained text and retired Check callbacks.
+The existing 436.3 native owner/model semantics remain a separate contract; this
+slice adds mounted browser coverage without another state framework.

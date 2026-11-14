@@ -69,10 +69,10 @@ flowchart LR
 
 ## Boundary and next step
 
-These are pure contracts, not a mounted editor. The existing Apply and Run owners
-still decide when to read telemetry. 436.4 will mount compact Conditions /
-Expression editing in those existing surfaces, preserving native labels, keyboard
-focus, invalid text and a single primary action. It must not put another toolbar
+These contracts are now mounted by [436.4](CEL_CONTEXTUAL_EDITOR.md). The existing
+Apply and Run owners still decide when to read telemetry. Shared Conditions /
+Expression editing preserves native labels, keyboard focus, invalid text and
+a single primary action. It must not put another toolbar
 before the live stream. Publication/provenance stays in 436.5.
 
 See [storyboard](journeys/cel-representation-ownership.md),

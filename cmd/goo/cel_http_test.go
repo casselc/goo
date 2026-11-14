@@ -49,6 +49,18 @@ func TestCELPlanningGenericRuntimeNoSourceOrStore(t *testing.T) {
 			t.Fatal(err, response.Body.String())
 		}
 	}
+	contextData, _ := json.Marshal(querycel.ContextRequest{Base: request.Base})
+	for _, path := range []string{"/cel/context", "/api/cel/context"} {
+		response := httptest.NewRecorder()
+		newQueryBudget(server.Handler, 0).ServeHTTP(response, httptest.NewRequest("POST", path, bytes.NewReader(contextData)))
+		if response.Code != 200 {
+			t.Fatal(path, response.Code, response.Body.String())
+		}
+		var context querycel.RecordContext
+		if err := json.Unmarshal(response.Body.Bytes(), &context); err != nil || context.BaseIdentity != request.Binding.BaseIdentity {
+			t.Fatal(err, response.Body.String())
+		}
+	}
 	if source.calls != 0 {
 		t.Fatalf("planning made %d source calls", source.calls)
 	}

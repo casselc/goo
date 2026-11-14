@@ -1,5 +1,54 @@
 # Validation record
 
+## 436.4 — contextual CEL editor in Activity and fixed Filters
+
+[Guide](docs/CEL_CONTEXTUAL_EDITOR.md), [real telemetry storyboard](docs/journeys/cel-editor.md)
+and [independent acceptance](docs/reviews/CEL_EDITOR_436_4.md).
+
+- Conditions remains the default inside existing Filters. The shared native mode
+  select/persistent textarea stages one additional condition through the existing
+  Apply/Run owner. Invalid drafts retain text and held rows, and disable execution;
+  external parent changes require explicit discard before adopting a new base.
+  Diagnostic summaries carry location; full raw messages appear once in native
+  details. The resizable textarea starts at 5.5rem rather than inherited 140px.
+- All root Go packages pass on Go 1.27.3; the final embedded server builds.
+  Full final frontend suite: **1,766 passing, zero failures/skips**, **63.327s**.
+  Eleven new component cases exercise native availability, ignored-abort late
+  errors/successes, mode/caret retention, local Unicode/byte refusals, explicit
+  rebase lock and compact diagnostics. Additional regressions cover native tail
+  blocking, visibility handoff and actual retained fixed Next/Tail callbacks.
+- `ContextFor` and `/api/cel/context` provide a Go-validated base identity and
+  compiler contract with no source/store dependencies. Focused domain/HTTP/runtime
+  checks pass, including zero source budget, zero source calls and no store creation.
+  OpenAPI passes: **118 operations, 751 reflected wire / 794 final schemas,
+  501 response fixtures, 202 admitted requests, 29 mux refusals**, negative controls
+  and SSE checks.
+- Final real OTLP/ClickHouse browser journey passes in **37.9s** (41.0s runner),
+  with no page errors and owned-runtime cleanup. Independent source assertions
+  cover six logs and numeric Info carrying FATAL text. Parent OR remains intact;
+  first and replacement Apply each issue one source request and return 4 then 2
+  records. Fixed Run issues one request and returns 1 record with exact held
+  bounds. Mode/typing/context/check/staging and held Return issue no telemetry
+  reads or store writes. A previously enabled fixed Tail becomes disabled for an
+  invalid draft; retained Next/Tail callbacks make no API calls and keep held rows.
+  Pagination is not claimed as positively exercised by this one-row fixture.
+- Bounded 25-second Bombadil actor completes across **459 snapshots**. Instrumented
+  actual fetch calls witness **1 context + 2 plan requests**, zero source/forbidden
+  POST calls, associated diagnostics, retained invalid text and no 390px overflow.
+  Invoking hidden Check leaves planning at 3 before/after. An initial performance-
+  timing observer did not observe requests and was replaced; positive witnesses
+  prevent accepting a vacuous zero-counter result.
+- Eight real 320/390/1440 frames are refreshed. Independent UX/accessibility/web
+  review accepts final source, focused reruns and frames. Review found and resolved
+  stale-error catch ownership, native disabled-state gaps, fixed Next/Tail leakage
+  and verbose duplicate compiler text. An initial frontend fixture lacked the new
+  tail dependency; the corrected fixture and final full suite pass. The restarted
+  environment's retained ClickHouse/Redis/collector lab and temporary dependency
+  caches were restored before integration checks; retained data was not replaced.
+- No fresh physical AT/cross-engine or whole-product 436.6 conformance is claimed.
+  Native metrics keep their grammar; authored source is not persisted yet.
+  Next: **436.5 revision-owned preservation and reuse**.
+
 ## 436.3 — exact representation and revision-safe authoring owner
 
 [Contract](docs/CEL_REPRESENTATION_OWNERSHIP.md),

@@ -31,8 +31,10 @@
 > [source-free contract](CEL_CHECKED_PLANNING.md).
 > **436.3 representation/slot ownership is delivered**; see
 > [bounded representation and ownership](CEL_REPRESENTATION_OWNERSHIP.md).
-> Next is compact contextual UI (436.4), one preservation owner (436.5) and whole-product observed
-> acceptance (436.6). 436.4–436.6 remain planned; the app has no CEL editor yet.
+> **436.4 compact contextual editing is delivered** in Activity and fixed Filters;
+> see [editor guide](CEL_CONTEXTUAL_EDITOR.md).
+> Next is one preservation owner (436.5), then whole-product observed acceptance
+> (436.6). Those two slices remain planned; authored source is not persisted yet.
 > Keep this one finite consolidation sequence; do not start a separate language
 > platform backlog or promise lossless conversion of unsupported visual predicates.
 > The older **427–429 preservation cycle** remains pending follow-on work. The older labeling queue

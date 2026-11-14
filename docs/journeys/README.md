@@ -2991,3 +2991,11 @@ backend planning milestone; the app editor remains planned.
 [Contract storyboard](cel-representation-ownership.md): exact print/check/lower,
 repeated condition replacement, deferred ABA responses, hidden/disposed callbacks
 and explicit clear. Visible contextual editing remains the next milestone.
+
+## 436.4 — mounted contextual editing
+
+[Real telemetry storyboard](cel-editor.md) and
+[executable journey](../../journeys/cel-editor.spec.js) cover optional Activity and
+fixed expression authoring, pure context/check requests, invalid-draft gating,
+slot replacement, explicit Apply/Run and held Return. Responsive frames and a
+bounded Bombadil actor exercise the new shared controls.

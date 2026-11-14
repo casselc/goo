@@ -1,11 +1,11 @@
 # CEL as part of the Goo product
 
-Status: adopted design direction, 2026-11-14. [436.1](REFINEMENT_CONSOLIDATION.md), [436.2](CEL_CHECKED_PLANNING.md)
-and [436.3](CEL_REPRESENTATION_OWNERSHIP.md) are delivered;
-436.4–436.6 remain **planned**.
+Status: adopted design direction, 2026-11-14. [436.1](REFINEMENT_CONSOLIDATION.md), [436.2](CEL_CHECKED_PLANNING.md),
+[436.3](CEL_REPRESENTATION_OWNERSHIP.md) and
+[436.4](CEL_CONTEXTUAL_EDITOR.md) are delivered; 436.5–436.6 remain **planned**.
 The delivered [predicate pilot](CEL_PREDICATE_PILOT.md) remains a Go library and
-source-free CLI. Checked planning now has an in-process HTTP route; no editor or
-persistence change is delivered.
+source-free CLI. Checked planning has in-process HTTP routes, and Activity/fixed
+Filters now mount the shared editor. Source provenance persistence remains planned.
 
 Seven specialists contributed: [Go](reviews/CEL_HOLISTIC_GO.md),
 [architecture](reviews/CEL_HOLISTIC_ARCHITECTURE.md),
@@ -170,14 +170,14 @@ inside the next 436 consolidation, not a competing language-platform backlog:
 2. **436.2 — delivered:** pure named planning use case, typed positioned diagnostics and bounded
    in-process transport; shared logical descriptors only where needed by this slice.
 3. **436.3 — delivered:** declared printer/representation coverage and revision-safe slot owner.
-4. **436.4:** mount the shared contextual editor and compact scope/status presentation.
+4. **436.4 — delivered:** mount the shared contextual editor and compact scope/status presentation.
 5. **436.5:** one existing definition/artifact owner for checked source provenance
    and ordinary save/reopen/export; no speculative capture retrofit.
 6. **436.6:** demonstrate the whole watch/refine/run/inspect/return/preserve/reuse loop,
    including existing Services and Measurements record context.
 
 Each slice can ship independently with its own checks and review. The next
-implementation task is 436.4. This finite sequence does not require a universal
+implementation task is 436.5. This finite sequence does not require a universal
 field registry, rewriting every clone site, implementing maps or replacing all
 controllers.
 Keep the older 427–429 preservation contracts pending and do not mark them complete

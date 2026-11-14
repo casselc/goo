@@ -23,7 +23,7 @@ type ErrorResponse struct {
 
 // PolicyFor declares that checking a supplied draft has no source/store effects.
 func PolicyFor(method, path string) (queryhttp.Policy, bool) {
-	if method != "POST" || path != "/cel/plan" {
+	if method != "POST" || (path != "/cel/plan" && path != "/cel/context") {
 		return queryhttp.Policy{}, false
 	}
 	return queryhttp.Policy{Effect: queryhttp.Pure, BodyLimit: BodyLimit, Timeout: 2 * time.Second, TrailingMessage: "expected one JSON object"}, true
@@ -31,35 +31,48 @@ func PolicyFor(method, path string) (queryhttp.Policy, bool) {
 
 // Register accepts no source, store, clock or readiness dependencies.
 func Register(mux *http.ServeMux) {
-	mux.HandleFunc("POST /cel/plan", func(w http.ResponseWriter, r *http.Request) {
-		fail := func(err error) {
-			response := ErrorResponse{Error: err.Error()}
-			errors.As(err, &response.Diagnostic)
-			httpjson.Write(w, http.StatusBadRequest, response)
-		}
-		if r.URL.RawQuery != "" {
-			fail(fmt.Errorf("query parameters are unsupported"))
-			return
-		}
-		ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
-		defer cancel()
-		r = r.WithContext(ctx)
-		var request querycel.PlanRequest
-		if err := httpjson.Decode(w, r, &request, BodyLimit, "expected one JSON object"); err != nil {
-			fail(err)
-			return
-		}
-		plan, err := querycel.PlanRecord(request)
-		if err != nil {
-			fail(err)
-			return
-		}
-		// Planning is synchronous and bounded by compiler budgets; this check
-		// prevents a completed/cancelled caller from publishing its result.
-		if err := ctx.Err(); err != nil {
-			fail(err)
-			return
-		}
-		httpjson.Write(w, http.StatusOK, plan)
+	mux.HandleFunc("POST /cel/context", func(w http.ResponseWriter, r *http.Request) {
+		handle(w, r, func(r *http.Request) (any, error) {
+			var request querycel.ContextRequest
+			if err := httpjson.Decode(w, r, &request, BodyLimit, "expected one JSON object"); err != nil {
+				return nil, err
+			}
+			return querycel.ContextFor(request.Base)
+		})
 	})
+	mux.HandleFunc("POST /cel/plan", func(w http.ResponseWriter, r *http.Request) {
+		handle(w, r, func(r *http.Request) (any, error) {
+			var request querycel.PlanRequest
+			if err := httpjson.Decode(w, r, &request, BodyLimit, "expected one JSON object"); err != nil {
+				return nil, err
+			}
+			return querycel.PlanRecord(request)
+		})
+	})
+}
+
+func handle(w http.ResponseWriter, r *http.Request, plan func(*http.Request) (any, error)) {
+	fail := func(err error) {
+		response := ErrorResponse{Error: err.Error()}
+		errors.As(err, &response.Diagnostic)
+		httpjson.Write(w, http.StatusBadRequest, response)
+	}
+	if r.URL.RawQuery != "" {
+		fail(fmt.Errorf("query parameters are unsupported"))
+		return
+	}
+	ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
+	defer cancel()
+	r = r.WithContext(ctx)
+	result, err := plan(r)
+	if err != nil {
+		fail(err)
+		return
+	}
+	// Compiler/domain budgets bound synchronous work; cancellation withdraws publication.
+	if err := ctx.Err(); err != nil {
+		fail(err)
+		return
+	}
+	httpjson.Write(w, http.StatusOK, result)
 }

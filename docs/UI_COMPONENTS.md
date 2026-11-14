@@ -2219,5 +2219,14 @@ disabled. See [436.1](REFINEMENT_CONSOLIDATION.md).
 `cel-authoring.mjs` owns one additional condition independently from execution.
 It has no DOM or transport. Callers retain exact check tokens for result acceptance
 and staging; hiding, rebasing or disposal retires them. Invalid text and last valid
-meaning stay separate. It is not mounted into controls yet; see
+meaning stay separate. 436.4 mounts it through the shared contextual adapter; see
 [representation and ownership](CEL_REPRESENTATION_OWNERSHIP.md).
+
+## Shared contextual CEL controls
+
+`cel-expression-editor.mjs` mounts native labelled mode selection, persistent
+textarea, checking/clearing and associated diagnostics. Planning and staging are
+injected; it has no independent telemetry or persistence owner. Its scoped CSS
+uses a compact resizable textarea. `filter-editor.mjs` combines it with a native
+Conditions fieldset; Activity and fixed adapters retain their execution owners.
+See [guide](CEL_CONTEXTUAL_EDITOR.md) and [storyboard](journeys/cel-editor.md).
