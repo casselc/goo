@@ -5,9 +5,9 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-426, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
+430, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
 [fleet service triage](SERVICE_TRIAGE.md).
-The [active roadmap](ROADMAP_2026_11_13_CHECKPOINT_426.md) owns execution order;
+The [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
 below are research inputs, not additional backlogs or claims of vendor parity.
 
@@ -23,6 +23,10 @@ by each operand's own fixed exposure, including unequal windows and known zero.
 [Investigation preservation](INVESTIGATION_CONSOLIDATION.md) retains complete saved-view
 configuration, stages reopen without telemetry reads, and restores held Activity.
 Portable views can be imported before the first query.
+
+[Unknown-data entry](UNKNOWN_DATA_ENTRY.md) places existing bounded environment
+discovery beside Environment, with explicit preview/stage/start and keyboard-safe
+Pause/Resume. Signal availability and metrics-only bootstrap remain pending.
 
 ## What users can do
 
@@ -79,8 +83,9 @@ Recorded Error context (419) and [contextual action consistency](CONTEXTUAL_ACTI
 (420) are delivered. [Contextual Activity facet entry](ACTIVITY_FACET_ENTRY.md)
 (421) reuses existing counted values. [Multi-value selection](MULTI_VALUE_FACETS.md)
 (422) stages atomic OR choices within the retained scope. [Measured render/scope
-snapshot consolidation](ACTIVITY_SCOPE_SNAPSHOTS.md) (423) is delivered. Next is explicit contextual field-
-constraint editing (424); see the [active roadmap](ROADMAP_2026_11_13_CHECKPOINT_426.md).
+snapshot consolidation](ACTIVITY_SCOPE_SNAPSHOTS.md) (423) is delivered. Contextual field-constraint
+editing (424), selected/rest entry (425), preservation (426), and first-use scope
+entry (430) are delivered; see the [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
 Captured-example task discovery and adjacent labeling remain deferred. Delivered
 capabilities and remaining boundaries are distinguished below.
 

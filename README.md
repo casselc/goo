@@ -85,4 +85,4 @@ different source states.
 - [Architecture overview](docs/SYSTEM_OVERVIEW.md) — runtime, data flow and extension points.
 - [API](docs/API.md) · [OpenAPI specification](api/openapi.json).
 - [Contributing and testing](CONTRIBUTING.md).
-- [Roadmap](docs/ROADMAP_2026_11_13_CHECKPOINT_426.md) · [Validation record](VALIDATION.md).
+- [Roadmap](docs/ROADMAP_2026_11_14_CHECKPOINT_430.md) · [Validation record](VALIDATION.md).

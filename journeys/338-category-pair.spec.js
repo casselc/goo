@@ -46,7 +46,7 @@ test('338 compare category populations across both fresh fixed windows',async({p
  async function enter(signal,environment){
   await page.goto(base+'/');const activity=page.locator('.stream-entry');await activity.getByLabel('Live signal',{exact:true}).selectOption(signal);const adoption=activity.locator('.environment-adoption');await open(adoption);
   let pending=post('/api/environment-scopes');await adoption.getByRole('button',{name:'Read environment scopes',exact:true}).click();await pending;
-  pending=post('/api/environment-scopes/records');await adoption.locator('tbody tr').filter({hasText:'Named environment: "'+environment+'"'}).getByRole('button',{name:'Preview named '+signal,exact:true}).first().click();await pending;
+  pending=post('/api/environment-scopes/records');await adoption.locator('tbody tr').filter({hasText:'Named environment: "'+environment+'"'}).getByRole('button',{name:new RegExp('^Preview named '+signal+' · ')}).first().click();await pending;
   let before=source();await adoption.getByRole('button',{name:'Stage in Activity',exact:true}).click();expect(source()).toBe(before);
   await activity.getByRole('button',{name:'Start stream',exact:true}).click();await expect(activity.locator('.live-tail tbody>tr')).toHaveCount(100);await activity.getByRole('button',{name:'Pause stream',exact:true}).click();await open(activity.locator('.entry-investigate-options'));
   before=source();await activity.getByRole('button',{name:'Compare previous window by service',exact:true}).click();await expect(pop()).toHaveAttribute('data-phase','staged');expect(source()).toBe(before);

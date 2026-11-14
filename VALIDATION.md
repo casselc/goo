@@ -1,5 +1,35 @@
 # Validation record
 
+## 430 — unknown-data scope entry and interaction reliability
+
+[Contract](docs/UNKNOWN_DATA_ENTRY.md), [storyboard](docs/journeys/unknown-data-entry.md),
+[independent acceptance](docs/reviews/UNKNOWN_DATA_ENTRY_430.md) and
+[active roadmap](docs/ROADMAP_2026_11_14_CHECKPOINT_430.md).
+
+- **1,652 frontend tests pass**, zero failures/skips (19.6s), including actual
+  Pause/Resume handlers, no-steal cases, unchanged status publication and idle
+  Find announcements. The Go binary builds with the pinned Go 1.27.3 toolchain.
+- The new isolated generic-mode journey passes (40.1s / 41.8s runner), including
+  a **30-second Bombadil campaign**. Real OTLP logs and spans cover unreported,
+  empty-current/conflicting-legacy, named-current/conflicting-legacy and legacy-only
+  environments. Initial entry performs no telemetry POSTs; each explicit discovery
+  and preview reads once; Stage and withdrawn closed controls read nothing.
+- The actor independently observes completion with **one discovery, one preview,
+  two tail starts**, exact effective named scope, safe local staging, no forbidden
+  writes and keyboard focus retained through both pauses. All safety flags pass.
+- Existing environment-to-investigation/capture (256, 17.0s) and generic startup
+  (191, 10.0s) browser regressions pass individually. Desktop/390/320 first-entry
+  and paused frames are updated; the two existing Activity frames also reflect
+  the moved chooser. No page horizontal overflow was observed in the new sweeps.
+- Existing Hegel environment selection/flow properties and **native Quint observed
+  constructor traces pass** (12.8s, no skips), including rejecting controls for
+  policy loss/replacement. These validate typed environment construction, not DOM
+  focus or new signal availability.
+- Independent UX and accessibility follow-ups accept this bounded remediation.
+  No real speech-output audit was run; active Find counts may still announce
+  changed totals per batch. Partial-schema readiness, metrics-only bootstrap and
+  empty-stream recovery remain explicit next work.
+
 ## Ad-hoc live OTLP review — 2026-11-14
 
 Four independent source reviews (product, UX, OTel/data and accessibility) were

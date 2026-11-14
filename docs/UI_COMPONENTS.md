@@ -1,5 +1,16 @@
 # Display component library
 
+## Unknown-data scope entry (430)
+
+EnvironmentAdoption remains an application controller using one native disclosure
+and shared table/record/inspector components. The existing DOM now mounts beside
+Environment in the Activity toolbar; placement never reads a source. Named action
+labels expose complete scope values and tables use native row headers. Read,
+preview, inspection and Stage honor native control/carrier availability.
+Tail transfers focus only for an explicitly activated disappearing Pause/Resume
+control, and deduplicates unchanged status text. Data, execution and scope ownership
+remain unchanged. See [the contract](UNKNOWN_DATA_ENTRY.md).
+
 ## Investigation preservation ownership (426)
 
 The population workspace owns source reads, persistence and navigation. Its

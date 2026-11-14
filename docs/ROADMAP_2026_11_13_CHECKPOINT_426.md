@@ -1,5 +1,8 @@
 # Roadmap after the 426 investigation checkpoint
 
+**Superseded execution order:** use the [430 checkpoint](ROADMAP_2026_11_14_CHECKPOINT_430.md).
+The 427–429 contracts below remain pending, after the adopted ad-hoc entry cycle.
+
 **2026-11-14 review:** the [ad-hoc live telemetry pass](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md)
 recommends unknown-data entry, sparse/delayed-data recovery and shared discovery
 consolidation ahead of the pending preservation cycle below. This is a proposed

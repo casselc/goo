@@ -10,6 +10,7 @@ This index separates using Goo, extending it, and the development record.
 | Try the sample application | [Local lab](LOCAL_LAB.md) |
 | Connect existing ClickHouse telemetry | [Generic startup](GENERIC_STARTUP.md) |
 | Understand supported workflows and limits | [Capability guide](CAPABILITY_GUIDE.md) |
+| Find telemetry without knowing environment labels | [Unknown-data entry](UNKNOWN_DATA_ENTRY.md) |
 | Follow a complete investigation | [Illustrated preserve/reopen journey](journeys/investigation-reuse.md) |
 | Browse worked examples | [Journey index](journeys/README.md) |
 | Save questions, views or observations | [Preservation](PRESERVATION.md) |
@@ -30,7 +31,7 @@ This index separates using Goo, extending it, and the development record.
 manifest-free first use, source compatibility, empty-stream recovery and the
 proposed next usability cycle.
 
-- [Current roadmap](ROADMAP_2026_11_13_CHECKPOINT_426.md): adopted next work.
+- [Current roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md): adopted next work.
 - [Known issues](KNOWN_ISSUES.md): detailed limitations and open gaps.
 - [Validation](../VALIDATION.md): checks actually executed, newest first.
 - [Implementation plan](IMPLEMENTATION_PLAN.md): milestone history and execution guidance.

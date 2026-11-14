@@ -1,5 +1,20 @@
 # Semantic properties and model conformance
 
+## Unknown-data entry (430)
+
+The [real generic OTLP journey](../docs/journeys/unknown-data-entry.md) exercises
+observed environment discovery, local staging and keyboard-safe Activity. Its
+Bombadil actor is `bombadil/unknown-data-entry430.ts`; completion requires observed
+records and focus, not clicks. Existing typed environment properties and native
+constructor-trace rejection checks remain applicable:
+
+```sh
+go test -p 1 . -run '^Test(HegelEnvironmentSelection|HegelRecordEnvironmentFlow250|QuintObservedRecordEnvironmentFlow250)$' -count=1 -v
+```
+
+These model checks cover environment identity and detachment, not source-family
+availability or browser focus. Actual results are in [VALIDATION.md](../VALIDATION.md).
+
 ## Investigation preservation and return (426)
 
 `reuse426` checks the continuous browser ledger, mandatory native Quint protocol

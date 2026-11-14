@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Unfamiliar OTLP scope entry](unknown-data-entry.md) (430) discovers environments
+without guessed labels or manifests, stages exact policy before streaming, and
+checks keyboard Pause/Resume with desktop and narrow frames.
+
 [Investigation preserve, reopen and return](investigation-reuse.md) (426) follows
 counted selection through comparison, guarded Save, metadata-only reopen,
 explicit reacquisition and exact held Activity return, with desktop/mobile frames.

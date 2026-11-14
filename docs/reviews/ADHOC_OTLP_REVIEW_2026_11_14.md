@@ -1,7 +1,9 @@
 # Ad-hoc live telemetry: product and usability review
 
-Status: review and proposed implementation order; findings below are not delivered
-features. Four independent specialists reviewed product completeness, UX,
+Status: review and proposed implementation order. [430](../UNKNOWN_DATA_ENTRY.md)
+subsequently delivers chooser placement, accessible scope actions, initial action
+labels and bounded Pause/Resume/announcement fixes. The remaining findings below
+are not delivered features. Four independent specialists reviewed product completeness, UX,
 OpenTelemetry/data architecture, and accessibility/interaction coverage. The root
 reviewer reconciled their findings and performed the bounded browser checks below.
 

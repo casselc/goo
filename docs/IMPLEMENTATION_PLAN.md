@@ -1,6 +1,6 @@
 # Implementation plan
 
-> Active execution order: [426 product checkpoint](ROADMAP_2026_11_13_CHECKPOINT_426.md),
+> Active execution order: [430 ad-hoc entry checkpoint](ROADMAP_2026_11_14_CHECKPOINT_430.md),
 > reconciled across the independent product/architecture reviews summarized there.
 > The adopted operator cadence delivered **412 fleet service triage** and
 > **413 Activity log volume**. **414 recent and pinned scope
@@ -13,8 +13,10 @@
 > **424 contextual field-constraint editing** is delivered.
 > **425 counted selection comparison entry** is delivered.
 > **426 preserve/recall/return conformance** is delivered.
-> Next: **427 exact saved-view recall**, **428 existing paired-capture adoption**,
-> then **429 preservation/scope/action consolidation**, per the revised checkpoint. The older labeling queue
+> **430 unknown-data scope entry and interaction reliability** adopts the ad-hoc
+> telemetry review and is delivered. Next: **431 available signal families**, **432 metrics-only
+> and sparse-data first use**, then **433 shared discovery/recovery consolidation**.
+> The older **427–429 preservation cycle** remains pending follow-on work. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped
 > P95, host sample context and broader platform work remain deferred.

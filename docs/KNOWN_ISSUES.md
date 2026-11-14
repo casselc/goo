@@ -3,6 +3,9 @@
 [The ad-hoc telemetry review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) identifies
 first-use scope discovery, partial-signal table assumptions, metric-only bootstrap,
 event-time empty-stream recovery and keyboard Pause focus as priority gaps.
+[430](UNKNOWN_DATA_ENTRY.md) improves first-use chooser placement and fixes explicit
+Pause/Resume focus. Partial-source availability, metrics bootstrap and empty-stream
+recovery remain planned in the [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
 The generic no-environment log path was exercised; partial-schema installations
 remain source-reviewed rather than newly integration-tested.
 
@@ -10,7 +13,8 @@ Fixed-comparison Preserve currently saves the full composition but shares or
 captures the selected question only, explicitly labeled. General paired captures
 already exist elsewhere; [428](ROADMAP_2026_11_13_CHECKPOINT_426.md) adopts that
 infrastructure here. Saved-view configuration is not frozen comparison evidence.
-Recent/Pinned exact saved-view references are the next breadth item (427).
+Recent/Pinned exact saved-view references remain pending (427), after the adopted
+ad-hoc first-use cycle.
 
 [Counted selected/rest comparisons](COUNTED_SELECTION_COMPARISONS.md) currently
 start in Activity and support bounded ordinary categorical Count questions.
