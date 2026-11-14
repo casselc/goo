@@ -1,5 +1,48 @@
 # Validation record
 
+## 438 — inspect raw gauge observations before evaluation
+
+[Contract](docs/RAW_GAUGE_OBSERVATIONS.md),
+[real OTLP storyboard](docs/journeys/raw-gauge-observations.md),
+[architecture review](docs/reviews/RAW_GAUGE_438_ARCH.md) and
+[UX review](docs/reviews/RAW_GAUGE_438_UX.md).
+
+- Explicit gauge-only `POST /metric-observations` reads the exact discovered
+  instrument and fixed narrow scope without evaluator prerequisites. It retains
+  duplicate occurrences, reported attributes/units, exact timestamps, raw scalar
+  representations and diagnostics. No-recorded values remain unavailable.
+  Malformed structural identity/end times and 10,000-row/8 MiB limits refuse
+  atomically. No evaluator, capture carrier or continuous-series claim is added.
+- Full root `go test ./...` passes on Go 1.27.3. The new native route required
+  updating the policy inventory expectation from eight to nine routes.
+  Full frontend suite: **1,838 passing, zero failures/skips**; the final zero-start
+  display correction additionally passes all **14 focused raw UI tests**.
+- OpenAPI: **119 operations / 805 schemas**; complete checker passes
+  **511 response fixtures / 207 admitted requests / 30 mux refusals**, plus
+  negative and SSE controls. Local documentation links and diff whitespace pass.
+- Hegel checks **150 generated source banks**. Actual Go/JavaScript admission
+  parity covers **60 fixed rows and eight rejecting controls**, including
+  malformed starts, large attribute maps and exact flags beyond browser numeric
+  precision. Generated/source checks pass with zero skips.
+- Read observations alone acquires raw values. Find, 100-row paging and Inspect
+  use the held bank. Explicit Read reveals the pending heading synchronously;
+  completion never steals focus. Close/Cancel restore an eligible opener.
+  Source failure retains held data and its original read clock. Start zero is
+  displayed as not reported with raw zero retained rather than as 1970 UTC.
+
+- Final real OTLP browser journey passes **56.5s**, with **16 steps**, **35 main
+  SQL requests**, and a **553-snapshot Bombadil campaign** completing all phases
+  with **10 actor SQL requests** and no violations. Successful data comes from
+  actual collector-exported rows; the budget fixture explicitly expands one real
+  row to 10,001 occurrences. An actual completed HTTP 200 is held and delivered
+  late to prove obsolete results cannot replace rows, read clock or focus.
+- Mandatory native observed-trace gate passes **14.59s**, zero skips, with eight
+  negative controls. A calibration correctly rejected a mixed-carrier All request;
+  final acceptance uses an otherwise valid All-only request and proves zero SQL.
+  Runtime and isolated database cleanup pass; no browser console errors. Six
+  desktop/390/320 table/detail frames are regenerated and UX accepted. No physical
+  screen-reader or cross-engine acceptance is claimed.
+
 ## 437 — explicit All-environments log entry
 
 [Contract](docs/ALL_ENVIRONMENTS_LOG_ENTRY.md),

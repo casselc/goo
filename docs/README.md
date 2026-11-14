@@ -12,6 +12,7 @@ This index separates using Goo, extending it, and the development record.
 | Understand supported workflows and limits | [Capability guide](CAPABILITY_GUIDE.md) |
 | Find which supported signals are available | [Source capabilities](SOURCE_CAPABILITIES.md) |
 | Investigate metrics without known service or environment labels | [Metric scope discovery](METRIC_SCOPE_DISCOVERY.md) |
+| Inspect reported gauge values before evaluation | [Raw gauge observations](RAW_GAUGE_OBSERVATIONS.md) |
 | Understand instrument preview eligibility | [Instrument preflight](INSTRUMENT_PREFLIGHT.md) |
 | Recover a failed live source without losing held rows | [Activity source recovery](ACTIVITY_SOURCE_RECOVERY.md) |
 | Search stored log messages from local Find | [Activity message search](ACTIVITY_MESSAGE_SEARCH.md) |

@@ -20,6 +20,28 @@ def validator(spec, schema):
     return Draft202012Validator({'allOf': [schema], 'components': spec['components']})
 
 
+def check_raw_gauge438(spec):
+    shape=spec['paths']['/metric-observations']['post']['requestBody']['content']['application/json']['schema']
+    check=validator(spec,shape)
+    question={'question':{'environment':'prod','service':'api','fromMs':1000,'toMs':2000},
+              'instrument':{'kind':'gauge','scope':'','version':'','schemaURL':'','metric':'temperature','unit':''}}
+    check.validate(question)
+    for mutate in (lambda q:q['instrument'].update(kind='counter'),lambda q:q['instrument'].pop('unit'),
+                   lambda q:q['instrument'].update(scope=None),lambda q:q.update(question=None),
+                   lambda q:q.update(question={'service':'api','fromMs':1000,'toMs':2000,'environmentSelector':{'version':'goo/environment-selector/v1','policy':'effective','scope':{'mode':'all'}}})):
+        bad=copy.deepcopy(question);mutate(bad)
+        assert not check.is_valid(bad),bad
+    bank=json.loads((ROOT/'testdata/http/raw-gauge438.json').read_text())['cases']
+    result=json.loads(next(c['response'] for c in bank if c['name']=='observed'))
+    response=validator(spec,spec['paths']['/metric-observations']['post']['responses']['200']['content']['application/json']['schema'])
+    response.validate(result)
+    for mutate in (lambda r:r.update(version='wrong'),lambda r:r.update(limit=10),
+                   lambda r:r['rows'][0].update(valueState='healthy'),lambda r:r['rows'][0].update(endNS='nan'),
+                   lambda r:r['rows'][0].update(valueState='absent'),lambda r:r['rows'][0].update(flags=-1)):
+        bad=copy.deepcopy(result);mutate(bad)
+        assert not response.is_valid(bad),bad
+
+
 def check_cel_authoring4365(spec):
     """Closed provenance carriers; Go owns CEL checking and exact hash equality."""
     base={'signal':'logs','environment':'prod','fromMs':1000,'toMs':61000,'limit':100,'offset':0}
@@ -2282,7 +2304,7 @@ def check(spec):
                     accepted.append((shape, request))
     # Native histogram discovery adds five actual successful GET responses
     # to the prior 471/186/28 fixture baseline.
-    assert responses == 501 and requests == 202 and mux_refusals == 29, (responses, requests, mux_refusals)
+    assert responses == 511 and requests == 207 and mux_refusals == 30, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -2768,6 +2790,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    check_raw_gauge438(spec)
     if args.log_severity_observations:
         check_log_severity_observations435(spec,args.log_severity_observations)
 

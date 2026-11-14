@@ -42,6 +42,10 @@ log/span streaming needs its own per-family watermarks and failure policy later.
 
 ## 438 — inspect raw gauge observations before evaluation
 
+Delivered: [raw observation contract](RAW_GAUGE_OBSERVATIONS.md),
+[real OTLP storyboard](journeys/raw-gauge-observations.md) and
+[validation](../VALIDATION.md). The design basis below records the bounded slice.
+
 Ad-hoc metric producers can lack service.instance.id. Discovery currently shows
 identity labels and counts, while service evaluation correctly refuses known
 missing identity. The evaluated data-first view is downstream of that refusal;

@@ -3047,3 +3047,9 @@ validation. Reported layout gains do not imply faster queries.
 scope, reported environment facts, keyboard-safe staging, 1,005-record bounded
 reads/capture, actual adopted-view export, typed narrowing and zero-SQL unsupported
 routes. A bounded actor and mandatory native gate validate the complete report.
+
+## 438 — raw gauge observations
+
+[Real OTLP gauge inspection](raw-gauge-observations.md) covers explicit reads,
+missing identity, duplicates, units, nonfinite and not-recorded values, local
+inspection, atomic source limits, refusal and obsolete-response retirement.

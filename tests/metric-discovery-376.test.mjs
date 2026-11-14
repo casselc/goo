@@ -44,3 +44,8 @@ test('catalog readiness refuses missing or ineligible supplied plans and keeps f
  }
  const host=node('section');host.connected=true;render(host,{instruments:[instrument()],warning:'Full discovery caveat.',sources:[]},{onBuild(){}});const disclosure=host.children[0];assert.equal(disclosure.tagName,'details');assert.equal(disclosure.children[0].textContent,'Metadata and support');assert.match(disclosure.textContent,/Full discovery caveat/);assert.equal(disclosure.open,undefined);
 });
+
+test('raw gauge read remains independent of missing-instance evaluation policy and retires on local paging',()=>{
+ const source=instrument({capabilityPlan:{...capability,eligible:false,reasons:['Reported instance required for evaluation.']}}),host=node('section');host.connected=true;const read=[];render(host,{instruments:[source,...Array.from({length:25},(_,i)=>instrument({metric:'other-'+i}))],sources:[]},{onBuild(){throw Error('not evaluable')},onReadObservations:(i,button)=>read.push({i,button})});
+ const build=find(host,'button').find(x=>x.textContent==='Build measurement package'),raw=find(host,'button').find(x=>x.textContent==='Read observations');assert.equal(build.disabled,true);assert.equal(raw.disabled,false);assert.match(raw.getAttribute('aria-label'),/load/);raw.onclick();assert.equal(read[0].i,source);const old=raw.onclick;find(host,'button').find(x=>x.textContent==='More instruments').onclick();old();assert.equal(read.length,1);
+});

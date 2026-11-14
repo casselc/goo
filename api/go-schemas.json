@@ -1443,6 +1443,19 @@
   "PrebuiltRegistry": {
     "$ref": "#/components/schemas/prebuilt.Registry"
   },
+  "RawGaugeRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/measurements.RawGaugeQuestionInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "RawGaugeResult": {
+    "$ref": "#/components/schemas/measurements.RawGaugeResult"
+  },
   "RecipeList": {
     "anyOf": [
       {
@@ -19960,6 +19973,334 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.Question"
+  },
+  "measurements.RawGaugeDiagnostic": {
+    "properties": {
+      "code": {
+        "type": "string"
+      },
+      "field": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "field",
+      "code"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawGaugeDiagnostic"
+  },
+  "measurements.RawGaugeInstrument": {
+    "properties": {
+      "kind": {
+        "type": "string"
+      },
+      "metric": {
+        "type": "string"
+      },
+      "schemaURL": {
+        "type": "string"
+      },
+      "scope": {
+        "type": "string"
+      },
+      "unit": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind",
+      "scope",
+      "version",
+      "schemaURL",
+      "metric",
+      "unit"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawGaugeInstrument"
+  },
+  "measurements.RawGaugeInstrumentInput": {
+    "additionalProperties": false,
+    "properties": {
+      "kind": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "metric": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "schemaURL": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scope": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "unit": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawGaugeInstrument"
+  },
+  "measurements.RawGaugeObservation": {
+    "properties": {
+      "diagnostics": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.RawGaugeDiagnostic"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "endNS": {
+        "type": "string"
+      },
+      "flags": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "flagsState": {
+        "type": "string"
+      },
+      "occurrenceKey": {
+        "type": "string"
+      },
+      "rawRow": {},
+      "rawValue": {},
+      "startNS": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "startState": {
+        "type": "string"
+      },
+      "stream": {
+        "$ref": "#/components/schemas/measurements.RawGaugeStream"
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "valueState": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "occurrenceKey",
+      "stream",
+      "startNS",
+      "endNS",
+      "startState",
+      "rawValue",
+      "value",
+      "valueState",
+      "flags",
+      "flagsState",
+      "diagnostics",
+      "rawRow"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawGaugeObservation"
+  },
+  "measurements.RawGaugeQuestionInput": {
+    "additionalProperties": false,
+    "properties": {
+      "instrument": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.RawGaugeInstrumentInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "question": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.DiscoveryQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawGaugeQuestion"
+  },
+  "measurements.RawGaugeResult": {
+    "properties": {
+      "instrument": {
+        "$ref": "#/components/schemas/measurements.RawGaugeInstrument"
+      },
+      "limit": {
+        "type": "integer"
+      },
+      "question": {
+        "$ref": "#/components/schemas/measurements.DiscoveryQuestion"
+      },
+      "readAt": {
+        "type": "string"
+      },
+      "rows": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.RawGaugeObservation"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "instrument",
+      "readAt",
+      "rows",
+      "limit"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawGaugeResult"
+  },
+  "measurements.RawGaugeStream": {
+    "properties": {
+      "attributes": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "name": {
+        "type": "string"
+      },
+      "resource": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "resourceSchemaURL": {
+        "type": "string"
+      },
+      "schemaURL": {
+        "type": "string"
+      },
+      "scope": {
+        "type": "string"
+      },
+      "unit": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "resourceSchemaURL",
+      "resource",
+      "scope",
+      "version",
+      "schemaURL",
+      "name",
+      "unit",
+      "attributes"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawGaugeStream"
   },
   "measurements.ResourceBinding": {
     "properties": {

@@ -1332,3 +1332,15 @@ refused. Grouping and bucket width remain on the parent query. The existing
 composition/store/reuse endpoints preserve the destination's complete question.
 See [the finite contract](GROUPED_COUNT_TIMELINE_REUSE.md) for supported profiles,
 source/derived/display bounds, and execution ownership. No new HTTP route is added.
+
+## Raw gauge inspection
+
+Discovered gauges offer **Read observations** independently of evaluator
+readiness, including when `service.instance.id` is missing. The explicit
+`POST /metric-observations` read retains the exact instrument and fixed narrow
+discovery scope. It returns at most 10,000 reported occurrences atomically,
+including duplicates, attributes, units and scalar diagnostics. Find, paging and
+row details use the held result locally. Missing values remain unavailable;
+these rows do not establish a continuous series or fleet aggregate. See the
+[raw observation contract](RAW_GAUGE_OBSERVATIONS.md) and
+[real OTLP journey](journeys/raw-gauge-observations.md).

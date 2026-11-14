@@ -6155,6 +6155,93 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/metric-observations": {
+      "post": {
+        "operationId": "post_metric_observations",
+        "summary": "POST /metric-observations",
+        "tags": [
+          "metric-observations"
+        ],
+        "description": "Explicit bounded raw gauge read from exact discovered metadata. Requires kind gauge and the original narrow service/environment/namespace and fixed window; missing instance identity does not block raw inspection. Gauge metadata compatibility is checked separately from the value projection. Unsupported kinds/scopes refuse before SQL; later projection failure, invalid identity/observation time, row and byte overruns refuse atomically. Scalar invalidity remains per-row diagnostics. No capture, evaluator or continuity claim.",
+        "x-go-source": "internal/nativehttp/routes.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RawGaugeResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceReadFailure"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RawGaugeRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 65536,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/metric-scopes": {
       "post": {
         "operationId": "post_metric_scopes",
@@ -9684,6 +9771,19 @@
       },
       "PrebuiltRegistry": {
         "$ref": "#/components/schemas/prebuilt.Registry"
+      },
+      "RawGaugeRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.RawGaugeQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "RawGaugeResult": {
+        "$ref": "#/components/schemas/measurements.RawGaugeResult"
       },
       "RecipeList": {
         "anyOf": [
@@ -35470,6 +35570,371 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.Question"
+      },
+      "measurements.RawGaugeDiagnostic": {
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "field": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "field",
+          "code"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.RawGaugeDiagnostic"
+      },
+      "measurements.RawGaugeInstrument": {
+        "properties": {
+          "kind": {
+            "const": "gauge"
+          },
+          "metric": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1
+          },
+          "schemaURL": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "scope": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "kind",
+          "scope",
+          "version",
+          "schemaURL",
+          "metric",
+          "unit"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.RawGaugeInstrument"
+      },
+      "measurements.RawGaugeInstrumentInput": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "gauge"
+          },
+          "metric": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1
+          },
+          "schemaURL": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "scope": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 128
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.RawGaugeInstrument",
+        "required": [
+          "kind",
+          "scope",
+          "version",
+          "schemaURL",
+          "metric",
+          "unit"
+        ]
+      },
+      "measurements.RawGaugeObservation": {
+        "properties": {
+          "diagnostics": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.RawGaugeDiagnostic"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "endNS": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "flags": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4294967295
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "flagsState": {
+            "enum": [
+              "valid",
+              "absent",
+              "invalid"
+            ]
+          },
+          "occurrenceKey": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "rawRow": {
+            "type": "object"
+          },
+          "rawValue": {},
+          "startNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "startState": {
+            "enum": [
+              "valid",
+              "absent",
+              "invalid"
+            ]
+          },
+          "stream": {
+            "$ref": "#/components/schemas/measurements.RawGaugeStream"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "valueState": {
+            "enum": [
+              "finite",
+              "nonfinite",
+              "absent",
+              "invalid"
+            ]
+          }
+        },
+        "required": [
+          "occurrenceKey",
+          "stream",
+          "startNS",
+          "endNS",
+          "startState",
+          "rawValue",
+          "value",
+          "valueState",
+          "flags",
+          "flagsState",
+          "diagnostics",
+          "rawRow"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.RawGaugeObservation",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "valueState": {
+                  "const": "finite"
+                }
+              },
+              "required": [
+                "valueState"
+              ]
+            },
+            "then": {
+              "properties": {
+                "value": {
+                  "type": "number"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "value": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "flagsState": {
+                  "const": "valid"
+                }
+              },
+              "required": [
+                "flagsState"
+              ]
+            },
+            "then": {
+              "properties": {
+                "flags": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4294967295
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "flags": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "measurements.RawGaugeQuestionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "instrument": {
+            "$ref": "#/components/schemas/measurements.RawGaugeInstrumentInput"
+          },
+          "question": {
+            "$ref": "#/components/schemas/measurements.DiscoveryQuestionInput"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.RawGaugeQuestion",
+        "required": [
+          "question",
+          "instrument"
+        ]
+      },
+      "measurements.RawGaugeResult": {
+        "properties": {
+          "instrument": {
+            "$ref": "#/components/schemas/measurements.RawGaugeInstrument"
+          },
+          "limit": {
+            "const": 10000
+          },
+          "question": {
+            "$ref": "#/components/schemas/measurements.DiscoveryQuestion"
+          },
+          "readAt": {
+            "type": "string"
+          },
+          "rows": {
+            "type": "array",
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/measurements.RawGaugeObservation"
+            }
+          },
+          "version": {
+            "const": "goo/raw-gauge-observations/v1"
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "instrument",
+          "readAt",
+          "rows",
+          "limit"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.RawGaugeResult",
+        "description": "Bounded reported gauge occurrences; independent source-read clock. No evaluated stream identity, continuity, aggregation, health or completeness claim. Mandatory observation time proves the fixed half-open bounds. Missing, invalid, nonfinite and flagged values remain explicit; repeated occurrences remain distinct."
+      },
+      "measurements.RawGaugeStream": {
+        "properties": {
+          "attributes": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "resource": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "resourceSchemaURL": {
+            "type": "string"
+          },
+          "schemaURL": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "resourceSchemaURL",
+          "resource",
+          "scope",
+          "version",
+          "schemaURL",
+          "name",
+          "unit",
+          "attributes"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.RawGaugeStream"
       },
       "measurements.ResourceBinding": {
         "properties": {

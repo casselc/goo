@@ -5043,3 +5043,27 @@ rejects skipped native verdicts. Standalone native runs without the report are
 marked as integration skips.
 This projection is not browser-focus model checking or a claim that contextual
 records are causal metric members. See [acceptance](../docs/CEL_WHOLE_PRODUCT_ACCEPTANCE.md).
+
+## 438 — bounded raw gauge observations
+
+The raw-gauge checks preserve source occurrences rather than constructing an
+evaluated `GaugeResult`. Generated exporter-shaped banks exercise the actual Go
+source adapter and the JavaScript supplied-result admission boundary. Duplicates,
+reported labels, units, raw scalar text and clocks remain distinct; missing
+instance identity does not authorize invented producer IDs or stream continuity.
+
+The real [raw-gauge journey](../journeys/raw-gauge-observations.spec.js) writes
+`goo.rawGauge438/1` after runtime and isolated-source cleanup. Run its native gate
+from this module:
+
+```sh
+GOO_RAW_GAUGE_438_REPORT=/absolute/path/report.json go test -run '^TestQuintRawGauge438Observed$' -count=1 -v
+```
+
+Use `go test -run '^(TestHegelRawGauge438Conservation|TestRawGauge438GoJavaScriptAdmission)$' -count=1 -v`
+for the finite generated/source and actual JavaScript admission checks. The native
+gate explicitly skips without a report; the browser requires a non-skipped verdict.
+The gate checks actual OTLP/exporter, acquisition and held-row banks separately
+from the reused population-drilldown model's read/history projection. This models
+source/local authority, not gauge evaluation, browser geometry or completeness.
+Executed results belong in `VALIDATION.md`; this guide is not a passing verdict.

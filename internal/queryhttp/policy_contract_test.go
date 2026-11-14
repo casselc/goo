@@ -36,7 +36,7 @@ func TestFamilyPoliciesMatchPublishedAPIBoundaries(t *testing.T) {
 	}{
 		"cel":         {celhttp.PolicyFor, 2},
 		"record":      {recordhttp.PolicyFor, 13},
-		"native":      {nativehttp.PolicyFor, 8},
+		"native":      {nativehttp.PolicyFor, 9},
 		"explanation": {explanationhttp.PolicyFor, 3},
 		"capture":     {capturehttp.PolicyFor, 2},
 	}

@@ -48,8 +48,9 @@
 > [measured controls](MEASURED_SCOPE_PRESERVATION.md).
 > **437 explicit All-environments logs is delivered**; see
 > [All-environments entry](ALL_ENVIRONMENTS_LOG_ENTRY.md).
-> Next: **438 raw gauge inspection**, then **439 measured first-use acquisition
-> consolidation**. These are planned, design-gated outcomes.
+> **438 raw gauge inspection is delivered**; see
+> [raw observations](RAW_GAUGE_OBSERVATIONS.md).
+> Next: **439 measured first-use acquisition consolidation** (planned).
 > Definition recall and evidence capture retain separate semantics. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped

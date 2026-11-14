@@ -37,8 +37,14 @@ metadata from an older held question. More general CEL vocabulary and native
 metric expression authoring remain unimplemented. [427 exact recall](EXACT_SAVED_VIEW_RECALL.md)
 is delivered, as is [428 paired evidence](PAIRED_COMPARISON_CAPTURE.md).
 [429 measured consolidation](MEASURED_SCOPE_PRESERVATION.md) is delivered.
-[437 All-environments logs](ALL_ENVIRONMENTS_LOG_ENTRY.md) is delivered. Next is
-438 raw gauge inspection in the [whole-product cycle](ROADMAP_2026_11_14_CHECKPOINT_429.md).
+[437 All-environments logs](ALL_ENVIRONMENTS_LOG_ENTRY.md) and
+[438 raw gauge inspection](RAW_GAUGE_OBSERVATIONS.md) are delivered. Next is
+439 measured first-use acquisition in the [whole-product cycle](ROADMAP_2026_11_14_CHECKPOINT_429.md).
+
+Raw gauge inspection is bounded and table-only. Missing instance identity no
+longer blocks reading reported values, but evaluator readiness remains separate.
+It provides no continuity, aggregate, freshness or completeness claim and no new
+capture carrier. Native All-environments reads remain unsupported.
 
 All is an explicit log selector within the configured source. Spans, trace and
 surrounding context, inventory, native evaluation and implicit linked-family

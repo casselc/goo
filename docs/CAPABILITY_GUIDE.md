@@ -112,3 +112,15 @@ original context; older “next” labels do not activate work today.
 - [Bitemporality](BITEMPORALITY.md), [annotation storage spike](ANNOTATION_STORAGE_SPIKE.md)
   and [collaboration research](COLLABORATIVE_INVESTIGATIONS_RESEARCH.md): design
   alternatives, not claims that a new store or multiplayer workspace ships.
+
+## Raw gauge inspection
+
+Discovered gauges offer **Read observations** independently of evaluator
+readiness, including when `service.instance.id` is missing. The explicit
+`POST /metric-observations` read retains the exact instrument and fixed narrow
+discovery scope. It returns at most 10,000 reported occurrences atomically,
+including duplicates, attributes, units and scalar diagnostics. Find, paging and
+row details use the held result locally. Missing values remain unavailable;
+these rows do not establish a continuous series or fleet aggregate. See the
+[raw observation contract](RAW_GAUGE_OBSERVATIONS.md) and
+[real OTLP journey](journeys/raw-gauge-observations.md).

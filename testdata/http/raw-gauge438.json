@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "observed",
+      "method": "POST",
+      "path": "/metric-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"gauge\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"temperature\",\"unit\":\"Cel\"}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"gauge\",\"metric\":\"temperature\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"Cel\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"diagnostics\":[],\"endNS\":\"1500000000\",\"flags\":0,\"flagsState\":\"valid\",\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"end_ns\":\"1500000000\",\"flags\":0,\"name\":\"temperature\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"unit\":\"Cel\",\"value\":\"12.5\",\"version\":\"\"},\"rawValue\":\"12.5\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"temperature\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"Cel\",\"version\":\"\"},\"value\":12.5,\"valueState\":\"finite\"}],\"version\":\"goo/raw-gauge-observations/v1\"}\n"
+    },
+    {
+      "name": "empty",
+      "method": "POST",
+      "path": "/metric-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"gauge\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"temperature\",\"unit\":\"Cel\"}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"gauge\",\"metric\":\"temperature\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"Cel\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[],\"version\":\"goo/raw-gauge-observations/v1\"}\n"
+    },
+    {
+      "name": "no-recorded",
+      "method": "POST",
+      "path": "/metric-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"gauge\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"temperature\",\"unit\":\"Cel\"}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"gauge\",\"metric\":\"temperature\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"Cel\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"diagnostics\":[{\"code\":\"no-recorded-value\",\"field\":\"value\"}],\"endNS\":\"1500000000\",\"flags\":1,\"flagsState\":\"valid\",\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"end_ns\":\"1500000000\",\"flags\":1,\"name\":\"temperature\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"unit\":\"Cel\",\"value\":\"12.5\",\"version\":\"\"},\"rawValue\":\"12.5\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"temperature\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"Cel\",\"version\":\"\"},\"value\":null,\"valueState\":\"absent\"}],\"version\":\"goo/raw-gauge-observations/v1\"}\n"
+    },
+    {
+      "name": "source-failure",
+      "method": "POST",
+      "path": "/metric-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"gauge\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"temperature\",\"unit\":\"Cel\"}}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
+    },
+    {
+      "name": "malformed-end",
+      "method": "POST",
+      "path": "/metric-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"gauge\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"temperature\",\"unit\":\"Cel\"}}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"Source response rejected.\",\"refusal\":{\"kind\":\"malformed\",\"detail\":\"The source returned invalid or unsupported record data. No partial result was admitted.\"}}\n"
+    },
+    {
+      "name": "wrong-kind",
+      "method": "POST",
+      "path": "/metric-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"temperature\",\"unit\":\"Cel\"}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require a bounded exact gauge instrument\"}\n"
+    },
+    {
+      "name": "missing-unit",
+      "method": "POST",
+      "path": "/metric-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"gauge\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"temperature\"}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"instrument requires explicit non-null unit\"}\n"
+    },
+    {
+      "suffix": "{}",
+      "name": "trailing",
+      "method": "POST",
+      "path": "/metric-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"gauge\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"temperature\",\"unit\":\"Cel\"}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "name": "unknown",
+      "method": "POST",
+      "path": "/metric-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"gauge\",\"extra\":true,\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"temperature\",\"unit\":\"Cel\"}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"extra\\\"\"}\n"
+    },
+    {
+      "name": "oversize",
+      "method": "POST",
+      "path": "/metric-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"gauge\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"temperature\",\"unit\":\"Cel\"}}",
+      "padTo": 65537,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "name": "method",
+      "method": "GET",
+      "path": "/metric-observations",
+      "body": "",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    }
+  ]
+}

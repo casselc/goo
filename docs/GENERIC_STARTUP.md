@@ -113,3 +113,15 @@ are historical, not evidence of this migration.
 Before live validation, verify persistent compiler/npm dependencies, artifact
 storage and lab prerequisites. See [managed runtime recovery](CLOUD_RUNTIME_RECOVERY.md).
 These test/setup requirements do not add a Node or Python product server.
+
+## Raw gauge inspection
+
+Discovered gauges offer **Read observations** independently of evaluator
+readiness, including when `service.instance.id` is missing. The explicit
+`POST /metric-observations` read retains the exact instrument and fixed narrow
+discovery scope. It returns at most 10,000 reported occurrences atomically,
+including duplicates, attributes, units and scalar diagnostics. Find, paging and
+row details use the held result locally. Missing values remain unavailable;
+these rows do not establish a continuous series or fleet aggregate. See the
+[raw observation contract](RAW_GAUGE_OBSERVATIONS.md) and
+[real OTLP journey](journeys/raw-gauge-observations.md).
