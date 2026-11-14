@@ -26,6 +26,10 @@ This index separates using Goo, extending it, and the development record.
 
 ## Project status and development record
 
+[Ad-hoc live telemetry review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) covers
+manifest-free first use, source compatibility, empty-stream recovery and the
+proposed next usability cycle.
+
 - [Current roadmap](ROADMAP_2026_11_13_CHECKPOINT_426.md): adopted next work.
 - [Known issues](KNOWN_ISSUES.md): detailed limitations and open gaps.
 - [Validation](../VALIDATION.md): checks actually executed, newest first.

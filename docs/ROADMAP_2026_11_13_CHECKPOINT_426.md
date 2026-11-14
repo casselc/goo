@@ -1,5 +1,11 @@
 # Roadmap after the 426 investigation checkpoint
 
+**2026-11-14 review:** the [ad-hoc live telemetry pass](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md)
+recommends unknown-data entry, sparse/delayed-data recovery and shared discovery
+consolidation ahead of the pending preservation cycle below. This is a proposed
+reprioritization; existing acceptance contracts remain available and no pending
+milestone is claimed delivered or renumbered.
+
 Status: **426 is complete**. The 427–429 sequence below is the proposed next
 finite cycle, reconciled with architecture and UX review. These next items are
 not implemented. Actual 426 execution and bounded acceptance are recorded in

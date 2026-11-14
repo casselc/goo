@@ -1,5 +1,19 @@
 # Validation record
 
+## Ad-hoc live OTLP review — 2026-11-14
+
+Four independent source reviews (product, UX, OTel/data and accessibility) were
+reconciled in the [review report](docs/reviews/ADHOC_OTLP_REVIEW_2026_11_14.md).
+A bounded browser check ran the existing Go binary in isolated generic mode,
+submitted two real OTLP logs without environment labels to the lab collector
+(HTTP 200), and discovered/staged/started unreported-environment activity without
+a guessed label. Initial entry made zero telemetry POSTs. The current record
+appeared; the older record was outside both requested windows. Keyboard Pause
+reproduced focus moving to BODY. The 390px paused view had no page overflow.
+
+This was an exploratory review, not a full journey-suite or partial-schema test
+run. New rendered frames are linked in the report. No production code changed.
+
 ## Documentation entry-point cleanup
 
 Documentation-only change: replaced the accumulated README with a product

@@ -1,5 +1,11 @@
 # Known issues and gaps
 
+[The ad-hoc telemetry review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) identifies
+first-use scope discovery, partial-signal table assumptions, metric-only bootstrap,
+event-time empty-stream recovery and keyboard Pause focus as priority gaps.
+The generic no-environment log path was exercised; partial-schema installations
+remain source-reviewed rather than newly integration-tested.
+
 Fixed-comparison Preserve currently saves the full composition but shares or
 captures the selected question only, explicitly labeled. General paired captures
 already exist elsewhere; [428](ROADMAP_2026_11_13_CHECKPOINT_426.md) adopts that
