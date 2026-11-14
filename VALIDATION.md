@@ -1,5 +1,47 @@
 # Validation record
 
+## 432b — sparse/delayed Activity recovery
+
+[Contract](docs/ACTIVITY_SPARSE_RECOVERY.md),
+[storyboard](docs/journeys/sparse-data-recovery.md),
+[independent review](docs/reviews/SPARSE_ACTIVITY_RECOVERY_432.md) and
+[roadmap](docs/ROADMAP_2026_11_14_CHECKPOINT_430.md).
+
+- All root Go packages pass under Go 1.27.3; the final embedded UI binary builds.
+  No API, collector or evaluation format changes are introduced.
+- **1,677 frontend tests pass**, zero failures/skips (28.1s). Eight focused recovery
+  checks cover detached exact scope, retained-versus-delivered observations,
+  limited/stale/failed reads, hidden/dirty controls, pause-time reentrancy,
+  callback refusal/throw restoration and clean-edit status/focus ownership.
+- The real OTLP logs/spans journey passes (**49.4s**, 53.4s runner), including a
+  **30-second Bombadil actor**. Five-minute-old matching events are outside the
+  recent tail but inside the fixed wider search; current out-of-filter and
+  out-of-environment distractors are excluded. Logs use a named current scope;
+  spans use effective empty-current/conflicting-legacy policy.
+- Each actual path records one tail connection, local stage with zero telemetry
+  POSTs, one explicit fixed query, one same-window reread after late insertion,
+  local held Return, and one explicit Resume connection. Counts change **1 → 2**
+  while the exact 15-minute question stays fixed. Dirty/retired callbacks read
+  nothing. Connection counts are not a count of the server's internal polls.
+- The actor independently completes with **two tail opens and one fixed query**,
+  exact scope/window, no implicit local reads, no forbidden writes and no overflow.
+  The isolated runtime cleans up; existing telemetry and stores are retained.
+- Native **Quint replay passes without skips** (23.0s), admitting actual source
+  requests through the existing Go query types and rejecting five corruptions per
+  signal: changed window/scope, implicit stage/Return reads and stale read clocks.
+  No duplicate production planner or synthetic-data-only model replaces the journey.
+- Desktop and 390/320 entry/staging frames, wider results and held return are
+  regenerated. Independent UX and standards reviewers accept the bounded flow.
+  The visual check also fixed stale Unapplied/Apply framing after exact filter undo.
+- Existing unfamiliar OTLP entry (430) passes against the updated isolated binary
+  (**8.9s**, 10.4s runner), retaining label discovery, typed scope staging and
+  keyboard-safe Pause/Resume. Its affected documentation frames are refreshed.
+- Source refusal/limited/stale states are focused unit coverage, not a newly claimed
+  denied-user deployment. Tail emptiness is loaded-observation state, not a source
+  census, arrival-order guarantee, ingestion-health check or retention diagnosis.
+  Actual assistive-technology speech output was not tested. The running lab image
+  is not upgraded by this isolated-binary acceptance.
+
 ## 432a — metrics-only identity bootstrap
 
 [Contract](docs/METRIC_SCOPE_DISCOVERY.md), [storyboard](docs/journeys/metric-scopes.md),

@@ -12,6 +12,7 @@ This index separates using Goo, extending it, and the development record.
 | Understand supported workflows and limits | [Capability guide](CAPABILITY_GUIDE.md) |
 | Find which supported signals are available | [Source capabilities](SOURCE_CAPABILITIES.md) |
 | Investigate metrics without known service or environment labels | [Metric scope discovery](METRIC_SCOPE_DISCOVERY.md) |
+| Investigate a quiet stream over a wider event-time window | [Activity recovery](ACTIVITY_SPARSE_RECOVERY.md) |
 | Find telemetry without knowing environment labels | [Unknown-data entry](UNKNOWN_DATA_ENTRY.md) |
 | Follow a complete investigation | [Illustrated preserve/reopen journey](journeys/investigation-reuse.md) |
 | Browse worked examples | [Journey index](journeys/README.md) |

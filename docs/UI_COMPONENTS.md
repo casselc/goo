@@ -2165,3 +2165,12 @@ comparison operands. The counted source owner separates optional `retainedCurren
 custody from active `current` permission. Completed data can survive a held child;
 loads, controls and late response publication still require fresh active authority.
 Scope replacement retires that generation even if an identical scope returns.
+
+## Quiet Activity recovery
+
+[Wider-window recovery](ACTIVITY_SPARSE_RECOVERY.md) composes a native button and
+read-window disclosure beside the tail metadata. The Activity adapter supplies
+scalar completed-read metadata, applied scope and an owner epoch; no row cloning
+is needed to decide readiness. The local planner preserves the fixed event-time
+end and exact predicates. Existing fixed-question components own editing and Run,
+and existing held navigation owns Return. Display components never start reads.

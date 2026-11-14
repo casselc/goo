@@ -6,11 +6,17 @@ event-time empty-stream recovery and keyboard Pause focus as priority gaps.
 [430](UNKNOWN_DATA_ENTRY.md) improves first-use chooser placement and fixes explicit
 Pause/Resume focus. [431 source capabilities](SOURCE_CAPABILITIES.md) now addresses partial-source
 availability. [432a metric scope discovery](METRIC_SCOPE_DISCOVERY.md) adds bounded
-identity bootstrap without a known environment/service. Empty-stream recovery
-remains next in the [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
+identity bootstrap without a known environment/service. [432b Activity recovery](ACTIVITY_SPARSE_RECOVERY.md)
+stages a wider fixed question from a quiet loaded buffer, with explicit Run and
+held paused return. This does not diagnose ingestion freshness, retention or skew.
+[433 consolidation](ROADMAP_2026_11_14_CHECKPOINT_430.md) is next.
 Isolated logs-only, spans-only and gauge-only installations were exercised in 431;
 actual denied-user deployments remain covered by transport checks rather than a
 new database-user integration run.
+
+Activity draft predicate dirtiness still uses raw property order. Differently
+ordered equivalent supplied predicates can remain marked unapplied after an edit;
+433 will use checked semantic identity while preserving actual predicate changes.
 
 Native evaluation currently requires reported nonempty `service.instance.id`.
 This is an evaluator policy, not a universal OTLP stream identity requirement.

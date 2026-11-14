@@ -58,8 +58,9 @@ See [metric scope discovery](METRIC_SCOPE_DISCOVERY.md) and its
 signal families and allow partial-family service/instrument inventories.
 Record environment discovery still uses the selected Logs/Spans signal; metrics
 use their separate qualified scope discovery above. Streaming still uses the
-latest 60 seconds of event time; sparse and
-delayed-event recovery is separate work. See the
+latest 60 seconds of event time. [Wider-window recovery](ACTIVITY_SPARSE_RECOVERY.md)
+stages an explicit fixed search when a successful read leaves no loaded observations.
+It does not diagnose ingestion freshness, retention or clock skew. See the
 [ad-hoc review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) and
 [current roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
 

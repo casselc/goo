@@ -4735,3 +4735,20 @@ Hegel-driven properties over the production planner. Supply the completed
 held return and exact categorical partitions through native Quint, actual browser
 ledger replay and Hegel-generated production-planner properties. Supply the
 completed `GOO_COUNTED_COMPARE425_REPORT` for acceptance.
+
+## Sparse Activity recovery (432b)
+
+The [browser journey](../journeys/sparse-data-recovery.spec.js) emits ordinary
+OTLP logs/spans and writes its continuous actual-request report. Replay it with:
+
+```sh
+GOO_SPARSE432_REPORT=/absolute/path/to/report.json \
+  go test -run '^TestQuintObservedSparseRecovery432$' -count=1 -v .
+```
+
+Run from this module with Quint on PATH. Required milestone acceptance supplies
+the report and must pass without skips. An ordinary test discovery without the
+report skips this artifact-dependent check; a supplied missing/invalid report or
+unavailable model tool fails. The native model checks local stage/Return budgets,
+exact scope and fixed windows, independent read clocks and rejecting mutations.
+It does not infer physical arrival order or source completeness from the tail.

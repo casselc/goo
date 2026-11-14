@@ -33,6 +33,7 @@ bounded presence and supports partial-family catalogs. Metrics-only bootstrap re
 
 | User task | Delivered path | Boundary to keep visible |
 | --- | --- | --- |
+| Recover a quiet Activity stream | [Wider-window search](ACTIVITY_SPARSE_RECOVERY.md) stages a fixed 15-minute question with the applied selector and held return | Empty loaded observations are not a source census; Run explicitly reads the wider event-time window. |
 | See what is happening now | [Live Activity](LIVE_ACTIVITY.md), scoped log/span streams, optional [log volume and literal severity-text context](ACTIVITY_LOG_CONTEXT.md), inspection and [contextual investigation actions](ACTIVITY_NAVIGATION.md) | A bounded live buffer is not the full population; disconnects, gaps and pauses remain explicit. |
 | Narrow and inspect ordinary telemetry | [Typed filters](FILTER_EDITOR.md), [counted field values](FILTER_VALUES.md), structured attributes and [qualified field presentation](FIELD_PRESENTATION.md) | Missing and present-empty values differ. A displayed page does not define total counts. |
 | Inspect captured activity over time | [Exact captured-record rates](CAPTURED_RECORD_RATES.md) in fixed summaries and ungrouped timelines | Count/window rates describe captured records, not unsampled traffic or application throughput. Clipped buckets use their actual duration. |

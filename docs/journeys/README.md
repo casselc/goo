@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Sparse/delayed Activity recovery](sparse-data-recovery.md) (432b) retains a quiet
+stream while staging a wider fixed search. Explicit rereads distinguish a frozen
+event-time window from later source observations.
+
 [Metrics-only scope discovery](metric-scopes.md) (432a) starts without known labels
 or a manifest, selects exact environment/service/namespace locally, and continues
 through instrument discovery and explicit package evaluation. It includes the

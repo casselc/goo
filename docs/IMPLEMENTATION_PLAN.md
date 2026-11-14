@@ -16,7 +16,7 @@
 > **430 unknown-data scope entry and interaction reliability** adopts the ad-hoc
 > telemetry review and is delivered. **431 available signal families** adds shared
 > readiness and partial inventories and is delivered. **432a metric-only identity
-> bootstrap** is implemented. Next: **432b sparse/delayed event recovery**, then
+> bootstrap** and **432b sparse/delayed event recovery** are delivered. Next:
 > **433 shared discovery/recovery consolidation**, including clear instance-policy
 > preflight before native evaluation.
 > The older **427–429 preservation cycle** remains pending follow-on work. The older labeling queue
