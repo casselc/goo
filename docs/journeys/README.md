@@ -2985,3 +2985,9 @@ POST. Includes refreshed desktop/mobile frames and observed model replay.
 [Planning storyboard](cel-checked-planning.md) follows a complete parent through
 source-free CLI/HTTP checking, typed refusals and binding mismatch. This is a
 backend planning milestone; the app editor remains planned.
+
+## 436.3 — representation and owned edits
+
+[Contract storyboard](cel-representation-ownership.md): exact print/check/lower,
+repeated condition replacement, deferred ABA responses, hidden/disposed callbacks
+and explicit clear. Visible contextual editing remains the next milestone.

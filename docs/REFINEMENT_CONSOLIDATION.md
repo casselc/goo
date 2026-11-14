@@ -82,5 +82,6 @@ contracts.
 
 See [executed storyboard](journeys/refinement-consolidation.md),
 [independent acceptance](reviews/REFINEMENT_CONSOLIDATION_436_1.md) and
-[validation](../VALIDATION.md). The next slice is 436.2's pure checked planning
-and typed positioned diagnostics.
+[validation](../VALIDATION.md). [436.2](CEL_CHECKED_PLANNING.md) delivers pure checked planning and typed
+positioned diagnostics; [436.3](CEL_REPRESENTATION_OWNERSHIP.md) delivers exact
+representation and owner state. Contextual mounting is next in 436.4.

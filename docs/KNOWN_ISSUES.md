@@ -8,15 +8,17 @@ is used. Reference evaluation requires every referenced field to be present and
 well typed, including short-circuited branches.
 
 The [whole-product design review](CEL_PRODUCT_INTEGRATION.md) identifies the next
-integration gaps: AND-only Apply cannot replace edited conditions; current CEL
-cannot represent every visual predicate; compiler diagnostics previously lacked typed source
+integration gaps: low-level AND-only Apply does not replace edited conditions;
+current CEL cannot represent every visual predicate; compiler diagnostics previously lacked typed source
 spans; and narrow Activity has substantial controls before the first record.
 436 addresses these through one bounded consolidation sequence.
 [436.1](REFINEMENT_CONSOLIDATION.md) delivers shared predicate admission, typed
 cloning and additive refinement, plus guarded aggregate handoffs. Additive
 refinement does not replace an edited slot. [436.2 checked planning](CEL_CHECKED_PLANNING.md) delivers typed diagnostics and
-a bounded pure compile transport. Slot ownership, app expression editing and
-authoring metadata remain planned. Source/readiness, native metric grain/units and historical custody remain
+a bounded pure compile transport. [436.3](CEL_REPRESENTATION_OWNERSHIP.md)
+adds exact bounded printing and a pure revision-safe additional-condition owner.
+The owner is not mounted yet; app expression editing and preserved authoring
+metadata remain planned. Source/readiness, native metric grain/units and historical custody remain
 separate from language checking.
 
 [The ad-hoc telemetry review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) identifies

@@ -4866,3 +4866,23 @@ or driver is introduced. See [storyboard](../docs/journeys/refinement-consolidat
 against an independent predicate oracle, complete-parent conservation, exact opaque
 revision tokens, target parameterization, stale bindings and unsupported branches.
 See [planning contract](../docs/CEL_CHECKED_PLANNING.md).
+
+## 436.3 — representation and authoring authority
+
+The CEL representation properties compare checked inverse lowering through the
+actual JavaScript `QuestionSession.identity`, including structural negative
+controls. The pure owner tests cover deferred checks, original-base replacement
+and retired direct staging. See [contract](../docs/CEL_REPRESENTATION_OWNERSHIP.md)
+and current validation for executed native/model checks.
+
+Run the bounded native checks from this module with the managed toolchain:
+
+```sh
+go test -run '^(TestHegelCELRepresentation436|TestCELRepresentation436)' -count=1 -v
+go test -run '^TestQuintCELAuthoring436ObservedAuthority$' -count=1 -v
+```
+
+The authoring model projects actual JavaScript owner snapshots and method results;
+Go supplies actual planning receipts through the driver. Its zero-read observation
+counts intercepted `fetch` calls; source review establishes the pure module has no
+other IO. This is not browser interaction or a source-truth model.

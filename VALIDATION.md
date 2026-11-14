@@ -1,5 +1,48 @@
 # Validation record
 
+## 436.3 — exact representation and revision-safe authoring owner
+
+[Contract](docs/CEL_REPRESENTATION_OWNERSHIP.md),
+[storyboard](docs/journeys/cel-representation-ownership.md) and
+[independent acceptance](docs/reviews/CEL_REPRESENTATION_436_3.md).
+
+- `PrintPredicate` admits the whole ordinary predicate, prints its fixed-field
+  intersection and checks inverse lowering before returning text. Unsupported
+  leaves, changed branch structure, noncanonical numeric spelling and budget
+  excess refuse without partial source. Parent filters are never dropped.
+- The pure additional-condition owner consumes bound checks without DOM, fetch,
+  timers or execution state. Exact private check/stage leases reject ABA replies,
+  errors and direct callbacks; repeated edits replace against the original base.
+  Invalid text/last valid meaning remain distinct, clear restores the base, and
+  visual overwrite requires explicit discard. Correlation tokens reject malformed
+  Unicode. Local malformed-draft feedback belongs to the mounted 436.4 adapter.
+- Full root Go suite and final embedded server build pass on Go 1.27.3. Full
+  frontend suite: **1,751 passing, zero failures/skips**, 55.953 seconds. Nine new
+  owner tests include repeated replacement, mode retention, receipt mismatches,
+  changed parent/signal, hidden/disposed callbacks and detached snapshots.
+  An earlier unprivileged frontend attempt failed the existing loopback streaming
+  test; the final loopback-enabled run above passes it.
+- Native representation/interop tests pass in **0.338 seconds**, zero skips:
+  120 generated profiles, **3,600 independent membership checks**, actual Node
+  `QuestionSession.identity` before/after inverse lowering, idempotence and
+  order/drop-clause negative controls. Two real Go-planned logs/spans scenarios
+  verify actual JavaScript owner acceptance, exact bindings, stale callbacks,
+  replacement and clear over unsupported ordinary parent filters.
+- Observed Quint acceptance passes in **11.401 seconds**, zero skips: **26 real
+  JavaScript owner transitions** use actual Go planning receipts over stdio. The
+  model admits the observed trace and rejects six mutants: ABA success, retired
+  stage callback, invalid-draft readiness, hidden reply, disposed error and an
+  unexpected local fetch count. Direct Quint typechecking passes. This bounded
+  projection models authority, not CEL meaning or browser concurrency; its effect
+  counter intercepts `fetch`, complemented by source review of the pure owner.
+  Initial test plumbing (event count, a reserved model action name and the sibling
+  generator's constant requirement) was corrected before the passing replay.
+- Independent Go/architecture/usability review accepts the pure printer/owner
+  contracts; focused printer and owner reruns pass. No visible editor is mounted,
+  so there are no new screenshots/browser/AT/cross-engine claims. HTTP wire shape
+  is unchanged; no fresh OpenAPI generation is claimed. Next: **436.4 shared
+  contextual editing and compact scope presentation**.
+
 ## 436.2 — checked CEL planning and positioned diagnostics
 
 [Contract](docs/CEL_CHECKED_PLANNING.md),

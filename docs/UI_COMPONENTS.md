@@ -2213,3 +2213,11 @@ owner synchronously and rechecks before handing off. It does not acquire data or
 merge controllers. Volume retains its clean-band policy; latency retains Compare
 for a deliberately staged duration draft. Retired latency Compare is natively
 disabled. See [436.1](REFINEMENT_CONSOLIDATION.md).
+
+## Pure CEL authoring owner
+
+`cel-authoring.mjs` owns one additional condition independently from execution.
+It has no DOM or transport. Callers retain exact check tokens for result acceptance
+and staging; hiding, rebasing or disposal retires them. Invalid text and last valid
+meaning stay separate. It is not mounted into controls yet; see
+[representation and ownership](CEL_REPRESENTATION_OWNERSHIP.md).

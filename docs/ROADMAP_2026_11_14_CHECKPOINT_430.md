@@ -4,9 +4,10 @@ The [four-expert review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) prioritizes re
 useful unfamiliar telemetry before more preservation depth. This checkpoint
 adopts that direction without renumbering the older pending 427–429 contracts.
 
-Status: **430–435 and 436.1–436.2 delivered and validated**. See
+Status: **430–435 and 436.1–436.3 delivered and validated**. See
 [shared refinement and held handoff](REFINEMENT_CONSOLIDATION.md). Next:
-**436.3 representation coverage and revision-safe slot ownership**, under the adopted [whole-product CEL integration design](CEL_PRODUCT_INTEGRATION.md).
+**436.4 shared contextual editor and compact scope presentation**, under the
+adopted [whole-product CEL integration design](CEL_PRODUCT_INTEGRATION.md).
 
 The user-directed [CEL predicate pilot](CEL_PREDICATE_PILOT.md) is also delivered:
 a real versioned CEL extension, checked overload lowering, `plan-cel`, immutable
@@ -113,7 +114,7 @@ explanation with actual held numbers. [Storyboard](journeys/activity-severity.md
   slices: 436.1 ordinary refinement/cloning and matching aggregate return; 436.2
   pure checked planning/positioned diagnostics; 436.3 representation coverage and
   revision-safe slots; 436.4 shared contextual editor/compact chrome; 436.5 one
-  existing preservation owner; 436.6 observed whole-product acceptance. 436.1–436.2 are delivered; remaining slices are
+  existing preservation owner; 436.6 observed whole-product acceptance. 436.1–436.3 are delivered; remaining slices are
   proposed changes, not delivered UI. Do not require a universal model, general
   extension registry or full attribute vocabulary before the bounded bridge.
   Carry forward 435's closed refinement lesson: validate the original selector AND

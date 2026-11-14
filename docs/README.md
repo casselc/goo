@@ -59,3 +59,6 @@ the domain operations, owner-specific interaction guards and remaining CEL work.
 
 [Checked CEL planning](CEL_CHECKED_PLANNING.md) explains the shared CLI/HTTP
 contract, owner bindings, Unicode diagnostics and source-free limits.
+
+[CEL representation and ownership](CEL_REPRESENTATION_OWNERSHIP.md) explains
+exact conversion coverage and the pure additional-condition owner before UI mounting.
