@@ -41,6 +41,7 @@ This index separates using Goo, extending it, and the development record.
 - [Shared UI components](UI_COMPONENTS.md): supplied-data display contracts.
 - [Contributing](../CONTRIBUTING.md): builds, tests and documentation conventions.
 - [Gotogether shadow pilot](GOTOGETHER_ACQUISITION_PILOT.md): pinned browser/model checks, completion controls and compiled replay.
+- [Ideal contract workflow](GOTOGETHER_IDEAL_WORKFLOW.md): design exercise spanning authoring, refactoring and operation.
 
 ## Project status and development record
 
