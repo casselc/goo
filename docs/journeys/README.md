@@ -3006,3 +3006,11 @@ bounded Bombadil actor exercise the new shared controls.
 existing Save view, YAML export/import, original recall and replacement. It covers
 dirty recall, explicit source discard, destination-preserving display reuse and
 a bounded source-free restore/check actor.
+
+## 436.6 — retained contexts across Services and Measurements
+
+[Context storyboard](cel-context-entry.md) and
+[real browser journey](../../journeys/cel-context-entry.spec.js) carry exact
+producer/environment/namespace/interval scope through shared CEL checking, explicit
+Run and retained native/service Return. The native model gate is mandatory after
+the observed ledger is complete; source totals exceed the displayed page.

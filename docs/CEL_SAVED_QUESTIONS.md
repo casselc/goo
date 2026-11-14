@@ -74,7 +74,7 @@ This first owner is a fixed saved question. A rolling Activity check does not
 silently rebase its provenance onto a later fixed window. Ordinary Activity
 selectors, telemetry packages and captures keep their existing contracts.
 Captured receipts remain immutable and need no speculative source metadata.
-The whole-product acceptance loop is 436.6; delivering this owner does not finish
+[436.6](CEL_WHOLE_PRODUCT_ACCEPTANCE.md) verifies the whole-product acceptance loop; delivering this owner does not finish
 the older preservation backlog or imply all native metric grammars accept CEL.
 
 See [contextual editing](CEL_CONTEXTUAL_EDITOR.md),

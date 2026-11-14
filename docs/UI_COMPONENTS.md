@@ -2239,3 +2239,13 @@ editor controllers. Checked metadata stays separate from private invocation toke
 The existing saved-view Preserve form can explicitly discard CEL source while
 keeping the typed question; recall uses owned keep/discard controls.
 See [saved questions](CEL_SAVED_QUESTIONS.md).
+
+## Numeric severity in shared record summaries
+
+`record-presentation.mjs` uses the pure OTel `log-severity.mjs` classifier.
+Canonical numeric severity controls tone; differing producer text remains
+visibly attributed (`Info · producer: FATAL`) and literal in record data/tooltips.
+Missing/invalid numeric values do not inherit text-based alarm colors. Loaded Find
+includes the displayed canonical band and raw producer text without turning it
+into a numeric source filter. Compact labels keep full accessible DOM text and
+tooltip while ellipsizing long labels; short desktop summaries/actions stay inline.

@@ -3,11 +3,11 @@
 Status: adopted design direction, 2026-11-14. [436.1](REFINEMENT_CONSOLIDATION.md), [436.2](CEL_CHECKED_PLANNING.md),
 [436.3](CEL_REPRESENTATION_OWNERSHIP.md),
 [436.4](CEL_CONTEXTUAL_EDITOR.md) and [436.5](CEL_SAVED_QUESTIONS.md) are delivered;
-436.6 remains **planned**.
+[436.6 whole-product acceptance](CEL_WHOLE_PRODUCT_ACCEPTANCE.md) is delivered.
 The delivered [predicate pilot](CEL_PREDICATE_PILOT.md) remains a Go library and
 source-free CLI. Checked planning has in-process HTTP routes, and Activity/fixed
 Filters mount the shared editor. Saved ExplorationViews now preserve checked source
-through their existing store and YAML artifact. Whole-product acceptance remains planned.
+through their existing store and YAML artifact. Whole-product acceptance closes this finite sequence.
 
 Seven specialists contributed: [Go](reviews/CEL_HOLISTIC_GO.md),
 [architecture](reviews/CEL_HOLISTIC_ARCHITECTURE.md),
@@ -175,11 +175,11 @@ inside the next 436 consolidation, not a competing language-platform backlog:
 4. **436.4 — delivered:** mount the shared contextual editor and compact scope/status presentation.
 5. **436.5 — delivered:** one existing definition/artifact owner for checked source provenance
    and ordinary save/reopen/export; no speculative capture retrofit.
-6. **436.6:** demonstrate the whole watch/refine/run/inspect/return/preserve/reuse loop,
+6. **436.6 — delivered:** demonstrate the whole watch/refine/run/inspect/return/preserve/reuse loop,
    including existing Services and Measurements record context.
 
 Each slice can ship independently with its own checks and review. The next
-implementation task is 436.6. This finite sequence does not require a universal
+implementation task is 427 under the [post-CEL operator cycle](reviews/ROADMAP_AFTER_CEL_436_PROPOSAL.md). This finite sequence does not require a universal
 field registry, rewriting every clone site, implementing maps or replacing all
 controllers.
 Keep the older 427–429 preservation contracts pending and do not mark them complete

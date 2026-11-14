@@ -8,7 +8,7 @@ goo-record-summary:not([compact])>.record-message{max-height:none;overflow:visib
 /* Short compact records keep metadata and message on one scan line; full detail
    remains a block. Native table cells retain their own actions and ownership. */
 goo-record-summary[compact]{display:inline-flex;gap:2px 6px;align-items:baseline;vertical-align:middle;max-width:100%}
-goo-record-summary[compact]>.record-label,goo-record-summary[compact]>.record-duration{flex:0 0 auto;min-width:0;max-width:min(12em,100%)}
+goo-record-summary[compact]>.record-label,goo-record-summary[compact]>.record-duration{flex:0 0 auto;min-width:0;max-width:min(12em,100%);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 goo-record-summary[compact]>.record-message{flex:1 1 auto;min-width:0;margin:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;max-height:2lh;overflow:hidden}
 goo-record-summary details{border:0;margin:0;padding:0}
 goo-record-context{display:block;min-width:0;margin:4px 0;font-size:11px}
@@ -29,7 +29,7 @@ goo-record-context .record-reference{display:inline-block;margin:4px 6px 4px 0;b
 
 /* Opt-in supplied record rows, shared by SSR tables and application adapters. */
 @media(min-width:701px){
- goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=summary]>goo-record-summary[compact]{display:flex;margin-inline-end:6px}
+ goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=summary]>goo-record-summary[compact]{display:inline-flex;margin-inline-end:6px}
  goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=summary]>goo-record-summary[compact]>.record-message{display:block;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-height:1lh}
  goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=context]{white-space:nowrap;width:1%}
  goo-table[record-layout=compact]>table>tbody>tr>td[data-record-core=utc]{white-space:nowrap;width:1%;font-size:12px;font-variant-numeric:tabular-nums}

@@ -76,7 +76,9 @@ test('display entry imports a closed passive graph without publishing namespaces
   // Saved source metadata adds one pure admission module, never its authoring owner.
   assert.ok(visited.has(new URL('../ui/cel-provenance.mjs', import.meta.url).href));
   assert.deepEqual(Object.keys(await import('../ui/cel-provenance.mjs')).sort(),['authoring','capture','condition','recordCELContract']);
-  assert.equal(visited.size, 68);
+  // Canonical record labels reuse the pure OTel classifier, never an app owner.
+  assert.ok(visited.has(new URL('../ui/log-severity.mjs', import.meta.url).href));
+  assert.equal(visited.size, 69);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

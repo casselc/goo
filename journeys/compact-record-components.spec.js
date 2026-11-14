@@ -1,4 +1,4 @@
-const {test,expect}=require('@playwright/test');const base='http://127.0.0.1:8088';
+const {test,expect}=require('@playwright/test');const base=process.env.GOO_QUERY_URL||'http://127.0.0.1:8088';
 test('161 supplied compact records preserve SSR/SPA semantics standalone and inside tail layout',async({page})=>{
  const reads=[],errors=[];page.on('request',r=>{if(r.url().includes('/api/'))reads.push(r.url())});page.on('pageerror',e=>errors.push(e.message));await page.goto(base+'/ui-components');
  // Synthetic passive contract; this is separate from the real-source journey 160.

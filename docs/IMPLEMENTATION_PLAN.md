@@ -1,7 +1,7 @@
 # Implementation plan
 
-> Active execution order: [430 ad-hoc entry checkpoint](ROADMAP_2026_11_14_CHECKPOINT_430.md),
-> reconciled across the independent product/architecture reviews summarized there.
+> Active execution order: [post-CEL operator cycle](reviews/ROADMAP_AFTER_CEL_436_PROPOSAL.md),
+> adopted after the [430–436 checkpoint](ROADMAP_2026_11_14_CHECKPOINT_430.md).
 > The adopted operator cadence delivered **412 fleet service triage** and
 > **413 Activity log volume**. **414 recent and pinned scope
 > consolidation** completes that cycle. **415 guided service-version comparison**
@@ -35,11 +35,15 @@
 > see [editor guide](CEL_CONTEXTUAL_EDITOR.md).
 > **436.5 revision-owned preservation is delivered** through saved ExplorationViews
 > and existing YAML ViewArtifacts; see [saved CEL questions](CEL_SAVED_QUESTIONS.md).
-> Next is whole-product observed acceptance (436.6). No new artifact family or
+> **436.6 whole-product observed acceptance is delivered**; see the
+> [acceptance report](CEL_WHOLE_PRODUCT_ACCEPTANCE.md). No new artifact family or
 > capture metadata is introduced.
 > Keep this one finite consolidation sequence; do not start a separate language
 > platform backlog or promise lossless conversion of unsupported visual predicates.
-> The older **427–429 preservation cycle** remains pending follow-on work. The older labeling queue
+> Next: **427 exact saved-view recall from Recent / Pinned**, then **428 paired
+> evidence from existing Preserve**, then **429 measured scope/preservation
+> compactness and consolidation**. These planned contracts are resumed, not marked
+> delivered by CEL integration. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped
 > P95, host sample context and broader platform work remain deferred.

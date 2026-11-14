@@ -4907,3 +4907,17 @@ configuration writes from telemetry reads. `bombadil/cel-preservation.ts` explor
 restored source under fresh checks and native visibility without publication or
 telemetry actions. The existing observed authoring model remains the private-lease
 gate; serialized metadata never restores its invocation tokens.
+
+## 436.6 — observed Services/native context acceptance
+
+`cel_context436_test.go` consumes `GOO_CEL_CONTEXT_4366_REPORT` from the real
+[context journey](../journeys/cel-context-entry.spec.js). It independently checks
+selected counter/histogram context, complete native bounds/producer/environment,
+CEL planning, raw membership, page/full counts and numeric severity display.
+Observed source/local/return steps reuse the existing population drilldown model;
+ten rejecting controls cover semantic/origin/custody/page and hidden-read errors.
+The browser requires this gate after writing a passed, cleaned-up ledger and
+rejects skipped native verdicts. Standalone native runs without the report are
+marked as integration skips.
+This projection is not browser-focus model checking or a claim that contextual
+records are causal metric members. See [acceptance](../docs/CEL_WHOLE_PRODUCT_ACCEPTANCE.md).

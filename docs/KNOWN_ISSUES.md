@@ -29,6 +29,15 @@ Fixed analysis retains its existing service/message/severity controls; broader c
 Source/readiness, native metric grain/units and historical custody remain
 separate from language checking.
 
+[436.6 acceptance](CEL_WHOLE_PRODUCT_ACCEPTANCE.md) verifies Services/native
+record-context entry and retained return, and corrects common row severity to
+follow numeric OTel bands rather than producer text. Same-ID Discard now reloads
+its original definition, and a checked-source mismatch cannot silently erase
+metadata from an older held question. More general CEL vocabulary and native
+metric expression authoring remain unimplemented. The next finite cycle resumes
+427 exact recall, 428 paired evidence and 429 compact shared scope/preservation;
+see the [adopted roadmap](reviews/ROADMAP_AFTER_CEL_436_PROPOSAL.md).
+
 [The ad-hoc telemetry review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) identifies
 first-use scope discovery, partial-signal table assumptions, metric-only bootstrap,
 event-time empty-stream recovery and keyboard Pause focus as priority gaps.

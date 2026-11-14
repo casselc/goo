@@ -1508,3 +1508,32 @@ Trace expansion retains its existing broader millisecond-window/trace-ID read
 and the exact record origin. Gauge points have no UI lookaround in this slice. Shared time establishes context, not causality,
 complete traces or a joined metric/record denominator. See
 [native record context](NATIVE_RECORD_CONTEXT.md) for the exact mapping boundary.
+
+## Checked record conditions across retained parent contexts
+
+The delivered [CEL acceptance](CEL_WHOLE_PRODUCT_ACCEPTANCE.md) connects existing
+entry points without merging their acquisition, native measurement or evidence
+owners. Both source-free planning routes are in the single Go runtime.
+
+```mermaid
+flowchart LR
+  A[Activity held scope] --> F[Shared fixed record editor]
+  S[Services native interval] --> N[Exact producer / interval record context]
+  M[Measurements native interval] --> N
+  N --> F
+  F --> C[Pure Go context and checked CEL planning]
+  C --> P[Complete ordinary parent AND owned condition]
+  P --> R[Explicit fixed Run through record source adapter]
+  R --> H[Held records and local inspection]
+  H --> B[Return to retained Activity / Services / Measurements]
+  P --> V[Existing saved view with checked source metadata]
+  V --> Y[Existing portable YAML artifact]
+  Y --> O[Open original under fresh local authoring ownership]
+  O --> F
+```
+
+Check, local staging and Return read no telemetry. Saved-source metadata cannot
+revive an invocation token. Native context preserves exact nanosecond constraints
+inside its enclosing millisecond window; it does not equate record counts with
+native metric values. Numeric log severity, independent of producer text, controls
+the common record label. Capture remains an explicit independent evidence owner.

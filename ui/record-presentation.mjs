@@ -1,3 +1,4 @@
+import * as LogSeverity from './log-severity.mjs';
 import * as RecordColumns from './record-columns.mjs';
 import * as UI from './components.mjs';
 import * as EvidenceSummary from './evidence-summary.mjs';
@@ -8,6 +9,18 @@ import * as ExceptionDetail from './exception-detail.mjs';
 const global=globalThis;
  const ui=UI,evidence=EvidenceSummary,identity=ServiceIdentity;
  const validID=(value,n)=>typeof value==='string'&&new RegExp('^[a-f0-9]{'+n+'}$').test(value)&&!/^0+$/.test(value);
+ // SeverityText is a producer label, not the OTel severity classification.
+ function recordLabel(record,signal){
+  const r=record||{};
+  if(signal==='spans'){const text=typeof r.StatusCode==='string'&&r.StatusCode||'Unreported status';return {text,tone:text==='Error'?'error':'neutral',title:'Reported span status: '+text,band:null,numeric:false};}
+  const raw=typeof r.SeverityText==='string'?r.SeverityText:'';
+  let band,numeric=false;
+  try{band=LogSeverity.classify(r.SeverityNumber);numeric=true}catch{band=r.SeverityNumber===undefined||r.SeverityNumber===null?'unreported':'invalid'}
+  const canonical=band==='unreported'?'Unreported':LogSeverity.bands.find(item=>item.key===band).label;
+  const text=canonical+(raw&&raw.toLowerCase()!==canonical.toLowerCase()?' · producer: '+raw:'');
+  const title=(numeric?'OTel severity '+canonical+' (SeverityNumber '+r.SeverityNumber+')':band==='unreported'?'Numeric OTel severity not reported':'Numeric OTel severity invalid')+'; '+(raw?'producer severity text: '+raw:'producer severity text not reported');
+  return {text,tone:band==='error'||band==='fatal'?'error':band==='warn'?'warn':'neutral',title,band,numeric};
+ }
  function describe(record,signal){const r=record||{},time=typeof r.timestamp_ns==='string'&&r.timestamp_ns.length<=32?evidence.unixNs(r.timestamp_ns):null,namespace=r.ResourceAttributes?.['service.namespace'];let duration='Duration unavailable';try{if(typeof r.duration_ns==='string'&&/^\d{1,20}$/.test(r.duration_ns)&&BigInt(r.duration_ns)<=18446744073709551615n)duration=ui.durationMS(r.duration_ns)}catch{}
   const ns=identity.namespace(typeof namespace==='string'?namespace:undefined),name=typeof r.ServiceName==='string'?(r.ServiceName||'Empty service name'):'Service not reported';return {qualifiedService:identity.name(name,ns),signal:signal==='spans'?'spans':'logs',time:time?{...time,compact:time.exact.split('T')[1].slice(0,12)+'Z'}:null,service:typeof r.ServiceName==='string'?(r.ServiceName||'Empty service name'):'Service not reported',namespace:typeof namespace==='string'?(namespace||'Empty namespace'):'Namespace not reported',message:signal==='spans'?(typeof r.SpanName==='string'&&r.SpanName||'Unnamed span'):typeof r.Body==='string'?(r.Body||'Empty log body'):'Log body unavailable',label:signal==='spans'?(typeof r.StatusCode==='string'&&r.StatusCode||'Unreported status'):(typeof r.SeverityText==='string'&&r.SeverityText||'Unset severity'),duration:signal==='spans'?duration:null};
  }
@@ -16,6 +29,7 @@ const global=globalThis;
  function findQuery(query){if(typeof query!=='string'||!query.isWellFormed()||query.length>256||new TextEncoder().encode(query).length>1024)throw Error('Find loaded records accepts at most 256 well-formed characters.');return query.toLowerCase()}
  function findValues(record,signal,fieldColumns=[]){const r=record||{},m=describe(r,signal),values=[];
   for(const value of [signal==='spans'?r.SpanName:r.Body,r.ServiceName,signal==='spans'?r.StatusCode:r.SeverityText,r.ResourceAttributes?.['service.namespace']])if(typeof value==='string')values.push(value);
+  const severity=recordLabel(r,signal);if(signal!=='spans'&&severity.numeric)values.push(LogSeverity.bands.find(item=>item.key===severity.band).label);
   if(m.time)values.push(m.time.text,m.time.exact,m.time.compact);if(signal==='spans'&&m.duration!=='Duration unavailable')values.push(m.duration);
   for(const [key,size]of [['TraceId',32],['SpanId',16],['ParentSpanId',16]])if(validID(r[key],size))values.push(r[key]);
   for(const field of fieldColumns){const value=RecordColumns.value(r,field);if(!value.present||value.value===null||value.value==='')continue;const display=RecordColumns.presentation(r,field);if(field.kind==='column'&&field.key==='timestamp_ns'&&!m.time||field.kind==='column'&&field.key==='duration_ns'&&describe(r,'spans').duration==='Duration unavailable')continue;if(typeof display.text==='string')values.push(typeof value.value==='string'&&!(field.kind==='column'&&['timestamp_ns','duration_ns'].includes(field.key))?value.value:display.text);}
@@ -40,7 +54,7 @@ const global=globalThis;
    attributeChangedCallback(name){if(name==='record')this._record=undefined;if(name==='records')this._records=undefined;if(this.isConnected)this.render()}
   }
   class GooRecordSummary extends SuppliedRecord{
-   render(){const record=this.record,m=describe(record,this.getAttribute('signal')),open=this.querySelector('details')?.open;this.replaceChildren();this.dataset.signal=m.signal;const label=ui.node('span',m.label,'record-label'),message=ui.node('div',undefined,'log-message tail-message record-message');label.dataset.tone=/error|fatal/i.test(m.label)?'error':/warn/i.test(m.label)?'warn':'neutral';if(m.message.length>240&&!this.hasAttribute('compact')){const disclosure=ui.disclosure(m.message.slice(0,160)+'…',[ui.node('div',m.message)],{open:!!open});message.append(disclosure)}else message.textContent=m.message;this.append(label,message);if(m.duration){const duration=ui.node('span',m.duration,'record-duration');if(m.duration!=='Duration unavailable')duration.title=record.duration_ns+' ns';this.append(duration)}}
+   render(){const record=this.record,m=describe(record,this.getAttribute('signal')),open=this.querySelector('details')?.open;this.replaceChildren();this.dataset.signal=m.signal;const presentation=recordLabel(record,m.signal),label=ui.node('span',presentation.text,'record-label'),message=ui.node('div',undefined,'log-message tail-message record-message');label.dataset.tone=presentation.tone;if(presentation.band)label.dataset.severityBand=presentation.band;label.title=presentation.title;if(m.message.length>240&&!this.hasAttribute('compact')){const disclosure=ui.disclosure(m.message.slice(0,160)+'…',[ui.node('div',m.message)],{open:!!open});message.append(disclosure)}else message.textContent=m.message;this.append(label,message);if(m.duration){const duration=ui.node('span',m.duration,'record-duration');if(m.duration!=='Duration unavailable')duration.title=record.duration_ns+' ns';this.append(duration)}}
   }
   class GooRecordContext extends SuppliedRecord{
    set records(value){this._records=Array.isArray(value)&&value.length<=200?structuredClone(value):null;if(this.isConnected)this.render()}get records(){if(this._records!==undefined)return structuredClone(this._records);try{const s=this.getAttribute('records');return s&&s.length<=262144?JSON.parse(s):[]}catch{return null}}
@@ -49,4 +63,4 @@ const global=globalThis;
   if(!global.customElements.get('goo-record-summary'))global.customElements.define('goo-record-summary',GooRecordSummary);
   if(!global.customElements.get('goo-record-context'))global.customElements.define('goo-record-context',GooRecordContext);
  }
- export {findQuery,findValues,matchesLoaded,describe,ancestry,validID,timestamp,service,summary,description,attributes,detail,table};
+ export {recordLabel,findQuery,findValues,matchesLoaded,describe,ancestry,validID,timestamp,service,summary,description,attributes,detail,table};

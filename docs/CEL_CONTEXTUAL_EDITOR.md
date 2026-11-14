@@ -69,7 +69,7 @@ into unsupported CEL. Native measurements keep their own grammar.
 
 [436.5](CEL_SAVED_QUESTIONS.md) preserves exact checked source with saved fixed
 ExplorationViews through the existing save/export paths. Rolling Activity checks
-are not silently rebound to a later fixed window. Whole-product cross-surface acceptance remains 436.6.
+are not silently rebound to a later fixed window. [436.6](CEL_WHOLE_PRODUCT_ACCEPTANCE.md) verifies cross-surface acceptance.
 
 See [checked planning](CEL_CHECKED_PLANNING.md),
 [ownership](CEL_REPRESENTATION_OWNERSHIP.md),

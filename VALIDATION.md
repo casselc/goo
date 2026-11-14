@@ -1,5 +1,68 @@
 # Validation record
 
+## 436.6 — whole-product CEL acceptance and shared trust fixes
+
+[Acceptance](docs/CEL_WHOLE_PRODUCT_ACCEPTANCE.md),
+[real context storyboard](docs/journeys/cel-context-entry.md),
+[independent architecture/Go review](docs/reviews/CEL_WHOLE_PRODUCT_436_6_ARCH.md),
+[UX/web standards review](docs/reviews/CEL_WHOLE_PRODUCT_436_6_UX.md) and
+[adopted next cycle](docs/reviews/ROADMAP_AFTER_CEL_436_PROPOSAL.md).
+
+- Corrected shared record severity: numeric OTel classification controls tone,
+  with differing producer text visibly attributed (`Info · producer: FATAL`).
+  Missing/malformed/unrecognized numbers never inherit producer-text alarm colors;
+  span status remains separate. Tests cover all 256 UInt8 values as numbers and
+  strings, malformed inputs, actual custom-element rendering and literal Find.
+  Generic spans use visible attribution, not prohibited ARIA naming or extra roles.
+- Fixed explicit same-ID saved Discard being swallowed by normal-load deduplication.
+  Actual production-callback tests cover Keep, current/retired Discard, pending-load
+  cancellation and clean duplicate history. Fixed a checked-source mismatch being
+  mistaken for source discard on an older held question; publication now refuses.
+  The updated real preservation journey exercises the native same-fragment link.
+- All root Go packages pass; the embedded server builds on Go 1.27.3. Final full
+  frontend suite: **1,784 passing, zero failures/skips**, **42.262s**. Independent
+  architecture/UX focused Go and UI reruns also pass. Wire shapes are unchanged;
+  no fresh OpenAPI regeneration is claimed for these display/owner corrections.
+- Native semantic audit passes in **14.882s**, zero skips: existing 220 CEL/Goo
+  profiles, 120 parent conservation cases, eight severity bands × 256 codes,
+  80 preservation profiles with 12 tamper controls, and the real 26-step private
+  owner Quint replay with six rejecting controls. Four real read-only ClickHouse
+  parity fixtures agree at 4/232/43/170 matches; no source tables are changed.
+- New real Services-histogram and Measurements-counter journey plus its mandatory
+  native gate passes in **42.8s** (44.9s runner). Both contexts preserve effective
+  environment, namespace, instance and exact nanosecond interval. Independent
+  source oracle: **115 qualifying records → 112 CEL matches → 100 displayed**.
+  All 100 displayed rows retain numeric Info/producer FATAL and neutral tone.
+  Check/stage/local inspection/Back perform no telemetry reads or store writes;
+  original native snapshots, timeline selection and opener focus are retained.
+  Retired Check makes no API call. Nondefault Service instruments are selected
+  through the existing explicit picker/reread, not hidden fixture pruning.
+- `TestQuintCELContext436Observed` admits both actual context traces using the
+  existing population drilldown model and rejects **ten** semantic, origin,
+  custody, page-total, display and authority mutants. Standalone gate passes in
+  **18.379s**, zero skips; the final browser run requires it after writing a passed
+  ledger and closing its owned runtime. It cannot silently opt out or accept a
+  partial report. Oracle calibration corrected physical LogAttributes naming,
+  an explicit full-source result budget, and ordinary omitted/default identity;
+  these were fixture corrections, not passing product failures.
+- Updated real preservation regression passes in **54.3s** (57.2s runner), including
+  same-ID Keep/Discard, exact source/YAML, dirty recovery and destination display
+  isolation. Its bounded actor completes with 469 snapshots, no source/publication
+  calls and successful source/base restoration. Eight preservation frames refreshed;
+  eight new 320/390/1440 context/return frames captured. Both runtimes clean up with
+  no browser errors.
+- A further standalone SSR/SPA check caught compact label wrapping and block
+  summaries increasing short desktop rows to 73px. Shared CSS keeps compact labels
+  on one ellipsized line with full DOM text/title, and short summaries/actions inline.
+  The unchanged browser contract now passes in **4.1s** (6.0s runner): 320/390/700/
+  701/1024 layouts, 1440px short row **37px < 48px**, label/message top delta 0,
+  keyboard/reattach/UTC behavior, zero API calls and no page errors. No threshold
+  was relaxed. This is a local layout measurement, not a whole-app speed claim.
+- The finite 436 sequence is accepted; no physical AT/cross-engine, causal metric
+  membership, production deployment or completion of older preservation work is
+  claimed. Resume **427 exact Recent/Pinned saved-view recall → 428 paired evidence
+  via existing Preserve → 429 measured compactness/shared-owner consolidation**.
+
 ## 436.5 — checked CEL source on existing saved questions
 
 [Guide](docs/CEL_SAVED_QUESTIONS.md),
