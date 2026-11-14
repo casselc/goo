@@ -1,3 +1,4 @@
+import * as Environment from './record-environment.mjs';
 /* Passive bounded record display. The application owns acquisition and actions. */
 import * as UI from './components.mjs';
 import * as Pages from './record-page.mjs';
@@ -62,7 +63,7 @@ export class RecordList extends Base{
   const list=n('ol');list.setAttribute('aria-label','Supplied '+page.signal+' records');list.start=page.page.offset+1;this.append(list);
   for(const {index,record,fields}of model.rows){
    const item=n('li',undefined,'record-list-item');item.dataset.recordIndex=String(index);const line=n('div',undefined,'record-list-meta');
-   if(display.columns.includes('utc'))line.append(Records.timestamp(record));if(display.columns.includes('service'))line.append(Records.service(record));if(line.childNodes.length)item.append(line);
+   if(display.columns.includes('utc'))line.append(Records.timestamp(record));if(display.columns.includes('service'))line.append(Records.service(record));if(Environment.isAll(page.question))line.append(' ',Records.environment(record));if(line.childNodes.length)item.append(line);
    if(display.columns.includes('summary'))item.append(Records.summary(record,page.signal,{compact:true}));
    if(fields.length){const values=n('dl',undefined,'record-list-fields');for(const value of fields){const pair=n('div'),label=value.field.kind+':'+value.field.key,text=n('dd',value.text);text.dataset.valueState=value.state;text.dataset.valueType=value.type;text.setAttribute('aria-label',label+' · '+value.type+' value · '+value.text);if(value.title)text.title=value.title;pair.append(n('dt',label),text);values.append(pair)}item.append(values)}
    if(display.columns.includes('context')){const context=n('goo-record-context');context.setAttribute('signal',page.signal);context.record=ancestryRows[index];context.records=ancestryRows;item.append(context)}

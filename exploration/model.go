@@ -107,8 +107,10 @@ func (q Query) Validate() error {
 	if q.Signal != "spans" && q.Signal != "logs" {
 		return fmt.Errorf("signal must be spans or logs")
 	}
-	if _, err := q.EnvironmentSelection(); err != nil {
+	if selection, err := q.EnvironmentSelection(); err != nil {
 		return err
+	} else if selection.All() && q.Signal != "logs" {
+		return fmt.Errorf("all-environments scope supports logs only; choose one environment for this signal")
 	}
 	if q.FromMS < 0 || q.ToMS <= q.FromMS || q.ToMS-q.FromMS > 120*60000 || q.ToMS > 4102444800000 {
 		return fmt.Errorf("require half-open window of at most 120 minutes before 2100")

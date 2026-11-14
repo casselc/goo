@@ -8,7 +8,7 @@ import {nativeControlReady,completionControlReady} from './dom-visibility.mjs';
 export function scopeSummary(intent){
  if(intent.kind==='saved-view'){const saved=normalizeIntent(intent);return {primary:saved.title,meta:'Saved view',policy:'Exact revision',window:saved.id.slice(0,12)+'…',exactWindow:'Saved view ID '+saved.id,exact:'Saved view · '+saved.title+' · '+saved.id};}
  const q=intent.question||intent.selector,selection=Environment.selection(q),scope=selection.scope;
- const environment=scope.mode==='named'?JSON.stringify(scope.value):scope.mode==='empty'?'Empty environment':'Unreported environment';
+ const environment=scope.mode==='all'?'All environments':scope.mode==='named'?JSON.stringify(scope.value):scope.mode==='empty'?'Empty environment':'Unreported environment';
  const kind=intent.kind==='activity'?'Activity':'Fixed question',signal=q.signal==='logs'?'Logs':'Spans';
  const primary=q.where?selectorText(q.where):'All '+signal.toLowerCase();
  let window='Rolling 60s',exactWindow='Rolling last 60 seconds; Start stream explicitly reads a new window.';

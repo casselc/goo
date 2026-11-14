@@ -9,6 +9,9 @@ func environmentSelectionPredicate(selection identity.EnvironmentSelection) (str
 	if err := selection.Validate(); err != nil {
 		return "", nil, err
 	}
+	if selection.All() {
+		return "1", map[string]string{}, nil
+	}
 	scope := selection.Scope()
 	if selection.CurrentOnly() {
 		return "mapContains(ResourceAttributes, 'deployment.environment.name') AND ResourceAttributes['deployment.environment.name'] = {environment:String}", map[string]string{"environment": scope.Value}, nil

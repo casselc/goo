@@ -21,7 +21,7 @@ function namespace(value,selectable){
   return {mode:value.mode,...(value.mode==='value'&&value.value?{value:value.value}:{})};
 }
 function environment(value){object(value,['mode','value']);if(!['named','empty','unreported'].includes(value.mode)||value.value!==undefined&&!text(value.value)||value.mode!=='named'&&(value.value??'')!=='')invalid();return {mode:value.mode,...(value.mode==='named'?{value:value.value??''}:{})}}
-function selector(value,scope){let selected;try{selected=Environment.normalize(value)}catch{invalid()}if(selected.policy!=='effective'||JSON.stringify(selected.scope)!==JSON.stringify(scope))invalid();return selected}
+function selector(value,scope){Environment.normalizeScope(scope);let selected;try{selected=Environment.normalize(value)}catch{invalid()}if(selected.policy!=='effective'||JSON.stringify(selected.scope)!==JSON.stringify(scope))invalid();return selected}
 function windowQuestion(value){object(value,['fromMs','toMs']);if(!Number.isSafeInteger(value.fromMs)||!Number.isSafeInteger(value.toMs)||value.fromMs<0||value.toMs<=value.fromMs||value.toMs-value.fromMs>7200000||value.toMs>4102444800000)invalid();return value;}
 function validateResult(value,question){
   windowQuestion(question);windowQuestion(value?.question);

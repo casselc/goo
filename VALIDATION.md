@@ -1,5 +1,76 @@
 # Validation record
 
+## 437 — explicit All-environments log entry
+
+[Contract](docs/ALL_ENVIRONMENTS_LOG_ENTRY.md),
+[real OTLP storyboard](docs/journeys/all-environments.md),
+[independent architecture](docs/reviews/ALL_ENVIRONMENTS_437_ARCH.md) and
+[UX/accessibility acceptance](docs/reviews/ALL_ENVIRONMENTS_437_UX.md).
+
+- Added explicit `effective` selector `scope.mode: all` for logs. Blank input and
+  literal named `all` keep their meanings. Checked All selection remains separate
+  from observed named/empty/unreported categories. Generic identity readers retain
+  the wire; execution owners enforce logs-only support. SQL omits only the
+  environment restriction, retaining bounds, predicates, parameters and budgets.
+- Activity offers a native checkbox that stages locally and retains focus on
+  check/uncheck. Start/Apply remains explicit. Reported per-row facts use current
+  key presence over legacy fallback, including empty current labels. Missing or
+  malformed metadata is unavailable, not fabricated Unreported. Typed row
+  narrowing preserves bounds/predicates, resets inspection offset and focuses
+  the current connected Run action without reading. Unsupported wide context
+  actions have visible reasons and refuse before requests/source execution.
+- Full root Go suite passes on Go 1.27.3. New identity/exploration/native/workbench/
+  HTTP tests cover bounded tail, real source fixtures, capture/store reopen,
+  saved views, steps, YAML/packages and zero-read unsupported owners. Full frontend:
+  **1,824 passing, zero failures/skips, 29.192s**. Shared selector-bank consumers
+  now assert All support or refusal for their own profiles rather than assuming
+  every semantically valid selector is executable everywhere.
+- OpenAPI regenerated with **118 operations / 796 schemas**. The complete checker
+  passes **501 fixture responses, 202 admitted requests, 29 mux refusals** plus
+  negative/SSE controls. All-log requests validate; All spans/native/inventory/
+  trace requests refuse. Observed EnvironmentScope keeps its three-mode enum;
+  selector scope supports four modes. Documentation and generic startup reflect
+  explicit opt-in rather than a guessed environment or automatic broadening.
+- Hegel conservation passes **150 generated resource banks**; **600 actual Go/JS
+  cases** check policy parity, observed classification and detached row narrowing.
+  Final generated/parity run: **0.159s**, zero skips. All is conserved across
+  detached Tail → fixed question → capture → record-step wires; zero selectors
+  remain invalid. Literal named `all` is distinct from the wide selection.
+- The real integration bank contains **1,005 OTLP logs** copied from the collector's
+  exporter table into an owned isolated configured-source database. It includes
+  current/legacy conflict, legacy-only, empty-current masking legacy, unreported
+  and literal named `all`. Tail returns a **1,000-row limited batch**, retaining
+  **100 displayed/held rows**. Fixed count is **1,005** with a **100-row page**;
+  capture retains **1,000 inspection rows** and the full count. Cold stored reopen
+  reads no telemetry. Empty, Unreported and named `all` each narrow to **201**.
+- The 1,005 distinct work IDs exercise the existing **1,000-group** counted-values
+  budget: two bounded SQL requests produce a typed **502 source_budget** refusal,
+  with no partial ranking presented as complete. This is bounded refusal proof,
+  not a broad high-cardinality performance benchmark. A scoped source-proxy 403
+  tests access refusal while retaining All/held rows; successful data comes from
+  real ClickHouse. Otherwise-valid wide spans, inventory, trace and metric
+  discovery requests each return **400 with zero SQL**.
+- Final browser + actor + mandatory native run: **1.6m** (1.7m runner), **31 steps,
+  32 SQL requests** (31 main + one explicit actor read), **424 actor snapshots**,
+  no browser errors and complete runtime/database cleanup. Actual keyboard proof
+  keeps checkbox focus and performs zero reads until a separate Start. Checkbox
+  is **14×14 px** with **32/44/44 px** label hit areas at 1440/390/320. Nine new
+  responsive frames were independently accepted.
+- Cold Recent recall is verified beyond transport: the existing UI YAML export
+  yields the actual adopted complete All view, with **zero source/store/SQL** work.
+  `TestQuintAllEnvironments437Observed` checks raw membership/precedence, exact
+  scope/carriers, immutable capture content, adopted view, each request/response,
+  ordered SQL and readonly budgets. Existing population-model replay rejects
+  **eight semantic/authority controls**. Mandatory browser gate passes **17.45s**;
+  final strengthened file independently passes **18.25s**, zero skips, on that
+  same complete report. Oracle calibration corrected compact `Env` prefix,
+  ID-free view hashing and capture creation's **201** contract; semantic/data/
+  authority checks remain strict. It does not model browser focus or rolling time.
+- Independent review passes **13 new Go / 23 JS** checks; UX separately reruns
+  shared scope/record and All/trail cases, all without skips. Next is planned
+  **438 bounded raw gauge inspection**, followed by **439 measured acquisition
+  consolidation**; neither is implemented by this log-scope milestone.
+
 ## 429 — measured scope/preservation consolidation and rate display
 
 [Control guide](docs/MEASURED_SCOPE_PRESERVATION.md),

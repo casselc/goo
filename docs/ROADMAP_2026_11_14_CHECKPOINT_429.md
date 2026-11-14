@@ -7,13 +7,17 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 delivered and validated; the next cycle is adopted** after the
-independent architecture/product cross-review.
-The next cycle is **437 breadth → 438 depth → 439 consolidation**.
-These outcomes are planned, not implemented. The existing Go runtime, source
+Status: **429 and 437 delivered and validated**. The adopted cycle remains
+**437 breadth → 438 depth → 439 consolidation** after the independent review.
+Next: **438 raw gauge inspection**, then **439 measured acquisition**.
+Those two outcomes remain planned. The existing Go runtime, source
 adapters, typed questions and supplied-data components remain the foundation.
 
 ## 437 — explicit All-environments log entry
+
+**Delivered:** [contract](ALL_ENVIRONMENTS_LOG_ENTRY.md),
+[storyboard](journeys/all-environments.md) and [validation](../VALIDATION.md).
+The design and acceptance basis below records this bounded log-only slice.
 
 An operator who does not know environment labels should be able to explicitly
 start a bounded log stream across the configured workspace source. Current named,

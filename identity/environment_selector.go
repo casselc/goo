@@ -10,7 +10,8 @@ import (
 const EnvironmentSelectorVersion = "goo/environment-selector/v1"
 
 // EnvironmentSelector is a versioned wire value, separate from the immutable
-// checked EnvironmentSelection. It does not extend existing Query/Tail inputs.
+// checked EnvironmentSelection. Owning questions decide which selection profiles
+// they can execute; accepting this wire value is not native/trace permission.
 type EnvironmentSelector struct {
 	Version string           `json:"version" yaml:"version"`
 	Policy  string           `json:"policy" yaml:"policy"`
@@ -28,6 +29,12 @@ func (w EnvironmentSelector) Selection() (EnvironmentSelection, error) {
 		}
 		return CurrentEnvironment(w.Scope.Value)
 	case "effective":
+		if w.Scope.Mode == "all" {
+			if w.Scope.Value != "" {
+				return EnvironmentSelection{}, fmt.Errorf("all-environments selection does not accept a name")
+			}
+			return AllEnvironments(), nil
+		}
 		return EffectiveEnvironment(w.Scope)
 	default:
 		return EnvironmentSelection{}, fmt.Errorf("explicit environment selection policy required")

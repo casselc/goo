@@ -61,8 +61,9 @@ CLICKHOUSE_URL=http://127.0.0.1:8123 /tmp/goo serve-http \
   --investigations-dir ./goo-data
 ```
 
-Set `CLICKHOUSE_USER` and `CLICKHOUSE_PASSWORD` as needed. Open the UI, choose your
-scope, and **Start stream**. Keep the data directory across restarts.
+Set `CLICKHOUSE_USER` and `CLICKHOUSE_PASSWORD` as needed. Open the UI, choose
+**All environments** for logs or a specific scope, then **Start stream**.
+Keep the data directory across restarts.
 [Connection and configuration details](docs/GENERIC_STARTUP.md).
 
 ## What “grammar” means

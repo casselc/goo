@@ -16,7 +16,7 @@ test('trace view preserves typed environment policy and rejects invalid trace or
 });
 test('trace views preserve every supported typed environment representation without aliasing',()=>{
  for(const fixture of require('../testdata/protocol/environment-selectors.json').cases)for(const legacy of [{},{environment:''}]){
-  const origin={signal:'logs',...legacy,environmentSelector:structuredClone(fixture.selector),fromMs:1000,toMs:61000},before=structuredClone(origin),q=traceView(origin,trace).queries[0];
+  const origin={signal:'logs',...legacy,environmentSelector:structuredClone(fixture.selector),fromMs:1000,toMs:61000},before=structuredClone(origin);if(fixture.canonical.scope.mode==='all'){assert.throws(()=>traceView(origin,trace));assert.deepEqual(origin,before);continue}const q=traceView(origin,trace).queries[0];
   assert.deepEqual(q.environmentSelector,origin.environmentSelector,fixture.name);assert.equal(Object.hasOwn(q,'environment'),Object.hasOwn(origin,'environment'));assert.notEqual(q.environmentSelector,origin.environmentSelector);q.environmentSelector.scope.mode='broken';assert.deepEqual(origin,before);
  }
 });

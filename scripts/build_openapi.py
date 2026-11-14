@@ -177,11 +177,17 @@ selector=schemas['identity.EnvironmentSelector']
 selector['additionalProperties']=False
 selector['properties']['version']['const']='goo/environment-selector/v1'
 selector['properties']['policy']['enum']=['current-only','effective']
-selector['properties']['scope']={'type':'object','additionalProperties':False,'required':['mode'],'properties':{'mode':{'type':'string','enum':['named','empty','unreported']},'value':{'type':'string','maxLength':128,'description':'At most 128 UTF-8 bytes; runtime enforces the byte limit.'}},'allOf':[{'if':{'properties':{'mode':{'const':'named'}},'required':['mode']},'then':{'required':['value'],'properties':{'value':{'minLength':1}}},'else':{'properties':{'value':{'const':''}}}}]}
+selector['properties']['scope']={'type':'object','additionalProperties':False,'required':['mode'],'properties':{'mode':{'type':'string','enum':['named','empty','unreported','all']},'value':{'type':'string','maxLength':128,'description':'At most 128 UTF-8 bytes; runtime enforces the byte limit.'}},'allOf':[{'if':{'properties':{'mode':{'const':'named'}},'required':['mode']},'then':{'required':['value'],'properties':{'value':{'minLength':1}}},'else':{'properties':{'value':{'const':''}}}}]}
 selector['allOf']=[{'if':{'properties':{'policy':{'const':'current-only'}},'required':['policy']},'then':{'properties':{'scope':{'properties':{'mode':{'const':'named'}}}}}}]
-schemas['exploration.AdoptionRecordsResult']['properties']['selector']={'allOf':[{'$ref':'#/components/schemas/identity.EnvironmentSelector'},{'properties':{'policy':{'const':'effective'}}}]}
+schemas['exploration.AdoptionRecordsResult']['properties']['selector']={'allOf':[{'$ref':'#/components/schemas/identity.EnvironmentSelector'},{'properties':{'policy':{'const':'effective'},'scope':{'properties':{'mode':{'enum':['named','empty','unreported']}}}}}]}
 
 schemas['identity.EnvironmentSelectorInput']=copy.deepcopy(selector)
+# All is a selector policy, never an observed EnvironmentScope category.
+all_environment_condition={'required':['environmentSelector'],'properties':{'environmentSelector':{'type':'object','required':['scope'],'properties':{'scope':{'required':['mode'],'properties':{'mode':{'const':'all'}}}}}}}
+def single_environment_selector(target):
+ return {'allOf':[ref(target),{'properties':{'scope':{'properties':{'mode':{'enum':['named','empty','unreported']}}}}}]}
+selector['description']='Explicit environment selection. Effective scope all is supported only by ordinary log questions and their carriers; it is never an observed label, a blank-name fallback, or native/trace permission.'
+schemas['identity.EnvironmentSelectorInput']['description']=selector['description']
 # Metrics-only identity bootstrap (432a): display identities are not execution scopes.
 for name in ('measurements.MetricScopesQuestionInput','measurements.MetricScopesQuestion'):
  shape=schemas[name];shape['additionalProperties']=False
@@ -193,7 +199,7 @@ metric_choice=schemas['measurements.MetricScopeChoice'];metric_choice['additiona
 metric_choice['properties']['service']={'type':'string','maxLength':4096,'description':'Raw service display identity, bounded to 4096 UTF-8 bytes by Go. Empty/overlong identities remain nonselectable rather than inventing a service.'}
 metric_choice['properties']['environment']=raw_metric_environment
 metric_choice['properties']['namespace']=raw_metric_namespace
-metric_choice['properties']['environmentSelector']={'allOf':[ref('identity.EnvironmentSelector'),{'properties':{'policy':{'const':'effective'}}}]}
+metric_choice['properties']['environmentSelector']={'allOf':[single_environment_selector('identity.EnvironmentSelector'),{'properties':{'policy':{'const':'effective'}}}]}
 metric_choice['properties']['points']={'type':'string','pattern':'^[1-9][0-9]{0,38}$','description':'Canonical positive UInt128 sum of exported point records across compatible source families. Go enforces the exact UInt128 bound. Not metric values, stream count, represented histogram observations, health or completeness.'}
 for key in ('firstMs','lastMs'):metric_choice['properties'][key].update(minimum=0,maximum=4102444800000)
 metric_choice['properties']['selectable']={'type':'boolean'}
@@ -229,6 +235,7 @@ for wire in ('exploration.Query','exploration.QueryInput','exploration.TailSelec
  if input_wire:shape['required']=[key for key in shape.get('required',[]) if key!='environment']
  shape['oneOf']=[{'required':['environment'],'properties':{'environment':{'type':'string','minLength':1},'environmentSelector':{'type':'null'}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''},'environmentSelector':{'$ref':'#/components/schemas/'+target}}}]
  shape['description']='Choose a current-key-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge span questions apply the same checked environment policy to parent ownership and child membership.'
+ shape.setdefault('allOf',[]).append({'if':all_environment_condition,'then':{'properties':{'signal':{'enum':['','logs'] if 'TailSelector' in wire else ['logs']}}}})
 for wire in ('exploration.Query','exploration.QueryInput'):
  schemas[wire].setdefault('allOf',[]).append({'if':{'required':['reportedEdge'],'properties':{'reportedEdge':{'not':{'type':'null'}}}},'then':{'properties':{'signal':{'const':'spans'}}}})
 # Trace-wide search uses the same explicit selection as ordinary record questions.
@@ -236,6 +243,7 @@ for wire in ('exploration.TraceSearchRequest','exploration.TraceSearchRequestInp
  shape=schemas[wire];target='identity.EnvironmentSelectorInput' if wire.endswith('Input') else 'identity.EnvironmentSelector'
  shape['required']=[key for key in shape.get('required',[]) if key!='environment']
  shape['properties']['environment']={'type':'string'}
+ shape['properties']['environmentSelector']=single_environment_selector(target)
  shape['additionalProperties']=False
  shape['properties']['version']['const']='goo/trace-search/v1'
  shape['properties']['conditions'].update(minItems=1,maxItems=4)
@@ -267,7 +275,8 @@ for wire in ('exploration.PackageSource','exploration.PackageSourceInput'):
  shape['properties']['environment']={'type':'string','minLength':1,'maxLength':128,'pattern':'^[^\\u0000]*$','description':'Exact current-key-only name; at most 128 UTF-8 bytes, enforced by Go.'}
  shape['properties']['environmentSelector']={'$ref':'#/components/schemas/'+target}
  shape['oneOf']=[{'required':['environment'],'not':{'required':['environmentSelector']},'properties':{'environment':{'type':'string','minLength':1}}},{'required':['environmentSelector'],'not':{'required':['environment']}}]
- shape['description']='Checked reusable record source. Choose exactly one scalar current-only environment name or an explicit current-only/effective named, empty or unreported selector. Null scope fields and both arms, including an empty scalar beside a selector, are refused. JSON and YAML retain policy; planning fixes bounds independently of stored relative lookback. No source read is implied by validation or staging.'
+ shape.setdefault('allOf',[]).append({'if':all_environment_condition,'then':{'properties':{'signal':{'const':'logs'}}}})
+ shape['description']='Checked reusable record source. Choose exactly one scalar current-only environment name or an explicit current-only/effective selector. Effective All scope is logs-only. Null scope fields and both arms, including an empty scalar beside a selector, are refused. JSON and YAML retain policy; planning fixes bounds independently of stored relative lookback. No source read is implied by validation or staging.'
 schemas['exploration.TelemetryPackageInput']['properties']['source']=ref('exploration.PackageSourceInput')
 schemas['exploration.TelemetryPackageInput']['required']=list(dict.fromkeys([*schemas['exploration.TelemetryPackageInput'].get('required',[]),'source']))
 # Service discovery preserves the same checked environment, with a stricter
@@ -275,7 +284,7 @@ schemas['exploration.TelemetryPackageInput']['required']=list(dict.fromkeys([*sc
 for wire in ('exploration.InventoryQuestion','exploration.InventoryQuestionInput'):
  shape=schemas[wire];target='identity.EnvironmentSelectorInput' if wire.endswith('Input') else 'identity.EnvironmentSelector'
  shape['properties']['environment']={'type':'string'}
- shape['properties']['environmentSelector']={'$ref':'#/components/schemas/'+target}
+ shape['properties']['environmentSelector']=single_environment_selector(target)
  shape['oneOf']=[{'required':['environment'],'not':{'required':['environmentSelector']},'properties':{'environment':{'type':'string','minLength':1}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''}}}]
  shape['properties']['service']={'type':'string','maxLength':128,'pattern':'^[^\\u0000]*$','description':'Inventory only: omitted selects all service names; a present string selects exactly that name, including empty. At most 128 UTF-8 bytes; runtime enforces the byte limit. Null is refused. Applied before grouping and the existing 1001-row sentinel.'}
  shape['description']='Fixed inventory scope. Legacy environment is current-key-only; an explicit environmentSelector preserves current-only/effective policy and named/empty/unreported scope. Null or mixed nonempty selectors are refused. Optional exact service is supported only by inventory and inventory captures, not service discovery or dashboard scope.'
@@ -292,7 +301,7 @@ schemas['exploration.DashboardPlan']['properties']['nativeCapability']['descript
 # Native typed definitions admit the existing service per-stream numeric kernels.
 for wire in ('measurements.Definition','measurements.DefinitionInput','measurements.DiscoveryQuestion','measurements.DiscoveryQuestionInput'):
  shape=schemas[wire];target='identity.EnvironmentSelectorInput' if wire.endswith('Input') else 'identity.EnvironmentSelector'
- shape['properties']['environment']={'type':'string'};shape['properties']['environmentSelector']={'$ref':'#/components/schemas/'+target}
+ shape['properties']['environment']={'type':'string'};shape['properties']['environmentSelector']=single_environment_selector(target)
  shape['oneOf']=[{'required':['environment'],'not':{'required':['environmentSelector']},'properties':{'environment':{'type':'string','minLength':1}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''}}}]
  if 'Definition' in wire:
   shape.setdefault('allOf',[]).append({'if':{'required':['environmentSelector']},'then':{'properties':{'kind':{'enum':['gauge','counter','histogram']},'grain':{'const':'per-stream'},'source':{'properties':{'resource':{'type':'null'}}}},'required':['kind','grain','source']}})
@@ -1777,6 +1786,7 @@ def strict_record_input_contract417():
  props=query['properties'];props.update(signal={'enum':['logs','spans']},environment=text(128),fromMs={'type':'integer','minimum':0,'maximum':4102444800000},toMs={'type':'integer','minimum':1,'maximum':4102444800000},limit={'type':'integer','minimum':1,'maximum':100},offset={'type':'integer','minimum':0,'maximum':1000},bucketMs={'enum':[0,1000,10000,60000,300000]},summary={'enum':['','span-duration']},spanStatus={'type':'boolean'},logSeverity={'type':'boolean'},groupTimeSeries={'type':'boolean'},groupBy={'type':'array','maxItems':2,'uniqueItems':True,'items':strict_ref('exploration.FieldInput')})
  query['oneOf']=[{'required':['environment'],'not':{'required':['environmentSelector']},'properties':{'environment':{'minLength':1}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''}}}]
  query.setdefault('allOf',[]).extend([
+  {'if':all_environment_condition,'then':{'properties':{'signal':{'const':'logs'}}}},
   {'if':{'required':['summary'],'properties':{'summary':{'const':'span-duration'}}},'then':{'properties':{'signal':{'const':'spans'}}}},
   {'if':{'required':['spanStatus'],'properties':{'spanStatus':{'const':True}}},'then':{'properties':{'signal':{'const':'spans'}}}},
   {'if':{'required':['logSeverity'],'properties':{'logSeverity':{'const':True}}},'then':{'properties':{'signal':{'const':'logs'},'groupTimeSeries':{'const':False}},'not':{'anyOf':[{'required':[key]} for key in ['numeric','numericHistogram']]}}},

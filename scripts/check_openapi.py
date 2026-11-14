@@ -234,6 +234,41 @@ def check_capture_reviews(spec):
     return len(observations),accepted
 
 
+def check_all_environments437(spec):
+    """All is an explicit log selector, never an observed or native scope."""
+    selected={'version':'goo/environment-selector/v1','policy':'effective','scope':{'mode':'all'}}
+    selector=validator(spec,{'$ref':'#/components/schemas/identity.EnvironmentSelectorInput'})
+    selector.validate(selected)
+    selector.validate({**selected,'scope':{'mode':'all','value':''}})
+    for invalid in ({**selected,'policy':'current-only'}, {**selected,'scope':{'mode':'all','value':'prod'}}, {**selected,'scope':{'mode':'all','value':None}}):
+        assert not selector.is_valid(invalid), 'invalid All selector accepted'
+    observed=validator(spec,{'$ref':'#/components/schemas/identity.EnvironmentScope'})
+    assert not observed.is_valid({'mode':'all'}), 'All became an observed environment category'
+    base={'signal':'logs','environmentSelector':selected,'fromMs':1000,'toMs':2000,'limit':100}
+    for name in ('RecordQuery','exploration.Query'):
+        check=validator(spec,{'$ref':'#/components/schemas/'+name})
+        body={**base,**({'environment':'','offset':0} if name=='exploration.Query' else {})}
+        check.validate(body)
+        assert not check.is_valid({**body,'signal':'spans'}), 'All execution widened to spans'
+    for name in ('exploration.TailSelector','exploration.TailSelectorInput'):
+        check=validator(spec,{'$ref':'#/components/schemas/'+name})
+        body={'environmentSelector':selected,**({'environment':''} if name=='exploration.TailSelector' else {})}
+        check.validate({**body,'signal':'logs'})
+        check.validate(body)
+        assert not check.is_valid({**body,'signal':'spans'}), 'All tail widened to spans'
+    for name, body in (
+        ('exploration.InventoryQuestionInput',{'environmentSelector':selected,'fromMs':1000,'toMs':2000}),
+        ('measurements.DiscoveryQuestionInput',{'environmentSelector':selected,'service':'worker','fromMs':1000,'toMs':2000}),
+        ('exploration.TraceSearchRequestInput',{'version':'goo/trace-search/v1','environmentSelector':selected,'fromMs':1000,'toMs':2000,'conditions':[{'field':{'kind':'column','key':'service'},'op':'eq','value':'worker'}],'limit':10}),
+    ):
+        assert not validator(spec,{'$ref':'#/components/schemas/'+name}).is_valid(body), 'unsupported All route admitted by '+name
+    for name in ('exploration.PackageSource','exploration.PackageSourceInput'):
+        check=validator(spec,{'$ref':'#/components/schemas/'+name})
+        source={'adapter':'clickhouse.otel/v1','signal':'logs','environmentSelector':selected}
+        check.validate(source)
+        assert not check.is_valid({**source,'signal':'spans'}), 'All package widened to spans'
+
+
 def check_package_scopes(spec):
     scopes=[{'version':'goo/environment-selector/v1','policy':policy,'scope':{'mode':mode,**({'value':"prod-'雪"} if mode=='named' else {})}} for policy,mode in [('current-only','named'),('effective','named'),('effective','empty'),('effective','unreported')]]
     base={'adapter':'clickhouse.otel/v1','signal':'spans'}
@@ -2086,6 +2121,7 @@ def check(spec):
     validate_spec(spec)
     check_activity_scope_views(spec)
     check_view_artifacts(spec)
+    check_all_environments437(spec)
     check_cel_authoring4365(spec)
     check_view_dataset(spec)
     check_timeline_composition(spec)
@@ -2129,7 +2165,11 @@ def check(spec):
         base={'fromMs':100000,'toMs':160000}
         check_service.validate(body({**base,'environment':'prod'}))
         for case in bank['cases']:
-            check_service.validate(body({**base,'environmentSelector':case['selector']}))
+            selected=body({**base,'environmentSelector':case['selector']})
+            if case['selector']['scope']['mode']=='all':
+                assert not check_service.is_valid(selected), f'{path}: All log scope acquired service/inventory authority'
+            else:
+                check_service.validate(selected)
         for service in ('', 'api', "api'雪"):
             selected=body({**base,'environment':'prod','service':service})
             if path=='/inventory':
@@ -2146,7 +2186,12 @@ def check(spec):
     native_check=validator(spec,{'$ref':'#/components/schemas/measurements.DefinitionInput'})
     discovery_check=validator(spec,spec['paths']['/metric-discovery']['post']['requestBody']['content']['application/json']['schema'])
     for case in bank['cases']:
-        typed={**native_definition,'environmentSelector':case['selector']};native_check.validate(typed)
+        typed={**native_definition,'environmentSelector':case['selector']}
+        if case['selector']['scope']['mode']=='all':
+            assert not native_check.is_valid(typed), 'All log scope acquired native authority'
+            assert not discovery_check.is_valid({'environmentSelector':case['selector'],'service':'api','fromMs':100000,'toMs':160000}), 'All acquired metric discovery authority'
+            continue
+        native_check.validate(typed)
         for kind in ('counter','histogram'):
             positive={**typed,'kind':kind,'source':{**typed['source'],'unit':'ms' if kind=='histogram' else 'items'}}
             native_check.validate(positive)

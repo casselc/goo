@@ -10,6 +10,7 @@ function millisecondsToNS(value){
   if(ns>18446744073709551615n)throw Error('Duration exceeds uint64 nanoseconds.');return String(ns);
  }
 function surroundingQuestion(origin,row,radiusMS=30000,offset=0){
+ RecordEnvironment.requireNarrow(origin);
   if(!Number.isSafeInteger(offset)||offset<0||offset>1000)throw Error('Context offset must be 0–1000.');
   if(!Number.isSafeInteger(radiusMS)||radiusMS<1000||radiusMS>300000)throw Error('Context radius must be 1–300 seconds.');
   if(typeof row.timestamp_ns!=='string'||!/^\d+$/.test(row.timestamp_ns)||typeof row.ServiceName!=='string')throw Error('Captured log timestamp and service required.');

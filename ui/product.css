@@ -1953,3 +1953,8 @@ input::placeholder,textarea::placeholder {color:var(--muted);opacity:1}
 .capture-draft-scope[hidden]{display:none}.capture-draft-scope>section{min-width:0}.capture-draft-scope h3{font-size:var(--text-sm,.875rem);margin:.5rem 0}
 @media(max-width:700px){.capture-draft-scope{grid-template-columns:minmax(0,1fr)}}
 .capture-selector{overflow-wrap:anywhere;white-space:pre-wrap}
+
+/* Native scope choice does not inherit the text-input width in the Activity toolbar. */
+.stream-entry-toolbar>.entry-all-environments{display:inline-flex;align-items:center;gap:6px;min-height:32px;font-size:12px;color:var(--ink)}
+.stream-entry-toolbar>.entry-all-environments>input{width:14px;height:14px;min-width:14px;min-height:0;padding:0;margin:0;flex:none}
+@media(max-width:700px){.stream-entry-toolbar>.entry-all-environments{min-height:44px}}

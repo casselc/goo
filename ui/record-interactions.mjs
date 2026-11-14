@@ -1,3 +1,4 @@
+import * as Environment from './record-environment.mjs';
 /* Application-owned interactions shared by record presentations. Display data grants no source authority. */
 import * as Attributes from './attributes.mjs';
 import * as Discovery from './discovery.mjs';
@@ -46,7 +47,7 @@ function surface(target,rows,signal,options){
    append(){},finish(){}
   };
  }
- const records=RecordPresentation.table({signal,summaryCompact:true,mobileCompact:true,labels:['UTC','Service',signal==='spans'?'Span / duration':'Severity / body','Actions'],caption:'Captured '+signal+' · inspection page; full totals shown separately',label:'Captured '+signal+' inspection page'});
+ const records=RecordPresentation.table({signal,showEnvironment:options.showEnvironment,summaryCompact:true,mobileCompact:true,labels:['UTC','Service',signal==='spans'?'Span / duration':'Severity / body','Actions'],caption:'Captured '+signal+' · inspection page; full totals shown separately',label:'Captured '+signal+' inspection page'});
  records.element.className='telemetry-table';records.header.className='record-columns';
  const rowElements=[];
  return {...records,rowElements,current:()=>true,
@@ -60,7 +61,7 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
  const inspectorOwners=new Map();
  const surround=surrounding(),owner={};mounts.set(target,owner);target.replaceChildren();
  if(!rows.length){const empty=node('goo-result-state','No captured records in this page; absence is not health evidence.');empty.state='empty';target.append(empty);return}
- const records=surface(target,rows,signal,options),{viewport}=records,isPassive=['record-list','record-span-waterfall'].includes(options.recordKind);
+ const records=surface(target,rows,signal,{...options,showEnvironment:Environment.isAll(origin)}),{viewport}=records,isPassive=['record-list','record-span-waterfall'].includes(options.recordKind);
  const canUseRecord=()=>mounts.get(target)===owner&&active()&&target.isConnected&&viewport.isConnected&&target.contains(viewport)&&records.current()&&options.canUseRecord?.()!==false;
  const originalOptions=attributeOptions(target,signal,options,origin,basis);
  const actions={...originalOptions,
@@ -118,12 +119,13 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
   if(signal==='logs'){
    if(target===surround.target&&Discovery.sameLog(row,surround.anchor)){tr.classList.add('log-anchor');item.time.append(node('span','Anchor fields match','anchor-badge'))}
    const nearby=node('button','Surrounding logs');nearby.setAttribute('aria-label','Surrounding logs for '+row.ServiceName+' at '+row.timestamp_ns);
-   secondaryAction(nearby,opener=>openSurrounding(target===surround.target?surround.origin:origin,row,target===surround.target?surround.basis:basis,opener,origin,basis));
+   nearby.disabled=Environment.isAll(origin);if(nearby.disabled)nearby.title='Narrow to one environment before reading surrounding logs.';secondaryAction(nearby,opener=>{if(Environment.isAll(origin))return;openSurrounding(target===surround.target?surround.origin:origin,row,target===surround.target?surround.basis:basis,opener,origin,basis)});
   }
   if(typeof row.TraceId==='string'&&/^[a-f0-9]{32}$/.test(row.TraceId)&&!/^0+$/.test(row.TraceId)){
    const expand=node('button','Expand trace');expand.dataset.expandTrace=String(index);expand.setAttribute('aria-label','Expand trace '+row.TraceId);expand.title='Trace '+row.TraceId;
-   secondaryAction(expand,opener=>openTrace(origin,row.TraceId,row.SpanId,basis,opener,{...(options.onOpenTraceView?{onOpenView:(view,opener)=>canUseRecord()?options.onOpenTraceView(view,opener):false,canOpenView:()=>canUseRecord()&&options.canOpenTraceView?.()!==false}:{})}));
+   expand.disabled=Environment.isAll(origin);if(expand.disabled)expand.title='Narrow to one environment before opening a trace.';secondaryAction(expand,opener=>{if(Environment.isAll(origin))return;openTrace(origin,row.TraceId,row.SpanId,basis,opener,{...(options.onOpenTraceView?{onOpenView:(view,opener)=>canUseRecord()?options.onOpenTraceView(view,opener):false,canOpenView:()=>canUseRecord()&&options.canOpenTraceView?.()!==false}:{})})});
   }else cell.append(node('span','No valid reported trace ID','record-identity-missing'));
+  if(Environment.isAll(origin)){const narrow=node('button','Stage this environment');let question;try{question=Environment.observedQuestion(origin,row.ResourceAttributes);question.offset=0;narrow.title=Environment.questionLabel(question)}catch(error){narrow.disabled=true;narrow.title=error.message}secondaryAction(narrow,opener=>{if(!question||!canUseRecord())return;globalThis.dispatchEvent(new CustomEvent('goo:open-population',{detail:{question:structuredClone(question),stage:true,focusRun:true,opener}}))})}
   if(options.onFacet||options.resultToken||readOnly&&savedPage()&&target===primary()){
    const input=node('input');input.type='checkbox';input.dataset.recordSelection='true';input.setAttribute('aria-label','Select captured record '+(index+1));input.onchange=()=>selectRecord(index,input);inputs.set(index,input);cell.prepend(input);
   }
@@ -137,10 +139,10 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
    for(const button of target.querySelectorAll('[data-inspect-record]'))button.setAttribute('aria-pressed',String(button===inspectButton));
    const key=String(index),description=RecordPresentation.description(row);
    if(inspect.has(key)){inspect.show({key,title:signal==='logs'?'Selected log':'Selected span record',description,opener:inspectButton});inspectorOwners.get(key)?.resume?.();focusInspection(inspectButton);return}
-   const content=RecordPresentation.detail(row,signal,actions,rows),scope=node('details');
+   const content=RecordPresentation.detail(row,signal,actions,rows),scope=node('details');if(Environment.isAll(origin))content.append(node('small','Choose one environment to open traces or surrounding logs.','evidence-note'));
    scope.append(node('summary','Record scope and evidence basis'),node('p','Retained record inspection. Trace expansion and surrounding logs are separate reads.'),node('pre',JSON.stringify({question:origin,basis},null,2)));content.append(scope);
    const follow=secondary.map(({button,run})=>{
-    const action=node('button',button.textContent);if(button.hasAttribute('aria-label'))action.setAttribute('aria-label',button.getAttribute('aria-label'));if(button.title)action.title=button.title;
+    const action=node('button',button.textContent);action.disabled=button.disabled;if(button.hasAttribute('aria-label'))action.setAttribute('aria-label',button.getAttribute('aria-label'));if(button.title)action.title=button.title;
     action.onclick=()=>{if(canUseRecord()&&nativeControlReady(action))run(action)};return action;
    });
    if(signal==='spans'&&actions.onTraceSearch){const find=node('button','Find traces with this operation');find.type='button';find.disabled=actions.canTraceSearch?.()===false;find.onclick=()=>{if(!canUseRecord()||actions.canTraceSearch?.()===false||!nativeControlReady(find))return;try{actions.onTraceSearch(TraceSearch.seedFromRow(row),find)}catch(error){find.title=error.message}};follow.push(find)}
@@ -148,7 +150,7 @@ export function mount(target,rows,signal,origin,basis,options={},context={}){
    inspect.show({key,title:signal==='logs'?'Selected log':'Selected span record',description,content,actions:follow,opener:inspectButton});focusInspection(inspectButton);
   };
   const input=inputs.get(index);if(!item.timingButton){if(input)input.after(inspectButton);else cell.prepend(inspectButton)}
-  if(secondary.length){const menu=UI.actions([],secondary.map(({button})=>button),{label:'More'});secondaryOpener=menu.querySelector('summary');secondaryOpener.setAttribute('aria-label','More record actions');cell.append(menu)}
+  if(secondary.length){const menu=UI.actions([],secondary.map(({button})=>button),{label:'More'});if(Environment.isAll(origin))menu.querySelector('.ui-actions-body').append(node('small','Choose one environment to open traces or surrounding logs.','evidence-note'));secondaryOpener=menu.querySelector('summary');secondaryOpener.setAttribute('aria-label','More record actions');cell.append(menu)}
   records.append(tr);records.append(item.detailRow);
  }
  const layoutKey=(target.id||'records')+':'+signal,layout=options.recordLayout||layouts.get(layoutKey)||initialLayout||undefined;

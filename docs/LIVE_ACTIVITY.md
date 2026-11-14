@@ -3,8 +3,11 @@
 The S1 entry composition uses the existing bounded log/span tail. A fresh `/` or
 `#explore` visit automatically connects one log monitor for the lab's explicit
 `local` environment. The environment input and Apply scope start another exact
-scope; Logs/Spans selects one active signal. Missing scope asks for an environment.
-This does not discover or query every environment in a deployment.
+scope; Logs/Spans selects one active signal. Generic startup waits for explicit
+scope and Start. Logs can use [All environments](ALL_ENVIRONMENTS_LOG_ENTRY.md)
+within the configured workspace source. This is not a default, and blank input
+does not widen scope. Spans and contextual trace/native reads require a narrower
+supported environment.
 
 The normal entry has one compact scope/action bar: environment, signal and Pause.
 Apply appears only while editing scope; a draft shows the currently applied scope.

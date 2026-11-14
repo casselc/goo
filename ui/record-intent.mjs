@@ -17,7 +17,7 @@ export function validateRecordQuestion(q){
  object(q,allowed,'Unsupported record question fields.');
  if(!['logs','spans'].includes(q.signal)||!Number.isSafeInteger(q.fromMs)||!Number.isSafeInteger(q.toMs)||q.fromMs<0||q.toMs<=q.fromMs||q.toMs-q.fromMs>7200000||q.toMs>4102444800000)throw Error('Require a fixed window of at most 120 minutes before 2100.');
  if(present(q,'environment')&&typeof q.environment!=='string'||q.environmentSelector===null)throw Error('Invalid record environment.');
- Environment.selection(q);
+ Environment.selection(q);if(Environment.isAll(q)&&q.signal!=='logs')throw Error('All environments supports logs only.');
  if(!Number.isInteger(q.limit)||q.limit<1||q.limit>100||present(q,'offset')&&(!Number.isInteger(q.offset)||q.offset<0||q.offset>1000))throw Error('Page limit 1..100 and offset 0..1000 required.');
  if(present(q,'where'))validatePredicate(q.where,q.signal);
  if(present(q,'groupBy')){array(q.groupBy);if(q.groupBy.length>2)throw Error('Use at most two grouping fields.');const seen=new Set();for(const f of q.groupBy){validateField(f,q.signal);const key=JSON.stringify([f.kind,f.key]);if(seen.has(key))throw Error('Duplicate grouping field.');seen.add(key);}}

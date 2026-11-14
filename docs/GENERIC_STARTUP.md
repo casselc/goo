@@ -59,7 +59,12 @@ distinct states.
 ## Choose scope before reading
 
 Generic Activity starts with a blank environment and an explicit **Start stream**
-action. **Find data**, beside Environment, offers **Read available signals** to
+action. For logs, choose **All environments** to start across the configured
+workspace source without knowing its labels. This is explicit opt-in; blank input
+never means All. Spans require a specific supported environment. See
+[All-environments logs](ALL_ENVIRONMENTS_LOG_ENTRY.md).
+
+**Find data**, beside Environment, offers **Read available signals** to
 check supported source families and event-window presence without knowing a
 service or environment. Choose Logs or Spans locally, then explicitly discover labels
 in the selected Logs/Spans signal. Preview a named, empty or unreported scope,

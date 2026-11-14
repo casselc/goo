@@ -23,7 +23,14 @@ func environmentSelection(name string, selector *identity.EnvironmentSelector) (
 	if name != "" {
 		return identity.EnvironmentSelection{}, fmt.Errorf("choose environment or environmentSelector, not both")
 	}
-	return selector.Selection()
+	selection, err := selector.Selection()
+	if err != nil {
+		return identity.EnvironmentSelection{}, err
+	}
+	if selection.All() {
+		return identity.EnvironmentSelection{}, fmt.Errorf("all-environments scope is unavailable for native measurements; choose one environment")
+	}
+	return selection, nil
 }
 func (d Definition) EnvironmentSelection() (identity.EnvironmentSelection, error) {
 	return environmentSelection(d.Environment, d.EnvironmentSelector)
@@ -81,6 +88,9 @@ func typedServiceKind(kind string) bool {
 func metricEnvironmentPredicate(selection identity.EnvironmentSelection, param func(string, string) string) (string, error) {
 	if e := selection.Validate(); e != nil {
 		return "", e
+	}
+	if selection.All() {
+		return "", fmt.Errorf("all-environments scope is unavailable for native measurements")
 	}
 	scope := selection.Scope()
 	current := "mapContains(ResourceAttributes,'deployment.environment.name')"

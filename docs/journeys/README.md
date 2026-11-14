@@ -3039,3 +3039,11 @@ rows and read states across unchanged/updated binaries, with separate rolling
 Activity checks. Local controls, held return, exact recall, pair capture and a
 real tiny counter feed request/DOM budgets, a bounded actor and mandatory native
 validation. Reported layout gains do not imply faster queries.
+
+## 437 — explicit All-environments logs
+
+[Real OTLP storyboard](all-environments.md) and
+[executable journey](../../journeys/all-environments.spec.js) cover opt-in wide
+scope, reported environment facts, keyboard-safe staging, 1,005-record bounded
+reads/capture, actual adopted-view export, typed narrowing and zero-SQL unsupported
+routes. A bounded actor and mandatory native gate validate the complete report.

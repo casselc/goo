@@ -7,7 +7,7 @@ import * as InspectionFocus from './inspection-focus.mjs';
 import * as Records from './record-presentation.mjs';
 import * as Environment from './record-environment.mjs';
 function literal(value){if(value===null)return 'not reported';if(value==='')return 'empty';const chars=Array.from(JSON.stringify(value));return chars.length>100?chars.slice(0,100).join('')+'…':chars.join('')}
-function scopeLabel(scope){return scope.mode==='unreported'?'Unreported environment':scope.mode==='empty'?'Empty environment label':'Named environment: '+literal(scope.value)}
+function scopeLabel(scope){Environment.normalizeScope(scope);return scope.mode==='unreported'?'Unreported environment':scope.mode==='empty'?'Empty environment label':'Named environment: '+literal(scope.value)}
 function scopeName(scope){return scope.mode==='named'?'Named environment: '+JSON.stringify(scope.value):scopeLabel(scope)}
 function sameWindow(a,b){return !!a&&!!b&&a.signal===b.signal&&a.fromMs===b.fromMs&&a.toMs===b.toMs}
 function activitySelector(signal,selector,scope){if(!['logs','spans'].includes(signal))throw Error('Choose logs or spans.');return {signal,environment:'',environmentSelector:Environment.assertPreview(selector,scope)}}

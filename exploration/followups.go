@@ -79,7 +79,10 @@ func (c SavedCapture) Followups(row int) (*FollowupSet, error) {
 		}
 	} else if origin.Explore != nil && c.Explore != nil {
 		q := *origin.Explore
-		if q.EnvironmentSelector != nil {
+		selection, _ := q.EnvironmentSelection()
+		if selection.All() {
+			out.Warnings = append(out.Warnings, "Choose one environment before opening trace or native context from these observations.")
+		} else if q.EnvironmentSelector != nil {
 			out.Warnings = append(out.Warnings, "Native discovery, saved views and reusable packages do not support this explicit environment selector yet.")
 		}
 		if q.Signal == "spans" {
@@ -123,7 +126,7 @@ func (c SavedCapture) Followups(row int) (*FollowupSet, error) {
 					}
 				}
 			}
-			if followupTrace.MatchString(r.Trace) && r.Trace != strings.Repeat("0", 32) {
+			if !selection.All() && followupTrace.MatchString(r.Trace) && r.Trace != strings.Repeat("0", 32) {
 				trace := Query{Signal: "spans", Environment: q.Environment, FromMS: q.FromMS, ToMS: q.ToMS, Where: ptrPredicate(followupEqual("trace_id", r.Trace))}
 				trace = trace.WithEnvironmentFrom(q)
 				addQuery("trace", "Follow this trace across services", "Inspect spans reporting this exact trace ID within the original window. Sampling and out-of-window parents remain unknown.", "Exact reported trace ID", trace)

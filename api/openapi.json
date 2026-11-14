@@ -11605,6 +11605,17 @@
                 "properties": {
                   "policy": {
                     "const": "effective"
+                  },
+                  "scope": {
+                    "properties": {
+                      "mode": {
+                        "enum": [
+                          "named",
+                          "empty",
+                          "unreported"
+                        ]
+                      }
+                    }
                   }
                 }
               }
@@ -17004,7 +17015,26 @@
             "type": "string"
           },
           "environmentSelector": {
-            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              },
+              {
+                "properties": {
+                  "scope": {
+                    "properties": {
+                      "mode": {
+                        "enum": [
+                          "named",
+                          "empty",
+                          "unreported"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           "fromMs": {
             "type": "integer"
@@ -17072,7 +17102,26 @@
             "type": "string"
           },
           "environmentSelector": {
-            "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              },
+              {
+                "properties": {
+                  "scope": {
+                    "properties": {
+                      "mode": {
+                        "enum": [
+                          "named",
+                          "empty",
+                          "unreported"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           "fromMs": {
             "anyOf": [
@@ -19531,7 +19580,43 @@
             }
           }
         ],
-        "description": "Checked reusable record source. Choose exactly one scalar current-only environment name or an explicit current-only/effective named, empty or unreported selector. Null scope fields and both arms, including an empty scalar beside a selector, are refused. JSON and YAML retain policy; planning fixes bounds independently of stored relative lookback. No source read is implied by validation or staging."
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "environmentSelector"
+              ],
+              "properties": {
+                "environmentSelector": {
+                  "type": "object",
+                  "required": [
+                    "scope"
+                  ],
+                  "properties": {
+                    "scope": {
+                      "required": [
+                        "mode"
+                      ],
+                      "properties": {
+                        "mode": {
+                          "const": "all"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "const": "logs"
+                }
+              }
+            }
+          }
+        ],
+        "description": "Checked reusable record source. Choose exactly one scalar current-only environment name or an explicit current-only/effective selector. Effective All scope is logs-only. Null scope fields and both arms, including an empty scalar beside a selector, are refused. JSON and YAML retain policy; planning fixes bounds independently of stored relative lookback. No source read is implied by validation or staging."
       },
       "exploration.PackageSourceInput": {
         "additionalProperties": false,
@@ -19592,7 +19677,43 @@
             }
           }
         ],
-        "description": "Checked reusable record source. Choose exactly one scalar current-only environment name or an explicit current-only/effective named, empty or unreported selector. Null scope fields and both arms, including an empty scalar beside a selector, are refused. JSON and YAML retain policy; planning fixes bounds independently of stored relative lookback. No source read is implied by validation or staging."
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "environmentSelector"
+              ],
+              "properties": {
+                "environmentSelector": {
+                  "type": "object",
+                  "required": [
+                    "scope"
+                  ],
+                  "properties": {
+                    "scope": {
+                      "required": [
+                        "mode"
+                      ],
+                      "properties": {
+                        "mode": {
+                          "const": "all"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "const": "logs"
+                }
+              }
+            }
+          }
+        ],
+        "description": "Checked reusable record source. Choose exactly one scalar current-only environment name or an explicit current-only/effective selector. Effective All scope is logs-only. Null scope fields and both arms, including an empty scalar beside a selector, are refused. JSON and YAML retain policy; planning fixes bounds independently of stored relative lookback. No source read is implied by validation or staging."
       },
       "exploration.Plan": {
         "properties": {
@@ -20266,6 +20387,42 @@
         ],
         "description": "Choose a current-key-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge span questions apply the same checked environment policy to parent ownership and child membership.",
         "allOf": [
+          {
+            "if": {
+              "required": [
+                "environmentSelector"
+              ],
+              "properties": {
+                "environmentSelector": {
+                  "type": "object",
+                  "required": [
+                    "scope"
+                  ],
+                  "properties": {
+                    "scope": {
+                      "required": [
+                        "mode"
+                      ],
+                      "properties": {
+                        "mode": {
+                          "const": "all"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "enum": [
+                    "logs"
+                  ]
+                }
+              }
+            }
+          },
           {
             "if": {
               "required": [
@@ -22305,7 +22462,46 @@
             }
           }
         ],
-        "description": "Choose a current-key-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge span questions apply the same checked environment policy to parent ownership and child membership."
+        "description": "Choose a current-key-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge span questions apply the same checked environment policy to parent ownership and child membership.",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "environmentSelector"
+              ],
+              "properties": {
+                "environmentSelector": {
+                  "type": "object",
+                  "required": [
+                    "scope"
+                  ],
+                  "properties": {
+                    "scope": {
+                      "required": [
+                        "mode"
+                      ],
+                      "properties": {
+                        "mode": {
+                          "const": "all"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "enum": [
+                    "",
+                    "logs"
+                  ]
+                }
+              }
+            }
+          }
+        ]
       },
       "exploration.TailSelectorInput": {
         "additionalProperties": false,
@@ -22397,7 +22593,46 @@
             }
           }
         ],
-        "description": "Choose a current-key-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge span questions apply the same checked environment policy to parent ownership and child membership."
+        "description": "Choose a current-key-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge span questions apply the same checked environment policy to parent ownership and child membership.",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "environmentSelector"
+              ],
+              "properties": {
+                "environmentSelector": {
+                  "type": "object",
+                  "required": [
+                    "scope"
+                  ],
+                  "properties": {
+                    "scope": {
+                      "required": [
+                        "mode"
+                      ],
+                      "properties": {
+                        "mode": {
+                          "const": "all"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "enum": [
+                    "",
+                    "logs"
+                  ]
+                }
+              }
+            }
+          }
+        ]
       },
       "exploration.TelemetryPackage": {
         "properties": {
@@ -23093,12 +23328,24 @@
             "type": "string"
           },
           "environmentSelector": {
-            "anyOf": [
+            "allOf": [
               {
                 "$ref": "#/components/schemas/identity.EnvironmentSelector"
               },
               {
-                "type": "null"
+                "properties": {
+                  "scope": {
+                    "properties": {
+                      "mode": {
+                        "enum": [
+                          "named",
+                          "empty",
+                          "unreported"
+                        ]
+                      }
+                    }
+                  }
+                }
               }
             ]
           },
@@ -23188,19 +23435,24 @@
             "type": "string"
           },
           "environmentSelector": {
-            "anyOf": [
+            "allOf": [
               {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
               },
               {
-                "type": "null"
+                "properties": {
+                  "scope": {
+                    "properties": {
+                      "mode": {
+                        "enum": [
+                          "named",
+                          "empty",
+                          "unreported"
+                        ]
+                      }
+                    }
+                  }
+                }
               }
             ]
           },
@@ -26478,7 +26730,8 @@
                 "enum": [
                   "named",
                   "empty",
-                  "unreported"
+                  "unreported",
+                  "all"
                 ]
               },
               "value": {
@@ -26556,7 +26809,8 @@
               }
             }
           }
-        ]
+        ],
+        "description": "Explicit environment selection. Effective scope all is supported only by ordinary log questions and their carriers; it is never an observed label, a blank-name fallback, or native/trace permission."
       },
       "identity.EnvironmentSelectorInput": {
         "properties": {
@@ -26579,7 +26833,8 @@
                 "enum": [
                   "named",
                   "empty",
-                  "unreported"
+                  "unreported",
+                  "all"
                 ]
               },
               "value": {
@@ -26657,7 +26912,8 @@
               }
             }
           }
-        ]
+        ],
+        "description": "Explicit environment selection. Effective scope all is supported only by ordinary log questions and their carriers; it is never an observed label, a blank-name fallback, or native/trace permission."
       },
       "identity.Namespace": {
         "properties": {
@@ -29395,7 +29651,26 @@
             "type": "string"
           },
           "environmentSelector": {
-            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              },
+              {
+                "properties": {
+                  "scope": {
+                    "properties": {
+                      "mode": {
+                        "enum": [
+                          "named",
+                          "empty",
+                          "unreported"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           "grain": {
             "type": "string"
@@ -29587,7 +29862,26 @@
             "type": "string"
           },
           "environmentSelector": {
-            "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              },
+              {
+                "properties": {
+                  "scope": {
+                    "properties": {
+                      "mode": {
+                        "enum": [
+                          "named",
+                          "empty",
+                          "unreported"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           "grain": {
             "anyOf": [
@@ -29959,7 +30253,26 @@
             "type": "string"
           },
           "environmentSelector": {
-            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              },
+              {
+                "properties": {
+                  "scope": {
+                    "properties": {
+                      "mode": {
+                        "enum": [
+                          "named",
+                          "empty",
+                          "unreported"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           "fromMs": {
             "type": "integer"
@@ -30025,7 +30338,26 @@
             "type": "string"
           },
           "environmentSelector": {
-            "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              },
+              {
+                "properties": {
+                  "scope": {
+                    "properties": {
+                      "mode": {
+                        "enum": [
+                          "named",
+                          "empty",
+                          "unreported"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           },
           "fromMs": {
             "anyOf": [
@@ -32288,7 +32620,26 @@
           "environmentSelector": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/identity.EnvironmentSelector"
+                  },
+                  {
+                    "properties": {
+                      "scope": {
+                        "properties": {
+                          "mode": {
+                            "enum": [
+                              "named",
+                              "empty",
+                              "unreported"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
               },
               {
                 "properties": {
@@ -66890,6 +67241,42 @@
           {
             "if": {
               "required": [
+                "environmentSelector"
+              ],
+              "properties": {
+                "environmentSelector": {
+                  "type": "object",
+                  "required": [
+                    "scope"
+                  ],
+                  "properties": {
+                    "scope": {
+                      "required": [
+                        "mode"
+                      ],
+                      "properties": {
+                        "mode": {
+                          "const": "all"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "enum": [
+                    "logs"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
                 "reportedEdge"
               ],
               "properties": {
@@ -66902,6 +67289,40 @@
               "properties": {
                 "signal": {
                   "const": "spans"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "environmentSelector"
+              ],
+              "properties": {
+                "environmentSelector": {
+                  "type": "object",
+                  "required": [
+                    "scope"
+                  ],
+                  "properties": {
+                    "scope": {
+                      "required": [
+                        "mode"
+                      ],
+                      "properties": {
+                        "mode": {
+                          "const": "all"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "const": "logs"
                 }
               }
             }
@@ -67046,7 +67467,8 @@
                 "enum": [
                   "named",
                   "empty",
-                  "unreported"
+                  "unreported",
+                  "all"
                 ]
               },
               "value": {
@@ -67127,7 +67549,8 @@
               }
             }
           }
-        ]
+        ],
+        "description": "Explicit environment selection. Effective scope all is supported only by ordinary log questions and their carriers; it is never an observed label, a blank-name fallback, or native/trace permission."
       },
       "recordintent.exploration.FieldInput": {
         "additionalProperties": false,

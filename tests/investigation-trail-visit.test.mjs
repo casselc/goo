@@ -49,3 +49,14 @@ test('construction events retain typed scope until the mounted API acknowledges 
   readyAPI.saved=null;emit('goo:question-state',{phase:'draft',action:'stage',requested:question});assert.equal(trail.currentConfiguration().kind,'question','edited unacknowledged scope is not falsely pinned as its former saved revision');
  }finally{mountHook=null;for(const [key,value]of previous){if(value===undefined)delete globalThis[key];else globalThis[key]=value}}
 });
+
+test('437 explicit row-scope staging focuses only its current newly adopted visit',()=>{
+ const keys=['document','addEventListener','dispatchEvent','scrollY','location','CustomEvent'],previous=new Map(keys.map(k=>[k,globalThis[k]])),listeners=new Map(),focused=[];let reenter=false,trail;
+ Object.assign(globalThis,{document:{addEventListener(){},activeElement:null},addEventListener(type,fn){listeners.set(type,fn)},dispatchEvent(){},scrollY:0,location:{hash:'#explore'},CustomEvent:class{}});
+ const question={signal:'logs',environmentSelector:{version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'empty'}},fromMs:1000,toMs:61000,limit:100,offset:0},other={...question,environmentSelector:{version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'named',value:'other'}}};
+ mountHook=(_view,api)=>{api.focusRun=()=>focused.push(api);const open=api.openQuestion.bind(api);api.openQuestion=(...args)=>{open(...args);if(reenter){reenter=false;trail.openQuestion(other,[],{stage:true})}}};
+ try{const host=new El('main');host.root=true;trail=mount(host,{lazy:true});const enter=listeners.get('goo:open-population');enter({detail:{question,stage:true,focusRun:true}});assert.equal(focused.length,1);assert.equal(focused[0],apis.at(-1));assert.deepEqual(focused[0].question,question);
+  enter({detail:{question,stage:true}});assert.equal(focused.length,1,'ordinary entry without requested focus keeps its existing policy');
+  reenter=true;enter({detail:{question,stage:true,focusRun:true}});assert.equal(focused.length,1,'reentrant replacement cannot focus the departed visit');assert.deepEqual(apis.at(-1).question,other);
+ }finally{mountHook=null;for(const [key,value]of previous){if(value===undefined)delete globalThis[key];else globalThis[key]=value}}
+});

@@ -6,7 +6,7 @@ const version='goo.service-handoff/v1',own=(o,k)=>Object.prototype.hasOwnPropert
 function closed(x,keys){if(!plain(x)||Object.keys(x).some(k=>!keys.includes(k)))throw Error('Invalid service context fields.');}
 function text(x,empty=false){return typeof x==='string'&&(empty||x.length>0)&&x.isWellFormed()&&!x.includes('\0')&&new TextEncoder().encode(x).length<=128;}
 function namespace(x){closed(x,['mode','value']);if(!['missing','value'].includes(x.mode)||x.mode==='missing'&&own(x,'value')||x.mode==='value'&&!text(x.value,true))throw Error('Service namespace must have an exact reported value or a known missing key.');return structuredClone(x);}
-function origin(q){validateRecordQuestion(q);if(q.where)validatePredicate(q.where,q.signal);if(q.toMs>=4102444800000)throw Error('This observation window is outside service discovery bounds.');return Environment.selection(q);}
+function origin(q){validateRecordQuestion(q);if(q.where)validatePredicate(q.where,q.signal);if(q.toMs>=4102444800000)throw Error('This observation window is outside service discovery bounds.');return Environment.requireNarrow(q);}
 function freeze(x){if(x&&typeof x==='object'){Object.values(x).forEach(freeze);Object.freeze(x)}return x;}
 export function validate(value){
  closed(value,['version','service','namespace','environmentSelector','fromMs','toMs','origin']);if(value.version!==version||!text(value.service))throw Error('Open service requires a nonempty reported service name (up to 128 bytes).');

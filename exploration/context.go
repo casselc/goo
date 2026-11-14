@@ -11,6 +11,10 @@ func SurroundingQuestion(origin Query, anchorNS, service string, radiusMS int64,
 	if err := origin.Validate(); err != nil {
 		return Query{}, err
 	}
+	selection, _ := origin.EnvironmentSelection()
+	if selection.All() {
+		return Query{}, fmt.Errorf("choose one environment before opening surrounding record context")
+	}
 	if origin.Signal != "logs" || radiusMS < 1000 || radiusMS > 300000 {
 		return Query{}, fmt.Errorf("log origin and radius 1..300 seconds required")
 	}

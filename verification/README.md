@@ -1,5 +1,41 @@
 # Semantic properties and model conformance
 
+## Explicit All-environments logs (437)
+
+`TestHegelAllEnvironments437Conservation` generates 150 resource banks, preserving
+current-key presence over legacy fallback. All selection is the union of the
+existing disjoint named/empty/unreported observations; neither a zero scope nor
+an observed scope becomes All. Literal named `all` stays distinct. The property
+checks bounded parameterized SQL and detached Tail/fixed/capture/record-step wires.
+`TestAllEnvironments437GoJavaScriptParity` checks 600 actual Go/JS combinations,
+including production observation and row-narrowing helpers without replacing the
+original fixed bounds or predicates.
+
+`TestQuintAllEnvironments437Observed` consumes `GOO_ALL_ENVIRONMENTS_437_REPORT`
+from the [real OTLP journey](../journeys/all-environments.spec.js). It admits the
+1005-row oracle, the actual bounded tail and its environment facts, fixed/narrowed
+queries, immutable capture bank and source-free reopening, exact saved definition
+and Recent recall plus actual source-inert UI YAML export, supported cardinality
+refusal and unsupported-family refusal.
+Per-step and global API/SQL authority are checked independently, including exact
+request/response binding, ordered source plans, readonly budgets and the configured
+isolated source database. The existing population-drilldown model then
+replays source attempts/local transitions and rejects eight semantic/authority
+mutants. It is not a model of browser focus, layout, or server rolling-clock time.
+
+```sh
+go test . -run '^(TestHegelAllEnvironments437Conservation|TestAllEnvironments437GoJavaScriptParity)$' -count=1 -v
+GOO_ALL_ENVIRONMENTS_437_REPORT=/absolute/path/to/report.json \
+  go test . -run '^TestQuintAllEnvironments437Observed$' -count=1 -v
+```
+
+The browser requires the native gate after a passed report and owned-runtime
+cleanup; it rejects skips. Missing-report standalone skips do not constitute
+acceptance. Final actual native acceptance passed in **18.25s**, zero skips,
+with 31 observed steps, 32 owned SQL requests and all eight controls rejected.
+The latest generated conservation/parity run passed in **0.159s**. Actual
+browser/native results belong in [validation](../VALIDATION.md).
+
 ## Measured scope and preservation consolidation (429)
 
 `TestQuintMeasuredPreservation429Observed` consumes the completed joined

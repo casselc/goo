@@ -99,6 +99,9 @@ func (c *compiler) predicate(p *Predicate) string {
 	return "(" + present + " AND " + expr + ")"
 }
 func (c *compiler) source(q Query, selection identity.EnvironmentSelection) (string, string, error) {
+	if selection.All() && q.Signal != "logs" {
+		return "", "", fmt.Errorf("all-environments scope supports logs only")
+	}
 	table, attrs := "otel_traces", "SpanAttributes"
 	if q.Signal == "logs" {
 		table, attrs = "otel_logs", "LogAttributes"

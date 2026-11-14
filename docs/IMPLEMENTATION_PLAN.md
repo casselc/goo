@@ -46,9 +46,10 @@
 > evidence from existing Preserve is delivered**; see [paired capture](PAIRED_COMPARISON_CAPTURE.md).
 > **429 measured scope/preservation consolidation is delivered**; see
 > [measured controls](MEASURED_SCOPE_PRESERVATION.md).
-> Next: **437 explicit All-environments logs**, **438 raw gauge inspection** and
-> **439 measured first-use acquisition consolidation**. These are planned,
-> design-gated outcomes, not delivered features.
+> **437 explicit All-environments logs is delivered**; see
+> [All-environments entry](ALL_ENVIRONMENTS_LOG_ENTRY.md).
+> Next: **438 raw gauge inspection**, then **439 measured first-use acquisition
+> consolidation**. These are planned, design-gated outcomes.
 > Definition recall and evidence capture retain separate semantics. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped

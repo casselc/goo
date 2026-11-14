@@ -325,6 +325,63 @@
         false,
         false
       ]
+    },
+    {
+      "name": "explicit all environments",
+      "selector": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "all"
+        }
+      },
+      "canonical": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "all"
+        }
+      },
+      "matches": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "name": "explicit all empty value canonicalized",
+      "selector": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "all",
+          "value": ""
+        }
+      },
+      "canonical": {
+        "version": "goo/environment-selector/v1",
+        "policy": "effective",
+        "scope": {
+          "mode": "all"
+        }
+      },
+      "matches": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
     }
   ],
   "invalid": [
@@ -502,6 +559,29 @@
       "scope": {
         "mode": "empty",
         "VALUE": ""
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "current-only",
+      "scope": {
+        "mode": "all"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "mode": "all",
+        "value": "prod"
+      }
+    },
+    {
+      "version": "goo/environment-selector/v1",
+      "policy": "effective",
+      "scope": {
+        "mode": "all",
+        "value": null
       }
     }
   ],

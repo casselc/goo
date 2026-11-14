@@ -37,7 +37,13 @@ metadata from an older held question. More general CEL vocabulary and native
 metric expression authoring remain unimplemented. [427 exact recall](EXACT_SAVED_VIEW_RECALL.md)
 is delivered, as is [428 paired evidence](PAIRED_COMPARISON_CAPTURE.md).
 [429 measured consolidation](MEASURED_SCOPE_PRESERVATION.md) is delivered.
-Next is the [437–439 whole-product cycle](ROADMAP_2026_11_14_CHECKPOINT_429.md).
+[437 All-environments logs](ALL_ENVIRONMENTS_LOG_ENTRY.md) is delivered. Next is
+438 raw gauge inspection in the [whole-product cycle](ROADMAP_2026_11_14_CHECKPOINT_429.md).
+
+All is an explicit log selector within the configured source. Spans, trace and
+surrounding context, inventory, native evaluation and implicit linked-family
+planning require a supported narrow scope. Named `all`, empty and unreported
+remain distinct; unavailable resource metadata cannot prove Unreported.
 
 [The ad-hoc telemetry review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) identifies
 first-use scope discovery, partial-signal table assumptions, metric-only bootstrap,

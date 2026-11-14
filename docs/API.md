@@ -18,6 +18,18 @@ not extra observability operations. Automatic HEAD/mux refusal behavior is not a
 separately supported operation. The checked-in spec records ownership and
 [known limits](KNOWN_ISSUES.md); executed coverage remains separately stated.
 
+Log queries and tails can explicitly select All environments:
+
+```json
+{"version":"goo/environment-selector/v1","policy":"effective","scope":{"mode":"all"}}
+```
+
+Use this as `environmentSelector` in a complete bounded log request. Blank input
+does not mean All, and `environment: "all"` still names a literal current-key
+label. Spans, inventory, trace context and native measurement requests refuse the
+wide selector before source access. Observed environment scopes retain only
+named, empty and unreported labels. See [All-environments entry](ALL_ENVIRONMENTS_LOG_ENTRY.md).
+
 Captured-record review has a separate bounded metadata surface under
 `/record-reviews`: resolve an absolute stored occurrence, create/load immutable
 tasks and decisions, and create/load/export historical pinned manifests. All

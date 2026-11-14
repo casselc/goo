@@ -15,6 +15,7 @@ const global=globalThis;
 const identity=ServiceIdentity;
 const own=(value,key)=>Object.hasOwn(value,key),text=value=>typeof value==='string'&&value.isWellFormed()&&!value.includes('\0')&&new TextEncoder().encode(value).length<=128;
 function inventoryQuestion(scope,...selection){
+ RecordEnvironment.requireNarrow(scope);
  const out={...RecordEnvironment.questionFields(scope),fromMs:scope.fromMs,toMs:scope.toMs};
  if(!Number.isSafeInteger(out.fromMs)||!Number.isSafeInteger(out.toMs)||out.fromMs<0||out.toMs<=out.fromMs||out.toMs-out.fromMs>7200000||out.toMs>4102444800000)throw Error('Choose a fixed inventory window of at most 120 minutes.');
  if(scope.namespace!=null){const ns=scope.namespace;if(typeof ns!=='object'||Array.isArray(ns)||Object.keys(ns).some(key=>!['mode','value'].includes(key))||!['missing','value'].includes(ns.mode)||ns.mode==='missing'&&own(ns,'value')&&ns.value!==''||ns.mode==='value'&&own(ns,'value')&&!text(ns.value))throw Error('Choose an exact namespace or all namespaces.');out.namespace=structuredClone(ns);}
