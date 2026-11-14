@@ -3,7 +3,9 @@
 Status: **adopted after 436.6 acceptance**, 2026-11-14. Subsequently,
 [427 exact recall](../EXACT_SAVED_VIEW_RECALL.md) and
 [428 paired evidence](../PAIRED_COMPARISON_CAPTURE.md) were delivered and validated.
-429 remains planned. The proposal below records the original sequencing basis.
+429 is also delivered as [measured consolidation](../MEASURED_SCOPE_PRESERVATION.md).
+The [437–439 checkpoint](../ROADMAP_2026_11_14_CHECKPOINT_429.md) owns next work.
+The proposal below records the original sequencing basis.
 436.6 completed actual Services/native record-context and held-return acceptance.
 The parent maintains executed results in [validation](../../VALIDATION.md).
 

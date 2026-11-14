@@ -4,20 +4,16 @@ Goo's main loop is **see current telemetry → isolate a population → follow i
 evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
-[CEL predicate planning](CEL_PREDICATE_PILOT.md) now provides a versioned Go
-extension and source-free CLI that produce the existing ordinary question model.
-It is a bounded library/CLI authoring path; interactive text authoring is planned.
-The [whole-product integration design](CEL_PRODUCT_INTEGRATION.md) keeps expression
-editing in existing workflows with protected parent scope and explicit Apply/Run.
-Its staged 436 plan remains unimplemented; ordinary visual investigation continues
-to work without CEL.
+Visual filters and optional [CEL conditions](CEL_CONTEXTUAL_EDITOR.md) use the
+same typed question model. Checking is source-free; Apply and Run remain explicit.
+[Saved definitions](CEL_SAVED_QUESTIONS.md) retain checked source and bindings.
+CEL currently covers a bounded fixed-field vocabulary, not arbitrary attribute
+maps or whole-query SQL replacement.
 
-This is the current task-oriented capability index, reconciled through milestone
-435, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
-[fleet service triage](SERVICE_TRIAGE.md).
-The [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md) owns execution order;
-[validation](../VALIDATION.md) records checks actually run. Historical proposals
-below are research inputs, not additional backlogs or claims of vendor parity.
+This task-oriented index describes delivered behavior. The
+[active roadmap](ROADMAP_2026_11_14_CHECKPOINT_429.md) owns execution order and
+[validation](../VALIDATION.md) records checks actually run. Dated proposals are
+research inputs, not additional backlogs or claims of vendor parity.
 
 [Query-only exception groups](EXCEPTION_GROUPS.md) identify exact reported type/stack
 signatures across logs or spans, with explicit unclassified records and ordinary drill-down.
@@ -44,8 +40,8 @@ local inspection and selection. [Message search](ACTIVITY_MESSAGE_SEARCH.md) now
 bridges local Find to an explicit case-sensitive source Body query in the same
 fixed window. [Numeric severity](ACTIVITY_NUMERIC_SEVERITY.md) adds full-window
 bands, local shared-scale timelines and exact numeric filtering independently of
-producer text. Aggregate selection and held-return consolidation is next; see the
-[active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
+producer text. [Shared refinement and held return](REFINEMENT_CONSOLIDATION.md)
+preserve checked parent scope across record and native/service contexts.
 
 ## What users can do
 
@@ -54,6 +50,8 @@ producer text. Aggregate selection and held-return consolidation is next; see th
 | Recover a quiet Activity stream | [Wider-window search](ACTIVITY_SPARSE_RECOVERY.md) stages a fixed 15-minute question with the applied selector and held return | Empty loaded observations are not a source census; Run explicitly reads the wider event-time window. |
 | See what is happening now | [Live Activity](LIVE_ACTIVITY.md), scoped log/span streams, optional [log volume and literal severity-text context](ACTIVITY_LOG_CONTEXT.md), inspection and [contextual investigation actions](ACTIVITY_NAVIGATION.md) | A bounded live buffer is not the full population; disconnects, gaps and pauses remain explicit. |
 | Narrow and inspect ordinary telemetry | [Typed filters](FILTER_EDITOR.md), [counted field values](FILTER_VALUES.md), structured attributes and [qualified field presentation](FIELD_PRESENTATION.md) | Missing and present-empty values differ. A displayed page does not define total counts. |
+| Author a checked condition | [Contextual CEL editing](CEL_CONTEXTUAL_EDITOR.md), positioned diagnostics and [source-preserving saved definitions](CEL_SAVED_QUESTIONS.md) | Unsupported expressions refuse before execution. Parent scope stays protected; checking does not query telemetry. |
+| Find a saved investigation | [Exact Recent / Pinned recall](EXACT_SAVED_VIEW_RECALL.md), local search and browser persistence opt-in | Immutable ID selects the complete definition. Stage resolves metadata; only Run reads telemetry. |
 | Inspect captured activity over time | [Exact captured-record rates](CAPTURED_RECORD_RATES.md) in fixed summaries and ungrouped timelines | Count/window rates describe captured records, not unsampled traffic or application throughput. Clipped buckets use their actual duration. |
 | Compare populations | [Population workspace](POPULATION_WORKSPACE.md), distributions, baseline/selection comparisons and [fresh-window comparisons](FRESH_COMPARISON.md) | Independent reads can disagree. Ranked differences are leads, not statistical significance or cause. |
 | Follow traces across services | [Cross-service trace search](TRACE_SEARCH.md), qualified witnesses, [waterfalls and trace findings](TRACE_FINDINGS.md) | Conditions are independent within a reported trace ID. Witnesses do not prove ordering, a unique invocation or a complete trace. |
@@ -67,6 +65,7 @@ producer text. Aggregate selection and held-return consolidation is next; see th
 | See native data before configuration | [Data-first native composition](NATIVE_DATA_FIRST.md) across ordinary, service-expanded and saved native views | Compact scope/state and real first data are visible at natural entry; detailed identity/provenance is disclosed. Source, custody and return owners remain separate. |
 | Follow a gauge observation into records | [Logs/spans around an observation](GAUGE_OBSERVATION_CONTEXT.md) from ordinary Measurements, Services and Saved, explicit Run and held Back | A reported timestamp anchors clipped ±60s time association; no causal join, metric-label filter inference or new coverage claim. Saved retains immutable custody; service staging binds the accepted widget. |
 | Preserve and hand off an investigation | [Typed question steps](INVESTIGATION_STEPS.md), [immutable captures](GENERAL_CAPTURES.md), [six-family admission](CAPTURE_FAMILY_ADMISSION.md), notes and [linked evidence histories](LINKED_QUESTION_EVIDENCE.md) | Authored intent, source-read basis and custody receipt are separate. Refresh creates a successor; it does not rewrite prior evidence. |
+| Capture both comparison questions | [Paired comparison evidence](PAIRED_COMPARISON_CAPTURE.md), ordered children, stored reopen and existing capture cards | Confirmation rereads both questions. Later failures can leave completed children; no shared snapshot or rollback is implied. |
 | Keep observations and annotate examples | [Kept observations](KEPT_OBSERVATIONS.md), [tags/notes](WORKBENCH_ANNOTATIONS.md) and [captured-record review](CAPTURE_RECORD_REVIEW.md) | Review targets one immutable occurrence. Labels are local judgments with explicit vocabularies, not ground truth or authenticated reviewer attribution. |
 | Author reusable scoped views | [View templates](AUTHORABLE_VIEW_TEMPLATES.md), [ungrouped summary templates](UNGROUPED_SUMMARY_TEMPLATES.md), [numeric histogram views](AUTHORED_NUMERIC_HISTOGRAMS.md), [saved display declarations](SAVED_DISPLAY_DECLARATIONS.md), record tables/lists, timelines and declared facets | Compatibility is checked against the supplied data profile. Configuration is not captured data or permission to execute arbitrary code. |
 | Extend displays and automate workflows | [Framework-neutral components](UI_COMPONENTS.md), checked data/kind contracts and the [Go HTTP/OpenAPI contract](API.md) | Display components consume supplied data. Application owners retain reads, navigation, scope and publication authority. |
@@ -74,45 +73,16 @@ producer text. Aggregate selection and held-return consolidation is next; see th
 ## Remaining boundaries
 
 These are current gaps or gates, not an automatically scheduled feature list.
-The active roadmap adopts a finite breadth/depth/consolidation queue after the
-393 whole-product checkpoint: [direct distribution customization](DISTRIBUTION_CUSTOMIZATION.md)
-(394) and [grouped count timeline reuse](GROUPED_COUNT_TIMELINE_REUSE.md) (395)
-and [held editing/save consolidation](HELD_PRESENTATION_OWNERSHIP.md) (396)
-are delivered. Quantitative customization (397) preserves the selected numeric or
-duration measure through that same workflow. [Grouped mean duration](GROUPED_MEAN_DURATION_REUSE.md) (398) preserves exact
-sum/count support with unavailable empty latency. [Pure helper consolidation](PURE_DISPLAY_HELPERS.md) (399) removes grouped
-renderer back edges without moving source ownership.
-[Summary authoring](AUTHORED_POPULATION_SUMMARIES.md) (400) uses existing exact
-whole-population facts with no forced grouping. [Retained gauge context](RETAINED_GAUGE_RECORD_CONTEXT.md)
-(401) and [shared-table context](TABLE_CONTEXT.md) (402) are delivered. [Trace-search continuation](TRACE_SEARCH_CONTINUATION.md) (403) is delivered.
-[Ungrouped summary templates](UNGROUPED_SUMMARY_TEMPLATES.md) (404) are also delivered;
-[Shared parameter encoding](CLICKHOUSE_PARAMETER_ENCODING.md) (405) is delivered.
-[Captured-record rates](CAPTURED_RECORD_RATES.md) (406) are delivered.
-[Authored numeric histograms](AUTHORED_NUMERIC_HISTOGRAMS.md) (407) are delivered.
-[Passive exports and embedding examples](PASSIVE_DISPLAY_EMBEDDING.md) (408) are delivered.
-[Service-window captured-count comparisons](SERVICE_WINDOW_COMPARISONS.md) (409) are delivered.
-[Incoming HTTP response context](INCOMING_HTTP_RESPONSES.md) (410) is delivered.
-[Shared quantitative chrome](QUANTITATIVE_VIEW_COMPOSITION.md) (411) consolidates
-numeric and selected native histogram surfaces and action readiness.
-[Fleet service triage](SERVICE_TRIAGE.md) (412) is delivered.
-[Log volume/severity-text context](ACTIVITY_LOG_CONTEXT.md) (413) is delivered.
-[Recent/pinned scope recall](RECENT_PINNED_SCOPES.md) (414) consolidates browser configuration and held-visit entry.
-[Guided service-version comparisons](SERVICE_VERSION_COMPARISONS.md) (415/419) now reuse count/mean and recorded Error comparisons from an exact fixed service scope.
-[Ordinary captured-rate comparisons](CAPTURED_RATE_COMPARISONS.md) (418) are delivered.
-Recorded Error context (419) and [contextual action consistency](CONTEXTUAL_ACTIONS.md)
-(420) are delivered. [Contextual Activity facet entry](ACTIVITY_FACET_ENTRY.md)
-(421) reuses existing counted values. [Multi-value selection](MULTI_VALUE_FACETS.md)
-(422) stages atomic OR choices within the retained scope. [Measured render/scope
-snapshot consolidation](ACTIVITY_SCOPE_SNAPSHOTS.md) (423) is delivered. Contextual field-constraint
-editing (424), selected/rest entry (425), preservation (426), and first-use scope
-entry (430) are delivered; see the [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
-Captured-example task discovery and adjacent labeling remain deferred. Delivered
-capabilities and remaining boundaries are distinguished below.
+Current delivery history belongs in the [implementation plan](IMPLEMENTATION_PLAN.md)
+and [validation record](../VALIDATION.md). Use the task table above for supported
+workflows and the active roadmap for priorities.
 
 | Area | Remaining gap or decision | Current reference |
 | --- | --- | --- |
+| CEL vocabulary | Interactive fixed-field conditions and checked source preservation are delivered. Attribute maps, explicit presence guards, whole-query CEL and a general third-party lowering registry remain unimplemented. | [CEL acceptance](CEL_WHOLE_PRODUCT_ACCEPTANCE.md) |
+| Native instrument readiness | Discovery can show instruments that the service evaluator cannot execute without reported nonempty service.instance.id. Resource/stream policies remain separate; Goo does not invent identities. | [Instrument preflight](INSTRUMENT_PREFLIGHT.md) |
 | Native context coverage | Ordinary Measurements gauge nearby-record context is delivered alongside existing counter/histogram interval context. Services/Saved gauge continuation is delivered in 401. Stock and broader resource contexts require their own retained-evidence admission. | [Gauge context contract](GAUGE_OBSERVATION_CONTEXT.md) |
-| Further density | [384](DATA_FIRST_FIXED_RESULTS.md) covers checked fixed/retained records; [390](NATIVE_DATA_FIRST.md) delivers actual first-item visibility in ordinary, service-expanded and saved native entry. Other screens and larger-label/population cases remain evidence-driven refinements, not another automatic redesign. | [Current native contract](NATIVE_DATA_FIRST.md) |
+| Further density | [Measured scope/preservation controls](MEASURED_SCOPE_PRESERVATION.md) reduce edit/modal controls and action distance without a query-speed claim. [384](DATA_FIRST_FIXED_RESULTS.md) covers checked fixed/retained records; [390](NATIVE_DATA_FIRST.md) delivers actual first-item visibility in ordinary, service-expanded and saved native entry. Other screens and larger-label/population cases remain evidence-driven refinements, not another automatic redesign. | [Current native contract](NATIVE_DATA_FIRST.md) |
 | Native outgoing HTTP | The explicit Client-span lens is delivered; the exact seconds explicit-histogram `http.client.request.duration` discovered profile is delivered in 392. Generic duration execution/discovery does not grant Client-span lens authority. | [Outgoing HTTP contract](OUTGOING_HTTP.md) and [native duration contract](HTTP_CLIENT_NATIVE_DURATION.md) |
 | Training/review workflow | Contextual task discovery and adjacent captured-occurrence navigation are deferred behind the adopted operator cadence. A disjoint verified kept-occurrence review target remains deferred. Existing captured-record review and export are delivered. | [Review contract](CAPTURE_RECORD_REVIEW.md) and [next roadmap](ROADMAP_2026_11_12_CHECKPOINT_414.md) |
 | Display grammar coverage | Gauge, histogram and counter display reuse are delivered. Counter compatibility requires exact unit and matching integer/decimal domain; resource-bound counters, stocks and other grains remain outside that arm. [Checked count-only log-pattern display admission/reuse](LOG_PATTERN_DISPLAY_REUSE.md) is delivered in 391; pattern execution already exists. | [Counter contract](NATIVE_COUNTER_VIEW_REUSE.md) and [gauge/histogram contract](NATIVE_GAUGE_VIEW_REUSE.md) |

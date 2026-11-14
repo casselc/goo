@@ -36,8 +36,8 @@ its original definition, and a checked-source mismatch cannot silently erase
 metadata from an older held question. More general CEL vocabulary and native
 metric expression authoring remain unimplemented. [427 exact recall](EXACT_SAVED_VIEW_RECALL.md)
 is delivered, as is [428 paired evidence](PAIRED_COMPARISON_CAPTURE.md).
-The next finite step is 429 compact shared scope/preservation;
-see the [adopted roadmap](reviews/ROADMAP_AFTER_CEL_436_PROPOSAL.md).
+[429 measured consolidation](MEASURED_SCOPE_PRESERVATION.md) is delivered.
+Next is the [437–439 whole-product cycle](ROADMAP_2026_11_14_CHECKPOINT_429.md).
 
 [The ad-hoc telemetry review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) identifies
 first-use scope discovery, partial-signal table assumptions, metric-only bootstrap,
@@ -53,9 +53,9 @@ held paused return. This does not diagnose ingestion freshness, retention or ske
 failures and held observations. [434 message search](ACTIVITY_MESSAGE_SEARCH.md)
 bridges local Find to explicit source Body search. [435 numeric severity](ACTIVITY_NUMERIC_SEVERITY.md)
 adds full-window band counts, local time context and exact numeric filters.
-Aggregate selection/held-return consolidation is delivered; the current next
-step is measured scope/preservation compactness in the
-[active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
+Aggregate selection/held-return and measured scope/preservation consolidation
+are delivered; the [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_429.md)
+now prioritizes broader first-use observation access.
 Isolated logs-only, spans-only and gauge-only installations were exercised in 431;
 actual denied-user deployments remain covered by transport checks rather than a
 new database-user integration run.
@@ -99,12 +99,12 @@ for ordinary single-group Count questions, separately from selected-query captur
 Unsupported summary/status/numeric and multi-query profiles retain their existing
 capture paths. Confirmation rereads both questions; later failures can leave
 completed children in Saved. Saved-view configuration is not frozen comparison
-evidence. The shared capture dialog still exposes some irrelevant destination
-controls in Capture-only mode; measured simplification remains in 429.
+evidence. [429](MEASURED_SCOPE_PRESERVATION.md) hides irrelevant Capture-only
+destination fields and resets stale question links.
 Recent/Pinned now resolves exact immutable saved-view references (427), preserving
 whole compositions and checked source. Stage loads metadata only; it does not
-create evidence. Desktop picker row actions could sit closer to their titles;
-the independent review retains that bounded polish item for consolidation.
+create evidence. Picker actions now sit near their titles; fixed shortcuts use native Quick
+filters without hiding active predicate chips.
 
 [Counted selected/rest comparisons](COUNTED_SELECTION_COMPARISONS.md) currently
 start in Activity and support bounded ordinary categorical Count questions.

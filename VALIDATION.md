@@ -1,5 +1,79 @@
 # Validation record
 
+## 429 — measured scope/preservation consolidation and rate display
+
+[Control guide](docs/MEASURED_SCOPE_PRESERVATION.md),
+[paired measurement storyboard](docs/journeys/measured-preservation.md),
+[independent architecture](docs/reviews/MEASURED_CONSOLIDATION_429_ARCH.md) and
+[UX/web standards acceptance](docs/reviews/MEASURED_CONSOLIDATION_429_UX.md).
+
+- Capture-only now hides irrelevant question/destination fields and prose. A pure
+  presentation policy resets stale question links; publication and navigation
+  leases remain separate. Existing service/message/literal-severity/span shortcuts
+  move under native Quick filters; full active predicate chips remain visible.
+  Newly hidden/disabled/retired callbacks refuse edits and reads. Recent actions
+  fit beside titles. Fixed Rerun keeps primary emphasis; Recent mode retains its
+  own accent. The final color-only exclusion has separate Chromium geometry,
+  settled-color, hover and keyboard-focus proof.
+- Existing exact numeric presentation now supplies compact native rates and
+  timeline bounds. Tiny nonzero values cannot become zero; rounded text is marked
+  ≈. Raw values, geometry, units, states and exact/recorded detail remain distinct.
+  Tests include 501 orders of magnitude with both signs, invalid scalars, actual
+  custom-element rendering and unchanged exact UTC bounds. Existing UTC formatting
+  was verified, not claimed as new. The real counter workbench changes a long
+  positive decimal to a compact positive value; its old screen was not zero.
+  Separate formatter tests cover the previous rounded-zero bug in window summaries.
+- Full frontend suite: **1,817 passing, zero failures/skips, 32.691s**. Root Go
+  packages pass; embedded binaries build with Go 1.27.3. No production Go/API,
+  storage carrier or permission framework changed. Eleven older authoring drivers
+  now explicitly reveal shortcut controls; syntax checks pass. This does not claim
+  every historical browser suite was rerun.
+- The paired actual journey uses unchanged `f4bfe8d8` and updated binaries over
+  identical fixed questions, six source logs, event-time bounds and saved view.
+  Fifteen matched state/width samples cover 1440/390/320. Applied first rows remain
+  **368/459/481 px** with **15 actions**. Editing first rows change from
+  **815/1242/1322 → 688/960/1040 px**, with **52 → 48 actions**. Capture-only actions
+  change **9 → 8**; relative Save offsets **715/995/1130 → 522/745/843 px**.
+  Desktop modal height is **782 → 589 px**, and Recent title/action gap **913 → 10 px**.
+  These are geometry gains, not faster queries or a denser applied read view.
+- Main source work remains **22 SQL requests in each phase**. The after actor adds
+  six explicitly owned SQL requests for its one comparison Run. Actual held Return
+  and three local Preserve toggles each add **zero source/store/metadata/SQL work**,
+  retain the same row DOM and cause zero row additions/removals. Initial capture
+  form opening still reads legitimate destination metadata; it is not described
+  as zero API work. Rolling Activity uses separate phase banks and server clocks;
+  those scopes are not normalized into a false identical-window comparison.
+- A real declared decimal counter retains **0.001 s / 3.6 s = 1/3600 s/s** in both
+  binaries, including raw interval and inspector values. Fixture calibration
+  respected the existing maximum-gap and covered-window rules; no kernel guard
+  was loosened to obtain a numeric result.
+- `TestQuintMeasuredPreservation429Observed` admits the actual joined report,
+  34 main steps, matched rows/scopes/rates, explicit API/SQL authority and held
+  work. Existing population-drilldown replay rejects **eight negative controls**;
+  layout itself is not claimed formally modeled. Final browser+actor+mandatory
+  native run: **1.1m**, **475 actor snapshots**, native **17.90s**, zero skips,
+  errors empty and cleanup complete. Native calibration used canonical public
+  `Attributes`, not physical ClickHouse `LogAttributes`, for the independent row
+  membership check. Actor actions await observed outcomes rather than treating a
+  retired-control click as success.
+- Reused Hegel capture, comparison and actual-journal swarms pass in **12.906s**,
+  zero skips: 60×15, 100×25 and 40×48 generated sequences/steps respectively.
+  Independent architecture reran **23 lifecycle/recall checks**, UX recorded **24
+  focused checks**, all passing without skips. Eleven new before/after frames were
+  generated from running binaries and accepted independently.
+- Additional real CEL preservation regression exposed synchronous construction
+  events reading a visit API before mount returned. Read-only access now tolerates
+  the unready API, preserves typed fallback and adopts complete saved references
+  only after acknowledgment. An actual mount-hook regression verifies no premature
+  acknowledgment or composition flattening. Final CEL browser regression passes
+  **52.7s** (54.4s runner), **21 steps, 392 actor snapshots**, no errors, cleanup
+  complete; eight existing frames refreshed and representative frames reviewed.
+- Whole-product architecture/UX checkpoint corrected the capability guide's stale
+  planned-CEL claims. The reviewed [next finite cycle](docs/ROADMAP_2026_11_14_CHECKPOINT_429.md)
+  is **437 explicit All-environments logs → 438 raw gauge inspection → 439 measured
+  acquisition consolidation**. Those features remain planned and gated; this
+  milestone does not implement them.
+
 ## 428 — paired evidence from fixed comparison Preserve
 
 [Operator guide](docs/PAIRED_COMPARISON_CAPTURE.md),

@@ -2,6 +2,7 @@
 import * as Attributes from './attributes.mjs';
 import * as EvidenceSummary from './evidence-summary.mjs';
 import * as Histograms from './histograms.mjs';
+import {compactScalar} from './numeric-values.mjs';
 import * as UI from './components.mjs';
 const global=globalThis;
 const node=(...args)=>(UI).node(...args);
@@ -49,13 +50,13 @@ function latest(s,kind){
    let value='Unavailable';const validSeries=kind==='stock'?['observed','unknown','stale'].includes(s.state):gauge?s.state==='observed':['ok','unknown'].includes(s.state);
    if(validSeries&&(kind==='stock'?['observed','stale'].includes(last?.state):last?.state===(gauge?'observed':'ok'))){
     if(gauge&&typeof last.value==='number'&&Number.isFinite(last.value))value=String(last.value)+' '+s.stream.unit;
-    else if(kind==='counter'&&typeof last.perSecond==='number'&&Number.isFinite(last.perSecond))value=String(last.perSecond)+' '+s.stream.unit+'/s';
+    else if(kind==='counter'&&typeof last.perSecond==='number'&&Number.isFinite(last.perSecond)){const amount=compactScalar(last.exactPerSecond??last.perSecond);if(amount)value=amount.text+' '+s.stream.unit+'/s'}
     else if(kind==='histogram'&&last.distribution?.unit===s.stream.unit){const d=last.distribution,formatter=Histograms;value=d.count+' observations · '+(['bucket-bound','unbounded-upper','unbounded-lower','unbounded','no_data'].includes(d.p95.state)?formatter.p95Label(d.p95,d.unit):'P95 unavailable')}
    }
-   return {stream:structuredClone(s.stream),kind,seriesState:s.state,state:last?.state||s.state,value,extent:last?(gauge?'Endpoint '+last.atNS+' ns':'Latest interval ['+last.fromNS+', '+last.toNS+') ns'):'No retained endpoint or interval',reason:last?.reason||'',fromNS:last?.fromNS,toNS:last?.toNS,atNS:last?.atNS,...(kind==='stock'?{startNS:last?.startNS}:{})};
+   return {stream:structuredClone(s.stream),kind,seriesState:s.state,state:last?.state||s.state,value,...(kind==='counter'&&value!=='Unavailable'?{valueTitle:(last.exactPerSecond!=null?'Exact rate ':'Recorded rate ')+(last.exactPerSecond??last.perSecond)+' '+s.stream.unit+'/s'}:{}),extent:last?(gauge?'Endpoint '+last.atNS+' ns':'Latest interval ['+last.fromNS+', '+last.toNS+') ns'):'No retained endpoint or interval',reason:last?.reason||'',fromNS:last?.fromNS,toNS:last?.toNS,atNS:last?.atNS,...(kind==='stock'?{startNS:last?.startNS}:{})};
  }
 function nativeSummary(data){const family=data.gauges||data.stocks||data.counters||data.histograms;if(!family)return [];const kind=data.gauges?'gauge':data.stocks?'stock':data.counters?'counter':'histogram';return family.series.slice(0,4).map(s=>latest(s,kind))}
-function rateText(value){if(typeof value!=='string'||! /^-?\d+(\/[1-9]\d*)?$/.test(value)||value.length>256)return 'Unavailable';const [a,b='1']=value.split('/'),n=BigInt(a),d=BigInt(b),v=((n<0n?-n:n)*1000n+d/2n)/d;return (n<0n&&v!==0n?'-':'')+String(v/1000n)+'.'+String(v%1000n).padStart(3,'0')}
+function rateText(value){return compactScalar(value)?.text||'Unavailable'}
 function windowValue(stream,summary){
   if(!windowCoverage(summary).validated)return 'Unavailable';
   if(summary.rate!==undefined)return summary.delta+' increments · '+rateText(summary.rate)+' '+stream.unit+'/s';
@@ -63,7 +64,7 @@ function windowValue(stream,summary){
   const formatter=Histograms;
   return d.count+' histogram observations · '+(['bucket-bound','unbounded-upper','unbounded-lower','unbounded','no_data'].includes(d.p95?.state)?formatter.p95Label(d.p95,d.unit):'P95 unavailable');
  }
-function renderWindowMember(host,member){const section=node('section');section.className='native-window-member';section.append(node('p',(member.stream.resource?.['service.instance.id']||'Unknown instance')+' · '+member.stream.name+' ['+member.stream.unit+']'),node('strong',windowValue(member.stream,member.summary)));renderWindowCoverage(section,'Export coverage',member.summary);section.append(Attributes.streamInspection(member.stream));host.append(section);return section}
+function renderWindowMember(host,member){const section=node('section'),value=node('strong',windowValue(member.stream,member.summary));if(windowCoverage(member.summary).validated&&member.summary.rate!==undefined){value.title='Exact rate '+member.summary.rate+' '+member.stream.unit+'/s';value.tabIndex=0}section.className='native-window-member';section.append(node('p',(member.stream.resource?.['service.instance.id']||'Unknown instance')+' · '+member.stream.name+' ['+member.stream.unit+']'),value);renderWindowCoverage(section,'Export coverage',member.summary);section.append(Attributes.streamInspection(member.stream));host.append(section);return section}
 function renderReasons(host,codes){
   const unique=[...new Set(codes.filter(Boolean))];if(!unique.length)return;
   const list=node('ul');list.className='native-reason-list';for(const code of unique){const info=reasonInfo(code),item=node('li');item.append(node('strong',info.title),node('span',' '+info.guidance));list.append(item)}
@@ -71,7 +72,7 @@ function renderReasons(host,codes){
  }
 function extent(host,value){const p=node('p');if(value.atNS!==undefined)p.append('Endpoint ',EvidenceSummary.timestamp(value.atNS));else if(value.fromNS!==undefined&&value.toNS!==undefined)p.append('Latest interval [',EvidenceSummary.timestamp(value.fromNS),' → ',EvidenceSummary.timestamp(value.toNS),')');else p.textContent='No retained endpoint or interval';if(value.kind==='stock')p.append(' · accumulation epoch ',value.startNS?EvidenceSummary.timestamp(value.startNS):node('span','Unavailable'));host.append(p)}
 function renderStreamDiagnostics(host,s,kind,{exportCoverage=false,compact=false,showLatest=true}={}){const m=streamDiagnostics(s,kind),section=node(compact?'details':'section');section.className='native-diagnostics'+(compact?' native-coverage-details':'');section.dataset.state=m.state;section.append(node(compact?'summary':'h4',(exportCoverage?'Export intervals · ':'')+m.label));
-  if(showLatest){const value=latest(s,kind);const row=node('p');row.append(node('strong',value.value));section.append(row);extent(section,value)}
+  if(showLatest){const value=latest(s,kind);const row=node('p'),amount=node('strong',value.value);if(value.valueTitle){amount.title=value.valueTitle;amount.tabIndex=0}row.append(amount);section.append(row);extent(section,value)}
   section.append(UI.stats([{label:['gauge','stock'].includes(kind)?'Fresh observations':'Recorded intervals',value:String(m.recorded)},{label:['gauge','stock'].includes(kind)?'Observations needing review':'Intervals needing review',value:String(m.review)}]));renderReasons(section,m.reasons);section.append(node('small',['gauge','stock'].includes(kind)?'Independent samples; freshness is evaluated at the fixed window end.':'Recorded intervals do not by themselves establish whole-window coverage.'));host.append(section);return section;
  }
 function windowCoverage(side){return side?{state:side.state,fromNS:side.fromNS,toNS:side.toNS,temporality:side.temporality,reasons:[...new Set(side.reasons||[])],validated:side.state==='observed'&&!(side.reasons||[]).length}:{state:'missing',reasons:[],validated:false}}

@@ -23,6 +23,7 @@ This index separates using Goo, extending it, and the development record.
 | Save questions, views or observations | [Preservation](PRESERVATION.md) |
 | Find and stage a saved investigation | [Exact saved-view recall](EXACT_SAVED_VIEW_RECALL.md) |
 | Preserve evidence for both sides of a comparison | [Paired comparison capture](PAIRED_COMPARISON_CAPTURE.md) |
+| Understand scope and capture controls | [Measured scope/preservation controls](MEASURED_SCOPE_PRESERVATION.md) |
 | Create reusable views | [Authorable view templates](AUTHORABLE_VIEW_TEMPLATES.md) |
 | Author a record predicate with CEL | [CEL predicate pilot](CEL_PREDICATE_PILOT.md) |
 | Understand the planned visual/expression workflow | [Whole-product CEL integration](CEL_PRODUCT_INTEGRATION.md) |
@@ -42,7 +43,7 @@ This index separates using Goo, extending it, and the development record.
 manifest-free first use, source compatibility, empty-stream recovery and the
 proposed next usability cycle.
 
-- [Current roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md): adopted next work.
+- [Current roadmap](ROADMAP_2026_11_14_CHECKPOINT_429.md): adopted next work.
 - [Known issues](KNOWN_ISSUES.md): detailed limitations and open gaps.
 - [Validation](../VALIDATION.md): checks actually executed, newest first.
 - [Implementation plan](IMPLEMENTATION_PLAN.md): milestone history and execution guidance.

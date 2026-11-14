@@ -36,3 +36,11 @@ module.exports.openRecordPackage=openRecordPackage;
 // This is a local gesture; the caller still owns any explicit source/write action.
 async function revealControl(control){for(const details of await control.locator('xpath=ancestor::details').all())if(!await details.evaluate(el=>el.open))await details.locator(':scope > summary').click();return control}
 module.exports.revealControl=revealControl;
+
+// Explicit authoring gesture for a particular shortcut; never opens controls on Edit alone.
+async function revealShortcut(page,control,container=page){
+ const editor=control.locator('xpath=ancestor::*[contains(concat(" ", normalize-space(@class), " "), " query-workbench ")]');
+ if(await editor.count()&&!await editor.isVisible())await container.getByRole('button',{name:'Edit question',exact:true}).click();
+ return revealControl(control);
+}
+module.exports.revealShortcut=revealShortcut;

@@ -1,14 +1,18 @@
 # Roadmap after the ad-hoc telemetry entry pass
 
+**Completed checkpoint:** 430–436 and the resumed 427–429 cycle are delivered.
+Use the [current 437–439 roadmap](ROADMAP_2026_11_14_CHECKPOINT_429.md) for next work.
+The original sequencing basis below is retained as history.
+
 The [four-expert review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) prioritizes reaching
 useful unfamiliar telemetry before more preservation depth. This checkpoint
 adopts that direction without renumbering the older pending 427–429 contracts.
 
-Status: **430–436 and 427–428 delivered and validated**. See
+Status: **430–436 and 427–429 delivered and validated**. See
 [whole-product CEL acceptance](CEL_WHOLE_PRODUCT_ACCEPTANCE.md) and
-[exact saved-view recall](EXACT_SAVED_VIEW_RECALL.md). Next:
-**429 measured consolidation**, following [paired evidence](PAIRED_COMPARISON_CAPTURE.md), under the adopted
-[post-CEL operator cycle](reviews/ROADMAP_AFTER_CEL_436_PROPOSAL.md).
+[exact saved-view recall](EXACT_SAVED_VIEW_RECALL.md).
+[Measured consolidation](MEASURED_SCOPE_PRESERVATION.md) completes the post-CEL
+operator cycle. Next work is the [437–439 checkpoint](ROADMAP_2026_11_14_CHECKPOINT_429.md).
 
 The user-directed [CEL predicate pilot](CEL_PREDICATE_PILOT.md) is also delivered:
 a real versioned CEL extension, checked overload lowering, `plan-cel`, immutable
@@ -139,6 +143,6 @@ readiness caching if measurements justify it.
 
 [Exact saved-view recall](EXACT_SAVED_VIEW_RECALL.md) is delivered as 427.
 [Paired-capture adoption](PAIRED_COMPARISON_CAPTURE.md) is delivered as 428.
-[Preservation consolidation](ROADMAP_2026_11_13_CHECKPOINT_426.md)
-remains pending as 429. Its prior acceptance contract remains available;
+[Preservation consolidation](MEASURED_SCOPE_PRESERVATION.md)
+is delivered as 429. The original acceptance contract remains available;
 none is replaced by an improvised discovery-specific view or capture format.

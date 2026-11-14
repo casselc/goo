@@ -1182,6 +1182,7 @@ td details {
 /* Recent activity uses the population adapter as the primary canvas. */
 .exploration-current > h2,.exploration-current > h2 + p { display:none }
 .recent-activity-run { background:var(--accent);color:#11251f;font-weight:600 }
+:where(.fixed-question:not(.recent-mode) > .exploration-scope) > .recent-activity-run{background:var(--surface);color:var(--ink)}
 .recent-entry-hint { margin:.4rem 0;font-size:12px;color:var(--muted) }
 .recent-mode.population-open .exploration-scope > :is([id$=exploreRun],[id$=exploreCancel]) { display:none }
 .recent-mode.population-open .recent-entry-hint { display:none }
@@ -1858,7 +1859,7 @@ input::placeholder,textarea::placeholder {color:var(--muted);opacity:1}
 .scope-history>div:not(.controls){display:grid;gap:.5rem;max-height:24rem;overflow:auto;overscroll-behavior:contain}
 .scope-history section{min-width:0}
 .scope-history h3{font-size:.6875rem;letter-spacing:.04em;text-transform:uppercase;margin:.5rem 0 .25rem;color:var(--muted)}
-.scope-history-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.5rem 1rem;padding:.5rem 0;border-bottom:1px solid var(--border)}
+.scope-history-row{display:grid;grid-template-columns:fit-content(36rem) max-content;justify-content:start;align-items:center;gap:.5rem .75rem;padding:.5rem 0;border-bottom:1px solid var(--border)}
 .scope-history-summary{display:grid;gap:.2rem;min-width:0;overflow-wrap:anywhere;font-size:.8125rem;line-height:1.35}
 .scope-history-title{font-weight:550;color:var(--ink)}
 .scope-history-meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem .5rem;color:var(--muted);font-size:.75rem}

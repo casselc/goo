@@ -1,8 +1,9 @@
 # Roadmap after the 426 investigation checkpoint
 
 **Superseded execution order:** use the [430 checkpoint](ROADMAP_2026_11_14_CHECKPOINT_430.md).
-The ad-hoc entry cycle is complete; **427–428 are now delivered**. **429 remains
-pending**. The dated review and original planning basis below are historical.
+The ad-hoc entry cycle and **427–429 are delivered**. Use the
+[437–439 checkpoint](ROADMAP_2026_11_14_CHECKPOINT_429.md) for next work.
+The dated review and original planning basis below are historical.
 
 **2026-11-14 review:** the [ad-hoc live telemetry pass](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md)
 recommends unknown-data entry, sparse/delayed-data recovery and shared discovery
@@ -137,6 +138,10 @@ A new fragment carrier needs an actual second-parent reuse gap and a minimal
 validated owner contract; it is not required to complete this investigation loop.
 
 ## 429 — consolidate: shared scope and action contracts
+
+**Delivered:** [measured controls](MEASURED_SCOPE_PRESERVATION.md),
+[storyboard](journeys/measured-preservation.md) and [validation](../VALIDATION.md).
+The original acceptance contract below records the planning basis.
 
 Use the exercised 427/428 flow to consolidate pair-facing preservation commands,
 then duplicated normalized-question projections and native action/late-completion guards where their semantics are

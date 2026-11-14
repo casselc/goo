@@ -3031,3 +3031,11 @@ canary/rest questions through a two-side preview, late telemetry, fresh pair
 capture, existing investigation attachment and stored pair/child reopen.
 Keyboard/narrow, source refusal, cancelled late attachment and bounded Bombadil
 checks feed mandatory native/model validation after runtime cleanup.
+
+## 429 — measured scope and preservation controls
+
+[Paired storyboard](measured-preservation.md) compares identical fixed scopes,
+rows and read states across unchanged/updated binaries, with separate rolling
+Activity checks. Local controls, held return, exact recall, pair capture and a
+real tiny counter feed request/DOM budgets, a bounded actor and mandatory native
+validation. Reported layout gains do not imply faster queries.

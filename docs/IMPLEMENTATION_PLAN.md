@@ -1,7 +1,8 @@
 # Implementation plan
 
-> Active execution order: [post-CEL operator cycle](reviews/ROADMAP_AFTER_CEL_436_PROPOSAL.md),
-> adopted after the [430–436 checkpoint](ROADMAP_2026_11_14_CHECKPOINT_430.md).
+> Active execution order: [437–439 whole-product checkpoint](ROADMAP_2026_11_14_CHECKPOINT_429.md).
+> The [post-CEL operator cycle](reviews/ROADMAP_AFTER_CEL_436_PROPOSAL.md) and
+> [430–436 checkpoint](ROADMAP_2026_11_14_CHECKPOINT_430.md) are complete.
 > The adopted operator cadence delivered **412 fleet service triage** and
 > **413 Activity log volume**. **414 recent and pinned scope
 > consolidation** completes that cycle. **415 guided service-version comparison**
@@ -43,7 +44,11 @@
 > **427 exact saved-view recall from Recent / Pinned is delivered**; see
 > [exact recall](EXACT_SAVED_VIEW_RECALL.md). **428 paired
 > evidence from existing Preserve is delivered**; see [paired capture](PAIRED_COMPARISON_CAPTURE.md).
-> Next: **429 measured scope/preservation compactness and consolidation**.
+> **429 measured scope/preservation consolidation is delivered**; see
+> [measured controls](MEASURED_SCOPE_PRESERVATION.md).
+> Next: **437 explicit All-environments logs**, **438 raw gauge inspection** and
+> **439 measured first-use acquisition consolidation**. These are planned,
+> design-gated outcomes, not delivered features.
 > Definition recall and evidence capture retain separate semantics. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped

@@ -1,3 +1,4 @@
+const {revealShortcut}=require('./support/explore');
 const {revealControl}=require('./support/explore');
 const {test,expect}=require('@playwright/test'),fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os'),{execFile}=require('node:child_process'),{promisify}=require('node:util'),{startRuntime}=require('./191-generic-runtime');
 test('253 fixed owner preserves checked environment scope across edits without activating selector entry',async({page})=>{
@@ -14,7 +15,7 @@ test('253 fixed owner preserves checked environment scope across edits without a
    const environmentSelector=selector(scope),toMs=Date.now(),q={signal:'logs',environmentSelector,fromMs:toMs-60000,toMs,limit:100,offset:0};const before=requests.length;
    await page.evaluate(q=>window.scope253.openQuestion(q,[],{stage:true}),q);expect(requests).toHaveLength(before);
    await expect(host.locator('#s253exploreQuestionState')).toContainText(scope.mode==='unreported'?'Unreported environment':scope.mode==='empty'?'Empty environment label':'current/legacy precedence');
-   await host.locator('#s253discoveryMessage').fill('owned-no-match-253');expect(requests).toHaveLength(before);
+   await revealShortcut(page,host.locator('#s253discoveryMessage'),host);await host.locator('#s253discoveryMessage').fill('owned-no-match-253');expect(requests).toHaveLength(before);
    let response=page.waitForResponse(r=>r.url().endsWith('/api/explore')&&r.request().method()==='POST');await host.locator('#s253exploreRun').click();expect((await response).status()).toBe(200);await expect(host).toHaveAttribute('data-question-phase','applied');expect(requests.at(-1).environmentSelector).toEqual(environmentSelector);expect(requests.at(-1).fromMs).toBe(q.fromMs);expect(requests.at(-1).toMs).toBe(q.toMs);
    await expect(host.locator('#s253exploreCreatePackage')).toBeDisabled();await expect(host.locator('#s253deploymentLoad')).toBeDisabled();
    // Changing signal/fresh bounds must not turn an unreported scope into "".

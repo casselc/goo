@@ -1,6 +1,6 @@
 import {test,mock} from 'node:test';import assert from 'node:assert/strict';
 class El{constructor(tag,text){this.tag=tag;this.textContent=text;this.children=[];this.dataset={questionPhase:'initial'};this.parent=null;this.hidden=false}get isConnected(){return this.root||!!this.parent?.isConnected}append(...nodes){for(const n of nodes){n.parent=this;this.children.push(n)}}replaceChildren(...nodes){this.children.forEach(n=>n.parent=null);this.children=[];this.append(...nodes)}setAttribute(){}querySelectorAll(){return []}contains(){return false}remove(){if(this.parent)this.parent.children=this.parent.children.filter(n=>n!==this);this.parent=null}}
-const apis=[];mock.module('../ui/components.mjs',{exports:{node:(tag,text)=>new El(tag,text)}});mock.module('../ui/exploration.mjs',{exports:{mount:view=>{const api={suspensions:0,openQuestion(question,_fields,options={}){this.question=structuredClone(question);this.options=structuredClone(options);view.dataset.questionPhase='staged'},suspend(){this.suspensions++},dispose(){},resume(){},focusRun(){}};apis.push(api);return api}}});
+const apis=[];let mountHook=null;mock.module('../ui/components.mjs',{exports:{node:(tag,text)=>new El(tag,text)}});mock.module('../ui/exploration.mjs',{exports:{mount:view=>{const api={suspensions:0,openQuestion(question,_fields,options={}){this.question=structuredClone(question);this.options=structuredClone(options);view.dataset.questionPhase='staged'},suspend(){this.suspensions++},dispose(){},resume(){},focusRun(){}};apis.push(api);mountHook?.(view,api);return api}}});
 const {mount}=await import('../ui/investigation-trail.mjs');
 const {questionLink}=await import('../ui/question-protocol.mjs');
 test('consumed local question links stay local while ordinary question links enter the trail',()=>{
@@ -23,4 +23,29 @@ test('template entry stages grouped and ungrouped whole checked roots and reject
  const ungrouped={...structuredClone(original),groupBy:[],limit:7};enter({detail:{question:ungrouped,templates:true}});assert.equal(apis.length,before+2);assert.deepEqual(apis.at(-1).question,ungrouped);assert.equal(apis.at(-1).options.stage,true);assert.equal(apis.at(-1).options.templates,true);
  for(const bad of [{...original,offset:1},{...original,groupTimeSeries:true},{...original,groupBy:[{kind:'column',key:'name'},{kind:'column',key:'service'}]},{...ungrouped,numeric:{field:{kind:'attribute',key:'value'},type:'int64',parse:'canonical-decimal',unit:'{item}'}}])enter({detail:{question:bad,templates:true}});assert.equal(apis.length,before+2,'invalid entry must not replace the active visit');
  }finally{for(const [key,value]of previous){if(value===undefined)delete globalThis[key];else globalThis[key]=value}}
+});
+
+
+test('construction events retain typed scope until the mounted API acknowledges an exact saved reference',()=>{
+ const keys=['document','addEventListener','dispatchEvent','scrollY','location','CustomEvent'],previous=new Map(keys.map(key=>[key,globalThis[key]])),listeners=new Map();
+ const emit=(type,detail)=>{for(const listener of listeners.get(type)||[])listener({type,detail})};
+ Object.assign(globalThis,{document:{addEventListener(){},activeElement:null},addEventListener(type,listener){if(!listeners.has(type))listeners.set(type,[]);listeners.get(type).push(listener)},dispatchEvent(event){emit(event.type,event.detail)},scrollY:0,location:{hash:'#explore'},CustomEvent:class{constructor(type,{detail}={}){this.type=type;this.detail=detail}}});
+ try{
+  const host=new El('main');host.root=true;const trail=mount(host,{lazy:true}),question={signal:'logs',environment:'prod',fromMs:1000,toMs:61000,limit:100,offset:0},ref={kind:'saved-view',id:'a'.repeat(64),title:'Whole comparison'};let readyAPI;
+  mountHook=(view,api)=>{
+   readyAPI=api;api.currentSavedView=()=>api.saved||null;view.dataset.questionPhase='draft';
+   assert.doesNotThrow(()=>emit('goo:question-state',{phase:'draft',action:'stage',requested:question}));
+   assert.deepEqual(trail.currentConfiguration(),{kind:'question',question,view:'Records'});assert.equal(trail.recallState(),null);
+   // An event alone does not acknowledge a saved definition before API readiness.
+   api.saved=ref;assert.doesNotThrow(()=>emit('goo:scope-used',ref));
+   assert.equal(trail.visits()[0].configuration.kind,'question');
+  };
+  assert.doesNotThrow(()=>trail.openQuestion(question));mountHook=null;
+  assert.deepEqual(trail.currentConfiguration(),ref);
+  emit('goo:scope-used',ref);assert.deepEqual(trail.visits()[0].configuration,ref);
+  emit('goo:question-state',{phase:'applied',action:'publish',applied:{question}});
+  assert.deepEqual(trail.visits()[0].configuration,ref,'an acknowledged composition never collapses to its selected question');
+  const returned=trail.currentConfiguration();returned.title='Caller mutation';assert.equal(trail.currentConfiguration().title,ref.title);
+  readyAPI.saved=null;emit('goo:question-state',{phase:'draft',action:'stage',requested:question});assert.equal(trail.currentConfiguration().kind,'question','edited unacknowledged scope is not falsely pinned as its former saved revision');
+ }finally{mountHook=null;for(const [key,value]of previous){if(value===undefined)delete globalThis[key];else globalThis[key]=value}}
 });

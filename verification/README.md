@@ -1,5 +1,35 @@
 # Semantic properties and model conformance
 
+## Measured scope and preservation consolidation (429)
+
+`TestQuintMeasuredPreservation429Observed` consumes the completed joined
+before/after report from the [measured journey](../journeys/measured-preservation.spec.js)
+via `GOO_MEASURED_PRESERVATION_429_REPORT`. It checks the same immutable questions,
+raw membership, applied counts/bases/rows and five UI states at 320/390/1440.
+Rolling Activity is exercised separately in each phase: its actual server-owned
+bounds are not normalized away to manufacture a cross-phase comparison.
+
+The gate checks actual API/SQL ownership, source-free local disclosure/return,
+retained rows/opener focus, an exact positive decimal-counter rate and observed
+layout/control counts. The existing population-drilldown model replays read/local
+steps; eight negative controls cover scope, counts, held state and authority.
+Geometry is measured in the browser and admitted independently; this is not a
+runtime benchmark or a model of browser layout/focus.
+The counter fixture retains exact `1/3600 s/s`; its real workbench change is
+long positive scalar notation to compact positive notation, not a prior zero.
+
+```sh
+GOO_MEASURED_PRESERVATION_429_REPORT=/absolute/path/to/comparison.json \
+  go test . -run '^TestQuintMeasuredPreservation429Observed$' -count=1 -v
+```
+
+The after journey requires this gate after cleanup and rejects skipped verdicts.
+A standalone missing-report skip is not acceptance. Existing Hegel capture,
+comparison and exact-journal swarms remain the semantic regressions; no new
+capture engine, model or property framework is introduced. The final actual
+gate passed in 20.19s with all eight controls rejected; reused Hegel checks passed
+in 12.906s. Executed results and limits are recorded in [validation](../VALIDATION.md).
+
 ## Paired population capture (428)
 
 `TestQuintPairedCapture428Observed` consumes `GOO_PAIRED_CAPTURE_428_REPORT`
