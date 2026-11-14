@@ -1,5 +1,50 @@
 # Validation record
 
+## Gotogether acquisition shadow and Quint upgrade — 2026-11-14
+
+[Pilot](docs/GOTOGETHER_ACQUISITION_PILOT.md),
+[real journey](docs/journeys/gotogether-acquisition.md),
+[independent acceptance](docs/reviews/GOTOGETHER_SHADOW_ACCEPTANCE.md), and
+[ready-to-file feedback](docs/reviews/GOTOGETHER_SHADOW_FEEDBACK.md).
+
+- Quint and lockfile upgraded to **0.33.1**. Existing lifecycle model typecheck,
+  100-sample/30-step TypeScript safety run and native model-driven/observed-trace
+  regressions pass. Native regression **4.422s** replays eight generated traces /
+  160 real preparer steps and rejects its mutated trace. Gotogether's required
+  hello example passes 30 faithful faulted runs (**4.026s**) in isolated upstream
+  tooling; normal Goo Hegel/quintgo dependencies are unchanged.
+- New independent `verification/gotogether` module pins upstream
+  `v0.0.0-20261114180025-771dcce13fd2`, Go 1.27.3, no upstream local replacement.
+  Vendored Playwright adapter is byte-identical to the pin, with license/hash.
+  Actual DOM observations are separate from transport completion. Binding intern
+  preserves equality of readable opaque question/detail strings. No product UI
+  changes or custom string encoding remain.
+- Final real-OTLP shadow run `6e20fa05c382` passes the existing native gate first
+  (**10.890s**), recorded-journey shadow plus controls (**24.490s**), then Bombadil
+  adapter admission (**0.030s**), with zero skips. Thirteen native phases retain
+  **24 SQL** calls; the actor records **579 snapshots / nine separate SQL** calls.
+  Actual late HTTP200 does not adopt a new display. Runtime and owned DB cleanup
+  pass; three existing responsive frames are regenerated.
+- On the same **23 recorded protocol events**, one source replay takes **3.621s**
+  and compiled replay **30.120ms**. The compiled positive passes with Node/Quint
+  absent from PATH. This is a single shadow-projection comparison, not a benchmark
+  or a replacement for the native source/question/row oracle.
+- Source/compiled controls distinguish unanswered call, missing final display,
+  stale bank, hidden final display and torn-tail undecided; stale artifacts refuse.
+  Quoted JSON/multiline detail passes with built-in intern. Strict CI command
+  `npm run test:gotogether-controls` passes **23.671s**. Full frontend regressions:
+  **1,849 passing, zero failures/skips, 27.325s**. Model/protocol controls are added
+  to API-contract CI; live trial remains explicit `test:gotogether-shadow`.
+- Independent source review accepts the bounded visible-ownership projection;
+  it does not prove arbitrary read-to-display causality or global collection
+  completeness. An independent deliberate command-argv probe confirms upstream
+  Refutes witness replay omits the requested TypeScript backend; its exit73 is
+  the probe's intentional stop before a default Rust download, not a product
+  failure. Detailed reproduction and integration ergonomics are in the feedback.
+- User-authorized `gh issue create` failed: GraphQL returned `Forbidden` and the
+  current enforced environment allowlist excludes `api.github.com`. No issue was
+  posted; its complete text is retained. Roadmap442 remains planned.
+
 ## Gotogether current-source review — 2026-11-14
 
 [Findings and bounded adoption proposal](docs/GOTOGETHER_CURRENT_REVIEW.md).

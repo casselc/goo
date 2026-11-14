@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "test:journeys": "bash scripts/run_journeys.sh",
+    "test:gotogether-shadow": "GOO_GOTOGETHER_SHADOW=1 playwright test journeys/first-use-acquisition.spec.js --workers=1",
     "model:check": "quint typecheck verification/model/lifecycle.qnt",
     "model:test": "quint run verification/model/lifecycle.qnt --main=lifecycleInstance --backend=typescript --max-samples=100 --max-steps=30 --invariant=safety --seed=42 --verbosity=1",
     "test:visualizations": "node --experimental-test-module-mocks --test tests/*.test.js tests/*.test.mjs",
@@ -23,11 +24,12 @@
     "test:measurements-campaign": "GOO_MEASUREMENTS_BOMBADIL=1 bash scripts/run_journeys.sh journeys/measurements.spec.js",
     "test:smoke": "bash scripts/run_journeys.sh --smoke",
     "diagnostics:plan": "python3 scripts/retain_diagnostics.py",
-    "diagnostics:prune": "python3 scripts/retain_diagnostics.py --apply"
+    "diagnostics:prune": "python3 scripts/retain_diagnostics.py --apply",
+    "test:gotogether-controls": "cd verification/gotogether && GOTOGETHER_STRICT=1 go test -mod=readonly -count=1 -run \"^(TestModelPossible|TestProtocolControls)$\" ."
   },
   "devDependencies": {
     "@antithesishq/bombadil": "0.7.9",
-    "@informalsystems/quint": "0.32.0",
+    "@informalsystems/quint": "0.33.1",
     "@playwright/test": "1.56.1"
   }
 }

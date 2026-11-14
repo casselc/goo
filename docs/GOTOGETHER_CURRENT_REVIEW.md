@@ -6,6 +6,10 @@ This follows the isolated [original pilot](GOTOGETHER_PILOT.md) and
 upstream test run, **not a migration of Goo's verification module**. Goo remains
 on its existing quintgo and Hegel dependencies.
 
+The subsequent [acquisition shadow pilot](GOTOGETHER_ACQUISITION_PILOT.md) is now
+implemented and Quint is upgraded to 0.33.1. Tool versions and unchanged-file
+statements below describe this earlier review, before the trial.
+
 ## Changes worth using
 
 | Priority | Available now | Concrete fit for Goo |

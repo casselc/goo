@@ -148,14 +148,14 @@ async function startBombadil({ dir, url, specification, seconds, width, height }
   };
 }
 
-async function verifyWithGo(dir, testName, variables, {timeoutSeconds = 50} = {}) {
+async function verifyWithGo(dir, testName, variables, {timeoutSeconds = 50, moduleDir = 'verification'} = {}) {
   if (!/^Test[A-Za-z0-9_]+$/.test(testName)) throw new Error('Expected one exact top-level Go test name');
   if (!Number.isInteger(timeoutSeconds) || timeoutSeconds < 10 || timeoutSeconds > 180) throw new Error('Use a bounded verification timeout between 10 and 180 seconds');
   const env = { ...process.env, ...variables, NO_COLOR: '1', GOWORK: 'off', GOTOOLCHAIN: 'local' };
   delete env.FORCE_COLOR;
   const output = [], diagnostics = [];
   const child = spawn('go', ['test', '-mod=readonly', '-json', '-count=1', '-timeout=' + timeoutSeconds + 's', '-run', '^' + testName + '$', '.'], {
-    cwd: path.resolve('verification'), env, timeout: (timeoutSeconds + (timeoutSeconds > 50 ? 30 : 10)) * 1000, stdio: ['ignore', 'pipe', 'pipe'],
+    cwd: path.resolve(moduleDir), env, timeout: (timeoutSeconds + (timeoutSeconds > 50 ? 30 : 10)) * 1000, stdio: ['ignore', 'pipe', 'pipe'],
   });
   child.stdout.setEncoding('utf8');
   child.stderr.setEncoding('utf8');

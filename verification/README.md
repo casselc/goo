@@ -1147,7 +1147,7 @@ The live fault-ledger test skips unless `GOO_FAULT_LEDGER` is supplied.
 
 This separate Go module keeps Hegel's native loader/development dependencies out
 of the runtime module. It uses hegel-go **0.9.8** (embedded libhegel 0.43.4), Quint
-**0.32.0**, and the checked-out sibling `observability/quintgo` tools. No sibling
+**0.33.1**, and the checked-out sibling `observability/quintgo` tools. No sibling
 source is modified. All Goo modules and the sibling tool module require Go 1.27+;
 [`.go-version`](../.go-version) pins the validated compiler. The root CI job
 checks root, instrumentation and both examples. These two verification modules
@@ -3529,9 +3529,12 @@ Production and existing verification module dependencies remain unchanged.
 
 The [current gotogether review](../docs/GOTOGETHER_CURRENT_REVIEW.md) checks
 `771dcce` against the latest upstream adapter/differential/compiled-model tests.
-It proposes one acquisition-journey shadow trial; no normal dependency migration
-has been made. Current gotogether requires Quint 0.33.1+, while this checkout
-still pins 0.32.0. See the review for tested scope and remaining replay limits.
+The [implemented shadow pilot](../docs/GOTOGETHER_ACQUISITION_PILOT.md) now uses
+its own pinned `verification/gotogether` module; normal Hegel/quintgo dependencies
+remain unchanged. Quint is upgraded to 0.33.1. Run `npm run test:gotogether-controls`
+for the CI controls and, with a compiled generic binary and the existing telemetry
+lab, `GOO_GENERIC_BINARY=/absolute/path/to/goo npm run test:gotogether-shadow`.
+The existing native gate remains authoritative; the shadow is a separate check.
 
 ### Compact pool view (journey198)
 

@@ -3075,3 +3075,10 @@ monotonic/nonmonotonic tuples, including discovered stock, without inventing
 rates or resets. Exact metadata, flags, units and duplicates survive table/detail
 inspection; local paging, Find, retained return and obsolete-response rejection
 use the shared raw inspector.
+
+## Gotogether acquisition shadow trial
+
+[Acquisition shadow](gotogether-acquisition.md) reuses439's real OTLP journey,
+adds separate standard driver/DOM observations, and runs gotogether after the
+existing native source gate. It includes finished-journey controls, no-tools
+compiled replay and a separate existing Bombadil actor adapter check.
