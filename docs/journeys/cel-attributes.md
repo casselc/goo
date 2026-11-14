@@ -48,7 +48,7 @@ reads no telemetry and uses wrapping code examples at narrow widths.
 - [390 px attribute condition](screenshots/440-attribute-condition-390.png)
 - [320 px attribute condition](screenshots/440-attribute-condition-320.png)
 
-## Validation
+## Initial 440 validation
 
 Final real-app journey passes **42.1s** (test body 40.1s) against the final compiled
 Go runtime. The run contains **46 recorded steps**, **12 CEL explicit reads** and
@@ -75,3 +75,41 @@ snapshots**, checked one context and two plans, and made **zero source reads or
 forbidden POSTs**. Hidden callbacks remained ineligible; no overflow or browser
 errors occurred. The owned runtime cleaned up. The campaign does not claim that
 all three random choices were executed.
+
+
+## 442: refine from observed fields, details and columns
+
+1. Start with the ordinary OTLP parent question, separately for logs and spans.
+2. Open the always-reported integer-text field in observed suggestions. **Is
+   missing** is available even though no missing value was suggested. Choosing
+   either presence action stages locally; Run checks the exact source IDs.
+3. Inspect `example.zone = "7"` and open the shared field menu with Enter. Include,
+   Exclude, Is reported and Is missing all preserve the fixed parent. Exclude
+   matches missing or unequal values; the earlier CEL `.ne()` example remains
+   reported-only.
+4. Add `example.zone` as a record column. A missing cell offers the two presence
+   actions, with no invented Include value. A present-empty cell remains distinct.
+5. Each local gesture makes zero source POSTs. Each explicit Run makes one
+   exploration POST and compares its full returned IDs against independently
+   queried exporter maps, with outside-parent/environment records excluded.
+6. At 1440/390/320, keep the inspected field, its value and four refinement actions
+   in view. Escape closes to the menu summary; Enter reopens without a read.
+
+Current frames: [desktop](screenshots/442-attribute-actions-1440.png),
+[390 px](screenshots/442-attribute-actions-390.png),
+[320 px](screenshots/442-attribute-actions-320.png).
+
+The final real-app run passes in **1.5m** (test body **1.4m**), with **110 recorded
+steps**, **44 CEL/refinement reads** and **two visual baseline reads**, no console
+errors and successful owned-runtime cleanup. Receipt:
+`artifacts/cel-attributes440/4929db9f2b08/report.json`.
+
+The updated inspection/Bombadil journey separately passes in **55.5s**, including
+its 30-second campaign. All **527** inspection snapshots satisfy the new
+qualified-field presence invariant; **514** occur after its nonvacuous
+presence-menu completion. This added stage opens/verifies/Escape-closes a real
+menu without clicking a refinement action. Broader actor choices retain their
+existing read-only source-query behavior. Runtime cleanup succeeds.
+
+See [shared semantics](../ATTRIBUTE_REFINEMENT.md) and
+[independent acceptance](../reviews/ATTRIBUTE_REFINEMENT_442_ACCEPTANCE.md).

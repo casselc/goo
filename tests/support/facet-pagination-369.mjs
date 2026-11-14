@@ -17,8 +17,9 @@ export class Element{
  setSelectionRange(start,end,direction){this.selectionStart=start;this.selectionEnd=end;this.selectionDirection=direction}
 }
 const node=(tag,text,className)=>{const element=new Element(tag);element.textContent=text;if(className)element.className=className;return element};
-globalThis.HTMLElement=Element;const body=node('body');body.isConnected=true;globalThis.document={body,activeElement:body};
-mock.module('../../ui/components.mjs',{exports:{node,actionVisible}});
+globalThis.HTMLElement=Element;const body=node('body');body.isConnected=true;globalThis.document={body,activeElement:body,createElement:tag=>new Element(tag)};
+const {actions:actionGroup}=await import('../../ui/components.mjs');
+mock.module('../../ui/components.mjs',{exports:{node,actionVisible,actions:actionGroup}});
 const {CategoricalFacet}=await import('../../ui/categorical-facet.mjs');
 const {create}=await import('../../ui/facet-declaration.mjs');
 export const field={kind:'attribute',key:'cohort'};

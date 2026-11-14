@@ -56,7 +56,9 @@
 > [attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md).
 > **441 raw sum observations is delivered**; see
 > [raw sums](RAW_SUM_OBSERVATIONS.md).
-> Next: **442 attribute refinement consolidation** (planned, measured workflow gate).
+> Next: **443 typed numeric attribute conditions** (proposed depth slice).
+**442 delivered:** [shared refinement](ATTRIBUTE_REFINEMENT.md) unifies categorical
+Exclude and compact presence actions while retaining explicit execution owners.
 > Definition recall and evidence capture retain separate semantics. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped

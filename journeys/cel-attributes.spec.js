@@ -11,7 +11,7 @@ const pure=new Set(['/api/cel/context','/api/cel/plan']);
 const sourcePaths=new Set(['/api/explore','/api/explore/page','/api/tail','/api/discovery','/api/inventory','/api/source-capabilities','/api/record-aggregates','/api/population/explain','/api/explore/counted-values']);
 
 // Ordinary OTLP plus the real source adapter: no successful UI responses are synthesized.
-test('440 qualified attributes preserve missing and empty values through checked CEL and explicit reads',async({page,request})=>{
+test('440/442 qualified attributes refine consistently through observed fields, record details and checked CEL',async({page,request})=>{
  test.setTimeout(180000);page.setDefaultTimeout(15000);if(!process.env.GOO_GENERIC_BINARY)throw Error('GOO_GENERIC_BINARY must name the final compiled runtime');
  const token=randomBytes(6).toString('hex'),environment='cel440-'+token,clock=Date.now(),dir=path.resolve('artifacts/cel-attributes440',token),report={version:'goo.celAttributes440/1',token,environment,fixture:[],raw:{},contexts:[],calls:[],errors:[]};await fs.mkdir(dir,{recursive:true});
  let runtime;page.on('pageerror',error=>report.errors.push(error.message));page.on('request',r=>{const pathname=new URL(r.url()).pathname;if(!pathname.startsWith('/api/'))return;let body;try{body=r.postDataJSON()}catch{}report.calls.push({path:pathname,method:r.method(),body})});
@@ -47,6 +47,77 @@ test('440 qualified attributes preserve missing and empty values through checked
    for(const [name,expression,predicate]of examples){await local(context,'stage-'+name,()=>stage(base));const plan=await local(context,'check-'+name,()=>check(expression));expect(plan.predicate).toEqual(predicate);expect(plan.question.where).toEqual({all:[parent,predicate]});expect(plan.question).toMatchObject({signal,environment,fromMs:base.fromMs,toMs:base.toMs,limit:100,offset:0});context.checks.push({name,expression,request:posts().findLast(c=>c.path==='/api/cel/plan').body,plan});const expected=report.raw[signal].filter(r=>selected(r,predicate)).map(r=>r.SpanId).sort();const before=reads().length,pending=post('/api/explore');await page.locator('#exploreRun').click();const response=await pending;expect(response.ok(),await response.text()).toBe(true);const result=await response.json();expect(result.count).toBe(String(expected.length));expect(result.rows.map(r=>r.SpanId).sort()).toEqual(expected);expect(reads().length).toBe(before+1);expect(response.request().postDataJSON().where).toEqual(plan.question.where);context.runs.push({name,request:response.request().postDataJSON(),result,expected});context.steps.push({name:'run-'+name,sourceReads:1});}
    // The ordinary visual condition uses exactly the same present-only leaf.
    await local(context,'stage-visual',async()=>{await stage(base);await editor().getByRole('combobox',{name:'Filter mode',exact:true}).selectOption('conditions');await addFilter(page,{kind:'attribute',key:'example.zone'},'ne','')});const before=reads().length,pending=post('/api/explore');await page.locator('#exploreRun').click();const result=await(await pending).json();expect(result.count).toBe('3');expect(reads().length).toBe(before+1);context.visual={request:reads().at(-1).body,result};expect(JSON.parse(JSON.stringify(context.visual.request.where,(key,value)=>key==='value'&&value===''?undefined:value))).toEqual({all:[parent,field('attribute','ne','')]});context.steps.push({name:'run-visual-same-leaf',sourceReads:1});
+   // 442: presence actions must be available even when every supplied record has
+   // the key. Suggestions are incomplete observations, not schema authority.
+   async function runRefinement(name,expected,expectedWhere){
+    const before=reads().length,pending=post('/api/explore');await page.locator('#exploreRun').click();const response=await pending;
+    expect(response.ok(),await response.text()).toBe(true);const result=await response.json(),request=response.request().postDataJSON();
+    expect(result.rows.map(r=>r.SpanId).sort()).toEqual(expected);expect(result.count).toBe(String(expected.length));expect(reads().length).toBe(before+1);
+    expect(request).toMatchObject({signal,environment,fromMs:base.fromMs,toMs:base.toMs});expect(request.where).toEqual(expectedWhere);
+    context.runs.push({name,request,result,expected});context.steps.push({name:'run-'+name,sourceReads:1});return result;
+   }
+   for(const [label,op]of [['Is reported','exists'],['Is missing','missing']]){
+    await local(context,'stage-observed-'+op,async()=>{await stage(base);await editor().getByRole('combobox',{name:'Filter mode',exact:true}).selectOption('conditions')});
+    await runRefinement('observe-parent-'+op,report.raw[signal].map(r=>r.SpanId).sort(),parent);
+    await local(context,'observed-'+op,async()=>{
+     await openFilters(page);const observed=editor().locator('.filter-observations');if(!await observed.evaluate(e=>e.open))await observed.locator(':scope > summary').click();
+     const field=observed.locator('details[data-field="attribute:example.reported_integer"]');await field.locator(':scope > summary').click();
+     await expect(field.getByRole('button',{name:'Add attribute:example.reported_integer Missing key',exact:true})).toHaveCount(0);
+     await field.getByRole('button',{name:'Add attribute:example.reported_integer '+label,exact:true}).press('Enter');
+    });
+    const condition={field:{kind:'attribute',key:'example.reported_integer'},op};
+    await runRefinement('observed-'+op,op==='exists'?report.raw[signal].map(r=>r.SpanId).sort():[],{all:[parent,condition]});
+   }
+   // These are real record-detail gestures over the same independently read
+   // source. Exclude is a categorical complement, unlike CEL .ne: it includes
+   // missing keys, and neither operation treats a reported empty string as missing.
+   for(const [label,mode]of [['Include','include'],['Exclude','exclude'],['Is reported','exists'],['Is missing','missing']]){
+    await local(context,'stage-detail-'+mode,async()=>{await stage(base);await editor().getByRole('combobox',{name:'Filter mode',exact:true}).selectOption('conditions')});
+    await runRefinement('detail-parent-'+mode,report.raw[signal].map(r=>r.SpanId).sort(),parent);
+    await local(context,'detail-'+mode,async()=>{
+     const rows=page.locator('#exploreRows .record-row');let found=false;
+     for(let i=0;i<await rows.count();i++){
+      await rows.nth(i).getByRole('button',{name:'Inspect record',exact:true}).click();const inspector=page.locator('#exploreRows .ui-inspector'),record=JSON.parse(await inspector.locator('.raw-record > pre').textContent());
+      if(record.Attributes?.['example.zone']==='7'){
+       const row=inspector.locator('.attribute-row[data-key="example.zone"]').filter({has:page.locator('button[aria-label="'+label+' attribute:example.zone from record"]')}),menu=row.locator('.ui-action-menu');
+       await menu.locator(':scope > summary').focus();await page.keyboard.press('Enter');await expect(menu).toHaveJSProperty('open',true);
+       if(signal==='logs'&&mode==='missing'){
+        for(const width of [1440,390,320]){
+         await page.setViewportSize({width,height:1000});await inspector.evaluate(el=>el.scrollIntoView({block:'center'}));
+         // Frame the field, not the bottom of its expanded actions: the inspector
+         // owns an independent scrollport on both inline and drawer layouts.
+         await row.evaluate(el=>{const body=el.closest('.ui-inspector-body');body.scrollTop+=el.getBoundingClientRect().top-body.getBoundingClientRect().top-8});
+         await expect(row.locator('.attribute-key')).toBeInViewport();await expect(row.locator('.attribute-value')).toBeInViewport();
+         for(const action of ['Include','Exclude','Is reported','Is missing'])await expect(row.getByRole('button',{name:action+' attribute:example.zone from record',exact:true})).toBeInViewport();
+         expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'docs/journeys/screenshots/442-attribute-actions-'+width+'.png'});
+        }
+        await menu.locator(':scope > summary').focus();await page.keyboard.press('Escape');await expect(menu).toHaveJSProperty('open',false);await expect(menu.locator(':scope > summary')).toBeFocused();await page.keyboard.press('Enter');await expect(menu).toHaveJSProperty('open',true);
+       }
+       await row.getByRole('button',{name:label+' attribute:example.zone from record',exact:true}).press('Enter');found=true;break;
+      }
+      await inspector.getByRole('button',{name:'Close selected item details',exact:true}).click();
+     }
+     expect(found,'reported source value must be inspected').toBe(true);
+    });
+    const condition=mode==='include'?field('attribute','eq','7'):mode==='exclude'?{any:[field('attribute','missing'),field('attribute','ne','7')]}:field('attribute',mode),expected=report.raw[signal].filter(r=>mode==='exclude'?!Object.hasOwn(r.Attributes,'example.zone')||r.Attributes['example.zone']!=='7':selected(r,condition)).map(r=>r.SpanId).sort();
+    await runRefinement('detail-'+mode,expected,{all:[parent,{all:[condition]}]});await page.setViewportSize({width:1440,height:1000});
+   }
+   // A column projected from supplied records preserves missing versus empty,
+   // and a missing cell still offers field-level presence refinement.
+   for(const [label,op]of [['Is reported','exists'],['Is missing','missing']]){
+    await local(context,'stage-missing-cell-'+op,async()=>{await stage(base);await editor().getByRole('combobox',{name:'Filter mode',exact:true}).selectOption('conditions')});
+    await runRefinement('missing-cell-parent-'+op,report.raw[signal].map(r=>r.SpanId).sort(),parent);
+    await local(context,'missing-cell-'+op,async()=>{
+     const records=page.locator('#exploreRows'),picker=records.locator('goo-record-columns');await picker.locator('summary').first().click();
+     const show=picker.getByRole('button',{name:'Show attribute:example.zone',exact:true});if(await show.count())await show.click();await picker.locator('summary').first().click();
+     const cell=records.locator('td[data-record-field][data-value-state="missing"]').filter({has:page.locator('button[aria-label="'+label+' attribute:example.zone column value"]')});
+     await expect(cell).toHaveCount(1);await expect(records.locator('td[data-record-field][data-value-state="empty"]')).toHaveCount(1);
+     await cell.locator('summary').focus();await page.keyboard.press('Enter');await expect(cell.getByRole('button',{name:'Include attribute:example.zone column value',exact:true})).toHaveCount(0);
+     await cell.getByRole('button',{name:label+' attribute:example.zone column value',exact:true}).press('Enter');
+    });
+    const condition=field('attribute',op),expected=report.raw[signal].filter(r=>selected(r,condition)).map(r=>r.SpanId).sort();
+    await runRefinement('missing-cell-'+op,expected,{all:[parent,{all:[condition]}]});
+   }
    await local(context,'reject-unsupported',async()=>{await stage(base);for(const expression of ['record.attributes["example.zone"] != ""','record.attributes.eq(record.service, "7")','record.attributes.eq("example.zone", 7)','!record.attributes.eq("example.zone", "7")']){const refused=await check(expression,400);expect(refused.diagnostic).toBeTruthy();expect(refused.question).toBeUndefined();await expect(text()).toHaveAttribute('aria-invalid','true');context.checks.push({name:'refused',expression,refused})}});
    await local(context,'recover-condition',async()=>{await check('record.attributes.ne("example.zone", "")');await expect(page.locator('#exploreRun')).toBeEnabled()});
    await local(context,'attribute-examples',async()=>{const examples=editor().locator('.cel-expression-examples');await examples.locator('summary').focus();await page.keyboard.press('Enter');await expect(examples).toHaveJSProperty('open',true);await expect(examples).toContainText('Missing differs from empty')});

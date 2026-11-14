@@ -5,6 +5,14 @@ export { noUncaughtExceptions, noUnhandledPromiseRejections } from '@antithesish
 
 const inspection = extract(({ document }) => ({
   version:'goo.inspection.v2',
+  presenceMenuStage: document.documentElement.dataset.gooPresenceMenuStage || 'initial',
+  presenceMenus: [...document.querySelectorAll<HTMLElement>('#exploreRows .ui-inspector:not([hidden]) .attribute-actions .ui-action-menu')].filter(menu=>menu.getClientRects().length>0&&[...menu.querySelectorAll('button')].some(button=>/^Include (resource|attribute):[\s\S]* from record$/.test(button.getAttribute('aria-label')||''))).length,
+  presenceActionsQualified: [...document.querySelectorAll<HTMLElement>('.attribute-actions .ui-action-menu')].every(menu=>{
+    const labels=[...menu.querySelectorAll('button')].map(button=>button.getAttribute('aria-label')||''),qualified=labels.flatMap(label=>{const match=/^(?:Include|Exclude|Is reported|Is missing) ((?:resource|attribute):[\s\S]*) from record$/.exec(label);return match?[match[1]]:[]});
+    if(!qualified.length)return true;
+    const names=new Set(qualified),name=qualified[0],key=name.slice(name.indexOf(':')+1),row=menu.closest<HTMLElement>('.attribute-row');
+    return names.size===1&&key===row?.dataset.key&&['Is reported','Is missing'].every(action=>labels.includes(action+' '+name+' from record'))&&(!labels.includes('Include '+name+' from record')||labels.includes('Exclude '+name+' from record'));
+  }),
   waterfallStage: document.documentElement.dataset.gooWaterfallStage || 'initial',
   traceAvailable: [...document.querySelectorAll<HTMLButtonElement>('#exploreRows [data-expand-trace]')].some(button=>button.getClientRects().length>0&&!button.disabled),
   fieldMenuStage: document.documentElement.dataset.gooFieldMenuStage || 'initial',
@@ -34,6 +42,7 @@ const inspection = extract(({ document }) => ({
 const recordDetails=extract(({document})=>{const root=document.getElementById('exploreRows');return !root||root.querySelectorAll('.record-attributes').length===0&&root.querySelectorAll('.ui-inspector:not([hidden])').length<=1&&[...root.querySelectorAll<HTMLElement>('.record-detail-row:not([hidden])')].every(row=>!!row.querySelector('.ui-inspector:not([hidden])'));});
 export const singleRecordDetail=always(()=>recordDetails.current);
 export const fieldActionsKeepAccessibleCopy=always(()=>inspection.current.fieldActionsAccessible);
+export const attributePresenceActionsUseQualifiedField=always(()=>inspection.current.presenceActionsQualified);
 export const becomesReady = eventually(() => inspection.current.ready).within(10, 'seconds');
 export const oneContextInspector = always(() => !(inspection.current.trace && inspection.current.nearby));
 export const waterfallRowsMatchSuppliedEvidence = always(() => inspection.current.waterfalls);
@@ -54,6 +63,21 @@ const act = registerCustomAction('goo.inspect', async (document, _window, action
   }
   if (action === 'trace') recordRead('#exploreRows [data-expand-trace]');
   if(action==='openFieldMenu'){const menu=[...document.querySelectorAll<HTMLDetailsElement>('#exploreRows .ui-inspector:not([hidden]) .attribute-actions .ui-action-menu')].find(menu=>menu.getClientRects().length>0);if(menu){menu.querySelector<HTMLElement>('summary')?.click();if(!menu.open)throw Error('Field actions failed to open');document.documentElement.dataset.gooFieldMenuStage='opened'}}
+  if(action==='openPresenceMenu'){
+    const menu=[...document.querySelectorAll<HTMLDetailsElement>('#exploreRows .ui-inspector:not([hidden]) .attribute-actions .ui-action-menu')].find(menu=>menu.getClientRects().length>0&&[...menu.querySelectorAll('button')].some(button=>/^Include (resource|attribute):[\s\S]* from record$/.test(button.getAttribute('aria-label')||'')));
+    if(!menu)throw Error('No qualified attribute menu available for presence inspection');
+    if(!menu.open)menu.querySelector<HTMLElement>(':scope>summary')?.click();
+    const labels=[...menu.querySelectorAll('button')].map(button=>button.getAttribute('aria-label')||''),include=labels.find(label=>/^Include (resource|attribute):[\s\S]* from record$/.test(label))!,name=include.slice('Include '.length,-' from record'.length);
+    if(!menu.open||!['Include','Exclude','Is reported','Is missing'].every(action=>labels.includes(action+' '+name+' from record')))throw Error('Qualified attribute actions do not share a field');
+    menu.dataset.gooPresenceMenu='selected';document.documentElement.dataset.gooPresenceMenuStage='opened';
+  }
+  if(action==='closePresenceMenu'){
+    const menu=document.querySelector<HTMLDetailsElement>('#exploreRows .ui-inspector:not([hidden]) .ui-action-menu[data-goo-presence-menu="selected"]');
+    if(!menu?.open)throw Error('Presence inspection menu was lost before close');
+    const summary=menu.querySelector<HTMLElement>(':scope>summary');summary?.focus();summary?.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true}));
+    if(menu.open||document.activeElement!==summary)throw Error('Presence menu failed to close and restore focus');
+    delete menu.dataset.gooPresenceMenu;document.documentElement.dataset.gooPresenceMenuStage='complete';
+  }
   if(action==='closeFieldMenu'){const menu=document.querySelector<HTMLDetailsElement>('#exploreRows .ui-inspector:not([hidden]) .attribute-actions .ui-action-menu[open]');if(menu){const summary=menu.querySelector<HTMLElement>('summary');summary?.focus();summary?.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true}));if(menu.open||document.activeElement!==summary)throw Error('Field actions failed to close and restore focus');document.documentElement.dataset.gooFieldMenuStage='complete'}}
   if (action === 'select' || action === 'nextSpan') {
     const rows=[...document.querySelectorAll<HTMLButtonElement>('#exploreTrace goo-trace-waterfall .waterfall-row')];
@@ -91,6 +115,8 @@ export const inspect = actions(() => {
   if(s.waterfallStage==='next')return s.selected?[act('verifyWaterfall','complete')]:['Wait'];
   if(s.waterfallStage==='complete'&&s.fieldMenuStage==='initial'&&s.records){if(s.trace)return[act('close')];if(!s.viewer)return[act('record')];if(s.fieldMenus)return[act('openFieldMenu')]}
   if(s.fieldMenuStage==='opened')return[act('closeFieldMenu')];
+  if(s.fieldMenuStage==='complete'&&s.presenceMenuStage==='initial'&&s.records){if(s.trace)return[act('close')];if(!s.viewer)return[act('record')];if(s.presenceMenus)return[act('openPresenceMenu')]}
+  if(s.presenceMenuStage==='opened')return[act('closePresenceMenu')];
   const choices = [act('query'),act('signal')];
   if(s.nearbyAvailable)choices.push(act('nearby'));
   if(s.nearby)choices.push(act('radius'),act('closeNearby'));

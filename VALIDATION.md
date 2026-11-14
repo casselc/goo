@@ -1,5 +1,44 @@
 # Validation record
 
+## 442 shared attribute refinement — 2026-11-14
+
+[Contract](docs/ATTRIBUTE_REFINEMENT.md), [storyboard](docs/journeys/cel-attributes.md)
+and [independent acceptance](docs/reviews/ATTRIBUTE_REFINEMENT_442_ACCEPTANCE.md).
+
+- Shared pure intent unifies missing-inclusive Exclude in Activity, fixed
+  exploration, categorical selection and explanation. CEL `.ne()` stays
+  reported-only. Details, custom columns, observed fields and facets expose
+  compact reported/missing actions; missing/null/empty distinctions and existing
+  execution owners remain intact. Admission occurs before draft/CEL mutation.
+- Final full UI regression suite: **1,855 passed, zero skips**, **32.680s**.
+  A subsequently added targeted UI test also passes for present null/number/
+  boolean/object values, proving they do not create missing-value Include.
+  Pure independent-map checks cover both signals/namespaces and complement
+  partitions; stale, hidden, closed and disabled callbacks remain guarded.
+- Real OTLP logs/spans journey: **1.5m**, **110 recorded steps**, **44 CEL/refinement
+  reads plus two visual reads**. Every result matches independently read source
+  IDs; staged actions cause zero source POSTs. Parent, environment and fixed
+  clocks remain exact. All three responsive frames assert visible field/value
+  and four actions, keyboard Escape/focus/reopen, and no horizontal overflow.
+  Receipt `artifacts/cel-attributes440/4929db9f2b08/report.json`; zero browser errors,
+  owned-runtime cleanup successful. Existing 440 and inspection frames refreshed.
+- Updated real inspection/Bombadil journey: **55.5s**, 30-second campaign,
+  **527 snapshots**, qualified presence invariant true throughout; **514 snapshots**
+  after explicit presence-menu completion. Added menu path performs no refinement
+  or source query. Existing broad read-only actor queries remain allowed.
+  Receipt `artifacts/typed-inspection/polish-b21ff33d2e71/bombadil/trace.jsonl`;
+  owned-runtime cleanup successful.
+- Existing Go querycel attribute checks pass **0.062s**; existing Hegel parity and
+  presence-partition checks pass **0.368s**. Go **1.27.3** builds the final embedded
+  app. No Go dependency/runtime upgrade or new model authority was needed.
+- Live acceptance caught and fixed a collapsed-editor guard rejecting legitimate
+  record refinement. Follow-up review caught native disabled/inert/fieldset
+  callback gaps; controls now use the shared native guard and action disclosure.
+  Initial full-suite failures were an outdated passive-graph size expectation,
+  missing component mock exports and sandbox loopback restriction; final checks
+  above pass. No latency, SQL-work reduction or full accessibility audit is claimed.
+
+
 ## Gotogether acquisition shadow and Quint upgrade — 2026-11-14
 
 [Pilot](docs/GOTOGETHER_ACQUISITION_PILOT.md),

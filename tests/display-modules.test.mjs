@@ -78,7 +78,9 @@ test('display entry imports a closed passive graph without publishing namespaces
   assert.deepEqual(Object.keys(await import('../ui/cel-provenance.mjs')).sort(),['authoring','capture','condition','recordCELContract']);
   // Canonical record labels reuse the pure OTel classifier, never an app owner.
   assert.ok(visited.has(new URL('../ui/log-severity.mjs', import.meta.url).href));
-  assert.equal(visited.size, 69);
+  // Attribute gestures share pure intent admission, never a source client.
+  assert.ok(visited.has(new URL('../ui/field-refinement.mjs', import.meta.url).href));
+  assert.equal(visited.size, 70);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

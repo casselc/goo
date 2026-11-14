@@ -80,3 +80,5 @@ reopen its original base, and use existing saved-view YAML import/export.
 
 [Whole-product CEL acceptance](CEL_WHOLE_PRODUCT_ACCEPTANCE.md) connects Activity,
 Services/native record context and saved reuse, with the next operator roadmap.
+
+[Refine by an attribute](ATTRIBUTE_REFINEMENT.md): Include, Exclude, reported and missing across record details, columns, facets and CEL.

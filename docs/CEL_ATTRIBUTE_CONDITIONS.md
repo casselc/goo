@@ -18,6 +18,9 @@ log attributes for logs and span attributes for spans. A dotted OpenTelemetry
 semantic-convention key is one literal key, not an object path. Goo does not
 substitute another convention version or search both maps automatically.
 
+See [attribute refinement](ATTRIBUTE_REFINEMENT.md) for the matching record, column
+and facet actions. UI **Exclude** includes missing keys; CEL `.ne()` alone does not.
+
 ## Missing is not empty
 
 Attribute `.eq`, `.ne` and `.contains` match only reported keys. All three return

@@ -18,8 +18,9 @@ class Element{
  addEventListener(type,handler){this.listeners.set(type,handler)}dispatchEvent(event){this.listeners.get(event.type)?.(event);return true}focus(){globalThis.document.activeElement=this}
 }
 const node=(tag,text,className)=>{const element=new Element(tag);element.textContent=text;if(className)element.className=className;return element};
-globalThis.HTMLElement=Element;const body=node('body');body.isConnected=true;globalThis.document={body,activeElement:body};
-mock.module('../ui/components.mjs',{exports:{node,actionVisible}});
+globalThis.HTMLElement=Element;const body=node('body');body.isConnected=true;globalThis.document={body,activeElement:body,createElement:tag=>new Element(tag)};
+const {actions:actionGroup}=await import('../ui/components.mjs');
+mock.module('../ui/components.mjs',{exports:{node,actionVisible,actions:actionGroup}});
 const {CategoricalFacet}=await import('../ui/categorical-facet.mjs');
 const {create}=await import('../ui/facet-declaration.mjs');
 const field={kind:'attribute',key:'http.request.method'},declaration=create({signal:'logs',environment:'prod',fromMs:0,toMs:60000,offset:0,limit:100,groupBy:[]},field),receipt={readAt:'2026-11-05T00:00:01Z',basis:'a'.repeat(64)};

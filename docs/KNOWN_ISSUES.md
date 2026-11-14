@@ -46,8 +46,11 @@ is delivered, as is [428 paired evidence](PAIRED_COMPARISON_CAPTURE.md).
 across temporary navigation without rereading.
 [440 attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md) add presence-safe string
 queries. [441 raw sums](RAW_SUM_OBSERVATIONS.md) covers reported counters and
-cumulative nonmonotonic stocks without evaluator prerequisites. Next is measured
-attribute refinement consolidation in the
+cumulative nonmonotonic stocks without evaluator prerequisites.
+[442 shared attribute refinement](ATTRIBUTE_REFINEMENT.md) unifies Exclude and
+reported/missing gestures across record details, columns and facets. Exclude
+includes missing keys; CEL inequality remains reported-only. Typed numeric CEL
+conditions remain the proposed next depth slice in the
 [whole-product cycle](ROADMAP_2026_11_14_CHECKPOINT_429.md).
 
 Raw gauge and sum inspection is bounded and table-only. Missing instance

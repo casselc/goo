@@ -28,11 +28,41 @@ test('attribute rows keep Copy primary and put qualified operations in a closed 
   mount(host,record,{raw:false,onFacet:(field,value,mode)=>{invoked++;chosen={field,value,mode}},onFilter(){invoked++},onBreakdown(){invoked++},onPlot(field,opener){invoked++;plotOrigin={field,opener}},onTraceSearch(seed,opener){invoked++;traceOrigin={seed,opener}}});
   const all=descendants(host),row=all.find(e=>e.getAttribute('aria-label')==='Span attributes: work.region'),actions=descendants(row).find(e=>e.className==='attribute-actions'),group=actions.children[0],copy=group.children[0],menu=group.children[1];
   assert.equal(copy.getAttribute('aria-label'),'Copy value for work.region');assert.equal(copy.textContent,'Copy');assert.equal(menu.tagName,'details');assert.equal(menu.open,false);assert.equal(menu.children[0].textContent,'⋯');assert.equal(menu.children[0].getAttribute('aria-label'),'Field actions');
-  const secondary=descendants(menu).filter(e=>e.tagName==='button');assert.equal(secondary.length,6);assert(secondary.every(button=>button!==copy));
+  const secondary=descendants(menu).filter(e=>e.tagName==='button');assert.equal(secondary.length,8);assert(secondary.every(button=>button!==copy));
   for(const button of secondary)button.onclick();assert.equal(invoked,0,'closed menu callbacks cannot stage or query');
   const include=secondary.find(e=>e.getAttribute('aria-label')==='Include attribute:work.region from record');menu.open=true;include.onclick();assert.deepEqual(chosen,{field:{kind:'attribute',key:'work.region'},value:'eu-west',mode:'include'});assert.equal(invoked,1);
   for(const blocked of ['disabled','hidden','inert']){include[blocked]=true;include.onclick();include[blocked]=false;assert.equal(invoked,1,'unavailable action cannot stage: '+blocked)}menu.open=false;include.onclick();assert.equal(invoked,1,'captured callback refuses after menu closes');
   menu.open=true;secondary.find(e=>e.getAttribute('aria-label')==='Plot values of attribute:work.region').onclick();assert.equal(plotOrigin.opener,menu.children[0]);assert.deepEqual(plotOrigin.field,{kind:'attribute',key:'work.region'});secondary.find(e=>e.getAttribute('aria-label')==='Find traces containing attribute:work.region').onclick();assert.equal(traceOrigin.opener,menu.children[0]);assert.deepEqual(traceOrigin.seed,{field:{kind:'attribute',key:'work.region'},op:'eq',value:'eu-west'});menu.open=false;assert.equal(plotOrigin.opener,menu.children[0],'return origin survives native menu close');
   assert.equal(descendants(host).find(e=>e.tagName==='goo-field-value'&&e.value==='9007199254740993').value,'9007199254740993');assert.deepEqual(record,before);
  }finally{global.document=previous}
+});
+
+
+test('reported and missing attribute actions stage canonical presence without reading or using the observed value',()=>{
+ const previous=global.document;global.document={createElement:tag=>new Element(tag)};
+ try{
+  for(const kind of ['resource','attribute']){
+   const calls=[],host=new Element('section'),field={kind,key:'example.zone'};
+   mount(host,kind==='resource'?{ResourceAttributes:{'example.zone':''}}:{Attributes:{'example.zone':''}},{raw:false,onFacet:(...args)=>calls.push(args)});
+   const all=descendants(host),reported=all.find(e=>e.getAttribute('aria-label')==='Is reported '+kind+':example.zone from record'),missing=all.find(e=>e.getAttribute('aria-label')==='Is missing '+kind+':example.zone from record');
+   assert(reported);assert(missing);reported.onclick();missing.onclick();assert.deepEqual(calls,[],'closed menu is inert');
+   reported.closest('details:not([open])').open=true;reported.onclick();missing.onclick();
+   assert.deepEqual(calls,[[field,null,'exclude'],[field,null,'include']]);
+   reported.disabled=true;reported.onclick();assert.equal(calls.length,2);
+   host.hidden=true;missing.onclick();assert.equal(calls.length,2);
+  }
+ }finally{global.document=previous}
+});
+
+
+test('present typed values never become a missing-value inclusion',()=>{
+ const previous=global.document;global.document={createElement:tag=>new Element(tag)};
+ try{for(const value of [null,7,false,{nested:'value'}]){
+  const host=new Element('section');mount(host,{Attributes:{'example.typed':value}},{raw:false,onFacet(){throw Error('unexpected staging')}});
+  const labels=descendants(host).map(e=>e.getAttribute('aria-label'));
+  assert(!labels.includes('Include attribute:example.typed from record'));
+  assert(!labels.includes('Exclude attribute:example.typed from record'));
+  assert(labels.includes('Is reported attribute:example.typed from record'));
+  assert(labels.includes('Is missing attribute:example.typed from record'));
+ }}finally{global.document=previous}
 });

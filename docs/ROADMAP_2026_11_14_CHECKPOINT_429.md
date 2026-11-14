@@ -7,9 +7,10 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–441 delivered and validated**. The cadence continues as
+Status: **429 and 437–442 delivered**. The cadence continues as
 **440 attribute breadth → 441 native metric depth → 442 consolidation**.
-Next: **442 attribute refinement consolidation** (planned, measured workflow gate). The existing
+Next: **443 typed numeric attribute conditions** (proposed depth slice; define the
+explicit type/parse/validity contract before extending CEL). The existing
 Go runtime, source adapters, typed questions and supplied-data components remain
 the foundation.
 
@@ -119,7 +120,14 @@ native All scope unsupported and evaluator preflight intact. Acceptance must
 include real delta/cumulative and monotonic/nonmonotonic OTLP points, no-recorded
 values, missing identity, cancellation and local retained inspection.
 
-## 442 — consolidate attribute refinement (planned)
+## 442 — consolidate attribute refinement
+
+Delivered: [shared refinement contract](ATTRIBUTE_REFINEMENT.md). Exclude is the
+missing-inclusive complement across Activity, fixed exploration and population
+selection. Shared compact presence actions work from observed fields, details,
+missing table cells and categorical facets; CEL `.ne()` stays reported-only.
+[Storyboard](journeys/cel-attributes.md) and [validation](../VALIDATION.md) record
+the executed coverage. The design basis below records the bounded slice.
 
 Exercise expanded attribute use across visual filters, facets, record context
 and authored conditions. Consolidate overlapping gestures or helper code only

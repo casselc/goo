@@ -2249,3 +2249,8 @@ Missing/invalid numeric values do not inherit text-based alarm colors. Loaded Fi
 includes the displayed canonical band and raw producer text without turning it
 into a numeric source filter. Compact labels keep full accessible DOM text and
 tooltip while ellipsizing long labels; short desktop summaries/actions stay inline.
+
+Attribute refinement uses the pure [field intent helper](../ui/field-refinement.mjs)
+and shared native action disclosures. Display components emit canonical staged
+selection intents; application adapters retain draft, revision and read authority.
+See [attribute refinement](ATTRIBUTE_REFINEMENT.md).
