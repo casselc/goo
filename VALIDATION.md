@@ -23956,3 +23956,9 @@ POST-blocked reopen. Four actual frames and all source/proof reviews approved.
 No backend rebuild or root Go/API rerun is claimed for this UI-only round.
 [Evidence](docs/evidence/host-controls-216.json) and
 [storyboard](journeys/216-host-controls-storyboard.md) retain actual receipts.
+
+## Gotogether #221 adoption and CW1 handoff (2026-11-14)
+
+Pinned `a1a90fe5653d`. Strict TypeScript model possibility, restored one-step `Refutes` witness replay and protocol controls passed (32.95s, no skips). Fresh real-OTLP acquisition journey `1a04dbf5ce4e` passed (1.9m): native source gate, 24 SQL assertions, source/compiled observation checks and Bombadil admission; isolated database cleanup succeeded.
+
+Portable `TestCW1Fixture` passed in 29.574s, including source/compiled positive replay, five negative controls and stale compiled-artifact refusal. Compiled positive replay removes Node/Quint from PATH. Snapshot hashes and document fences are checked; upstream Markdown extraction/source maps are future work. See [fixture](verification/gotogether/testdata/cw1/contract.md) and [independent acceptance](docs/reviews/CW1_CONSUMER_ACCEPTANCE.md).

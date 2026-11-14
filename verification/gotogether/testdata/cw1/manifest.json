@@ -1,0 +1,20 @@
+{
+  "version": "goo.cw1-consumer/1",
+  "sourceCommit": "801eedfc04e20f8027e5ecba42959b804fe0f6ba",
+  "gotogetherCommit": "a1a90fe5653db07cbf6cc467021bda18e4b27d79",
+  "captureToken": "1a04dbf5ce4e",
+  "capture": {
+    "nativeSourceGate": "passed",
+    "sqlAssertions": 24,
+    "otlpPoints": 240,
+    "databaseCleanup": true,
+    "staticReplayRerunsNativeSourceGate": false
+  },
+  "sha256": {
+    "contract.md": "c60314b059dec947c54cd60fdff036c4af0ba7052f64e186485256790bd94c9c",
+    "model/acquisition.qnt": "86e56c21a5585aa28ef9622dcf993e7e6d182d1158877ab87db6697558b7021f",
+    "acquisition.binding.yaml": "249b75839b7e4f9e6f6d04772de023761408a3bc7d2aa33edffef92a723defc9",
+    "scenario.go.txt": "ea9188dc31c46a8ccde51531569837937c0363859b7a62d60b877fb4009dbd49",
+    "requests.jsonl": "43abdd3d6726bcb887d7caa93ddb71229d50bec69f2442e82d8435285a2567b5"
+  }
+}

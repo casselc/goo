@@ -19,7 +19,11 @@ const binding = "acquisition.binding.yaml"
 func options() validate.Options { return validate.Options{Backend: "typescript", Eval: "quint"} }
 func TestModelPossible(t *testing.T) {
 	t.Setenv("QUINT_BACKEND", "typescript")
-	qtest.Model(t, binding).Expect(t, qtest.Possible(Scenario()))
+	// A retained display before acquisition has no matching local view: the
+	// model must catch that bad observation, with its witness replayed by Quint.
+	qtest.Model(t, binding).Expect(t,
+		qtest.Possible(Scenario()),
+		qtest.Refutes("retainedOwnership").InAtMost(1))
 	cmd := exec.Command("quint", "run", "model/acquisition.qnt", "--backend=typescript", "--max-samples=10", "--max-steps=10")
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("model simulation: %v: %s", err, out)

@@ -2,7 +2,7 @@ module goo.local/verification/gotogether
 
 go 1.27.3
 
-require github.com/chucklehead-dev/gotogether v0.0.0-20261114180025-771dcce13fd2
+require github.com/chucklehead-dev/gotogether v0.0.0-20261114220723-a1a90fe5653d
 
 require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect

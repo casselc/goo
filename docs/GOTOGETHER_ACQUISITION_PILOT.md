@@ -11,7 +11,7 @@ quintgo/Hegel dependencies are unchanged.
 - Quint is pinned at **0.33.1** in `package.json` and its lockfile. Existing
   lifecycle model-driven and observed-trace checks pass with the upgraded CLI.
 - `verification/gotogether` is a separate Go 1.27.3 module pinned to upstream
-  `771dcce13fd24071d3ae2677c567540ad0ec79ff`, with no local upstream replacement.
+  `a1a90fe5653db07cbf6cc467021bda18e4b27d79`, with no local upstream replacement.
 - The Playwright adapter is vendored unchanged with its MIT license, exact commit
   and byte hash. A small application adapter records actual DOM observations
   separately from the request's own completion.
@@ -70,8 +70,7 @@ landed as [PR #221](https://github.com/chucklehead-dev/gotogether/pull/221), mer
 at `a1a90fe5653db07cbf6cc467021bda18e4b27d79`. Graph witness replay now applies
 backend selection; the new argv regression and end-to-end TypeScript Refutes
 test cover our report. All 37 reported PR checks were successful when reviewed.
-This records source and upstream CI review. Goo's consumer pin remains
-`771dcce`; restoring its optional Refutes claim follows a pin update.
+Goo now pins this fix and passes the restored TypeScript `Refutes` witness replay.
 
 The external-driver reference now explains intern scopes and empty values,
 Bombadil's unchanged-return epoch recipe, and the drain/settle bridge. A request-log
@@ -88,3 +87,9 @@ items; the native Go compiler/evaluator remains the separate Q track.
 
 A useful consumer follow-up is one pinned portable acquisition document/model/log
 fixture. Keep that preparation separate from implementing an extractor in Goo.
+
+## CW1 consumer handoff
+
+The [portable acquisition fixture](../verification/gotogether/testdata/cw1/contract.md) includes the document/model/binding, exact scenario and drain bridge, a real 23-record browser log, and snapshot hashes. Its capture passed the native source gate and both gotogether evaluators on 2026-11-14. Static replay checks bounded observation ownership and completion, not source completeness.
+
+The dependency now pins upstream fix `a1a90fe5653d`; TypeScript `Refutes` witness replay is restored. CW1 extraction and document source maps remain upstream work. The fixture runs with the strict controls command and requires no Databricks instance or running ClickHouse.

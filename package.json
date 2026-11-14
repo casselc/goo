@@ -25,7 +25,7 @@
     "test:smoke": "bash scripts/run_journeys.sh --smoke",
     "diagnostics:plan": "python3 scripts/retain_diagnostics.py",
     "diagnostics:prune": "python3 scripts/retain_diagnostics.py --apply",
-    "test:gotogether-controls": "cd verification/gotogether && GOTOGETHER_STRICT=1 go test -mod=readonly -count=1 -run \"^(TestModelPossible|TestProtocolControls)$\" ."
+    "test:gotogether-controls": "cd verification/gotogether && GOTOGETHER_STRICT=1 go test -mod=readonly -count=1 -run \"^(TestModelPossible|TestProtocolControls|TestCW1Fixture)$\" ."
   },
   "devDependencies": {
     "@antithesishq/bombadil": "0.7.9",

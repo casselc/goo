@@ -1,0 +1,17 @@
+spec: model/acquisition.qnt
+module: acquisition
+# Opaque DOM text identities retain raw strings in the log; equality only.
+intern:
+  question: actor
+  detail: actor
+actions:
+  read: {}
+  show: {}
+invariants: [retainedOwnership]
+eventually: [journeyFinished]
+complete: true
+simulate:
+  allows: [retainedOwnership]
+  possible:
+    - name: acquisition and retained return
+      steps: [show, show, show, show, show]
