@@ -1,5 +1,31 @@
 # Semantic properties and model conformance
 
+## Exact saved-view recall (427)
+
+`TestHegelExactViewRecall427JournalState` drives the production browser journal
+through 40 generated sequences of 48 remember/pin/unpin/forget/clear/reload/expiry
+operations and compares each state with an independent reference model. The latest
+run passed all 1,920 transitions; this is journal coverage, not browser acceptance.
+
+`TestQuintExactViewRecall427Observed` consumes the complete real journey report
+via `GOO_EXACT_VIEW_RECALL_427_REPORT`. It admits the actual saved definitions,
+UI exports, metadata/source request ledger and comparison responses, then checks
+the trace with the existing population-drilldown Quint model and rejects eight
+semantic/authority mutations. It requires both operands, CEL authoring, reference-only
+persistence, local-only staging, completed fault/ABA/draft journeys and focus outcomes.
+
+```sh
+go test . -run '^TestHegelExactViewRecall427JournalState$' -count=1 -v
+GOO_EXACT_VIEW_RECALL_427_REPORT=/absolute/path/to/report.json \
+  go test . -run '^TestQuintExactViewRecall427Observed$' -count=1 -v
+```
+
+The [browser journey](../journeys/saved-view-recall.spec.js) runs the native gate
+mandatorily after runtime cleanup. A missing report skips the standalone native
+test and does not count as acceptance; the journey rejects skips. See the
+[storyboard](../docs/journeys/saved-view-recall.md) and [validation](../VALIDATION.md)
+for the executed browser/native results and limits.
+
 ## Instrument instance preflight (433a)
 
 `TestHegelInstrumentInstancePreflight433` calls production `PlanInstrument` over

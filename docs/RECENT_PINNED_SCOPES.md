@@ -12,6 +12,7 @@ picker does not create a workspace, shared catalogue or evidence store.
 | --- | --- | --- |
 | Activity | Rolling log/span selector and column layout | Stages; Start stream reads |
 | Fixed question | Validated query and exact UTC window | Stages; Run reads |
+| Saved view | Exact immutable definition ID and title hint | Resolves metadata and stages the whole view; Run reads |
 | Held visit | Existing view retained in this tab | Returns to retained view without a source read |
 
 History contains configuration, never telemetry rows, receipts, membership tokens,
@@ -60,6 +61,8 @@ screenshots. The roadmap calls for a whole-product review after this consolidati
 rather than automatically growing another feature queue.
 
 Ordinary log/span questions retain their supported fixed query and Records display.
-This slice does not serialize arbitrary composed views, trace searches, native
-measurements or other surfaces into record history. Existing saved definitions
-and evidence remain the appropriate carriers for those workflows.
+Composed saved views now use [exact saved-view references](EXACT_SAVED_VIEW_RECALL.md)
+(427), rather than copying their queries into record history. That reference
+retains complete composition, comparison operands and checked CEL source through
+the existing definition reader. Trace searches, native measurements and other
+surfaces retain their own saved-definition and evidence carriers.

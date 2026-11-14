@@ -1853,6 +1853,7 @@ input::placeholder,textarea::placeholder {color:var(--muted);opacity:1}
 
 /* Shared configuration recall: compact rows, native disclosure and wrapping actions. */
 .scope-history{margin:0 0 .5rem;max-width:100%;min-width:0}
+.scope-history>input[type=search]{box-sizing:border-box;inline-size:min(28rem,100%);min-inline-size:0;margin-block:.25rem}
 .scope-history>summary{width:fit-content;font-size:.8125rem;color:var(--muted);padding:.25rem 0}
 .scope-history>div:not(.controls){display:grid;gap:.5rem;max-height:24rem;overflow:auto;overscroll-behavior:contain}
 .scope-history section{min-width:0}

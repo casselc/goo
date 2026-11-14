@@ -3014,3 +3014,11 @@ a bounded source-free restore/check actor.
 producer/environment/namespace/interval scope through shared CEL checking, explicit
 Run and retained native/service Return. The native model gate is mandatory after
 the observed ledger is complete; source totals exceed the displayed page.
+
+## 427 — exact saved investigations from Recent / Pinned
+
+[Storyboard](saved-view-recall.md) and
+[real browser journey](../../journeys/saved-view-recall.spec.js) cover complete CEL
+and composed comparison definitions, local pin/filter/forget, cold persistence,
+metadata-only Stage, exact YAML exports, explicit source reads, dirty recovery and
+late-response refusal. Native model validation follows the completed actual report.

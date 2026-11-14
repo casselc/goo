@@ -21,6 +21,7 @@ This index separates using Goo, extending it, and the development record.
 | Follow a complete investigation | [Illustrated preserve/reopen journey](journeys/investigation-reuse.md) |
 | Browse worked examples | [Journey index](journeys/README.md) |
 | Save questions, views or observations | [Preservation](PRESERVATION.md) |
+| Find and stage a saved investigation | [Exact saved-view recall](EXACT_SAVED_VIEW_RECALL.md) |
 | Create reusable views | [Authorable view templates](AUTHORABLE_VIEW_TEMPLATES.md) |
 | Author a record predicate with CEL | [CEL predicate pilot](CEL_PREDICATE_PILOT.md) |
 | Understand the planned visual/expression workflow | [Whole-product CEL integration](CEL_PRODUCT_INTEGRATION.md) |

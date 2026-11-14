@@ -29,7 +29,7 @@ function fixture({pending=false}={}){
  panel.dataset.phase=pending?'loading':'ready';
  const old={id,generation:1,pending,retired:false,controller:{abort(){calls.aborts++}}};
  const s={recallConflict:null,savedVisit:old,savedID:id,generation:1,busy:false,controller:null,panel,
-  node:(...args)=>new Element(...args),libraryHost:host,controlsHost:host,acknowledgedRecall:()=>null,canRecall:()=>false,
+  admitSavedView:value=>Composition.view(value),rememberSaved(){},node:(...args)=>new Element(...args),libraryHost:host,controlsHost:host,acknowledgedRecall:()=>null,canRecall:()=>false,
   nativeControlReady:n=>!n.removed,active:()=>true,location:{hash:'#exploration-view='+id},document:{activeElement:null},
   AbortController,structuredClone,Composition,CELProvenance,CapturedCount:{queryVariant:()=>false},sourceErrors:new Set(),sourceDrafts:new Map(),filterDrafts:new Map(),
   discardedAuthoring:new Set(),draftRevision:0,clearViews(){},closeChild(){},retireCountComparison(){},resetLive(){},visibility(){},
@@ -39,7 +39,7 @@ function fixture({pending=false}={}){
  };
  s.history={replaceState(a,b,hash){s.location.hash=hash}};
  vm.runInNewContext(['function clearRecallConflict(','function retireSavedLoad(','function retireSavedVisit(','function savedVisitCurrent(','async function load('].map(declaration).join('\n')+'\nthis.load=load;',s);
- return {s,id,host,old,calls};
+ return {s,id,host:panel,old,calls};
 }
 
 test('Keep then explicit discard can reopen the same saved view and retire the previous visit',async()=>{
@@ -63,4 +63,10 @@ test('Keep then explicit discard can reopen the same saved view and retire the p
 test('clean duplicate history notification for the current saved view remains a no-op',async()=>{
  const f=fixture();f.s.canRecall=()=>true;await f.s.load(f.id);await f.s.load(f.id);
  assert.equal(f.calls.configuration,0);assert.equal(f.calls.restored,0);assert.equal(f.s.savedVisit,f.old);assert.equal(f.host.children.length,0);
+});
+
+
+test('clean saved CEL navigation checks the current acknowledged view, independently of the requested ID',async()=>{
+ const f=fixture(),next='b'.repeat(64);f.s.location.hash='#exploration-view='+next;let acknowledged;f.s.acknowledgedRecall=key=>{acknowledged=key;return {queries:[]}};f.s.canRecall=ack=>!!ack;f.s.api=async path=>{assert.equal(path,'/api/exploration-views/'+next);f.calls.configuration++;return {id:next,version:1,title:'Other',queries:[{signal:'logs',environment:'prod',fromMs:1000,toMs:61000,limit:100}],layout:'records',columns:['utc','summary']}};
+ await f.s.load(next);assert.equal(acknowledged,f.id);assert.equal(f.calls.configuration,1);assert.equal(f.s.recallConflict,null);
 });

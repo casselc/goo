@@ -138,10 +138,26 @@ let activityEntry;
 const scopeJournal=new ScopeHistory.Journal();
 const scopeHistoryHost=textNode('div','');el('exploration').before(scopeHistoryHost);
 globalThis.addEventListener('goo:explore-mode',event=>{scopeHistoryHost.hidden=event.detail.measurements;});
-const scopePicker=ScopePicker.mount(scopeHistoryHost,{journal:scopeJournal,current:()=>activityEntry?.active()?activityEntry.configuration():liveExploration.currentConfiguration(),visits:()=>liveExploration.visits(),onVisit:id=>{appWorkspace.navigate('explore',{writeHash:false});exploreMode(false);activityEntry?.enterFixed();liveExploration.selectVisit(id)},onStage:intent=>{appWorkspace.navigate('explore',{writeHash:false});exploreMode(false);if(intent.kind==='activity')activityEntry?.stageConfiguration(intent);else{history.pushState(null,'',Workspace.questionLink(intent.question,intent.view));liveExploration.openQuestion(intent.question,[],{stage:true,recalledView:intent.view});liveExploration.focusRun();}}});
-function rememberScope(intent){if(!intent)return;try{scopeJournal.remember(intent);}catch{}if(scopePicker.root.open)scopePicker.refresh();}
+let scopeRecallEpoch=0,scopeRecallOwner=null,lastInvestigationFocus=null;
+const scopePicker=ScopePicker.mount(scopeHistoryHost,{journal:scopeJournal,current:()=>activityEntry?.active()?activityEntry.configuration():liveExploration.currentConfiguration(),visits:()=>liveExploration.visits(),onVisit:id=>{appWorkspace.navigate('explore',{writeHash:false});exploreMode(false);activityEntry?.enterFixed();liveExploration.selectVisit(id)},onStage:async(intent,options={})=>{
+ if(intent.kind==='saved-view'){
+  liveExploration.prepareSavedRecall();
+  const owner=scopeRecallOwner={epoch:++scopeRecallEpoch,id:intent.id,adopting:false},activity=activityEntry?.recallState(),fixed=liveExploration.recallState();
+  const current=()=>scopeRecallOwner===owner&&owner.epoch===scopeRecallEpoch&&(options.current?.()??true)&&appWorkspace.current()==='explore'&&(owner.adopting||activity===activityEntry?.recallState()&&fixed===liveExploration.recallState());
+  try{return await liveExploration.stageSavedView(intent,{...options,current,returnFocus:lastInvestigationFocus,dirty:()=>activityEntry?.active()&&activityEntry.recallDirty(),adopt:()=>{owner.adopting=true;appWorkspace.navigate('explore',{writeHash:false});exploreMode(false);activityEntry?.enterFixed();}})}finally{if(scopeRecallOwner===owner)scopeRecallOwner=null}
+ }
+ appWorkspace.navigate('explore',{writeHash:false});exploreMode(false);if(intent.kind==='activity')activityEntry?.stageConfiguration(intent);else{history.pushState(null,'',Workspace.questionLink(intent.question,intent.view));liveExploration.openQuestion(intent.question,[],{stage:true,recalledView:intent.view});liveExploration.focusRun();}return true;
+}});
+function retireScopeRecall(force=false){if(!scopeRecallOwner||scopeRecallOwner.adopting&&!force)return;scopeRecallEpoch++;scopeRecallOwner=null;scopePicker.refresh();}
+for(const type of ['input','change','click'])document.addEventListener(type,event=>{if(!event.target.closest?.('.scope-history,.population-recall-conflict'))retireScopeRecall(type!=='click')},true);
+document.addEventListener('focusin',event=>{if(!event.target.closest?.('.scope-history'))lastInvestigationFocus=event.target});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)retireScopeRecall(true)});
+globalThis.addEventListener('pagehide',()=>retireScopeRecall(true));
+globalThis.addEventListener('goo:workspace',()=>retireScopeRecall());globalThis.addEventListener('goo:explore-mode',()=>retireScopeRecall());
+
+function rememberScope(intent){if(!intent)return;try{scopeJournal.remember(intent);}catch{}if(scopePicker.root.open&&!(scopeRecallOwner?.adopting&&intent.kind==='saved-view'&&intent.id===scopeRecallOwner.id))scopePicker.refresh();}
 globalThis.addEventListener('goo:scope-used',event=>rememberScope(event.detail));
-globalThis.addEventListener('goo:question-state',event=>{if(event.detail.phase==='applied'&&event.detail.action==='publish')rememberScope({kind:'question',question:event.detail.applied.question,view:'Records'});});
+globalThis.addEventListener('goo:question-state',event=>{if(!scopeRecallOwner?.adopting)retireScopeRecall();if(event.detail.phase==='applied'&&event.detail.action==='publish')rememberScope(liveExploration.currentConfiguration()?.kind==='saved-view'?liveExploration.currentConfiguration():{kind:'question',question:event.detail.applied.question,view:'Records'});});
 uiConfiguration.then(config=>{const lab=config?.profile==='lab';if(!lab)el('inventoryEnvironment').value='';activityEntry=StreamEntry.mount(el('exploration'),{environment:lab?'local':'',autoStart:lab,onLeaveFixed:()=>liveExploration.suspend(),onEnterFixed:()=>liveExploration.resume(),onOpenFixed:(q,recordLayout,options)=>liveExploration.openQuestion(q,[],{stage:true,activity:true,recordLayout,...options}),onOpenService:openObservedService,onOpenTrace:(q,row,opener,options)=>{dispatchEvent(new CustomEvent('goo:navigate-explore'));liveExploration.openTrace(q,row.TraceId,row.SpanId,null,opener,options)}})});
 const nativeRecordNavigation=NativeRecordNavigation.mount(el('nativeRecordReturn'),{nativeHost:el('measurementWorkbench'),holdResourceOrigin:question=>ResourceReturn.hold(document.querySelector('[data-workspace-panel="explore"]'),question),active:()=>appWorkspace.current()==='explore'&&el('exploreMeasurementsMode').getAttribute('aria-selected')==='true',stageQuestion:q=>{appWorkspace.navigate('explore',{writeHash:false});exploreMode(false);liveExploration.openQuestion(q,[],{stage:true})},showNative:()=>{appWorkspace.navigate('explore',{writeHash:false});exploreMode(true)},suspendRecords:()=>liveExploration.suspend()});
 Measurements.mount(el('measurementWorkbench'),{profilePromise:uiConfiguration,onRecordContext:(detail,opener)=>nativeRecordNavigation.stage(detail,opener),onRestoreStep:hash=>nativeRecordNavigation.restore(hash)});

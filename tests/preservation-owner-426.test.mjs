@@ -28,6 +28,7 @@ const walk=n=>[n,...n.children.filter(c=>typeof c==='object').flatMap(walk)],nod
 const source=readFileSync(new URL('../ui/population-workspace.mjs',import.meta.url),'utf8');
 const between=(a,b)=>source.slice(source.indexOf(a),source.indexOf(b,source.indexOf(a)));
 const mountSource=between('  function mountPreservedQuestion(','  function mountTemplateAuthor(');
+const rememberSource=between('  function rememberSaved(','  function savedReference(');
 const linkSource=between('  function preservationCurrent(','  let facetRead=');
 const renderLine=source.split('\n').find(line=>line.trimStart().startsWith('const owner=preservationOwner='));
 const saveSource=renderLine.slice(0,renderLine.indexOf(';if(CapturedCount.queryVariant'))+';panel.append(saveBox);globalThis.controls={saveBox,save,name,saved,meaningHost};';
@@ -36,8 +37,8 @@ const view=plan(parent,field,[null,'']);
 function fixture({deferred=false,savedID=null}={}){
  const previous=globalThis.document,document={hidden:false,activeElement:null,createElement:tag=>node(tag)};globalThis.document=document;
  const panel=node('section');panel.root=true;const env={node,structuredClone,RecordEnvironment,QuestionSession,Preservation,Composition,CapturedCount,QuestionProtocol,nativeControlReady,completionControlReady,document,panel,queries:structuredClone(view.queries),composition:structuredClone(view.composition),generation:7,preservationOwner:null,disposed:false,draftRevision:3,savedRevision:savedID?3:-1,savedID,title:view.title,authoring:{},discardedAuthoring:new Set(),sourceErrors:new Set(),filterDrafts:new Map(),selection:[],results:[{widget:{key:'logs'},result:{}}],views:new Map(),busy:false,childOwner:null,attachmentPreserveOpen:true,enabled:true,writes:[],staged:[],events:[],meanings:0,CustomEvent,location:{origin:'https://goo.test',pathname:'/',search:''},global:{dispatchEvent:e=>env.events.push(e)},Documents:{context:()=>({}),stageRecordQuestion:q=>env.staged.push(q)},Meaning:{mount:()=>env.meanings++},hasPendingRecordSelection:()=>false,refreshViewAttachment(){},active:()=>env.enabled,currentRun:g=>env.enabled&&g===env.generation&&!env.childOwner,settings:()=>structuredClone({...view,title:env.title}),markDraft:()=>{env.draftRevision++;env.savedID=null}};
- env.api=async(_path,body)=>{env.writes.push(body);if(deferred)return new Promise(resolve=>env.resolve=resolve);return{id:'a'.repeat(64)}};
- vm.createContext(env);vm.runInContext(linkSource+mountSource+saveSource,env);const controls=env.controls;controls.saveBox.open=true;
+ env.api=async(_path,body)=>{env.writes.push(body);if(deferred)return new Promise(resolve=>env.resolve=resolve);return{...structuredClone(view),id:'a'.repeat(64)}};
+ vm.createContext(env);vm.runInContext(rememberSource+linkSource+mountSource+saveSource,env);const controls=env.controls;controls.saveBox.open=true;
  return {...controls,env,panel,button:text=>walk(panel).find(e=>e.localName==='button'&&e.textContent===text),link:()=>walk(panel).find(e=>e.localName==='a'&&e.textContent.startsWith('Open saved view ')),close:()=>globalThis.document=previous};
 }
 const click=()=>new Event('click',{cancelable:true});
@@ -58,7 +59,7 @@ test('426 valid view preservation keeps both queries while selected question/evi
   f.button('Share selected question').onclick();const shared=walk(f.panel).find(e=>e.getAttribute('aria-label')==='Shared question link');assert.equal(shared.hidden,false);assert.deepEqual(QuestionProtocol.readQuestionLink(new URL(shared.value).hash).question,view.queries[0]);
   f.button('Add selected question to investigation').onclick();assert.equal(f.env.staged.length,1);
   f.button('Capture selected query').onclick();assert.equal(f.env.events.length,1);assert.deepEqual(f.env.events[0].detail.question.explore,view.queries[0]);
-  await f.save.onclick();assert.equal(f.env.writes.length,1);assert.deepEqual(f.env.writes[0].queries,view.queries);assert.deepEqual(Composition.comparison(f.env.writes[0].composition).baselineQuery,Composition.comparison(view.composition).baselineQuery);assert.equal(f.env.savedID,'a'.repeat(64));
+  await f.save.onclick();assert.equal(f.env.writes.length,1);assert.deepEqual(f.env.writes[0].queries,view.queries);assert.deepEqual(Composition.comparison(f.env.writes[0].composition).baselineQuery,Composition.comparison(view.composition).baselineQuery);assert.equal(f.env.savedID,'a'.repeat(64));assert.deepEqual(JSON.parse(JSON.stringify(f.env.events.at(-1).detail)),{kind:'saved-view',id:'a'.repeat(64),title:view.title});
   let link=f.link();let e=click();link.onclick(e);assert.equal(e.defaultPrevented,false);
   for(const mode of ['closed','inert','aria']){if(mode==='closed')f.saveBox.open=false;if(mode==='inert')f.saveBox.inert=true;if(mode==='aria')link.setAttribute('aria-disabled','true');e=click();link.onclick(e);assert.equal(e.defaultPrevented,true);f.saveBox.open=true;f.saveBox.inert=false;link.setAttribute('aria-disabled','false')}
   f.env.generation++;e=click();link.onclick(e);assert.equal(e.defaultPrevented,false,'held parent return keeps the same render owner across child query generations');await f.save.onclick();assert.equal(f.env.writes.length,2,'the same held Preserve controls remain usable after child return');link=f.link();assert(nativeControlReady(link));f.env.preservationOwner={};e=click();link.onclick(e);assert.equal(e.defaultPrevented,true,'an identical saved ID does not revive a departed render');
@@ -69,7 +70,8 @@ test('426 pending save may complete while its own button is disabled, but cannot
  for(const mode of ['ready','closed','inert','revision','generation','owner','fieldset']){const f=fixture({deferred:true});try{
   const pending=f.save.onclick();assert.equal(f.env.writes.length,1);assert.equal(f.save.disabled,true);
   if(mode==='closed')f.saveBox.open=false;if(mode==='inert')f.saveBox.inert=true;if(mode==='revision')f.env.draftRevision++;if(mode==='generation')f.env.generation++;if(mode==='owner')f.env.preservationOwner={};if(mode==='fieldset'){const fieldset=node('fieldset');fieldset.disabled=true;f.panel.append(fieldset);fieldset.append(f.saveBox)}
-  f.env.resolve({id:'a'.repeat(64)});await pending;
+  f.env.resolve({...structuredClone(view),id:'a'.repeat(64)});await pending;
+  assert.equal(f.env.events.length,mode==='ready'?1:0,mode);if(mode==='ready')assert.deepEqual(JSON.parse(JSON.stringify(f.env.events[0].detail)),{kind:'saved-view',id:'a'.repeat(64),title:view.title});
   assert.equal(f.env.savedID,mode==='ready'?'a'.repeat(64):null,mode);assert.equal(!!f.link(),mode==='ready',mode);assert.equal(f.env.meanings,mode==='ready'?1:0,mode);
  }finally{f.close()}}
 });

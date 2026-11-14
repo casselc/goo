@@ -17,7 +17,7 @@ test('metadata failures retry explicitly once, with old controls retired and foc
  next.onclick();const other={};document.activeElement=other;f.reads[2].reject();await tick();assert.equal(document.activeElement,other);f.route(b);retry.onclick();next.onclick();assert.equal(f.reads.length,4);f.owner.dispose();f.reads.at(-1).resolve();await tick();assert.equal(f.adoptions.length,0);
 });
 test('wrong definition identity refuses admission and passive history is not a retry',async()=>{
- const f=fixture();await tick();f.route(a);f.reads[0].resolve(b);await tick();assert.equal(f.adoptions.length,0);assert.match(f.panel().textContent,/identity differs/);f.emit('popstate');f.emit('hashchange');assert.equal(f.reads.length,1);f.owner.dispose();
+ const f=fixture();await tick();f.route(a);f.reads[0].resolve(b);await tick();assert.equal(f.adoptions.length,0);assert.match(f.panel().textContent,/identity or shape/);f.emit('popstate');f.emit('hashchange');assert.equal(f.reads.length,1);f.owner.dispose();
 });
 test('pending departure to plain Explore releases obsolete loading UI without telemetry reads',async()=>{
  const f=fixture();await tick();f.route(a);assert.equal(f.panel().hidden,false);f.route(null);assert.equal(f.panel().hidden,true);assert(f.reads[0].signal.aborted);f.reads[0].resolve();await tick();assert.equal(f.adoptions.length,0);assert(f.reads.every(r=>r.method==='GET'&&r.url.startsWith('/api/exploration-views/')));f.owner.dispose();

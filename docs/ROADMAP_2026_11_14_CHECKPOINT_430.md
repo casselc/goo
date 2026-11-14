@@ -4,10 +4,10 @@ The [four-expert review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) prioritizes re
 useful unfamiliar telemetry before more preservation depth. This checkpoint
 adopts that direction without renumbering the older pending 427–429 contracts.
 
-Status: **430–436 delivered and validated**. See
-[whole-product CEL acceptance](CEL_WHOLE_PRODUCT_ACCEPTANCE.md). Next:
-**427 exact saved-view recall from Recent / Pinned**, followed by **428 paired
-evidence** and **429 measured consolidation**, under the adopted
+Status: **430–436 and 427 delivered and validated**. See
+[whole-product CEL acceptance](CEL_WHOLE_PRODUCT_ACCEPTANCE.md) and
+[exact saved-view recall](EXACT_SAVED_VIEW_RECALL.md). Next:
+**428 paired evidence**, followed by **429 measured consolidation**, under the adopted
 [post-CEL operator cycle](reviews/ROADMAP_AFTER_CEL_436_PROPOSAL.md).
 
 The user-directed [CEL predicate pilot](CEL_PREDICATE_PILOT.md) is also delivered:
@@ -137,6 +137,7 @@ readiness caching if measurements justify it.
 
 ## Retained follow-on work
 
-[Exact saved-view recall, paired-capture adoption and preservation consolidation](ROADMAP_2026_11_13_CHECKPOINT_426.md)
-remain useful pending work. Their prior acceptance contracts remain available;
+[Exact saved-view recall](EXACT_SAVED_VIEW_RECALL.md) is delivered as 427.
+[Paired-capture adoption and preservation consolidation](ROADMAP_2026_11_13_CHECKPOINT_426.md)
+remain pending as 428–429. Their prior acceptance contracts remain available;
 none is replaced by an improvised discovery-specific view or capture format.

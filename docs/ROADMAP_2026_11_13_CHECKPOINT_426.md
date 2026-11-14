@@ -1,7 +1,8 @@
 # Roadmap after the 426 investigation checkpoint
 
 **Superseded execution order:** use the [430 checkpoint](ROADMAP_2026_11_14_CHECKPOINT_430.md).
-The 427–429 contracts below remain pending, after the adopted ad-hoc entry cycle.
+The ad-hoc entry cycle is complete; **427 is now delivered**. **428–429 remain
+pending**. The dated review and original planning basis below are historical.
 
 **2026-11-14 review:** the [ad-hoc live telemetry pass](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md)
 recommends unknown-data entry, sparse/delayed-data recovery and shared discovery
@@ -9,9 +10,9 @@ consolidation ahead of the pending preservation cycle below. This is a proposed
 reprioritization; existing acceptance contracts remain available and no pending
 milestone is claimed delivered or renumbered.
 
-Status: **426 is complete**. The 427–429 sequence below is the proposed next
-finite cycle, reconciled with architecture and UX review. These next items are
-not implemented. Actual 426 execution and bounded acceptance are recorded in
+Original checkpoint status: **426 is complete**. The 427–429 sequence below was
+the proposed next finite cycle, reconciled with architecture and UX review.
+Actual 426 execution and bounded acceptance are recorded in
 [validation](../VALIDATION.md) and its
 [integration review](reviews/INVESTIGATION_CONSOLIDATION_426.md).
 
@@ -53,6 +54,10 @@ Three distinctions are durable product rules:
   not establish a simultaneous or unsampled census.
 
 ## 427 — breadth: exact saved-view recall at the main entry
+
+**Delivered:** [exact recall contract](EXACT_SAVED_VIEW_RECALL.md),
+[storyboard](journeys/saved-view-recall.md) and [validation](../VALIDATION.md).
+The original gap and acceptance contract below record the planning basis.
 
 Outcome: “I saved this useful comparison; let me find it from Recent / Pinned
 without rebuilding it.” Add an exact saved exploration-view reference to the

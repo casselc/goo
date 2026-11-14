@@ -1,5 +1,55 @@
 # Validation record
 
+## 427 — exact saved investigations from Recent / Pinned
+
+[Contract](docs/EXACT_SAVED_VIEW_RECALL.md),
+[real OTLP storyboard](docs/journeys/saved-view-recall.md) and
+[independent source/UX review](docs/reviews/EXACT_VIEW_RECALL_427.md).
+
+- Recent / Pinned now stores closed immutable saved-view references with only
+  kind, ID and title. Local search/pin/forget and explicit persistence preserve
+  complete saved compositions, both comparison operands and checked CEL source
+  through the existing Go definition reader. Stage resolves metadata; Run remains
+  the telemetry-read owner. No production Go API or wire format changed.
+- Detached admission retains the current investigation on missing, malformed,
+  mismatched-ID or obsolete-library responses. Private invocation ownership stops
+  ignored-abort success/error from reviving after A → B → A. Native dirty choices
+  protect valid and invalid text, restore Keep focus and focus the adopted heading.
+  Real navigation exposed a target-acknowledgment bug: clean saved CEL A → B now
+  checks A's acknowledgment and loads B; dirty prompts mount in the visible panel.
+- Root Go suite passes; final binary builds on Go 1.27.3. Full frontend suite:
+  **1,798 passing, zero failures/skips, 35.927s**. Independent final focused review:
+  **24 passing, zero skips**; journal/picker cases also passed independently.
+  The first unprivileged full-suite run could not bind the cancellation fixture's
+  loopback socket; the complete authorized loopback rerun passed unchanged.
+- Hegel compares the actual production journal with an independent Go model over
+  **40 × 48 = 1,920 transitions**, including cold reload, age and capacity.
+  Current run passes in **7.35s**. Reference-only storage and exact-ID identity are
+  checked independently of title hints.
+- The real generic-runtime journey uses five ordinary OTLP logs and two complete
+  definitions. Actual YAML exports prove adopted source/composition/operands;
+  explicit comparison Run performs exactly **two telemetry calls** followed by
+  one supplied-data compare. Independent raw logs yield **3 east / 2 west**.
+  Local recall, inspection, failure recovery and journal operations perform no
+  telemetry reads or configuration writes. Cold persistence, ignored-abort ABA,
+  valid/invalid draft recovery and actual focus are covered, with cleanup receipts.
+- `TestQuintExactViewRecall427Observed` admits the complete actual report, verifies
+  definition content IDs, CEL provenance, full operand/source results, request
+  authority and minimal history, then replays the existing population-drilldown
+  model and rejects **eight semantic/authority mutants**. The first actual report
+  passes in **14.93s**; the final integrated rerun passes in **12.30s**, zero skips.
+  Final browser + mandatory native journey: **1.7m** (1.8m runner), 19 observed
+  steps, **506 Bombadil snapshots**, both focus checks true, no browser errors
+  and owned runtime cleanup complete. Calibration corrected whitespace-sensitive raw
+  JSON request equality to parsed-content equality; body/path and two-source limits
+  remain enforced. The browser requires the gate after a passed report and cleanup;
+  a missing-report standalone skip does not count as acceptance.
+- Responsive 1440/390/320 screenshots were generated from the running app and
+  independently accepted. No visual blocker; desktop row action proximity remains
+  an optional measured-consolidation item. Physical AT and cross-engine checks are
+  not claimed. Saved definitions remain configuration, not captured evidence;
+  **428 paired evidence** and **429 consolidation** remain pending.
+
 ## 436.6 — whole-product CEL acceptance and shared trust fixes
 
 [Acceptance](docs/CEL_WHOLE_PRODUCT_ACCEPTANCE.md),

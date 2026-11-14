@@ -8,7 +8,11 @@ const day=86400000,maximum=20;
 const closed=(v,keys)=>{try{object(v,keys);return true}catch{return false}};
 const budget=value=>{if(new TextEncoder().encode(JSON.stringify(value)).length>16384)throw Error('Scope configuration exceeds 16 KiB.');};
 export function normalizeIntent(raw){
- object(raw,['kind','question','view','selector','columns','fieldColumns','baselineCapture'],'Invalid scope configuration.');
+ object(raw,['kind','question','view','selector','columns','fieldColumns','baselineCapture','id','title'],'Invalid scope configuration.');
+ if(raw.kind==='saved-view'){
+  if(!closed(raw,['kind','id','title'])||typeof raw.id!=='string'||! /^[a-f0-9]{64}$/.test(raw.id)||typeof raw.title!=='string'||!raw.title.isWellFormed()||!raw.title.trim()||new TextEncoder().encode(raw.title).length>120||/[\p{Cc}]/u.test(raw.title))throw Error('Invalid saved view reference.');
+  return {kind:'saved-view',id:raw.id,title:raw.title};
+ }
  if(!closed(raw,raw?.kind==='question'?['kind','question','view']:['kind','selector','columns','fieldColumns','baselineCapture']))throw Error('Invalid scope configuration.');
  if(raw.kind==='question'){const view=raw.view===undefined?'Records':raw.view;Protocol.validateRecordQuestion(raw.question,view);budget(raw);const question=structuredClone(raw.question);return {kind:'question',question,view};}
  if(raw.kind!=='activity'||!closed(raw.selector,['signal','environment','environmentSelector','where'])||!['logs','spans'].includes(raw.selector.signal))throw Error('Invalid Activity scope.');
@@ -18,8 +22,8 @@ export function normalizeIntent(raw){
  if(raw.baselineCapture!==undefined&&(typeof raw.baselineCapture!=='string'||!/^[a-f0-9]{64}$/.test(raw.baselineCapture)||raw.selector.signal!=='spans'))throw Error('Invalid baseline reference.');
  budget(raw);return {kind:'activity',selector:structuredClone(raw.selector),...layout,...(raw.baselineCapture?{baselineCapture:raw.baselineCapture}:{})};
 }
-export function identity(raw){const v=normalizeIntent(raw);return v.kind==='question'?v.kind+Session.identity(v.question)+v.view:v.kind+Session.identity({...v.selector,fromMs:0,toMs:60000})+JSON.stringify([v.columns,v.fieldColumns,v.baselineCapture||'']);}
-export function describe(raw){const v=normalizeIntent(raw),q=v.question||v.selector;return (v.kind==='activity'?'Activity':'Fixed question')+' · '+q.signal+' · '+Environment.questionLabel(q);}
+export function identity(raw){const v=normalizeIntent(raw);if(v.kind==='saved-view')return 'saved-view:'+v.id;return v.kind==='question'?v.kind+Session.identity(v.question)+v.view:v.kind+Session.identity({...v.selector,fromMs:0,toMs:60000})+JSON.stringify([v.columns,v.fieldColumns,v.baselineCapture||'']);}
+export function describe(raw){const v=normalizeIntent(raw);if(v.kind==='saved-view')return 'Saved view · '+v.title+' · '+v.id;const q=v.question||v.selector;return (v.kind==='activity'?'Activity':'Fixed question')+' · '+q.signal+' · '+Environment.questionLabel(q);}
 export class Journal{
  constructor({storage=()=>globalThis.localStorage,path=globalThis.location?.pathname||'/',now=()=>Date.now()}={}){this.storage=storage;this.now=now;this.key='goo.scope-history.v1:'+path;this.items=[];this.durable=false;this.error='';try{const raw=storage().getItem(this.key);if(raw){if(new TextEncoder().encode(raw).length>262144)throw Error('Scope history exceeds bound.');const v=JSON.parse(raw);if(!closed(v,['version','items'])||v.version!==1||!Array.isArray(v.items)||v.items.length>40)throw Error('Invalid scope history.');this.items=v.items.map(x=>this.entry(x)).filter(x=>x.pinned||this.fresh(x));this.durable=true;this.bound();}}catch(e){this.error='Browser history unavailable · '+e.message;}}
  entry(x){if(!closed(x,['intent','usedAt','pinned'])||!Number.isSafeInteger(x.usedAt)||x.usedAt<0||x.usedAt>this.now()||typeof x.pinned!=='boolean')throw Error('Invalid history entry.');return {intent:normalizeIntent(x.intent),usedAt:x.usedAt,pinned:x.pinned};}
