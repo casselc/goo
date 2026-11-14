@@ -3053,3 +3053,10 @@ routes. A bounded actor and mandatory native gate validate the complete report.
 [Real OTLP gauge inspection](raw-gauge-observations.md) covers explicit reads,
 missing identity, duplicates, units, nonfinite and not-recorded values, local
 inspection, atomic source limits, refusal and obsolete-response retirement.
+
+## 439 — measured first-use acquisition and retained inspection
+
+[First-use acquisition](first-use-acquisition.md) follows metric scope discovery,
+instrument metadata, explicit raw reads and local inspection over ordinary OTLP.
+It records source/API response bytes and rows separately from local rendered
+rows, then verifies retained return and pending-response retirement.

@@ -38,8 +38,10 @@ metric expression authoring remain unimplemented. [427 exact recall](EXACT_SAVED
 is delivered, as is [428 paired evidence](PAIRED_COMPARISON_CAPTURE.md).
 [429 measured consolidation](MEASURED_SCOPE_PRESERVATION.md) is delivered.
 [437 All-environments logs](ALL_ENVIRONMENTS_LOG_ENTRY.md) and
-[438 raw gauge inspection](RAW_GAUGE_OBSERVATIONS.md) are delivered. Next is
-439 measured first-use acquisition in the [whole-product cycle](ROADMAP_2026_11_14_CHECKPOINT_429.md).
+[438 raw gauge inspection](RAW_GAUGE_OBSERVATIONS.md) are delivered.
+[439 measured acquisition](FIRST_USE_ACQUISITION.md) retains settled raw banks
+across temporary navigation without rereading. Next is bounded presence-safe CEL
+attribute conditions in the [whole-product cycle](ROADMAP_2026_11_14_CHECKPOINT_429.md).
 
 Raw gauge inspection is bounded and table-only. Missing instance identity no
 longer blocks reading reported values, but evaluator readiness remains separate.

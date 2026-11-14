@@ -15,7 +15,10 @@ required to inspect rows. Native All-environments scope remains unsupported.
 
 Opening metadata, expanding held rows or changing their local presentation does
 not read values. A source-scope edit or new discovery retires the old inspector;
-a late response cannot publish into a replacement context. Read observations is
+a late response cannot publish into a replacement context. Temporary navigation
+cancels pending work while retaining the settled bank and local inspection in
+the same mounted workspace; returning does not reread. See
+[first-use acquisition](FIRST_USE_ACQUISITION.md). Read observations is
 independent of evaluator readiness. Existing Build/Preview readiness and kernel
 preflight remain unchanged.
 

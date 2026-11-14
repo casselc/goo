@@ -5067,3 +5067,29 @@ The gate checks actual OTLP/exporter, acquisition and held-row banks separately
 from the reused population-drilldown model's read/history projection. This models
 source/local authority, not gauge evaluation, browser geometry or completeness.
 Executed results belong in `VALIDATION.md`; this guide is not a passing verdict.
+
+## 439 — measured first-use acquisition and retained return
+
+The [first-use journey](../journeys/first-use-acquisition.spec.js) meters actual
+ClickHouse response bytes and row work separately from browser API bytes and
+rendered rows. Its isolated ordinary-OTLP bank contains 240 points; local pages
+remain bounded to 100 DOM rows. These are acquired/exported and rendered counts,
+not ClickHouse storage bytes scanned or an ingestion completeness claim.
+
+The completed `goo.firstUse439/1` report is checked by:
+
+```sh
+GOO_FIRST_USE_439_REPORT=/absolute/path/report.json go test -run '^TestQuintFirstUse439Observed$' -count=1 -v
+```
+
+The browser requires this native gate without a skip. A standalone invocation
+without the report explicitly skips. Admission checks the fixed acquisition
+question, source-read clock, local authority and source meter ledger. Retained
+return conserves Find/page/detail and held occurrences; canceled or obsolete
+successful responses cannot replace them or steal focus. Source cancellation
+and deliberately delayed successful-response delivery remain separate checks.
+Seven negative controls exercise new local source work, changed receipts/scope,
+stolen late-response focus, unbounded DOM rendering and incomplete cleanup. The existing population-drilldown
+Quint model replays read/history authority; it does not evaluate gauge values or
+pretend schema compatibility establishes freshness. Executed measurements and
+limits belong in `VALIDATION.md` and the storyboard.

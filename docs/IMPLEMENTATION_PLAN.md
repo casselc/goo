@@ -50,7 +50,9 @@
 > [All-environments entry](ALL_ENVIRONMENTS_LOG_ENTRY.md).
 > **438 raw gauge inspection is delivered**; see
 > [raw observations](RAW_GAUGE_OBSERVATIONS.md).
-> Next: **439 measured first-use acquisition consolidation** (planned).
+> **439 measured first-use acquisition consolidation is delivered**; see
+> [retained inspection](FIRST_USE_ACQUISITION.md).
+> Next: **440 presence-safe CEL attribute conditions** (planned).
 > Definition recall and evidence capture retain separate semantics. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped

@@ -7,10 +7,9 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437 delivered and validated**. The adopted cycle remains
+Status: **429 and 437–439 delivered and validated**. The adopted cycle remains
 **437 breadth → 438 depth → 439 consolidation** after the independent review.
-Next: **438 raw gauge inspection**, then **439 measured acquisition**.
-Those two outcomes remain planned. The existing Go runtime, source
+Next: **440 presence-safe CEL attributes** (planned, bounded design gate). The existing Go runtime, source
 adapters, typed questions and supplied-data components remain the foundation.
 
 ## 437 — explicit All-environments log entry
@@ -71,6 +70,11 @@ source-read time distinct from observation time.
 
 ## 439 — measure first-use acquisition and consolidate matching work
 
+Delivered: [contract](FIRST_USE_ACQUISITION.md),
+[measured storyboard](journeys/first-use-acquisition.md) and
+[validation](../VALIDATION.md). The bounded change retains settled observations
+on temporary navigation; per-request source probes remain independent.
+
 Measure discovery → explicit read → inspect → retained return over the new paths.
 Record cold and retained requests, per-family SQL/bytes, cancellation, row work
 and high-cardinality behavior before proposing caching or refactoring. Compare
@@ -81,6 +85,22 @@ scope, completeness and lifetime contracts. A schema probe is not evidence of
 fresh data. No durable readiness cache without an invalidation contract; no
 universal identity or permission layer. Keep source and native evaluator owners
 separate. Refresh executable storyboards, responsive frames and native tests.
+
+## 440 — presence-safe CEL attribute conditions (planned)
+
+Extend the existing checked-condition workflow to bounded qualified resource and
+record attribute access. Define missing, empty, invalid and typed-value semantics
+first; visual attribute gestures and CEL must use the same predicate AST and
+source adapter. Test presence guards and short-circuit behavior against reference
+and source execution. Preserve the existing revision-owned additional-condition
+slot, diagnostic spans and explicit Apply/Run boundaries. No second executor,
+implicit coercion, arbitrary extension registry or unbounded dynamic field path.
+
+A subsequent depth candidate is raw counter inspection with reported temporality,
+monotonicity and start metadata, if it closes the same missing-instance first-use
+gap. That requires its own profile and acceptance; raw rows cannot imply a rate,
+reset or fleet total. After expanded attribute use, consolidate overlapping
+refinement gestures based on actual workflows rather than adding new controls.
 
 ## Retained follow-ons
 

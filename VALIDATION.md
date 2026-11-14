@@ -1,5 +1,46 @@
 # Validation record
 
+## 439 — measured first-use acquisition and retained inspection
+
+[Contract](docs/FIRST_USE_ACQUISITION.md),
+[measurement journey](docs/journeys/first-use-acquisition.md),
+[architecture review](docs/reviews/FIRST_USE_439_ARCH.md) and
+[UX review](docs/reviews/FIRST_USE_439_UX.md).
+
+- Temporary Metrics departure now cancels and invalidates pending raw reads while
+  preserving the settled same-owner bank, fixed window, source-read clock, Find,
+  page and selected detail. Scope changes, new discovery and Close still clear
+  it. Pending first reads cannot create held data on return; pending rereads
+  cannot replace the preceding settled bank. Hidden Find callbacks are guarded.
+- Full frontend regression suite: **1,842 passing, zero failures/skips, 27.735s**.
+  Focused raw owner **17 tests**, measurement recovery **18 tests** and ordinary
+  measurement **6 tests** pass. Go 1.27.3 product build passes; backend source and
+  API contract are unchanged in this milestone.
+- Architecture review accepts the separate suspend/discard lifecycles. Source
+  probes remain fresh per explicit request: no durable readiness cache, source
+  capability promotion or evaluator coupling was introduced.
+
+- Final real OTLP browser journey passes **45.8s** including the required native
+  observed/model gate: **9.99s, zero skips, seven negative controls rejected**.
+  Local documentation links and diff whitespace checks pass.
+- Real OTLP measurement covers **240 points**, **13 steps** and **24 total SQL
+  requests** including explicit rereads and cancellation. Cold scope discovery →
+  metadata → raw acquisition uses **3 API requests / 15 SQL requests** with
+  **212,116 source response bytes / 245,351 API response bytes**. The raw read
+  contributes **102,051 source bytes / 229,783 API bytes** and renders at most
+  **100 rows**. These are fixture response sizes, not physical scan costs or
+  production latency guarantees.
+- Local paging, Find, keyboard Inspect, retained return and late-response delivery
+  start **zero API POSTs / zero SQL**. Exact question, read clock, row keys,
+  local page/filter/detail and focus survive return. Actual source cancellation
+  observes downstream closure. A separately held completed HTTP 200 is delivered
+  after departure/return and cannot replace the settled bank. Six bank receipts
+  establish conservation; runtime and isolated database cleanup pass.
+- Independent architecture and UX reviews accept the change, including genuine
+  desktop/390/320 frames. No physical screen-reader or cross-engine acceptance
+  is claimed. Calibration distinguished request starts from response completions
+  and fixed single-line JSONEachRow metering before final acceptance.
+
 ## 438 — inspect raw gauge observations before evaluation
 
 [Contract](docs/RAW_GAUGE_OBSERVATIONS.md),
