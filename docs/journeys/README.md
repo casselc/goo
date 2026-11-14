@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Activity message search](activity-search.md) (434) stages an exact literal Body
+search from local Find, retains the applied fixed window and returns to held rows
+without restarting the stream.
+
 [Live-source refusal and recovery](tail-refusal.md) (433b) stops stable failures
 for explicit Retry, preserves held inspection and selection, and distinguishes
 transient reconnect with actual source frames.

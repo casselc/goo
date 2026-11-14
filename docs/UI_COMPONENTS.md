@@ -85,6 +85,12 @@ sharing a source-state manager.
 adapter owns visibility, loaded counts, selection and stream lifecycle; display
 helpers do not search the source or discard records.
 
+[Activity message search](ACTIVITY_MESSAGE_SEARCH.md) is a separate app-owned
+continuation beside Find. `activity-search.mjs` plans a validated fixed Body query
+from lightweight tail metadata and mounts a native button with visible case/window
+semantics. The entry adapter owns navigation and held return; passive record and
+table components acquire no query or lifecycle authority.
+
 The [standalone reference source](../ui/components.html), served at `/ui-components`
 by the local lab, contains labeled synthetic display fixtures. It loads display
 modules rather than the application/query client; these conformance examples are

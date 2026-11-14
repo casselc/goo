@@ -4,7 +4,7 @@ The [four-expert review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) prioritizes re
 useful unfamiliar telemetry before more preservation depth. This checkpoint
 adopts that direction without renumbering the older pending 427–429 contracts.
 
-Status: **430–433 delivered and validated**. Next: 434 explicit local Find → source log-message search.
+Status: **430–434 delivered and validated**. Next: 435 numeric OTel severity context.
 
 ## 430 — first-use scope entry and interaction reliability
 
@@ -82,13 +82,13 @@ virtual-time rollover, safe causes, held selection, and keyboard/mobile recovery
 
 ## Next operator cycle
 
-- **434 breadth — explicit local Find → source log-message search.** Stage a literal
-  Body search in the applied selector and a visible fixed event-time window; Run
-  reads explicitly. Local Find still matches loaded text, IDs and selected fields.
-  The action must name the narrower source-message meaning rather than silently
-  reinterpret local matches or broaden the parent predicate. Reuse the ordinary
-  record-question editor/executor and held return. Freeze exact window/case/field
-  semantics and acceptance before implementation.
+**434 breadth delivered:** [Activity message search](ACTIVITY_MESSAGE_SEARCH.md)
+keeps local Find unchanged and stages case-sensitive literal Body search over the
+latest completed 60-second event-time window. The entire applied selector stays
+inside an AND; only Run reads. Real OTLP cases, an independent Bombadil campaign
+and native verification cover literal/case/ID differences, no-read staging/return
+and held custody. [Storyboard](journeys/activity-search.md).
+
 - **435 depth — numeric OTel severity context.** Extend the existing Activity volume
   strip with complete severity-band counts/time context and exact numeric filters.
   Keep unspecified/invalid values explicit and SeverityText independent.

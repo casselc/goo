@@ -1,5 +1,47 @@
 # Validation record
 
+## 434 — explicit local Find to source-message search
+
+[Contract](docs/ACTIVITY_MESSAGE_SEARCH.md),
+[storyboard](docs/journeys/activity-search.md),
+[independent acceptance](docs/reviews/ACTIVITY_MESSAGE_SEARCH_434.md) and
+[roadmap](docs/ROADMAP_2026_11_14_CHECKPOINT_430.md).
+
+- All root Go packages pass under Go 1.27.3; the embedded runtime builds. No API,
+  source schema, query operator or compatibility format was added. Existing typed
+  record questions and parameterized literal Body contains execute the search.
+- The full frontend suite passes **1,700 tests**, zero failures/skips (46.3s).
+  The final focused file separately passes **eight tests**, including a rollback
+  test added after the full suite began. Actual controls cover native/dirty/hidden/
+  retired/reentrant guards, fixed-window ownership, typed environments, exact term,
+  nested OR preservation, invalid text/AST budgets and refused handoff focus.
+  An initial sandbox-only run hit loopback EPERM in an existing listener test;
+  the completed full run has the needed local network access and passes.
+- The final real OTLP/ClickHouse journey passes (**43.8s**, 46.0s runner), including
+  a **30-second Bombadil campaign**. Three scenarios establish case differences,
+  literal Unicode/spaces/punctuation and ID-only local matches versus Body search.
+  Outside-bank and older records are excluded. Actual requests retain the exact
+  applied predicate and latest completed 60-second window. Find, staging and held
+  Return make zero source reads; Run is explicit. Original row keys and Find are
+  retained, and dirty/cleared-term callbacks cannot stage or read.
+- The independent actor completes with exactly **one tail request / one source
+  query**, local/scope/held checks true, no forbidden writes and no mobile overflow.
+  Runtime cleanup succeeds; existing lab telemetry and stores are retained.
+  The admitted report is `artifacts/activity-search434/da113549fcf7/report.json`.
+- Native Hegel evaluator/compiler properties and final observed Quint replay pass
+  **without skips** (41.0s combined). Three real cases and **21 rejecting controls**
+  check actual outgoing source requests, windows, literals, source-result counts,
+  local read budgets and held keys. Quint typechecking passes. A missing report
+  skips only ordinary artifact-dependent discovery; required acceptance supplied
+  the actual completed report.
+- Desktop, 390px and 320px storyboards are refreshed. Independent source/UX/standards
+  review accepts visible semantics, native focus and compact composition. The
+  reviewer notes a nonblocking UTC-bound wrapping refinement. Physical AT and
+  cross-engine acceptance are not claimed. Next: 435 numeric severity context.
+- Adjacent sparse-window recovery and typed source-refusal journeys both pass
+  (51.3s total), with their affected documentation frames refreshed. Their existing
+  explicit Run/Retry and held return contracts remain intact.
+
 ## 433b — typed live-source failure and guarded recovery
 
 [Contract](docs/ACTIVITY_SOURCE_RECOVERY.md),

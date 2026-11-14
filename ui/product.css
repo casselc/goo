@@ -1760,6 +1760,9 @@ td details {
 .tail-record-tools>label {font-size:0}
 .tail-record-tools>small {display:none}
 .tail-record-tools>goo-record-columns {margin-left:auto}
+.tail-record-tools>.activity-source-search {display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;flex-basis:100%;min-width:0}
+.activity-source-search>span {color:var(--muted);font-size:11px;overflow-wrap:anywhere;min-width:0}
+@media(pointer:coarse){.activity-source-search>button {min-height:44px}}
 .stream-entry .compact-tail .tail-record-line {display:flex;align-items:center;gap:12px;min-height:28px}
 .stream-entry .compact-tail .tail-record-line>goo-record-summary {flex:1;min-width:0}
 .stream-entry .compact-tail td[data-record-core=summary] .record-message {font-family:ui-monospace,SFMono-Regular,Consolas,monospace}

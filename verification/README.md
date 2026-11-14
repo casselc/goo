@@ -4786,3 +4786,23 @@ discovery without the artifact skips that replay; malformed supplied artifacts,
 unavailable Quint, invalid frame prefixes and counterexample admission fail.
 The model checks actual retry/read budgets, selector/held-row preservation and
 terminal-versus-transient probes. It does not infer ingestion completeness.
+
+## Local Find to source-message search (434)
+
+`TestHegelSourceSearch434` generates literal text and parent OR scopes against the
+production Go evaluator/compiler, including parameterization and fixed bounds.
+`TestQuintObservedSourceSearch434` replays the real
+[journey](../docs/journeys/activity-search.md) report with case, punctuation/Unicode
+and ID-only cases, actual outgoing queries, no-read stages/returns and held keys.
+
+```sh
+go test -p 1 . -run '^TestHegelSourceSearch434$' -count=1 -v
+GOO_SEARCH434_REPORT=/absolute/path/to/report.json \
+  go test -p 1 . -run '^TestQuintObservedSourceSearch434$' -count=1 -v
+```
+
+Required acceptance supplies a completed report and passes without skips. Ordinary
+discovery without the artifact skips only this replay. Invalid supplied artifacts
+or unavailable Quint fail. Counterexamples alter the recorded window, scope,
+literal, read budgets, held rows and retired-owner facts. The optional Bombadil
+actor follows the same user continuation independently in a real browser.

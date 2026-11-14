@@ -23,6 +23,12 @@ No ancestry is inferred from arrival order or a shared trace ID. The shared deta
 view follows only supplied, exact reported parent links with explicit limits. See
 [record presentation](RECORD_PRESENTATION.md).
 
+Local Find filters loaded text, IDs and chosen fields without reading. For logs,
+**Search log messages** stages a case-sensitive literal Body query in the visibly
+named latest completed poll window. It retains all applied filters and pauses the
+stream. Run is explicit; Return restores held rows and Find without reconnecting.
+See [message search](ACTIVITY_MESSAGE_SEARCH.md).
+
 ## Intent and ownership
 
 `GooStreamEntry` owns the fresh-entry intent, applied environment/signal, mode,

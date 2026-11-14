@@ -11,8 +11,9 @@ stages a wider fixed question from a quiet loaded buffer, with explicit Run and
 held paused return. This does not diagnose ingestion freshness, retention or skew.
 [433a instrument preflight](INSTRUMENT_PREFLIGHT.md) aligns discovery actions.
 [433b live-source refusal/retry](ACTIVITY_SOURCE_RECOVERY.md) now retains stable
-failures and held observations. Next is the explicit Find-to-source-search bridge
-in the [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
+failures and held observations. [434 message search](ACTIVITY_MESSAGE_SEARCH.md)
+bridges local Find to explicit source Body search. Next is numeric OTel severity
+context in the [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
 Isolated logs-only, spans-only and gauge-only installations were exercised in 431;
 actual denied-user deployments remain covered by transport checks rather than a
 new database-user integration run.
@@ -20,6 +21,13 @@ new database-user integration run.
 Activity draft identity now ignores object key order and wire-default omissions
 while retaining predicate child order and actual changes. It does not implicitly
 apply a new scope or resume Activity.
+
+Local Find is case-insensitive across loaded fields; source message search is
+case-sensitive and Body-only. The latest completed 60-second poll window stays
+fixed; old rows from other polls are not the searched population. Invalid source
+terms or AST budgets withdraw the source action while local Find stays available.
+The narrow UTC interval can wrap within an ISO date; separate bound formatting
+is a nonblocking readability refinement for later shared time presentation.
 
 Native service evaluation still requires reported nonempty `service.instance.id`.
 [Preflight](INSTRUMENT_PREFLIGHT.md) now disables Build/Preview for known missing
