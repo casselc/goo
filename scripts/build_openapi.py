@@ -32,6 +32,30 @@ request=schemas['querycel.PlanRequestInput']['properties']
 request['expression']={'type':'string','minLength':1,'maxLength':4096,'description':'Go additionally requires well-formed UTF-8, no NUL, and at most 4096 bytes.'}
 schemas['querycel.Diagnostic']['description']='Stable authoring refusal code/phase. Optional span uses zero-based Unicode code-point offsets [start,end), one-based line/column; omitted span means no trustworthy expression location. Domain path is independent.'
 
+schemas['querycel.RecordPlan']['properties']['loweringDigest']={'type':'string','pattern':'^[a-f0-9]{64}$','description':'Server-computed digest of admitted ordinary predicate identity; not an execution or provenance authorization.'}
+
+# Exact authored source is subordinate to the existing saved ordinary question.
+# Go rechecks source/binding/lowering and whole-question equality at every owner
+# boundary; JSON Schema describes the closed carrier, not CEL evaluation.
+for suffix in ('','Input'):
+ authored=schemas['workbench.RecordAuthoring'+suffix]
+ authored.update(additionalProperties=False,required=['version','representation','source','base','binding','parentRevision','loweringDigest'])
+ authored['properties']['version']={'const':'goo.cel-authoring/1'}
+ authored['properties']['representation']={'const':'cel'}
+ authored['properties']['source']={'type':'string','minLength':1,'maxLength':4096,'description':'Exact UTF-8 CEL source including comments/formatting. Go enforces 4096 bytes, no NUL and the current checked subset.'}
+ authored['properties']['base']={'$ref':'#/components/schemas/exploration.Query'+suffix}
+ contract=copy.deepcopy(binding)
+ authored['properties']['binding']={'allOf':[ref('querycel.PlanBinding'+suffix),{'type':'object','properties':contract,'required':list(contract),'additionalProperties':False}]}
+ authored['properties']['parentRevision']={'type':'string','minLength':1,'maxLength':128,'description':'Opaque UTF-8 parent revision token; Go enforces byte/control bounds.'}
+ authored['properties']['loweringDigest']={'type':'string','pattern':'^[a-f0-9]{64}$'}
+ authored['description']='Checked source provenance for one additional condition over an immutable base. Current library/compiler only; Go recompiles and rejects source/binding/digest/question mismatch. Never an execution, capture, readiness or migration authority.'
+ view=schemas['workbench.ExplorationView'+suffix]
+ keyed={signal:{'allOf':[ref('workbench.RecordAuthoring'+suffix),{'properties':{'base':{'properties':{'signal':{'const':signal}}},'binding':{'properties':{'signal':{'const':signal}}}}}]} for signal in ('logs','spans')}
+ view['properties']['authoring']={'type':'object','minProperties':1,'maxProperties':2,'properties':keyed,'additionalProperties':False,'description':'Optional provenance keyed by a configured query signal. Go requires each authored result to equal that complete saved query, including environment, fixed window and page policy.'}
+ for signal in ('logs','spans'):
+  present={'required':['authoring'],'properties':{'authoring':{'required':[signal]}}}
+  view.setdefault('allOf',[]).append({'if':present,'then':{'properties':{'queries':{'contains':{'properties':{'signal':{'const':signal}},'required':['signal']}}}}})
+
 # Reported exemplars are bounded source metadata, independent from numeric bins.
 exemplars = schemas['measurements.HistogramExemplarReport']
 for key, value in {'version': 'goo/histogram-exemplar-references/1', 'valueEncoding': 'source-float64', 'originalValueType': 'unknown'}.items():

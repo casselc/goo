@@ -85,4 +85,5 @@ See [executed storyboard](journeys/refinement-consolidation.md),
 [validation](../VALIDATION.md). [436.2](CEL_CHECKED_PLANNING.md) delivers pure checked planning and typed
 positioned diagnostics; [436.3](CEL_REPRESENTATION_OWNERSHIP.md) delivers exact
 representation and owner state. [436.4](CEL_CONTEXTUAL_EDITOR.md) mounts the
-contextual editor; source provenance preservation is next in 436.5.
+contextual editor; [436.5](CEL_SAVED_QUESTIONS.md) preserves source with saved views.
+Whole-product acceptance is next in 436.6.

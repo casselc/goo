@@ -44,13 +44,14 @@ type PlanRequest struct {
 
 // RecordPlan is a source-free planning receipt, never captured telemetry.
 type RecordPlan struct {
-	Version    string                 `json:"version"`
-	CELLibrary string                 `json:"celLibrary"`
-	Expression string                 `json:"expression"`
-	Predicate  *exploration.Predicate `json:"predicate"`
-	Question   exploration.Query      `json:"question"`
-	Plan       exploration.Plan       `json:"plan"`
-	Binding    PlanBinding            `json:"binding"`
+	LoweringDigest string                 `json:"loweringDigest"`
+	Version        string                 `json:"version"`
+	CELLibrary     string                 `json:"celLibrary"`
+	Expression     string                 `json:"expression"`
+	Predicate      *exploration.Predicate `json:"predicate"`
+	Question       exploration.Query      `json:"question"`
+	Plan           exploration.Plan       `json:"plan"`
+	Binding        PlanBinding            `json:"binding"`
 }
 
 // BaseIdentity hashes validated typed JSON, preserving predicate order and
@@ -136,5 +137,24 @@ func PlanRecord(request PlanRequest) (*RecordPlan, error) {
 	if err != nil {
 		return nil, planningError("unsupported_target", "target", "question", err)
 	}
-	return &RecordPlan{PlanVersion, LibraryVersion, request.Expression, program.Predicate(), question, plan, request.Binding}, nil
+	predicate := program.Predicate()
+	loweringDigest, err := PredicateDigest(request.Base.Signal, predicate)
+	if err != nil {
+		return nil, err
+	}
+	return &RecordPlan{LoweringDigest: loweringDigest, Version: PlanVersion, CELLibrary: LibraryVersion, Expression: request.Expression, Predicate: predicate, Question: question, Plan: plan, Binding: request.Binding}, nil
+}
+
+// PredicateDigest identifies validated typed lowering, preserving literal spelling,
+// branch order and nesting. It is separate from exact authored source identity.
+func PredicateDigest(signal string, predicate *exploration.Predicate) (string, error) {
+	if err := exploration.ValidatePredicate(predicate, signal); err != nil {
+		return "", err
+	}
+	data, err := json.Marshal(predicate)
+	if err != nil {
+		return "", err
+	}
+	sum := sha256.Sum256(data)
+	return hex.EncodeToString(sum[:]), nil
 }

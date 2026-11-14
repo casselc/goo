@@ -73,7 +73,8 @@ These contracts are now mounted by [436.4](CEL_CONTEXTUAL_EDITOR.md). The existi
 Apply and Run owners still decide when to read telemetry. Shared Conditions /
 Expression editing preserves native labels, keyboard focus, invalid text and
 a single primary action. It must not put another toolbar
-before the live stream. Publication/provenance stays in 436.5.
+before the live stream. [436.5](CEL_SAVED_QUESTIONS.md) supplies checked publication/provenance through
+the existing saved-view owner.
 
 See [storyboard](journeys/cel-representation-ownership.md),
 [integration design](CEL_PRODUCT_INTEGRATION.md) and [validation](../VALIDATION.md).

@@ -20,6 +20,46 @@ def validator(spec, schema):
     return Draft202012Validator({'allOf': [schema], 'components': spec['components']})
 
 
+def check_cel_authoring4365(spec):
+    """Closed provenance carriers; Go owns CEL checking and exact hash equality."""
+    base={'signal':'logs','environment':'prod','fromMs':1000,'toMs':61000,'limit':100,'offset':0}
+    binding={'operation':'record.refine','signal':'logs','baseIdentity':'a'*64,'slot':'condition',
+             'epoch':'mount-1','revision':'9007199254740993','library':'goo.cel.otel/v1',
+             'compiler':'goo.record-cel/1','target':'clickhouse','profile':'fixed-record/1'}
+    authoring={'version':'goo.cel-authoring/1','representation':'cel','source':'// keep my comment\nlog.body == "x"',
+               'base':base,'binding':binding,'parentRevision':'parent-7','loweringDigest':'b'*64}
+    question={**base,'where':{'field':{'kind':'column','key':'body'},'op':'eq','value':'x'}}
+    view={'version':1,'title':'Checked CEL','queries':[question],'layout':'records',
+          'columns':['utc','summary'],'authoring':{'logs':authoring}}
+    for suffix in ('','Input'):
+        check=validator(spec,{'$ref':'#/components/schemas/workbench.ExplorationView'+suffix})
+        check.validate(view)
+        for mutate in (
+            lambda v:v.update(authoring=None),
+            lambda v:v.update(authoring={}),
+            lambda v:v['authoring'].update(metrics=authoring),
+            lambda v:v['authoring'].update(logs=None),
+            lambda v:v['authoring']['logs'].update(extra=True),
+            lambda v:v['authoring']['logs'].pop('parentRevision'),
+            lambda v:v['authoring']['logs'].update(representation='sql'),
+            lambda v:v['authoring']['logs'].update(source=''),
+            lambda v:v['authoring']['logs'].update(loweringDigest='bad'),
+            lambda v:v['authoring']['logs'].update(base=None),
+            lambda v:v['authoring']['logs'].update(binding=None),
+            lambda v:v['authoring']['logs']['binding'].update(library='goo.cel.otel/old'),
+            lambda v:v['authoring']['logs']['binding'].update(compiler='old'),
+            lambda v:v['authoring']['logs']['binding'].update(revision=9007199254740993),
+            lambda v:v['authoring']['logs']['binding'].update(signal='spans'),
+            lambda v:v['authoring']['logs']['base'].update(signal='spans'),
+            lambda v:v['queries'][0].update(signal='spans'),
+        ):
+            bad=copy.deepcopy(view);mutate(bad)
+            assert not check.is_valid(bad),'invalid CEL provenance carrier admitted'
+        artifact={'version':'goo.view-artifact/1','namespace':'platform','name':'cel-logs','revision':'v1','view':view}
+        validator(spec,{'$ref':'#/components/schemas/workbench.ViewArtifact'+suffix}).validate(artifact)
+    print('CEL authored views436.5: closed source/binding carriers, exact string revisions, current contracts and per-signal query ownership pass; Go owns recompilation/digest/question equality')
+
+
 def check_record_intent417(spec):
     """Ordinary query input is a closed non-null graph, distinct from other DTOs."""
     shapes=[{'$ref':'#/components/schemas/RecordQuery'},
@@ -2046,6 +2086,7 @@ def check(spec):
     validate_spec(spec)
     check_activity_scope_views(spec)
     check_view_artifacts(spec)
+    check_cel_authoring4365(spec)
     check_view_dataset(spec)
     check_timeline_composition(spec)
     check_record_only_compositions(spec)

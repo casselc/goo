@@ -1,5 +1,68 @@
 # Validation record
 
+## 436.5 — checked CEL source on existing saved questions
+
+[Guide](docs/CEL_SAVED_QUESTIONS.md),
+[real telemetry storyboard](docs/journeys/cel-preservation.md) and
+[independent acceptance](docs/reviews/CEL_PRESERVATION_436_5.md).
+
+- Existing `ExplorationView.authoring` owns exact source, representation, complete
+  original base, planning binding, parent revision and server-computed lowering
+  digest. Existing store and YAML artifact paths recompile and compare the whole
+  typed question before accepting it. There is no CEL artifact family, new Save
+  action, capture retrofit or implicit old-library migration. Formatting-only
+  source changes alter definition content identity without changing ordinary
+  question meaning or the admitted condition digest.
+- All root Go packages pass on Go 1.27.3; the embedded server builds. Complete
+  `workbench` / `querycel` runs pass (3.383s / 0.177s), with strict Unicode/null/
+  case/duplicate-field controls, detached helper inputs and stored-hash integrity.
+  HTTP checks pass in 0.034s: save/load, codecs and fresh-store import preserve
+  source; malformed/tampered/old-library input refuses before writes, with zero
+  telemetry calls. OpenAPI passes: **118 operations, 753 reflected wire / 796 final
+  schemas, 501 response fixtures, 202 admitted requests, 29 mux refusals**, plus
+  new provenance shape controls, negative controls and SSE checks.
+- Final full frontend: **1,776 passing, zero failures/skips**, **38.629s**.
+  Reopen restores source/base/slot under fresh invocation leases. Unchanged CRLF
+  source survives native textarea normalization and rechecking; actual edits start
+  a new text revision. Discard clears source ownership without guessing AST
+  branches. Invalid and valid-unsaved source both require explicit recall choice;
+  self-recall exemption compares the actual parent candidate to acknowledged
+  complete meaning and exact metadata. The public display graph remains passive
+  and explicitly excludes the authoring/editor controllers.
+- Native Hegel preservation checks: **80 generated profiles**, **12 tamper controls**,
+  store/YAML round trips and independent lowering hashes pass in **1.515s**, no
+  skips. Existing observed Quint owner replay passes again in **16.415s**: 26 real
+  JavaScript/Go steps admitted, six authority/effect mutants rejected. Serialized
+  provenance cannot restore a private check/stage token.
+- Enhanced real OTLP/ClickHouse journey passes in **50.0s** (54.0s runner), with
+  owned-runtime cleanup and no page errors. Existing Save view/export/import retain
+  exact commented source and its unsupported ordinary parent OR. Explicit fixed
+  runs independently return 3 then 2 records; recalling the saved original,
+  replacing one slot, keeping valid-unsaved or invalid drafts, and explicit discard
+  perform no telemetry read. Foreign display reuse keeps the destination question
+  and cannot adopt donor source. Configuration writes occur only at explicit save/
+  import actions; codecs/planning stay source-free.
+- Bounded 25-second Bombadil actor completes across **446 snapshots**, witnessing
+  restored source and original base, one new plan check (two planning calls total),
+  hidden-check count 2→2, zero telemetry/publication calls and no 390px overflow.
+  The initial actor attempted input before native disclosure activation; it now
+  waits for actual editability without weakening the invalid-Run invariant.
+- Adjacent 436.4 real editor regression passes on the same final runtime in
+  **38.3s** (40.1s runner), with no page errors and cleanup. Its actor completes
+  across 478 snapshots with 1 context / 2 plan calls, no source/publication calls
+  and hidden count 3→3. Its eight existing frames are regenerated as well.
+- Eight 320/390/1440 preservation frames are refreshed. Independent architecture,
+  Go and UX review accepts source, focused reruns and real frames. Review/browser
+  findings resolved include duplicate recall prompts, valid-unsaved recall loss,
+  stale provenance attachment, fixed-check clock drift and CRLF normalization.
+  An earlier full frontend run exposed seven missing VM fixture dependencies and
+  a passive-graph layering regression; updated fixtures and the pure shared
+  provenance contract fix them in the final full suite above.
+- No fresh physical AT/cross-engine or whole-product 436.6 conformance is claimed.
+  This first provenance owner is fixed saved views; rolling Activity, telemetry
+  packages and immutable captures retain separate contracts. Next: **436.6 whole-
+  product observed acceptance**, including existing Services/native record context.
+
 ## 436.4 — contextual CEL editor in Activity and fixed Filters
 
 [Guide](docs/CEL_CONTEXTUAL_EDITOR.md), [real telemetry storyboard](docs/journeys/cel-editor.md)

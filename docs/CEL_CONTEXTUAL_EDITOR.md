@@ -67,9 +67,9 @@ entry still presents the stream before optional authoring. Attribute/presence
 filters in the parent remain ordinary predicates; they are not silently printed
 into unsupported CEL. Native measurements keep their own grammar.
 
-Exact authored source is not yet persisted with saved definitions. Ordinary typed
-questions continue through their existing save/export paths; revision-owned source
-provenance is 436.5. Whole-product cross-surface acceptance remains 436.6.
+[436.5](CEL_SAVED_QUESTIONS.md) preserves exact checked source with saved fixed
+ExplorationViews through the existing save/export paths. Rolling Activity checks
+are not silently rebound to a later fixed window. Whole-product cross-surface acceptance remains 436.6.
 
 See [checked planning](CEL_CHECKED_PLANNING.md),
 [ownership](CEL_REPRESENTATION_OWNERSHIP.md),

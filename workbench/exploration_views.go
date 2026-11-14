@@ -22,6 +22,7 @@ type ExplorationBreakdown struct {
 
 // ExplorationView is reusable fixed-question configuration, never captured evidence.
 type ExplorationView struct {
+	Authoring    map[string]RecordAuthoring      `json:"authoring,omitempty"`
 	Version      int                             `json:"version"`
 	ID           string                          `json:"id,omitempty"`
 	Title        string                          `json:"title"`
@@ -51,6 +52,10 @@ func (v ExplorationView) Validate() error {
 		if _, e := exploration.Compile(q); e != nil {
 			return e
 		}
+	}
+
+	if err := v.validateAuthoring(); err != nil {
+		return err
 	}
 
 	if v.Composition != nil {

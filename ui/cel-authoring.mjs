@@ -2,7 +2,8 @@ import {validateRecordQuestion} from './record-intent.mjs';
 import {identity} from './question-session.mjs';
 
 /* One additional-condition owner. No DOM, transport, execution or evidence state. */
-export const recordCELContract=Object.freeze({operation:'record.refine',library:'goo.cel.otel/v1',compiler:'goo.record-cel/1',target:'clickhouse',profile:'fixed-record/1'});
+import {recordCELContract} from './cel-provenance.mjs';
+export {recordCELContract};
 const clone=value=>structuredClone(value);
 const bindingKeys=['operation','signal','baseIdentity','slot','epoch','revision','library','compiler','target','profile'];
 const sameBinding=(a,b)=>a&&b&&bindingKeys.every(key=>a[key]===b[key])&&Object.keys(a).length===bindingKeys.length;
@@ -56,7 +57,7 @@ export class AuthoringSlot {
  accept(lease,receipt){
   if(!this.#owns(lease))return false;
   const request=this.#current.request;
-  if(!receipt||receipt.version!=='goo.cel-plan/1'||receipt.celLibrary!==request.binding.library||receipt.expression!==request.expression||!sameBinding(receipt.binding,request.binding)||!receipt.predicate)return false;
+  if(!receipt||receipt.version!=='goo.cel-plan/1'||receipt.celLibrary!==request.binding.library||receipt.expression!==request.expression||typeof receipt.loweringDigest!=='string'||!/^[a-f0-9]{64}$/.test(receipt.loweringDigest)||!sameBinding(receipt.binding,request.binding)||!receipt.predicate)return false;
   try{
    validateRecordQuestion(receipt.question);
    const expected=clone(request.base);

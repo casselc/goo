@@ -33,8 +33,10 @@
 > [bounded representation and ownership](CEL_REPRESENTATION_OWNERSHIP.md).
 > **436.4 compact contextual editing is delivered** in Activity and fixed Filters;
 > see [editor guide](CEL_CONTEXTUAL_EDITOR.md).
-> Next is one preservation owner (436.5), then whole-product observed acceptance
-> (436.6). Those two slices remain planned; authored source is not persisted yet.
+> **436.5 revision-owned preservation is delivered** through saved ExplorationViews
+> and existing YAML ViewArtifacts; see [saved CEL questions](CEL_SAVED_QUESTIONS.md).
+> Next is whole-product observed acceptance (436.6). No new artifact family or
+> capture metadata is introduced.
 > Keep this one finite consolidation sequence; do not start a separate language
 > platform backlog or promise lossless conversion of unsupported visual predicates.
 > The older **427–429 preservation cycle** remains pending follow-on work. The older labeling queue

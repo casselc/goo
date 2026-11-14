@@ -65,3 +65,6 @@ exact conversion coverage and the pure additional-condition owner before UI moun
 
 [Contextual CEL editing](CEL_CONTEXTUAL_EDITOR.md): optional Conditions /
 Expression inside Activity and fixed-question Filters; Check stages, Apply/Run reads.
+
+[Saved CEL questions](CEL_SAVED_QUESTIONS.md): preserve exact checked source,
+reopen its original base, and use existing saved-view YAML import/export.

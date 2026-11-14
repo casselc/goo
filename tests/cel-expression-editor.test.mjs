@@ -19,7 +19,7 @@ const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve
 const base=()=>({signal:'logs',environment:'prod',fromMs:1000,toMs:61000,limit:20,where:{any:[{field:{kind:'attribute',key:'tenant'},op:'missing'},{field:{kind:'column',key:'service'},op:'eq',value:'api'}]}});
 function receipt(request,value='ok'){
  const predicate={field:{kind:'column',key:'body'},op:'eq',value},question=clone(request.base);question.where={all:[question.where,predicate]};
- return {version:'goo.cel-plan/1',celLibrary:recordCELContract.library,expression:request.expression,binding:clone(request.binding),predicate,question,plan:{rows:'parameterized'}};
+ return {loweringDigest:'b'.repeat(64),version:'goo.cel-plan/1',celLibrary:recordCELContract.library,expression:request.expression,binding:clone(request.binding),predicate,question,plan:{rows:'parameterized'}};
 }
 function setup({prepare,check}={}){
  globalThis.document={activeElement:null};const host=new Element('section'),conditions=new Element('fieldset'),changes=[],calls=[],owners=[];let available=true,discarded=0,prepares=0;
@@ -112,4 +112,16 @@ test('long compiler diagnostics have one concise announcement and one optional f
  assert.equal(details.hidden,false);assert.equal(details.open,false);assert.equal(pre.textContent,raw);assert.equal(pre.parentElement,details);assert.notEqual(details.parentElement,h.feedback);
  assert.equal(walk(h.host).filter(e=>e.textContent===raw).length,1);assert.equal(h.feedback.getAttribute('aria-live'),'polite');assert.equal(h.text.getAttribute('aria-describedby'),h.text.id+'-hint '+h.feedback.id);
  h.type('log.body == "ok"');assert.equal(details.hidden,true);assert.equal(pre.textContent,'');
+});
+
+test('checked provenance survives hide but never an A-B-A edit or explicit discard',async()=>{
+ const h=setup();await h.expression();h.type('// exact comment\nlog.body == "ok"');await h.run();const question=h.changes.at(-1)[0],saved=h.widget.provenance(question);
+ assert.equal(saved.source,h.text.value);assert.equal(saved.loweringDigest,'b'.repeat(64));const other=clone(question);other.where.all[1].value='other';assert.equal(h.widget.provenance(other),null);h.widget.setVisible(false);h.widget.setVisible(true);assert.deepEqual(h.widget.provenance(question),saved);
+ const text=h.text.value;h.type('log.body == "other"');h.type(text);assert.equal(h.widget.provenance(question),null);await h.run();assert(h.widget.provenance(question));h.mode.value='conditions';h.mode.onchange();h.discard.onclick();assert.equal(h.widget.provenance(question),null);
+});
+test('restored CRLF source stays exact until an actual text edit normalizes it',async()=>{
+ const h=setup();await h.expression();h.type('log.body == "ok"');await h.run();const question=h.changes.at(-1)[0],saved=h.widget.provenance(question);saved.source='// exact\r\nlog.body == "ok"';h.widget.restore(saved,question);
+ // Native textarea value normalization must not rewrite the stored source on save.
+ h.text.value=saved.source.replace('\r\n','\n');assert.equal(h.widget.provenance(question).source,saved.source);assert.equal(h.widget.hasUnappliedDraft(),false);await h.run();assert.equal(h.calls.at(-1).request.expression,saved.source);assert.equal(h.widget.provenance(question).source,saved.source);
+ h.text.oninput();assert.equal(h.widget.provenance(question),null);assert.equal(h.widget.hasUnappliedDraft(),true);
 });

@@ -4896,3 +4896,14 @@ checks actual fetch invocation counters with positive context/check witnesses,
 invalid-draft primary gating, retained text and retired Check callbacks.
 The existing 436.3 native owner/model semantics remain a separate contract; this
 slice adds mounted browser coverage without another state framework.
+
+## 436.5 — checked source preservation
+
+`go test -run "^(TestHegelCELPreservation436|TestCELPreservation436)" -count=1 -v`
+checks generated source/IR and immutable store/YAML round trips, formatting-only
+identity and refusal before publication. The real
+[editor preservation journey](../journeys/cel-preservation.spec.js) distinguishes
+configuration writes from telemetry reads. `bombadil/cel-preservation.ts` explores
+restored source under fresh checks and native visibility without publication or
+telemetry actions. The existing observed authoring model remains the private-lease
+gate; serialized metadata never restores its invocation tokens.

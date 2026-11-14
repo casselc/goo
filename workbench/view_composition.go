@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"slices"
+	"strings"
 
 	"github.com/casselc/goo/exploration"
 )
@@ -15,6 +16,14 @@ func (v *ExplorationView) UnmarshalJSON(data []byte) error {
 	var fields map[string]json.RawMessage
 	if err := json.Unmarshal(data, &fields); err != nil {
 		return err
+	}
+	for name := range fields {
+		if strings.EqualFold(name, "authoring") && name != "authoring" {
+			return errors.New("authoring field name is case-sensitive")
+		}
+	}
+	if authoring, present := fields["authoring"]; present && bytes.Equal(bytes.TrimSpace(authoring), []byte("null")) {
+		return errors.New("omit unused authoring rather than supplying null")
 	}
 	if template, present := fields["template"]; present && bytes.Equal(bytes.TrimSpace(template), []byte("null")) {
 		return errors.New("omit an unused template rather than supplying null")
@@ -31,7 +40,11 @@ func (v *ExplorationView) UnmarshalJSON(data []byte) error {
 	}
 	type wire ExplorationView
 	var value wire
-	decoder := json.NewDecoder(bytes.NewReader(data))
+	canonical, err := json.Marshal(fields)
+	if err != nil {
+		return err
+	}
+	decoder := json.NewDecoder(bytes.NewReader(canonical))
 	decoder.DisallowUnknownFields()
 	if err := decoder.Decode(&value); err != nil {
 		return err

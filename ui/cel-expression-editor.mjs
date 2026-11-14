@@ -1,3 +1,5 @@
+import {identity} from './question-session.mjs';
+import * as CELProvenance from './cel-provenance.mjs';
 import {node} from './components.mjs';
 import {nativeControlReady,completionControlReady} from './dom-visibility.mjs';
 
@@ -27,7 +29,8 @@ export function mount(host,{owner:prepare,check,onChange=()=>{},current=()=>true
  text.id=id;text.rows=3;text.spellcheck=false;text.autocapitalize='off';text.autocomplete='off';text.setAttribute('aria-label','Additional condition (CEL)');label.htmlFor=text.id;hint.id=id+'-hint';feedback.id=id+'-diagnostic';feedback.setAttribute('role','status');feedback.setAttribute('aria-atomic','true');text.setAttribute('aria-describedby',hint.id+' '+feedback.id);text.placeholder='log.body.contains("timeout")';
  for(const button of [verify,clear,discard])button.type='button';discard.title='Discard expression text; keep the current filters.';
  details.append(detailsTitle,detailsBody);actions.append(verify,clear);pane.append(scope,label,text,hint,actions);root.append(modeLabel,mode,pane,lockedNote,discard,feedback,details);host.append(root);
- let active=true,disposed=false,owned=null,preparing=null,preparation=null,job=null,stageToken=null,verification=null,modeInvocation=null,modeValue='conditions',hasDraft=false,hasCondition=false,needsAdoption=false,diagnostic=null,lastDetail='';
+ let active=true,disposed=false,owned=null,preparing=null,preparation=null,job=null,stageToken=null,verification=null,modeInvocation=null,modeValue='conditions',hasDraft=false,hasCondition=false,needsAdoption=false,diagnostic=null,lastDetail='',preserved=null,preservedQuestion=null;
+ const sourceForCheck=()=>preserved?.source??text.value;
  const available=()=>!disposed&&active&&current();
  const actionReady=control=>available()&&nativeControlReady(control);
  function scopeText(){return typeof scopeSummary==='function'?scopeSummary():scopeSummary}
@@ -55,11 +58,11 @@ export function mount(host,{owner:prepare,check,onChange=()=>{},current=()=>true
   preparing=Promise.resolve().then(()=>prepare(ticket.controller.signal)).then(result=>{
    if(preparation!==ticket||!available()){result?.dispose?.();return null}
    if(!result||typeof result.beginCheck!=='function')throw Error('Condition owner unavailable.');
-   owned=result;owned.edit(text.value);owned.setMode(modeValue);owned.setVisible(modeValue==='expression'&&available());return owned;
+   owned=result;owned.edit(sourceForCheck());owned.setMode(modeValue);owned.setVisible(modeValue==='expression'&&available());return owned;
   }).catch(error=>{if(preparation!==ticket||!available())return null;throw error}).finally(()=>{if(preparation===ticket){preparation=null;preparing=null;display()}});
   display();return preparing;
  }
- function pendingDraft(){verification=null;hasDraft=true;diagnostic=null;hasCondition=false;stageToken=null;job?.controller.abort();job=null;owned?.edit(text.value);onChange(undefined,'Check the expression before applying.',{draft:true});display()}
+ function pendingDraft(){preserved=null;preservedQuestion=null;verification=null;hasDraft=true;diagnostic=null;hasCondition=false;stageToken=null;job?.controller.abort();job=null;owned?.edit(text.value);onChange(undefined,'Check the expression before applying.',{draft:true});display()}
  mode.onchange=()=>{
   if(!actionReady(mode))return;
   modeValue=mode.value;owned?.setMode(modeValue);owned?.setVisible(modeValue==='expression'&&available());if(modeValue==='conditions'){verification=null;job?.controller.abort();job=null;stageToken=null;hasCondition=false}onMode(modeValue);display();
@@ -71,10 +74,10 @@ export function mount(host,{owner:prepare,check,onChange=()=>{},current=()=>true
   diagnostic=null;const invocation=verification={};let lease=null;
   try{
    const author=await ensureOwner();if(!author||!available()||verification!==invocation||!completionControlReady(verify))return;
-   author.edit(text.value);const attempt=author.beginCheck();if(!attempt)return;
+   const authoredSource=sourceForCheck();author.edit(authoredSource);const attempt=author.beginCheck();if(!attempt)return;
    lease=job={attempt,author,controller:new AbortController()};stageToken=null;hasCondition=false;
    onChange(undefined,'Checking the expression before applying.',{draft:true});display({announce:true});
-   const invalid=!text.value.isWellFormed()?'Expression contains malformed Unicode.':!text.value||bytes(text.value)>4096?'Use an expression of 1–4096 UTF-8 bytes.':text.value.includes('\0')?'Expression cannot contain NUL.':null;
+   const invalid=!authoredSource.isWellFormed()?'Expression contains malformed Unicode.':!authoredSource||bytes(authoredSource)>4096?'Use an expression of 1–4096 UTF-8 bytes.':authoredSource.includes('\0')?'Expression cannot contain NUL.':null;
    let receipt;
    if(invalid){const failure=localDiagnostic(invalid);if(author.fail(attempt.token,failure)){diagnostic=failure;onChange(undefined,'Check expression before applying.',{diagnostic:failure})}}
    else{
@@ -85,7 +88,7 @@ export function mount(host,{owner:prepare,check,onChange=()=>{},current=()=>true
     else{
      receipt=response?.ok===true?response.data:response;
      if(author.accept(attempt.token,receipt)){
-      const question=author.stage(attempt.token);if(question){stageToken=attempt.token;hasCondition=true;hasDraft=true;onChange(question,null,{expression:text.value,predicate:receipt.predicate,checked:true})}
+      const question=author.stage(attempt.token);if(question){stageToken=attempt.token;hasCondition=true;hasDraft=true;preserved=CELProvenance.capture(author.snapshot(),receipt);preservedQuestion=structuredClone(question);onChange(question,null,{expression:receipt.expression,predicate:receipt.predicate,checked:true})}
      }else{const failure=localDiagnostic('Scope changed. Check the condition again.');diagnostic=failure;onChange(undefined,'Check expression before applying.',{diagnostic:failure})}
     }
    }
@@ -101,20 +104,25 @@ export function mount(host,{owner:prepare,check,onChange=()=>{},current=()=>true
  verify.onclick=verifyCondition;
  clear.onclick=async()=>{
   if(!actionReady(clear))return;const invocation=verification={};
-  try{const author=await ensureOwner();if(!author||!available()||verification!==invocation||!completionControlReady(clear))return;const token=author.clear(),question=author.stage(token);if(!question)return;text.value='';hasDraft=false;hasCondition=false;diagnostic=null;stageToken=token;onChange(question,null,{clear:true});display({announce:true})}
+  try{const author=await ensureOwner();if(!author||!available()||verification!==invocation||!completionControlReady(clear))return;const token=author.clear(),question=author.stage(token);if(!question)return;text.value='';preserved=null;preservedQuestion=null;hasDraft=false;hasCondition=false;diagnostic=null;stageToken=token;onChange(question,null,{clear:true});display({announce:true})}
   catch(error){if(available()&&verification===invocation&&completionControlReady(clear)){diagnostic=localDiagnostic(messageOf(error));display({announce:true})}}
  };
  discard.onclick=()=>{
   if(!actionReady(discard))return;
-  retire();text.value='';hasDraft=false;hasCondition=false;needsAdoption=false;diagnostic=null;onDiscard();display();
+  retire();text.value='';preserved=null;preservedQuestion=null;hasDraft=false;hasCondition=false;needsAdoption=false;diagnostic=null;onDiscard();display();
  };
  display();
  return {
   root,
+  provenance(question){if(!preserved||!preservedQuestion||needsAdoption||diagnostic||job)return null;try{if(identity(preservedQuestion)!==identity(question))return null;return CELProvenance.condition(preserved,question)}catch{return null}},
+  reset(){retire();preserved=null;preservedQuestion=null;text.value='';modeValue='conditions';hasDraft=false;hasCondition=false;needsAdoption=false;diagnostic=null;display();},
+  restore(value,question){const admitted=CELProvenance.condition(value,question);retire();preserved=admitted;preservedQuestion=structuredClone(question);text.value=admitted.source;modeValue='expression';hasDraft=true;hasCondition=true;needsAdoption=false;diagnostic=null;display();},
+  hasDraft:()=>hasDraft,
+  hasUnappliedDraft:()=>needsAdoption||hasDraft&&!preserved,
   canEditConditions:()=>!hasDraft,
   snapshot:()=>({mode:modeValue,text:text.value,hasDraft,hasCondition,needsAdoption,diagnostic:structuredClone(diagnostic),owner:owned?.snapshot()||null}),
   sync(){display()},
-  invalidate(){retire();diagnostic=null;hasCondition=false;needsAdoption=hasDraft;if(hasDraft)onChange(undefined,'Scope changed. Discard this draft before adding a new condition.',{draft:true});display()},
+  invalidate(){retire();preserved=null;preservedQuestion=null;diagnostic=null;hasCondition=false;needsAdoption=hasDraft;if(hasDraft)onChange(undefined,'Scope changed. Discard this draft before adding a new condition.',{draft:true});display()},
   setVisible(value){active=!!value;owned?.setVisible(active);if(!active){verification=null;modeInvocation=null;job?.controller.abort();job=null;stageToken=null;preparation?.controller.abort();preparation=null;preparing=null;hasCondition=false}display()},
   dispose(){if(disposed)return;disposed=true;active=false;retire();display()},
  };

@@ -1,3 +1,4 @@
+import * as CELProvenance from './cel-provenance.mjs';
 /* Bounded, IO-free composition intent. The host owns one query and its supplied aspects. */
 import * as CapturedCount from './captured-count-comparison.mjs';
 import * as Aggregate from './view-declaration.mjs';
@@ -62,6 +63,7 @@ export function reuse(value,source,destination){
 export function declaration(view,signal){const found=aggregate(view?.composition);return found?.scope.signal===signal?found:view?.displays?.[signal]}
 export function declarations(view){const found=aggregate(view?.composition);return found?{[found.scope.signal]:found}:view?.displays||{}}
 export function view(value){
+ CELProvenance.authoring(value.authoring,value.queries);
  if(!Object.hasOwn(value,'composition'))return structuredClone(value);
  if(!Array.isArray(value.queries)||value.queries.length!==1||['layout','columns','fieldColumns','displays','breakdowns','tail'].some(key=>Object.hasOwn(value,key)))throw Error('Composition owns child presentation and requires one query; omit flat view options.');
  return {...structuredClone(value),composition:validate(value.composition,value.queries[0])};

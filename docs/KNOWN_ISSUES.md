@@ -21,9 +21,12 @@ a bounded pure compile transport. [436.3](CEL_REPRESENTATION_OWNERSHIP.md)
 adds exact bounded printing and a pure revision-safe additional-condition owner.
 [436.4](CEL_CONTEXTUAL_EDITOR.md) mounts that owner inside existing Filters.
 External scope changes retain the text but require explicit discard before a new
-condition can be adopted; they never guess which old branch to remove. Authored
-source/provenance preservation remains planned. Fixed analysis retains its
-existing service/message/severity controls; broader compactness is not claimed. Source/readiness, native metric grain/units and historical custody remain
+condition can be adopted; they never guess which old branch to remove.
+[436.5](CEL_SAVED_QUESTIONS.md) preserves checked source and bindings on saved
+fixed ExplorationViews and portable ViewArtifacts. Rolling Activity checks,
+telemetry packages and captures are not implicitly retrofitted with provenance.
+Fixed analysis retains its existing service/message/severity controls; broader compactness is not claimed.
+Source/readiness, native metric grain/units and historical custody remain
 separate from language checking.
 
 [The ad-hoc telemetry review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) identifies

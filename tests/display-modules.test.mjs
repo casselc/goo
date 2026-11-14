@@ -52,7 +52,7 @@ test('display entry imports a closed passive graph without publishing namespaces
   for(const name of ['source-refusal','source-refusal-view'])assert.ok(visited.has(new URL('../ui/'+name+'.mjs',import.meta.url).href));
   assert.deepEqual(Object.keys(await import('../ui/source-refusal.mjs')).sort(),['SourceReadError','failure','reasons','refusal','responseError']);
   assert.deepEqual(Object.keys(await import('../ui/source-refusal-view.mjs')),['renderRefusal']);
-  for(const name of ['queries','filter-values','facet-value-reads','population-workspace','exploration','distributions','numeric-measures','grouped-time-series','display-examples'])assert.equal(visited.has(new URL('../ui/'+name+'.mjs',import.meta.url).href),false);
+  for(const name of ['queries','filter-values','facet-value-reads','population-workspace','exploration','distributions','numeric-measures','grouped-time-series','display-examples','cel-authoring','cel-expression-editor'])assert.equal(visited.has(new URL('../ui/'+name+'.mjs',import.meta.url).href),false);
   // Exact numeric admission is now a shared pure module, without pulling app owners into display.
   assert.ok(visited.has(new URL('../ui/numeric-predicate.mjs',import.meta.url).href));
   // Grouped timelines add only their pure shape validator to this graph.
@@ -73,7 +73,10 @@ test('display entry imports a closed passive graph without publishing namespaces
   assert.ok(visited.has(new URL('../ui/exception-fingerprint-identity.mjs', import.meta.url).href));
   assert.ok(visited.has(new URL('../ui/record-intent.mjs', import.meta.url).href));
   assert.ok(visited.has(new URL('../ui/intent-shape.mjs', import.meta.url).href));
-  assert.equal(visited.size, 67);
+  // Saved source metadata adds one pure admission module, never its authoring owner.
+  assert.ok(visited.has(new URL('../ui/cel-provenance.mjs', import.meta.url).href));
+  assert.deepEqual(Object.keys(await import('../ui/cel-provenance.mjs')).sort(),['authoring','capture','condition','recordCELContract']);
+  assert.equal(visited.size, 68);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

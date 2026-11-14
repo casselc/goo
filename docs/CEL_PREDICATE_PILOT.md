@@ -147,3 +147,7 @@ This remains additive AND refinement, with no app editor or map-presence extensi
 and adds its in-process HTTP route. Compiler failures support `errors.As` with
 code, phase and optional Unicode span. Exact binding travels with each successful
 receipt. [436.4](CEL_CONTEXTUAL_EDITOR.md) adds the shared contextual editor.
+
+[Saved CEL questions](CEL_SAVED_QUESTIONS.md) now preserve checked source and
+bindings through the existing ExplorationView and portable view artifact. The
+Go helper recomputes metadata; saved source never replaces ordinary query authority.

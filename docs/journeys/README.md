@@ -2999,3 +2999,10 @@ and explicit clear. Visible contextual editing remains the next milestone.
 fixed expression authoring, pure context/check requests, invalid-draft gating,
 slot replacement, explicit Apply/Run and held Return. Responsive frames and a
 bounded Bombadil actor exercise the new shared controls.
+
+## 436.5 — source-preserving saved questions
+
+[Executable storyboard](cel-preservation.md) follows real checked source through
+existing Save view, YAML export/import, original recall and replacement. It covers
+dirty recall, explicit source discard, destination-preserving display reuse and
+a bounded source-free restore/check actor.

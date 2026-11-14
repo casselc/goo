@@ -9,7 +9,7 @@ function receipt(check,value='ok'){
  const predicate={field:{kind:'column',key:'body'},op:'eq',value};
  const question=clone(check.request.base);
  question.where=question.where?{all:[question.where,predicate]}:predicate;
- return {version:'goo.cel-plan/1',celLibrary:recordCELContract.library,expression:check.request.expression,predicate,question,binding:clone(check.request.binding),plan:{rows:'parameterized'}};
+ return {loweringDigest:'b'.repeat(64),version:'goo.cel-plan/1',celLibrary:recordCELContract.library,expression:check.request.expression,predicate,question,binding:clone(check.request.binding),plan:{rows:'parameterized'}};
 }
 const diagnosis={code:'syntax',phase:'parse',message:'Expected expression.',span:{start:2,end:2,line:1,column:3}};
 function check(owner,text='log.body == "ok"'){

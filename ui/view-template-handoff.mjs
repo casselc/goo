@@ -1,3 +1,4 @@
+import * as CELProvenance from './cel-provenance.mjs';
 import {recordAggregates} from './record-aggregate-protocol.mjs';
 import * as Composition from './view-composition.mjs';
 /* Checked configuration handoff only. No source data, witnesses or navigation. */
@@ -24,7 +25,8 @@ export function binding(value){closed(value,['version','group','profile','baseli
 export function intervalLabel(width){if(!Number.isInteger(width)||width<=0)return 'Not configured';const unit=width<60000?'second':'minute',value=width<60000?width/1000:width/60000;return value+' '+unit+(value===1?'':'s');}
 export function requirements(profile){if(profile==='ordinary-histogram')return 'Same signal, qualified numeric field, type, scale, literal unit, parse policy and bin specification; ungrouped page-zero records.';if(profile==='ordinary-summary')return 'Same signal, ungrouped page-zero records and supplied count, duration or recorded-status facts; no numeric binding.';const rule=Object.hasOwn(profileRules,profile)?profileRules[profile]:null;return rule?'Exact service, '+rule.kind+' kind and nonempty current '+rule.attribute+'.'+(profile==='otel.rpc-server-current'?' rpc.method is conditional; missing and empty labels remain populations.':''):'Same signal, one ordinary grouping and requested measure support.';}
 export function templateView(value){
- closed(value,['version','id','title','queries','composition','template']);if(value.version!==1||value.id!==undefined&&(typeof value.id!=='string'||!/^[a-f0-9]{64}$/.test(value.id)))throw Error('Choose a checked view/template revision.');
+ CELProvenance.authoring(value.authoring,value.queries);
+ closed(value,['version','id','title','queries','composition','template','authoring']);if(value.version!==1||value.id!==undefined&&(typeof value.id!=='string'||!/^[a-f0-9]{64}$/.test(value.id)))throw Error('Choose a checked view/template revision.');
  if(!object(value)||!value.template||!value.composition||value.queries?.length!==1||['layout','columns','fieldColumns','displays','breakdowns','tail'].some(key=>Object.hasOwn(value,key)))throw Error('Reusable templates require one checked record composition.');
  binding(value.template);title(value.title);const q=value.queries[0];validateRecordQuestion(q);Composition.validate(value.composition,q);
  if(value.template.profile==='ordinary-histogram'){if(!Histogram.eligible(q)||value.composition.children.length!==2||!Composition.histogram(value.composition)||!Composition.records(value.composition))throw Error('Numeric histogram templates require exactly histogram and records over an ungrouped page-zero numeric histogram.');return {...structuredClone(value),composition:Composition.validate(value.composition,q)};}
@@ -57,7 +59,7 @@ export function eligible(widget){const q=widget?.query,preset=presets[widget?.fa
 export function customizeLabel(widget){return presets[widget?.family]?.label||'view';}
 export function request(widget){if(!eligible(widget))throw Error('Customize requires a supported HTTP route, current RPC method or database operation widget.');validateRecordQuestion(widget.query);return {template:presets[widget.family].id,version:1,widget:structuredClone(widget)};}
 export function stagedView(value,question){
- validateRecordQuestion(question);closed(value,['version','title','queries','layout','columns','displays','composition','template']);
+ validateRecordQuestion(question);CELProvenance.authoring(value.authoring,value.queries);closed(value,['version','title','queries','layout','columns','displays','composition','template','authoring']);
  if(value.version!==1||!Array.isArray(value.queries)||value.queries.length!==1)throw Error('Template changed the current widget question.');
  validateRecordQuestion(value.queries[0]);if(questionIdentity(value.queries[0])!==questionIdentity(question))throw Error('Template changed the current widget question.');
  title(value.title);if(Object.hasOwn(value,'composition')){const view=Composition.view(value);if(view.template)templateView(view);return view;}if(value.template)throw Error('Template requires a composition.');if(!['charts-records','records'].includes(value.layout))throw Error('Invalid template layout.');

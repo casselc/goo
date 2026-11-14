@@ -2230,3 +2230,12 @@ injected; it has no independent telemetry or persistence owner. Its scoped CSS
 uses a compact resizable textarea. `filter-editor.mjs` combines it with a native
 Conditions fieldset; Activity and fixed adapters retain their execution owners.
 See [guide](CEL_CONTEXTUAL_EDITOR.md) and [storyboard](journeys/cel-editor.md).
+
+## Saved condition provenance
+
+`cel-provenance.mjs` is pure shape/binding admission shared by view configuration
+and authoring. The public display graph stays independent of `AuthoringSlot` and
+editor controllers. Checked metadata stays separate from private invocation tokens.
+The existing saved-view Preserve form can explicitly discard CEL source while
+keeping the typed question; recall uses owned keep/discard controls.
+See [saved questions](CEL_SAVED_QUESTIONS.md).

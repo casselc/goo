@@ -24630,6 +24630,9 @@
       "expression": {
         "type": "string"
       },
+      "loweringDigest": {
+        "type": "string"
+      },
       "plan": {
         "$ref": "#/components/schemas/exploration.Plan"
       },
@@ -24651,6 +24654,7 @@
       }
     },
     "required": [
+      "loweringDigest",
       "version",
       "celLibrary",
       "expression",
@@ -28584,6 +28588,19 @@
   },
   "workbench.ExplorationView": {
     "properties": {
+      "authoring": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/workbench.RecordAuthoring"
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "breakdowns": {
         "anyOf": [
           {
@@ -28703,6 +28720,26 @@
   "workbench.ExplorationViewInput": {
     "additionalProperties": false,
     "properties": {
+      "authoring": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/workbench.RecordAuthoringInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "breakdowns": {
         "anyOf": [
           {
@@ -30030,6 +30067,119 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.NativeViewSummary"
+  },
+  "workbench.RecordAuthoring": {
+    "properties": {
+      "base": {
+        "$ref": "#/components/schemas/exploration.Query"
+      },
+      "binding": {
+        "$ref": "#/components/schemas/querycel.PlanBinding"
+      },
+      "loweringDigest": {
+        "type": "string"
+      },
+      "parentRevision": {
+        "type": "string"
+      },
+      "representation": {
+        "type": "string"
+      },
+      "source": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "representation",
+      "source",
+      "base",
+      "binding",
+      "parentRevision",
+      "loweringDigest"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.RecordAuthoring"
+  },
+  "workbench.RecordAuthoringInput": {
+    "additionalProperties": false,
+    "properties": {
+      "base": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.QueryInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "binding": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/querycel.PlanBindingInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "loweringDigest": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "parentRevision": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "representation": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "source": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.RecordAuthoring"
   },
   "workbench.RecordViewDeclaration": {
     "properties": {
