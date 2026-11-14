@@ -1,12 +1,9 @@
-# Ready-to-file upstream feedback: external browser shadow integration
+# Upstream feedback: external browser shadow integration
 
-Posting was attempted with `gh issue create` after user authorization. The
-managed environment's enforced allowlist does not include `api.github.com`;
-GitHub's GraphQL request returned `Forbidden`. No issue was created. Live
-network access changes are not available through this session's tools. Add that
-host in environment settings before retrying; the complete issue body is below.
-
-Suggested title: `Model Refutes witness replay ignores QUINT_BACKEND; external-driver integration feedback`
+Posted as [gotogether #220](https://github.com/chucklehead-dev/gotogether/issues/220):
+**Goo adoption feedback: Refutes backend selection and external-driver ergonomics**.
+Earlier attempts were blocked by environment access; the user-requested retry
+succeeded through `gh issue create`. The submitted issue body follows.
 
 We trialed gotogether at `771dcce13fd24071d3ae2677c567540ad0ec79ff` as a
 shadow consumer of Goo's acquisition/retained-return browser journey. The native
