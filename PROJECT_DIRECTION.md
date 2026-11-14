@@ -47,6 +47,12 @@ this direction note and subsequent validation evidence are additions.
 
 ## Declarative authoring direction
 
+The [bounded CEL predicate pilot](docs/CEL_PREDICATE_PILOT.md) is now implemented
+in Go: a versioned CEL extension lowers checked expressions into the existing
+record model, and `goo plan-cel` emits ordinary questions and parameterized plans.
+Full resource authoring, attribute presence semantics and app text editing remain
+follow-on work; this does not declare the entire IaC grammar implemented.
+
 The user prefers an IaC grammar along the lines of **YAML with CEL expressions**,
 **KCL**, or a comparable declarative language. This is a design preference, not
 an already selected parser or an implemented API. Keep Go/Rust runtime choice

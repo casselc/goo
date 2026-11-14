@@ -443,7 +443,11 @@ evaluator service or module rewrite is required by this documentation repair.
 ## Representation and language
 
 JSON remains the browser/result transport. Strict YAML operation packages and
-prepared aggregate definitions are implemented; CEL/KCL remain authoring candidates. The original design uses EDN and Clojure-style expressions because plain values and functional composition fit the project. The next implementation must preserve semantic structure across transport, regardless of syntax. Prefer a small normalized data model over a decision to port the entire app before its semantics are established.
+prepared aggregate definitions are implemented. The [bounded CEL predicate pilot](CEL_PREDICATE_PILOT.md)
+now supplies a versioned extension and checked lowering into ordinary record
+predicates; broader CEL/KCL resource authoring remains open. The original EDN
+design is historical. Authoring syntax preserves the normalized typed model;
+the existing source compiler owns planning, parameters and execution semantics.
 
 Plotje may serve as a renderer or design influence. Trace waterfalls and related-record browsing need explicit result contracts even if they use a different rendering adapter. Native metric points and span-derived measurements also need distinct typed semantics.
 

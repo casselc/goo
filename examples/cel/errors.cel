@@ -1,0 +1,1 @@
+otel.severityBand(log.severity_number) == "error" && log.body.contains("timeout")

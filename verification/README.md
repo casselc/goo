@@ -4827,3 +4827,24 @@ Required acceptance supplies a completed report and passes without skips. Ordina
 discovery without the artifact skips only this replay; an invalid supplied report
 or missing model tool fails. Counterexamples change band conservation, scope,
 numeric range, window, explicit read budgets, chart scale and held-guide facts.
+
+## CEL predicate compiler pilot
+
+`querycel_test.go` checks the actual checked CEL runtime against Goo's predicate
+interpreter, whole-parent AND/nonmutation properties and every severity code across
+eight bands. The required live test compares four generated ClickHouse plans over
+256 read-only inline records, including NUL-containing message data. No tables,
+telemetry records or stores are created.
+
+```sh
+GOO_CEL_CLICKHOUSE_URL=http://127.0.0.1:8123 \
+  go test -p 1 . -run '^(TestHegelCEL|TestCEL)' -count=1 -v
+```
+
+`GOO_TEST_CLICKHOUSE_USER` and `GOO_TEST_CLICKHOUSE_PASSWORD` configure the source
+credentials (the local lab defaults are used otherwise). Ordinary discovery without
+`GOO_CEL_CLICKHOUSE_URL` skips only the live parity test; required acceptance sets
+it and must pass without skips. A declared unavailable source fails. This is a
+stateless compiler/reference pilot, so no new Quint state model or Bombadil driver
+is introduced. [Guide](../docs/CEL_PREDICATE_PILOT.md),
+[CLI storyboard](../docs/journeys/cel-authoring.md).

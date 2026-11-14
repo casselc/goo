@@ -22,6 +22,7 @@ This index separates using Goo, extending it, and the development record.
 | Browse worked examples | [Journey index](journeys/README.md) |
 | Save questions, views or observations | [Preservation](PRESERVATION.md) |
 | Create reusable views | [Authorable view templates](AUTHORABLE_VIEW_TEMPLATES.md) |
+| Author a record predicate with CEL | [CEL predicate pilot](CEL_PREDICATE_PILOT.md) |
 | Call the API | [API guide](API.md) and [OpenAPI](../api/openapi.json) |
 
 ## Understand and extend Goo

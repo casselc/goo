@@ -17,7 +17,7 @@ import (
 
 func run(args []string, out io.Writer) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: goo validate-view|import-view|validate|compile|evaluate|rebuild-capture-catalog|prepare|evaluate-prepared|discover|catalog|expand|prepare-http|manifest|weave|observe-operations|plan-operations|evaluate-counters|evaluate-histograms|merge-histograms [options]")
+		return fmt.Errorf("usage: goo validate-view|import-view|validate|compile|plan-exploration|plan-cel|evaluate|rebuild-capture-catalog|prepare|evaluate-prepared|discover|catalog|expand|prepare-http|manifest|weave|observe-operations|plan-operations|evaluate-counters|evaluate-histograms|merge-histograms [options]")
 	}
 	command := args[0]
 	if command == "validate-view" || command == "import-view" {
@@ -37,6 +37,9 @@ func run(args []string, out io.Writer) error {
 			return writeErr
 		}
 		return err
+	}
+	if command == "plan-cel" {
+		return planCEL(args[1:], out)
 	}
 	if command == "plan-exploration" {
 		return planExploration(args[1:], out)

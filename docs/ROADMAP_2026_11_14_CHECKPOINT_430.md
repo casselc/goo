@@ -6,6 +6,14 @@ adopts that direction without renumbering the older pending 427–429 contracts.
 
 Status: **430–435 delivered and validated**. Next: 436 aggregate selection and held return.
 
+The user-directed [CEL predicate pilot](CEL_PREDICATE_PILOT.md) is also delivered:
+a real versioned CEL extension, checked overload lowering, `plan-cel`, immutable
+parent refinement and CEL/Goo/ClickHouse parity. It advances shared authoring without
+adding another executor. The next language slice is a source-free app draft bridge
+and visual/text round trip. Attribute maps require an explicit presence contract;
+arbitrary CEL functions never imply backend compilation. This does not renumber or
+silently replace the operator consolidation below.
+
 ## 430 — first-use scope entry and interaction reliability
 
 The existing Find environments chooser is adjacent to Environment, highlighted

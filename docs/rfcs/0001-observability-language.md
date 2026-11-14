@@ -2,6 +2,11 @@
 
 Status: Proposed. Date: 2026-10-16. The runnable prototype does not implement this RFC.
 
+Current partial implementation: the [CEL predicate pilot](../CEL_PREDICATE_PILOT.md)
+adds versioned extension functions and checked lowering into ordinary record
+predicates. It does not implement the full resource/expression proposal below;
+the original syntax and open decisions remain a historical design snapshot.
+
 ## Problem
 
 Teams need a common way to define observability meaning beside application code and explore that meaning interactively. Independent chart SQL, alert SQL, and SLO code drift. A chart builder alone cannot explain subject grain, missing evidence, asynchronous completion, or whether a proposed transformation is valid.

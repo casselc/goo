@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[CEL predicate authoring](cel-authoring.md) is a CLI/library storyboard: compile a
+versioned extension into the existing query model, preserve the parent scope and
+compare CEL/Goo/ClickHouse behavior. Interactive text editing remains planned.
+
 [Numeric severity](activity-severity.md) (435) inspects all OTel bands over full
 source counts, replots supplied time buckets locally and stages exact numeric
 filters or fixed banded explanations independently of SeverityText.

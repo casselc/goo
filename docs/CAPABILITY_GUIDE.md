@@ -4,6 +4,10 @@ Goo's main loop is **see current telemetry → isolate a population → follow i
 evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
+[CEL predicate planning](CEL_PREDICATE_PILOT.md) now provides a versioned Go
+extension and source-free CLI that produce the existing ordinary question model.
+It is a bounded library/CLI authoring path; interactive text authoring is planned.
+
 This is the current task-oriented capability index, reconciled through milestone
 435, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
 [fleet service triage](SERVICE_TRIAGE.md).

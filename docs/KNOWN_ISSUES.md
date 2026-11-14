@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+[CEL predicate authoring](CEL_PREDICATE_PILOT.md) is a delivered library/CLI pilot
+over fixed nonnullable fields. Attribute maps, presence guards, whole-query CEL,
+app text editing and a general third-party lowering registry remain unimplemented.
+Unsupported expressions refuse before evaluation; no local record-page fallback
+is used. Reference evaluation requires every referenced field to be present and
+well typed, including short-circuited branches.
+
 [The ad-hoc telemetry review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) identifies
 first-use scope discovery, partial-signal table assumptions, metric-only bootstrap,
 event-time empty-stream recovery and keyboard Pause focus as priority gaps.

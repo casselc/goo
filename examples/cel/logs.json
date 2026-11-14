@@ -1,0 +1,14 @@
+{
+  "signal": "logs",
+  "environment": "production",
+  "fromMs": 1794657600000,
+  "toMs": 1794657900000,
+  "limit": 100,
+  "offset": 0,
+  "where": {
+    "any": [
+      {"field": {"kind": "column", "key": "service"}, "op": "eq", "value": "api"},
+      {"field": {"kind": "column", "key": "service"}, "op": "eq", "value": "worker"}
+    ]
+  }
+}

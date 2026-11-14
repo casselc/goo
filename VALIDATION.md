@@ -1,5 +1,48 @@
 # Validation record
 
+## CEL predicate authoring pilot — user-directed language slice
+
+[Guide](docs/CEL_PREDICATE_PILOT.md),
+[storyboard](docs/journeys/cel-authoring.md),
+[independent acceptance](docs/reviews/CEL_PREDICATE_PILOT.md) and
+[roadmap](docs/ROADMAP_2026_11_14_CHECKPOINT_430.md).
+
+- All root Go packages pass under Go 1.27.3 after the final production freeze;
+  the final `goo` binary builds. Canonical `cel.dev/cel-go v0.32.0` is pinned.
+  Seven focused library tests plus an external package example pass; both CLI
+  tests pass. The independent reviewer reruns the nine test functions, zero skips.
+- The versioned OTel CEL library registers through CEL's actual extension API.
+  The compiler admits resolved checked overloads, signal-specific fixed fields,
+  unsigned/string comparisons, boolean composition, literal contains and exact
+  numeric severity-band equality. Unsupported operations refuse before evaluation,
+  including dead branches. Tests cover parser/literal/expanded AST/work bounds,
+  nil/zero programs, detached getters and whole-parent OR preservation under AND.
+- `goo plan-cel` accepts a bounded parent JSON question and inline/file expression,
+  then emits the ordinary refined question and parameterized source plan. Actual
+  example execution emits `goo.cel-plan/1` with `goo.cel.otel/v1`, unchanged fixed
+  time/environment/service parent and numeric Error 17–20 plus literal `timeout`.
+  SQL-looking literals remain parameter values. Refusals emit no partial receipt.
+- Actual CLI output passes existing UI question admission and link encode/decode
+  with unchanged semantic identity. This is a source-free command/transport check,
+  not a new app text editor or browser journey.
+- Native acceptance passes **without skips** (0.149s): **220 generated CEL/Goo
+  parity cases**, **120 parent membership/nonmutation cases**, all **256 physical
+  severity codes × eight bands**, unsupported/missing-input checks and four real
+  read-only ClickHouse comparisons over 256 inline records each. Matching result
+  counts are 4, 232, 43 and 170. Data includes Unicode, punctuation and NUL bytes;
+  uint64 edge values are checked in reference properties. No source table, telemetry
+  record, runtime or investigation store is created by this verification.
+- The final static/runtime work bound is **1,000,000 CEL units**, with 4,096-byte
+  expression and 65,536-byte string-input limits. Cost estimates are not a general
+  wall-clock/memory guarantee for arbitrary extension code; the shipped binding
+  performs only bounded pure classification. No arbitrary host extensions are
+  admitted by the source compiler.
+- No UI/HTTP shape changed, so frontend/browser/OpenAPI suites are not newly
+  claimed. This stateless compiler slice adds no Quint or Bombadil state model.
+  Attribute maps, general extension registration, interactive text/visual round
+  trips and Databricks record lowering remain planned. The next language step is
+  a source-free app draft bridge; 436 remains the next numbered consolidation slice.
+
 ## 435 — numeric OTel severity in Activity volume
 
 [Contract](docs/ACTIVITY_NUMERIC_SEVERITY.md),
