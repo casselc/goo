@@ -1,5 +1,62 @@
 # Validation record
 
+## 435 — numeric OTel severity in Activity volume
+
+[Contract](docs/ACTIVITY_NUMERIC_SEVERITY.md),
+[storyboard](docs/journeys/activity-severity.md),
+[independent acceptance](docs/reviews/NUMERIC_SEVERITY_435.md) and
+[roadmap](docs/ROADMAP_2026_11_14_CHECKPOINT_430.md).
+
+- All root Go packages pass under Go 1.27.3, and the final embedded runtime builds.
+  The logs-only `logSeverity` projection returns exact uint64 band partitions in
+  overall, group and time results using the existing three aggregate reads.
+  Tests cover equal-total band drift, zero buckets, ordinary/captured results,
+  package/measure preservation and explicit unsupported profile refusal.
+- Standard log rows now include physical SeverityNumber and deterministic ordering
+  by it. Readiness requires UInt8 and refuses missing, String, UInt64 and nullable
+  columns before a read probe. Independent exporter fixtures, the current plan
+  digest and affected planning/telemetry HTTP responses were updated to match the
+  actual adapter. Final root tests pass after those fixture corrections.
+- **1,719 frontend tests pass**, zero failures/skips (39.9s). Coverage includes
+  strict summary/conservation/identity protocols, exact predicates, shared-scale
+  local plots, numeric/text independence, dirty/hidden/native/retired/band-ABA
+  controls, predicate budgets, and actual volume-to-explanation integration.
+  Independent reviewers also execute focused protocol/model/controller checks.
+- The final real OTLP/ClickHouse journey passes (**42.4s**, 44.5s runner), including
+  a **30-second Bombadil actor**. The collector retains 0, 25 and 255 without SQL
+  fixture substitution. Overall counts cover 125 matching logs beyond the 100-row
+  held buffer. A `FATAL` producer label with number 9 remains numeric Info.
+  Independent source rows validate global, grouped and six time-bucket partitions.
+- All eight band choices replot locally on the unchanged all-log ceiling, without
+  reads. Filter preserves the whole OR parent under AND with exact 17–20 numeric
+  bounds; only Apply opens the next stream. Banded Explain stages the original
+  fixed band/time scope without reading. The actual held Error guide contains 90
+  matching observations, independently of the 112 source Error logs. Retired and
+  dirty callbacks cannot stage or reread.
+- The actor completes with **two tail opens / one aggregate request**, local/scope
+  checks true, no forbidden writes and no mobile overflow (692 snapshots). The
+  admitted report is `artifacts/activity-severity435/07e99b2dbc63/report.json`.
+  Owned runtimes/proxies clean up; existing telemetry and stores remain intact.
+- Hegel properties check 180 classifier/filter/count cases plus 80 actual aggregate
+  conservation cases. Final observed Quint replay and **11 rejecting controls**
+  pass without skips (**22.567s** combined native run); model typechecking passes.
+  The replay checks actual outgoing requests, independent source partitions,
+  matching held guide, exact scopes, chart scales and local read budgets.
+  An initial zero-argument model-import adapter issue was fixed before acceptance.
+- Full OpenAPI checks pass **116 operations**, 501 fixture responses, 202 admitted
+  requests and 29 mux refusals. Generated schemas are **737 wire / 780 OpenAPI**;
+  severity controls cover **2 valid / 55 rejecting** shapes. The actual final
+  Activity request and full count/group/time response conform to the schema.
+- Three adjacent browser regressions pass (**54.2s**): existing volume/explanation
+  and held Return, span latency, and 434 Find-to-source search. Their affected
+  documentation frames are refreshed alongside new desktop/mobile/explanation frames.
+  Real-browser findings around refined-parent admission and missing physical row
+  numbers were fixed and rerun, with stronger integration assertions.
+- Independent architecture and UX/accessibility/standards reviews accept the
+  final closed refinement, source custody and compact composition. Physical AT,
+  cross-engine behavior and deployment of the shared lab image are not claimed.
+  Next: 436 aggregate-selection and held-return consolidation.
+
 ## 434 — explicit local Find to source-message search
 
 [Contract](docs/ACTIVITY_MESSAGE_SEARCH.md),

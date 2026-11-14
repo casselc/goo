@@ -10,7 +10,7 @@ function sourceFields(source){
 export function sourceLabel(source){sourceFields(source);return Environment.questionLabel(source);}
 export function packageQuestion(definition,{fromMs,toMs}){
  const q={signal:definition.source?.signal,...sourceFields(definition.source),fromMs,toMs,limit:100,offset:0};
- for(const key of ['numericHistogram','reportedEdge','numeric','groupTimeSeries','spanStatus','bucketMs','summary','where','groupBy'])if(definition[key]!==undefined&&definition[key]!==null)q[key]=structuredClone(definition[key]);
+ for(const key of ['numericHistogram','reportedEdge','numeric','groupTimeSeries','spanStatus','logSeverity','bucketMs','summary','where','groupBy'])if(definition[key]!==undefined&&definition[key]!==null)q[key]=structuredClone(definition[key]);
  validateRecordQuestion(q);return q;
 }
 function canonical(value){return JSON.stringify(value,(_key,item)=>object(item)?Object.fromEntries(Object.keys(item).sort().map(key=>[key,item[key]])):item);}

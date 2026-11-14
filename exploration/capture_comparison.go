@@ -120,7 +120,9 @@ func CompareEvidence(a, b *SavedCapture) (*EvidenceComparison, error) {
 				x.Summary = ""
 				y.Summary = ""
 				x.SpanStatus = false
+				x.LogSeverity = false
 				y.SpanStatus = false
+				y.LogSeverity = false
 				x.BucketMS = 0
 				y.BucketMS = 0
 				x.GroupTimeSeries = false

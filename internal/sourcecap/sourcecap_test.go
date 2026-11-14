@@ -62,6 +62,50 @@ func TestProfilesAreFixedIndependentAndDoNotReadObservations(t *testing.T) {
 		}
 	}
 }
+
+func TestLogSeverityColumnReadiness435(t *testing.T) {
+	for _, typ := range []string{"UInt8", "UInt64", "Nullable(UInt8)", "String", ""} {
+		t.Run(typ, func(t *testing.T) {
+			bank := schemaBank(t)
+			columns := []json.RawMessage{}
+			for _, raw := range bank[Logs] {
+				var c struct{ Name, Type string }
+				if json.Unmarshal(raw, &c) != nil {
+					t.Fatal("invalid schema fixture")
+				}
+				if c.Name == "SeverityNumber" {
+					if typ == "" {
+						continue
+					}
+					c.Type = typ
+					raw, _ = json.Marshal(map[string]string{"name": c.Name, "type": c.Type})
+				}
+				columns = append(columns, raw)
+			}
+			calls := 0
+			got, err := Inspect(context.Background(), func(_ context.Context, sql string, _ map[string]string) ([]json.RawMessage, error) {
+				calls++
+				if strings.HasPrefix(sql, "DESCRIBE") {
+					return columns, nil
+				}
+				if !strings.Contains(sql, "`SeverityNumber`") {
+					t.Fatal("access probe omitted intrinsic severity number")
+				}
+				return nil, nil
+			}, Logs)
+			if err != nil || len(got) != 1 {
+				t.Fatal(got, err)
+			}
+			if typ == "UInt8" {
+				if !got[0].Compatible() || calls != 2 {
+					t.Fatal(got, calls)
+				}
+			} else if got[0].State != "incompatible" || !strings.Contains(got[0].Detail, "SeverityNumber") || calls != 1 {
+				t.Fatal(got, calls)
+			}
+		})
+	}
+}
 func TestSubsetValidationPrecedesReadsAndDoesNotCache(t *testing.T) {
 	bank := schemaBank(t)
 	reads := 0

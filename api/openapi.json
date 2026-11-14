@@ -5040,6 +5040,9 @@
                       "spanStatus": {
                         "const": false
                       },
+                      "logSeverity": {
+                        "const": false
+                      },
                       "groupTimeSeries": {
                         "const": false
                       },
@@ -17873,6 +17876,79 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.LiveCounterInfo"
       },
+      "exploration.LogSeveritySummary": {
+        "properties": {
+          "count": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          },
+          "debug": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          },
+          "error": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          },
+          "fatal": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          },
+          "info": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          },
+          "invalid": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          },
+          "trace": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          },
+          "unspecified": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          },
+          "warn": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Exact canonical uint64 decimal; Go enforces maximum18446744073709551615. Plot coordinates never replace this value."
+          }
+        },
+        "required": [
+          "count",
+          "trace",
+          "debug",
+          "info",
+          "warn",
+          "error",
+          "fatal",
+          "unspecified",
+          "invalid"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.LogSeveritySummary",
+        "additionalProperties": false,
+        "description": "Exact captured-log SeverityNumber partition:0 unspecified;1–4 trace;5–8 debug;9–12 info;13–16 warn;17–20 error;21–24 fatal;>24 invalid in the unsigned exporter column. SeverityText remains independent. Go checks uint64 bounds, sum of bands=count and cross-read conservation; disagreeing projections are diagnostics."
+      },
       "exploration.MeasureComparison": {
         "properties": {
           "baselineDuration": {
@@ -19945,6 +20021,9 @@
           "limit": {
             "type": "integer"
           },
+          "logSeverity": {
+            "type": "boolean"
+          },
           "numeric": {
             "anyOf": [
               {
@@ -20376,6 +20455,9 @@
               "$ref": "#/components/schemas/RecordAggregateGroup"
             }
           },
+          "logSeverity": {
+            "$ref": "#/components/schemas/exploration.LogSeveritySummary"
+          },
           "question": {
             "$ref": "#/components/schemas/exploration.Query"
           },
@@ -20491,6 +20573,80 @@
                     "not": {
                       "required": [
                         "g1"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "question": {
+                  "required": [
+                    "logSeverity"
+                  ],
+                  "properties": {
+                    "logSeverity": {
+                      "const": true
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "logSeverity"
+              ],
+              "properties": {
+                "groups": {
+                  "items": {
+                    "required": [
+                      "logSeverity"
+                    ],
+                    "properties": {
+                      "logSeverity": {
+                        "$ref": "#/components/schemas/exploration.LogSeveritySummary"
+                      }
+                    }
+                  }
+                },
+                "timeSeries": {
+                  "items": {
+                    "required": [
+                      "logSeverity"
+                    ],
+                    "properties": {
+                      "logSeverity": {
+                        "$ref": "#/components/schemas/exploration.LogSeveritySummary"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "else": {
+              "not": {
+                "required": [
+                  "logSeverity"
+                ]
+              },
+              "properties": {
+                "groups": {
+                  "items": {
+                    "not": {
+                      "required": [
+                        "logSeverity"
+                      ]
+                    }
+                  }
+                },
+                "timeSeries": {
+                  "items": {
+                    "not": {
+                      "required": [
+                        "logSeverity"
                       ]
                     }
                   }
@@ -20880,6 +21036,9 @@
               }
             ]
           },
+          "logSeverity": {
+            "$ref": "#/components/schemas/exploration.LogSeveritySummary"
+          },
           "numeric": {
             "anyOf": [
               {
@@ -21015,7 +21174,83 @@
           "warnings"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/exploration.Result"
+        "x-go-type": "github.com/casselc/goo/exploration.Result",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "question": {
+                  "required": [
+                    "logSeverity"
+                  ],
+                  "properties": {
+                    "logSeverity": {
+                      "const": true
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "logSeverity"
+              ],
+              "properties": {
+                "groups": {
+                  "items": {
+                    "required": [
+                      "logSeverity"
+                    ],
+                    "properties": {
+                      "logSeverity": {
+                        "$ref": "#/components/schemas/exploration.LogSeveritySummary"
+                      }
+                    }
+                  }
+                },
+                "timeSeries": {
+                  "items": {
+                    "required": [
+                      "logSeverity"
+                    ],
+                    "properties": {
+                      "logSeverity": {
+                        "$ref": "#/components/schemas/exploration.LogSeveritySummary"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "else": {
+              "not": {
+                "required": [
+                  "logSeverity"
+                ]
+              },
+              "properties": {
+                "groups": {
+                  "items": {
+                    "not": {
+                      "required": [
+                        "logSeverity"
+                      ]
+                    }
+                  }
+                },
+                "timeSeries": {
+                  "items": {
+                    "not": {
+                      "required": [
+                        "logSeverity"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
       },
       "exploration.SavedComparison": {
         "properties": {
@@ -22046,6 +22281,9 @@
           "groupTimeSeries": {
             "type": "boolean"
           },
+          "logSeverity": {
+            "type": "boolean"
+          },
           "lookbackMinutes": {
             "type": "integer"
           },
@@ -22187,6 +22425,16 @@
             ]
           },
           "groupTimeSeries": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "logSeverity": {
             "anyOf": [
               {
                 "type": "boolean"
@@ -22371,6 +22619,9 @@
           },
           "fromMs": {
             "type": "integer"
+          },
+          "logSeverity": {
+            "$ref": "#/components/schemas/exploration.LogSeveritySummary"
           },
           "numeric": {
             "anyOf": [
@@ -45064,6 +45315,9 @@
                             },
                             "groupTimeSeries": {
                               "const": false
+                            },
+                            "logSeverity": {
+                              "const": false
                             }
                           }
                         },
@@ -45112,6 +45366,9 @@
                               "type": "null"
                             },
                             "spanStatus": {
+                              "const": false
+                            },
+                            "logSeverity": {
                               "const": false
                             },
                             "groupTimeSeries": {
@@ -45188,6 +45445,9 @@
                           "type": "null"
                         },
                         "groupTimeSeries": {
+                          "const": false
+                        },
+                        "logSeverity": {
                           "const": false
                         }
                       }
@@ -52109,6 +52369,9 @@
                     "spanStatus": {
                       "const": true
                     },
+                    "logSeverity": {
+                      "const": false
+                    },
                     "groupTimeSeries": {
                       "const": false
                     },
@@ -52500,6 +52763,9 @@
                     },
                     "spanStatus": {
                       "const": true
+                    },
+                    "logSeverity": {
+                      "const": false
                     },
                     "groupTimeSeries": {
                       "const": false
@@ -54422,6 +54688,9 @@
                       "spanStatus": {
                         "const": true
                       },
+                      "logSeverity": {
+                        "const": false
+                      },
                       "groupTimeSeries": {
                         "const": false
                       },
@@ -54534,6 +54803,9 @@
                       "spanStatus": {
                         "const": true
                       },
+                      "logSeverity": {
+                        "const": false
+                      },
                       "groupTimeSeries": {
                         "const": false
                       },
@@ -54614,6 +54886,9 @@
                                   },
                                   "spanStatus": {
                                     "const": true
+                                  },
+                                  "logSeverity": {
+                                    "const": false
                                   },
                                   "groupTimeSeries": {
                                     "const": false
@@ -54716,6 +54991,9 @@
                           },
                           "groupTimeSeries": {
                             "const": false
+                          },
+                          "logSeverity": {
+                            "const": false
                           }
                         }
                       },
@@ -54764,6 +55042,9 @@
                             "type": "null"
                           },
                           "spanStatus": {
+                            "const": false
+                          },
+                          "logSeverity": {
                             "const": false
                           },
                           "groupTimeSeries": {
@@ -54839,6 +55120,9 @@
                         "type": "null"
                       },
                       "groupTimeSeries": {
+                        "const": false
+                      },
+                      "logSeverity": {
                         "const": false
                       }
                     }
@@ -54930,6 +55214,9 @@
                         "type": "null"
                       },
                       "spanStatus": {
+                        "const": false
+                      },
+                      "logSeverity": {
                         "const": false
                       },
                       "groupTimeSeries": {
@@ -56408,6 +56695,9 @@
                       "spanStatus": {
                         "const": true
                       },
+                      "logSeverity": {
+                        "const": false
+                      },
                       "groupTimeSeries": {
                         "const": false
                       },
@@ -56520,6 +56810,9 @@
                       "spanStatus": {
                         "const": true
                       },
+                      "logSeverity": {
+                        "const": false
+                      },
                       "groupTimeSeries": {
                         "const": false
                       },
@@ -56600,6 +56893,9 @@
                                   },
                                   "spanStatus": {
                                     "const": true
+                                  },
+                                  "logSeverity": {
+                                    "const": false
                                   },
                                   "groupTimeSeries": {
                                     "const": false
@@ -56702,6 +56998,9 @@
                           },
                           "groupTimeSeries": {
                             "const": false
+                          },
+                          "logSeverity": {
+                            "const": false
                           }
                         }
                       },
@@ -56750,6 +57049,9 @@
                             "type": "null"
                           },
                           "spanStatus": {
+                            "const": false
+                          },
+                          "logSeverity": {
                             "const": false
                           },
                           "groupTimeSeries": {
@@ -56825,6 +57127,9 @@
                         "type": "null"
                       },
                       "groupTimeSeries": {
+                        "const": false
+                      },
+                      "logSeverity": {
                         "const": false
                       }
                     }
@@ -56916,6 +57221,9 @@
                         "type": "null"
                       },
                       "spanStatus": {
+                        "const": false
+                      },
+                      "logSeverity": {
                         "const": false
                       },
                       "groupTimeSeries": {
@@ -65149,6 +65457,9 @@
           },
           "spanStatus": {
             "$ref": "#/components/schemas/exploration.SpanStatusSummary"
+          },
+          "logSeverity": {
+            "$ref": "#/components/schemas/exploration.LogSeveritySummary"
           }
         },
         "additionalProperties": false
@@ -65595,6 +65906,9 @@
             "minimum": 1,
             "maximum": 100
           },
+          "logSeverity": {
+            "type": "boolean"
+          },
           "numeric": {
             "$ref": "#/components/schemas/recordintent.exploration.NumericBindingInput"
           },
@@ -65724,6 +66038,42 @@
                 "signal": {
                   "const": "spans"
                 }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "logSeverity"
+              ],
+              "properties": {
+                "logSeverity": {
+                  "const": true
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "const": "logs"
+                },
+                "groupTimeSeries": {
+                  "const": false
+                }
+              },
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "numeric"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "numericHistogram"
+                    ]
+                  }
+                ]
               }
             }
           },
@@ -66286,6 +66636,7 @@
     "Tail early JSON errors omit Cache-Control; streaming responses set no-store and X-Accel-Buffering: no.",
     "Health is process liveness only; it does not query ClickHouse or certify telemetry ingestion.",
     "No generated handlers, semantic validator replacement, API stability guarantee or new authorization layer is introduced.",
-    "Ordinary record Query input is a closed non-null graph: exact field names and one predicate arm; missing zero defaults remain permitted. Other input families retain their independently documented null policies."
+    "Ordinary record Query input is a closed non-null graph: exact field names and one predicate arm; missing zero defaults remain permitted. Other input families retain their independently documented null policies.",
+    "logSeverity:true requests exact numeric OTel bands in count, groups and time intervals for logs without numeric/split projections; SeverityText remains independent. Go enforces conservation, including equal-total per-band drift. Record-page inspection preserves the question but omits aggregate summaries. General scopedview and cohort/rate projections do not yet admit this profile."
   ]
 }

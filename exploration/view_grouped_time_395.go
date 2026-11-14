@@ -13,7 +13,7 @@ const MaxGroupedTimeSeriesDerivedCells = MaxTimeSeriesGroups * 240
 // GroupedCountTimelineQuery is the finite reusable grouped-count profile. The
 // grouping and bucket width belong to the query, never to a renderer's labels.
 func GroupedCountTimelineQuery(q Query) bool {
-	if q.Validate() != nil || !q.GroupTimeSeries || q.BucketMS <= 0 || len(q.GroupBy) != 1 || q.Numeric != nil || q.NumericHistogram != nil || q.Summary != "" || q.SpanStatus || q.ReportedEdge != nil {
+	if q.Validate() != nil || !q.GroupTimeSeries || q.BucketMS <= 0 || len(q.GroupBy) != 1 || q.Numeric != nil || q.NumericHistogram != nil || q.Summary != "" || q.SpanStatus || q.LogSeverity || q.ReportedEdge != nil {
 		return false
 	}
 	field := q.GroupBy[0]

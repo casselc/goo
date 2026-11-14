@@ -59,6 +59,23 @@ func TestPlanningHTTPWireFixtures(t *testing.T) {
 	if f.Version != 1 || len(f.Cases) != 32 {
 		t.Fatal("coverage changed", len(f.Cases))
 	}
+	if os.Getenv("GOO_UPDATE_PLANNING_HTTP_FIXTURES") == "1" {
+		for i, c := range f.Cases {
+			actual := planningWireResponse(t, c)
+			f.Cases[i].Status = actual.Code
+			f.Cases[i].Response = actual.Body.String()
+			for key := range c.Headers {
+				f.Cases[i].Headers[key] = actual.Header().Get(key)
+			}
+		}
+		data, err := json.MarshalIndent(f, "", "  ")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err = os.WriteFile("../../testdata/http/planning.json", append(data, '\n'), 0644); err != nil {
+			t.Fatal(err)
+		}
+	}
 	for _, c := range f.Cases {
 		t.Run(c.Name, func(t *testing.T) {
 			w := planningWireResponse(t, c)

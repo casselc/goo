@@ -7,13 +7,14 @@ import (
 )
 
 type TimePoint struct {
-	Numeric    *NumericSummary    `json:"numeric,omitempty"`
-	SpanStatus *SpanStatusSummary `json:"spanStatus,omitempty"`
-	FromMS     int64              `json:"fromMs"`
-	ToMS       int64              `json:"toMs"`
-	Count      string             `json:"count"`
-	State      string             `json:"state"`
-	Duration   *DurationSummary   `json:"duration,omitempty"`
+	Numeric     *NumericSummary     `json:"numeric,omitempty"`
+	SpanStatus  *SpanStatusSummary  `json:"spanStatus,omitempty"`
+	LogSeverity *LogSeveritySummary `json:"logSeverity,omitempty"`
+	FromMS      int64               `json:"fromMs"`
+	ToMS        int64               `json:"toMs"`
+	Count       string              `json:"count"`
+	State       string              `json:"state"`
+	Duration    *DurationSummary    `json:"duration,omitempty"`
 }
 
 // Empty intervals mean no captured records in this aggregate read, not health.
@@ -39,6 +40,10 @@ func DecodeTimeSeries(q Query, raw []json.RawMessage) ([]TimePoint, error) {
 		if q.Summary != "" {
 			d := ReferenceDurationSummary(nil)
 			p.Duration = &d
+		}
+		if q.LogSeverity {
+			d := emptyLogSeverity()
+			p.LogSeverity = &d
 		}
 		if q.SpanStatus {
 			d := emptySpanStatus()
@@ -71,6 +76,13 @@ func DecodeTimeSeries(q Query, raw []json.RawMessage) ([]TimePoint, error) {
 		n, e := durationDecimal(v.Count, 64)
 		if e != nil || n.Sign() == 0 {
 			return nil, fmt.Errorf("invalid observed interval count")
+		}
+		if q.LogSeverity {
+			d, e := DecodeLogSeverity(r)
+			if e != nil {
+				return nil, e
+			}
+			points[i].LogSeverity = d
 		}
 		if q.SpanStatus {
 			d, e := DecodeSpanStatus(r)
@@ -126,6 +138,13 @@ func ValidateTimeSeries(q Query, points []TimePoint) error {
 		state := "observed"
 		if n.Sign() == 0 {
 			state = "no_data"
+		}
+		if q.LogSeverity {
+			if p.LogSeverity == nil || p.LogSeverity.Count != p.Count || p.LogSeverity.Validate() != nil {
+				return fmt.Errorf("invalid interval log severity")
+			}
+		} else if p.LogSeverity != nil {
+			return fmt.Errorf("unexpected interval log severity")
 		}
 		if q.SpanStatus {
 			if p.SpanStatus == nil || p.SpanStatus.Count != p.Count || p.SpanStatus.Validate() != nil {

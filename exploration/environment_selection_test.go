@@ -9,10 +9,11 @@ import (
 	"testing"
 )
 
-// Frozen before the shared environment lowering extraction. Full serialized
-// plans include row/count/group/field/time SQL and all parameter names/values.
+// Current complete plans protect shared environment lowering and all SQL/values.
+// The log projection includes intrinsic SeverityNumber as of435; this is not a
+// compatibility floor for older prerelease projections.
 func TestCurrentEnvironmentPlanCompatibility248(t *testing.T) {
-	hashes := map[string]string{"logs": "80b513bb6893eaff3913ad0aa889a718edf132a99c73ee6f51b385a123f96fb9", "spans": "95162515ce79f97113b85ad356e694c312e51a001d8a97d881b5e03be214936d"}
+	hashes := map[string]string{"logs": "6f62acd433b4a9a0d049261d9c9f9502a6b73e7eb987fbbe7b7384873c60945c", "spans": "95162515ce79f97113b85ad356e694c312e51a001d8a97d881b5e03be214936d"}
 	for signal, want := range hashes {
 		q := Query{Signal: signal, Environment: "prod'雪", FromMS: 60000, ToMS: 120000, Limit: 20, Offset: 3, BucketMS: 10000, GroupBy: []Field{{Kind: "resource", Key: "service.namespace"}}, Where: &Predicate{Field: &Field{Kind: "attribute", Key: "tenant"}, Op: "eq", Value: "blue"}}
 		plan, err := Compile(q)

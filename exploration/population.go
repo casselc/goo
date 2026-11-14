@@ -53,6 +53,7 @@ func PlanPopulation(in PopulationRequest) (*PopulationPlan, error) {
 	}
 	other.Summary = ""
 	other.SpanStatus = false
+	other.LogSeverity = false
 	other.GroupBy = nil
 	other.GroupTimeSeries = false
 	other.Numeric = nil

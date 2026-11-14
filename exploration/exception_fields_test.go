@@ -101,8 +101,8 @@ func TestExceptionFieldsValidationProjectionAndNullableConsumers(t *testing.T) {
 	}
 	q.Signal = "logs"
 	plain, e = Compile(q)
-	if e != nil || strings.Contains(plain.Rows, "SeverityNumber") {
-		t.Fatal("old logs row projection changed", e)
+	if e != nil || !strings.Contains(plain.Rows, "Body, SeverityText, SeverityNumber") || strings.Contains(plain.Rows, " AS severity_number") {
+		t.Fatal("intrinsic severity number or request-only numeric projection changed", e)
 	}
 	q.Where = &Predicate{All: []Predicate{{Field: &severity, Op: "gte", Value: "17"}, {Field: &severity, Op: "lte", Value: "24"}}}
 	p, e := Compile(q)

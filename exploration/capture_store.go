@@ -338,6 +338,9 @@ func validateCapture(c *SavedCapture) error {
 			if c.Question.Explore.GroupTimeSeries && c.Explore.State != "changed_between_reads" && !groupedSeriesAgree(c.Explore) {
 				return errors.New("saved split chart disagrees with aggregate reads")
 			}
+			if err := validateLogSeverityResult(c.Explore); err != nil {
+				return err
+			}
 			if c.Question.Explore.SpanStatus {
 				if c.Explore.SpanStatus == nil || c.Explore.SpanStatus.Count != c.Explore.Count || c.Explore.SpanStatus.Validate() != nil {
 					return errors.New("invalid saved span status")

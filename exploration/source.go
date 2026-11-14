@@ -20,31 +20,32 @@ import (
 )
 
 type Result struct {
-	GroupedTimeDataset *ViewDataset       `json:"groupedTimeDataset,omitempty"`
-	HistogramDataset   *ViewDataset       `json:"histogramDataset,omitempty"`
-	ViewDataset        *ViewDataset       `json:"viewDataset,omitempty"`
-	TimeDataset        *ViewDataset       `json:"timeDataset,omitempty"`
-	SummaryDataset     *ViewDataset       `json:"summaryDataset,omitempty"`
-	NumericHistogram   *NumericHistogram  `json:"numericHistogram,omitempty"`
-	ResultToken        string             `json:"resultToken,omitempty"`
-	TraceExamples      *TraceExampleSet   `json:"traceExamples,omitempty"`
-	Numeric            *NumericSummary    `json:"numeric,omitempty"`
-	GroupedTimeSeries  []TimeSeriesGroup  `json:"groupedTimeSeries,omitempty"`
-	SpanStatus         *SpanStatusSummary `json:"spanStatus,omitempty"`
-	TimeSeries         []TimePoint        `json:"timeSeries,omitempty"`
-	Duration           *DurationSummary   `json:"duration,omitempty"`
-	Question           Query              `json:"question"`
-	CapturedAt         string             `json:"capturedAt"`
-	Basis              string             `json:"basis"`
-	Count              string             `json:"count"`
-	State              string             `json:"state"`
-	Rows               []json.RawMessage  `json:"rows"`
-	HasMore            bool               `json:"hasMore"`
-	Groups             []json.RawMessage  `json:"groups"`
-	Fields             []Field            `json:"fields"`
-	FieldsLimited      bool               `json:"fieldsLimited"`
-	Plan               Plan               `json:"plan"`
-	Warnings           []string           `json:"warnings"`
+	GroupedTimeDataset *ViewDataset        `json:"groupedTimeDataset,omitempty"`
+	HistogramDataset   *ViewDataset        `json:"histogramDataset,omitempty"`
+	ViewDataset        *ViewDataset        `json:"viewDataset,omitempty"`
+	TimeDataset        *ViewDataset        `json:"timeDataset,omitempty"`
+	SummaryDataset     *ViewDataset        `json:"summaryDataset,omitempty"`
+	NumericHistogram   *NumericHistogram   `json:"numericHistogram,omitempty"`
+	ResultToken        string              `json:"resultToken,omitempty"`
+	TraceExamples      *TraceExampleSet    `json:"traceExamples,omitempty"`
+	Numeric            *NumericSummary     `json:"numeric,omitempty"`
+	GroupedTimeSeries  []TimeSeriesGroup   `json:"groupedTimeSeries,omitempty"`
+	SpanStatus         *SpanStatusSummary  `json:"spanStatus,omitempty"`
+	LogSeverity        *LogSeveritySummary `json:"logSeverity,omitempty"`
+	TimeSeries         []TimePoint         `json:"timeSeries,omitempty"`
+	Duration           *DurationSummary    `json:"duration,omitempty"`
+	Question           Query               `json:"question"`
+	CapturedAt         string              `json:"capturedAt"`
+	Basis              string              `json:"basis"`
+	Count              string              `json:"count"`
+	State              string              `json:"state"`
+	Rows               []json.RawMessage   `json:"rows"`
+	HasMore            bool                `json:"hasMore"`
+	Groups             []json.RawMessage   `json:"groups"`
+	Fields             []Field             `json:"fields"`
+	FieldsLimited      bool                `json:"fieldsLimited"`
+	Plan               Plan                `json:"plan"`
+	Warnings           []string            `json:"warnings"`
 }
 type Source struct {
 	Endpoint, User, Password string
@@ -129,6 +130,7 @@ func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnl
 		q.GroupTimeSeries = false
 		q.Summary = ""
 		q.SpanStatus = false
+		q.LogSeverity = false
 		q.Numeric = nil
 		q.NumericHistogram = nil
 	}
@@ -182,6 +184,12 @@ func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnl
 	}
 	if q.Summary == "span-duration" {
 		r.Duration, e = DecodeDurationSummary(count[0])
+		if e != nil {
+			return nil, e
+		}
+	}
+	if q.LogSeverity {
+		r.LogSeverity, e = DecodeLogSeverity(count[0])
 		if e != nil {
 			return nil, e
 		}
@@ -248,6 +256,15 @@ func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnl
 	}
 	if plan.Groups != "" {
 		var changed bool
+		if q.LogSeverity {
+			drift, err := decodeLogSeverityGroups(r.Groups, r.LogSeverity)
+			if err != nil {
+				return nil, err
+			}
+			if drift {
+				r.State = "changed_between_reads"
+			}
+		}
 		r.Groups, changed, e = decodeAggregateGroups(q, r.Groups, r.Count, r.Duration, r.SpanStatus)
 		if e != nil {
 			return nil, e
@@ -309,7 +326,7 @@ func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnl
 		if err != nil {
 			return nil, err
 		}
-		if !aggregateSeriesAgree(r.Count, r.SpanStatus, nil, r.TimeSeries) {
+		if !aggregateSeriesAgree(r.Count, r.SpanStatus, nil, r.TimeSeries) || q.LogSeverity && !logSeveritySeriesAgree(r.LogSeverity, r.TimeSeries) {
 			r.State = "changed_between_reads"
 		}
 	}

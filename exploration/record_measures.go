@@ -58,6 +58,10 @@ func recordMeasures(q Query) []RecordMeasure {
 		field := Field{Kind: "column", Key: "status_class"}
 		out = append(out, RecordMeasure{ID: "recorded_status", Operator: "partition-count", Input: &field, InputType: "string", OutputType: "partitioned-uint64", Unit: "{record}", Merge: "sum-aligned-partitions"})
 	}
+	if q.LogSeverity {
+		field := Field{Kind: "column", Key: "severity_number"}
+		out = append(out, RecordMeasure{ID: "numeric_log_severity", Operator: "partition-count", Input: &field, InputType: "uint64", OutputType: "partitioned-uint64", Unit: "{record}", Merge: "sum-aligned-partitions"})
+	}
 	if q.Numeric != nil {
 		b := q.Numeric
 		for _, v := range []struct{ id, op, typ, merge string }{{"numeric_sum", "sum", "int256", "sum"}, {"numeric_min", "min", b.Type, "min"}, {"numeric_max", "max", b.Type, "max"}, {"numeric_mean", "mean", "rational", "sum-and-valid-count"}, {"numeric_coverage", "coverage-count", "partitioned-uint64", "sum-aligned-partitions"}} {
@@ -86,14 +90,15 @@ func recordAggregateSQL(q Query) (string, error) {
 func lowerRecordMeasures(measures []RecordMeasure) (string, error) {
 	parts := []string{}
 	quantiles := []string{}
-	status := false
+	status, logSeverity := false, false
 	for _, m := range measures {
 		if m.Operator == "count" {
 			if m.Input != nil || m.Unit != "{record}" {
 				return "", fmt.Errorf("record count requires record grain")
 			}
 		} else if m.Operator == "partition-count" {
-			if m.Input == nil || *m.Input != (Field{Kind: "column", Key: "status_class"}) || m.InputType != "string" || m.Unit != "{record}" {
+			if m.Input == nil || m.Unit != "{record}" || !(*m.Input == (Field{Kind: "column", Key: "status_class"}) && m.InputType == "string" ||
+				*m.Input == (Field{Kind: "column", Key: "severity_number"}) && m.InputType == "uint64") {
 				return "", fmt.Errorf("unsupported status binding")
 			}
 		} else if m.Operator == "sum" || m.Operator == "min" || m.Operator == "max" || m.Operator == "mean" || m.Operator == "quantile" {
@@ -114,7 +119,11 @@ func lowerRecordMeasures(measures []RecordMeasure) (string, error) {
 		case "quantile":
 			quantiles = append(quantiles, m.Probability)
 		case "partition-count":
-			status = true
+			if m.InputType == "uint64" {
+				logSeverity = true
+			} else {
+				status = true
+			}
 		default:
 			return "", fmt.Errorf("unsupported record operator %q", m.Operator)
 		}
@@ -128,6 +137,9 @@ func lowerRecordMeasures(measures []RecordMeasure) (string, error) {
 	sql := strings.Join(parts, ", ")
 	if status {
 		sql += statusAggregateSQL()
+	}
+	if logSeverity {
+		sql += logSeverityAggregateSQL()
 	}
 	return sql, nil
 }

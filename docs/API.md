@@ -236,6 +236,23 @@ short-lived local capabilities, not authorization. Do not infer authentication
 from ClickHouse credentials held by the server. See the fuller
 [HTTP ownership contract](HTTP_BOUNDARIES.md) for budgets and effects.
 
+## Numeric OTel log severity
+
+Ordinary log questions and `/api/record-aggregates` accept `logSeverity: true`.
+Requested overall, group and time-point summaries carry canonical uint64 string
+counts for `count`, `trace`, `debug`, `info`, `warn`, `error`, `fatal`,
+`unspecified` and `invalid`. Bands follow SeverityNumber 1–4 through 21–24;
+0 is unspecified and values above 24 remain invalid. SeverityText is independent.
+This projection requires logs without numeric-measurement/histogram or split-series
+projections. Record-page inspection preserves the question but omits summaries.
+
+Runtime admission requires each summary to partition its population, and requires
+each band to conserve across independent count/group/time reads. Disagreement is
+`changed_between_reads`; schemas check the closed shape, while Go/JavaScript own
+arithmetic and matching query semantics. Generic view datasets and cohort/rate
+consumers do not yet admit this projection. See the
+[Activity contract](ACTIVITY_NUMERIC_SEVERITY.md) for interaction and read boundaries.
+
 ## Nullable grouping values
 
 Fixed physical columns such as `column:service` are always present in valid source

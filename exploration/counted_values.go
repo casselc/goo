@@ -46,7 +46,7 @@ func ValidateCountedValuesQuery(q Query) error {
 	if err := q.Validate(); err != nil {
 		return err
 	}
-	if len(q.GroupBy) != 1 || q.Numeric != nil || q.NumericHistogram != nil || q.Summary != "" || q.BucketMS != 0 || q.GroupTimeSeries || q.SpanStatus || q.Offset != 0 {
+	if len(q.GroupBy) != 1 || q.Numeric != nil || q.NumericHistogram != nil || q.Summary != "" || q.BucketMS != 0 || q.GroupTimeSeries || q.SpanStatus || q.LogSeverity || q.Offset != 0 {
 		return fmt.Errorf("counted values requires one string group, offset zero and no measure or series projections")
 	}
 	typ, e := q.GroupBy[0].Type(q.Signal)

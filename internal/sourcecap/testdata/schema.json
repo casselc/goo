@@ -39,6 +39,10 @@
     {
       "name": "SeverityText",
       "type": "LowCardinality(String)"
+    },
+    {
+      "name": "SeverityNumber",
+      "type": "UInt8"
     }
   ],
   "spans": [

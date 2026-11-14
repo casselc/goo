@@ -91,6 +91,13 @@ from lightweight tail metadata and mounts a native button with visible case/wind
 semantics. The entry adapter owns navigation and held return; passive record and
 table components acquire no query or lifecycle authority.
 
+[Numeric severity](ACTIVITY_NUMERIC_SEVERITY.md) reuses the supplied-data
+`goo-time-bars` component. `log-severity.mjs` validates exact partitions and builds
+numeric predicates; the Activity adapter supplies the selected band's six counts
+and the unchanged all-log ceiling. A native selector and one Filter action stay
+app-owned. Band choice, labels and chart disclosure never read source data;
+Apply and explicit explanation execution retain their existing owners.
+
 The [standalone reference source](../ui/components.html), served at `/ui-components`
 by the local lab, contains labeled synthetic display fixtures. It loads display
 modules rather than the application/query client; these conformance examples are

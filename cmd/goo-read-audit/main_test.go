@@ -70,8 +70,8 @@ func TestFixedCountOperandAggregateAuditKeepsMeaningAndReducesReadSet314(t *test
 	if len(fullAudit.reads) != 4 || len(narrowAudit.reads) != 2 || narrowAudit.reads[0].Kind != "count" || narrowAudit.reads[1].Kind != "groups" {
 		t.Fatal("operand source statement budget changed")
 	}
-	a := aggregateFingerprint(full.Question, full.Count, full.State, full.Groups, full.Duration, full.SpanStatus, full.TimeSeries)
-	b := aggregateFingerprint(narrow.Question, narrow.Count, narrow.State, narrow.Groups, narrow.Duration, narrow.SpanStatus, narrow.TimeSeries)
+	a := aggregateFingerprint(full.Question, full.Count, full.State, full.Groups, full.Duration, full.SpanStatus, full.LogSeverity, full.TimeSeries)
+	b := aggregateFingerprint(narrow.Question, narrow.Count, narrow.State, narrow.Groups, narrow.Duration, narrow.SpanStatus, narrow.LogSeverity, narrow.TimeSeries)
 	if a != b || full.State != "observed" || narrow.Count != "4" || narrow.Duration == nil {
 		t.Fatal("aggregate-only acquisition changed admitted meaning")
 	}
@@ -83,7 +83,7 @@ func TestFixedCountOperandAggregateAuditKeepsMeaningAndReducesReadSet314(t *test
 	}
 	// Fingerprints must fail equality rather than hiding source diagnostic state
 	// or measures. They deliberately exclude separate read clocks/DTO shape.
-	changed := aggregateFingerprint(narrow.Question, narrow.Count, "changed_between_reads", narrow.Groups, narrow.Duration, narrow.SpanStatus, narrow.TimeSeries)
+	changed := aggregateFingerprint(narrow.Question, narrow.Count, "changed_between_reads", narrow.Groups, narrow.Duration, narrow.SpanStatus, narrow.LogSeverity, narrow.TimeSeries)
 	if changed == b {
 		t.Fatal("fingerprint discarded certainty")
 	}

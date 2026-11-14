@@ -26,6 +26,7 @@ func sourceCapabilityResponse431(sql string) (string, bool) {
 		columns[name] = "Map(String,String)"
 	}
 	columns["Duration"] = "UInt64"
+	columns["SeverityNumber"] = "UInt8"
 	columns["Events.Timestamp"] = "Array(DateTime64(9))"
 	for _, name := range []string{"Events.Name", "Links.TraceId", "Links.SpanId"} {
 		columns[name] = "Array(String)"

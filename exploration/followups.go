@@ -116,6 +116,7 @@ func (c SavedCapture) Followups(row int) (*FollowupSet, error) {
 						derived.GroupBy = []Field{{Kind: "attribute", Key: key}}
 						derived.Summary = ""
 						derived.SpanStatus = false
+						derived.LogSeverity = false
 						derived.BucketMS = 0
 						derived.GroupTimeSeries = false
 						addQuery("reported-"+key, "Break down reported "+key, "Inspect literal reported values, including missing and empty values in the matching population. A reported attribute does not establish an exhaustive outcome policy.", "Same matching span population", derived)

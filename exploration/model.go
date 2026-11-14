@@ -30,6 +30,7 @@ type Query struct {
 	ReportedEdge        *ReportedEdge                 `json:"reportedEdge,omitempty" yaml:"reportedEdge,omitempty"`
 	Numeric             *NumericBinding               `json:"numeric,omitempty" yaml:"numeric,omitempty"`
 	GroupTimeSeries     bool                          `json:"groupTimeSeries,omitempty" yaml:"groupTimeSeries,omitempty"`
+	LogSeverity         bool                          `json:"logSeverity,omitempty" yaml:"logSeverity,omitempty"`
 	SpanStatus          bool                          `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
 	BucketMS            int64                         `json:"bucketMs,omitempty" yaml:"bucketMs,omitempty"`
 	Summary             string                        `json:"summary,omitempty" yaml:"summary,omitempty"`
@@ -81,6 +82,9 @@ func (q Query) Validate() error {
 		return fmt.Errorf("split chart requires a time bucket and breakdown; at most 8 series and 1000 observed cells")
 	}
 
+	if q.LogSeverity && (q.Signal != "logs" || q.Numeric != nil || q.NumericHistogram != nil || q.GroupTimeSeries) {
+		return fmt.Errorf("logSeverity requires logs without numeric or split-series projections")
+	}
 	if q.SpanStatus && q.Signal != "spans" {
 		return fmt.Errorf("spanStatus requires spans")
 	}

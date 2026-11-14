@@ -5,7 +5,7 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-434, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
+435, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
 [fleet service triage](SERVICE_TRIAGE.md).
 The [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
@@ -34,7 +34,9 @@ Build/Preview readiness across Services and Measurements. [Live-source recovery]
 now separates explicit stable-source Retry from transient reconnect, retaining
 local inspection and selection. [Message search](ACTIVITY_MESSAGE_SEARCH.md) now
 bridges local Find to an explicit case-sensitive source Body query in the same
-fixed window. Numeric severity context is next; see the
+fixed window. [Numeric severity](ACTIVITY_NUMERIC_SEVERITY.md) adds full-window
+bands, local shared-scale timelines and exact numeric filtering independently of
+producer text. Aggregate selection and held-return consolidation is next; see the
 [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
 
 ## What users can do

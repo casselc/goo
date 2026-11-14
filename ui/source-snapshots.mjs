@@ -7,6 +7,7 @@ import {validateRecordQuestion} from './question-protocol.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
 import {validate as validateSaved} from './saved-capture-protocol.mjs';
 import {fromExploration as recordPageFromExploration} from './record-page.mjs';
+import {validateProjection as validateLogSeverity} from './log-severity.mjs';
 
 const source=createSourceAdapter({id:'goo.explore'}),stored=createSourceAdapter({id:'goo.verified-saved-explore'});
 const slots=Object.freeze({viewDataset:'ranked',timeDataset:'time-series',groupedTimeDataset:'grouped-time-series',summaryDataset:'summary',histogramDataset:'histogram'});
@@ -23,6 +24,7 @@ function sameQuestion(expected,actual,paging=false){
 function admit(data,expected,adapter,{paging=false}={}){
   if(!record(data))throw Error('An exploration response is required.');
   sameQuestion(expected,data.question,paging);
+  validateLogSeverity(data.question,data);
   const result={...data};
   for(const [slot,shape] of Object.entries(slots)){
     const value=data[slot];if(value===undefined||value===null)continue;

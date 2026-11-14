@@ -4,7 +4,7 @@ The [four-expert review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) prioritizes re
 useful unfamiliar telemetry before more preservation depth. This checkpoint
 adopts that direction without renumbering the older pending 427–429 contracts.
 
-Status: **430–434 delivered and validated**. Next: 435 numeric OTel severity context.
+Status: **430–435 delivered and validated**. Next: 436 aggregate selection and held return.
 
 ## 430 — first-use scope entry and interaction reliability
 
@@ -89,12 +89,21 @@ inside an AND; only Run reads. Real OTLP cases, an independent Bombadil campaign
 and native verification cover literal/case/ID differences, no-read staging/return
 and held custody. [Storyboard](journeys/activity-search.md).
 
-- **435 depth — numeric OTel severity context.** Extend the existing Activity volume
-  strip with complete severity-band counts/time context and exact numeric filters.
-  Keep unspecified/invalid values explicit and SeverityText independent.
+**435 depth delivered:** [Numeric severity](ACTIVITY_NUMERIC_SEVERITY.md) extends
+the existing volume strip with all eight exact numeric categories and supplied
+time context. Local band choice keeps the all-log scale; Filter stages an exact
+numeric predicate for Apply. SeverityText remains independent. Real OTLP includes
+unspecified/invalid values, more records than the retained buffer and banded
+explanation with actual held numbers. [Storyboard](journeys/activity-severity.md).
+
 - **436 consolidate — aggregate selection and held return.** Align log-volume and
   span-latency gestures only where read-gate and passive intent contracts match;
   refresh narrow/desktop flows and measure before claiming speedups.
+  Carry forward 435's closed refinement lesson: validate the original selector AND
+  a declared band/range, rather than weakening exact-parent guards. Keep physical
+  row fields, readiness and aggregate projections aligned. Do not generalize
+  controllers with different acquisition or custody contracts. Shared UTC-bound
+  formatting can improve the narrow date wrapping identified in 434.
 
 Existing filters, charts, dashboards and waterfalls are delivered capabilities,
 not additional missing primitives. The following boundaries remain in force.

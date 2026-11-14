@@ -12,8 +12,10 @@ held paused return. This does not diagnose ingestion freshness, retention or ske
 [433a instrument preflight](INSTRUMENT_PREFLIGHT.md) aligns discovery actions.
 [433b live-source refusal/retry](ACTIVITY_SOURCE_RECOVERY.md) now retains stable
 failures and held observations. [434 message search](ACTIVITY_MESSAGE_SEARCH.md)
-bridges local Find to explicit source Body search. Next is numeric OTel severity
-context in the [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
+bridges local Find to explicit source Body search. [435 numeric severity](ACTIVITY_NUMERIC_SEVERITY.md)
+adds full-window band counts, local time context and exact numeric filters. Next
+is aggregate selection/held-return consolidation in the
+[active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
 Isolated logs-only, spans-only and gauge-only installations were exercised in 431;
 actual denied-user deployments remain covered by transport checks rather than a
 new database-user integration run.
@@ -28,6 +30,14 @@ fixed; old rows from other polls are not the searched population. Invalid source
 terms or AST budgets withdraw the source action while local Find stays available.
 The narrow UTC interval can wrap within an ISO date; separate bound formatting
 is a nonblocking readability refinement for later shared time presentation.
+
+Numeric severity uses the baseline exporter's UInt8 `SeverityNumber` column;
+missing or incompatible physical columns refuse readiness. Zero is unspecified,
+including omitted producer numbers; invalid stored values above 24 stay distinct.
+Generic view datasets and count-cohort/rate consumers do not yet admit the new
+summary profile. Ordinary raw results, captures and packages preserve it; Activity
+Filter/Explain use ordinary predicates without the summary flag. Independent
+aggregate reads must conserve every band, not just their grand totals.
 
 Native service evaluation still requires reported nonempty `service.instance.id`.
 [Preflight](INSTRUMENT_PREFLIGHT.md) now disables Build/Preview for known missing

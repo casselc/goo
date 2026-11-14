@@ -1973,7 +1973,62 @@ def check_tail_observations433(spec,path):
     print(f'Tail recovery433b: {count} actual response observations and {events} SSE events conform')
 
 
+def check_log_severity435(spec):
+    """Requested severity is a closed numeric projection, never inferred text."""
+    query=validator(spec,{'$ref':'#/components/schemas/RecordQuery'})
+    base={'signal':'logs','environment':'prod','fromMs':1000,'toMs':61000,'limit':1,'offset':0,'groupBy':[{'kind':'column','key':'severity'}],'bucketMs':10000,'logSeverity':True}
+    query.validate(base)
+    good=1;bad=0
+    for update in ({'signal':'spans'},{'logSeverity':None},{'logSeverity':'true'},{'groupTimeSeries':True},
+                   {'numeric':{'field':{'kind':'attribute','key':'v'},'type':'int64','unit':'1','parse':'canonical-decimal'}}):
+        value={**base,**update}
+        assert not query.is_valid(value),'numeric severity admitted unsupported query'
+        bad+=1
+    keys=['count','trace','debug','info','warn','error','fatal','unspecified','invalid']
+    summary={key:'0' for key in keys};summary.update(count='1',error='1')
+    receipt={'readAt':'2026-11-14T00:00:00Z','basis':'a'*64}
+    result={'version':'goo/record-aggregates/v1','question':base,'capturedAt':receipt['readAt'],'basis':'b'*64,
+            'count':'1','state':'observed','groups':[{'g0':'INFO','count':'1','logSeverity':copy.deepcopy(summary)}],
+            'logSeverity':copy.deepcopy(summary),'timeSeries':[{'fromMs':1000,'toMs':11000,'count':'1','state':'observed','logSeverity':copy.deepcopy(summary)}],
+            'warnings':[],'reads':{'count':receipt,'groups':receipt,'timeSeries':receipt}}
+    output=validator(spec,{'$ref':'#/components/schemas/RecordAggregatesResult'})
+    output.validate(result);good+=1
+    summary_validator=validator(spec,{'$ref':'#/components/schemas/exploration.LogSeveritySummary'})
+    for key in keys:
+        missing=copy.deepcopy(summary);missing.pop(key)
+        assert not summary_validator.is_valid(missing),'missing severity partition accepted'
+        bad+=1
+        for value in ('01',-1,None,'184467440737095516150'):
+            wrong=copy.deepcopy(summary);wrong[key]=value
+            assert not summary_validator.is_valid(wrong),'malformed severity coefficient accepted'
+            bad+=1
+    unknown={**summary,'healthy':'1'};assert not summary_validator.is_valid(unknown);bad+=1
+    for location in ('global','group','time'):
+        value=copy.deepcopy(result)
+        target=value if location=='global' else value['groups'][0] if location=='group' else value['timeSeries'][0]
+        target.pop('logSeverity')
+        assert not output.is_valid(value),'requested severity omitted'
+        bad+=1
+    value=copy.deepcopy(result);value['question'].pop('logSeverity')
+    assert not output.is_valid(value),'unrequested severity accepted';bad+=1
+    print(f'Numeric severity435: {good} valid / {bad} rejecting schema controls; runtime owns conservation and uint64 max')
+
+
+def check_log_severity_observations435(spec,path):
+    """Validate actual outgoing Activity aggregate query/response without mocks."""
+    report=json.loads(Path(path).read_text())
+    assert report.get('version')=='goo.activitySeverity435/1' and report.get('status')=='passed'
+    aggregate=report['aggregate']
+    validator(spec,{'$ref':'#/components/schemas/RecordQuery'}).validate(aggregate['question'])
+    validator(spec,{'$ref':'#/components/schemas/RecordAggregatesResult'}).validate(aggregate['result'])
+    assert aggregate['question']['logSeverity'] is True
+    assert aggregate['result']['question']['logSeverity'] is True
+    assert aggregate['result']['logSeverity']['count']==aggregate['result']['count']
+    print('Numeric severity435: actual Activity query and full count/group/time response conform')
+
+
 def check(spec):
+    check_log_severity435(spec)
     check_tail_recovery433(spec)
     check_source_capabilities431(spec)
     check_metric_scopes432(spec)
@@ -2599,6 +2654,7 @@ if __name__ == '__main__':
     parser.add_argument('--source-capability-observations')
     parser.add_argument('--metric-scope-observations')
     parser.add_argument('--tail-observations')
+    parser.add_argument('--log-severity-observations')
     parser.add_argument('--status-view-observations')
     parser.add_argument('--histogram-view-observations')
     parser.add_argument('--histogram-comparison-observations')
@@ -2626,6 +2682,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.log_severity_observations:
+        check_log_severity_observations435(spec,args.log_severity_observations)
+
     if args.tail_observations:
         check_tail_observations433(spec,args.tail_observations)
     if args.metric_scope_observations:

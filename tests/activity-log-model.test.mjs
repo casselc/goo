@@ -2,13 +2,14 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import * as M from '../ui/activity-log-model.mjs';
 const clone=x=>structuredClone(x),context={selector:{signal:'logs',environment:'prod',where:{any:[{field:{kind:'column',key:'severity_number'},op:'gte',value:'17'},{field:{kind:'attribute',key:'work'},op:'eq',value:''}]}},readWindow:{fromMs:61000,toMs:121000}};
+const summary=(count,band='info')=>Object.fromEntries(['count','trace','debug','info','warn','error','fatal','unspecified','invalid'].map(key=>[key,key==='count'||key===band?count:'0']));
 function response(q,counts=['1','2','0','0','0','0'],groups=[{g0:'ERROR',count:'2'},{g0:'',count:'1'}]){
  const count=counts.reduce((n,value)=>n+BigInt(value),0n).toString(),receipt={readAt:'2026-11-12T00:00:00Z',basis:'a'.repeat(64)};
- return {version:'goo/record-aggregates/v1',question:clone(q),count,state:count==='0'?'no_data':'observed',capturedAt:receipt.readAt,basis:'b'.repeat(64),warnings:[],groups:clone(groups),timeSeries:counts.map((count,i)=>({fromMs:q.fromMs+i*10000,toMs:q.fromMs+(i+1)*10000,count,state:count==='0'?'no_data':'observed'})),reads:{count:clone(receipt),groups:clone(receipt),timeSeries:clone(receipt)}};
+ return {version:'goo/record-aggregates/v1',question:clone(q),count,state:count==='0'?'no_data':'observed',capturedAt:receipt.readAt,basis:'b'.repeat(64),warnings:[],logSeverity:summary(count),groups:clone(groups).map(group=>({...group,logSeverity:summary(group.count)})),timeSeries:counts.map((count,i)=>({fromMs:q.fromMs+i*10000,toMs:q.fromMs+(i+1)*10000,count,state:count==='0'?'no_data':'observed',logSeverity:summary(count)})),reads:{count:clone(receipt),groups:clone(receipt),timeSeries:clone(receipt)}};
 }
 function snapshot(){const q=M.query(context);return M.admit(q,response(q))}
 test('log context uses exact applied selector and latest completed sixty-second window with three aggregate projections',()=>{
- const source=clone(context),q=M.query(source);assert.equal(q.signal,'logs');assert.equal(q.limit,1);assert.equal(q.offset,0);assert.equal(q.bucketMs,10000);assert.deepEqual(q.groupBy,[{kind:'column',key:'severity'}]);assert.deepEqual(q.where,context.selector.where);assert.equal(q.fromMs,61000);assert.equal(q.toMs,121000);assert.equal(q.summary,undefined);assert.equal(q.spanStatus,undefined);source.selector.where.any[1].value='changed';assert.deepEqual(q.where,context.selector.where);
+ const source=clone(context),q=M.query(source);assert.equal(q.signal,'logs');assert.equal(q.limit,1);assert.equal(q.offset,0);assert.equal(q.bucketMs,10000);assert.equal(q.logSeverity,true);assert.deepEqual(q.groupBy,[{kind:'column',key:'severity'}]);assert.deepEqual(q.where,context.selector.where);assert.equal(q.fromMs,61000);assert.equal(q.toMs,121000);assert.equal(q.summary,undefined);assert.equal(q.spanStatus,undefined);source.selector.where.any[1].value='changed';assert.deepEqual(q.where,context.selector.where);
  const policy={version:'goo/environment-selector/v1',policy:'effective',scope:{mode:'unreported'}},typed={selector:{environmentSelector:policy},readWindow:context.readWindow};assert.deepEqual(M.query(typed).environmentSelector,policy);assert.equal(M.scopeKey(context),M.scopeKey({...context,readWindow:{fromMs:71000,toMs:131000}}));assert.notEqual(M.scopeKey(context),M.scopeKey({...context,selector:{...context.selector,where:undefined}}));
  for(const bad of [{...context,selector:{signal:'spans',environment:'prod'}},{...context,readWindow:null},{...context,readWindow:{fromMs:61000.5,toMs:121000.5}},{...context,readWindow:{fromMs:61000,toMs:120999}},{...context,readWindow:{fromMs:-1,toMs:59999}},{...context,readWindow:{fromMs:4102444800000,toMs:4102444860000}},{...context,selector:{...context.selector,reportedEdge:{}}}]){assert.throws(()=>M.query(bad));assert.equal(M.scopeKey(bad),null)}
 });
@@ -29,4 +30,19 @@ test('scope, independent-read conservation, shape and bucket mutations are refus
 test('large counts and zero windows retain exact arithmetic without buffer sampling or inferred health',()=>{
  const q=M.query(context),huge='9007199254740993',n=BigInt(huge),value=M.admit(q,response(q,[huge,'0','0','0','0','0'],[{g0:'ERROR',count:huge}]));assert.equal(M.timeline(value).ceiling,huge);assert.equal(M.timeline(value).points[0].value,huge);assert.equal(M.rate(value).numerator,(n/3n).toString());assert.equal(M.rate(value).denominator,'20');assert.match(M.rate(value).text,/150119987579016\.550 logs\/s/);assert.equal(M.severity(value)[0].share.numerator,huge);
  const zero=M.admit(q,response(q,Array(6).fill('0'),[]));assert.equal(zero.state,'no_data');assert.equal(M.timeline(zero).ceiling,'1');assert.equal(M.timeline(zero).points.every(p=>p.state==='no_data'&&p.value==='0'),true);assert.deepEqual(M.severity(zero),[]);assert.deepEqual(M.rate(zero),{numerator:'0',denominator:'1',exact:'0',text:'0.000 logs/s'});assert.equal(M.select(zero,'1').fromMs,71000);
+});
+
+
+test('numeric bands reproject supplied counts with a shared full-population scale and exact numeric selectors',()=>{
+ const q=M.query(context),value=M.admit(q,response(q)),all=M.timeline(value),info=M.timeline(value,'info'),error=M.timeline(value,'error');
+ assert.equal(M.severityBands(value).length,8);assert.equal(M.severityBands(value).find(b=>b.key==='info').count,'3');assert.equal(M.severityBands(value).find(b=>b.key==='unspecified').count,'0');
+ assert.equal(info.ceiling,all.ceiling);assert.equal(error.ceiling,all.ceiling);assert.deepEqual(info.points.map(p=>p.value),all.points.map(p=>p.value));assert.equal(error.points.every(p=>p.value==='0'&&p.state==='no_data'),true);
+ assert.deepEqual(M.rate(value,'error'),{numerator:'0',denominator:'1',exact:'0',text:'0.000 logs/s'});
+ const selected=M.select(value,'1','3','error');assert.equal(selected.fromMs,q.fromMs+10000);assert.equal(selected.toMs,q.fromMs+40000);assert.equal(selected.logSeverity,undefined);assert.deepEqual(selected.where,{all:[q.where,{all:[{field:{kind:'column',key:'severity_number'},op:'gte',value:'17'},{field:{kind:'column',key:'severity_number'},op:'lte',value:'20'}]}]});
+ assert.deepEqual(M.bandWhere(value,'unspecified'),{all:[q.where,{field:{kind:'column',key:'severity_number'},op:'eq',value:'0'}]});assert.deepEqual(M.bandWhere(value,'invalid'),{all:[q.where,{field:{kind:'column',key:'severity_number'},op:'gte',value:'25'}]});assert.throws(()=>M.bandWhere(value,'all'));assert.throws(()=>M.timeline(value,'ERROR'));assert.throws(()=>M.select(value,'0','1','unknown'));
+});
+test('equal aggregate totals with different numeric severity composition refuse actionability',()=>{
+ const q=M.query(context),value=response(q);value.timeSeries[0].logSeverity=summary('1','error');assert.throws(()=>M.admit(q,value));
+ const groups=response(q);groups.groups[0].logSeverity=summary('2','unspecified');assert.throws(()=>M.admit(q,groups));
+ const missing=response(q);delete missing.logSeverity;assert.throws(()=>M.admit(q,missing));
 });

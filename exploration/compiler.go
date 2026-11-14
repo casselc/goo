@@ -196,8 +196,8 @@ func recordProjection(signal string) (string, string) {
 	selectRows := common + ", SpanName, SpanKind, ParentSpanId, " + durationBucketSQL() + " AS duration_bucket, toString(Duration) AS duration_ns, StatusCode, StatusMessage, SpanAttributes, arrayMap(t -> toString(toUnixTimestamp64Nano(t)), Events.Timestamp) AS event_times_ns, Events.Name AS event_names, Events.Attributes AS event_attributes, `Links.Attributes` AS linked_attributes, `Links.TraceId` AS linked_traces, `Links.SpanId` AS linked_spans"
 	order := "Timestamp, TraceId, SpanId, ServiceName, toString(ResourceAttributes), toString(SpanAttributes), SpanName, Duration"
 	if signal == "logs" {
-		selectRows = common + ", Body, SeverityText"
-		order = "Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, toString(ResourceAttributes), toString(LogAttributes)"
+		selectRows = common + ", Body, SeverityText, SeverityNumber"
+		order = "Timestamp, TraceId, SpanId, ServiceName, Body, SeverityText, SeverityNumber, toString(ResourceAttributes), toString(LogAttributes)"
 	}
 	return selectRows, order
 }

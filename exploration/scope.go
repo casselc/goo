@@ -261,7 +261,7 @@ func describeScopeChanges(origin, target CaptureQuestion, a, b QuestionScope, re
 			add("numericHistogram", "Numeric histogram binning", reflect.DeepEqual(x.NumericHistogram, y.NumericHistogram))
 		}
 		add("groupBy", "Grouping → "+grouping, reflect.DeepEqual(x.GroupBy, y.GroupBy))
-		add("measures", fmt.Sprintf("Summary → %s; recorded-status summary → %t", y.Summary, y.SpanStatus), x.Summary == y.Summary && x.SpanStatus == y.SpanStatus)
+		add("measures", fmt.Sprintf("Summary → %s; recorded-status summary → %t; numeric log severity → %t", y.Summary, y.SpanStatus, y.LogSeverity), x.Summary == y.Summary && x.SpanStatus == y.SpanStatus && x.LogSeverity == y.LogSeverity)
 		add("bucketMs", fmt.Sprintf("Time chart interval → %d ms (0 disables chart)", y.BucketMS), x.BucketMS == y.BucketMS)
 		add("inspectionPage", fmt.Sprintf("Inspection page → offset %d / limit %d", y.Offset, y.Limit), x.Limit == y.Limit && x.Offset == y.Offset)
 	}

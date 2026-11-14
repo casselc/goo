@@ -242,6 +242,7 @@ func PlanNumericHistogramSelection(parent Query, fromBin, toBin int) (*NumericHi
 		v.NumericHistogram = nil
 		v.Summary = ""
 		v.SpanStatus = false
+		v.LogSeverity = false
 		// Existing cohort comparison requires one shared distribution dimension.
 		// Keep the first declared dimension, or use the service-name distribution.
 		if len(v.GroupBy) == 0 {
@@ -257,6 +258,7 @@ func PlanNumericHistogramSelection(parent Query, fromBin, toBin int) (*NumericHi
 		v.NumericHistogram = nil
 		v.Summary = ""
 		v.SpanStatus = false
+		v.LogSeverity = false
 		if len(v.GroupBy) == 0 {
 			v.GroupBy = []Field{{Kind: "column", Key: "service"}}
 		} else {

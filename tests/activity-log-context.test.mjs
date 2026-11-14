@@ -22,13 +22,15 @@ mock.module('../ui/dom-visibility.mjs',{exports:{actionVisible:visible,nativeCon
 mock.module('../ui/queries.mjs',{exports:{postJSON:(url,q,signal)=>new Promise((resolve,reject)=>reads.push({url,q:structuredClone(q),signal,resolve,reject}))}});
 const {mount}=await import('../ui/activity-log-context.mjs');
 const turn=()=>new Promise(resolve=>setImmediate(resolve));
-function dto(q,{empty=false}={}){const values=empty?[0,0,0,0,0,0]:[2,0,0,0,0,1],count=empty?'0':'3',receipt={basis:'a'.repeat(64),readAt:'2026-11-12T12:00:00Z'};return{version:'goo/record-aggregates/v1',question:structuredClone(q),capturedAt:receipt.readAt,basis:'b'.repeat(64),state:empty?'no_data':'observed',count,groups:empty?[]:[{g0:'INFO',count:'2'},{g0:' ERROR ',count:'1'}],warnings:[],reads:{count:receipt,groups:receipt,timeSeries:receipt},timeSeries:values.map((count,i)=>({fromMs:q.fromMs+i*10000,toMs:q.fromMs+(i+1)*10000,count:String(count),state:count?'observed':'no_data'}))}}
+const summary=(count,band='info')=>Object.fromEntries(['count','trace','debug','info','warn','error','fatal','unspecified','invalid'].map(key=>[key,key==='count'||key===band?String(count):'0']));
+function dto(q,{empty=false}={}){const values=empty?[0,0,0,0,0,0]:[2,0,0,0,0,1],count=empty?'0':'3',receipt={basis:'a'.repeat(64),readAt:'2026-11-12T12:00:00Z'};return{version:'goo/record-aggregates/v1',question:structuredClone(q),capturedAt:receipt.readAt,basis:'b'.repeat(64),state:empty?'no_data':'observed',count,logSeverity:empty?summary('0'):{...summary('3'),info:'2',error:'1'},groups:empty?[]:[{g0:'INFO',count:'2',logSeverity:summary('2')},{g0:' ERROR ',count:'1',logSeverity:summary('1','error')}],warnings:[],reads:{count:receipt,groups:receipt,timeSeries:receipt},timeSeries:values.map((count,i)=>({fromMs:q.fromMs+i*10000,toMs:q.fromMs+(i+1)*10000,count:String(count),state:count?'observed':'no_data',logSeverity:summary(count,i===5?'error':'info')}))}}
+
 function setup(t){
  reads=[];globalThis.document={hidden:false,activeElement:null};const root=node('main');root.root=true;const toolbar=node('div'),host=node('div');root.append(toolbar,host);
- const c={selector:{signal:'logs',environment:'prod',where:{any:[{field:{kind:'attribute',key:'tenant'},op:'missing'},{field:{kind:'attribute',key:'tenant'},op:'eq',value:''}]}},readWindow:{fromMs:120000,toMs:180000},active:true,clean:true,phase:'partial'},explanations=[],paused=[];let owner;
- owner=mount(host,{controlsHost:toolbar,current:()=>c,pauseStream:()=>{paused.push(true);c.phase='paused';owner.sync()},onExplain:(...args)=>explanations.push(args)});t.after(()=>owner.dispose());
+ const c={selector:{signal:'logs',environment:'prod',where:{any:[{field:{kind:'attribute',key:'tenant'},op:'missing'},{field:{kind:'attribute',key:'tenant'},op:'eq',value:''}]}},readWindow:{fromMs:120000,toMs:180000},active:true,clean:true,phase:'partial'},explanations=[],paused=[],staged=[];let owner;
+ owner=mount(host,{controlsHost:toolbar,current:()=>c,pauseStream:()=>{paused.push(true);c.phase='paused';owner.sync()},onExplain:(...args)=>explanations.push(args),onStage:(...args)=>staged.push(args)});t.after(()=>owner.dispose());
  const all=()=>[...walk(toolbar),...walk(host)],button=name=>all().find(e=>e.tag==='button'&&(e.textContent===name||e.attributes['aria-label']===name));
- return{root,toolbar,host,c,owner,paused,explanations,button,chart:()=>all().find(e=>e.tag==='goo-time-bars'),cadence:()=>all().find(e=>e.tag==='select'),section:()=>host.children[0],open:()=>button('Show volume').onclick()};
+ return{root,toolbar,host,c,owner,paused,explanations,staged,button,band:()=>all().find(e=>e.attributes['aria-label']==='Numeric severity'),chart:()=>all().find(e=>e.tag==='goo-time-bars'),cadence:()=>all().find(e=>e.tag==='select'),section:()=>host.children[0],open:()=>button('Show volume').onclick()};
 }
 function complete(read,options){read.resolve({ok:true,data:dto(read.q,options)})}
 
@@ -82,4 +84,21 @@ test('single-bar selection clears a previously committed range before setting it
  const f=setup(t),work=f.open();complete(reads[0]);await work;const calls=[];f.chart().clearRange=()=>calls.push({action:'clear',selectedKey:f.chart().selectedKey});
  f.chart().dispatch('goo-time-range',{fromKey:'1',toKey:'3'});assert.equal(f.chart().selectedKey,null);assert.equal(calls.length,0);
  f.chart().dispatch('goo-time-select',{key:'4'});assert.deepEqual(calls,[{action:'clear',selectedKey:null}]);assert.equal(f.chart().selectedKey,'4');f.button('Explain interval').onclick();assert.equal(f.explanations[0][0].selection.fromMs,160000);assert.equal(f.explanations[0][0].selection.toMs,170000);
+});
+
+
+test('numeric band choice replots locally, keeps the total scale, and filters or explains exact numeric scope',async t=>{
+ const f=setup(t),work=f.open();assert.equal(reads[0].q.logSeverity,true);complete(reads[0]);await work;const ceiling=f.chart().data.ceiling,band=f.band();assert.equal(band.children.length,9);assert.match(band.textContent,/Unspecified 0 · 0/);assert.match(band.textContent,/Invalid >24 · 0/);
+ band.value='error';band.onchange();assert.equal(reads.length,1);assert.equal(f.chart().data.ceiling,ceiling);assert.deepEqual(f.chart().data.points.map(p=>p.value),['0','0','0','0','0','1']);assert.equal(f.c.phase,'paused');assert.equal(f.section().dataset.severityBand,'error');assert.match(f.section().textContent,/1 of 3 logs/);
+ f.chart().dispatch('goo-time-select',{key:'5'});f.button('Explain interval').onclick();const exact={all:[f.c.selector.where,{all:[{field:{kind:'column',key:'severity_number'},op:'gte',value:'17'},{field:{kind:'column',key:'severity_number'},op:'lte',value:'20'}]}]};assert.deepEqual(f.explanations[0][0].parent.where,exact);assert.deepEqual(f.explanations[0][0].selection.where,exact);assert.equal(f.explanations[0][0].selection.fromMs,170000);
+ f.button('Filter Error').onclick();assert.deepEqual(f.staged[0][0],exact);assert.equal(reads.length,1);
+});
+test('numeric filter leases retire band ABA, changed scope, disabled/hidden control and pause reentrancy',async t=>{
+ const f=setup(t),work=f.open();complete(reads[0]);await work;const band=f.band();band.value='error';band.onchange();const button=f.button('Filter Error'),old=button.onclick;band.value='info';band.onchange();band.value='error';band.onchange();old();assert.equal(f.staged.length,0);
+ button.disabled=true;button.onclick();assert.equal(f.staged.length,0);button.disabled=false;button.hidden=true;button.onclick();assert.equal(f.staged.length,0);button.hidden=false;f.c.clean=false;button.onclick();assert.equal(f.staged.length,0);f.c.clean=true;
+ const original=f.owner.sync;f.owner.sync=()=>{f.c.clean=false;original()};button.onclick();assert.equal(f.staged.length,0);assert.equal(reads.length,1);
+});
+
+test('local severity display survives a parent predicate budget that cannot admit another numeric constraint',async t=>{
+ const f=setup(t);f.c.selector.where={all:Array.from({length:29},(_,i)=>({field:{kind:'attribute',key:'tag'+i},op:'eq',value:'yes'}))};f.owner.sync();const work=f.open();complete(reads[0]);await work;const band=f.band();band.value='error';assert.doesNotThrow(()=>band.onchange());assert.equal(f.section().dataset.severityBand,'error');assert.equal(f.chart().data.points[5].value,'1');assert.equal(f.button('Filter Error').disabled,true);assert.equal(f.button('Explain window').disabled,true);assert.doesNotThrow(()=>f.button('Explain window').onclick());assert.equal(f.explanations.length,0);assert.equal(f.staged.length,0);assert.equal(reads.length,1);
 });

@@ -112,6 +112,7 @@ func explanationCountQuery(q Query) Query {
 	v.NumericHistogram = nil
 	v.Summary = ""
 	v.SpanStatus = false
+	v.LogSeverity = false
 	v.BucketMS = 0
 	v.GroupTimeSeries = false
 	v.GroupBy = nil

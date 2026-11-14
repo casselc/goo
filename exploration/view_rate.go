@@ -15,7 +15,7 @@ const RecordRateKey = "record.rate"
 // RecordRateQuery admits only the initial ordinary, ungrouped record profile.
 // Count exposure is the declared query window, regardless of narrower predicates.
 func RecordRateQuery(q Query) bool {
-	return (q.Signal == "logs" || q.Signal == "spans") && len(q.GroupBy) == 0 && !q.GroupTimeSeries && q.NumericHistogram == nil && q.ReportedEdge == nil && q.Validate() == nil
+	return (q.Signal == "logs" || q.Signal == "spans") && len(q.GroupBy) == 0 && !q.GroupTimeSeries && !q.LogSeverity && q.NumericHistogram == nil && q.ReportedEdge == nil && q.Validate() == nil
 }
 
 // RecordRateSummaryQuery also admits the existing ordinary categorical count

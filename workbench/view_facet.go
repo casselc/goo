@@ -65,6 +65,7 @@ func (d FacetViewDeclaration) Validate(q exploration.Query) error {
 	projected.Summary = ""
 	projected.BucketMS = 0
 	projected.SpanStatus = false
+	projected.LogSeverity = false
 	projected.Limit = 1
 	projected.Offset = 0
 	return exploration.ValidateCountedValuesQuery(projected)

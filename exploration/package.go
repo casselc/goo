@@ -29,6 +29,7 @@ type TelemetryPackage struct {
 	ReportedEdge     *ReportedEdge         `json:"reportedEdge,omitempty" yaml:"reportedEdge,omitempty"`
 	Numeric          *NumericBinding       `json:"numeric,omitempty" yaml:"numeric,omitempty"`
 	GroupTimeSeries  bool                  `json:"groupTimeSeries,omitempty" yaml:"groupTimeSeries,omitempty"`
+	LogSeverity      bool                  `json:"logSeverity,omitempty" yaml:"logSeverity,omitempty"`
 	SpanStatus       bool                  `json:"spanStatus,omitempty" yaml:"spanStatus,omitempty"`
 	BucketMS         int64                 `json:"bucketMs,omitempty" yaml:"bucketMs,omitempty"`
 	Summary          string                `json:"summary,omitempty" yaml:"summary,omitempty"`
@@ -177,7 +178,7 @@ func (s *PackageSource) UnmarshalYAML(n *yaml.Node) error {
 	return json.Unmarshal(data, s)
 }
 func (p TelemetryPackage) rawQuestion(from, to int64) Query {
-	return Query{EnvironmentSelector: p.Source.EnvironmentSelector, NumericHistogram: p.NumericHistogram, ReportedEdge: p.ReportedEdge, Numeric: p.Numeric, GroupTimeSeries: p.GroupTimeSeries, SpanStatus: p.SpanStatus, BucketMS: p.BucketMS, Summary: p.Summary, Signal: p.Source.Signal, Environment: p.Source.Environment, FromMS: from, ToMS: to, Where: p.Where, GroupBy: p.GroupBy, Limit: 100, Offset: 0}
+	return Query{EnvironmentSelector: p.Source.EnvironmentSelector, NumericHistogram: p.NumericHistogram, ReportedEdge: p.ReportedEdge, Numeric: p.Numeric, GroupTimeSeries: p.GroupTimeSeries, SpanStatus: p.SpanStatus, LogSeverity: p.LogSeverity, BucketMS: p.BucketMS, Summary: p.Summary, Signal: p.Source.Signal, Environment: p.Source.Environment, FromMS: from, ToMS: to, Where: p.Where, GroupBy: p.GroupBy, Limit: 100, Offset: 0}
 }
 
 // Question detaches every mutable definition field without a JSON round trip
@@ -309,7 +310,7 @@ func DraftTelemetryPackage(q Query, name, title string, minutes int) (TelemetryP
 	b, _ := json.Marshal(q)
 	var clone Query
 	json.Unmarshal(b, &clone)
-	p := TelemetryPackage{NumericHistogram: clone.NumericHistogram, ReportedEdge: clone.ReportedEdge, Numeric: clone.Numeric, GroupTimeSeries: q.GroupTimeSeries, SpanStatus: q.SpanStatus, BucketMS: q.BucketMS, Summary: q.Summary, APIVersion: PackageVersion, Name: name, Title: title, Source: PackageSource{Adapter: "clickhouse.otel/v1", Signal: clone.Signal, Environment: clone.Environment, EnvironmentSelector: clone.EnvironmentSelector}, Where: clone.Where, GroupBy: clone.GroupBy, Measure: "captured-record-count", LookbackMinutes: minutes, Views: []string{"records", "trace-context"}}
+	p := TelemetryPackage{NumericHistogram: clone.NumericHistogram, ReportedEdge: clone.ReportedEdge, Numeric: clone.Numeric, GroupTimeSeries: q.GroupTimeSeries, SpanStatus: q.SpanStatus, LogSeverity: q.LogSeverity, BucketMS: q.BucketMS, Summary: q.Summary, APIVersion: PackageVersion, Name: name, Title: title, Source: PackageSource{Adapter: "clickhouse.otel/v1", Signal: clone.Signal, Environment: clone.Environment, EnvironmentSelector: clone.EnvironmentSelector}, Where: clone.Where, GroupBy: clone.GroupBy, Measure: "captured-record-count", LookbackMinutes: minutes, Views: []string{"records", "trace-context"}}
 	if len(p.GroupBy) == 1 {
 		p.Views = []string{"records", "distribution", "trace-context"}
 	}

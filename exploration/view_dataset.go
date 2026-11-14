@@ -22,7 +22,7 @@ type ViewCompleteness = scopedview.Completeness
 
 func viewText(v string) *string { return &v }
 func supportedViewMeasures(q Query) bool {
-	return q.NumericHistogram == nil && !q.GroupTimeSeries
+	return q.NumericHistogram == nil && !q.GroupTimeSeries && !q.LogSeverity
 }
 func baseViewDataset(r *Result, shape, aspect string) *ViewDataset {
 	if !regexpRevision.MatchString(r.Basis) || r.Question.Validate() != nil {

@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Numeric severity](activity-severity.md) (435) inspects all OTel bands over full
+source counts, replots supplied time buckets locally and stages exact numeric
+filters or fixed banded explanations independently of SeverityText.
+
 [Activity message search](activity-search.md) (434) stages an exact literal Body
 search from local Find, retains the applied fixed window and returns to held rows
 without restarting the stream.

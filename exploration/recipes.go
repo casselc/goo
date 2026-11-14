@@ -62,6 +62,7 @@ func PlanRecipe(id string, q Query) (*RecipePlan, error) {
 	next.Offset = 0
 	next.Summary = ""
 	next.SpanStatus = false
+	next.LogSeverity = false
 	key := "severity"
 	switch id {
 	case "latency":

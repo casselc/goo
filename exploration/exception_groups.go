@@ -61,7 +61,7 @@ func ValidateExceptionGroupsQuery(q Query) error {
 	if e := q.Validate(); e != nil {
 		return e
 	}
-	if len(q.GroupBy) != 0 || q.Offset != 0 || q.Summary != "" || q.SpanStatus || q.BucketMS != 0 || q.Numeric != nil || q.NumericHistogram != nil || q.GroupTimeSeries || q.ReportedEdge != nil {
+	if len(q.GroupBy) != 0 || q.Offset != 0 || q.Summary != "" || q.SpanStatus || q.LogSeverity || q.BucketMS != 0 || q.Numeric != nil || q.NumericHistogram != nil || q.GroupTimeSeries || q.ReportedEdge != nil {
 		return fmt.Errorf("exception groups require an ordinary page-zero log/span scope without display projections")
 	}
 	return nil

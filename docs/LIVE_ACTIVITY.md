@@ -29,6 +29,12 @@ named latest completed poll window. It retains all applied filters and pauses th
 stream. Run is explicit; Return restores held rows and Find without reconnecting.
 See [message search](ACTIVITY_MESSAGE_SEARCH.md).
 
+**Show volume** includes a numeric severity selector with exact whole-window band
+counts. Choosing a band replots supplied time buckets locally on the all-log scale
+and pauses updates. **Filter** stages an exact SeverityNumber condition; Apply
+reads a new rolling window. SeverityText remains independent. See
+[numeric severity](ACTIVITY_NUMERIC_SEVERITY.md).
+
 ## Intent and ownership
 
 `GooStreamEntry` owns the fresh-entry intent, applied environment/signal, mode,

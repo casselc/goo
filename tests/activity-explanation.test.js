@@ -21,3 +21,16 @@ test('pinned aggregate scopes normalize Go empty predicate values without changi
  assert.deepEqual(a.pinnedWindow(latest,{parent,selection:{...structuredClone(parent),fromMs:160000,toMs:180000}}).parent,a.windowQuestion(context));
  assert.throws(()=>a.pinnedWindow(latest,{parent:{...parent,where:{field:{kind:'attribute',key:'empty'},op:'missing'}},selection:parent}));
 });
+
+test('numeric severity pins only its declared exact AND refinement, never an arbitrary foreign selector',()=>{
+ const {bandPredicate}=require('../ui/log-severity.mjs'),base=a.windowQuestion(c),refine=(band)=>({...structuredClone(base),where:{all:[structuredClone(base.where),bandPredicate(band)]}}),parent=refine('error'),selection=a.selectWindow(parent,160000,180000),value={parent,selection,logSeverityBand:'error'},pinned=a.pinnedWindow(c,value);
+ assert.deepEqual(pinned,value);assert.equal(a.sameParent(c,parent,true,'error'),true);assert.equal(a.sameParent(c,parent,false,'error'),false);assert.equal(a.sameParent(c,parent,true),false);assert.equal(a.sameParent(c,parent,true,'info'),false);
+ for(const bad of [{parent,selection},{...value,logSeverityBand:'all'},{...value,logSeverityBand:'ERROR'},{...value,logSeverityBand:undefined},{...value,logSeverityBand:'info'},{...value,extra:true},{...value,parent:{...parent,where:{any:parent.where.all}}},{...value,parent:{...parent,where:bandPredicate('error')}},{...value,selection:{...selection,where:base.where}},{...value,parent:{...parent,logSeverity:true}},{...value,selection:{...selection,logSeverity:true}}])assert.throws(()=>a.pinnedWindow(c,bad));
+ assert.equal(a.sameParent({...c,selector:{...c.selector,where:{field:{kind:'attribute',key:'region'},op:'eq',value:'east'}}},parent,true,'error'),false);
+ const spans={...c,selector:{signal:'spans',environment:'prod'}};assert.throws(()=>a.pinnedWindow(spans,{...value,parent:{...parent,signal:'spans'},selection:{...selection,signal:'spans'}}));
+ pinned.parent.where.all[0].value='mutated';assert.equal(parent.where.all[0].value,'west');
+});
+test('banded held guides count only matching physical numbers and skip absent or malformed values',()=>{
+ const q=a.windowQuestion(c),row=(SeverityNumber,timestamp_ns='120000000000')=>({record:{timestamp_ns,...(SeverityNumber===undefined?{}:{SeverityNumber})}}),rows=[row(17),row('20'),row(9),row(0),row(25),row(255),row(undefined),row(null),row('17.0'),row('017'),row(-1),row(256),row(17,'180000000000')],context={...c,rows};
+ assert.deepEqual(a.heldBins(context,q,'error').points.map(p=>p.value),['2','0','0','0','0','0']);assert.equal(a.heldBins(context,q,'info').points[0].value,'1');assert.equal(a.heldBins(context,q,'unspecified').points[0].value,'1');assert.equal(a.heldBins(context,q,'invalid').points[0].value,'2');assert.equal(a.heldBins(context,q).points[0].value,'12');assert.match(a.heldBins(context,q,'error').title,/error observations/);assert.throws(()=>a.heldBins(c,q,'all'));assert.throws(()=>a.heldBins(c,{...q,signal:'spans'},'error'));
+});

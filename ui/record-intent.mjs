@@ -3,7 +3,7 @@ import {object,text,array} from './intent-shape.mjs';
 import {validate as validatePredicate,validateField} from './predicate-validation.mjs';
 import {validateNumericPredicate} from './numeric-predicate.mjs';
 import * as Environment from './record-environment.mjs';
-const allowed=['environmentSelector','signal','environment','fromMs','toMs','limit','offset','where','groupBy','numeric','numericHistogram','summary','spanStatus','bucketMs','groupTimeSeries','reportedEdge'];
+const allowed=['environmentSelector','signal','environment','fromMs','toMs','limit','offset','where','groupBy','numeric','numericHistogram','summary','spanStatus','logSeverity','bucketMs','groupTimeSeries','reportedEdge'];
 const present=(q,k)=>q[k]!==undefined;
 function namespace(n){object(n,['mode','value'],'Invalid reported namespace.');if(!['missing','value'].includes(n.mode)||present(n,'value')&&!text(n.value,128)||n.mode==='missing'&&n.value!==undefined&&n.value!=='')throw Error('Invalid reported namespace.');return [n.mode,n.value??''];}
 function edge(e,signal){
@@ -24,6 +24,7 @@ export function validateRecordQuestion(q){
  if(present(q,'numeric'))validateNumericPredicate({numeric:q.numeric,op:'valid'});
  if(present(q,'numericHistogram')){object(q.numericHistogram,['binning'],'Invalid numeric histogram.');if(!q.numeric||q.numericHistogram.binning!=='powers-of-two')throw Error('Numeric distribution requires a numeric binding and powers-of-two bins.');}
  if(present(q,'summary')&&(!['','span-duration'].includes(q.summary)||q.summary&&q.signal!=='spans')||present(q,'spanStatus')&&(typeof q.spanStatus!=='boolean'||q.spanStatus&&q.signal!=='spans')||present(q,'groupTimeSeries')&&typeof q.groupTimeSeries!=='boolean')throw Error('Invalid record presentation.');
+ if(present(q,'logSeverity')&&(typeof q.logSeverity!=='boolean'||q.logSeverity&&(q.signal!=='logs'||q.numeric||q.numericHistogram||q.groupTimeSeries)))throw Error('Numeric severity requires ordinary log count projections.');
  if(present(q,'bucketMs')&&![0,1000,10000,60000,300000].includes(q.bucketMs))throw Error('Choose a supported time bucket.');
  if(q.bucketMs&&Math.ceil((q.toMs-q.fromMs)/q.bucketMs)>240)throw Error('Use at most 240 time intervals; increase bucket width or narrow window.');
  if(q.groupTimeSeries&&(!q.bucketMs||!q.groupBy?.length))throw Error('Split chart requires a time bucket and breakdown.');

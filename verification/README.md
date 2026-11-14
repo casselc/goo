@@ -4806,3 +4806,24 @@ discovery without the artifact skips only this replay. Invalid supplied artifact
 or unavailable Quint fail. Counterexamples alter the recorded window, scope,
 literal, read budgets, held rows and retired-owner facts. The optional Bombadil
 actor follows the same user continuation independently in a real browser.
+
+## Numeric OTel severity (435)
+
+`TestHegelNumericSeverity435` checks actual Go classification, numeric predicates
+and exact count strings. `TestHegelSeverityConservation435` generates actual
+three-read aggregate responses, including equal-total per-band drift.
+`TestQuintObservedNumericSeverity435` consumes the completed
+[real journey](../docs/journeys/activity-severity.md) report, independently checks
+source-number/time partitions, actual outgoing requests, held guides and local
+read boundaries, and rejects altered observed facts.
+
+```sh
+go test -p 1 . -run '^TestHegel(NumericSeverity435|SeverityConservation435)$' -count=1 -v
+GOO_SEVERITY435_REPORT=/absolute/path/to/report.json \
+  go test -p 1 . -run '^TestQuintObservedNumericSeverity435$' -count=1 -v
+```
+
+Required acceptance supplies a completed report and passes without skips. Ordinary
+discovery without the artifact skips only this replay; an invalid supplied report
+or missing model tool fails. Counterexamples change band conservation, scope,
+numeric range, window, explicit read budgets, chart scale and held-guide facts.

@@ -54,6 +54,9 @@ func compareMeasures(a, b *DurationSummary, x, y *SpanStatusSummary) *MeasureCom
 	return r
 }
 func (c Cohort) validateMeasures() error {
+	if c.Question.LogSeverity {
+		return fmt.Errorf("log severity comparison is not supported by this cohort projection")
+	}
 	if c.Question.SpanStatus && c.SpanStatus == nil {
 		return fmt.Errorf("captured span status required for the requested profile")
 	}

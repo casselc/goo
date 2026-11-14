@@ -19,18 +19,19 @@ type RecordAggregatesReads struct {
 
 // Changed reads retain diagnostics, never an actionable conserved snapshot.
 type RecordAggregatesResult struct {
-	Version    string                `json:"version"`
-	Question   Query                 `json:"question"`
-	CapturedAt string                `json:"capturedAt"`
-	Basis      string                `json:"basis"`
-	Count      string                `json:"count"`
-	State      string                `json:"state"`
-	Groups     []json.RawMessage     `json:"groups"`
-	Duration   *DurationSummary      `json:"duration,omitempty"`
-	SpanStatus *SpanStatusSummary    `json:"spanStatus,omitempty"`
-	TimeSeries []TimePoint           `json:"timeSeries,omitempty"`
-	Warnings   []string              `json:"warnings"`
-	Reads      RecordAggregatesReads `json:"reads"`
+	Version     string                `json:"version"`
+	Question    Query                 `json:"question"`
+	CapturedAt  string                `json:"capturedAt"`
+	Basis       string                `json:"basis"`
+	Count       string                `json:"count"`
+	State       string                `json:"state"`
+	Groups      []json.RawMessage     `json:"groups"`
+	Duration    *DurationSummary      `json:"duration,omitempty"`
+	SpanStatus  *SpanStatusSummary    `json:"spanStatus,omitempty"`
+	LogSeverity *LogSeveritySummary   `json:"logSeverity,omitempty"`
+	TimeSeries  []TimePoint           `json:"timeSeries,omitempty"`
+	Warnings    []string              `json:"warnings"`
+	Reads       RecordAggregatesReads `json:"reads"`
 }
 
 func ValidateRecordAggregatesQuery(q Query) error {
@@ -105,6 +106,12 @@ func (s Source) FetchRecordAggregates(ctx context.Context, q Query) (result *Rec
 			return nil, e
 		}
 	}
+	if q.LogSeverity {
+		r.LogSeverity, e = DecodeLogSeverity(raw[0])
+		if e != nil {
+			return nil, e
+		}
+	}
 	if q.SpanStatus {
 		r.SpanStatus, e = DecodeSpanStatus(raw[0])
 		if e != nil {
@@ -133,6 +140,15 @@ func (s Source) FetchRecordAggregates(ctx context.Context, q Query) (result *Rec
 		}
 	}
 	var changed bool
+	if q.LogSeverity {
+		drift, err := decodeLogSeverityGroups(groups, r.LogSeverity)
+		if err != nil {
+			return nil, err
+		}
+		if drift {
+			r.State = "changed_between_reads"
+		}
+	}
 	r.Groups, changed, e = decodeAggregateGroups(question, groups, r.Count, r.Duration, r.SpanStatus)
 	if e != nil {
 		return nil, e
@@ -150,7 +166,7 @@ func (s Source) FetchRecordAggregates(ctx context.Context, q Query) (result *Rec
 		if e != nil {
 			return nil, e
 		}
-		if !aggregateSeriesAgree(r.Count, r.SpanStatus, r.Duration, r.TimeSeries) {
+		if !aggregateSeriesAgree(r.Count, r.SpanStatus, r.Duration, r.TimeSeries) || q.LogSeverity && !logSeveritySeriesAgree(r.LogSeverity, r.TimeSeries) {
 			r.State = "changed_between_reads"
 		}
 	}

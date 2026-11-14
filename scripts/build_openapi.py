@@ -11,8 +11,8 @@ ROOT = Path(__file__).resolve().parents[1]
 ref = lambda name: {'$ref': '#/components/schemas/' + name}
 # Summary rates can reuse the ordinary one-group count profile; interval rates
 # retain their original ungrouped contract. Arithmetic stays runtime-owned.
-record_rate_ungrouped418={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}
-record_rate_grouped418={'required':['groupBy'],'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'type':'array','minItems':1,'maxItems':1,'items':{'not':{'required':['kind','key'],'properties':{'kind':{'const':'column'},'key':{'enum':['body_pattern_v1','duration_bucket']}}}}},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'spanStatus':{'const':False},'groupTimeSeries':{'const':False},'summary':{'enum':['','span-duration']}}}
+record_rate_ungrouped418={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False},'logSeverity':{'const':False}}}
+record_rate_grouped418={'required':['groupBy'],'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'type':'array','minItems':1,'maxItems':1,'items':{'not':{'required':['kind','key'],'properties':{'kind':{'const':'column'},'key':{'enum':['body_pattern_v1','duration_bucket']}}}}},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'spanStatus':{'const':False},'logSeverity':{'const':False},'groupTimeSeries':{'const':False},'summary':{'enum':['','span-duration']}}}
 record_rate_summary418={'anyOf':[record_rate_ungrouped418,record_rate_grouped418]}
 schemas = json.loads((ROOT / 'api/go-schemas.json').read_text())
 # Reported exemplars are bounded source metadata, independent from numeric bins.
@@ -1094,7 +1094,7 @@ aggregate=schemas['exploration.RecordAggregatesResult']['properties']
 aggregate['version']['const']='goo/record-aggregates/v1'
 aggregate['state']['enum']=['observed','no_data','changed_between_reads']
 aggregate['count']['pattern']='^(0|[1-9][0-9]*)$';aggregate['basis']['pattern']='^[a-f0-9]{64}$';aggregate['capturedAt']['format']='date-time'
-schemas['RecordAggregateGroup']={'type':'object','required':['g0','count'],'properties':{'g0':{'type':['string','null']},'g1':{'type':['string','null']},'count':{'type':'string','pattern':'^[1-9][0-9]*$'},'duration':{'$ref':'#/components/schemas/exploration.DurationSummary'},'spanStatus':{'$ref':'#/components/schemas/exploration.SpanStatusSummary'}},'additionalProperties':False}
+schemas['RecordAggregateGroup']={'type':'object','required':['g0','count'],'properties':{'g0':{'type':['string','null']},'g1':{'type':['string','null']},'count':{'type':'string','pattern':'^[1-9][0-9]*$'},'duration':{'$ref':'#/components/schemas/exploration.DurationSummary'},'spanStatus':{'$ref':'#/components/schemas/exploration.SpanStatusSummary'},'logSeverity':{'$ref':'#/components/schemas/exploration.LogSeveritySummary'}},'additionalProperties':False}
 aggregate['groups']={'type':'array','maxItems':1000,'items':{'$ref':'#/components/schemas/RecordAggregateGroup'}}
 schemas['exploration.RecordAggregatesResult']['allOf']=[{'properties':{'question':{'required':['groupBy'],'properties':{'groupBy':{'minItems':1,'maxItems':2}}}}},{'if':{'properties':{'question':{'properties':{'groupBy':{'minItems':2}}}}},'then':{'properties':{'groups':{'items':{'required':['g1']}}}},'else':{'properties':{'groups':{'items':{'not':{'required':['g1']}}}}}}]
 schemas['exploration.RecordAggregatesResult']['description']='Aggregate-only record projection with one or two string grouping dimensions: exactly count and groups reads plus one optional time-series read. Separate clocks/content bases do not establish a transactional snapshot. Changed aggregates are diagnostic and non-actionable. Never includes source rows, fields, plan, pagination or retention token.'
@@ -1728,11 +1728,12 @@ def strict_record_input_contract417():
  selected=model('identity.EnvironmentSelectorInput');selected.update(required=['version','policy','scope'],additionalProperties=False)
  selected['properties']['scope']['properties']['value'].update(text(128))
  query=schemas[root_name];query.update(required=['signal','fromMs','toMs','limit'],additionalProperties=False)
- props=query['properties'];props.update(signal={'enum':['logs','spans']},environment=text(128),fromMs={'type':'integer','minimum':0,'maximum':4102444800000},toMs={'type':'integer','minimum':1,'maximum':4102444800000},limit={'type':'integer','minimum':1,'maximum':100},offset={'type':'integer','minimum':0,'maximum':1000},bucketMs={'enum':[0,1000,10000,60000,300000]},summary={'enum':['','span-duration']},spanStatus={'type':'boolean'},groupTimeSeries={'type':'boolean'},groupBy={'type':'array','maxItems':2,'uniqueItems':True,'items':strict_ref('exploration.FieldInput')})
+ props=query['properties'];props.update(signal={'enum':['logs','spans']},environment=text(128),fromMs={'type':'integer','minimum':0,'maximum':4102444800000},toMs={'type':'integer','minimum':1,'maximum':4102444800000},limit={'type':'integer','minimum':1,'maximum':100},offset={'type':'integer','minimum':0,'maximum':1000},bucketMs={'enum':[0,1000,10000,60000,300000]},summary={'enum':['','span-duration']},spanStatus={'type':'boolean'},logSeverity={'type':'boolean'},groupTimeSeries={'type':'boolean'},groupBy={'type':'array','maxItems':2,'uniqueItems':True,'items':strict_ref('exploration.FieldInput')})
  query['oneOf']=[{'required':['environment'],'not':{'required':['environmentSelector']},'properties':{'environment':{'minLength':1}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''}}}]
  query.setdefault('allOf',[]).extend([
   {'if':{'required':['summary'],'properties':{'summary':{'const':'span-duration'}}},'then':{'properties':{'signal':{'const':'spans'}}}},
   {'if':{'required':['spanStatus'],'properties':{'spanStatus':{'const':True}}},'then':{'properties':{'signal':{'const':'spans'}}}},
+  {'if':{'required':['logSeverity'],'properties':{'logSeverity':{'const':True}}},'then':{'properties':{'signal':{'const':'logs'},'groupTimeSeries':{'const':False}},'not':{'anyOf':[{'required':[key]} for key in ['numeric','numericHistogram']]}}},
   {'if':{'required':['groupTimeSeries'],'properties':{'groupTimeSeries':{'const':True}}},'then':{'required':['groupBy','bucketMs'],'properties':{'groupBy':{'minItems':1},'bucketMs':{'enum':[1000,10000,60000,300000]}}}},
   {'if':{'required':['numericHistogram']},'then':{'required':['numeric']}}
  ])
@@ -1741,9 +1742,27 @@ def strict_record_input_contract417():
  schemas['exploration.QueryInput']=ref(root_name)
  schemas['RecordQuery']=ref(root_name)
  op=spec['paths']['/exception-groups']['post']
- op['requestBody']['content']['application/json']['schema']={'allOf':[ref('RecordQuery'),{'not':{'anyOf':[{'required':[key]} for key in ('numeric','numericHistogram','reportedEdge')]},'properties':{'groupBy':{'type':'array','maxItems':0},'offset':{'const':0},'summary':{'const':''},'spanStatus':{'const':False},'groupTimeSeries':{'const':False},'bucketMs':{'const':0}}}]}
+ op['requestBody']['content']['application/json']['schema']={'allOf':[ref('RecordQuery'),{'not':{'anyOf':[{'required':[key]} for key in ('numeric','numericHistogram','reportedEdge')]},'properties':{'groupBy':{'type':'array','maxItems':0},'offset':{'const':0},'summary':{'const':''},'spanStatus':{'const':False},'logSeverity':{'const':False},'groupTimeSeries':{'const':False},'bucketMs':{'const':0}}}]}
 
 strict_record_input_contract417()
+
+# Numeric OTel severity is a closed, conserved requested projection, not text mapping.
+severity435=schemas['exploration.LogSeveritySummary']
+severity435.update(additionalProperties=False,required=['count','trace','debug','info','warn','error','fatal','unspecified','invalid'])
+for key in severity435['required']:
+ severity435['properties'][key]=copy.deepcopy(exact_count)
+severity435['description']='Exact captured-log SeverityNumber partition:0 unspecified;1–4 trace;5–8 debug;9–12 info;13–16 warn;17–20 error;21–24 fatal;>24 invalid in the unsigned exporter column. SeverityText remains independent. Go checks uint64 bounds, sum of bands=count and cross-read conservation; disagreeing projections are diagnostics.'
+severity435_ref=ref('exploration.LogSeveritySummary')
+schemas['exploration.TimePoint']['properties']['logSeverity']=copy.deepcopy(severity435_ref)
+for name in ['exploration.Result','exploration.RecordAggregatesResult']:
+ shape=schemas[name]
+ shape['properties']['logSeverity']=copy.deepcopy(severity435_ref)
+ requested={'properties':{'question':{'required':['logSeverity'],'properties':{'logSeverity':{'const':True}}}}}
+ nested={'properties':{'groups':{'items':{'required':['logSeverity'],'properties':{'logSeverity':copy.deepcopy(severity435_ref)}}},'timeSeries':{'items':{'required':['logSeverity'],'properties':{'logSeverity':copy.deepcopy(severity435_ref)}}}}}
+ then={'required':['logSeverity'],**nested}
+ absent={'not':{'required':['logSeverity']},'properties':{'groups':{'items':{'not':{'required':['logSeverity']}}},'timeSeries':{'items':{'not':{'required':['logSeverity']}}}}}
+ shape.setdefault('allOf',[]).append({'if':requested,'then':then,'else':absent})
+spec['x-contract-notes'].append('logSeverity:true requests exact numeric OTel bands in count, groups and time intervals for logs without numeric/split projections; SeverityText remains independent. Go enforces conservation, including equal-total per-band drift. Record-page inspection preserves the question but omits aggregate summaries. General scopedview and cohort/rate projections do not yet admit this profile.')
 
 (ROOT/'api/openapi.json').write_text(json.dumps(spec,indent=2,ensure_ascii=False)+'\n')
 print(f'Built OpenAPI: {sum(len(p) for p in spec["paths"].values())} operations, {len(schemas)} schemas')

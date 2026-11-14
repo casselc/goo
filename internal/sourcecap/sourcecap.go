@@ -47,7 +47,7 @@ func specs() []spec {
 	metric := []column{{"TimeUnix", "time"}, {"ServiceName", "string"}, {"ResourceAttributes", "map"}, {"ScopeName", "string"}, {"ScopeVersion", "string"}, {"ScopeSchemaUrl", "string"}, {"ResourceSchemaUrl", "string"}, {"MetricName", "string"}, {"MetricUnit", "string"}, {"Attributes", "map"}}
 	plus := func(base []column, extra ...column) []column { return append(append([]column(nil), base...), extra...) }
 	return []spec{
-		{Logs, "otel_logs", plus(record, column{"LogAttributes", "map"}, column{"Body", "string"}, column{"SeverityText", "string"})},
+		{Logs, "otel_logs", plus(record, column{"LogAttributes", "map"}, column{"Body", "string"}, column{"SeverityText", "string"}, column{"SeverityNumber", "uint8"})},
 		{Spans, "otel_traces", plus(record, column{"SpanAttributes", "map"}, column{"SpanName", "string"}, column{"SpanKind", "string"}, column{"ParentSpanId", "string"}, column{"Duration", "uint64"}, column{"StatusCode", "string"}, column{"StatusMessage", "string"}, column{"Events.Timestamp", "times"}, column{"Events.Name", "strings"}, column{"Events.Attributes", "maps"}, column{"Links.Attributes", "maps"}, column{"Links.TraceId", "strings"}, column{"Links.SpanId", "strings"})},
 		{Gauge, "otel_metrics_gauge", plus(metric)},
 		{Counter, "otel_metrics_sum", plus(metric, column{"AggregationTemporality", "int32"}, column{"IsMonotonic", "bool"})},
@@ -311,6 +311,8 @@ func matches(raw, shape string) bool {
 		return t == "Array(Map(String,String))"
 	case "uint64":
 		return t == "UInt64"
+	case "uint8":
+		return t == "UInt8"
 	case "int32":
 		return t == "Int32"
 	case "bool":

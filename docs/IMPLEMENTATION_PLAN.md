@@ -19,8 +19,8 @@
 > bootstrap** and **432b sparse/delayed event recovery** are delivered.
 > **433a instrument preflight and semantic scope identity** is delivered.
 > **433b stable live-source refusal/retry** and **434 explicit local Find → source
-> log-message search** are delivered. Next: **435 numeric severity** and
-> **436 aggregate-selection consolidation**, adopted in the
+> log-message search** are delivered. **435 numeric severity** is delivered.
+> Next: **436 aggregate-selection consolidation**, adopted in the
 > [433 checkpoint review](reviews/CONSOLIDATION_REVIEW_433.md).
 > The older **427–429 preservation cycle** remains pending follow-on work. The older labeling queue
 > below is deferred; it does not override the active roadmap.

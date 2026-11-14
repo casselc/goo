@@ -49,8 +49,8 @@ func sourceSummary(raw string) map[string]string {
 }
 
 // Compare the shared aggregate meaning independently of DTO/provenance shape.
-func aggregateFingerprint(q exploration.Query, count, state string, groups any, duration *exploration.DurationSummary, status *exploration.SpanStatusSummary, series []exploration.TimePoint) string {
-	b, _ := json.Marshal(map[string]any{"question": q, "count": count, "state": state, "groups": groups, "duration": duration, "spanStatus": status, "timeSeries": series})
+func aggregateFingerprint(q exploration.Query, count, state string, groups any, duration *exploration.DurationSummary, status *exploration.SpanStatusSummary, severity *exploration.LogSeveritySummary, series []exploration.TimePoint) string {
+	b, _ := json.Marshal(map[string]any{"question": q, "count": count, "state": state, "groups": groups, "duration": duration, "spanStatus": status, "logSeverity": severity, "timeSeries": series})
 	decoder := json.NewDecoder(strings.NewReader(string(b)))
 	decoder.UseNumber()
 	var canonical any
@@ -161,7 +161,7 @@ func run() error {
 			out["count"] = result.Count
 			out["groups"] = len(result.Groups)
 			out["state"] = result.State
-			out["aggregatesSHA256"] = aggregateFingerprint(result.Question, result.Count, result.State, result.Groups, result.Duration, result.SpanStatus, result.TimeSeries)
+			out["aggregatesSHA256"] = aggregateFingerprint(result.Question, result.Count, result.State, result.Groups, result.Duration, result.SpanStatus, result.LogSeverity, result.TimeSeries)
 		}
 	} else {
 		var result *exploration.Result
@@ -172,7 +172,7 @@ func run() error {
 			out["count"] = result.Count
 			out["groups"] = len(result.Groups)
 			out["state"] = result.State
-			out["aggregatesSHA256"] = aggregateFingerprint(result.Question, result.Count, result.State, result.Groups, result.Duration, result.SpanStatus, result.TimeSeries)
+			out["aggregatesSHA256"] = aggregateFingerprint(result.Question, result.Count, result.State, result.Groups, result.Duration, result.SpanStatus, result.LogSeverity, result.TimeSeries)
 		}
 	}
 	out["reads"] = a.reads
