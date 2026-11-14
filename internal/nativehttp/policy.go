@@ -12,6 +12,7 @@ import (
 const PodDashboardBodyLimit = (8 << 20) + 1024
 
 var policies = map[string]queryhttp.Policy{
+	"/metric-scopes":        {Effect: queryhttp.Read, BodyLimit: 4096, Timeout: 30 * time.Second, TrailingMessage: "one JSON object required"},
 	"/metric-discovery":     {Effect: queryhttp.Read, BodyLimit: 65536, Timeout: 15 * time.Second, TrailingMessage: "one JSON object required"},
 	"/measurements":         {Effect: queryhttp.ReadWithOptionalCustody, BodyLimit: 65536, Timeout: 15 * time.Second, TrailingMessage: "one JSON object required"},
 	"/host-discovery":       {Effect: queryhttp.Read, BodyLimit: 16384, Timeout: 15 * time.Second, TrailingMessage: "expected one JSON object"},

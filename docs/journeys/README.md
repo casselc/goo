@@ -1,5 +1,10 @@
 # User journeys and storyboards
 
+[Metrics-only scope discovery](metric-scopes.md) (432a) starts without known labels
+or a manifest, selects exact environment/service/namespace locally, and continues
+through instrument discovery and explicit package evaluation. It includes the
+alternate direct Measurements entry and exploratory actor.
+
 [Partial-source discovery](source-capabilities.md) (431) checks isolated logs-only,
 spans-only, gauge-only, incompatible and absent exporter schemas, with explicit
 local signal selection and existing environment-to-record continuation.

@@ -69,6 +69,14 @@ also withholds automatic reads. Lab mode retains automatic local streaming and i
 explicit prepared/operation declarations. The standalone component gallery is
 `/ui-components`; browsable API docs are `/api-docs` and the spec is `/openapi.json`.
 
+For metrics-only data, **Find metric scopes** opens Measurements with the selected
+window and no source read. Read scopes explicitly, choose a qualified service,
+environment and namespace, then Discover instruments. Generic Measurements starts
+with blank identity fields; no `local` environment or service name is guessed.
+The selected scope and original fixed window carry through to instrument discovery
+and package preview. Run remains explicit, with existing evaluation requirements.
+See the [metrics-only guide](METRIC_SCOPE_DISCOVERY.md).
+
 The obsolete reservation-specific JSON query panel and `/api/query`, `/api/explain`,
 `/api/package` are removed. Ordinary YAML examples and Go-backed package planning,
 native measurements and operation investigation remain supported. Sample

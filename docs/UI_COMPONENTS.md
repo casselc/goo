@@ -1,5 +1,22 @@
 # Display component library
 
+## Metric scope discovery (432a)
+
+MetricScopes is an application-owned controller inside the existing instrument
+discovery setup. It composes a native disclosure, shared compact table, row headers
+and explicit Read/Choose controls. Its response validator keeps raw display
+identities separate from selectable checked scopes, exact decimal point counts,
+namespace presence and the original fixed window. Selection stages existing
+instrument discovery locally and focuses its action; lifecycle, disclosure and
+property adoption never start source reads.
+
+Activity source capabilities open this same chooser through a local exact-window
+handoff. Generic profile initialization keeps identity fields blank, while service
+handoffs preserve their existing checked scope. Source-read ownership, cancellation
+and package evaluation stay in application controllers, not passive displays.
+See the [contract](METRIC_SCOPE_DISCOVERY.md) and
+[storyboard](journeys/metric-scopes.md).
+
 ## Source capability presentation (431)
 
 SourceCapabilities is an application-owned controller inside the existing Find data

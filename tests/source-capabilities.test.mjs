@@ -29,12 +29,12 @@ class Element{
  remove(){if(this.parentElement){const i=this.parentElement.children.indexOf(this);this.parentElement.children.splice(i,1);this.parentElement=null}}
 }
 function fixture(){
- const document={hidden:false},host=new Element('details'),minutes=new Element('input'),calls=[],pending=[],selections=[];host.root=true;minutes.value='2';host.append(minutes);globalThis.document=document;
+ const document={hidden:false},host=new Element('details'),minutes=new Element('input'),calls=[],pending=[],selections=[],metricWindows=[];host.root=true;minutes.value='2';host.append(minutes);globalThis.document=document;
  const text=readFileSync(new URL('../ui/source-capabilities.mjs',import.meta.url),'utf8').replace(/^import .*;\n/gm,'').replace(/^export .*;$/gm,'');
  const context={document,UI:{node:(tag,text,cls)=>{const e=new Element(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e}},Queries:{postJSON:async(url,q,signal)=>{calls.push({url,q,signal});return new Promise(resolve=>pending.push(resolve))}},SourceRefusal,nativeControlReady,completionControlReady,TextEncoder,AbortController,Date,Set,Map,structuredClone};
- vm.runInNewContext(text+';this.mount=mount',context);const api=context.mount(host,{minutes,active:()=>true,onSelect:kind=>{selections.push(kind);return true}}),section=host.children[1],read=section.children[0].children[0],status=section.children[1],output=section.children[2];
+ vm.runInNewContext(text+';this.mount=mount',context);const api=context.mount(host,{minutes,active:()=>true,onSelect:kind=>{selections.push(kind);return true},onOpenMetrics:window=>{metricWindows.push(window);return true}}),section=host.children[1],read=section.children[0].children[0],status=section.children[1],output=section.children[2];
  const find=(root,label)=>root.localName==='button'&&root.textContent===label?root:root.children.map(c=>find(c,label)).find(Boolean);
- return {host,minutes,api,read,status,output,calls,pending,selections,find,reply:()=>({ok:true,data:result(calls.at(-1).q)})};
+ return {host,minutes,api,read,status,output,calls,pending,selections,metricWindows,find,reply:()=>({ok:true,data:result(calls.at(-1).q)})};
 }
 test('mount and local signal choice do not read; actual controls refuse closed carriers and retired results',async()=>{
  const f=fixture();assert.equal(f.calls.length,0);f.host.open=false;await f.read.onclick();assert.equal(f.calls.length,0);f.host.open=true;
@@ -46,4 +46,10 @@ test('withdrawn pending reply releases busy state without publication and fresh 
 });
 test('minute edits and dispose retire pending replies and abort their source leases',async()=>{
  for(const dispose of [false,true]){const f=fixture(),reading=f.read.onclick(),signal=f.calls[0].signal;if(dispose)f.api.dispose();else f.minutes.listeners.get('input')();assert.equal(signal.aborted,true);f.pending.shift()(f.reply());await reading;assert.equal(f.output.children.length,0);assert.equal(f.read.disabled,false)}
+});
+
+test('one metric continuation stages its exact checked window locally and refuses a withdrawn opener',async()=>{
+ const f=fixture(),reading=f.read.onclick();f.pending.shift()(f.reply());await reading;
+ const open=f.find(f.output,'Find metric scopes');assert.ok(open);f.host.open=false;open.onclick();assert.equal(f.metricWindows.length,0);f.host.open=true;open.onclick();assert.deepEqual(f.metricWindows,[f.calls[0].q]);assert.equal(f.calls.length,1);open.onclick();assert.equal(f.metricWindows.length,1);
+ f.metricWindows[0].fromMs=0;assert.notEqual(f.calls[0].q.fromMs,0);
 });

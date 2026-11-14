@@ -13,6 +13,28 @@ application's `newQueryBudget(..., 4)` composition function. Server
 header timeout is five seconds; write timeout is 90 seconds. Pure planning, source
 execution, filesystem publication and XTDB transactions retain different owners.
 
+## Metric identity discovery (432a)
+
+`internal/nativehttp.PolicyFor` owns `POST /metric-scopes`: a source-read effect,
+strict 4096-byte object body, shared admission/cancellation registry and 30-second
+whole-operation deadline. The browser `/api/metric-scopes` path and unprefixed
+route dispatch to that same handler. No environment, service, table selector or
+arbitrary SQL is accepted; only a fixed half-open window of at most 120 minutes.
+
+The source checks the four fixed metric profiles and aggregates compatible
+exported point records by effective current-first environment, namespace presence
+and service. Missing, empty and named labels stay distinct. Cardinality above 128,
+a response above 1 MiB, no usable source or a later source read failure refuses
+without a partial catalog. Unsupported raw identities can be displayed as
+nonselectable with safe fixed reasons; only checked effective selectors authorize
+local staging. Source availability does not imply instrument evaluation support.
+
+The UI adopts a selected identity locally and preserves the admitted window,
+service, namespace and environment policy. It does not invoke instrument discovery
+or measurement execution. Those remain explicit reads with their existing owners.
+Source metadata, identity aggregation, instrument metadata and evaluation have
+independent read clocks; this is not a snapshot or ingestion-health guarantee.
+
 ## Source capability reads (431)
 
 `internal/recordhttp.PolicyFor` owns `POST /source-capabilities`: source-read

@@ -1104,6 +1104,19 @@
   "MetricDiscoveryResult": {
     "$ref": "#/components/schemas/measurements.DiscoveryResult"
   },
+  "MetricScopesQuestion": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/measurements.MetricScopesQuestionInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "MetricScopesResult": {
+    "$ref": "#/components/schemas/measurements.MetricScopesResult"
+  },
   "NativeHistogramSelector": {
     "$ref": "#/components/schemas/measurements.HistogramViewSelector"
   },
@@ -18556,6 +18569,175 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.LifecycleBinding"
+  },
+  "measurements.MetricScopeChoice": {
+    "properties": {
+      "environment": {
+        "$ref": "#/components/schemas/identity.EnvironmentScope"
+      },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "firstMs": {
+        "type": "integer"
+      },
+      "lastMs": {
+        "type": "integer"
+      },
+      "namespace": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.Namespace"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "points": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "selectable": {
+        "type": "boolean"
+      },
+      "service": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "service",
+      "namespace",
+      "environment",
+      "points",
+      "firstMs",
+      "lastMs",
+      "selectable"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.MetricScopeChoice"
+  },
+  "measurements.MetricScopesQuestion": {
+    "properties": {
+      "fromMs": {
+        "type": "integer"
+      },
+      "toMs": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "fromMs",
+      "toMs"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.MetricScopesQuestion"
+  },
+  "measurements.MetricScopesQuestionInput": {
+    "additionalProperties": false,
+    "properties": {
+      "fromMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "toMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.MetricScopesQuestion"
+  },
+  "measurements.MetricScopesResult": {
+    "properties": {
+      "capturedAt": {
+        "type": "string"
+      },
+      "choices": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.MetricScopeChoice"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "diagnostics": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.DiscoveryDiagnostic"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "question": {
+        "$ref": "#/components/schemas/measurements.MetricScopesQuestion"
+      },
+      "sources": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/sourcecap.Family"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "unit": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      },
+      "warning": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "capturedAt",
+      "sources",
+      "diagnostics",
+      "choices",
+      "unit",
+      "warning"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.MetricScopesResult"
   },
   "measurements.ObservedStream": {
     "properties": {

@@ -13,6 +13,7 @@ import (
 // Only Run may record lifecycle custody; discovery and supplied-data plans do not.
 // Definition catalogs and package publication are composed separately by cmd/goo.
 func RegisterMeasurements(mux *http.ServeMux, source measurements.Source) {
+	registerRead(mux, "/metric-scopes", measurements.MetricScopesQuestion.Validate, source.DiscoverMetricScopes)
 	registerRead(mux, "/metric-discovery", measurements.DiscoveryQuestion.Validate, source.Discover)
 	registerRead(mux, "/measurements", measurements.Question.Validate, func(ctx context.Context, q measurements.Question) (*measurements.Result, error) {
 		return source.Run(ctx, q, nil)

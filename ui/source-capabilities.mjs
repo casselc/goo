@@ -48,7 +48,7 @@ function sourceNote(sources){
   const excluded=sources.flatMap(source=>{const family=families.find(f=>f.kind===source.kind),reason=reasons[source.state];return family&&reason?[family.label+' ('+reason+')']:[]});
   return excluded.length?'Sources not included: '+excluded.join(', ')+'. Available sources only.':'';
 }
-function mount(host,{minutes,onRead,active=()=>true,onSelect}={}){
+function mount(host,{minutes,onRead,active=()=>true,onSelect,onOpenMetrics}={}){
   const n=UI.node,section=n('section',undefined,'source-capabilities'),controls=n('div',undefined,'controls'),read=n('button','Read available signals'),status=n('p'),output=n('div');
   section.setAttribute('aria-label','Available telemetry signals');
   read.type='button';status.setAttribute('role','status');status.className='source-capability-status';
@@ -71,7 +71,7 @@ function mount(host,{minutes,onRead,active=()=>true,onSelect}={}){
       }
       tr.append(name,state,action);body.append(tr);
     }
-    table.append(caption,head,body);viewport.append(table);const details=n('details'),summary=n('summary','Source details'),list=n('ul');for(const family of result.families)list.append(n('li',family.table+' · '+family.detail));details.append(summary,n('p','Checked '+result.capturedAt),list);output.replaceChildren(viewport,details);
+    table.append(caption,head,body);viewport.append(table);const details=n('details'),summary=n('summary','Source details'),list=n('ul');for(const family of result.families)list.append(n('li',family.table+' · '+family.detail));details.append(summary,n('p','Checked '+result.capturedAt),list);const metricAction=n('div',undefined,'controls');if(onOpenMetrics&&result.families.some(f=>['gauge','counter','histogram','exponential-histogram'].includes(f.kind)&&f.state==='compatible'&&['observed','empty'].includes(f.observation.state))){const open=n('button','Find metric scopes');open.type='button';open.onclick=()=>{if(!current(open)||g!==generation||adopted!==result)return;if(onOpenMetrics({...result.question})!==false)clear()};metricAction.append(open)}output.replaceChildren(viewport,metricAction,details);
   }
   read.onclick=async()=>{
     if(!current(read))return;

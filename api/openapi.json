@@ -6058,6 +6058,93 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/metric-scopes": {
+      "post": {
+        "operationId": "post_metric_scopes",
+        "summary": "POST /metric-scopes",
+        "tags": [
+          "metric-scopes"
+        ],
+        "description": "Explicit bounded metric identity discovery without a known environment or service. Checks four fixed exporter family profiles, groups compatible exported points by effective current-first environment, exact namespace and service, and refuses more than 128 choices instead of publishing a partial catalog. Counts are exported points, not values, streams, represented observations, health or completeness. Raw identity labels are display metadata; only selectable choices with checked effective environment selectors may stage existing instrument discovery. Selection is local and preserves the admitted fixed window. Metadata denial stays unreadable; no usable source and later data-read failure refuse. The enclosing source deadline is 30 seconds.",
+        "x-go-source": "internal/nativehttp/routes.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricScopesResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceReadFailure"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MetricScopesQuestion"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 4096,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/native-views/reuse": {
       "post": {
         "operationId": "post_native_views_reuse",
@@ -9161,6 +9248,19 @@
       },
       "MetricDiscoveryResult": {
         "$ref": "#/components/schemas/measurements.DiscoveryResult"
+      },
+      "MetricScopesQuestion": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.MetricScopesQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "MetricScopesResult": {
+        "$ref": "#/components/schemas/measurements.MetricScopesResult"
       },
       "NativeHistogramSelector": {
         "$ref": "#/components/schemas/measurements.HistogramViewSelector"
@@ -31728,6 +31828,1425 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.LifecycleBinding"
+      },
+      "measurements.MetricScopeChoice": {
+        "properties": {
+          "environment": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode"
+            ],
+            "properties": {
+              "mode": {
+                "enum": [
+                  "named",
+                  "empty",
+                  "unreported"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "maxLength": 4096
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "required": [
+                    "mode"
+                  ],
+                  "properties": {
+                    "mode": {
+                      "const": "named"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "value"
+                  ],
+                  "properties": {
+                    "value": {
+                      "minLength": 1
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "value": {
+                      "const": ""
+                    }
+                  }
+                }
+              }
+            ],
+            "description": "Observed effective display label; up to 4096 UTF-8 bytes, checked at runtime. This raw label does not authorize execution."
+          },
+          "environmentSelector": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              },
+              {
+                "properties": {
+                  "policy": {
+                    "const": "effective"
+                  }
+                }
+              }
+            ]
+          },
+          "firstMs": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4102444800000
+          },
+          "lastMs": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4102444800000
+          },
+          "namespace": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode"
+            ],
+            "properties": {
+              "mode": {
+                "enum": [
+                  "missing",
+                  "value"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "maxLength": 4096
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "required": [
+                    "mode"
+                  ],
+                  "properties": {
+                    "mode": {
+                      "const": "value"
+                    }
+                  }
+                },
+                "then": {},
+                "else": {
+                  "properties": {
+                    "value": {
+                      "const": ""
+                    }
+                  }
+                }
+              }
+            ],
+            "description": "Observed namespace presence; missing differs from a present empty value. Raw display metadata is not automatically a valid selector."
+          },
+          "points": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,38}$",
+            "description": "Canonical positive UInt128 sum of exported point records across compatible source families. Go enforces the exact UInt128 bound. Not metric values, stream count, represented histogram observations, health or completeness."
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "Safe bounded explanation for a nonselectable raw identity; wording is not an execution contract."
+          },
+          "selectable": {
+            "type": "boolean"
+          },
+          "service": {
+            "type": "string",
+            "maxLength": 4096,
+            "description": "Raw service display identity, bounded to 4096 UTF-8 bytes by Go. Empty/overlong identities remain nonselectable rather than inventing a service."
+          }
+        },
+        "required": [
+          "service",
+          "namespace",
+          "environment",
+          "points",
+          "firstMs",
+          "lastMs",
+          "selectable"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.MetricScopeChoice",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "selectable"
+              ],
+              "properties": {
+                "selectable": {
+                  "const": true
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "environmentSelector"
+              ],
+              "not": {
+                "required": [
+                  "reason"
+                ]
+              },
+              "properties": {
+                "service": {
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "^[^\\u0000]+$"
+                },
+                "namespace": {
+                  "properties": {
+                    "value": {
+                      "maxLength": 128,
+                      "pattern": "^[^\\u0000]*$"
+                    }
+                  }
+                },
+                "environment": {
+                  "properties": {
+                    "value": {
+                      "maxLength": 128,
+                      "pattern": "^[^\\u0000]*$"
+                    }
+                  }
+                }
+              }
+            },
+            "else": {
+              "required": [
+                "reason"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "environment": {
+                  "required": [
+                    "mode"
+                  ],
+                  "properties": {
+                    "mode": {
+                      "const": "named"
+                    }
+                  }
+                }
+              },
+              "required": [
+                "environment",
+                "environmentSelector"
+              ]
+            },
+            "then": {
+              "properties": {
+                "environmentSelector": {
+                  "properties": {
+                    "scope": {
+                      "properties": {
+                        "mode": {
+                          "const": "named"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "environment": {
+                  "required": [
+                    "mode"
+                  ],
+                  "properties": {
+                    "mode": {
+                      "const": "empty"
+                    }
+                  }
+                }
+              },
+              "required": [
+                "environment",
+                "environmentSelector"
+              ]
+            },
+            "then": {
+              "properties": {
+                "environmentSelector": {
+                  "properties": {
+                    "scope": {
+                      "properties": {
+                        "mode": {
+                          "const": "empty"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "environment": {
+                  "required": [
+                    "mode"
+                  ],
+                  "properties": {
+                    "mode": {
+                      "const": "unreported"
+                    }
+                  }
+                }
+              },
+              "required": [
+                "environment",
+                "environmentSelector"
+              ]
+            },
+            "then": {
+              "properties": {
+                "environmentSelector": {
+                  "properties": {
+                    "scope": {
+                      "properties": {
+                        "mode": {
+                          "const": "unreported"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "description": "Complete identity group in the admitted event window. Selectable choices carry a checked effective environment selector and valid namespace/service; equality with the displayed named environment and exact byte limits remain runtime-owned. Unsupported raw identities stay visible with a fixed reason and cannot stage discovery."
+      },
+      "measurements.MetricScopesQuestion": {
+        "properties": {
+          "fromMs": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "toMs": {
+            "type": "integer",
+            "maximum": 4102444800000
+          }
+        },
+        "required": [
+          "fromMs",
+          "toMs"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.MetricScopesQuestion",
+        "additionalProperties": false,
+        "description": "Explicit half-open fixed window, at most 120 minutes before 2100. No known service/environment, family/table selector or arbitrary SQL. Ordering and width are checked by Go."
+      },
+      "measurements.MetricScopesQuestionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "fromMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "minimum": 0
+          },
+          "toMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maximum": 4102444800000
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.MetricScopesQuestion",
+        "description": "Explicit half-open fixed window, at most 120 minutes before 2100. No known service/environment, family/table selector or arbitrary SQL. Ordering and width are checked by Go."
+      },
+      "measurements.MetricScopesResult": {
+        "properties": {
+          "capturedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "choices": {
+            "type": "array",
+            "maxItems": 128,
+            "items": {
+              "$ref": "#/components/schemas/measurements.MetricScopeChoice"
+            }
+          },
+          "diagnostics": {
+            "type": "array",
+            "maxItems": 4,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/components/schemas/measurements.DiscoveryDiagnostic"
+            }
+          },
+          "question": {
+            "$ref": "#/components/schemas/measurements.MetricScopesQuestion"
+          },
+          "sources": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "prefixItems": [
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/sourcecap.Family"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "gauge"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/sourcecap.Family"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "counter"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/sourcecap.Family"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "histogram"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/sourcecap.Family"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "exponential-histogram"
+                      }
+                    }
+                  }
+                ]
+              }
+            ],
+            "items": false,
+            "contains": {
+              "properties": {
+                "state": {
+                  "const": "compatible"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "minContains": 1
+          },
+          "unit": {
+            "const": "exported-points"
+          },
+          "version": {
+            "const": "goo/metric-scopes/v1"
+          },
+          "warning": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "capturedAt",
+          "sources",
+          "diagnostics",
+          "choices",
+          "unit",
+          "warning"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.MetricScopesResult",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "compatible"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "not": {
+                    "contains": {
+                      "properties": {
+                        "kind": {
+                          "const": "gauge"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "absent"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "contains": {
+                    "properties": {
+                      "kind": {
+                        "const": "gauge"
+                      },
+                      "reason": {
+                        "const": "absent"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason"
+                    ]
+                  },
+                  "items": {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "gauge"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "reason": {
+                          "const": "absent"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "incompatible"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "contains": {
+                    "properties": {
+                      "kind": {
+                        "const": "gauge"
+                      },
+                      "reason": {
+                        "const": "incompatible"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason"
+                    ]
+                  },
+                  "items": {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "gauge"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "reason": {
+                          "const": "incompatible"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "unreadable"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "contains": {
+                    "properties": {
+                      "kind": {
+                        "const": "gauge"
+                      },
+                      "reason": {
+                        "const": "unreadable"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason"
+                    ]
+                  },
+                  "items": {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "gauge"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "reason": {
+                          "const": "unreadable"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {},
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "compatible"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "not": {
+                    "contains": {
+                      "properties": {
+                        "kind": {
+                          "const": "counter"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {},
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "absent"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "contains": {
+                    "properties": {
+                      "kind": {
+                        "const": "counter"
+                      },
+                      "reason": {
+                        "const": "absent"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason"
+                    ]
+                  },
+                  "items": {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "counter"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "reason": {
+                          "const": "absent"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {},
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "incompatible"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "contains": {
+                    "properties": {
+                      "kind": {
+                        "const": "counter"
+                      },
+                      "reason": {
+                        "const": "incompatible"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason"
+                    ]
+                  },
+                  "items": {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "counter"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "reason": {
+                          "const": "incompatible"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {},
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "unreadable"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "contains": {
+                    "properties": {
+                      "kind": {
+                        "const": "counter"
+                      },
+                      "reason": {
+                        "const": "unreadable"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason"
+                    ]
+                  },
+                  "items": {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "counter"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "reason": {
+                          "const": "unreadable"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {},
+                    {},
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "compatible"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "not": {
+                    "contains": {
+                      "properties": {
+                        "kind": {
+                          "const": "histogram"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {},
+                    {},
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "absent"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "contains": {
+                    "properties": {
+                      "kind": {
+                        "const": "histogram"
+                      },
+                      "reason": {
+                        "const": "absent"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason"
+                    ]
+                  },
+                  "items": {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "histogram"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "reason": {
+                          "const": "absent"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {},
+                    {},
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "incompatible"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "contains": {
+                    "properties": {
+                      "kind": {
+                        "const": "histogram"
+                      },
+                      "reason": {
+                        "const": "incompatible"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason"
+                    ]
+                  },
+                  "items": {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "histogram"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "reason": {
+                          "const": "incompatible"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {},
+                    {},
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "unreadable"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "contains": {
+                    "properties": {
+                      "kind": {
+                        "const": "histogram"
+                      },
+                      "reason": {
+                        "const": "unreadable"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason"
+                    ]
+                  },
+                  "items": {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "histogram"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "reason": {
+                          "const": "unreadable"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {},
+                    {},
+                    {},
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "compatible"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "not": {
+                    "contains": {
+                      "properties": {
+                        "kind": {
+                          "const": "exponential-histogram"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {},
+                    {},
+                    {},
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "absent"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "contains": {
+                    "properties": {
+                      "kind": {
+                        "const": "exponential-histogram"
+                      },
+                      "reason": {
+                        "const": "absent"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason"
+                    ]
+                  },
+                  "items": {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "exponential-histogram"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "reason": {
+                          "const": "absent"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {},
+                    {},
+                    {},
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "incompatible"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "contains": {
+                    "properties": {
+                      "kind": {
+                        "const": "exponential-histogram"
+                      },
+                      "reason": {
+                        "const": "incompatible"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason"
+                    ]
+                  },
+                  "items": {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "exponential-histogram"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "reason": {
+                          "const": "incompatible"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "sources"
+              ],
+              "properties": {
+                "sources": {
+                  "prefixItems": [
+                    {},
+                    {},
+                    {},
+                    {
+                      "properties": {
+                        "state": {
+                          "const": "unreadable"
+                        }
+                      },
+                      "required": [
+                        "state"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "diagnostics": {
+                  "contains": {
+                    "properties": {
+                      "kind": {
+                        "const": "exponential-histogram"
+                      },
+                      "reason": {
+                        "const": "unreadable"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reason"
+                    ]
+                  },
+                  "items": {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "exponential-histogram"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "reason": {
+                          "const": "unreadable"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "description": "Explicit complete bounded scope/service discovery over compatible metric families, without a manifest or prior identity. No usable source, more than 128 groups, a 1 MiB encoded result, or a later data-read failure refuses rather than returning a partial catalog. Source readiness is independent from observations and instrument eligibility. Empty choices mean no matching points in the successful read, not absent tables or health."
       },
       "measurements.ObservedStream": {
         "properties": {

@@ -34,7 +34,7 @@ func TestFamilyPoliciesMatchPublishedAPIBoundaries(t *testing.T) {
 		count  int
 	}{
 		"record":      {recordhttp.PolicyFor, 13},
-		"native":      {nativehttp.PolicyFor, 7},
+		"native":      {nativehttp.PolicyFor, 8},
 		"explanation": {explanationhttp.PolicyFor, 3},
 		"capture":     {capturehttp.PolicyFor, 2},
 	}

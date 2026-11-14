@@ -28,8 +28,14 @@ claim or service-health verdict. All services and environments are inspected onl
 within the explicitly chosen window. Read time and event-time scope are distinct.
 Source details remain in a collapsed disclosure.
 
-Metric rows report discovery-profile compatibility. They do not promise kernel
-support or complete metrics-only onboarding; those remain separate checks/work.
+For usable metric families, **Find metric scopes** opens Measurements locally and
+carries this exact source-check window. **Read metric scopes** explicitly discovers
+qualified environment/service choices; selecting one stages instrument discovery
+without another read. See [metric scope discovery](METRIC_SCOPE_DISCOVERY.md).
+
+Metric-family compatibility still does not promise evaluation support. Instrument
+eligibility and the existing kernel's instance-identity requirements remain
+separate from browsing scopes.
 
 ## Partial installations
 
@@ -65,6 +71,7 @@ flowchart LR
   Presence --> Display[Shared source table]
   States --> Display
   Display -->|local Choose logs/spans| Scope[Existing environment discovery]
+  Display -->|local Find metric scopes| Metrics[Metric scope discovery]
   Schema --> Inventory[Service / instrument inventory over compatible families]
 ```
 

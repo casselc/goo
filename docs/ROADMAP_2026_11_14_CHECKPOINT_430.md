@@ -4,7 +4,7 @@ The [four-expert review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) prioritizes re
 useful unfamiliar telemetry before more preservation depth. This checkpoint
 adopts that direction without renumbering the older pending 427–429 contracts.
 
-Status: **430 and 431 delivered and validated**; 432–433 remain planned.
+Status: **430 and 431 delivered and validated**; 432a metrics bootstrap is implemented; 432b sparse-data recovery and 433 remain planned.
 
 ## 430 — first-use scope entry and interaction reliability
 
@@ -43,12 +43,13 @@ not browser SQL or a second collector.
 
 ## 432 — depth: metrics-only and sparse-data first use
 
-Reuse 431's capabilities for bounded environment/service/instrument discovery.
+**432a implemented:** [metric scope discovery](METRIC_SCOPE_DISCOVERY.md) and its
+[executable journey](journeys/metric-scopes.md) reuse 431's capabilities for bounded environment/service/instrument discovery.
 Remove the generic Measurements `local` default and avoid requiring a known
 service before discovering that one exists. Preserve namespace, environment
 policy, unit/schema/temporality and existing instrument support reasons.
 
-From an empty live stream, offer a wider fixed-window search that retains its
+**432b next:** From an empty live stream, offer a wider fixed-window search that retains its
 selector and held parent. Event-time windows must be visible; newer read time is
 not proof of ingestion freshness. Keep clock skew, source retention, data absence
 and source failure distinct. Do not introduce arrival-order guarantees.
@@ -60,8 +61,17 @@ source refusals, explicit reads and keyboard/mobile completion.
 
 Use the exercised paths to unify scope selection, per-source state/refusal,
 retry and action ownership across Activity, Services and Measurements. Consolidate
-only matching contracts. Preserve local staging versus source reads, current-key
+only matching contracts. Fold verbose instrument coverage/representation prose into
+existing support/read details while retaining concise point/instrument counts.
+Preserve local staging versus source reads, current-key
 versus effective environment policy, and held results versus active actions.
+
+Align instrument planning with the existing evaluator’s reported `service.instance.id`
+requirement: an observed missing/empty instance must explain noneligibility before
+Run, using all observations rather than the capped stream display. Missing
+observations remain unknown. This is Goo evaluation policy, not an OTLP identity
+requirement. Review generic resource/scope/instrument/attribute stream evaluation
+separately; do not synthesize instance IDs or silently remove kernel guards.
 
 Run the finite first-use matrix from the review, refresh affected storyboards,
 and perform the next whole-product review. Measure before claiming performance

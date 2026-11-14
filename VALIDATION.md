@@ -1,5 +1,42 @@
 # Validation record
 
+## 432a — metrics-only identity bootstrap
+
+[Contract](docs/METRIC_SCOPE_DISCOVERY.md), [storyboard](docs/journeys/metric-scopes.md),
+[independent review](docs/reviews/METRIC_SCOPE_DISCOVERY_432.md) and
+[roadmap](docs/ROADMAP_2026_11_14_CHECKPOINT_430.md).
+
+- All root Go packages pass under Go 1.27.3; the final embedded UI binary builds.
+  HTTP tests cover validation before reads, admission and denied metadata.
+- **1,669 frontend tests pass**, zero failures/skips (26.8s), including qualified
+  identities, UInt128 bounds, contradictory-source refusal, local handoff,
+  stale/closed controls and hidden-to-visible late-response retirement.
+- The new isolated gauge-only ClickHouse journey passes (**44.0s**, 47.2s runner),
+  including a **30-second Bombadil actor**. Six usable scopes and one nonselectable
+  empty-service identity distinguish current/legacy policy and missing/empty
+  namespaces. Equivalent effective scopes merge before the group limit. Selection
+  performs no reads; instrument discovery preserves the exact window and identity;
+  Build is source-free and explicit Run evaluates two observations in one series.
+- The actor observes one scope read, one instrument read and one pure plan with no
+  implicit evaluation or writes. The fixture database and isolated runtime are
+  cleaned up. Exporter-shaped points are inserted directly; this new fixture is
+  not a collector-ingestion claim.
+- Regenerated 1440/390/320 frames pass containment, caption and first-action
+  visibility checks. Mobile inputs are 32px high; the first usable choice ends at
+  579px/614px in a 900px viewport. Independent UX follow-up accepts the slice.
+- Native **Hegel continuation properties and Quint observed-trace validation pass**
+  (9.26s, no skips), including named/empty/unreported policies and rejecting controls.
+- OpenAPI checks pass **116 operations**, 501 fixture responses, 202 admitted
+  requests and 29 mux refusals. The actual new journey wire response conforms,
+  including exact scope/window relationships.
+- The existing ordinary OTLP counter journey passes against the new isolated
+  runtime (**32.9s**, 34.6s runner), including collector export, discovery, package
+  save, two evaluated streams, capture, document save and native Quint ledger replay.
+  Its screenshots and structured-attribute assertions are refreshed.
+- Successful evaluation uses reported instance IDs. The current kernel policy is
+  stricter than universal OTLP identity; missing-instance preflight remains 433.
+  Sparse/delayed event recovery remains 432b. No deployed lab upgrade is claimed.
+
 ## 431 — signal availability and partial-family discovery
 
 [Contract](docs/SOURCE_CAPABILITIES.md), [storyboard](docs/journeys/source-capabilities.md),

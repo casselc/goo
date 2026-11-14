@@ -78,7 +78,48 @@ are independent, not a transactional snapshot or collector-delivery check.
 
 Choosing Logs or Spans from the result stages the existing UI signal choice
 locally. Reading environment labels and starting Activity remain separate explicit
-actions. Metrics-only identity bootstrap remains separate work.
+actions. Metrics-only identities use the separate explicit window read below.
+
+## Metrics-only environment and service discovery (432a)
+
+`POST /metric-scopes` accepts only `{fromMs,toMs}`: a half-open fixed window of at
+most 120 minutes before 2100. It requires no known environment, service, manifest,
+source family or physical table name. The native handler admits a 4096-byte body,
+uses the shared query budget/cancellation registry, and bounds the whole source
+operation to 30 seconds.
+
+The `goo/metric-scopes/v1` response includes the admitted `question`, `capturedAt`,
+four checked metric `sources`, excluded-family `diagnostics`, and at most 128
+complete `choices`. Each choice contains:
+
+- `service`, raw `environment` and raw `namespace` display identity. Missing and
+  present-empty namespace differ; current environment-key presence wins over
+  legacy, including an empty current value.
+- `points`: a canonical positive UInt128 decimal sum of exported point records
+  across compatible gauge/sum/histogram families. It is not a metric value,
+  number of streams, histogram observations, completeness or health verdict.
+- `firstMs` / `lastMs`: observed event bounds inside the admitted window.
+- `selectable`, a checked effective `environmentSelector` when available, and a
+  fixed `reason` when the display identity cannot be used as a valid selector.
+
+Raw identity strings are bounded to 4096 UTF-8 bytes. They remain display facts;
+only a selectable choice with a valid service, namespace and checked effective
+selector may stage instrument discovery. The checked selector must match the raw
+effective environment. Go and the browser enforce exact equality, UTF-8 byte
+limits and event-window relationships beyond JSON Schema's wire-shape checks.
+A value namespace with omitted `value` encodes a present empty namespace, matching
+Go's omitted-empty string representation; it never means missing namespace.
+
+Selecting a choice locally fills the existing instrument discovery controls and
+retains the **original fixed window**, typed environment policy and namespace.
+Discover instruments remains an explicit source read. Build/preview and Run retain
+their existing planning/execution boundaries; discovering a metric family does
+not make every instrument executable.
+
+No usable family, more than 128 groups, a response over 1 MiB, invalid source data
+or a post-check acquisition failure refuses instead of publishing a partial
+catalog. Successful empty choices mean no matching points in that window over the
+usable sources. Metadata checks and point aggregation are independent reads.
 
 ## Observed service and metric discovery
 
@@ -160,6 +201,7 @@ boundary. Representative limits are:
 | Route | Both path forms |
 | --- | --- |
 | `/dashboards/plan` | 256 KiB |
+| `/metric-scopes` | 4 KiB |
 | `/metric-discovery` | 64 KiB |
 | `/annotations`, `/deployments` | 128 KiB |
 | `/compare` | 1 MiB |

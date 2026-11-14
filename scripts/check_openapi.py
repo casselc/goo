@@ -1685,6 +1685,115 @@ def check_http_client_profile385(spec):
     assert 'not attempts' in spec['components']['schemas']['exploration.DashboardRequestInput']['properties']['profile']['description']
     print('Outgoing HTTP385: exact profile enum, nullable generic selection and native/alias refusal shape pass')
 
+def check_metric_scopes432(spec):
+    """Metric identities remain raw display facts until a checked local choice."""
+    operation=spec['paths']['/metric-scopes']['post']
+    request=validator(spec,operation['requestBody']['content']['application/json']['schema'])
+    response=validator(spec,operation['responses']['200']['content']['application/json']['schema'])
+    question={'fromMs':0,'toMs':60000}
+    request.validate(question)
+    for change in ({'service':'orders'},{'environment':'prod'},{'family':'gauge'},
+                   {'sql':'SELECT 1'},{'fromMs':-1},{'toMs':4102444800001},{'fromMs':'0'}):
+        assert not request.is_valid({**question,**change}),('metric scope request accepted',change)
+    kinds=[('gauge','otel_metrics_gauge'),('counter','otel_metrics_sum'),
+           ('histogram','otel_metrics_histogram'),('exponential-histogram','otel_metrics_exp_histogram')]
+    sources=[{'kind':kind,'table':table,'state':'compatible' if i==0 else 'absent','detail':'Fixed source check.'}
+             for i,(kind,table) in enumerate(kinds)]
+    choice={'service':'orders','namespace':{'mode':'missing'},'environment':{'mode':'unreported'},
+            'environmentSelector':{'version':'goo/environment-selector/v1','policy':'effective','scope':{'mode':'unreported'}},
+            'points':'3','firstMs':100,'lastMs':200,'selectable':True}
+    result={'version':'goo/metric-scopes/v1','question':question,'capturedAt':'2026-11-14T01:00:00Z',
+            'sources':sources,'diagnostics':[{'kind':kind,'reason':'absent'} for kind,_ in kinds[1:]],
+            'choices':[choice],'unit':'exported-points','warning':'Independent source reads; coverage unknown.'}
+    response.validate(result);accepted=1
+    for mode,value in [('named','prod'),('empty',''),('unreported','')]:
+        valid=copy.deepcopy(result)
+        scope={'mode':mode,**({'value':value} if value else {})}
+        valid['choices'][0]['environment']=scope
+        valid['choices'][0]['environmentSelector']['scope']=copy.deepcopy(scope)
+        for namespace in ({'mode':'missing'},{'mode':'value'},{'mode':'value','value':''},{'mode':'value','value':'team'}):
+            valid['choices'][0]['namespace']=namespace;response.validate(valid);accepted+=1
+    for edits in [
+        {'service':'','selectable':False,'reason':'Service name is empty or not reported.'},
+        {'service':'x'*129,'selectable':False,'reason':'Service name exceeds selector limits.'},
+        {'namespace':{'mode':'value','value':'x'*129},'selectable':False,'reason':'Namespace exceeds selector limits.'},
+        {'environment':{'mode':'named','value':'x'*129},'environmentSelector':None,'selectable':False,'reason':'Environment label exceeds selector limits.'},
+        {'points':str(2**128-1)},
+    ]:
+        valid=copy.deepcopy(result);valid['choices'][0].update(edits)
+        if valid['choices'][0].get('environmentSelector') is None:valid['choices'][0].pop('environmentSelector',None)
+        response.validate(valid);accepted+=1
+    empty=copy.deepcopy(result);empty['choices']=[];response.validate(empty);accepted+=1
+    for state in ('compatible','incompatible','unreadable'):
+        valid=copy.deepcopy(result);valid['sources'][1]['state']=state
+        valid['diagnostics']=[{'kind':family['kind'],'reason':family['state']} for family in valid['sources'] if family['state']!='compatible']
+        response.validate(valid);accepted+=1
+    all_ready=copy.deepcopy(result)
+    for family in all_ready['sources']:family['state']='compatible'
+    all_ready['diagnostics']=[];response.validate(all_ready);accepted+=1
+    mutants=[]
+    for field,value in [('service',''),('service','x'*129),('service','bad\x00name'),
+                        ('points','0'),('points','01'),('points','-1'),('points','1.0'),
+                        ('points','1e3'),('points','9'*40),('points',3),('selectable','true'),
+                        ('reason','Service name is empty or not reported.'),('supported',True),('count','3')]:
+        bad=copy.deepcopy(result);bad['choices'][0][field]=value;mutants.append(bad)
+    bad=copy.deepcopy(result);bad['choices'][0].pop('environmentSelector');mutants.append(bad)
+    bad=copy.deepcopy(result);bad['choices'][0]['environmentSelector']['policy']='current-only';mutants.append(bad)
+    bad=copy.deepcopy(result);bad['choices'][0]['environmentSelector']['scope']={'mode':'empty'};mutants.append(bad)
+    bad=copy.deepcopy(result);bad['choices'][0].update(selectable=False);mutants.append(bad)
+    bad=copy.deepcopy(result);bad['choices'][0]['environment']={'mode':'all'};mutants.append(bad)
+    bad=copy.deepcopy(result);bad['choices'][0]['namespace']=None;mutants.append(bad)
+    bad=copy.deepcopy(result);bad['choices'][0]['namespace']={'mode':'all'};mutants.append(bad)
+    bad=copy.deepcopy(result);bad['choices']*=129;mutants.append(bad)
+    for field,value in [('unit','records'),('complete',True),('version','unknown')]:
+        bad=copy.deepcopy(result);bad[field]=value;mutants.append(bad)
+    bad=copy.deepcopy(result);bad['sources'].reverse();mutants.append(bad)
+    bad=copy.deepcopy(result);bad['sources'].pop();mutants.append(bad)
+    bad=copy.deepcopy(result)
+    for family in bad['sources']:family['state']='unreadable'
+    mutants.append(bad)
+    bad=copy.deepcopy(result);bad['diagnostics']=[];mutants.append(bad)
+    bad=copy.deepcopy(result);bad['diagnostics'][0]['reason']='unreadable';mutants.append(bad)
+    bad=copy.deepcopy(result);bad['diagnostics'].append(copy.deepcopy(bad['diagnostics'][0]));mutants.append(bad)
+    bad=copy.deepcopy(result);bad['diagnostics'].append({'kind':'gauge','reason':'absent'});mutants.append(bad)
+    bad=copy.deepcopy(result);bad['sources'][1]['state']='compatible';mutants.append(bad)
+    for bad in mutants:assert not response.is_valid(bad),'metric identity wire mutant accepted'
+    assert operation['x-effects']=='source-read'
+    assert operation['x-go-body-limit-bytes']==4096
+    assert any(item['name']=='X-Goo-Query-ID' for item in operation['parameters'])
+    print(f'Metric identity bootstrap432a: {accepted} identity states valid; {len(mutants)} selector/count/authority mutations rejected')
+
+
+def check_metric_scope_observations432(spec,path):
+    report=json.loads(Path(path).read_text());cases=report if isinstance(report,list) else report['cases']
+    operation=spec['paths']['/metric-scopes']['post']
+    request=validator(spec,operation['requestBody']['content']['application/json']['schema'])
+    response=validator(spec,operation['responses']['200']['content']['application/json']['schema'])
+    count=0
+    for case in cases:
+        if case.get('path','/metric-scopes') not in ('/metric-scopes','/api/metric-scopes') or case.get('status',200)!=200:continue
+        request.validate(case['request']);result=case['response'];response.validate(result)
+        assert result['question']==case['request'],'metric identity result changed its admitted window'
+        expected_diagnostics=[{'kind':family['kind'],'reason':family['state']} for family in result['sources'] if family['state']!='compatible']
+        assert result['diagnostics']==expected_diagnostics,'metric identity diagnostics contradict checked source states'
+        assert any(family['state']=='compatible' for family in result['sources']),'successful metric identity result has no usable source'
+        for choice in result['choices']:
+            assert result['question']['fromMs']<=choice['firstMs']<=choice['lastMs']<result['question']['toMs']
+            assert 0<int(choice['points'])<=2**128-1
+            for value in (choice['service'],choice['namespace'].get('value',''),choice['environment'].get('value','')):
+                assert len(value.encode('utf8'))<=4096
+            if choice['selectable']:
+                for value in (choice['service'],choice['namespace'].get('value',''),choice['environment'].get('value','')):
+                    assert len(value.encode('utf8'))<=128 and '\x00' not in value
+                selected=choice['environmentSelector']
+                assert selected['policy']=='effective'
+                assert selected['scope']['mode']==choice['environment']['mode']
+                assert selected['scope'].get('value','')==choice['environment'].get('value','')
+        count+=1
+    assert count,'no successful metric identity observations supplied'
+    print(f'Metric identity bootstrap432a: {count} actual wire responses and exact scopes conform')
+
+
 def check_source_capabilities431(spec):
     """Presence, readiness and profile identity must not masquerade as totals."""
     operation = spec['paths']['/source-capabilities']['post']
@@ -1784,6 +1893,7 @@ def check_source_capability_observations431(spec, path):
 
 def check(spec):
     check_source_capabilities431(spec)
+    check_metric_scopes432(spec)
     check_record_intent417(spec)
     review_responses,review_accepted=check_capture_reviews(spec)
     check_package_scopes(spec)
@@ -2404,6 +2514,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--observations')
     parser.add_argument('--source-capability-observations')
+    parser.add_argument('--metric-scope-observations')
     parser.add_argument('--status-view-observations')
     parser.add_argument('--histogram-view-observations')
     parser.add_argument('--histogram-comparison-observations')
@@ -2431,6 +2542,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.metric_scope_observations:
+        check_metric_scope_observations432(spec,args.metric_scope_observations)
     if args.source_capability_observations:
         check_source_capability_observations431(spec,args.source_capability_observations)
     if args.histogram_exemplar_observations:

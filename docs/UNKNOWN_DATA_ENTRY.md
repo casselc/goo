@@ -41,12 +41,24 @@ Native controls must remain available in the active disclosure. Hidden, inert,
 disabled or stale discovery actions cannot start reads or stage a scope. Returning
 from a withdrawn request releases its private busy state without publishing data.
 
+## Metrics-only data
+
+When Read available signals finds a usable metric family, **Find metric scopes**
+opens the existing Measurements workspace locally, retaining that read's exact
+window. Read metric scopes explicitly, choose an environment/service/namespace,
+then Discover instruments. The direct Measurements entry also supports this flow
+without knowing any labels. Selection and package preview do not read telemetry;
+Run keeps its existing execution requirements.
+See [metric scope discovery](METRIC_SCOPE_DISCOVERY.md) and its
+[executable storyboard](journeys/metric-scopes.md).
+
 ## Remaining work
 
 [Source capability checks](SOURCE_CAPABILITIES.md) now identify available
 signal families and allow partial-family service/instrument inventories.
-Environment discovery still uses the selected Logs/Spans signal; metrics-only
-identity bootstrap remains planned. Streaming still uses the latest 60 seconds of event time; sparse and
+Record environment discovery still uses the selected Logs/Spans signal; metrics
+use their separate qualified scope discovery above. Streaming still uses the
+latest 60 seconds of event time; sparse and
 delayed-event recovery is separate work. See the
 [ad-hoc review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) and
 [current roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).

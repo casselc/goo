@@ -5,9 +5,19 @@ first-use scope discovery, partial-signal table assumptions, metric-only bootstr
 event-time empty-stream recovery and keyboard Pause focus as priority gaps.
 [430](UNKNOWN_DATA_ENTRY.md) improves first-use chooser placement and fixes explicit
 Pause/Resume focus. [431 source capabilities](SOURCE_CAPABILITIES.md) now addresses partial-source
-availability; metrics bootstrap and empty-stream recovery remain planned in the [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
-The generic no-environment log path was exercised; partial-schema installations
-remain source-reviewed rather than newly integration-tested.
+availability. [432a metric scope discovery](METRIC_SCOPE_DISCOVERY.md) adds bounded
+identity bootstrap without a known environment/service. Empty-stream recovery
+remains next in the [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
+Isolated logs-only, spans-only and gauge-only installations were exercised in 431;
+actual denied-user deployments remain covered by transport checks rather than a
+new database-user integration run.
+
+Native evaluation currently requires reported nonempty `service.instance.id`.
+This is an evaluator policy, not a universal OTLP stream identity requirement.
+Metadata discovery can expose instruments that later refuse this policy. The
+433 consolidation will align planning preflight with all observed stream identities;
+a separate architecture decision is needed for generic resource/scope/instrument/
+attribute evaluation. No missing instance IDs are synthesized.
 
 Fixed-comparison Preserve currently saves the full composition but shares or
 captures the selected question only, explicitly labeled. General paired captures

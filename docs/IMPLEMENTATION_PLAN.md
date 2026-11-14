@@ -15,8 +15,10 @@
 > **426 preserve/recall/return conformance** is delivered.
 > **430 unknown-data scope entry and interaction reliability** adopts the ad-hoc
 > telemetry review and is delivered. **431 available signal families** adds shared
-> readiness and partial inventories and is delivered. Next: **432 metrics-only
-> and sparse-data first use**, then **433 shared discovery/recovery consolidation**.
+> readiness and partial inventories and is delivered. **432a metric-only identity
+> bootstrap** is implemented. Next: **432b sparse/delayed event recovery**, then
+> **433 shared discovery/recovery consolidation**, including clear instance-policy
+> preflight before native evaluation.
 > The older **427–429 preservation cycle** remains pending follow-on work. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped

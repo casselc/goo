@@ -1,5 +1,20 @@
 # Semantic properties and model conformance
 
+## Metric identity continuation (432a)
+
+The [metrics-only journey](../docs/journeys/metric-scopes.md) and
+`bombadil/metric-scopes432.ts` exercise local scope selection, instrument discovery
+and pure package preview. The native continuation checks separately cover scope,
+namespace and fixed-window preservation through the actual source owners:
+
+```sh
+go test -p 1 . -run '^Test(HegelMetricScopeContinuation432|QuintMetricScopeContinuation432)$' -count=1 -v
+```
+
+These checks do not expand instrument eligibility or the evaluation kernel's
+instance-identity contract. Consult [VALIDATION.md](../VALIDATION.md) for executed
+results and limits, rather than treating this command as evidence that it passed.
+
 ## Source readiness and discovery (431)
 
 The shared fixed-family inspector is checked by generated Hegel classifications

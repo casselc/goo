@@ -933,7 +933,7 @@ td details {
 #guidedPackageSteps article {margin:12px 0}
 #guidedMeasurements {margin:30px 0}
 #measureLibrary {max-width:100%}
-@media(max-width:600px){#measurementWorkbench .controls{align-items:stretch;flex-direction:column}#measureLibrary{width:100%}#measurementWorkbench input{max-width:100%;box-sizing:border-box}#measureYAML{min-height:240px}}
+@media(max-width:600px){#measurementWorkbench .controls{align-items:end;flex-direction:row;flex-wrap:wrap}#measureLibrary{width:100%}#measurementWorkbench input{max-width:100%;box-sizing:border-box}#measureYAML{min-height:240px}}
 
 /* A shared question → evidence → reuse flow across discovery and definitions. */
 #metricDiscovery {padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface-raised)}
