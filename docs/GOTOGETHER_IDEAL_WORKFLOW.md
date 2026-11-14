@@ -1,6 +1,11 @@
 # Ideal scene: behavioral contracts through the whole development lifecycle
 
 Shared upstream as a [design follow-up on gotogether #220](https://github.com/chucklehead-dev/gotogether/issues/220#issuecomment-6884857732).
+The [maintainer response](https://github.com/chucklehead-dev/gotogether/issues/220#issuecomment-6885341673)
+proposes the CW track in open [PR #223](https://github.com/chucklehead-dev/gotogether/pull/223),
+using Goo acquisition as CW1's first consumer case. See the
+[pilot follow-up](GOTOGETHER_ACQUISITION_PILOT.md#upstream-response-on-220) for
+merged fixes versus planned work.
 
 Design exercise, 2026-11-14. This is a proposal, not a claim that these features
 are implemented or a replacement for Goo's execution roadmap. It draws on Goo's

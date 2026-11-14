@@ -62,3 +62,29 @@ A stateful CEL/AST/ClickHouse differential pilot remains a separate proposed ste
 [Independent acceptance](reviews/GOTOGETHER_SHADOW_ACCEPTANCE.md),
 [upstream feedback](reviews/GOTOGETHER_SHADOW_FEEDBACK.md), and
 [executed checks](../VALIDATION.md) record the details.
+
+## Upstream response on #220
+
+The maintainer's [first response](https://github.com/chucklehead-dev/gotogether/issues/220#issuecomment-6884939876)
+landed as [PR #221](https://github.com/chucklehead-dev/gotogether/pull/221), merged
+at `a1a90fe5653db07cbf6cc467021bda18e4b27d79`. Graph witness replay now applies
+backend selection; the new argv regression and end-to-end TypeScript Refutes
+test cover our report. All 37 reported PR checks were successful when reviewed.
+This records source and upstream CI review. Goo's consumer pin remains
+`771dcce`; restoring its optional Refutes claim follows a pin update.
+
+The external-driver reference now explains intern scopes and empty values,
+Bombadil's unchanged-return epoch recipe, and the drain/settle bridge. A request-log
+settle event (O1) and a compact completion-controls example (O2) remain planned.
+
+The [second response](https://github.com/chucklehead-dev/gotogether/issues/220#issuecomment-6885341673)
+proposes the broader contract workflow in [PR #223](https://github.com/chucklehead-dev/gotogether/pull/223),
+which is open at this review. CW1 adopts our acquisition document as its first
+literate-model consumer: tangle it, map a broken invariant to the document line,
+refuse stale output and replay the existing log with the native source gate kept.
+Go doc comments link to the authoritative model. Generated alignment, scenario
+metadata, causal observations and production monitoring are subsequent roadmap
+items; the native Go compiler/evaluator remains the separate Q track.
+
+A useful consumer follow-up is one pinned portable acquisition document/model/log
+fixture. Keep that preparation separate from implementing an extractor in Goo.
