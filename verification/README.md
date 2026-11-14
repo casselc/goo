@@ -4859,3 +4859,10 @@ The existing activity-latency journey supplies the current retirement ledger to
 new reads, comparisons or API POSTs. Existing partition replay has six rejecting
 controls, including a forged source read in the final local step. No new model
 or driver is introduced. See [storyboard](../docs/journeys/refinement-consolidation.md).
+
+## 436.2 — bound record planning properties
+
+`go test -run TestHegelCELPlanning436 -count=1 -v` exercises generated logs/spans
+against an independent predicate oracle, complete-parent conservation, exact opaque
+revision tokens, target parameterization, stale bindings and unsupported branches.
+See [planning contract](../docs/CEL_CHECKED_PLANNING.md).

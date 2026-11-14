@@ -138,3 +138,10 @@ The delivered [436.1 consolidation](REFINEMENT_CONSOLIDATION.md) makes standalon
 predicate admission independent of a fabricated query. `Program.Apply` delegates
 to `exploration.Refine`; predicate access returns a validated detached typed copy.
 This remains additive AND refinement, with no app editor or map-presence extension.
+
+## Checked planning integration
+
+[436.2](CEL_CHECKED_PLANNING.md) moves the CLI onto the shared `PlanRecord` use case
+and adds its in-process HTTP route. Compiler failures support `errors.As` with
+code, phase and optional Unicode span. Exact binding travels with each successful
+receipt; there is still no visible CEL editor.

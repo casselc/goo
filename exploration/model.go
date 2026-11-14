@@ -3,6 +3,7 @@
 package exploration
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -11,6 +12,9 @@ import (
 
 	"github.com/casselc/goo/identity"
 )
+
+// ErrPredicateBudget identifies the ordinary predicate depth/node admission limit.
+var ErrPredicateBudget = errors.New("predicate exceeds depth/node budget")
 
 type Field struct {
 	Kind string `json:"kind" yaml:"kind"`
@@ -133,7 +137,7 @@ func validatePredicate(p *Predicate, signal string, depth int, count *int) error
 	}
 	*count++
 	if depth > 4 || *count > 32 {
-		return fmt.Errorf("predicate exceeds depth/node budget")
+		return ErrPredicateBudget
 	}
 	branches := p.All != nil || p.Any != nil
 	if branches {

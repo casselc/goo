@@ -8,6 +8,7 @@ import (
 	"github.com/casselc/goo/annotations"
 	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/internal/capturehttp"
+	"github.com/casselc/goo/internal/celhttp"
 	"github.com/casselc/goo/prebuilt"
 	"net/http"
 	"os"
@@ -102,6 +103,7 @@ func configuredHTTPServer(args []string) (*http.Server, error) {
 	client := &http.Client{Timeout: 15 * time.Second}
 	connection := clickHouseConnectionFromEnvironment(client)
 	mux := http.NewServeMux()
+	celhttp.Register(mux)
 	registerMeasurements(mux, connection.measurementSource(), *captureDir)
 	operationMux := http.NewServeMux()
 	registerOperationReads(operationMux, plans, ordered, expanded, source, connection)

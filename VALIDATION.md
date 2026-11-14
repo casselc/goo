@@ -1,5 +1,40 @@
 # Validation record
 
+## 436.2 — checked CEL planning and positioned diagnostics
+
+[Contract](docs/CEL_CHECKED_PLANNING.md),
+[storyboard](docs/journeys/cel-checked-planning.md) and
+[independent acceptance](docs/reviews/CEL_PLANNING_436_2.md).
+
+- The pure `querycel.PlanRecord` use case serves the CLI and in-process HTTP.
+  Complete original base and refined result are independently admitted. Exact
+  bindings carry content identity, slot, epoch, string revision and compiler/target
+  contract. No failure returns a partial question. Target literals are parameters.
+- All root Go packages pass. After final review changes, complete `querycel`,
+  `exploration`, `internal/celhttp`, `internal/queryhttp` and `cmd/goo` pass again;
+  the final embedded server builds on managed Go 1.27.3. Its real `plan-cel`
+  command succeeds with the existing logs/errors fixtures and bound receipt.
+- Diagnostic tests cover wrapped `errors.As`, Unicode multiline/rune positions,
+  parser anchors, missing positions, unsupported dead branches and exact budgets.
+  The domain limit has `errors.Is` identity; no classification parses error prose.
+  Upstream CEL resource refusals retain their parse/type phase classification.
+- Native Hegel: **120 generated profiles × 40 records**, plus four explicit large
+  uint64 controls across logs/spans, pass in **0.850 seconds**, zero skips. Checks
+  include parent OR/policy conservation, detachment, exact revision JSON,
+  parameterized hostile/Unicode text, stale base refusal and no partial result.
+- HTTP family/runtime checks pass. Both `/cel/plan` and `/api/cel/plan` work with
+  zero source budget, a rejecting counting source transport (**zero calls**) and
+  an absent store directory that remains absent. Strict 32KiB JSON, eight refusal
+  shapes, cancellation, diagnostics and no partial response are covered.
+- OpenAPI generation/checks pass: **117 operations, 501 response fixtures,
+  202 admitted requests, 29 mux refusals**, plus negative controls and SSE checks.
+  Reflected wire schemas: 747; final schemas: 790.
+- This backend slice changes no visible controls. No new screenshots, browser,
+  frontend suite, physical AT or cross-engine run is claimed. Existing screenshot
+  and held-selection acceptance remains recorded under 436.1. Next: **436.3
+  representation coverage and revision-safe slot ownership**; editor mounting,
+  source provenance persistence and whole-product acceptance remain planned.
+
 ## 436.1 — shared refinement and aggregate selection handoff
 
 [Contract](docs/REFINEMENT_CONSOLIDATION.md),

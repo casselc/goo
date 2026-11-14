@@ -1,6 +1,7 @@
 package querycel
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -18,11 +19,17 @@ import (
 // identity, and validates the expanded result against the ordinary Goo grammar.
 func Compile(signal, expression string) (*Program, error) {
 	if len(expression) == 0 || len(expression) > MaxExpressionBytes || !utf8.ValidString(expression) || strings.ContainsRune(expression, 0) {
-		return nil, fmt.Errorf("CEL expression requires 1–%d well-formed bytes without NUL", MaxExpressionBytes)
+		code := CodeInput
+		if len(expression) > MaxExpressionBytes {
+			code = CodeBudget
+		}
+		return nil, diagnostic(code, PhaseInput, fmt.Errorf("CEL expression requires 1–%d well-formed bytes without NUL", MaxExpressionBytes))
 	}
 	fields, err := declarations(signal)
 	if err != nil {
-		return nil, err
+		d := diagnostic(CodeBinding, PhaseBinding, err)
+		d.Path = "signal"
+		return nil, d
 	}
 	options := []cel.EnvOption{cel.ClearMacros(), cel.ParserRecursionLimit(32), cel.ParserExpressionSizeLimit(MaxExpressionBytes), cel.ExpressionNodeLimit(128), cel.Lib(OTelLibrary{})}
 	byName := make(map[string]fieldDeclaration, len(fields))
@@ -32,38 +39,50 @@ func Compile(signal, expression string) (*Program, error) {
 	}
 	env, err := cel.NewEnv(options...)
 	if err != nil {
-		return nil, err
+		return nil, diagnostic(CodeInternal, PhaseCheck, err)
 	}
-	checked, issues := env.Compile(expression)
+	parsed, issues := env.Parse(expression)
 	if issues.Err() != nil {
-		return nil, fmt.Errorf("CEL typecheck: %w", issues.Err())
+		return nil, compileIssues(expression, CodeSyntax, PhaseParse, issues)
+	}
+	checked, issues := env.Check(parsed)
+	if issues.Err() != nil {
+		return nil, compileIssues(expression, CodeType, PhaseCheck, issues)
 	}
 	if checked.OutputType() != cel.BoolType {
-		return nil, fmt.Errorf("CEL predicate must return bool")
+		d := diagnostic(CodeType, PhaseCheck, fmt.Errorf("CEL predicate must return bool"))
+		d.Span = astSpan(expression, checked.NativeRep(), checked.NativeRep().Expr())
+		return nil, d
 	}
-	lower := lowerer{tree: checked.NativeRep(), fields: byName, used: map[string]fieldDeclaration{}}
+	lower := lowerer{source: expression, tree: checked.NativeRep(), fields: byName, used: map[string]fieldDeclaration{}}
 	predicate, err := lower.predicate(checked.NativeRep().Expr(), 0)
 	if err != nil {
 		return nil, err
 	}
 	if err = exploration.ValidatePredicate(predicate, signal); err != nil {
-		return nil, fmt.Errorf("lowered CEL predicate: %w", err)
+		d := diagnostic(CodeUnsupported, PhaseAdmission, fmt.Errorf("lowered CEL predicate: %w", err))
+		if errors.Is(err, exploration.ErrPredicateBudget) {
+			d.Code = CodeBudget
+		}
+		d.Path = "where"
+		return nil, d
 	}
 	cost, err := env.EstimateCost(checked, costEstimator{})
 	if err != nil {
-		return nil, fmt.Errorf("CEL cost estimation: %w", err)
+		return nil, diagnostic(CodeInternal, PhaseCost, fmt.Errorf("CEL cost estimation: %w", err))
 	}
 	if cost.Max > MaxCost {
-		return nil, fmt.Errorf("CEL expression exceeds work budget")
+		return nil, diagnostic(CodeBudget, PhaseCost, fmt.Errorf("CEL expression exceeds work budget"))
 	}
 	evaluator, err := env.Program(checked, cel.CostLimit(MaxCost))
 	if err != nil {
-		return nil, err
+		return nil, diagnostic(CodeInternal, PhaseCost, err)
 	}
 	return &Program{signal: signal, predicate: predicate, evaluator: evaluator, fields: lower.used}, nil
 }
 
 type lowerer struct {
+	source string
 	tree   *ast.AST
 	fields map[string]fieldDeclaration
 	used   map[string]fieldDeclaration
@@ -87,10 +106,24 @@ func (l *lowerer) field(expression ast.Expr) (fieldDeclaration, bool) {
 	}
 	return field, ok
 }
-func (l *lowerer) predicate(expression ast.Expr, depth int) (*exploration.Predicate, error) {
+func (l *lowerer) predicate(expression ast.Expr, depth int) (result *exploration.Predicate, err error) {
+	defer func() {
+		if err == nil {
+			return
+		}
+		var existing *Diagnostic
+		if errors.As(err, &existing) {
+			return
+		}
+		d := diagnostic(CodeUnsupported, PhaseLower, err)
+		d.Span = astSpan(l.source, l.tree, expression)
+		err = d
+	}()
 	l.nodes++
 	if l.nodes > 64 || depth > 16 {
-		return nil, fmt.Errorf("CEL lowering exceeds expression budget")
+		d := diagnostic(CodeBudget, PhaseLower, fmt.Errorf("CEL lowering exceeds expression budget"))
+		d.Span = astSpan(l.source, l.tree, expression)
+		return nil, d
 	}
 	if expression.Kind() != ast.CallKind {
 		return nil, fmt.Errorf("CEL predicate requires a supported field comparison")
@@ -235,4 +268,38 @@ func (l *lowerer) severity(expression, constant ast.Expr) (*exploration.Predicat
 		}
 	}
 	return nil, true, fmt.Errorf("unknown numeric OTel severity band")
+}
+
+func compileIssues(source, code, phase string, issues *cel.Issues) *Diagnostic {
+	d := diagnostic(code, phase, fmt.Errorf("CEL typecheck: %w", issues.Err()))
+
+	if entries := issues.Errors(); len(entries) != 0 {
+		loc := entries[0].Location
+		if loc != nil && loc.Line() > 0 && loc.Column() >= 0 {
+			offset, line := 0, 1
+			for _, r := range source {
+				if line == loc.Line() {
+					break
+				}
+				offset++
+				if r == '\n' {
+					line++
+				}
+			}
+			offset += loc.Column()
+			d.Span = sourceSpan(source, offset, offset)
+		}
+	}
+	return d
+}
+
+func astSpan(source string, tree *ast.AST, expression ast.Expr) *SourceSpan {
+	if tree == nil || expression == nil {
+		return nil
+	}
+	offsets, ok := tree.SourceInfo().GetOffsetRange(expression.ID())
+	if !ok {
+		return nil
+	}
+	return sourceSpan(source, int(offsets.Start), int(offsets.Stop))
 }

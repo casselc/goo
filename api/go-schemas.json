@@ -38,6 +38,22 @@
       }
     ]
   },
+  "CELPlanError": {
+    "$ref": "#/components/schemas/celhttp.ErrorResponse"
+  },
+  "CELPlanRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/querycel.PlanRequestInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "CELRecordPlan": {
+    "$ref": "#/components/schemas/querycel.RecordPlan"
+  },
   "CaptureList": {
     "$ref": "#/components/schemas/exploration.CaptureList"
   },
@@ -3191,6 +3207,28 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/annotations.SubjectEvent"
+  },
+  "celhttp.ErrorResponse": {
+    "properties": {
+      "diagnostic": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/querycel.Diagnostic"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "error": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "error"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/internal/celhttp.ErrorResponse"
   },
   "exploration.AdoptionRecordsQuestion": {
     "properties": {
@@ -24293,6 +24331,298 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/prebuilt.View"
+  },
+  "querycel.Diagnostic": {
+    "properties": {
+      "code": {
+        "type": "string"
+      },
+      "message": {
+        "type": "string"
+      },
+      "path": {
+        "type": "string"
+      },
+      "phase": {
+        "type": "string"
+      },
+      "span": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/querycel.SourceSpan"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "code",
+      "phase",
+      "message"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/querycel.Diagnostic"
+  },
+  "querycel.PlanBinding": {
+    "properties": {
+      "baseIdentity": {
+        "type": "string"
+      },
+      "compiler": {
+        "type": "string"
+      },
+      "epoch": {
+        "type": "string"
+      },
+      "library": {
+        "type": "string"
+      },
+      "operation": {
+        "type": "string"
+      },
+      "profile": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "string"
+      },
+      "signal": {
+        "type": "string"
+      },
+      "slot": {
+        "type": "string"
+      },
+      "target": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "operation",
+      "signal",
+      "baseIdentity",
+      "slot",
+      "epoch",
+      "revision",
+      "library",
+      "compiler",
+      "target",
+      "profile"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/querycel.PlanBinding"
+  },
+  "querycel.PlanBindingInput": {
+    "additionalProperties": false,
+    "properties": {
+      "baseIdentity": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "compiler": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "epoch": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "library": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "operation": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "profile": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "revision": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "signal": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "slot": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "target": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/querycel.PlanBinding"
+  },
+  "querycel.PlanRequestInput": {
+    "additionalProperties": false,
+    "properties": {
+      "base": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.QueryInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "binding": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/querycel.PlanBindingInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "expression": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/querycel.PlanRequest"
+  },
+  "querycel.RecordPlan": {
+    "properties": {
+      "binding": {
+        "$ref": "#/components/schemas/querycel.PlanBinding"
+      },
+      "celLibrary": {
+        "type": "string"
+      },
+      "expression": {
+        "type": "string"
+      },
+      "plan": {
+        "$ref": "#/components/schemas/exploration.Plan"
+      },
+      "predicate": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.Predicate"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "question": {
+        "$ref": "#/components/schemas/exploration.Query"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "celLibrary",
+      "expression",
+      "predicate",
+      "question",
+      "plan",
+      "binding"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/querycel.RecordPlan"
+  },
+  "querycel.SourceSpan": {
+    "properties": {
+      "column": {
+        "type": "integer"
+      },
+      "end": {
+        "type": "integer"
+      },
+      "line": {
+        "type": "integer"
+      },
+      "start": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "start",
+      "end",
+      "line",
+      "column"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/querycel.SourceSpan"
   },
   "retention.CatalogItem": {
     "properties": {

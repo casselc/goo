@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/casselc/goo/internal/capturehttp"
+	"github.com/casselc/goo/internal/celhttp"
 	"github.com/casselc/goo/internal/explanationhttp"
 	"github.com/casselc/goo/internal/nativehttp"
 	"github.com/casselc/goo/internal/operationhttp"
@@ -33,6 +34,7 @@ func TestFamilyPoliciesMatchPublishedAPIBoundaries(t *testing.T) {
 		lookup func(string, string) (queryhttp.Policy, bool)
 		count  int
 	}{
+		"cel":         {celhttp.PolicyFor, 1},
 		"record":      {recordhttp.PolicyFor, 13},
 		"native":      {nativehttp.PolicyFor, 8},
 		"explanation": {explanationhttp.PolicyFor, 3},

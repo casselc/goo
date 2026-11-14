@@ -12,6 +12,7 @@ def route_sources(root):
     files.extend(root / path for path in (
         'cmd/goo/serve_ui.go',
         'internal/recordhttp/routes.go',
+        'internal/celhttp/routes.go',
         'internal/nativehttp/routes.go',
         'internal/explanationhttp/routes.go',
         'internal/capturehttp/routes.go',

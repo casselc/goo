@@ -2979,3 +2979,9 @@ A separate six-span smoke checks the shared gate's existing latency consumer.
 [Executable storyboard](refinement-consolidation.md): existing latency, log-volume
 and severity journeys, explicit Run, held Return and retired Compare with no API
 POST. Includes refreshed desktop/mobile frames and observed model replay.
+
+## 436.2 — checked planning
+
+[Planning storyboard](cel-checked-planning.md) follows a complete parent through
+source-free CLI/HTTP checking, typed refusals and binding mismatch. This is a
+backend planning milestone; the app editor remains planned.

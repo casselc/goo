@@ -55,27 +55,14 @@ func planCEL(args []string, out io.Writer) error {
 		}
 		*expression = string(data)
 	}
-	program, err := querycel.Compile(parent.Signal, *expression)
+	request, err := querycel.NewPlanRequest(parent, *expression, "cli-condition", "cli", "1")
 	if err != nil {
 		return err
 	}
-	question, err := program.Apply(parent)
+	result, err := querycel.PlanRecord(request)
 	if err != nil {
 		return err
 	}
-	plan, err := exploration.Compile(question)
-	if err != nil {
-		return err
-	}
-	// This is a source-free planning receipt, not captured telemetry or evidence.
-	result := struct {
-		Version    string                 `json:"version"`
-		CELLibrary string                 `json:"celLibrary"`
-		Expression string                 `json:"expression"`
-		Predicate  *exploration.Predicate `json:"predicate"`
-		Question   exploration.Query      `json:"question"`
-		Plan       exploration.Plan       `json:"plan"`
-	}{"goo.cel-plan/1", querycel.LibraryVersion, *expression, program.Predicate(), question, plan}
 	encoder := json.NewEncoder(out)
 	encoder.SetIndent("", "  ")
 	return encoder.Encode(result)
