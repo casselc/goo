@@ -1,7 +1,6 @@
 package querycel
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"unicode/utf8"
@@ -56,16 +55,12 @@ func (p *Program) Predicate() *exploration.Predicate {
 	if p == nil || p.evaluator == nil || p.predicate == nil {
 		return nil
 	}
-	return copyPredicate(p.predicate)
-}
-func copyPredicate(value *exploration.Predicate) *exploration.Predicate {
-	if value == nil {
+	// The compiler admits this private predicate before constructing Program.
+	clone, err := exploration.ClonePredicate(p.predicate, p.signal)
+	if err != nil {
 		return nil
 	}
-	wire, _ := json.Marshal(value)
-	var out exploration.Predicate
-	_ = json.Unmarshal(wire, &out)
-	return &out
+	return clone
 }
 
 // Apply adds the compiled predicate with AND; it never replaces the enclosing
@@ -74,30 +69,10 @@ func (p *Program) Apply(parent exploration.Query) (exploration.Query, error) {
 	if p == nil || p.evaluator == nil || p.predicate == nil {
 		return exploration.Query{}, fmt.Errorf("CEL program is unavailable")
 	}
-	if err := parent.Validate(); err != nil {
-		return exploration.Query{}, fmt.Errorf("invalid parent question: %w", err)
-	}
 	if parent.Signal != p.signal {
 		return exploration.Query{}, fmt.Errorf("CEL predicate signal differs from parent question")
 	}
-	wire, err := json.Marshal(parent)
-	if err != nil {
-		return exploration.Query{}, err
-	}
-	var q exploration.Query
-	if err = json.Unmarshal(wire, &q); err != nil {
-		return exploration.Query{}, err
-	}
-	predicate := p.Predicate()
-	if q.Where != nil {
-		q.Where = &exploration.Predicate{All: []exploration.Predicate{*q.Where, *predicate}}
-	} else {
-		q.Where = predicate
-	}
-	if err = q.Validate(); err != nil {
-		return exploration.Query{}, fmt.Errorf("combined CEL predicate: %w", err)
-	}
-	return q, nil
+	return exploration.Refine(parent, p.predicate)
 }
 
 // Eval executes the checked CEL reference program over already normalized fixed

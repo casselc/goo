@@ -131,3 +131,10 @@ The pilot changes predicate authoring, not grouping/aggregation/window semantics
 or source planning. Databricks lowering of these record expressions, richer types,
 derived measures and whole-query CEL builders remain proposed. Existing portable
 prepared-fact compilation is a separate implemented subset.
+
+## Shared domain refinement
+
+The delivered [436.1 consolidation](REFINEMENT_CONSOLIDATION.md) makes standalone
+predicate admission independent of a fabricated query. `Program.Apply` delegates
+to `exploration.Refine`; predicate access returns a validated detached typed copy.
+This remains additive AND refinement, with no app editor or map-presence extension.

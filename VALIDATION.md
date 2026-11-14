@@ -1,5 +1,35 @@
 # Validation record
 
+## 436.1 — shared refinement and aggregate selection handoff
+
+[Contract](docs/REFINEMENT_CONSOLIDATION.md),
+[storyboard](docs/journeys/refinement-consolidation.md) and
+[independent acceptance](docs/reviews/REFINEMENT_CONSOLIDATION_436_1.md).
+
+- All root Go packages pass on Go 1.27.3; the final embedded server builds.
+  Standalone predicate validation and typed cloning now serve CEL Apply and the
+  existing reported-group drill-down. No HTTP schema or format changes.
+- Full frontend suite: **1,742 passing, zero failures/skips**, 24.402 seconds.
+  Mounted tests cover synchronous hold invalidation and deliberate dirty Compare.
+- Native Hegel checks pass without skips: 160 new refinement profiles × 56 record
+  combinations, existing CEL/Goo properties and four real read-only ClickHouse
+  parity queries. Combined focused native run: 0.243 seconds.
+- Three adjacent real browser tests pass: both log-context cases and numeric
+  severity. The final latency journey passes in 1.5 minutes, including its
+  existing 25-second Bombadil exploration and mandatory observed Quint replay.
+  Return retains the held parent; retired Compare is disabled and its retained
+  callback produces no API POST, source read or comparison. Six rejecting model
+  controls include a forged read in the final local history step.
+- An initial latency probe exposed an enabled-but-retired Compare control. Native
+  disabling and accepted-read scope binding were corrected; the final journey
+  and full frontend suite above include both fixes. Actual desktop/mobile frames
+  are refreshed, including the 390px held-return frame.
+- Independent source review accepts the slice; its focused Go and UI checks pass.
+  The parent full Go run resolves the review sandbox's loopback restriction.
+  No fresh physical assistive-technology, cross-engine or OpenAPI check is claimed.
+  Next: **436.2 checked planning and typed positioned diagnostics**; app CEL editing
+  and owned replacement slots remain planned.
+
 ## Whole-product CEL integration design review
 
 [Adopted direction](docs/CEL_PRODUCT_INTEGRATION.md) and

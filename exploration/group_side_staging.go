@@ -85,15 +85,11 @@ func StageGroupSide(request ComparisonRequest, intent GroupSideIntent) (Query, e
 		if row.Value != nil {
 			leaf.Op, leaf.Value = "eq", *row.Value
 		}
-		if q.Where == nil {
-			q.Where = &leaf
-		} else {
-			q.Where = &Predicate{All: []Predicate{*q.Where, leaf}}
-		}
-		if err := q.Validate(); err != nil {
+		refined, err := Refine(q, &leaf)
+		if err != nil {
 			return Query{}, fmt.Errorf("group question cannot be staged: %w", err)
 		}
-		return q, nil
+		return refined, nil
 	}
 	return fail()
 }

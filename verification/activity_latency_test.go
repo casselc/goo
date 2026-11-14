@@ -50,12 +50,20 @@ func TestQuintActivityLatencyLedger(t *testing.T) {
 			Signal, Environment string
 			Where               *exploration.Predicate
 		}
+		Retirement *struct {
+			BeforeReads, AfterReads, BeforeComparisons, AfterComparisons, BeforePosts, AfterPosts int
+			ParentHeld, ControlDisabled                                                           bool
+		}
 	}
 	if e = json.Unmarshal(raw, &l); e != nil {
 		t.Fatal(e)
 	}
 	if l.FirstRead != 1 || l.BeforeBrush != 2 || l.StagedReads != l.BeforeBrush || l.Next.ToMS <= l.First.ToMS || l.First.ToMS-l.First.FromMS != 60000 || l.Next.ToMS-l.Next.FromMS != 60000 || l.First.Environment != l.Scope.Environment || l.Next.Environment != l.Scope.Environment || !reflect.DeepEqual(l.First.Where, l.Scope.Where) || !reflect.DeepEqual(l.Next.Where, l.Scope.Where) {
 		t.Fatal("rolling read/staging scope drift")
+	}
+	retired := l.Retirement
+	if retired == nil || !retired.ParentHeld || !retired.ControlDisabled || retired.BeforeReads != l.AfterReturn || retired.AfterReads != retired.BeforeReads || retired.AfterComparisons != retired.BeforeComparisons || retired.BeforeComparisons < 1 || retired.AfterPosts != retired.BeforePosts {
+		t.Fatal("retired Compare adopted a child or dispatched API work")
 	}
 	type event struct {
 		Action       string `json:"action"`
@@ -66,6 +74,9 @@ func TestQuintActivityLatencyLedger(t *testing.T) {
 		events = append(events, event{"read", 1, i})
 	}
 	events = append(events, event{"back", 0, l.AfterReturn})
+	// The real held-return retirement is a local macrostep, reusing the
+	// existing no-read history action rather than inventing another state model.
+	events = append(events, event{"history", 0, retired.AfterReads})
 	replay := map[string]any{"parent": l.Next, "pair": l.Pair, "initial": l.BeforeBrush, "beforeReturn": l.BeforeReturn, "afterReturn": l.AfterReturn, "events": events}
 	body, e := json.Marshal(replay)
 	if e != nil {

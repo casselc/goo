@@ -51,3 +51,8 @@ They can contain planned or superseded behavior; they are not independent featur
 promises. Use the capability guide for current behavior and the current roadmap
 for priorities. The [historical README](history/README_BEFORE_DOCS_CLEANUP.md) and
 [original handoff](../START_HERE.md) are background, not getting-started guides.
+
+## Refinement and held selections
+
+[Shared refinement and aggregate handoff](REFINEMENT_CONSOLIDATION.md) documents
+the domain operations, owner-specific interaction guards and remaining CEL work.

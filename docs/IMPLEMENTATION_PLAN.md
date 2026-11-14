@@ -25,10 +25,11 @@
 > The delivered [CEL predicate pilot](CEL_PREDICATE_PILOT.md) is followed by the
 > [whole-product integration design](CEL_PRODUCT_INTEGRATION.md), reconciled from
 > six specialist reviews and a planner and cross-reviewed by architecture/UX.
-> **436.1 shared ordinary refinement/held return is next**, followed by checked
+> **436.1 shared ordinary refinement/held return is delivered**; see the
+> [implemented contract](REFINEMENT_CONSOLIDATION.md). Next is checked
 > planning/diagnostics (436.2), representation/slot ownership (436.3), compact
 > contextual UI (436.4), one preservation owner (436.5) and whole-product observed
-> acceptance (436.6). All six are planned; the app has no CEL editor yet.
+> acceptance (436.6). 436.2–436.6 remain planned; the app has no CEL editor yet.
 > Keep this one finite consolidation sequence; do not start a separate language
 > platform backlog or promise lossless conversion of unsupported visual predicates.
 > The older **427–429 preservation cycle** remains pending follow-on work. The older labeling queue

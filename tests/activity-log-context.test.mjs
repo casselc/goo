@@ -25,10 +25,10 @@ const turn=()=>new Promise(resolve=>setImmediate(resolve));
 const summary=(count,band='info')=>Object.fromEntries(['count','trace','debug','info','warn','error','fatal','unspecified','invalid'].map(key=>[key,key==='count'||key===band?String(count):'0']));
 function dto(q,{empty=false}={}){const values=empty?[0,0,0,0,0,0]:[2,0,0,0,0,1],count=empty?'0':'3',receipt={basis:'a'.repeat(64),readAt:'2026-11-12T12:00:00Z'};return{version:'goo/record-aggregates/v1',question:structuredClone(q),capturedAt:receipt.readAt,basis:'b'.repeat(64),state:empty?'no_data':'observed',count,logSeverity:empty?summary('0'):{...summary('3'),info:'2',error:'1'},groups:empty?[]:[{g0:'INFO',count:'2',logSeverity:summary('2')},{g0:' ERROR ',count:'1',logSeverity:summary('1','error')}],warnings:[],reads:{count:receipt,groups:receipt,timeSeries:receipt},timeSeries:values.map((count,i)=>({fromMs:q.fromMs+i*10000,toMs:q.fromMs+(i+1)*10000,count:String(count),state:count?'observed':'no_data',logSeverity:summary(count,i===5?'error':'info')}))}}
 
-function setup(t){
+function setup(t,{onPause}={}){
  reads=[];globalThis.document={hidden:false,activeElement:null};const root=node('main');root.root=true;const toolbar=node('div'),host=node('div');root.append(toolbar,host);
  const c={selector:{signal:'logs',environment:'prod',where:{any:[{field:{kind:'attribute',key:'tenant'},op:'missing'},{field:{kind:'attribute',key:'tenant'},op:'eq',value:''}]}},readWindow:{fromMs:120000,toMs:180000},active:true,clean:true,phase:'partial'},explanations=[],paused=[],staged=[];let owner;
- owner=mount(host,{controlsHost:toolbar,current:()=>c,pauseStream:()=>{paused.push(true);c.phase='paused';owner.sync()},onExplain:(...args)=>explanations.push(args),onStage:(...args)=>staged.push(args)});t.after(()=>owner.dispose());
+ owner=mount(host,{controlsHost:toolbar,current:()=>c,pauseStream:()=>{paused.push(true);c.phase='paused';owner.sync();onPause?.({c,owner,host,toolbar})},onExplain:(...args)=>explanations.push(args),onStage:(...args)=>staged.push(args)});t.after(()=>owner.dispose());
  const all=()=>[...walk(toolbar),...walk(host)],button=name=>all().find(e=>e.tag==='button'&&(e.textContent===name||e.attributes['aria-label']===name));
  return{root,toolbar,host,c,owner,paused,explanations,staged,button,band:()=>all().find(e=>e.attributes['aria-label']==='Numeric severity'),chart:()=>all().find(e=>e.tag==='goo-time-bars'),cadence:()=>all().find(e=>e.tag==='select'),section:()=>host.children[0],open:()=>button('Show volume').onclick()};
 }
@@ -101,4 +101,8 @@ test('numeric filter leases retire band ABA, changed scope, disabled/hidden cont
 
 test('local severity display survives a parent predicate budget that cannot admit another numeric constraint',async t=>{
  const f=setup(t);f.c.selector.where={all:Array.from({length:29},(_,i)=>({field:{kind:'attribute',key:'tag'+i},op:'eq',value:'yes'}))};f.owner.sync();const work=f.open();complete(reads[0]);await work;const band=f.band();band.value='error';assert.doesNotThrow(()=>band.onchange());assert.equal(f.section().dataset.severityBand,'error');assert.equal(f.chart().data.points[5].value,'1');assert.equal(f.button('Filter Error').disabled,true);assert.equal(f.button('Explain window').disabled,true);assert.doesNotThrow(()=>f.button('Explain window').onclick());assert.equal(f.explanations.length,0);assert.equal(f.staged.length,0);assert.equal(reads.length,1);
+});
+
+for(const state of ['dirty','hidden','disabled','disposed','scope','renderABA'])test('volume Explain withdraws when hold changes '+state,async t=>{
+ const f=setup(t,{onPause:({c,owner,host})=>{if(state==='dirty')c.clean=false;if(state==='hidden')host.hidden=true;if(state==='disabled')walk(host).find(e=>e.attributes['aria-label']==='Explain window').disabled=true;if(state==='disposed')owner.dispose();if(state==='scope'){c.selector.environment='other';owner.sync()}if(state==='renderABA'){owner.invalidate();c.selector.environment='other';owner.sync();c.selector.environment='prod';owner.sync()}}});const work=f.open();complete(reads[0]);await work;f.button('Explain window').onclick();assert.equal(f.explanations.length,0);assert.equal(reads.length,1);
 });

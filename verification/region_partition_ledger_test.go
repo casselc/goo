@@ -53,6 +53,10 @@ func checkRegionPartitionLedger(t *testing.T, variable string, durationOnly bool
 			l.Events[1].Reads++
 		case 4:
 			l.Pair.Baseline.Question.Environment = "other"
+		case 5:
+			// Keep the question and pair coherent, but forge work during the
+			// final local back/history step (including pause retirement).
+			l.Events[len(l.Events)-1].Reads++
 		}
 		coherent := l.BeforeReturn == l.AfterReturn && l.Pair.Selection.Count == "2" && l.Pair.Baseline.Count == "3"
 		for _, q := range []exploration.Query{l.Pair.Selection.Question, l.Pair.Baseline.Question} {
@@ -92,7 +96,7 @@ func checkRegionPartitionLedger(t *testing.T, variable string, durationOnly bool
 	if !check(-1) {
 		t.Fatal("valid region trace rejected")
 	}
-	for bad := 0; bad < 5; bad++ {
+	for bad := 0; bad < 6; bad++ {
 		if check(bad) {
 			t.Fatal("forged region trace accepted", bad)
 		}

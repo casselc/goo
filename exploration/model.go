@@ -125,8 +125,7 @@ func (q Query) Validate() error {
 		}
 		seen[f] = true
 	}
-	count := 0
-	return validatePredicate(q.Where, q.Signal, 0, &count)
+	return ValidatePredicate(q.Where, q.Signal)
 }
 func validatePredicate(p *Predicate, signal string, depth int, count *int) error {
 	if p == nil {

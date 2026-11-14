@@ -46,8 +46,7 @@ func Compile(signal, expression string) (*Program, error) {
 	if err != nil {
 		return nil, err
 	}
-	q := exploration.Query{Signal: signal, Environment: "cel-validation", FromMS: 0, ToMS: 60000, Limit: 100, Where: predicate}
-	if err = q.Validate(); err != nil {
+	if err = exploration.ValidatePredicate(predicate, signal); err != nil {
 		return nil, fmt.Errorf("lowered CEL predicate: %w", err)
 	}
 	cost, err := env.EstimateCost(checked, costEstimator{})

@@ -1,6 +1,6 @@
 # CEL as part of the Goo product
 
-Status: adopted design direction, 2026-11-14. Implementation below is **planned**.
+Status: adopted design direction, 2026-11-14. [436.1](REFINEMENT_CONSOLIDATION.md) is delivered; 436.2–436.6 remain **planned**.
 The delivered [predicate pilot](CEL_PREDICATE_PILOT.md) remains a Go library and
 source-free CLI; this review ships no editor, HTTP route or persistence change.
 
@@ -162,7 +162,7 @@ decisions. Existing prepared-fact portability does not imply record portability.
 Adopt the [reconciled plan](reviews/CEL_HOLISTIC_PLAN.md) as six reviewable slices
 inside the next 436 consolidation, not a competing language-platform backlog:
 
-1. **436.1:** shared ordinary predicate admission/refinement/cloning; align matching
+1. **436.1 — delivered:** shared ordinary predicate admission/refinement/cloning; align matching
    aggregate-selection/held-return contracts with one CEL and one non-CEL adopter.
 2. **436.2:** pure named planning use case, typed positioned diagnostics and bounded
    in-process transport; shared logical descriptors only where needed by this slice.
@@ -173,8 +173,8 @@ inside the next 436 consolidation, not a competing language-platform backlog:
 6. **436.6:** demonstrate the whole watch/refine/run/inspect/return/preserve/reuse loop,
    including existing Services and Measurements record context.
 
-Each slice can ship independently with its own checks and review. The first
-implementation task is 436.1; it does not require a universal field registry,
+Each slice can ship independently with its own checks and review. The next
+implementation task is 436.2; the delivered 436.1 does not require a universal field registry,
 rewriting every clone site, implementing maps or replacing all controllers.
 Keep the older 427–429 preservation contracts pending and do not mark them complete
 merely because their owners are reused.

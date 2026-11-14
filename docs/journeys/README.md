@@ -2973,3 +2973,9 @@ and Bombadil/Hegel/Quint results are recorded in [validation](../../VALIDATION.m
 counts versus retained occurrences, exact text severity, three-SQL refreshes,
 old-window selection, pending-refresh freeze, source faults and held return.
 A separate six-span smoke checks the shared gate's existing latency consumer.
+
+## 436.1 — refinement and held selection
+
+[Executable storyboard](refinement-consolidation.md): existing latency, log-volume
+and severity journeys, explicit Run, held Return and retired Compare with no API
+POST. Includes refreshed desktop/mobile frames and observed model replay.

@@ -11,9 +11,11 @@ The [whole-product design review](CEL_PRODUCT_INTEGRATION.md) identifies the nex
 integration gaps: AND-only Apply cannot replace edited conditions; current CEL
 cannot represent every visual predicate; compiler diagnostics lack typed source
 spans; and narrow Activity has substantial controls before the first record.
-436 now addresses these through one bounded consolidation sequence. No new editor,
-authoring metadata, shared cloning API or compile transport is implemented by the
-review. Source/readiness, native metric grain/units and historical custody remain
+436 addresses these through one bounded consolidation sequence.
+[436.1](REFINEMENT_CONSOLIDATION.md) delivers shared predicate admission, typed
+cloning and additive refinement, plus guarded aggregate handoffs. Additive
+refinement does not replace an edited slot. Typed diagnostics, slot ownership,
+app expression editing, authoring metadata and compile transport remain planned. Source/readiness, native metric grain/units and historical custody remain
 separate from language checking.
 
 [The ad-hoc telemetry review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) identifies

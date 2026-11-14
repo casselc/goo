@@ -2205,3 +2205,11 @@ tail-cause map. The shared five-kind vocabulary and default labels still serve
 other hosts. Native Technical details and Retry retain their familiar styling.
 The tail adapter owns retry policy, generation/scope guards, focus and timers;
 rendering a label or disclosure cannot acquire telemetry.
+
+## Aggregate selection handoff
+
+The app-owned `aggregate-selection-lease.mjs` helper checks eligibility, holds the
+owner synchronously and rechecks before handing off. It does not acquire data or
+merge controllers. Volume retains its clean-band policy; latency retains Compare
+for a deliberately staged duration draft. Retired latency Compare is natively
+disabled. See [436.1](REFINEMENT_CONSOLIDATION.md).

@@ -4848,3 +4848,14 @@ it and must pass without skips. A declared unavailable source fails. This is a
 stateless compiler/reference pilot, so no new Quint state model or Bombadil driver
 is introduced. [Guide](../docs/CEL_PREDICATE_PILOT.md),
 [CLI storyboard](../docs/journeys/cel-authoring.md).
+
+## 436.1 — shared refinement and retired selection
+
+`go test -run TestHegelRefinement436Conservation -count=1 -v` in this module
+checks 160 generated profiles against 56 record combinations each: complete-parent
+AND membership, nil identity, policy preservation and detached mutable members.
+The existing activity-latency journey supplies the current retirement ledger to
+`TestQuintActivityLatencyLedger`; it requires held/disabled return facts and no
+new reads, comparisons or API POSTs. Existing partition replay has six rejecting
+controls, including a forged source read in the final local step. No new model
+or driver is introduced. See [storyboard](../docs/journeys/refinement-consolidation.md).
