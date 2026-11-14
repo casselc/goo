@@ -36,3 +36,14 @@ test('Activity previous-window planner refuses dirty, expired and incomplete own
 test('Activity previous-window planner keeps named, empty and missing typed environment selection exact',()=>{
  for(const policy of ['current-only','effective'])for(const scope of [{mode:'named',value:'prod'},{mode:'empty'},{mode:'unreported'}]){const c=comparisonContext();c.selector.environmentSelector={version:'goo/environment-selector/v1',policy,scope};if(policy==='current-only'&&scope.mode!=='named'){assert.throws(()=>previousWindowView(c));continue}const v=previousWindowView(c),q=v.queries[0],b=v.composition.children.find(c=>c.comparison).comparison.baselineQuery;assert.deepEqual(q.environmentSelector,c.selector.environmentSelector);assert.deepEqual(b.environmentSelector,c.selector.environmentSelector)}
 });
+
+// Editor roundtrips may reorder object keys and omit wire-default empty values.
+test('Activity draft identity survives editor normalization without losing actual changes',()=>{
+ const {normalize}=require('../ui/filter-editor.mjs');
+ const original={all:[{op:'eq',value:'',field:{key:'tenant',kind:'resource'}},{any:[{op:'missing',field:{key:'region',kind:'attribute'}},{numeric:{parse:'canonical-decimal',unit:'{job}',scale:0,type:'int64',field:{key:'jobs',kind:'attribute'}},op:'ge',value:'2'}]}]};
+ const filters=new ScopeFilters();filters.restore(original);const held=filters.where(true);filters.replace(normalize(original));assert.equal(filters.dirty,false);assert.deepEqual(filters.where(true),held);
+ const edited=normalize(original);edited.all[0].op='missing';delete edited.all[0].value;filters.replace(edited);assert.equal(filters.dirty,true);
+ filters.replace(normalize(original));assert.equal(filters.dirty,false);const reordered=normalize(original);reordered.all.reverse();filters.replace(reordered);assert.equal(filters.dirty,true);
+ filters.restore({all:[{field:{kind:'attribute',key:'region'},op:'eq',value:'west'}]});filters.stage({kind:'resource',key:'tenant'},'','include');filters.apply();filters.replace(normalize(filters.where(true)));assert.equal(filters.dirty,false);
+ filters.replace({all:[{field:{kind:'resource',key:'region'},op:'eq',value:'west'},{field:{kind:'resource',key:'tenant'},op:'eq'}]});assert.equal(filters.dirty,true);
+});

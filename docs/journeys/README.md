@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Instrument preflight](instrument-preflight.md) (433a) keeps incomplete instance
+identity visible while aligning disabled Build/Preview actions across Measurements
+and Services, including a bad stream beyond the displayed preview cap.
+
 [Sparse/delayed Activity recovery](sparse-data-recovery.md) (432b) retains a quiet
 stream while staging a wider fixed search. Explicit rereads distinguish a frozen
 event-time window from later source observations.

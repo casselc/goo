@@ -44,7 +44,7 @@ class ScopeFilters{
   apply(){this.applied=structuredClone(this.draft);this.appliedBase=structuredClone(this.base)}
   reset(){this.draft=[];this.applied=[];this.base=null;this.appliedBase=null}
   restore(where){this.reset();this.base=structuredClone(where||null);this.appliedBase=structuredClone(this.base)}
-  get dirty(){return JSON.stringify([this.base,this.draft])!==JSON.stringify([this.appliedBase,this.applied])}
+  get dirty(){return QuestionSession.identity({where:this.where()})!==QuestionSession.identity({where:this.where(true)})}
   where(applied=false){const list=applied?this.applied:this.draft;const base=applied?this.appliedBase:this.base;return base?(list.length?{all:[structuredClone(base),...structuredClone(list)]}:structuredClone(base)):list.length?{all:structuredClone(list)}:undefined}
  }
 // An inspected occurrence keeps its original applied selector and poll window.

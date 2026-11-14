@@ -1,4 +1,5 @@
 import {admitHeld} from './native-held-record-context.mjs';
+import * as InstrumentCapabilities from './instrument-capabilities.mjs';
 import * as SourceRefusal from './source-refusal.mjs';
 import {renderRefusal} from './source-refusal-view.mjs';
 import * as RecordEnvironment from './record-environment.mjs';
@@ -92,7 +93,7 @@ function rpcServerObserved(scope,service,data,expected){return profileObserved(s
 function dbClientObserved(scope,service,data,expected){return profileObserved(scope,service,data,expected,'db-client')}
 function messagingConsumerObserved(scope,service,data,expected){return profileObserved(scope,service,data,expected,'messaging-consumer')}
 function messagingProducerObserved(scope,service,data,expected){return profileObserved(scope,service,data,expected,'messaging-producer')}
-function planningInput(input){const profile=input.profile||'auto';if(!['auto','all-spans',...Object.keys(recordProfiles)].includes(profile))throw Error('Unsupported service dashboard view.');return {...clone(input),instruments:(input.instruments||[]).map(i=>(PoolSignals).compactInstrument(i)),profile}}
+function planningInput(input){const profile=input.profile||'auto';if(!['auto','all-spans',...Object.keys(recordProfiles)].includes(profile))throw Error('Unsupported service dashboard view.');return {...clone(input),instruments:(input.instruments||[]).filter(InstrumentCapabilities.ready).map(i=>(PoolSignals).compactInstrument(i)),profile}}
 function recordFamily(widget){return widget.query?.signal==='spans'?recordProfile(widget.family):null}
 function incomingFamily(widget){const profile=recordFamily(widget);return profile?.role==='Server'?profile:null}
 function isHTTP(widget,plan){return !!widget.query&&widget.query.signal==='spans'&&widget.family==='http-server'}

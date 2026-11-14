@@ -10,7 +10,7 @@ import (
 func TestHTTPClientDuration392CapabilityAndCoverage(t *testing.T) {
 	for _, schema := range []string{CurrentHTTPClientSchema, "", "https://custom.invalid/schema"} {
 		i := Instrument{Metric: CurrentHTTPClientDurationMetric, Kind: "histogram", Unit: "s", SchemaURL: schema, Supported: true, Temporality: 1, Definition: &Definition{}}
-		observations := []DiscoveryObservation{{Resource: map[string]string{"service.instance.id": "one"}, Attributes: map[string]string{"http.request.method": "GET", "server.address": "api", "server.port": "443"}}, {Resource: map[string]string{}, Attributes: map[string]string{"http.request.method": "", "server.address": "", "server.port": ""}}, {Resource: map[string]string{"service.instance.id": "three"}, Attributes: map[string]string{}}}
+		observations := []DiscoveryObservation{{Resource: map[string]string{"service.instance.id": "one"}, Attributes: map[string]string{"http.request.method": "GET", "server.address": "api", "server.port": "443"}}, {Resource: map[string]string{"service.instance.id": "two"}, Attributes: map[string]string{"http.request.method": "", "server.address": "", "server.port": ""}}, {Resource: map[string]string{"service.instance.id": "three"}, Attributes: map[string]string{}}}
 		before, _ := json.Marshal(observations)
 		p := PlanInstrument(i, observations)
 		after, _ := json.Marshal(observations)

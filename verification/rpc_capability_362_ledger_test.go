@@ -153,15 +153,18 @@ func rpcCapabilityAdmission362(l rpcCapabilityLedger362) error {
 			return fmt.Errorf("missing capability metadata")
 		}
 		p := *i.CapabilityPlan
+		observations, _ := rpcRawPoints362(l, i)
+		if len(observations) != i.Records {
+			return fmt.Errorf("raw OTLP identity observations differ from discovery records")
+		}
 		shape := i.Metric == "rpc.server.call.duration" && i.Kind == "histogram" && i.Unit == "s"
-		if p.Verification != "not-run" || p.Eligible != (i.Supported && i.Definition != nil) {
-			return fmt.Errorf("metadata promoted evaluation or blocked generic eligibility")
+		if p.Verification != "not-run" || p.Eligible != rpcExpectedEligibility362(i, observations) {
+			return fmt.Errorf("metadata eligibility differs from raw service-instance policy")
 		}
 		if i.Metric == "rpc.server.call.duration" {
 			if p.Profile != "rpc-server-call-duration" || p.RuleSet != "OpenTelemetry semantic conventions v1.45.0" || p.ShapeMatches != shape {
 				return fmt.Errorf("literal current RPC shape/profile pin")
 			}
-			observations, _ := rpcRawPoints362(l, i)
 			if len(observations) != i.Records {
 				return fmt.Errorf("raw OTLP discovery records")
 			}

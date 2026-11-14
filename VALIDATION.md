@@ -1,5 +1,55 @@
 # Validation record
 
+## 433a — shared instrument readiness and semantic scope identity
+
+[Contract](docs/INSTRUMENT_PREFLIGHT.md),
+[storyboard](docs/journeys/instrument-preflight.md),
+[checkpoint review](docs/reviews/CONSOLIDATION_REVIEW_433.md) and
+[roadmap](docs/ROADMAP_2026_11_14_CHECKPOINT_430.md).
+
+- **All root Go packages pass** under Go 1.27.3; the final embedded binary builds.
+  Full-observation preflight distinguishes missing, empty and unknown resources,
+  preserves resource-bound host/container policy, and retains profile/kernel reasons.
+  Three older dimension-only fixtures now report valid instances; new tests cover
+  instance refusal independently of their conditional-dimension assertions.
+- **1,684 frontend tests pass**, zero failures/skips (20.3s), including actual
+  Services/Measurements callbacks, stable disabled labels, specific visible reasons,
+  retained source-exclusion cues, overview scheduling before compaction and semantic
+  Activity draft identity without changing predicate child order.
+- The final real ClickHouse journey passes (**36.8s**, 38.4s runner), including a
+  **30-second Bombadil actor**. Four instruments cover valid, missing, empty and
+  mixed instance identity. The mixed case has **27 actual streams**, with its bad
+  stream outside the **25 displayed valid previews**; it still refuses Build.
+  Scope metadata remains selectable and reports all 60 fixture points.
+- Both discovery surfaces show three disabled and one enabled native action.
+  Disabled/closed controls do not plan or run. The supported package previews and
+  explicitly evaluates two points in one stream. Services overview schedules only
+  the eligible instrument: actual measurement requests are exactly the explicit
+  valid Run plus the valid automatic overview read. Blocked metadata remains shown.
+  Per-card metadata disclosure reads nothing; supported service Preview performs
+  pure planning without another value read.
+- The actor independently observes four rows, three blocked actions and one
+  eligible action, completes one discovery and one pure plan, and performs no Run
+  or forbidden write. Its action set targets Build rather than hidden attribute
+  copy buttons. The owned fixture database and isolated runtime clean up.
+- New **Hegel preflight properties** and existing **RPC362/scope432 Hegel and native
+  Quint regressions pass** (14.7s, zero skips), covering full-observation policy,
+  permutation/preview-cap invariance, input immutability, known-versus-unknown
+  metadata and typed scope continuation with rejecting controls. The artifact-only
+  RPC362 browser-ledger test was updated but not newly executed in this round.
+- The five-journey first-use regression matrix passes (**54.2s**): generic startup,
+  unfamiliar OTLP scopes, partial-family installations, metric scope continuation
+  and sparse Activity recovery. These run serially with isolated Go runtimes.
+  Affected documentation frames are refreshed. The final overview scheduling
+  correction is additionally covered by the new real journey and frontend suite.
+- Independent architecture, product, UX and standards reviewers accept the bounded
+  consolidation. Final 1440/390/320 instrument/Services frames remove the previously
+  auto-scheduled rejected widget while retaining blocked metadata and reasons.
+  Source-adapter fixtures are direct exporter-shaped inserts, not a new collector
+  ingestion claim. Actual AT speech/cross-engine checks and a deployed lab upgrade
+  are not claimed. Stable typed live-source failure/retry remains **433b**, so the
+  entire 433 checkpoint is not marked complete.
+
 ## 432b — sparse/delayed Activity recovery
 
 [Contract](docs/ACTIVITY_SPARSE_RECOVERY.md),

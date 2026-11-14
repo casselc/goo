@@ -155,9 +155,44 @@ func observedCoverage(i Instrument, observations []DiscoveryObservation) Instrum
 	return out
 }
 
+// serviceInstancePreflight inspects all supplied resource identities, not the
+// bounded display preview. A nil resource is unknown; a known resource can
+// establish missing/empty instance identity even if dimension metadata is absent.
+// Resource-bound host/container kernels have a separate identity policy.
+func serviceInstancePreflight(i Instrument, observations []DiscoveryObservation) string {
+	if i.Definition == nil || i.Definition.Source.Resource != nil {
+		return ""
+	}
+	missing, empty := false, false
+	for _, observation := range observations {
+		if observation.Resource == nil {
+			continue
+		}
+		value, present := observation.Resource["service.instance.id"]
+		missing = missing || !present
+		empty = empty || present && value == ""
+	}
+	if !missing && !empty {
+		return ""
+	}
+	state := "missing"
+	if empty {
+		state = "empty"
+		if missing {
+			state = "missing and empty"
+		}
+	}
+	return "Current service evaluation policy requires reported nonempty service.instance.id; " + state + " values were observed. This is not an OTLP requirement."
+}
+
 // PlanInstrument is pure metadata planning. It does not verify telemetry semantics.
 func PlanInstrument(i Instrument, observations []DiscoveryObservation) InstrumentCapabilityPlan {
-	p := InstrumentCapabilityPlan{Version: CapabilityPlanVersion, Profile: "generic", Title: "Generic metric", Eligible: i.Supported && i.Definition != nil, Verification: "not-run", Reasons: []string{}, Hints: []string{}, Coverage: observedCoverage(i, observations)}
+	instanceReason := serviceInstancePreflight(i, observations)
+	metadataEligible := i.Supported && i.Definition != nil
+	p := InstrumentCapabilityPlan{Version: CapabilityPlanVersion, Profile: "generic", Title: "Generic metric", Eligible: metadataEligible && instanceReason == "", Verification: "not-run", Reasons: []string{}, Hints: []string{}, Coverage: observedCoverage(i, observations)}
+	if instanceReason != "" {
+		p.Reasons = append(p.Reasons, instanceReason)
+	}
 	if i.Kind == exponentialHistogramKind {
 		p.Eligible = false
 		p.Title = "Observed exponential histogram"
@@ -186,7 +221,7 @@ func PlanInstrument(i Instrument, observations []DiscoveryObservation) Instrumen
 	if i.Kind == "histogram" && i.Unit != "s" && i.Unit != "ms" {
 		p.Reasons = append(p.Reasons, "The current histogram kernel requires seconds or milliseconds.")
 	}
-	if !p.Eligible && len(p.Reasons) == 0 {
+	if !metadataEligible && (len(p.Reasons) == 0 || len(p.Reasons) == 1 && instanceReason != "") {
 		p.Reasons = append(p.Reasons, "No valid package binding is available from the current kernels.")
 	}
 	if GoRuntimeMetricTitle(i.Metric) != "" {
@@ -199,7 +234,7 @@ func PlanInstrument(i Instrument, observations []DiscoveryObservation) Instrumen
 			p.ShapeMatches = true
 			p.Hints = append(p.Hints, "Positive service-instance preview metadata supports exact-stream stock observations with nonnegative-integer domain. Numerical values and freshness still require evaluation.", "Memory types remain separate literal labels, including custom or unreported types. GC heap goal is a reported target, not GC pause time, collection activity or memory utilization. Goroutine count is not a leak diagnosis.")
 		} else {
-			p.Hints = append(p.Hints, "Pinned Go runtime eligibility is unconfirmed; it requires cumulative nonmonotonic stock identity, exact unit and v1.37.0 schema, plus positive service-instance preview evidence. The generic binding remains available; missing preview evidence is not absence.")
+			p.Hints = append(p.Hints, "Pinned Go runtime eligibility is unconfirmed; it requires cumulative nonmonotonic stock identity, exact unit and v1.37.0 schema, plus positive service-instance preview evidence. The generic binding remains available if eligible; missing preview evidence is not absence.")
 		}
 		return p
 	}
@@ -213,7 +248,7 @@ func PlanInstrument(i Instrument, observations []DiscoveryObservation) Instrumen
 			p.ShapeMatches = true
 			p.Hints = append(p.Hints, "A supplied observed stream reports a named pool, nonempty instance and nonempty literal state. Execution must use stockDomain=nonnegative-integer; values and freshness still require evaluation. States, pools and instances remain separate; capacity, utilization and pool health are unbound.")
 		} else {
-			p.Hints = append(p.Hints, "Named-pool eligibility is unconfirmed: it requires the pinned cumulative nonmonotonic connection stock binding and one of the first 25 observed streams reporting the same nonempty instance, pool name and nonempty literal state. Missing preview evidence is not absence; the generic binding remains available.")
+			p.Hints = append(p.Hints, "Named-pool eligibility is unconfirmed: it requires the pinned cumulative nonmonotonic connection stock binding and one of the first 25 observed streams reporting the same nonempty instance, pool name and nonempty literal state. Missing preview evidence is not absence; the generic binding remains available if eligible.")
 		}
 		return p
 	}

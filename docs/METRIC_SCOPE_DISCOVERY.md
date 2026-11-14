@@ -62,8 +62,10 @@ This is stricter than universal OTLP stream identity, and is not a requirement t
 browse metric scopes. No instance identifier is invented for missing data.
 
 The metrics-only journey reports actual instance IDs for its successful Run.
-Clearer preflight for absent instance identity, and a separate design decision on
-generic reported-stream evaluation, are tracked in the
+[Instrument preflight](INSTRUMENT_PREFLIGHT.md) now blocks Build/Preview for known
+missing or empty instance identity across all supplied observations. Unknown
+metadata and a changing source still require runtime checks. The separate design
+decision on generic reported-stream evaluation is tracked in the
 [roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md). This feature does not expand kernel
 eligibility or claim that every discovered instrument is executable.
 

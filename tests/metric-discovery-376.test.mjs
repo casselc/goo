@@ -23,9 +23,9 @@ function instrument(overrides={}){return {kind:'gauge',metric:'load',unit:'1',sc
 function setup(instruments,diagnostics=[]){const host=node('section');host.connected=true;const built=[];render(host,{instruments,diagnostics,sources:diagnostics.map(d=>({kind:d.kind,state:d.reason}))},{onBuild:i=>built.push(i)});return{host,built}}
 test('observed exponential points stay readable but never executable, including direct callback',()=>{
  const source=instrument({kind:'exponential-histogram',metric:'response.duration',unit:'s',records:13,supported:false,definition:undefined,unsupportedReason:'Zero-threshold and optional-statistic presence are unavailable.'});
- const {host,built}=setup([source]);assert.match(host.textContent,/Exponential histogram · s · 13 exported points/);assert.match(host.textContent,/Observed · unsupported for evaluation/);assert.match(host.textContent,/Zero-threshold/);assert.doesNotMatch(host.textContent,/13 observations/);
- const table=find(host,'goo-table')[0];assert.equal(table.getAttribute('mobile-layout'),'stacked');const heads=find(table,'th').map(x=>x.textContent),row=find(table,'tbody')[0].children[0];assert.deepEqual(row.children.map(x=>x.dataset.label),heads);assert.equal(row.children[2].textContent,'Observed · unsupported for evaluationSource and representation requirements unmet.');
- const use=find(host,'button').find(x=>x.textContent==='Unsupported instrument');assert.equal(use.disabled,true);use.onclick();use.disabled=false;use.onclick();assert.equal(built.length,0);
+ const {host,built}=setup([source]);assert.match(host.textContent,/Exponential histogram · s · 13 exported points/);assert.match(host.textContent,/Preview unavailable/);assert.match(host.textContent,/Zero-threshold/);assert.doesNotMatch(host.textContent,/13 observations/);
+ const table=find(host,'goo-table')[0];assert.equal(table.getAttribute('mobile-layout'),'stacked');const heads=find(table,'th').map(x=>x.textContent),row=find(table,'tbody')[0].children[0];assert.deepEqual(row.children.map(x=>x.dataset.label),heads);assert.match(row.children[2].textContent,/Preview unavailable · Zero-threshold/);
+ const use=find(host,'button').find(x=>x.textContent==='Build measurement package');assert.equal(use.disabled,true);use.onclick();use.disabled=false;use.onclick();assert.equal(built.length,0);
  // Even a forged eligible/supported flag cannot turn this kind into an explicit histogram package.
  source.supported=true;source.definition={kind:'histogram'};use.onclick();assert.equal(built.length,0);
 });
@@ -35,6 +35,12 @@ test('available ordinary instrument builds only through current visible row; loc
  find(host,'button').find(x=>x.textContent==='More instruments').onclick();assert.equal(built.length,1);old();assert.equal(built.length,1);find(host,'button').find(x=>x.textContent==='Previous instruments').onclick();host.append(use);old();assert.equal(built.length,1);
 });
 test('missing optional table is visible and an empty partial catalogue does not claim no instruments everywhere',()=>{
- const {host}=setup([],[{kind:'exponential-histogram',reason:'absent'}]);assert.match(host.textContent,/Exponential histograms \(table absent\)/);assert.match(host.textContent,/Available sources only/);assert.match(host.textContent,/available sources for this window/);assert.doesNotMatch(host.textContent,/No instruments observed in this window/);
+ const {host}=setup([],[{kind:'exponential-histogram',reason:'absent'}]);assert.equal(host.children[0].children[0].textContent,'Metadata and support · available sources only');assert.match(host.children[0].textContent,/Exponential histograms \(table absent\)/);assert.match(host.textContent,/Exponential histograms \(table absent\)/);assert.match(host.textContent,/Available sources only/);assert.match(host.textContent,/available sources for this window/);assert.doesNotMatch(host.textContent,/No instruments observed in this window/);
  const ordinary=setup([instrument()],[{kind:'exponential-histogram',reason:'absent'}]);assert.equal(find(ordinary.host,'button').find(x=>x.textContent==='Build measurement package').disabled,false);
+});
+test('catalog readiness refuses missing or ineligible supplied plans and keeps full caveats disclosed',()=>{
+ for(const patch of [{capabilityPlan:undefined},{capabilityPlan:{...capability,eligible:false,reasons:['Current service evaluation policy requires a reported instance.']}},{supported:false},{definition:null},{kind:'exponential-histogram'}]){
+  const i=instrument(patch),{host,built}=setup([i]),use=find(host,'button').find(x=>x.textContent==='Build measurement package');assert(use);assert.equal(use.disabled,true);use.disabled=false;use.onclick();assert.equal(built.length,0);assert.match(find(host,'tbody')[0].textContent,/Preview unavailable/);
+ }
+ const host=node('section');host.connected=true;render(host,{instruments:[instrument()],warning:'Full discovery caveat.',sources:[]},{onBuild(){}});const disclosure=host.children[0];assert.equal(disclosure.tagName,'details');assert.equal(disclosure.children[0].textContent,'Metadata and support');assert.match(disclosure.textContent,/Full discovery caveat/);assert.equal(disclosure.open,undefined);
 });

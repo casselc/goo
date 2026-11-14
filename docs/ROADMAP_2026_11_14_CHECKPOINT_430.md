@@ -4,7 +4,7 @@ The [four-expert review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) prioritizes re
 useful unfamiliar telemetry before more preservation depth. This checkpoint
 adopts that direction without renumbering the older pending 427–429 contracts.
 
-Status: **430–432 delivered and validated**. Next: 433 consolidation and whole-product checkpoint.
+Status: **430–432 delivered and validated**. 433a preflight/identity consolidation is delivered and validated; next is 433b stable live-source refusal/retry.
 
 ## 430 — first-use scope entry and interaction reliability
 
@@ -61,32 +61,37 @@ source refusals, explicit reads and keyboard/mobile completion.
 
 ## 433 — consolidate discovery and recovery
 
-Use the exercised paths to unify scope selection, per-source state/refusal,
-retry and action ownership across Activity, Services and Measurements. Consolidate
-only matching contracts. Replace raw property-order-sensitive Activity predicate
-dirtiness checks with checked semantic identity; preserve predicate child order and
-actual changes. Fold verbose instrument coverage/representation prose into
-existing support/read details while retaining concise point/instrument counts.
-Preserve local staging versus source reads, current-key
-versus effective environment policy, and held results versus active actions.
+**433a delivered:** [instrument preflight](INSTRUMENT_PREFLIGHT.md) checks all
+supplied observations for the existing service evaluator’s reported nonempty
+instance requirement. Measurements and Services share supplied-plan readiness and
+actual callback guards. Resource-bound host/container policies remain separate;
+nil observations remain unknown. Long metadata is disclosed, specific refusal
+reasons remain visible, and partial-source catalogs retain a visible cue. Activity
+draft comparison now uses existing semantic query identity rather than raw key order.
 
-**First bounded consolidation:** align instrument planning with the existing evaluator’s reported `service.instance.id`
-requirement: an observed missing/empty instance must explain noneligibility before
-Run, using all observations rather than the capped stream display. Missing
-observations remain unknown. This is Goo evaluation policy, not an OTLP identity
-requirement. Centralize supplied-plan readiness and its concise reason across
-Measurements, Services and their actual Build/Preview callbacks; Services currently
-checks instrument support without all plan eligibility. Keep valid metric scope
-selection available for metadata discovery. Test missing, empty and mixed instance
-IDs, including an invalid observation beyond the 25 displayed streams, and
-permutation/cap invariance. Nil observations remain unknown, not rejected.
+The [independent checkpoint review](reviews/CONSOLIDATION_REVIEW_433.md) accepts this
+reuse boundary and keeps discovery controllers separate: their completeness,
+preview, source-presence and stream-custody contracts differ.
 
-Review generic resource/scope/instrument/attribute stream evaluation
-separately; do not synthesize instance IDs or silently remove kernel guards.
+**433b next — stable Activity source refusals:** preserve safe typed refusal state
+and held observations, distinguish transient reconnect from stable configuration/
+access/schema refusal, and offer explicit Retry for terminal failures. Never
+convert a failed source into empty-data recovery or automatically widen a query.
+Exercise missing/denied sources, transient loss, held inspection, retired actions
+and keyboard/mobile Retry. This remaining P1 prevents calling all of 433 complete.
 
-Run the finite first-use matrix from the review, refresh affected storyboards,
-and perform the next whole-product review. Measure before claiming performance
-improvement; no compatibility shims are required for this prerelease.
+After 433b, adopt the review’s next bounded cycle: explicit local Find → fixed
+source log-message search (breadth), numeric OTel severity in the existing Activity
+volume strip (depth), then log-volume/span-latency selection and held-return
+consolidation. Existing generic filters, charts, dashboards and waterfalls are
+delivered capabilities, not additional missing primitives. These follow-ons remain
+planned, with their precise acceptance contracts to be frozen before implementation.
+
+Generic resource/scope/instrument/attribute stream evaluation stays a separate
+architecture decision for gauges, counters, histograms and epochs. No synthetic
+instance IDs, merged producers or silent kernel guard removal. Measure metadata
+probe latency before optimizing; prefer bounded request-local reuse over durable
+readiness caching if measurements justify it.
 
 ## Retained follow-on work
 

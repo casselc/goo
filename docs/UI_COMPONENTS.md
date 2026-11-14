@@ -2174,3 +2174,12 @@ scalar completed-read metadata, applied scope and an owner epoch; no row cloning
 is needed to decide readiness. The local planner preserves the fixed event-time
 end and exact predicates. Existing fixed-question components own editing and Run,
 and existing held navigation owns Return. Display components never start reads.
+
+## Supplied instrument readiness
+
+[Instrument preflight](INSTRUMENT_PREFLIGHT.md) uses one pure supplied-plan helper
+for Measurements and Services. Rendering and actual callbacks require supported
+kind/definition plus eligible, unevaluated server metadata. Stable native action
+labels remain disabled with a specific visible reason; detailed binding facts and
+caveats use native disclosures. Source exclusions retain a visible summary cue.
+No component infers readiness from the displayed subset or starts a source read.

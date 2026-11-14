@@ -96,7 +96,7 @@ func TestMessagingProcessingProfilePreservesGenericBindingsAndConditionalPresenc
 	for _, unit := range []string{"s", "ms"} {
 		rows := []json.RawMessage{}
 		for _, attrs := range []map[string]string{{"messaging.system": "kafka", "messaging.operation.type": "process"}, {"messaging.system": "", "messaging.destination.name": "orders"}, {}} {
-			b, _ := json.Marshal(map[string]any{"kind": "histogram", "scope": "ordinary.messaging", "metric": "messaging.process.duration", "unit": unit, "temporality": 1, "resource": map[string]string{"service.name": "consumer"}, "attributes": attrs})
+			b, _ := json.Marshal(map[string]any{"kind": "histogram", "scope": "ordinary.messaging", "metric": "messaging.process.duration", "unit": unit, "temporality": 1, "resource": map[string]string{"service.name": "consumer", "service.instance.id": "one"}, "attributes": attrs})
 			rows = append(rows, b)
 		}
 		result, err := discoverRows(q, rows)

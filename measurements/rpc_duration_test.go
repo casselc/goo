@@ -20,7 +20,7 @@ func TestCurrentRPCDiscoveryCapability(t *testing.T) {
 				{"rpc.system.name": "grpc", "rpc.method": "_OTHER"},
 				{},
 			} {
-				b, err := json.Marshal(map[string]any{"kind": "histogram", "scope": "rpc", "version": "test", "schemaURL": "custom-schema", "metric": CurrentRPCDurationMetric, "unit": unit, "temporality": temporality, "resource": map[string]string{"service.name": "api"}, "attributes": attrs})
+				b, err := json.Marshal(map[string]any{"kind": "histogram", "scope": "rpc", "version": "test", "schemaURL": "custom-schema", "metric": CurrentRPCDurationMetric, "unit": unit, "temporality": temporality, "resource": map[string]string{"service.name": "api", "service.instance.id": "one"}, "attributes": attrs})
 				if err != nil {
 					t.Fatal(err)
 				}

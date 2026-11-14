@@ -1,5 +1,20 @@
 # Semantic properties and model conformance
 
+## Instrument instance preflight (433a)
+
+`TestHegelInstrumentInstancePreflight433` calls production `PlanInstrument` over
+generated missing/empty/unknown identities, kinds and bindings. It checks full
+observation admission, permutation invariance, bounded coverage and immutability.
+The existing RPC362 Hegel/Quint and scope432 models remain regression checks:
+
+```sh
+go test -p 1 . -run '^Test(HegelInstrumentInstancePreflight433|HegelRPCCapability362|QuintCurrentRPCCapabilityProtocol362|HegelMetricScopeContinuation432|QuintMetricScopeContinuation432)$' -count=1 -v
+```
+
+The [real journey](../docs/journeys/instrument-preflight.md) supplies browser/
+ClickHouse coverage and Bombadil completion. These native checks do not pretend
+to replay that new browser run; see [validation](../VALIDATION.md) for exact limits.
+
 ## Metric identity continuation (432a)
 
 The [metrics-only journey](../docs/journeys/metric-scopes.md) and

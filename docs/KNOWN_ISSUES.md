@@ -9,21 +9,28 @@ availability. [432a metric scope discovery](METRIC_SCOPE_DISCOVERY.md) adds boun
 identity bootstrap without a known environment/service. [432b Activity recovery](ACTIVITY_SPARSE_RECOVERY.md)
 stages a wider fixed question from a quiet loaded buffer, with explicit Run and
 held paused return. This does not diagnose ingestion freshness, retention or skew.
-[433 consolidation](ROADMAP_2026_11_14_CHECKPOINT_430.md) is next.
+[433a instrument preflight](INSTRUMENT_PREFLIGHT.md) aligns discovery actions.
+[433b live-source refusal/retry](ROADMAP_2026_11_14_CHECKPOINT_430.md) remains next.
 Isolated logs-only, spans-only and gauge-only installations were exercised in 431;
 actual denied-user deployments remain covered by transport checks rather than a
 new database-user integration run.
 
-Activity draft predicate dirtiness still uses raw property order. Differently
-ordered equivalent supplied predicates can remain marked unapplied after an edit;
-433 will use checked semantic identity while preserving actual predicate changes.
+Activity draft identity now ignores object key order and wire-default omissions
+while retaining predicate child order and actual changes. It does not implicitly
+apply a new scope or resume Activity.
 
-Native evaluation currently requires reported nonempty `service.instance.id`.
-This is an evaluator policy, not a universal OTLP stream identity requirement.
-Metadata discovery can expose instruments that later refuse this policy. The
-433 consolidation will align planning preflight with all observed stream identities;
-a separate architecture decision is needed for generic resource/scope/instrument/
-attribute evaluation. No missing instance IDs are synthesized.
+Native service evaluation still requires reported nonempty `service.instance.id`.
+[Preflight](INSTRUMENT_PREFLIGHT.md) now disables Build/Preview for known missing
+or empty instance identity across all supplied observations, beyond the displayed
+stream cap. This is an evaluator policy, not a universal OTLP requirement. Unknown
+metadata and newly arriving streams can still fail runtime validation. Generic
+resource/scope/instrument/attribute evaluation needs its own architecture decision;
+no missing instance IDs are synthesized.
+
+Activity currently reduces source errors to generic unavailable/status messages and
+reconnects every two seconds regardless of cause. Stable configuration/schema/access
+refusal and explicit Retry remain the next bounded reliability task. Failed reads
+must not become no-data claims or automatic wider-window searches.
 
 Fixed-comparison Preserve currently saves the full composition but shares or
 captures the selected question only, explicitly labeled. General paired captures

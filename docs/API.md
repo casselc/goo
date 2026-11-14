@@ -123,6 +123,11 @@ usable sources. Metadata checks and point aggregation are independent reads.
 
 ## Observed service and metric discovery
 
+[Instrument preflight](INSTRUMENT_PREFLIGHT.md) reports service-instance policy
+refusals through existing capability-plan eligibility/reasons, across all supplied
+observations rather than the displayed stream cap. Unknown metadata is not an
+invented missing instance, and eligible metadata is not evaluated data.
+
 `POST /discovery` and `POST /metric-discovery` reuse the fixed source-profile
 checks. Responses retain checked `sources` and explicit `diagnostics` for absent,
 incompatible or unreadable excluded families. Available families remain usable;

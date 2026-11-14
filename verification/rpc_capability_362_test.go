@@ -92,6 +92,25 @@ func rpcCoverageCheck362(i measurements.Instrument, observations []measurements.
 	}
 	return nil
 }
+
+// Expected execution eligibility uses all raw resource identities independently
+// of the instrument plan and its bounded coverage preview. Unknown resources do
+// not establish an absent instance; a known missing or empty value does.
+func rpcExpectedEligibility362(i measurements.Instrument, observations []measurements.DiscoveryObservation) bool {
+	if !i.Supported || i.Definition == nil {
+		return false
+	}
+	if i.Definition.Source.Resource != nil {
+		return true
+	}
+	for _, observation := range observations {
+		if observation.Resource != nil && observation.Resource["service.instance.id"] == "" {
+			return false
+		}
+	}
+	return true
+}
+
 func rpcObservations362(n, seed int) []measurements.DiscoveryObservation {
 	out := []measurements.DiscoveryObservation{}
 	for k := range n {
@@ -135,7 +154,7 @@ func TestHegelRPCCapability362(t *testing.T) {
 		i.Definition.Source.SchemaURL = i.SchemaURL
 		before := savedJSON360([]any{i, observations})
 		p := measurements.PlanInstrument(i, observations)
-		if p.Profile != "rpc-server-call-duration" || p.RuleSet != "OpenTelemetry semantic conventions v1.45.0" || !p.ShapeMatches || !p.Eligible || p.Verification != "not-run" {
+		if p.Profile != "rpc-server-call-duration" || p.RuleSet != "OpenTelemetry semantic conventions v1.45.0" || !p.ShapeMatches || p.Eligible != rpcExpectedEligibility362(i, observations) || p.Verification != "not-run" {
 			tc.Fatal("literal current RPC metadata candidate", p)
 		}
 		if err := rpcCoverageCheck362(i, observations, p); err != nil {
@@ -150,7 +169,8 @@ func TestHegelRPCCapability362(t *testing.T) {
 			tc.Fatal("planning mutated input labels or binding")
 		}
 		// Shape is only literal name/type/unit. Generic binding eligibility remains a
-		// separate existing capability, independent of optional key presence/schema.
+		// separate capability: optional dimensions/schema do not establish instance
+		// identity, and known invalid instances remain an execution-policy refusal.
 		for variant := range 8 {
 			item := i
 			definition := *i.Definition
@@ -190,7 +210,7 @@ func TestHegelRPCCapability362(t *testing.T) {
 				tc.Fatal("shared shape fact broadened name/type/unit")
 			}
 			plan := measurements.PlanInstrument(item, observations)
-			if plan.Profile != wantProfile || plan.Eligible != (item.Supported && item.Definition != nil) || plan.Verification != "not-run" {
+			if plan.Profile != wantProfile || plan.Eligible != rpcExpectedEligibility362(item, observations) || plan.Verification != "not-run" {
 				tc.Fatal("generic binding/legacy/custom planning changed", variant)
 			}
 			if item.Metric == "rpc.server.call.duration" && plan.ShapeMatches != shape {
@@ -215,7 +235,7 @@ func TestHegelRPCCapability362(t *testing.T) {
 		if measurements.PlanInstrument(nilBinding, observations).Eligible {
 			tc.Fatal("metadata invented definition")
 		}
-		emptyKeys := []measurements.DiscoveryObservation{{Resource: map[string]string{}, Attributes: map[string]string{}}}
+		emptyKeys := []measurements.DiscoveryObservation{{Resource: map[string]string{"service.name": "api", "service.instance.id": "one"}, Attributes: map[string]string{}}}
 		optional := measurements.PlanInstrument(i, emptyKeys)
 		if !optional.Eligible || !optional.ShapeMatches || optional.Verification != "not-run" {
 			tc.Fatal("missing conditional keys blocked generic Run or verified conformance")
