@@ -52,7 +52,10 @@
 > [raw observations](RAW_GAUGE_OBSERVATIONS.md).
 > **439 measured first-use acquisition consolidation is delivered**; see
 > [retained inspection](FIRST_USE_ACQUISITION.md).
-> Next: **440 presence-safe CEL attribute conditions** (planned).
+> **440 presence-safe CEL attribute conditions is delivered**; see
+> [attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md).
+> Next: **441 raw counter observations**, then **442 attribute refinement
+> consolidation** (planned, bounded profile/measurement gates).
 > Definition recall and evidence capture retain separate semantics. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped

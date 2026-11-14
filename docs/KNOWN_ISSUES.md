@@ -1,13 +1,16 @@
 # Known issues and gaps
 
 [CEL predicate authoring](CEL_PREDICATE_PILOT.md) is a delivered library/CLI pilot
-over fixed nonnullable fields. Attribute maps, presence guards, whole-query CEL
-and a general third-party lowering registry remain unimplemented.
+over fixed nonnullable fields. [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md)
+add bounded resource/record string helpers and explicit presence checks. Bare
+indexing, typed attribute coercions, whole-query CEL and a general third-party
+lowering registry remain unimplemented.
 [Contextual text editing](CEL_CONTEXTUAL_EDITOR.md) is available in Activity and
 fixed-question Filters over one additional condition.
 Unsupported expressions refuse before evaluation; no local record-page fallback
-is used. Reference evaluation requires every referenced field to be present and
-well typed, including short-circuited branches.
+is used. Reference evaluation requires every referenced fixed column to be present and
+well typed, including short-circuited branches. Referenced attribute keys may be
+absent; comparison helpers then return false, including inequality.
 
 The [whole-product design review](CEL_PRODUCT_INTEGRATION.md) identifies the next
 integration gaps: low-level AND-only Apply does not replace edited conditions;
@@ -33,15 +36,17 @@ separate from language checking.
 record-context entry and retained return, and corrects common row severity to
 follow numeric OTel bands rather than producer text. Same-ID Discard now reloads
 its original definition, and a checked-source mismatch cannot silently erase
-metadata from an older held question. More general CEL vocabulary and native
-metric expression authoring remain unimplemented. [427 exact recall](EXACT_SAVED_VIEW_RECALL.md)
+metadata from an older held question. Attribute conditions now extend that
+vocabulary; native metric expression authoring remains unimplemented. [427 exact recall](EXACT_SAVED_VIEW_RECALL.md)
 is delivered, as is [428 paired evidence](PAIRED_COMPARISON_CAPTURE.md).
 [429 measured consolidation](MEASURED_SCOPE_PRESERVATION.md) is delivered.
 [437 All-environments logs](ALL_ENVIRONMENTS_LOG_ENTRY.md) and
 [438 raw gauge inspection](RAW_GAUGE_OBSERVATIONS.md) are delivered.
 [439 measured acquisition](FIRST_USE_ACQUISITION.md) retains settled raw banks
-across temporary navigation without rereading. Next is bounded presence-safe CEL
-attribute conditions in the [whole-product cycle](ROADMAP_2026_11_14_CHECKPOINT_429.md).
+across temporary navigation without rereading.
+[440 attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md) add presence-safe string
+queries. The next depth candidate is raw counter inspection with explicit
+temporality in the [whole-product cycle](ROADMAP_2026_11_14_CHECKPOINT_429.md).
 
 Raw gauge inspection is bounded and table-only. Missing instance identity no
 longer blocks reading reported values, but evaluator readiness remains separate.

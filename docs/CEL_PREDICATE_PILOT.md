@@ -6,8 +6,9 @@ used by the UI and ClickHouse compiler. It ships a real versioned CEL extension,
 
 The [whole-product design](CEL_PRODUCT_INTEGRATION.md) now defines app
 integration: contextual owned-condition editing, explicit source reads, honest
-representation coverage and compact shared controls. It does not expand the
-implemented library/CLI vocabulary described here.
+representation coverage and compact shared controls.
+[Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md) extend the same vocabulary
+with presence-safe resource and record attribute helpers.
 [Contextual editing](CEL_CONTEXTUAL_EDITOR.md) now mounts this checked vocabulary
 in Activity and fixed-question Filters.
 
@@ -36,8 +37,9 @@ The complete parent selector remains inside an AND. The helper lowers to numeric
 17–20, independently of SeverityText. No environment, fixed time bound, measure,
 grouping, inspection limit or offset is silently changed. The output `question`
 is an ordinary existing Goo question; CEL text is not an alternative API execution
-payload. Direct UI authoring, text/visual round trips and a planning HTTP endpoint
-are follow-on work.
+payload. The shared contextual editor and source-free planning HTTP endpoint
+use this same compiler. `PrintPredicate` supports exact inverse printing within
+its declared intersection; the UI does not add an automatic whole-filter converter.
 
 ## Supported vocabulary
 
@@ -45,6 +47,11 @@ are follow-on work.
 | --- | --- |
 | `a && b`, `a || b` | Compose admitted predicates |
 | `record.service == "api"` | Exact string equality |
+| `resource.attributes.eq("service.namespace", "payments")` | Reported resource attribute equals the literal |
+| `record.attributes.ne("http.request.method", "OPTIONS")` | Reported record attribute differs; missing does not match |
+| `record.attributes.contains("exception.message", "timeout")` | Reported record attribute contains the literal |
+| `"http.route" in record.attributes` | Attribute key is reported, including empty |
+| `!("http.route" in record.attributes)` | Attribute key is missing |
 | `log.severity_text != ""` | Exact nonempty producer text |
 | `log.body.contains("timeout")` | Case-sensitive literal match |
 | `log.severity_number >= 17u` | Exact unsigned comparison |
@@ -90,13 +97,14 @@ compiled CEL program. See the [external package example](../querycel/example_tes
 
 `OTelLibrary{}` implements CEL's library interface and can be registered in an
 ordinary CEL environment with `cel.Lib(querycel.OTelLibrary{})`. Its binding is a
-pure constant-work Go function. Source lowering is separately allowlisted in the
+pure bounded Go implementation. Source lowering is separately allowlisted in the
 Goo compiler: registering arbitrary CEL functions does not grant SQL capability.
-This pilot supplies one reviewed extension; a user-installable extension registry
+The library supplies reviewed severity and attribute helpers; a user-installable extension registry
 and arbitrary binary plugins are not implemented.
 
 `Eval(map[exploration.Field]string)` runs the actual checked CEL reference program
-over normalized fixed columns. All referenced columns must be present, strings
+over normalized fixed columns and referenced resource/record attributes. Referenced
+fixed columns must be present; attribute absence is represented explicitly. Strings
 well-formed and bounded, and uint64 values canonical decimal strings. Missing or
 malformed input is an error, including in a branch that could short-circuit.
 Empty strings and NUL-containing record data remain actual values; NUL literals
@@ -106,9 +114,10 @@ for executing a source query.
 
 ## Explicit limits
 
-Attribute maps are deferred: a missing CEL map key errors, whereas Goo has explicit
-missing/empty predicate semantics. A future guarded-map form needs its own checked
-lowering contract. Negation, strict inequalities, casts, arithmetic, regexes,
+Attribute helpers require literal keys and values. They use reported string
+projections, preserve missing versus empty and perform no numeric coercion. Bare
+map indexing is refused. Negation is admitted only for literal membership checks;
+general negation, strict inequalities, casts, arithmetic, regexes,
 macros/comprehensions, dynamic fields and unsupported calls are rejected before
 evaluation, even in an unreachable subtree. The root must be an admitted boolean
 predicate; constant boolean expressions alone are not supported.
@@ -139,7 +148,8 @@ prepared-fact compilation is a separate implemented subset.
 The delivered [436.1 consolidation](REFINEMENT_CONSOLIDATION.md) makes standalone
 predicate admission independent of a fabricated query. `Program.Apply` delegates
 to `exploration.Refine`; predicate access returns a validated detached typed copy.
-This remains additive AND refinement, with no app editor or map-presence extension.
+This remains additive AND refinement. The shared contextual editor and
+[attribute helpers](CEL_ATTRIBUTE_CONDITIONS.md) use this same refinement owner.
 
 ## Checked planning integration
 

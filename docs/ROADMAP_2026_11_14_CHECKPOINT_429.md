@@ -7,10 +7,11 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–439 delivered and validated**. The adopted cycle remains
-**437 breadth → 438 depth → 439 consolidation** after the independent review.
-Next: **440 presence-safe CEL attributes** (planned, bounded design gate). The existing Go runtime, source
-adapters, typed questions and supplied-data components remain the foundation.
+Status: **429 and 437–440 delivered and validated**. The cadence continues as
+**440 attribute breadth → 441 native metric depth → 442 consolidation**.
+Next: **441 raw counter inspection** (planned, profile design gate). The existing
+Go runtime, source adapters, typed questions and supplied-data components remain
+the foundation.
 
 ## 437 — explicit All-environments log entry
 
@@ -86,7 +87,12 @@ fresh data. No durable readiness cache without an invalidation contract; no
 universal identity or permission layer. Keep source and native evaluator owners
 separate. Refresh executable storyboards, responsive frames and native tests.
 
-## 440 — presence-safe CEL attribute conditions (planned)
+## 440 — presence-safe CEL attribute conditions
+
+Delivered: [attribute helper guide](CEL_ATTRIBUTE_CONDITIONS.md),
+[real OTLP journey](journeys/cel-attributes.md) and [validation](../VALIDATION.md).
+Literal-key helpers preserve present-only comparisons; membership and negated
+membership express reported/missing. No guarded-index rewriting is introduced.
 
 Extend the existing checked-condition workflow to bounded qualified resource and
 record attribute access. Define missing, empty, invalid and typed-value semantics
@@ -96,11 +102,24 @@ and source execution. Preserve the existing revision-owned additional-condition
 slot, diagnostic spans and explicit Apply/Run boundaries. No second executor,
 implicit coercion, arbitrary extension registry or unbounded dynamic field path.
 
-A subsequent depth candidate is raw counter inspection with reported temporality,
-monotonicity and start metadata, if it closes the same missing-instance first-use
-gap. That requires its own profile and acceptance; raw rows cannot imply a rate,
-reset or fleet total. After expanded attribute use, consolidate overlapping
-refinement gestures based on actual workflows rather than adding new controls.
+## 441 — raw counter observations (planned)
+
+Add explicit bounded table inspection of reported sum points when evaluator
+readiness blocks identified-stream evaluation. Retain temporality, monotonicity,
+reported start/end, scalar flags, units and duplicates. Define its own profile
+before acquisition; raw rows do not establish a rate, reset, continuity or fleet
+total. Reuse only projections and local display with identical contracts. Keep
+native All scope unsupported and evaluator preflight intact. Acceptance must
+include real delta/cumulative and monotonic/nonmonotonic OTLP points, no-recorded
+values, missing identity, cancellation and local retained inspection.
+
+## 442 — consolidate attribute refinement (planned)
+
+Exercise expanded attribute use across visual filters, facets, record context
+and authored conditions. Consolidate overlapping gestures or helper code only
+when scope, slot/revision, presence semantics and acquisition authority match.
+Measure clarity and source work before adding controls. Preserve the operator's
+parent question and explicit Apply/Run, and refuse partial whole-filter conversion.
 
 ## Retained follow-ons
 

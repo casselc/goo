@@ -14,3 +14,14 @@ parameterized SQL without contacting a source.
 The [language guide](../../docs/CEL_PREDICATE_PILOT.md) describes supported typed
 fields, explicit unsigned literals, missing-value semantics and limits. The
 [executable storyboard](../../docs/journeys/cel-authoring.md) records checks.
+
+To add reported resource and record attributes with the same planning command:
+
+```sh
+goo plan-cel -query examples/cel/logs.json -expression-file examples/cel/attributes.cel
+```
+
+`eq`, `ne` and `contains` match only reported keys. A missing HTTP method does
+not match `ne("http.request.method", "OPTIONS")`; present-empty does. Use
+`!("http.request.method" in record.attributes)` to select missing methods.
+See [attribute conditions](../../docs/CEL_ATTRIBUTE_CONDITIONS.md).

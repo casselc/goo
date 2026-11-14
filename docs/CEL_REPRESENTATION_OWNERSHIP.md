@@ -18,8 +18,10 @@ semantic resemblance does not authorize rewriting a user's original question.
 
 The intersection covers declared fixed string fields with equality, inequality
 and substring comparison, plus fixed unsigned numeric fields with supported
-comparisons and exact uint64 literals. Attribute maps, presence checks, regex,
-arithmetic, general negation and unsupported branch shapes remain outside it.
+comparisons and exact uint64 literals. [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md)
+add literal resource/record attribute eq/ne/contains leaves and exists/missing
+checks. Regex, arithmetic, general negation and unsupported branch shapes remain
+outside it.
 An unrestricted nil predicate has no printable `true` equivalent in the current
 compiler. A new empty owned slot is still allowed; it does not convert the parent.
 

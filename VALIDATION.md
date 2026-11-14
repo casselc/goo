@@ -1,5 +1,55 @@
 # Validation record
 
+## 440 — presence-safe CEL attribute conditions
+
+[Guide](docs/CEL_ATTRIBUTE_CONDITIONS.md),
+[real OTLP storyboard](docs/journeys/cel-attributes.md),
+[architecture review](docs/reviews/CEL_ATTRIBUTES_440_ARCH.md) and
+[UX review](docs/reviews/CEL_ATTRIBUTES_440_UX.md).
+
+- The existing CEL library adds literal-key `resource.attributes` and
+  `record.attributes` string helpers `eq`, `ne` and `contains`. All are false
+  for missing keys, including inequality. Literal membership and negated
+  membership lower to ordinary exists/missing leaves. Empty and numeric-looking
+  strings remain reported text; no SDK type recovery or numeric coercion.
+- Resolved overload/receiver/literal admission, existing predicate limits and
+  parameterized source lowering remain authoritative. Bare indexing, computed
+  keys/values, general negation, arbitrary map receivers and casts refuse before
+  execution. Exact inverse printing retains ordinary leaf/branch identity.
+  Reference evaluation permits missing referenced attributes while validating
+  any referenced present text, including branches that could short-circuit.
+- Full root Go suite passes on Go 1.27.3. Full frontend suite: **1,843 passing,
+  zero failures/skips, 67.378s**. Shared editor adds one collapsed native Examples
+  disclosure with selectable snippets and scoped wrapping; **14 focused editor
+  tests** pass. No new route, wire version, query executor or execution owner.
+- Independent Hegel verification: **180 generated banks**, **240 exhaustive
+  presence partitions**, **eight unsupported-expression controls**, and **32
+  actual ClickHouse parity counts** across both signals and both attribute maps.
+  Actual CEL, ordinary AST and a manual presence/string oracle agree; parent
+  conservation and exact inverse printing pass. Final run **1.355s, zero skips**.
+- Source-free CLI example `examples/cel/attributes.cel` successfully produces an
+  ordinary refined question and parameterized plan. Architecture review accepts
+  the helper boundary without guarded-index normalization or readiness changes.
+
+- Real OTLP logs/spans journey passes **42.1s**: five in-scope records per
+  signal plus outside-environment and outside-parent controls (**14 actual
+  records**). **12 CEL runs and two visual runs** return the independently
+  expected populations. **22 condition checks**, including eight unsupported
+  refusals and two recoveries, preserve source-free checking. Both signals
+  retain the exact parent predicate, environment and fixed bounds.
+- Keyboard-opened Examples stays local. Three desktop/390/320 frames are
+  regenerated and UX accepted; runtime cleanup passes with no browser errors.
+  Calibration corrected same-document draft retention and omitted-empty wire
+  representation in the harness without weakening exact parent/AST assertions.
+  No physical screen-reader or cross-engine acceptance is claimed.
+
+- Existing contextual editor regression passes **38.7s**, including an updated
+  **25-second Bombadil campaign / 487 snapshots**. It completes the new
+  `record.attributes.ne("http.route", "")` choice, one context/two plans,
+  **zero source reads / forbidden POSTs**, no overflow and clean runtime cleanup.
+  This run does not claim every actor choice executed. Eight existing editor
+  frames are regenerated to show the updated shared component.
+
 ## 439 — measured first-use acquisition and retained inspection
 
 [Contract](docs/FIRST_USE_ACQUISITION.md),

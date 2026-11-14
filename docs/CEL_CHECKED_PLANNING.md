@@ -79,8 +79,8 @@ Successful checks express static target support, never live source availability.
 
 436.3 delivers honest representation coverage and revision-safe slot ownership;
 [436.4](CEL_CONTEXTUAL_EDITOR.md) mounts compact contextual editing. Existing
-attribute predicates in the base remain intact, but attribute-map CEL expressions
-still need a presence contract. Native metrics retain their independent grammar.
+attribute predicates in the base remain intact. [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md)
+now provide the bounded literal-key presence contract. Native metrics retain their independent grammar.
 
 See [integration design](CEL_PRODUCT_INTEGRATION.md),
 [planning storyboard](journeys/cel-checked-planning.md) and

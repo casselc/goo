@@ -108,7 +108,7 @@ test('long compiler diagnostics have one concise announcement and one optional f
  assert.equal(h.feedback.textContent,'Check expression syntax · line 1, column 23.');
  assert.equal(h.changes.at(-1)[1],'Check expression before applying.');assert.equal(h.changes.at(-1)[2].diagnostic.message,raw);
  assert.equal(h.widget.snapshot().diagnostic.message,raw);assert.equal(document.activeElement,h.text);
- const details=walk(h.host).find(e=>e.tag==='details'),pre=walk(h.host).find(e=>e.tag==='pre');
+ const details=walk(h.host).find(e=>e.tag==='details'&&e.children.some(child=>child.tag==='summary'&&child.textContent==='Diagnostic details')),pre=details.children.find(e=>e.tag==='pre');
  assert.equal(details.hidden,false);assert.equal(details.open,false);assert.equal(pre.textContent,raw);assert.equal(pre.parentElement,details);assert.notEqual(details.parentElement,h.feedback);
  assert.equal(walk(h.host).filter(e=>e.textContent===raw).length,1);assert.equal(h.feedback.getAttribute('aria-live'),'polite');assert.equal(h.text.getAttribute('aria-describedby'),h.text.id+'-hint '+h.feedback.id);
  h.type('log.body == "ok"');assert.equal(details.hidden,true);assert.equal(pre.textContent,'');
@@ -124,4 +124,14 @@ test('restored CRLF source stays exact until an actual text edit normalizes it',
  // Native textarea value normalization must not rewrite the stored source on save.
  h.text.value=saved.source.replace('\r\n','\n');assert.equal(h.widget.provenance(question).source,saved.source);assert.equal(h.widget.hasUnappliedDraft(),false);await h.run();assert.equal(h.calls.at(-1).request.expression,saved.source);assert.equal(h.widget.provenance(question).source,saved.source);
  h.text.oninput();assert.equal(h.widget.provenance(question),null);assert.equal(h.widget.hasUnappliedDraft(),true);
+});
+
+test('attribute examples stay optional and local inside the existing expression pane',async()=>{
+ const h=setup(),examples=walk(h.host).find(e=>e.tag==='details'&&e.children.some(child=>child.tag==='summary'&&child.textContent==='Attribute examples'));
+ assert(examples);assert.equal(examples.open??false,false);assert.equal(ready(examples),false);
+ await h.expression();assert.equal(ready(examples),true);const before={prepares:h.prepares(),calls:h.calls.length,changes:h.changes.length};examples.open=true;
+ assert.deepEqual({prepares:h.prepares(),calls:h.calls.length,changes:h.changes.length},before);
+ assert.deepEqual(walk(examples).filter(e=>e.tag==='code').map(e=>e.textContent),['resource.attributes.eq("service.namespace", "payments")','record.attributes.eq("http.route", "/checkout")']);
+ assert(walk(examples).some(e=>e.textContent==='Missing differs from empty; comparisons match reported keys only.'));
+ assert.equal(h.text.value,'');assert.equal(h.widget.hasUnappliedDraft(),false);
 });

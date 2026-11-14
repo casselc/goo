@@ -63,9 +63,10 @@ flowchart LR
 ## Boundaries
 
 There is no permanent CEL toolbar or new top-level navigation. A fresh Activity
-entry still presents the stream before optional authoring. Attribute/presence
-filters in the parent remain ordinary predicates; they are not silently printed
-into unsupported CEL. Native measurements keep their own grammar.
+entry still presents the stream before optional authoring. [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md)
+use presence-safe helpers and a collapsed Examples disclosure. Parent filters
+remain ordinary predicates; mode changes do not silently convert them. Native
+measurements keep their own grammar.
 
 [436.5](CEL_SAVED_QUESTIONS.md) preserves exact checked source with saved fixed
 ExplorationViews through the existing save/export paths. Rolling Activity checks

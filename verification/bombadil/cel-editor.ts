@@ -82,7 +82,7 @@ export const choices=actions(()=>{
  if(s.phase===3)return s.checkReady?[checkInvalid()]:['Wait'];
  if(s.phase===4)return s.ownerPhase==='invalid'&&s.invalid?[conditions()]:['Wait'];
  if(s.phase===5)return [restore()];
- if(s.phase===6)return [valid('log.body.contains("ordinary")'),valid('log.severity_number >= 17u'),valid('log.body != "雪"')];
+ if(s.phase===6)return [valid('resource.attributes.eq("service.namespace", "payments")'),valid('record.attributes.ne("http.route", "")'),valid('"service.instance.id" in resource.attributes')];
  if(s.phase===7)return s.checkReady?[checkValid()]:['Wait'];
  if(s.phase===8)return s.ownerPhase==='valid'?[retire()]:['Wait'];
  return ['Wait'];

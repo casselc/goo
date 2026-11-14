@@ -1,0 +1,1 @@
+resource.attributes.eq("deployment.environment.name", "production") && record.attributes.ne("http.request.method", "OPTIONS")

@@ -17,9 +17,9 @@ const PhaseRepresentation = "representation"
 
 // PrintPredicate returns CEL only when checked inverse lowering preserves the
 // complete admitted predicate's identity, including branch order and nesting.
-// It covers the fixed-field intersection, not every ordinary visual predicate.
+// It covers fixed fields and bounded string attributes, not every visual predicate.
 // A refusal returns no partial expression; it never drops an unsupported leaf.
-// Nil, presence, attributes, numeric bindings and noncanonical uint spellings
+// Nil, numeric bindings and noncanonical uint spellings
 // are not convertible. No clock, source, store or query policy is involved.
 func PrintPredicate(signal string, predicate *exploration.Predicate) (string, error) {
 	declarations, err := declarations(signal)
@@ -95,6 +95,23 @@ func printPredicate(p *exploration.Predicate, fields map[exploration.Field]field
 	}
 	if p.Numeric != nil || p.Field == nil {
 		return "", representationError(CodeUnsupported, path, fmt.Errorf("numeric bindings have no fixed-field CEL representation"))
+	}
+	if p.Field.Kind == "resource" || p.Field.Kind == "attribute" {
+		name := "resource.attributes"
+		if p.Field.Kind == "attribute" {
+			name = "record.attributes"
+		}
+		key := strconv.Quote(p.Field.Key)
+		switch p.Op {
+		case "exists":
+			return key + " in " + name, nil
+		case "missing":
+			return "!(" + key + " in " + name + ")", nil
+		case "eq", "ne", "contains":
+			return name + "." + p.Op + "(" + key + ", " + strconv.Quote(p.Value) + ")", nil
+		default:
+			return "", representationError(CodeUnsupported, path, fmt.Errorf("operator has no string-attribute CEL representation"))
+		}
 	}
 	field, ok := fields[*p.Field]
 	if !ok {

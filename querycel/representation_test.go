@@ -59,7 +59,7 @@ func TestPrintPredicateRefusesCompleteUnsupportedStructures(t *testing.T) {
 	leaf := func(key, op, value string) exploration.Predicate {
 		return exploration.Predicate{Field: &exploration.Field{Kind: "column", Key: key}, Op: op, Value: value}
 	}
-	attr := exploration.Predicate{Field: &exploration.Field{Kind: "attribute", Key: "team"}, Op: "eq", Value: "edge"}
+	unsupported := exploration.Predicate{Field: &exploration.Field{Kind: "column", Key: "body_pattern_v1"}, Op: "exists"}
 	cycle := &exploration.Predicate{}
 	cycle.All = []exploration.Predicate{*cycle}
 	cycle.All[0].All = cycle.All
@@ -68,8 +68,8 @@ func TestPrintPredicateRefusesCompleteUnsupportedStructures(t *testing.T) {
 		predicate    *exploration.Predicate
 	}{
 		{"nil", "logs", nil},
-		{"attribute", "logs", &attr},
-		{"supported sibling cannot hide unsupported", "logs", &exploration.Predicate{All: []exploration.Predicate{leaf("body", "eq", "x"), attr}}},
+		{"unsupported derived field", "logs", &unsupported},
+		{"supported sibling cannot hide unsupported", "logs", &exploration.Predicate{All: []exploration.Predicate{leaf("body", "eq", "x"), unsupported}}},
 		{"presence", "logs", ptrPredicate(leaf("body", "exists", ""))},
 		{"single branch", "logs", &exploration.Predicate{All: []exploration.Predicate{leaf("body", "eq", "x")}}},
 		{"flat ternary changes inverse structure", "logs", &exploration.Predicate{All: []exploration.Predicate{leaf("body", "eq", "a"), leaf("body", "eq", "b"), leaf("body", "eq", "c")}}},

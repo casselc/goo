@@ -32,6 +32,7 @@ func Compile(signal, expression string) (*Program, error) {
 		return nil, d
 	}
 	options := []cel.EnvOption{cel.ClearMacros(), cel.ParserRecursionLimit(32), cel.ParserExpressionSizeLimit(MaxExpressionBytes), cel.ExpressionNodeLimit(128), cel.Lib(OTelLibrary{})}
+	options = append(options, cel.Variable("resource.attributes", cel.MapType(cel.StringType, cel.StringType)), cel.Variable("record.attributes", cel.MapType(cel.StringType, cel.StringType)))
 	byName := make(map[string]fieldDeclaration, len(fields))
 	for _, field := range fields {
 		options = append(options, cel.Variable(field.name, field.typ))
@@ -106,6 +107,46 @@ func (l *lowerer) field(expression ast.Expr) (fieldDeclaration, bool) {
 	}
 	return field, ok
 }
+
+// attribute admits only the two declared exporter string maps and a literal key.
+// It never grants dynamic indexing or recovers the producer's original OTel type.
+func (l *lowerer) attribute(target, key ast.Expr) (fieldDeclaration, error) {
+	if target.Kind() != ast.IdentKind {
+		return fieldDeclaration{}, fmt.Errorf("attribute access requires resource.attributes or record.attributes")
+	}
+	name := target.AsIdent()
+	kind := ""
+	switch name {
+	case "resource.attributes":
+		kind = "resource"
+	case "record.attributes":
+		kind = "attribute"
+	default:
+		return fieldDeclaration{}, fmt.Errorf("attribute access requires resource.attributes or record.attributes")
+	}
+	value, err := literal(key, cel.StringType)
+	if err != nil {
+		return fieldDeclaration{}, fmt.Errorf("attribute key requires a string literal")
+	}
+	field := fieldDeclaration{name: name + "[" + strconv.Quote(value) + "]", field: exploration.Field{Kind: kind, Key: value}, typ: cel.StringType, attributeMap: name}
+	l.used[field.name] = field
+	return field, nil
+}
+func (l *lowerer) presence(expression ast.Expr) (fieldDeclaration, error) {
+	if expression.Kind() != ast.CallKind {
+		return fieldDeclaration{}, fmt.Errorf("attribute presence requires a literal key in a qualified map")
+	}
+	id, err := l.resolved(expression)
+	if err != nil || id != overloads.InMap {
+		return fieldDeclaration{}, fmt.Errorf("attribute presence requires a literal key in a qualified map")
+	}
+	call := expression.AsCall()
+	if call.IsMemberFunction() || len(call.Args()) != 2 {
+		return fieldDeclaration{}, fmt.Errorf("unsupported attribute presence")
+	}
+	return l.attribute(call.Args()[1], call.Args()[0])
+}
+
 func (l *lowerer) predicate(expression ast.Expr, depth int) (result *exploration.Predicate, err error) {
 	defer func() {
 		if err == nil {
@@ -150,6 +191,44 @@ func (l *lowerer) predicate(expression ast.Expr, depth int) (result *exploration
 			return &exploration.Predicate{All: children}, nil
 		}
 		return &exploration.Predicate{Any: children}, nil
+	}
+	if id == overloads.InMap {
+		field, err := l.presence(expression)
+		if err != nil {
+			return nil, err
+		}
+		return &exploration.Predicate{Field: &field.field, Op: "exists"}, nil
+	}
+	if id == overloads.LogicalNot {
+		if call.IsMemberFunction() || len(args) != 1 {
+			return nil, fmt.Errorf("unsupported CEL negation")
+		}
+		field, err := l.presence(args[0])
+		if err != nil {
+			return nil, fmt.Errorf("CEL negation supports only literal attribute presence: %w", err)
+		}
+		return &exploration.Predicate{Field: &field.field, Op: "missing"}, nil
+	}
+	if id == attributeEqualOverload || id == attributeNotEqualOverload || id == attributeContainsOverload {
+		if !call.IsMemberFunction() || len(args) != 2 {
+			return nil, fmt.Errorf("attribute comparison requires a qualified map, literal key and literal value")
+		}
+		field, err := l.attribute(call.Target(), args[0])
+		if err != nil {
+			return nil, err
+		}
+		value, err := literal(args[1], cel.StringType)
+		if err != nil {
+			return nil, err
+		}
+		op := "eq"
+		if id == attributeNotEqualOverload {
+			op = "ne"
+		}
+		if id == attributeContainsOverload {
+			op = "contains"
+		}
+		return &exploration.Predicate{Field: &field.field, Op: op, Value: value}, nil
 	}
 	if id == overloads.ContainsString {
 		if !call.IsMemberFunction() || len(args) != 1 {

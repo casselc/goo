@@ -3060,3 +3060,10 @@ inspection, atomic source limits, refusal and obsolete-response retirement.
 instrument metadata, explicit raw reads and local inspection over ordinary OTLP.
 It records source/API response bytes and rows separately from local rendered
 rows, then verifies retained return and pending-response retirement.
+
+## 440 — presence-safe CEL attributes
+
+[Reported and missing attributes](cel-attributes.md) uses real OTLP logs and
+spans to compare resource/record attribute helpers with ordinary visual filters.
+Check stays source-free; Run retains the fixed environment, window and parent.
+Bare indexing, dynamic keys, numeric coercion and general negation refuse.

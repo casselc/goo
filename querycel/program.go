@@ -12,9 +12,10 @@ import (
 )
 
 type fieldDeclaration struct {
-	name  string
-	field exploration.Field
-	typ   *cel.Type
+	name         string
+	field        exploration.Field
+	typ          *cel.Type
+	attributeMap string
 }
 
 func declarations(signal string) ([]fieldDeclaration, error) {
@@ -23,7 +24,7 @@ func declarations(signal string) ([]fieldDeclaration, error) {
 	}
 	fields := []fieldDeclaration{}
 	add := func(name, key string, typ *cel.Type) {
-		fields = append(fields, fieldDeclaration{name, exploration.Field{Kind: "column", Key: key}, typ})
+		fields = append(fields, fieldDeclaration{name: name, field: exploration.Field{Kind: "column", Key: key}, typ: typ})
 	}
 	for _, key := range []string{"service", "trace_id", "span_id", "scope", "scope_version"} {
 		add("record."+key, key, cel.StringType)
@@ -75,17 +76,23 @@ func (p *Program) Apply(parent exploration.Query) (exploration.Query, error) {
 	return exploration.Refine(parent, p.predicate)
 }
 
-// Eval executes the checked CEL reference program over already normalized fixed
-// columns. Missing fields and malformed values are errors, never default values.
-// Only columns referenced by this expression are required.
+// Eval executes checked CEL over normalized fixed columns and exporter string
+// attributes. Referenced fixed columns must be present; absent attributes remain
+// absent map keys. Malformed referenced values are errors even in a short-circuited
+// branch. Unreferenced values are not consulted.
 func (p *Program) Eval(values map[exploration.Field]string) (bool, error) {
 	if p == nil || p.evaluator == nil || p.predicate == nil {
 		return false, fmt.Errorf("CEL program is unavailable")
 	}
-	activation := make(map[string]any, len(p.fields))
+	activation := make(map[string]any, len(p.fields)+2)
+	activation["resource.attributes"] = map[string]string{}
+	activation["record.attributes"] = map[string]string{}
 	for name, declaration := range p.fields {
 		value, ok := values[declaration.field]
 		if !ok {
+			if declaration.attributeMap != "" {
+				continue
+			}
 			return false, fmt.Errorf("missing fixed CEL field %s", name)
 		}
 		if declaration.typ == cel.UintType {
@@ -98,7 +105,11 @@ func (p *Program) Eval(values map[exploration.Field]string) (bool, error) {
 			if len(value) > MaxFieldBytes || !utf8.ValidString(value) {
 				return false, fmt.Errorf("CEL field %s requires bounded well-formed text", name)
 			}
-			activation[name] = value
+			if declaration.attributeMap != "" {
+				activation[declaration.attributeMap].(map[string]string)[declaration.field.Key] = value
+			} else {
+				activation[name] = value
+			}
 		}
 	}
 	value, _, err := p.evaluator.Eval(activation)

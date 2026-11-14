@@ -15,3 +15,6 @@
 .cel-expression-diagnostic-details { min-inline-size:0; font-size:.8rem; }
 .cel-expression-diagnostic-details[hidden] { display:none; }
 .cel-expression-diagnostic-details pre { max-block-size:16rem; overflow:auto; margin:.5rem 0 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+
+.cel-expression-examples { min-inline-size:0; font-size:.8rem; }
+.cel-expression-examples p,.cel-expression-examples pre { margin:.4rem 0 0; white-space:pre-wrap; overflow-wrap:anywhere; }

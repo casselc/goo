@@ -51,3 +51,17 @@ Check callback without Apply, Run or store writes. The pure owner/native model
 tests separately cover stale replies and retired staging callbacks. This journey does not claim physical assistive-technology testing or
 cross-browser acceptance. Definition provenance/preservation and the broader
 whole-product journey remain later 436.5/436.6 work.
+
+## 440 regression rerun
+
+The existing mounted-editor storyboard was rerun against the attribute-enabled
+runtime: **38.7s**, including its 25-second Bombadil campaign. The actor's valid
+choices now use qualified attribute equality, inequality or membership. This run
+selected `record.attributes.ne("http.route", "")`, completed all ten phases over
+**487 snapshots**, and retained **zero source reads / forbidden POSTs** during
+its authoring-only exploration. The existing 4364 frames were regenerated from
+the current shared editor, including its closed-by-default Attribute examples
+help. This does not change the historical 436.4 implementation scope or claim
+that every random choice ran. Browser errors were empty and runtime cleanup
+passed. See [qualified attribute conditions](cel-attributes.md) for the new real
+OTLP semantics journey.

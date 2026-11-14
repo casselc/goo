@@ -28,7 +28,9 @@ export function mount(host,{owner:prepare,check,onChange=()=>{},current=()=>true
  for(const [value,title]of [['conditions','Conditions'],['expression','Expression (CEL)']]){const option=node('option',title);option.value=value;mode.append(option)}
  text.id=id;text.rows=3;text.spellcheck=false;text.autocapitalize='off';text.autocomplete='off';text.setAttribute('aria-label','Additional condition (CEL)');label.htmlFor=text.id;hint.id=id+'-hint';feedback.id=id+'-diagnostic';feedback.setAttribute('role','status');feedback.setAttribute('aria-atomic','true');text.setAttribute('aria-describedby',hint.id+' '+feedback.id);text.placeholder='log.body.contains("timeout")';
  for(const button of [verify,clear,discard])button.type='button';discard.title='Discard expression text; keep the current filters.';
- details.append(detailsTitle,detailsBody);actions.append(verify,clear);pane.append(scope,label,text,hint,actions);root.append(modeLabel,mode,pane,lockedNote,discard,feedback,details);host.append(root);
+ const examples=node('details',undefined,'cel-expression-examples'),examplesTitle=node('summary','Attribute examples'),resourceExample=node('code','resource.attributes.eq("service.namespace", "payments")'),recordExample=node('code','record.attributes.eq("http.route", "/checkout")');
+ examples.append(examplesTitle,node('p','Missing differs from empty; comparisons match reported keys only.'));for(const code of [resourceExample,recordExample]){const pre=node('pre');pre.append(code);examples.append(pre)}
+ details.append(detailsTitle,detailsBody);actions.append(verify,clear);pane.append(scope,label,text,hint,examples,actions);root.append(modeLabel,mode,pane,lockedNote,discard,feedback,details);host.append(root);
  let active=true,disposed=false,owned=null,preparing=null,preparation=null,job=null,stageToken=null,verification=null,modeInvocation=null,modeValue='conditions',hasDraft=false,hasCondition=false,needsAdoption=false,diagnostic=null,lastDetail='',preserved=null,preservedQuestion=null;
  const sourceForCheck=()=>preserved?.source??text.value;
  const available=()=>!disposed&&active&&current();

@@ -7,8 +7,8 @@ useful starting point; a Goo manifest is optional.
 Visual filters and optional [CEL conditions](CEL_CONTEXTUAL_EDITOR.md) use the
 same typed question model. Checking is source-free; Apply and Run remain explicit.
 [Saved definitions](CEL_SAVED_QUESTIONS.md) retain checked source and bindings.
-CEL currently covers a bounded fixed-field vocabulary, not arbitrary attribute
-maps or whole-query SQL replacement.
+CEL covers fixed fields and [literal-key resource/record string attributes](CEL_ATTRIBUTE_CONDITIONS.md),
+including missing versus empty. It is not a whole-query SQL replacement.
 
 This task-oriented index describes delivered behavior. The
 [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_429.md) owns execution order and
@@ -80,7 +80,7 @@ workflows and the active roadmap for priorities.
 
 | Area | Remaining gap or decision | Current reference |
 | --- | --- | --- |
-| CEL vocabulary | Interactive fixed-field conditions and checked source preservation are delivered. Attribute maps, explicit presence guards, whole-query CEL and a general third-party lowering registry remain unimplemented. | [CEL acceptance](CEL_WHOLE_PRODUCT_ACCEPTANCE.md) |
+| CEL vocabulary | Interactive fixed-field and presence-safe resource/record attribute conditions, with checked source preservation. Bare map indexing, numeric attribute coercion, whole-query CEL and a general third-party lowering registry remain unimplemented. | [CEL acceptance](CEL_WHOLE_PRODUCT_ACCEPTANCE.md) |
 | Native instrument readiness | Discovery can show instruments that the service evaluator cannot execute without reported nonempty service.instance.id. Resource/stream policies remain separate; Goo does not invent identities. | [Instrument preflight](INSTRUMENT_PREFLIGHT.md) |
 | Native context coverage | Ordinary Measurements gauge nearby-record context is delivered alongside existing counter/histogram interval context. Services/Saved gauge continuation is delivered in 401. Stock and broader resource contexts require their own retained-evidence admission. | [Gauge context contract](GAUGE_OBSERVATION_CONTEXT.md) |
 | Further density | [Measured scope/preservation controls](MEASURED_SCOPE_PRESERVATION.md) reduce edit/modal controls and action distance without a query-speed claim. [384](DATA_FIRST_FIXED_RESULTS.md) covers checked fixed/retained records; [390](NATIVE_DATA_FIRST.md) delivers actual first-item visibility in ordinary, service-expanded and saved native entry. Other screens and larger-label/population cases remain evidence-driven refinements, not another automatic redesign. | [Current native contract](NATIVE_DATA_FIRST.md) |

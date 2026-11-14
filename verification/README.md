@@ -5093,3 +5093,27 @@ stolen late-response focus, unbounded DOM rendering and incomplete cleanup. The 
 Quint model replays read/history authority; it does not evaluate gauge values or
 pretend schema compatibility establishes freshness. Executed measurements and
 limits belong in `VALIDATION.md` and the storyboard.
+
+## 440 — presence-safe CEL attribute conditions
+
+Run the independent finite attribute contract checks with:
+
+```sh
+go test -run '^(TestHegelCELAttributes440Parity|TestCELAttributes440PresencePartitions)$' -count=1 -v
+GOO_CEL_CLICKHOUSE_URL=http://127.0.0.1:8123 go test -run '^TestCELAttributes440ClickHouseParity$' -count=1 -v
+```
+
+The property uses 180 generated resource/record attribute cases and an independent
+presence-plus-string oracle, then checks checked CEL, the ordinary predicate
+interpreter, exact inverse printing and enclosing-question conservation. The
+fixed bank covers 240 missing/present and empty/numeric-looking string partitions
+across logs/spans and both attribute namespaces. Unsupported lookup, dynamic-key,
+negated-comparison and coercion expressions must refuse.
+
+Live parity checks 32 source counts using a read-only generated ClickHouse
+relation. Only the compiler-owned table is replaced; the checked CEL predicate,
+ordinary source adapter, map-presence guards and typed parameter transport remain
+unchanged. These are SQL semantic checks, not SDK type recovery or ingestion
+completeness claims. Without the endpoint the live test explicitly skips; a skip
+is not evidence of source parity. The real OTLP editor journey complements these
+checks in [the attribute storyboard](../docs/journeys/cel-attributes.md).

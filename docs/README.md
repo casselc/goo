@@ -28,6 +28,7 @@ This index separates using Goo, extending it, and the development record.
 | Preserve evidence for both sides of a comparison | [Paired comparison capture](PAIRED_COMPARISON_CAPTURE.md) |
 | Understand scope and capture controls | [Measured scope/preservation controls](MEASURED_SCOPE_PRESERVATION.md) |
 | Create reusable views | [Authorable view templates](AUTHORABLE_VIEW_TEMPLATES.md) |
+| Query reported or missing attributes with CEL | [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md) |
 | Author a record predicate with CEL | [CEL predicate pilot](CEL_PREDICATE_PILOT.md) |
 | Understand the planned visual/expression workflow | [Whole-product CEL integration](CEL_PRODUCT_INTEGRATION.md) |
 | Call the API | [API guide](API.md) and [OpenAPI](../api/openapi.json) |
