@@ -7,6 +7,10 @@ useful starting point; a Goo manifest is optional.
 [CEL predicate planning](CEL_PREDICATE_PILOT.md) now provides a versioned Go
 extension and source-free CLI that produce the existing ordinary question model.
 It is a bounded library/CLI authoring path; interactive text authoring is planned.
+The [whole-product integration design](CEL_PRODUCT_INTEGRATION.md) keeps expression
+editing in existing workflows with protected parent scope and explicit Apply/Run.
+Its staged 436 plan remains unimplemented; ordinary visual investigation continues
+to work without CEL.
 
 This is the current task-oriented capability index, reconciled through milestone
 435, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and

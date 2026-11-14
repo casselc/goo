@@ -4,6 +4,11 @@ Goo's bounded CEL pilot compiles checked expressions into the same typed predica
 used by the UI and ClickHouse compiler. It ships a real versioned CEL extension,
 `goo.cel.otel/v1`, using the canonical `cel.dev/cel-go` module pinned to v0.32.0.
 
+The [whole-product design](CEL_PRODUCT_INTEGRATION.md) now defines planned app
+integration: contextual owned-condition editing, explicit source reads, honest
+representation coverage and compact shared controls. It does not expand the
+implemented library/CLI vocabulary described here.
+
 ## Plan a fixed question
 
 ```sh

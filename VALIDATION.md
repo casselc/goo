@@ -1,5 +1,30 @@
 # Validation record
 
+## Whole-product CEL integration design review
+
+[Adopted direction](docs/CEL_PRODUCT_INTEGRATION.md) and
+[reconciled implementation proposal](docs/reviews/CEL_HOLISTIC_PLAN.md).
+
+- Six independent specialists reviewed Go design, architecture, observability,
+  UX/accessibility, language/compilation and reliability; a planning specialist
+  reconciled their findings. Architecture and UX accepted the reconciled plan
+  with the small invalid-text/mode-label/preservation-owner clarifications now
+  incorporated. Recommendations are source-grounded and explicitly proposed.
+- The UX review inspected existing generated Activity 320/390/1440, staged fixed
+  analysis, Services, Saved and trace frames. This is inspection of prior captured
+  journeys, not a new browser/AT/cross-engine run or screenshot generation.
+- The Go specialist reran selected existing `querycel` and `cmd/goo` tests with
+  the managed Go toolchain: both packages pass (0.075s, 0.014s). The language expert
+  reran `go test ./querycel -count=1`, passing (0.037s). An initial default PATH
+  selected an unrelated executable; the available Go toolchain resolved this
+  without installation. These are focused checks, not a fresh full-stack run.
+- This round changes design/review/planning documents only. No product code,
+  compiler behavior, UI, HTTP schema or persisted format changes. The next work is
+  436.1 domain refinement and matching held-return consolidation; later slices
+  add typed planning, bounded representation/state, contextual UI and one existing
+  preservation owner. Future browser/native/model acceptance is specified, not
+  claimed as executed by this design review.
+
 ## CEL predicate authoring pilot — user-directed language slice
 
 [Guide](docs/CEL_PREDICATE_PILOT.md),

@@ -4,15 +4,16 @@ The [four-expert review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) prioritizes re
 useful unfamiliar telemetry before more preservation depth. This checkpoint
 adopts that direction without renumbering the older pending 427–429 contracts.
 
-Status: **430–435 delivered and validated**. Next: 436 aggregate selection and held return.
+Status: **430–435 delivered and validated**. Next: **436.1 shared ordinary refinement
+and held return**, under the adopted [whole-product CEL integration design](CEL_PRODUCT_INTEGRATION.md).
 
 The user-directed [CEL predicate pilot](CEL_PREDICATE_PILOT.md) is also delivered:
 a real versioned CEL extension, checked overload lowering, `plan-cel`, immutable
-parent refinement and CEL/Goo/ClickHouse parity. It advances shared authoring without
-adding another executor. The next language slice is a source-free app draft bridge
-and visual/text round trip. Attribute maps require an explicit presence contract;
-arbitrary CEL functions never imply backend compilation. This does not renumber or
-silently replace the operator consolidation below.
+parent refinement and CEL/Goo/ClickHouse parity. The specialist review now sequences
+domain ownership, diagnostics and honest representability before app authoring.
+An owned refinement slot preserves unsupported parent predicates; repeated edits
+replace the slot rather than accumulate AND clauses. Attribute maps still need an
+explicit presence contract. No new executor or competing platform queue is adopted.
 
 ## 430 — first-use scope entry and interaction reliability
 
@@ -107,6 +108,13 @@ explanation with actual held numbers. [Storyboard](journeys/activity-severity.md
 - **436 consolidate — aggregate selection and held return.** Align log-volume and
   span-latency gestures only where read-gate and passive intent contracts match;
   refresh narrow/desktop flows and measure before claiming speedups.
+  The [reconciled plan](reviews/CEL_HOLISTIC_PLAN.md) divides this into six small
+  slices: 436.1 ordinary refinement/cloning and matching aggregate return; 436.2
+  pure checked planning/positioned diagnostics; 436.3 representation coverage and
+  revision-safe slots; 436.4 shared contextual editor/compact chrome; 436.5 one
+  existing preservation owner; 436.6 observed whole-product acceptance. These are
+  proposed changes, not delivered UI. Do not require a universal model, general
+  extension registry or full attribute vocabulary before the bounded bridge.
   Carry forward 435's closed refinement lesson: validate the original selector AND
   a declared band/range, rather than weakening exact-parent guards. Keep physical
   row fields, readiness and aggregate projections aligned. Do not generalize

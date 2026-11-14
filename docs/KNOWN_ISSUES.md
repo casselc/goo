@@ -7,6 +7,15 @@ Unsupported expressions refuse before evaluation; no local record-page fallback
 is used. Reference evaluation requires every referenced field to be present and
 well typed, including short-circuited branches.
 
+The [whole-product design review](CEL_PRODUCT_INTEGRATION.md) identifies the next
+integration gaps: AND-only Apply cannot replace edited conditions; current CEL
+cannot represent every visual predicate; compiler diagnostics lack typed source
+spans; and narrow Activity has substantial controls before the first record.
+436 now addresses these through one bounded consolidation sequence. No new editor,
+authoring metadata, shared cloning API or compile transport is implemented by the
+review. Source/readiness, native metric grain/units and historical custody remain
+separate from language checking.
+
 [The ad-hoc telemetry review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) identifies
 first-use scope discovery, partial-signal table assumptions, metric-only bootstrap,
 event-time empty-stream recovery and keyboard Pause focus as priority gaps.

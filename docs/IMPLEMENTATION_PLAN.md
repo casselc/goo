@@ -22,11 +22,15 @@
 > log-message search** are delivered. **435 numeric severity** is delivered.
 > Next: **436 aggregate-selection consolidation**, adopted in the
 > [433 checkpoint review](reviews/CONSOLIDATION_REVIEW_433.md).
-> A user-directed [CEL predicate pilot](CEL_PREDICATE_PILOT.md) is now delivered
-> alongside this operator sequence: versioned extension, checked lowering, pure
-> planning CLI and reference/source parity. A source-free app draft bridge and
-> visual/text round trip are the next language acceptance slice, still planned.
-> Keep 436's scope/held-return consolidation as the next numbered milestone.
+> The delivered [CEL predicate pilot](CEL_PREDICATE_PILOT.md) is followed by the
+> [whole-product integration design](CEL_PRODUCT_INTEGRATION.md), reconciled from
+> six specialist reviews and a planner and cross-reviewed by architecture/UX.
+> **436.1 shared ordinary refinement/held return is next**, followed by checked
+> planning/diagnostics (436.2), representation/slot ownership (436.3), compact
+> contextual UI (436.4), one preservation owner (436.5) and whole-product observed
+> acceptance (436.6). All six are planned; the app has no CEL editor yet.
+> Keep this one finite consolidation sequence; do not start a separate language
+> platform backlog or promise lossless conversion of unsupported visual predicates.
 > The older **427–429 preservation cycle** remains pending follow-on work. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped
