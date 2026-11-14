@@ -42,6 +42,22 @@ def check_raw_gauge438(spec):
         assert not response.is_valid(bad),bad
 
 
+def check_raw_sum441(spec):
+    operation=spec['paths']['/sum-observations']['post']
+    check=validator(spec,operation['requestBody']['content']['application/json']['schema'])
+    request={'question':{'environment':'prod','service':'api','fromMs':1000,'toMs':2000},'instrument':{'kind':'counter','scope':'','version':'','schemaURL':'','metric':'jobs.total','unit':'{job}','temporality':1,'monotonic':True}}
+    check.validate(request)
+    stock=copy.deepcopy(request);stock['instrument'].update(kind='stock',temporality=2,monotonic=False);check.validate(stock)
+    unknown=copy.deepcopy(request);unknown['instrument']['temporality']=-2147483648;check.validate(unknown)
+    for mutate in (lambda q:q['instrument'].pop('monotonic'),lambda q:q['instrument'].update(monotonic=None),lambda q:q['instrument'].update(temporality=2147483648),lambda q:q['instrument'].update(temporality='1'),lambda q:q['instrument'].update(kind='stock'),lambda q:q['instrument'].update(kind='gauge'),lambda q:q.update(question={'service':'api','fromMs':1000,'toMs':2000,'environmentSelector':{'version':'goo/environment-selector/v1','policy':'effective','scope':{'mode':'all'}}})):
+        bad=copy.deepcopy(request);mutate(bad);assert not check.is_valid(bad),bad
+    cases=json.loads((ROOT/'testdata/http/raw-sum441.json').read_text())['cases']
+    response=validator(spec,operation['responses']['200']['content']['application/json']['schema'])
+    result=json.loads(next(c['response'] for c in cases if c['name']=='observed'));response.validate(result)
+    for mutate in (lambda r:r.update(version='wrong'),lambda r:r.update(limit=1),lambda r:r['rows'][0].update(temporality=2147483648),lambda r:r['rows'][0].update(monotonic='false'),lambda r:r['rows'][0].update(valueState='absent')):
+        bad=copy.deepcopy(result);mutate(bad);assert not response.is_valid(bad),bad
+
+
 def check_cel_authoring4365(spec):
     """Closed provenance carriers; Go owns CEL checking and exact hash equality."""
     base={'signal':'logs','environment':'prod','fromMs':1000,'toMs':61000,'limit':100,'offset':0}
@@ -2304,7 +2320,7 @@ def check(spec):
                     accepted.append((shape, request))
     # Native histogram discovery adds five actual successful GET responses
     # to the prior 471/186/28 fixture baseline.
-    assert responses == 511 and requests == 207 and mux_refusals == 30, (responses, requests, mux_refusals)
+    assert responses == 529 and requests == 215 and mux_refusals == 31, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -2791,6 +2807,7 @@ if __name__ == '__main__':
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
     check_raw_gauge438(spec)
+    check_raw_sum441(spec)
     if args.log_severity_observations:
         check_log_severity_observations435(spec,args.log_severity_observations)
 

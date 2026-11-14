@@ -1,6 +1,6 @@
 # Implementation plan
 
-> Active execution order: [437–439 whole-product checkpoint](ROADMAP_2026_11_14_CHECKPOINT_429.md).
+> Active execution order: [current operator roadmap](ROADMAP_2026_11_14_CHECKPOINT_429.md).
 > The [post-CEL operator cycle](reviews/ROADMAP_AFTER_CEL_436_PROPOSAL.md) and
 > [430–436 checkpoint](ROADMAP_2026_11_14_CHECKPOINT_430.md) are complete.
 > The adopted operator cadence delivered **412 fleet service triage** and
@@ -54,8 +54,9 @@
 > [retained inspection](FIRST_USE_ACQUISITION.md).
 > **440 presence-safe CEL attribute conditions is delivered**; see
 > [attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md).
-> Next: **441 raw counter observations**, then **442 attribute refinement
-> consolidation** (planned, bounded profile/measurement gates).
+> **441 raw sum observations is delivered**; see
+> [raw sums](RAW_SUM_OBSERVATIONS.md).
+> Next: **442 attribute refinement consolidation** (planned, measured workflow gate).
 > Definition recall and evidence capture retain separate semantics. The older labeling queue
 > below is deferred; it does not override the active roadmap.
 > Each milestone retains its source/custody and enclosing carrier gates. Grouped

@@ -3067,3 +3067,11 @@ rows, then verifies retained return and pending-response retirement.
 spans to compare resource/record attribute helpers with ordinary visual filters.
 Check stays source-free; Run retains the fixed environment, window and parent.
 Bare indexing, dynamic keys, numeric coercion and general negation refuse.
+
+## 441 — reported sum observations
+
+[Real OTLP sums](raw-sum-observations.md) covers delta/cumulative and
+monotonic/nonmonotonic tuples, including discovered stock, without inventing
+rates or resets. Exact metadata, flags, units and duplicates survive table/detail
+inspection; local paging, Find, retained return and obsolete-response rejection
+use the shared raw inspector.

@@ -45,11 +45,15 @@ is delivered, as is [428 paired evidence](PAIRED_COMPARISON_CAPTURE.md).
 [439 measured acquisition](FIRST_USE_ACQUISITION.md) retains settled raw banks
 across temporary navigation without rereading.
 [440 attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md) add presence-safe string
-queries. The next depth candidate is raw counter inspection with explicit
-temporality in the [whole-product cycle](ROADMAP_2026_11_14_CHECKPOINT_429.md).
+queries. [441 raw sums](RAW_SUM_OBSERVATIONS.md) covers reported counters and
+cumulative nonmonotonic stocks without evaluator prerequisites. Next is measured
+attribute refinement consolidation in the
+[whole-product cycle](ROADMAP_2026_11_14_CHECKPOINT_429.md).
 
-Raw gauge inspection is bounded and table-only. Missing instance identity no
-longer blocks reading reported values, but evaluator readiness remains separate.
+Raw gauge and sum inspection is bounded and table-only. Missing instance
+identity no longer blocks reading reported values, but evaluator readiness
+remains separate. Sum reads retain exact temporality and monotonicity; unknown
+temporality is diagnostic, while missing/malformed identity refuses atomically.
 It provides no continuity, aggregate, freshness or completeness claim and no new
 capture carrier. Native All-environments reads remain unsupported.
 

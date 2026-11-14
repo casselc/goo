@@ -1,0 +1,273 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "observed",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":1,\"monotonic\":true}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"counter\",\"metric\":\"jobs.total\",\"monotonic\":true,\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":1,\"unit\":\"{job}\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"diagnostics\":[],\"endNS\":\"1500000000\",\"flags\":0,\"flagsState\":\"valid\",\"monotonic\":true,\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"end_ns\":\"1500000000\",\"flags\":0,\"monotonic\":true,\"name\":\"jobs.total\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"temporality\":1,\"unit\":\"{job}\",\"value\":\"12.5\",\"version\":\"\"},\"rawValue\":\"12.5\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"jobs.total\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"{job}\",\"version\":\"\"},\"temporality\":1,\"value\":12.5,\"valueState\":\"finite\"}],\"version\":\"goo/raw-sum-observations/v1\"}\n"
+    },
+    {
+      "name": "stock",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"stock\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":2,\"monotonic\":false}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"stock\",\"metric\":\"jobs.total\",\"monotonic\":false,\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":2,\"unit\":\"{job}\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"diagnostics\":[],\"endNS\":\"1500000000\",\"flags\":0,\"flagsState\":\"valid\",\"monotonic\":false,\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"end_ns\":\"1500000000\",\"flags\":0,\"monotonic\":false,\"name\":\"jobs.total\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"temporality\":2,\"unit\":\"{job}\",\"value\":\"12.5\",\"version\":\"\"},\"rawValue\":\"12.5\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"jobs.total\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"{job}\",\"version\":\"\"},\"temporality\":2,\"value\":12.5,\"valueState\":\"finite\"}],\"version\":\"goo/raw-sum-observations/v1\"}\n"
+    },
+    {
+      "name": "unknown-temporality",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":7,\"monotonic\":true}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"counter\",\"metric\":\"jobs.total\",\"monotonic\":true,\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":7,\"unit\":\"{job}\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"diagnostics\":[{\"code\":\"unrecognized\",\"field\":\"temporality\"}],\"endNS\":\"1500000000\",\"flags\":0,\"flagsState\":\"valid\",\"monotonic\":true,\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"end_ns\":\"1500000000\",\"flags\":0,\"monotonic\":true,\"name\":\"jobs.total\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"temporality\":7,\"unit\":\"{job}\",\"value\":\"12.5\",\"version\":\"\"},\"rawValue\":\"12.5\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"jobs.total\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"{job}\",\"version\":\"\"},\"temporality\":7,\"value\":12.5,\"valueState\":\"finite\"}],\"version\":\"goo/raw-sum-observations/v1\"}\n"
+    },
+    {
+      "name": "missing-monotonic",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":1}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"instrument requires explicit non-null monotonic\"}\n"
+    },
+    {
+      "name": "null-temporality",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":null,\"monotonic\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"instrument requires explicit non-null temporality\"}\n"
+    },
+    {
+      "name": "mislabeled-stock",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"stock\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":1,\"monotonic\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"sum kind differs from reported temporality and monotonicity\"}\n"
+    },
+    {
+      "name": "mislabeled-counter",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":2,\"monotonic\":false}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"sum kind differs from reported temporality and monotonicity\"}\n"
+    },
+    {
+      "name": "all-scope",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environmentSelector\":{\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"all\"}},\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":1,\"monotonic\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"all-environments scope is unavailable for native measurements; choose one environment\"}\n"
+    },
+    {
+      "name": "metadata-mismatch",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":1,\"monotonic\":true}}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"Source response rejected.\",\"refusal\":{\"kind\":\"malformed\",\"detail\":\"The source returned invalid or unsupported record data. No partial result was admitted.\"}}\n"
+    },
+    {
+      "name": "empty",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":1,\"monotonic\":true}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"counter\",\"metric\":\"jobs.total\",\"monotonic\":true,\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":1,\"unit\":\"{job}\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[],\"version\":\"goo/raw-sum-observations/v1\"}\n"
+    },
+    {
+      "name": "no-recorded",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":1,\"monotonic\":true}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"counter\",\"metric\":\"jobs.total\",\"monotonic\":true,\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":1,\"unit\":\"{job}\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"diagnostics\":[{\"code\":\"no-recorded-value\",\"field\":\"value\"}],\"endNS\":\"1500000000\",\"flags\":1,\"flagsState\":\"valid\",\"monotonic\":true,\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"end_ns\":\"1500000000\",\"flags\":1,\"monotonic\":true,\"name\":\"jobs.total\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"temporality\":1,\"unit\":\"{job}\",\"value\":\"12.5\",\"version\":\"\"},\"rawValue\":\"12.5\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"jobs.total\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"{job}\",\"version\":\"\"},\"temporality\":1,\"value\":null,\"valueState\":\"absent\"}],\"version\":\"goo/raw-sum-observations/v1\"}\n"
+    },
+    {
+      "name": "source-failure",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":1,\"monotonic\":true}}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
+    },
+    {
+      "name": "malformed-end",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":1,\"monotonic\":true}}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"Source response rejected.\",\"refusal\":{\"kind\":\"malformed\",\"detail\":\"The source returned invalid or unsupported record data. No partial result was admitted.\"}}\n"
+    },
+    {
+      "name": "wrong-kind",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"gauge\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":1,\"monotonic\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"sum kind differs from reported temporality and monotonicity\"}\n"
+    },
+    {
+      "name": "missing-unit",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"temporality\":1,\"monotonic\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"instrument requires explicit non-null unit\"}\n"
+    },
+    {
+      "suffix": "{}",
+      "name": "trailing",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":1,\"monotonic\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "name": "unknown",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"extra\":true,\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":1,\"monotonic\":true}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"json: unknown field \\\"extra\\\"\"}\n"
+    },
+    {
+      "name": "oversize",
+      "method": "POST",
+      "path": "/sum-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"counter\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"jobs.total\",\"unit\":\"{job}\",\"temporality\":1,\"monotonic\":true}}",
+      "padTo": 65537,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "name": "method",
+      "method": "GET",
+      "path": "/sum-observations",
+      "body": "",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    }
+  ]
+}

@@ -7822,6 +7822,93 @@
         "x-schema-coverage": "typed"
       }
     },
+    "/sum-observations": {
+      "post": {
+        "operationId": "post_sum_observations",
+        "summary": "POST /sum-observations",
+        "tags": [
+          "sum-observations"
+        ],
+        "description": "Explicit bounded raw sum read from exact discovered counter/stock tuple. Requires reported int32 temporality and explicit monotonicity, including false. Stock is exactly cumulative nonmonotonic. Missing instance identity does not block inspection. Unknown temporality remains diagnostic; malformed or differing metadata refuses atomically. Same narrow fixed scope, source budgets and cancellation as raw gauges; no rate, reset, health, fleet aggregate or custody claim.",
+        "x-go-source": "internal/nativehttp/routes.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RawSumResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceReadFailure"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RawSumRequest"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 65536,
+        "x-schema-coverage": "typed"
+      }
+    },
     "/tail": {
       "post": {
         "operationId": "post_tail",
@@ -9784,6 +9871,19 @@
       },
       "RawGaugeResult": {
         "$ref": "#/components/schemas/measurements.RawGaugeResult"
+      },
+      "RawSumRequest": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.RawSumQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "RawSumResult": {
+        "$ref": "#/components/schemas/measurements.RawSumResult"
       },
       "RecipeList": {
         "anyOf": [
@@ -35571,22 +35671,6 @@
         "type": "object",
         "x-go-type": "github.com/casselc/goo/measurements.Question"
       },
-      "measurements.RawGaugeDiagnostic": {
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "field": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "field",
-          "code"
-        ],
-        "type": "object",
-        "x-go-type": "github.com/casselc/goo/measurements.RawGaugeDiagnostic"
-      },
       "measurements.RawGaugeInstrument": {
         "properties": {
           "kind": {
@@ -35664,13 +35748,67 @@
           "unit"
         ]
       },
-      "measurements.RawGaugeObservation": {
+      "measurements.RawGaugeQuestionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "instrument": {
+            "$ref": "#/components/schemas/measurements.RawGaugeInstrumentInput"
+          },
+          "question": {
+            "$ref": "#/components/schemas/measurements.DiscoveryQuestionInput"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.RawGaugeQuestion",
+        "required": [
+          "question",
+          "instrument"
+        ]
+      },
+      "measurements.RawGaugeResult": {
+        "properties": {
+          "instrument": {
+            "$ref": "#/components/schemas/measurements.RawGaugeInstrument"
+          },
+          "limit": {
+            "const": 10000
+          },
+          "question": {
+            "$ref": "#/components/schemas/measurements.DiscoveryQuestion"
+          },
+          "readAt": {
+            "type": "string"
+          },
+          "rows": {
+            "type": "array",
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/measurements.RawObservation"
+            }
+          },
+          "version": {
+            "const": "goo/raw-gauge-observations/v1"
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "instrument",
+          "readAt",
+          "rows",
+          "limit"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.RawGaugeResult",
+        "description": "Bounded reported gauge occurrences; independent source-read clock. No evaluated stream identity, continuity, aggregation, health or completeness claim. Mandatory observation time proves the fixed half-open bounds. Missing, invalid, nonfinite and flagged values remain explicit; repeated occurrences remain distinct."
+      },
+      "measurements.RawObservation": {
         "properties": {
           "diagnostics": {
             "anyOf": [
               {
                 "items": {
-                  "$ref": "#/components/schemas/measurements.RawGaugeDiagnostic"
+                  "$ref": "#/components/schemas/measurements.RawObservationDiagnostic"
                 },
                 "type": "array"
               },
@@ -35728,7 +35866,7 @@
             ]
           },
           "stream": {
-            "$ref": "#/components/schemas/measurements.RawGaugeStream"
+            "$ref": "#/components/schemas/measurements.RawObservationStream"
           },
           "value": {
             "anyOf": [
@@ -35764,7 +35902,7 @@
           "rawRow"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/measurements.RawGaugeObservation",
+        "x-go-type": "github.com/casselc/goo/measurements.RawObservation",
         "allOf": [
           {
             "if": {
@@ -35822,61 +35960,23 @@
           }
         ]
       },
-      "measurements.RawGaugeQuestionInput": {
-        "additionalProperties": false,
+      "measurements.RawObservationDiagnostic": {
         "properties": {
-          "instrument": {
-            "$ref": "#/components/schemas/measurements.RawGaugeInstrumentInput"
-          },
-          "question": {
-            "$ref": "#/components/schemas/measurements.DiscoveryQuestionInput"
-          }
-        },
-        "type": "object",
-        "x-go-type": "github.com/casselc/goo/measurements.RawGaugeQuestion",
-        "required": [
-          "question",
-          "instrument"
-        ]
-      },
-      "measurements.RawGaugeResult": {
-        "properties": {
-          "instrument": {
-            "$ref": "#/components/schemas/measurements.RawGaugeInstrument"
-          },
-          "limit": {
-            "const": 10000
-          },
-          "question": {
-            "$ref": "#/components/schemas/measurements.DiscoveryQuestion"
-          },
-          "readAt": {
+          "code": {
             "type": "string"
           },
-          "rows": {
-            "type": "array",
-            "maxItems": 10000,
-            "items": {
-              "$ref": "#/components/schemas/measurements.RawGaugeObservation"
-            }
-          },
-          "version": {
-            "const": "goo/raw-gauge-observations/v1"
+          "field": {
+            "type": "string"
           }
         },
         "required": [
-          "version",
-          "question",
-          "instrument",
-          "readAt",
-          "rows",
-          "limit"
+          "field",
+          "code"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/measurements.RawGaugeResult",
-        "description": "Bounded reported gauge occurrences; independent source-read clock. No evaluated stream identity, continuity, aggregation, health or completeness claim. Mandatory observation time proves the fixed half-open bounds. Missing, invalid, nonfinite and flagged values remain explicit; repeated occurrences remain distinct."
+        "x-go-type": "github.com/casselc/goo/measurements.RawObservationDiagnostic"
       },
-      "measurements.RawGaugeStream": {
+      "measurements.RawObservationStream": {
         "properties": {
           "attributes": {
             "anyOf": [
@@ -35934,7 +36034,396 @@
           "attributes"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/measurements.RawGaugeStream"
+        "x-go-type": "github.com/casselc/goo/measurements.RawObservationStream"
+      },
+      "measurements.RawSumInstrument": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "counter",
+              "stock"
+            ]
+          },
+          "metric": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1
+          },
+          "monotonic": {
+            "type": "boolean"
+          },
+          "schemaURL": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "scope": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "temporality": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "kind",
+          "scope",
+          "version",
+          "schemaURL",
+          "metric",
+          "unit",
+          "temporality",
+          "monotonic"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.RawSumInstrument",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "temporality": {
+                  "const": 2
+                },
+                "monotonic": {
+                  "const": false
+                }
+              },
+              "required": [
+                "temporality",
+                "monotonic"
+              ]
+            },
+            "then": {
+              "properties": {
+                "kind": {
+                  "const": "stock"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "kind": {
+                  "const": "counter"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "measurements.RawSumInstrumentInput": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "counter",
+              "stock"
+            ]
+          },
+          "metric": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1
+          },
+          "monotonic": {
+            "type": "boolean"
+          },
+          "schemaURL": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "scope": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "temporality": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 128
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.RawSumInstrument",
+        "required": [
+          "kind",
+          "scope",
+          "version",
+          "schemaURL",
+          "metric",
+          "unit",
+          "temporality",
+          "monotonic"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "temporality": {
+                  "const": 2
+                },
+                "monotonic": {
+                  "const": false
+                }
+              },
+              "required": [
+                "temporality",
+                "monotonic"
+              ]
+            },
+            "then": {
+              "properties": {
+                "kind": {
+                  "const": "stock"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "kind": {
+                  "const": "counter"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "measurements.RawSumObservation": {
+        "properties": {
+          "diagnostics": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/measurements.RawObservationDiagnostic"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "endNS": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "flags": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4294967295
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "flagsState": {
+            "enum": [
+              "valid",
+              "absent",
+              "invalid"
+            ]
+          },
+          "monotonic": {
+            "type": "boolean"
+          },
+          "occurrenceKey": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "rawRow": {
+            "type": "object"
+          },
+          "rawValue": {},
+          "startNS": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "startState": {
+            "enum": [
+              "valid",
+              "absent",
+              "invalid"
+            ]
+          },
+          "stream": {
+            "$ref": "#/components/schemas/measurements.RawObservationStream"
+          },
+          "temporality": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "valueState": {
+            "enum": [
+              "finite",
+              "nonfinite",
+              "absent",
+              "invalid"
+            ]
+          }
+        },
+        "required": [
+          "occurrenceKey",
+          "stream",
+          "startNS",
+          "endNS",
+          "startState",
+          "rawValue",
+          "value",
+          "valueState",
+          "flags",
+          "flagsState",
+          "diagnostics",
+          "rawRow",
+          "temporality",
+          "monotonic"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.RawSumObservation",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "valueState": {
+                  "const": "finite"
+                }
+              },
+              "required": [
+                "valueState"
+              ]
+            },
+            "then": {
+              "properties": {
+                "value": {
+                  "type": "number"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "value": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "flagsState": {
+                  "const": "valid"
+                }
+              },
+              "required": [
+                "flagsState"
+              ]
+            },
+            "then": {
+              "properties": {
+                "flags": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 4294967295
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "flags": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "measurements.RawSumQuestionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "instrument": {
+            "$ref": "#/components/schemas/measurements.RawSumInstrumentInput"
+          },
+          "question": {
+            "$ref": "#/components/schemas/measurements.DiscoveryQuestionInput"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.RawSumQuestion",
+        "required": [
+          "question",
+          "instrument"
+        ]
+      },
+      "measurements.RawSumResult": {
+        "properties": {
+          "instrument": {
+            "$ref": "#/components/schemas/measurements.RawSumInstrument"
+          },
+          "limit": {
+            "const": 10000
+          },
+          "question": {
+            "$ref": "#/components/schemas/measurements.DiscoveryQuestion"
+          },
+          "readAt": {
+            "type": "string"
+          },
+          "rows": {
+            "type": "array",
+            "maxItems": 10000,
+            "items": {
+              "$ref": "#/components/schemas/measurements.RawSumObservation"
+            }
+          },
+          "version": {
+            "const": "goo/raw-sum-observations/v1"
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "instrument",
+          "readAt",
+          "rows",
+          "limit"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/measurements.RawSumResult",
+        "description": "Bounded reported sum occurrences with exact temporality and monotonicity; stock labels mean cumulative nonmonotonic metadata only. Unknown enums remain visible. No evaluator, rate, reset, continuity, fleet total or completeness claim."
       },
       "measurements.ResourceBinding": {
         "properties": {

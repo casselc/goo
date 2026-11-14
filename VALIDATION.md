@@ -1,5 +1,59 @@
 # Validation record
 
+## 441 — reported sum observations
+
+[Contract and diagram](docs/RAW_SUM_OBSERVATIONS.md),
+[real OTLP storyboard](docs/journeys/raw-sum-observations.md),
+[architecture review](docs/reviews/RAW_SUM_441_ARCH.md) and
+[UX review](docs/reviews/RAW_SUM_441_UX.md).
+
+- Added explicit `POST /sum-observations` with its own raw-sum profile. Exact
+  discovered counter/stock identity includes required reported int32 temporality
+  and boolean monotonicity. Cumulative nonmonotonic sums retain `stock`; other
+  tuples retain `counter`. Unknown temporality is diagnostic. Missing, malformed
+  or mismatched metadata refuses atomically, independently of SQL filtering.
+  Native All scope refuses before source access. No evaluator preflight changes,
+  rate/reset inference, connected series, aggregate or new capture carrier.
+- Shared neutral raw parsing and SQL projection retain gauge semantics and wire;
+  the same inspector owner handles local paging, Find, detail, retained return
+  and retired requests. No compatibility aliases. Sum variants use shared compact
+  reported-temporality/monotonicity labels in discovery and inspector. Known
+  no-recorded samples show **Unavailable · not recorded**, preserving raw scalar
+  and flags rather than displaying zero.
+- Full root Go suite passes on Go 1.27.3. Full frontend: **1,849 passing,
+  zero failures/skips, 31.497s**. The final wording correction additionally passes
+  **22 focused raw-owner tests**; **six catalog tests** pass. Independent
+  architecture and UX source reviews accept the shared boundaries.
+- Complete API checker passes **120 operations / 812 schemas**, **529 response
+  fixtures / 215 admitted requests / 31 mux refusals**, plus negative/SSE
+  controls. Nineteen new direct HTTP cases include otherwise valid All refusal
+  and both kind/metadata mislabels without SQL. Strict response, timeout,
+  cancellation, 10,000-row and source/serialized 8 MiB budgets remain atomic.
+- Native generated/admission run: **1.255s, zero skips**. Sum coverage includes
+  **150 generated banks**, **12 Go/JS tuple banks / 72 scalar rows**, **eight
+  altered-result controls**, **six atomic metadata refusals** and zero-source
+  inconsistent stock identity. Existing gauge **150 generated banks / 60 Go/JS
+  rows / eight controls** also pass after neutral parser/module extraction.
+  Generated negative finite values remain raw facts even for reported monotonic
+  sums; the inspector does not apply counter kernel validity or infer resets.
+
+- Final real-OTLP journey passes **43.0s** over **232 actual exported sum
+  points / 14 steps**. Four exact temporality/monotonicity tuples return
+  **6/6/6/210 rows**; separate unit and nonfinite banks each return two. The
+  210-row bank renders at most 100 rows per page. Independent exporter rows
+  establish scalar, attribute, unit, flags, time and metadata conservation.
+- Local paging, Find, keyboard Inspect, retained return and late delivery issue
+  **zero new POSTs**. An owned-source column fault refuses with no partial bank
+  and retains held rows. An actual completed HTTP 200 delivered after navigation
+  cannot replace the settled read clock or focus. The updated existing actor
+  completes **586 snapshots**, one explicit sum read, two matching held rows,
+  **zero forbidden requests/overflow/errors**. Runtime and owned database cleanup
+  pass. Three desktop/390/320 frames are refreshed and UX accepted. No physical
+  screen-reader or cross-engine acceptance is claimed.
+- Local documentation links and diff whitespace checks pass. The neutral module
+  and typed profile changes remove old source aliases rather than retaining
+  compatibility scaffolding; historical gauge functionality remains covered.
+
 ## 440 — presence-safe CEL attribute conditions
 
 [Guide](docs/CEL_ATTRIBUTE_CONDITIONS.md),

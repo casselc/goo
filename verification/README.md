@@ -5117,3 +5117,26 @@ unchanged. These are SQL semantic checks, not SDK type recovery or ingestion
 completeness claims. Without the endpoint the live test explicitly skips; a skip
 is not evidence of source parity. The real OTLP editor journey complements these
 checks in [the attribute storyboard](../docs/journeys/cel-attributes.md).
+
+## 441 — reported sum observation conservation
+
+Run the finite raw-sum properties and actual Go/JavaScript admission parity:
+
+```sh
+go test -run '^(TestHegelRawSum441Conservation|TestRawSum441GoJavaScriptAdmission)$' -count=1 -v
+```
+
+The generated property uses 150 banks spanning reported delta, cumulative,
+unspecified and unknown temporalities, explicit monotonic/nonmonotonic states,
+missing instance identity, scalar diagnostics and duplicate occurrences. It
+checks the actual source adapter against independently supplied exporter-shaped
+bytes. The fixed bank sends 12 exact instrument tuples (72 rows) through both Go
+and the shared browser admission helper; eight altered results must refuse.
+Malformed or mismatched temporality/monotonicity refuses atomically, and a
+counter/stock identity mismatch must refuse before any source request.
+
+These are raw-point conservation checks, not counter evaluation, interval/reset
+inference or ingestion completeness. Existing raw-inspector state tests cover
+its shared suspend/retire lifecycle; the [sum storyboard](../docs/journeys/raw-sum-observations.md)
+complements these properties with actual OTLP and browser interaction. Executed
+results belong in `VALIDATION.md`.

@@ -228,7 +228,7 @@ func gauge438DataAdmission(r gauge438Report) string {
 		}
 		raw = append(raw, row)
 	}
-	admitted := map[string]measurements.RawGaugeObservation{}
+	admitted := map[string]measurements.RawObservation{}
 	readsByName := map[string]string{}
 	for _, acq := range r.Acquisitions {
 		var q measurements.RawGaugeQuestion
@@ -327,7 +327,7 @@ func gauge438DataAdmission(r gauge438Report) string {
 			return "held source-read receipt changed"
 		}
 		for _, held := range bank.Rows {
-			var row measurements.RawGaugeObservation
+			var row measurements.RawObservation
 			if json.Unmarshal(held.Record, &row) != nil || row.OccurrenceKey != held.Key {
 				return "held occurrence key changed"
 			}

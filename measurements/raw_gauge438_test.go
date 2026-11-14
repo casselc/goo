@@ -76,7 +76,7 @@ func TestRawGauge438ScalarDiagnostics(t *testing.T) {
 			if row.ValueState != c.state || c.state != "finite" && row.Value != nil {
 				t.Fatalf("state/value: %+v", row)
 			}
-			if c.code != "" && !slices.Contains(row.Diagnostics, RawGaugeDiagnostic{Field: "value", Code: c.code}) {
+			if c.code != "" && !slices.Contains(row.Diagnostics, RawObservationDiagnostic{Field: "value", Code: c.code}) {
 				t.Fatal(row.Diagnostics)
 			}
 		})
@@ -157,12 +157,12 @@ func TestRawGauge438Transport(t *testing.T) {
 
 func TestRawGauge438FlagsSemanticInteger(t *testing.T) {
 	for _, raw := range []string{"0.0", "1e0", "4294967295.000", "0e20"} {
-		if _, ok := rawGaugeFlags(json.RawMessage(raw)); !ok {
+		if _, ok := rawObservationFlags(json.RawMessage(raw)); !ok {
 			t.Fatal("semantic uint32 refused", raw)
 		}
 	}
 	for _, raw := range []string{"0.1", "-1", "4294967296", "4294967295.0000001", `"0"`, "true"} {
-		if _, ok := rawGaugeFlags(json.RawMessage(raw)); ok {
+		if _, ok := rawObservationFlags(json.RawMessage(raw)); ok {
 			t.Fatal("invalid flags admitted", raw)
 		}
 	}

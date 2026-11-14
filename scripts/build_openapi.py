@@ -1337,7 +1337,7 @@ page['properties']['capturedAt']['format']='date-time'
 page['properties']['state']['enum']=['observed','no_data','changed_between_reads']
 page['properties']['resultToken']['pattern']='^[a-f0-9]{64}$'
 
-reads = {'/metric-scopes','/source-capabilities','/environment-scopes','/environment-scopes/records','/pod-metric-discovery','/host-discovery','/pod-discovery','/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/page', '/explore/counted-values', '/record-aggregates','/exception-groups', '/trace-search', '/trace-search/page', '/population/explain', '/metric-observations','/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
+reads = {'/metric-scopes','/source-capabilities','/environment-scopes','/environment-scopes/records','/pod-metric-discovery','/host-discovery','/pod-discovery','/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/page', '/explore/counted-values', '/record-aggregates','/exception-groups', '/trace-search', '/trace-search/page', '/population/explain', '/metric-observations','/sum-observations','/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
 for profile,roles in [('container-memory-kubeletstats-v0.137.0',['working-set']),('container-memory-k8scluster-v0.137.0',['request','limit']),('container-cpu-kubeletstats-v0.137.0',['usage']),('container-cpu-k8scluster-v0.137.0',['request','limit'])]:
  podwidget_schema['allOf'].append({'if':{'properties':{'profile':{'const':profile}},'required':['profile']},'then':{'properties':{'role':{'enum':roles}}}})
 # Raw gauges share a bounded metadata selection, never a measurement result.
@@ -1352,32 +1352,55 @@ for name in ('measurements.RawGaugeInstrument','measurements.RawGaugeInstrumentI
   props[key]={'type':'string','maxLength':bound}
  props['metric']['minLength']=1
 raw=schemas['measurements.RawGaugeResult'];raw['properties']['version']={'const':'goo/raw-gauge-observations/v1'};raw['properties']['limit']={'const':10000}
-raw['properties']['rows']={'type':'array','maxItems':10000,'items':ref('measurements.RawGaugeObservation')}
-row=schemas['measurements.RawGaugeObservation']['properties']
+raw['properties']['rows']={'type':'array','maxItems':10000,'items':ref('measurements.RawObservation')}
+row=schemas['measurements.RawObservation']['properties']
 row['valueState']={'enum':['finite','nonfinite','absent','invalid']}
 row['startState']={'enum':['valid','absent','invalid']};row['flagsState']={'enum':['valid','absent','invalid']}
 row['endNS']={'type':'string','pattern':'^(0|[1-9][0-9]*)$'}
 row['occurrenceKey']={'type':'string','pattern':'^[1-9][0-9]*$'}
 row['rawRow']={'type':'object'}
 row['flags']={'anyOf':[{'type':'integer','minimum':0,'maximum':4294967295},{'type':'null'}]}
-schemas['measurements.RawGaugeObservation']['allOf']=[
+schemas['measurements.RawObservation']['allOf']=[
  {'if':{'properties':{'valueState':{'const':'finite'}},'required':['valueState']},'then':{'properties':{'value':{'type':'number'}}},'else':{'properties':{'value':{'type':'null'}}}},
  {'if':{'properties':{'flagsState':{'const':'valid'}},'required':['flagsState']},'then':{'properties':{'flags':{'type':'integer','minimum':0,'maximum':4294967295}}},'else':{'properties':{'flags':{'type':'null'}}}}
 ]
 
 schemas['measurements.RawGaugeResult']['description']='Bounded reported gauge occurrences; independent source-read clock. No evaluated stream identity, continuity, aggregation, health or completeness claim. Mandatory observation time proves the fixed half-open bounds. Missing, invalid, nonfinite and flagged values remain explicit; repeated occurrences remain distinct.'
+
+# Raw sums select the complete reported tuple, including explicit false and unknown enums.
+schemas['measurements.RawSumQuestionInput']['required']=['question','instrument']
+schemas['measurements.RawSumQuestionInput']['properties']['question']=ref('measurements.DiscoveryQuestionInput')
+schemas['measurements.RawSumQuestionInput']['properties']['instrument']=ref('measurements.RawSumInstrumentInput')
+for name in ('measurements.RawSumInstrument','measurements.RawSumInstrumentInput'):
+ item=schemas[name];item['required']=['kind','scope','version','schemaURL','metric','unit','temporality','monotonic']
+ props=item['properties'];props['kind']={'enum':['counter','stock']}
+ for key,bound in (('scope',256),('version',128),('schemaURL',1024),('metric',256),('unit',64)):
+  props[key]={'type':'string','maxLength':bound}
+ props['metric']['minLength']=1
+ props['temporality']={'type':'integer','minimum':-2147483648,'maximum':2147483647}
+ props['monotonic']={'type':'boolean'}
+ item['allOf']=[{'if':{'properties':{'temporality':{'const':2},'monotonic':{'const':False}},'required':['temporality','monotonic']},'then':{'properties':{'kind':{'const':'stock'}}},'else':{'properties':{'kind':{'const':'counter'}}}}]
+raw=schemas['measurements.RawSumResult'];raw['properties']['version']={'const':'goo/raw-sum-observations/v1'};raw['properties']['limit']={'const':10000}
+raw['properties']['rows']={'type':'array','maxItems':10000,'items':ref('measurements.RawSumObservation')}
+sumrow=schemas['measurements.RawSumObservation']
+for key,value in schemas['measurements.RawObservation']['properties'].items():sumrow['properties'][key]=copy.deepcopy(value)
+sumrow['allOf']=copy.deepcopy(schemas['measurements.RawObservation']['allOf'])
+sumrow['properties']['temporality']={'type':'integer','minimum':-2147483648,'maximum':2147483647}
+sumrow['properties']['monotonic']={'type':'boolean'}
+raw['description']='Bounded reported sum occurrences with exact temporality and monotonicity; stock labels mean cumulative nonmonotonic metadata only. Unknown enums remain visible. No evaluator, rate, reset, continuity, fleet total or completeness claim.'
+
 plans = {'/cel/context','/cel/plan','/native-views/reuse','/view-artifacts/encode','/view-artifacts/decode','/pod-dashboard/plan','/host-dashboard/plan','/pool-signals/plan','/pool-signals/view','/container-memory/view','/container-cpu/view','/container-resources/history','/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
 publications = {'/native-views','/kept-observations/records','/kept-observations/tail','/activity-views','/measurement-packages', '/telemetry-packages', '/annotations', '/exploration-views', '/deployments', '/documents', '/captures/comparisons'}
 requests = {'/cel/context':'CELContextRequest','/cel/plan':'CELPlanRequest','/native-views':'NativeViewRequest','/native-views/reuse':'NativeViewReuseRequest','/view-artifacts/encode':'ViewArtifactEncodeRequest','/view-artifacts/decode':'ViewArtifactDecodeRequest','/view-templates/expand':'ViewTemplateExpansionRequest','/kept-observations/repair':'KeptRepairRequest','/kept-observations/records':'KeepRecordsIntent','/kept-observations/tail':'KeepTailIntent','/pod-metric-discovery':'PodMetricDiscoveryQuestion','/pod-dashboard/plan':'PodDashboardRequest','/host-discovery':'HostDiscoveryQuestion','/pod-discovery':'PodDiscoveryQuestion','/host-dashboard/plan':'HostDashboardRequest','/pool-signals/plan':'PoolSignalsRequest','/pool-signals/view':'PoolViewRequest','/container-memory/view':'ContainerMemoryViewRequest','/container-cpu/view':'ContainerCPUViewRequest','/container-resources/history':'ContainerResourceHistoryRequest','/activity-views':'ActivityViewRequest',
  '/retained-evidence/tail':'TailIntent','/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'ServiceDiscoveryRequest','/explore':'RecordQuery','/explore/page':'RecordQuery','/explore/counted-values':'RecordQuery','/record-aggregates':'RecordQuery','/exception-groups':'RecordQuery','/trace-search':'TraceSearchRequest','/trace-search/page':'TraceSearchPageRequest','/tail':'TailSelector',
- '/metric-scopes':'MetricScopesQuestion','/source-capabilities':'SourceCapabilitiesQuestion','/environment-scopes':'AdoptionWindow','/environment-scopes/records':'AdoptionRecordsQuestion','/measurements':'NativeQuestion','/metric-observations':'RawGaugeRequest','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
+ '/metric-scopes':'MetricScopesQuestion','/source-capabilities':'SourceCapabilitiesQuestion','/environment-scopes':'AdoptionWindow','/environment-scopes/records':'AdoptionRecordsQuestion','/measurements':'NativeQuestion','/metric-observations':'RawGaugeRequest','/sum-observations':'RawSumRequest','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
  '/telemetry-packages':'YAMLRequest','/telemetry-packages/draft':'TelemetryDraftRequest','/telemetry-packages/numeric-plan':'NumericPlanRequest','/telemetry-packages/plan':'TelemetryPlanRequest',
  '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/numeric-histograms/selection':'NumericHistogramSelectionRequest','/numeric-histograms/comparison-selection':'DistributionSelectionRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
  '/population/explain':'ExplanationRequest','/population/explain/plan':'ExplanationRequest','/population/explain/filter':'ExplanationFilterRequest','/captures':'CaptureRequest','/captures/live':'LiveComparisonRequest','/captures/comparisons':'SaveComparisonRequest','/investigations':'InvestigationRequest','/retained-evidence':'RetainRequest','/retained-evidence/{id}/annotations':'CorrectRequest',
 }
 responses = {('post','/cel/context'):'CELRecordContext',('post','/cel/plan'):'CELRecordPlan',('get','/native-views'):'NativeViewList',('post','/native-views'):'NativeView',('get','/native-views/{id}'):'NativeView',('post','/native-views/reuse'):'NativeView',('post','/view-artifacts/encode'):'ViewArtifactResult',('post','/view-artifacts/decode'):'ViewArtifactResult',('post','/view-templates/expand'):'ViewTemplateExpansion',('get','/kept-observations/search'):'KeptSearchPage',('post','/kept-observations/repair'):'KeptRepairPage',('post','/kept-observations/records'):'KeptRecords',('post','/kept-observations/tail'):'KeptObservations',('get','/kept-observations/{id}'):'KeptResource',('post','/pod-metric-discovery'):'PodMetricDiscovery',('post','/pod-dashboard/plan'):'PodDashboardPlan',('post','/host-discovery'):'HostDiscovery',('post','/pod-discovery'):'PodDiscovery',('post','/host-dashboard/plan'):'HostDashboardPlan',('post','/pool-signals/plan'):'PoolSignalsPlan',('post','/pool-signals/view'):'PoolView',('post','/container-memory/view'):'ContainerMemoryView',('post','/container-cpu/view'):'ContainerCPUView',('post','/container-resources/history'):'ContainerResourceHistory',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
  ('post','/compare'):'CompareResult',('post','/inventory'):'InventoryResult',('post','/discovery'):'ServiceDiscovery',('post','/explore'):'RecordResult',('post','/explore/page'):'RecordPageResult',('post','/explore/counted-values'):'CountedValuesResult',('post','/record-aggregates'):'RecordAggregatesResult',('post','/exception-groups'):'ExceptionGroupsResult',('post','/trace-search'):'TraceSearchResult',('post','/trace-search/page'):'TraceSearchResult',
- ('post','/measurements'):'NativeResult',('post','/metric-observations'):'RawGaugeResult',('post','/metric-discovery'):'MetricDiscoveryResult',('post','/telemetry-packages/draft'):'PackagePlan',('post','/telemetry-packages/plan'):'PackagePlan',('post','/telemetry-packages/numeric-plan'):'NumericPlan',('post','/telemetry-packages'):'SavedPackage',('get','/telemetry-packages/{revision}'):'SavedPackage',
+ ('post','/measurements'):'NativeResult',('post','/metric-observations'):'RawGaugeResult',('post','/sum-observations'):'RawSumResult',('post','/metric-discovery'):'MetricDiscoveryResult',('post','/telemetry-packages/draft'):'PackagePlan',('post','/telemetry-packages/plan'):'PackagePlan',('post','/telemetry-packages/numeric-plan'):'NumericPlan',('post','/telemetry-packages'):'SavedPackage',('get','/telemetry-packages/{revision}'):'SavedPackage',
  ('post','/recipes'):'RecipePlan',('post','/dashboards/plan'):'DashboardPlan',('post','/population/plan'):'PopulationPlan',('post','/numeric-histograms/selection'):'NumericHistogramSelection',('post','/numeric-histograms/comparison-selection'):'NumericHistogramSelection',
  ('get','/http-package'):'LiveHTTPResult',('get','/operations'):'LiveOperations',('get','/counter-rates'):'LiveRates',('get','/histograms'):'LiveHistograms',
  ('get','/captures'):'CaptureList',('get','/captures/search'):'CaptureSearchPage',('post','/captures'):'CapturePage',('get','/captures/{id}'):'CapturePage',('get','/investigations/{id}'):'InvestigationCapture',('post','/investigations'):'InvestigationCapture',
@@ -1475,7 +1498,7 @@ def go_limit(path):
  if path in ('/compare','/numeric-histograms/comparison-selection'): return 1048576
  if path == '/dashboards/plan': return 262144
  if path == '/pod-dashboard/plan': return 8389632
- if path.startswith(('/telemetry-packages','/measurement-packages')) or path in ('/pod-metric-discovery','/host-dashboard/plan','/pool-signals/plan','/population/explain','/population/explain/plan','/population/explain/filter','/measurements','/metric-observations','/metric-discovery','/trace-search'): return 65536
+ if path.startswith(('/telemetry-packages','/measurement-packages')) or path in ('/pod-metric-discovery','/host-dashboard/plan','/pool-signals/plan','/population/explain','/population/explain/plan','/population/explain/filter','/measurements','/metric-observations','/sum-observations','/metric-discovery','/trace-search'): return 65536
  if path in ('/view-artifacts/encode','/view-artifacts/decode','/annotations','/exploration-views','/deployments','/documents','/population/plan', '/view-templates/expand', '/numeric-histograms/selection','/captures/comparisons'): return 131072
  return 16384
 
@@ -1522,7 +1545,7 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if path=='/kept-observations/search':op['parameters']=[{'name':name,'in':'query','schema':({'type':'string','enum':['','tail-selection','result-page','saved-capture']} if name=='origin' else {'type':'string','enum':['','logs','spans']} if name=='signal' else {'type':'string','maxLength':256,'description':'Case-sensitive literal UTF-8 text, at most 256 bytes. Empty text lists metadata.'} if name=='text' else {'type':'string','maxLength':1024})} for name in ('origin','signal','text','cursor')]
  for p in {'/captures':['cursor'],'/captures/{id}':['cursor'],'/captures/{id}/followups':['row'],'/captures/{id}/compare':['selection','distribution']}.get(path,[]):
   if method=='get' and not any(v['name']==p and v['in']=='query' for v in op['parameters']):op['parameters'].append({'name':p,'in':'query','schema':{'type':'string'},'description':'Single canonical value; saved evidence is not reread from the telemetry source.'})
- controlled=method=='post' and path in ('/metric-scopes','/source-capabilities','/environment-scopes','/environment-scopes/records','/metric-observations','/metric-discovery','/pod-metric-discovery','/host-discovery','/pod-discovery','/measurements','/explore','/explore/page','/explore/counted-values','/record-aggregates','/exception-groups','/trace-search','/trace-search/page','/population/explain','/inventory','/discovery','/captures','/captures/live')
+ controlled=method=='post' and path in ('/metric-scopes','/source-capabilities','/environment-scopes','/environment-scopes/records','/metric-observations','/sum-observations','/metric-discovery','/pod-metric-discovery','/host-discovery','/pod-discovery','/measurements','/explore','/explore/page','/explore/counted-values','/record-aggregates','/exception-groups','/trace-search','/trace-search/page','/population/explain','/inventory','/discovery','/captures','/captures/live')
  controlled = controlled or method=='get' and path in ('/http-package','/operations','/counter-rates','/histograms')
  if controlled:op['parameters'].append({'name':'X-Goo-Query-ID','in':'header','schema':{'type':'string','pattern':'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$'},'description':'Optional short-lived cancellation capability; repeated/cancelled IDs are refused.'})
  if method=='post' and path in requests:
@@ -1542,6 +1565,8 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if method=='get' and path in ('/http-package','/operation-packages','/operations','/counter-rates','/histograms'): codes.add(503)
  if path=='/metric-observations':
   op['description']='Explicit bounded raw gauge read from exact discovered metadata. Requires kind gauge and the original narrow service/environment/namespace and fixed window; missing instance identity does not block raw inspection. Gauge metadata compatibility is checked separately from the value projection. Unsupported kinds/scopes refuse before SQL; later projection failure, invalid identity/observation time, row and byte overruns refuse atomically. Scalar invalidity remains per-row diagnostics. No capture, evaluator or continuity claim.'
+ if path=='/sum-observations':
+  op['description']='Explicit bounded raw sum read from exact discovered counter/stock tuple. Requires reported int32 temporality and explicit monotonicity, including false. Stock is exactly cumulative nonmonotonic. Missing instance identity does not block inspection. Unknown temporality remains diagnostic; malformed or differing metadata refuses atomically. Same narrow fixed scope, source budgets and cancellation as raw gauges; no rate, reset, health, fleet aggregate or custody claim.'
  if path=='/metric-discovery':
   op['description']='Explicit bounded metric metadata discovery over compatible fixed exporter families. Each family has schema/read-access checks; excluded absent, incompatible and unreadable sources remain explicit in sources and diagnostics. No usable source refuses; available metadata uses one globally bounded union, and post-probe acquisition errors refuse the catalog. Exponential histograms remain unsupported for evaluation without an executable definition. Counts are exported points, not histogram observations or complete inventory.'
  if path=='/metric-scopes':

@@ -7,9 +7,9 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–440 delivered and validated**. The cadence continues as
+Status: **429 and 437–441 delivered and validated**. The cadence continues as
 **440 attribute breadth → 441 native metric depth → 442 consolidation**.
-Next: **441 raw counter inspection** (planned, profile design gate). The existing
+Next: **442 attribute refinement consolidation** (planned, measured workflow gate). The existing
 Go runtime, source adapters, typed questions and supplied-data components remain
 the foundation.
 
@@ -102,7 +102,13 @@ and source execution. Preserve the existing revision-owned additional-condition
 slot, diagnostic spans and explicit Apply/Run boundaries. No second executor,
 implicit coercion, arbitrary extension registry or unbounded dynamic field path.
 
-## 441 — raw counter observations (planned)
+## 441 — raw sum observations
+
+Delivered: [sum contract](RAW_SUM_OBSERVATIONS.md),
+[real OTLP journey](journeys/raw-sum-observations.md) and
+[validation](../VALIDATION.md). OTel sums include discovered counters and
+cumulative nonmonotonic stocks; both retain exact reported metadata and share
+local inspection with gauges. The design basis below records the bounded slice.
 
 Add explicit bounded table inspection of reported sum points when evaluator
 readiness blocks identified-stream evaluation. Retain temporality, monotonicity,
@@ -123,11 +129,10 @@ parent question and explicit Apply/Run, and refuse partial whole-filter conversi
 
 ## Retained follow-ons
 
-Presence-safe qualified CEL attributes remain valuable. Visual attribute queries
-already work, so the immediate priority is reaching observations that currently
-have no value path. A later CEL extension must distinguish absent, empty, invalid
-and typed values using the existing predicate AST and source adapters; it must
-not add another query executor or an unbounded extension registry.
+Presence-safe resource/record string attribute helpers are delivered in 440.
+Typed numeric attribute expressions still require a separate presence/validity
+contract through the existing predicate AST and source adapters. No new executor
+or unbounded extension registry follows from adding literal string helpers.
 
 Combined log/span Activity needs explicit independent polling, ordering, loss and
 partial-failure semantics. Monitoring delivery, multi-user collaboration,

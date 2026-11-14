@@ -114,14 +114,19 @@ Before live validation, verify persistent compiler/npm dependencies, artifact
 storage and lab prerequisites. See [managed runtime recovery](CLOUD_RUNTIME_RECOVERY.md).
 These test/setup requirements do not add a Node or Python product server.
 
-## Raw gauge inspection
+## Raw metric inspection
 
-Discovered gauges offer **Read observations** independently of evaluator
-readiness, including when `service.instance.id` is missing. The explicit
-`POST /metric-observations` read retains the exact instrument and fixed narrow
-discovery scope. It returns at most 10,000 reported occurrences atomically,
-including duplicates, attributes, units and scalar diagnostics. Find, paging and
-row details use the held result locally. Missing values remain unavailable;
-these rows do not establish a continuous series or fleet aggregate. See the
-[raw observation contract](RAW_GAUGE_OBSERVATIONS.md) and
-[real OTLP journey](journeys/raw-gauge-observations.md).
+Discovered gauges and sums offer **Read observations** independently of evaluator
+readiness, including when `service.instance.id` is missing. Gauge reads use
+`POST /metric-observations`; sums use `POST /sum-observations` with explicit
+reported temporality and monotonicity. Cumulative nonmonotonic sums retain their
+discovered `stock` kind. Each read keeps the exact instrument and fixed narrow
+scope; it returns at most 10,000 occurrences atomically, including duplicates,
+attributes, units and scalar diagnostics. Find, paging and details stay local.
+Missing values remain unavailable. Reported numbers do not establish a rate,
+reset, continuous series or fleet aggregate.
+
+See [raw gauges](RAW_GAUGE_OBSERVATIONS.md),
+[raw sums](RAW_SUM_OBSERVATIONS.md), and their real OTLP journeys for
+[gauges](journeys/raw-gauge-observations.md) and
+[sums](journeys/raw-sum-observations.md).

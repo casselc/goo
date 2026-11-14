@@ -34,7 +34,7 @@ test('438 read raw ordinary gauge observations without claiming evaluator readin
  async function step(action,run,{local=false}={}){const before=counters(),ci=report.calls.length,si=proxy.calls.length,focusBefore=await page.evaluate(()=>({id:document.activeElement?.id,role:document.activeElement?.getAttribute('aria-label'),text:document.activeElement?.textContent})),result=await run();await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));const after=counters();if(local)expect(after,action+' must stay local').toEqual(before);const focus=await page.evaluate(()=>({id:document.activeElement?.id,role:document.activeElement?.getAttribute('aria-label'),text:document.activeElement?.textContent}));report.steps.push({action,before,after,calls:report.calls.slice(ci),sql:proxy.calls.slice(si),focusBefore,focus});return result}
  const post=p=>page.waitForResponse(r=>r.request().method()==='POST'&&new URL(r.url()).pathname===p,{timeout:60000});
  const row=metric=>page.locator('#metricInstruments tr[data-instrument="'+metric+'"]');
- async function frame(name,width){await page.setViewportSize({width,height:1000});await page.locator(name==='held-inspection'?'[data-raw-gauge-observations] [aria-label="Selected item details"]':'[data-raw-gauge-observations]').evaluate(e=>e.scrollIntoView({block:'start'}));expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'docs/journeys/screenshots/438-'+name+'-'+width+'.png'})}
+ async function frame(name,width){await page.setViewportSize({width,height:1000});await page.locator(name==='held-inspection'?'[data-raw-observations] [aria-label="Selected item details"]':'[data-raw-observations]').evaluate(e=>e.scrollIntoView({block:'start'}));expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'docs/journeys/screenshots/438-'+name+'-'+width+'.png'})}
  try{
   const baseResource={'service.name':service,'deployment.environment.name':environment,'service.namespace':namespace,'fixture.bank':token};
   const resources=[{...baseResource},{...baseResource,'service.instance.id':'worker-a'}];
@@ -47,7 +47,7 @@ test('438 read raw ordinary gauge observations without claiming evaluator readin
   runtime=await startRuntime(process.env.GOO_GENERIC_BINARY,dir,{clickHouseURL:endpoint.href});
   await page.goto(runtime.base+'/');await page.locator('#exploreMeasurementsMode').click();await page.locator('#metricDiscovery > summary').click();await page.locator('#metricEnvironment').fill(environment);await page.locator('#metricService').fill(service);
   let pending,response;await step('discover-metadata',async()=>{pending=post('/api/metric-discovery');await page.locator('#metricDiscover').click();response=await pending;expect(response.ok(),await response.text()).toBe(true);report.discovery=await response.json()});
-  const panel=()=>page.locator('[data-raw-gauge-observations]');
+  const panel=()=>page.locator('[data-raw-observations]');
   const gauge=()=>row('queue.depth').filter({hasText:'{item}'});
   const readButton=()=>gauge().getByRole('button',{name:/^Read observations/});
   async function read(name,button=readButton()){

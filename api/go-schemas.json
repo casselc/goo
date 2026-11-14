@@ -1456,6 +1456,19 @@
   "RawGaugeResult": {
     "$ref": "#/components/schemas/measurements.RawGaugeResult"
   },
+  "RawSumRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/measurements.RawSumQuestionInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "RawSumResult": {
+    "$ref": "#/components/schemas/measurements.RawSumResult"
+  },
   "RecipeList": {
     "anyOf": [
       {
@@ -19974,22 +19987,6 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.Question"
   },
-  "measurements.RawGaugeDiagnostic": {
-    "properties": {
-      "code": {
-        "type": "string"
-      },
-      "field": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "field",
-      "code"
-    ],
-    "type": "object",
-    "x-go-type": "github.com/casselc/goo/measurements.RawGaugeDiagnostic"
-  },
   "measurements.RawGaugeInstrument": {
     "properties": {
       "kind": {
@@ -20089,90 +20086,6 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.RawGaugeInstrument"
   },
-  "measurements.RawGaugeObservation": {
-    "properties": {
-      "diagnostics": {
-        "anyOf": [
-          {
-            "items": {
-              "$ref": "#/components/schemas/measurements.RawGaugeDiagnostic"
-            },
-            "type": "array"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "endNS": {
-        "type": "string"
-      },
-      "flags": {
-        "anyOf": [
-          {
-            "minimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "flagsState": {
-        "type": "string"
-      },
-      "occurrenceKey": {
-        "type": "string"
-      },
-      "rawRow": {},
-      "rawValue": {},
-      "startNS": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "startState": {
-        "type": "string"
-      },
-      "stream": {
-        "$ref": "#/components/schemas/measurements.RawGaugeStream"
-      },
-      "value": {
-        "anyOf": [
-          {
-            "type": "number"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "valueState": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "occurrenceKey",
-      "stream",
-      "startNS",
-      "endNS",
-      "startState",
-      "rawValue",
-      "value",
-      "valueState",
-      "flags",
-      "flagsState",
-      "diagnostics",
-      "rawRow"
-    ],
-    "type": "object",
-    "x-go-type": "github.com/casselc/goo/measurements.RawGaugeObservation"
-  },
   "measurements.RawGaugeQuestionInput": {
     "additionalProperties": false,
     "properties": {
@@ -20218,7 +20131,7 @@
         "anyOf": [
           {
             "items": {
-              "$ref": "#/components/schemas/measurements.RawGaugeObservation"
+              "$ref": "#/components/schemas/measurements.RawObservation"
             },
             "type": "array"
           },
@@ -20242,7 +20155,107 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.RawGaugeResult"
   },
-  "measurements.RawGaugeStream": {
+  "measurements.RawObservation": {
+    "properties": {
+      "diagnostics": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.RawObservationDiagnostic"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "endNS": {
+        "type": "string"
+      },
+      "flags": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "flagsState": {
+        "type": "string"
+      },
+      "occurrenceKey": {
+        "type": "string"
+      },
+      "rawRow": {},
+      "rawValue": {},
+      "startNS": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "startState": {
+        "type": "string"
+      },
+      "stream": {
+        "$ref": "#/components/schemas/measurements.RawObservationStream"
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "valueState": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "occurrenceKey",
+      "stream",
+      "startNS",
+      "endNS",
+      "startState",
+      "rawValue",
+      "value",
+      "valueState",
+      "flags",
+      "flagsState",
+      "diagnostics",
+      "rawRow"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawObservation"
+  },
+  "measurements.RawObservationDiagnostic": {
+    "properties": {
+      "code": {
+        "type": "string"
+      },
+      "field": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "field",
+      "code"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawObservationDiagnostic"
+  },
+  "measurements.RawObservationStream": {
     "properties": {
       "attributes": {
         "anyOf": [
@@ -20300,7 +20313,295 @@
       "attributes"
     ],
     "type": "object",
-    "x-go-type": "github.com/casselc/goo/measurements.RawGaugeStream"
+    "x-go-type": "github.com/casselc/goo/measurements.RawObservationStream"
+  },
+  "measurements.RawSumInstrument": {
+    "properties": {
+      "kind": {
+        "type": "string"
+      },
+      "metric": {
+        "type": "string"
+      },
+      "monotonic": {
+        "type": "boolean"
+      },
+      "schemaURL": {
+        "type": "string"
+      },
+      "scope": {
+        "type": "string"
+      },
+      "temporality": {
+        "type": "integer"
+      },
+      "unit": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind",
+      "scope",
+      "version",
+      "schemaURL",
+      "metric",
+      "unit",
+      "temporality",
+      "monotonic"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawSumInstrument"
+  },
+  "measurements.RawSumInstrumentInput": {
+    "additionalProperties": false,
+    "properties": {
+      "kind": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "metric": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "monotonic": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "schemaURL": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scope": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "temporality": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "unit": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawSumInstrument"
+  },
+  "measurements.RawSumObservation": {
+    "properties": {
+      "diagnostics": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.RawObservationDiagnostic"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "endNS": {
+        "type": "string"
+      },
+      "flags": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "flagsState": {
+        "type": "string"
+      },
+      "monotonic": {
+        "type": "boolean"
+      },
+      "occurrenceKey": {
+        "type": "string"
+      },
+      "rawRow": {},
+      "rawValue": {},
+      "startNS": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "startState": {
+        "type": "string"
+      },
+      "stream": {
+        "$ref": "#/components/schemas/measurements.RawObservationStream"
+      },
+      "temporality": {
+        "type": "integer"
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "valueState": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "occurrenceKey",
+      "stream",
+      "startNS",
+      "endNS",
+      "startState",
+      "rawValue",
+      "value",
+      "valueState",
+      "flags",
+      "flagsState",
+      "diagnostics",
+      "rawRow",
+      "temporality",
+      "monotonic"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawSumObservation"
+  },
+  "measurements.RawSumQuestionInput": {
+    "additionalProperties": false,
+    "properties": {
+      "instrument": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.RawSumInstrumentInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "question": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.DiscoveryQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawSumQuestion"
+  },
+  "measurements.RawSumResult": {
+    "properties": {
+      "instrument": {
+        "$ref": "#/components/schemas/measurements.RawSumInstrument"
+      },
+      "limit": {
+        "type": "integer"
+      },
+      "question": {
+        "$ref": "#/components/schemas/measurements.DiscoveryQuestion"
+      },
+      "readAt": {
+        "type": "string"
+      },
+      "rows": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.RawSumObservation"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "instrument",
+      "readAt",
+      "rows",
+      "limit"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawSumResult"
   },
   "measurements.ResourceBinding": {
     "properties": {
