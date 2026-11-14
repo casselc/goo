@@ -45,6 +45,9 @@ func explorationJSONWireResponse(t *testing.T, c planningWireCase) *httptest.Res
 	wantReads := 0
 	if c.Status == 502 {
 		wantReads = 1
+		if c.Path == "/discovery" {
+			wantReads = 6
+		}
 	}
 	if reads != wantReads {
 		t.Fatal("unexpected source execution", reads, wantReads)

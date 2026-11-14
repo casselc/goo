@@ -4,7 +4,7 @@ The [four-expert review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) prioritizes re
 useful unfamiliar telemetry before more preservation depth. This checkpoint
 adopts that direction without renumbering the older pending 427–429 contracts.
 
-Status: **430 delivered and validated**; 431–433 are planned.
+Status: **430 and 431 delivered and validated**; 432–433 remain planned.
 
 ## 430 — first-use scope entry and interaction reliability
 
@@ -20,6 +20,10 @@ entire review. No source capability API, metrics bootstrap or new ingestion path
 is claimed delivered.
 
 ## 431 — breadth: discover available signal families
+
+Implemented contract: [source capabilities](SOURCE_CAPABILITIES.md), with
+[executable partial-installation journey](journeys/source-capabilities.md).
+Final executed results are recorded in [validation](../VALIDATION.md).
 
 Outcome: a user can find which supported telemetry families are available without
 guessing the signal or assuming every exporter table exists.

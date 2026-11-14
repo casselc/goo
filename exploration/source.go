@@ -79,7 +79,7 @@ func (s Source) read(ctx context.Context, sql string, params map[string]string) 
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, fmt.Errorf("exploration source HTTP %d", resp.StatusCode))
+		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, sourcehttp.Failure(resp))
 	}
 	rows, e := sourcejson.ReadObjects(resp.Body, sourcejson.Policy{MaxBytes: 8 << 20, MaxRows: 1001, BlankLines: sourcejson.SkipBlankLines, TrimRows: true})
 	switch e {

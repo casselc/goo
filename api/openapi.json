@@ -5978,7 +5978,7 @@
         "tags": [
           "metric-discovery"
         ],
-        "description": "Explicit bounded metric metadata discovery: one fixed optional exponential-table presence probe, then one globally bounded metadata union. Missing optional table is reported in diagnostics while ordinary families remain usable. Probe/query errors fail the request. Exponential histograms are observed metadata only, unsupported for evaluation, without an executable definition. Counts are exported points, not histogram observations or complete inventory.",
+        "description": "Explicit bounded metric metadata discovery over compatible fixed exporter families. Each family has schema/read-access checks; excluded absent, incompatible and unreadable sources remain explicit in sources and diagnostics. No usable source refuses; available metadata uses one globally bounded union, and post-probe acquisition errors refuse the catalog. Exponential histograms remain unsupported for evaluation without an executable definition. Counts are exported points, not histogram observations or complete inventory.",
         "x-go-source": "internal/nativehttp/routes.go",
         "x-effects": "source-read",
         "parameters": [
@@ -7461,6 +7461,93 @@
           }
         },
         "x-go-body-limit-bytes": 16384,
+        "x-schema-coverage": "typed"
+      }
+    },
+    "/source-capabilities": {
+      "post": {
+        "operationId": "post_source_capabilities",
+        "summary": "POST /source-capabilities",
+        "tags": [
+          "source-capabilities"
+        ],
+        "description": "Explicit bounded readiness and presence discovery across six fixed ClickStack exporter profiles, without a known environment or service. At most one schema check, one read-access check and one LIMIT 1 presence probe per family. Presence is not a total count; no records in the window is not absence or health. Invalid, denied and missing source states remain distinct. Selecting a signal in the UI stages locally and performs no source read. The enclosing source deadline is 30 seconds.",
+        "x-go-source": "internal/recordhttp/routes.go",
+        "x-effects": "source-read",
+        "parameters": [
+          {
+            "name": "X-Goo-Query-ID",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+            },
+            "description": "Optional short-lived cancellation capability; repeated/cancelled IDs are refused."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current success response. Empty/unknown evidence does not imply healthy or complete telemetry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceCapabilitiesResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Existing route refusal. Semantic validation and effect ordering remain in the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Source execution refused; no partial result admitted. Admission and cancellation ownership remain separate.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceReadFailure"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SourceCapabilitiesQuestion"
+              }
+            }
+          }
+        },
+        "x-go-body-limit-bytes": 4096,
         "x-schema-coverage": "typed"
       }
     },
@@ -9643,6 +9730,19 @@
       },
       "ServiceDiscovery": {
         "$ref": "#/components/schemas/exploration.ServiceDiscovery"
+      },
+      "SourceCapabilitiesQuestion": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.SourceCapabilitiesQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "SourceCapabilitiesResult": {
+        "$ref": "#/components/schemas/exploration.SourceCapabilitiesResult"
       },
       "SourceReadFailure": {
         "$ref": "#/components/schemas/sourcefailure.Response"
@@ -20897,11 +20997,11 @@
           },
           "diagnostics": {
             "type": "array",
-            "maxItems": 1,
+            "maxItems": 6,
             "items": {
               "$ref": "#/components/schemas/exploration.ServiceDiscoveryDiagnostic"
             },
-            "description": "Optional-source availability, separate from empty matching data. Source probe/read errors fail the operation."
+            "description": "Excluded source families retain absent, incompatible or unreadable state. Available families remain usable; no compatible source refuses instead of returning successful empty inventory."
           },
           "identity": {
             "type": "string"
@@ -20926,6 +21026,15 @@
             ],
             "description": "At most 1000 service/signal pairs across all included sources. Metric counts are exported gauge, sum, explicit and optional exponential histogram data-point records, never histogram mass or execution support."
           },
+          "sources": {
+            "type": "array",
+            "minItems": 6,
+            "maxItems": 6,
+            "items": {
+              "$ref": "#/components/schemas/sourcecap.Family"
+            },
+            "description": "Checked fixed exporter profiles for all supported families. Parent-link reads require compatible spans; no span source means no inferred topology."
+          },
           "warnings": {
             "anyOf": [
               {
@@ -20942,6 +21051,7 @@
         },
         "required": [
           "diagnostics",
+          "sources",
           "question",
           "capturedAt",
           "basis",
@@ -20956,10 +21066,21 @@
       "exploration.ServiceDiscoveryDiagnostic": {
         "properties": {
           "kind": {
-            "const": "exponential-histogram"
+            "enum": [
+              "logs",
+              "spans",
+              "gauge",
+              "counter",
+              "histogram",
+              "exponential-histogram"
+            ]
           },
           "reason": {
-            "const": "optional-table-missing"
+            "enum": [
+              "absent",
+              "incompatible",
+              "unreadable"
+            ]
           }
         },
         "required": [
@@ -21007,6 +21128,389 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/exploration.ServiceSignal"
+      },
+      "exploration.SourceCapabilitiesQuestion": {
+        "properties": {
+          "fromMs": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "toMs": {
+            "type": "integer",
+            "maximum": 4102444800000
+          }
+        },
+        "required": [
+          "fromMs",
+          "toMs"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.SourceCapabilitiesQuestion",
+        "additionalProperties": false,
+        "description": "Half-open fixed window, at most 120 minutes. No environment, service or arbitrary source/table fields. Cross-field ordering and width remain enforced by Go."
+      },
+      "exploration.SourceCapabilitiesQuestionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "fromMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "minimum": 0
+          },
+          "toMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maximum": 4102444800000
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.SourceCapabilitiesQuestion",
+        "description": "Half-open fixed window, at most 120 minutes. No environment, service or arbitrary source/table fields. Cross-field ordering and width remain enforced by Go."
+      },
+      "exploration.SourceCapabilitiesResult": {
+        "properties": {
+          "capturedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "families": {
+            "type": "array",
+            "minItems": 6,
+            "maxItems": 6,
+            "prefixItems": [
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.SourceCapability"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "logs"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.SourceCapability"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "spans"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.SourceCapability"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "gauge"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.SourceCapability"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "counter"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.SourceCapability"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "histogram"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.SourceCapability"
+                  },
+                  {
+                    "properties": {
+                      "kind": {
+                        "const": "exponential-histogram"
+                      }
+                    }
+                  }
+                ]
+              }
+            ],
+            "items": false
+          },
+          "question": {
+            "$ref": "#/components/schemas/exploration.SourceCapabilitiesQuestion"
+          },
+          "version": {
+            "const": "goo/source-capabilities/v1"
+          }
+        },
+        "required": [
+          "version",
+          "question",
+          "capturedAt",
+          "families"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.SourceCapabilitiesResult",
+        "additionalProperties": false,
+        "description": "Six fixed exporter profiles in canonical order. Readiness and observation presence have independent states/read clocks. No telemetry completeness, ingestion health, transactional source snapshot, population count or instrument evaluation authority is implied."
+      },
+      "exploration.SourceCapability": {
+        "properties": {
+          "detail": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "logs",
+              "spans",
+              "gauge",
+              "counter",
+              "histogram",
+              "exponential-histogram"
+            ]
+          },
+          "observation": {
+            "$ref": "#/components/schemas/exploration.SourceObservation"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "compatible",
+              "absent",
+              "incompatible",
+              "unreadable"
+            ]
+          },
+          "table": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "table",
+          "state",
+          "detail",
+          "observation"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.SourceCapability",
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "logs"
+              },
+              "table": {
+                "const": "otel_logs"
+              },
+              "observation": {
+                "properties": {
+                  "unit": {
+                    "const": "records"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "spans"
+              },
+              "table": {
+                "const": "otel_traces"
+              },
+              "observation": {
+                "properties": {
+                  "unit": {
+                    "const": "records"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "gauge"
+              },
+              "table": {
+                "const": "otel_metrics_gauge"
+              },
+              "observation": {
+                "properties": {
+                  "unit": {
+                    "const": "exported-points"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "counter"
+              },
+              "table": {
+                "const": "otel_metrics_sum"
+              },
+              "observation": {
+                "properties": {
+                  "unit": {
+                    "const": "exported-points"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "histogram"
+              },
+              "table": {
+                "const": "otel_metrics_histogram"
+              },
+              "observation": {
+                "properties": {
+                  "unit": {
+                    "const": "exported-points"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "exponential-histogram"
+              },
+              "table": {
+                "const": "otel_metrics_exp_histogram"
+              },
+              "observation": {
+                "properties": {
+                  "unit": {
+                    "const": "exported-points"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "compatible"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "observation": {
+                  "properties": {
+                    "state": {
+                      "enum": [
+                        "observed",
+                        "empty",
+                        "unreadable"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "observation": {
+                  "properties": {
+                    "state": {
+                      "const": "unknown"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "exploration.SourceObservation": {
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "empty",
+              "unreadable",
+              "unknown"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "records",
+              "exported-points"
+            ]
+          }
+        },
+        "required": [
+          "state",
+          "unit"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.SourceObservation",
+        "additionalProperties": false,
+        "description": "Independent LIMIT 1 presence witness in the requested window; observed is not a total count, empty is successful no-match, unreadable is a failed presence read, and unknown means the profile was not eligible for probing."
       },
       "exploration.SpanStatusSummary": {
         "properties": {
@@ -28924,10 +29428,19 @@
       "measurements.DiscoveryDiagnostic": {
         "properties": {
           "kind": {
-            "const": "exponential-histogram"
+            "enum": [
+              "gauge",
+              "counter",
+              "histogram",
+              "exponential-histogram"
+            ]
           },
           "reason": {
-            "const": "optional-table-missing"
+            "enum": [
+              "absent",
+              "incompatible",
+              "unreadable"
+            ]
           }
         },
         "required": [
@@ -29096,11 +29609,11 @@
         "properties": {
           "diagnostics": {
             "type": "array",
-            "maxItems": 1,
+            "maxItems": 4,
             "items": {
               "$ref": "#/components/schemas/measurements.DiscoveryDiagnostic"
             },
-            "description": "Empty when the optional exponential table is included; an explicit missing-table diagnostic otherwise. Source errors fail discovery, never imply absence."
+            "description": "Excluded metric families retain explicit absent, incompatible or unreadable state. Available families are acquired together under the existing global limit; post-probe acquisition errors refuse the catalog."
           },
           "instruments": {
             "anyOf": [
@@ -29122,6 +29635,15 @@
             "type": "integer",
             "description": "Retained exported data points across all included families, bounded globally at 10000. Not histogram bucket mass, health or ingestion completeness."
           },
+          "sources": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+              "$ref": "#/components/schemas/sourcecap.Family"
+            },
+            "description": "Checked metric discovery profiles, including excluded sources. These are separate reads, not a source snapshot or evaluation eligibility."
+          },
           "warning": {
             "type": "string"
           }
@@ -29129,6 +29651,7 @@
         "required": [
           "question",
           "diagnostics",
+          "sources",
           "instruments",
           "records",
           "warning"
@@ -47749,6 +48272,110 @@
         },
         "type": "object",
         "x-go-type": "github.com/casselc/goo/scopedview.Support"
+      },
+      "sourcecap.Family": {
+        "properties": {
+          "detail": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "logs",
+              "spans",
+              "gauge",
+              "counter",
+              "histogram",
+              "exponential-histogram"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "compatible",
+              "absent",
+              "incompatible",
+              "unreadable"
+            ]
+          },
+          "table": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "table",
+          "state",
+          "detail"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/internal/sourcecap.Family",
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "properties": {
+              "kind": {
+                "const": "logs"
+              },
+              "table": {
+                "const": "otel_logs"
+              }
+            }
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "spans"
+              },
+              "table": {
+                "const": "otel_traces"
+              }
+            }
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "gauge"
+              },
+              "table": {
+                "const": "otel_metrics_gauge"
+              }
+            }
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "counter"
+              },
+              "table": {
+                "const": "otel_metrics_sum"
+              }
+            }
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "histogram"
+              },
+              "table": {
+                "const": "otel_metrics_histogram"
+              }
+            }
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "exponential-histogram"
+              },
+              "table": {
+                "const": "otel_metrics_exp_histogram"
+              }
+            }
+          }
+        ],
+        "description": "Fixed exporter source profile. Compatible means required discovery/projection columns passed schema and read-access checks, not observed data, complete coverage or instrument evaluation support. Absent requires an explicit typed source missing-table response; denied metadata access remains unreadable."
       },
       "sourcefailure.Refusal": {
         "properties": {

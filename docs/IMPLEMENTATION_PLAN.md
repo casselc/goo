@@ -14,7 +14,8 @@
 > **425 counted selection comparison entry** is delivered.
 > **426 preserve/recall/return conformance** is delivered.
 > **430 unknown-data scope entry and interaction reliability** adopts the ad-hoc
-> telemetry review and is delivered. Next: **431 available signal families**, **432 metrics-only
+> telemetry review and is delivered. **431 available signal families** adds shared
+> readiness and partial inventories and is delivered. Next: **432 metrics-only
 > and sparse-data first use**, then **433 shared discovery/recovery consolidation**.
 > The older **427–429 preservation cycle** remains pending follow-on work. The older labeling queue
 > below is deferred; it does not override the active roadmap.

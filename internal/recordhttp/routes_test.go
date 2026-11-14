@@ -21,7 +21,7 @@ func TestAdmissionDistinguishesPureComparisonFromRecordReads(t *testing.T) {
 		policy, ok := recordhttp.PolicyFor(r.Method, r.URL.Path)
 		return ok && policy.Effect != queryhttp.Pure
 	})
-	for _, path := range []string{"/environment-scopes", "/environment-scopes/records", "/inventory", "/discovery", "/explore", "/explore/page", "/record-aggregates", "/exception-groups", "/explore/counted-values", "/trace-search", "/trace-search/page"} {
+	for _, path := range []string{"/source-capabilities", "/environment-scopes", "/environment-scopes/records", "/inventory", "/discovery", "/explore", "/explore/page", "/record-aggregates", "/exception-groups", "/explore/counted-values", "/trace-search", "/trace-search/page"} {
 		t.Run(path, func(t *testing.T) {
 			w := httptest.NewRecorder()
 			budget.ServeHTTP(w, httptest.NewRequest("POST", path, strings.NewReader(`{}`)))

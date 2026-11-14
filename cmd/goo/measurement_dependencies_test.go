@@ -63,8 +63,8 @@ func TestNativeMeasurementRegistrationsUseIndependentInjectedSources(t *testing.
 					t.Error("injected authentication/readonly not preserved")
 				}
 				sql, _ := io.ReadAll(r.Body)
-				if string(sql) == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
-					io.WriteString(w, "{\"result\":1}\n")
+				if response, handled := sourcecapFixture431(t, string(sql)); handled {
+					io.WriteString(w, response)
 					return
 				}
 				if strings.Contains(string(sql), "UNION ALL") {
@@ -107,14 +107,14 @@ func TestNativeMeasurementRegistrationsUseIndependentInjectedSources(t *testing.
 				t.Fatal("cross-registration source drift")
 			}
 			r = request("/metric-discovery", measurements.DiscoveryQuestion{Environment: "prod", Service: "api", FromMS: 100000, ToMS: 220000})
-			if r.Code != 200 || reads.Load() != 3 {
+			if r.Code != 200 || reads.Load() != 10 {
 				t.Fatal("native discovery dependency", r.Code, r.Body.String())
 			}
-			if clientCalls.Load() != 3 {
+			if clientCalls.Load() != 10 {
 				t.Fatal("injected client bypassed")
 			}
 			invalid := measurements.Question{Definition: d, FromMS: 220000, ToMS: 100000}
-			if r = request("/measurements", invalid); r.Code != 400 || reads.Load() != 3 {
+			if r = request("/measurements", invalid); r.Code != 400 || reads.Load() != 10 {
 				t.Fatal("invalid question reached source", r.Code)
 			}
 			ctx, cancel := context.WithCancel(context.Background())
@@ -123,7 +123,7 @@ func TestNativeMeasurementRegistrationsUseIndependentInjectedSources(t *testing.
 			cancelled := httptest.NewRecorder()
 			mux.ServeHTTP(cancelled, httptest.NewRequest("POST", "/measurements", strings.NewReader(string(body))).WithContext(ctx))
 			// Cancellation may stop at body receive (400) or source execution (502).
-			if (cancelled.Code != 400 && cancelled.Code != 502) || reads.Load() != 3 {
+			if (cancelled.Code != 400 && cancelled.Code != 502) || reads.Load() != 10 {
 				t.Fatal("cancelled native request reached source", cancelled.Code)
 			}
 			if _, e := os.Stat(filepath.Join(root, "exploration", "custody")); !os.IsNotExist(e) {

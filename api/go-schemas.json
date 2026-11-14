@@ -1680,6 +1680,19 @@
   "ServiceDiscovery": {
     "$ref": "#/components/schemas/exploration.ServiceDiscovery"
   },
+  "SourceCapabilitiesQuestion": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/exploration.SourceCapabilitiesQuestionInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "SourceCapabilitiesResult": {
+    "$ref": "#/components/schemas/exploration.SourceCapabilitiesResult"
+  },
   "SourceReadFailure": {
     "$ref": "#/components/schemas/sourcefailure.Response"
   },
@@ -11497,6 +11510,19 @@
           }
         ]
       },
+      "sources": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/sourcecap.Family"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "warnings": {
         "anyOf": [
           {
@@ -11513,6 +11539,7 @@
     },
     "required": [
       "diagnostics",
+      "sources",
       "question",
       "capturedAt",
       "basis",
@@ -11577,6 +11604,127 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.ServiceSignal"
+  },
+  "exploration.SourceCapabilitiesQuestion": {
+    "properties": {
+      "fromMs": {
+        "type": "integer"
+      },
+      "toMs": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "fromMs",
+      "toMs"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.SourceCapabilitiesQuestion"
+  },
+  "exploration.SourceCapabilitiesQuestionInput": {
+    "additionalProperties": false,
+    "properties": {
+      "fromMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "toMs": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.SourceCapabilitiesQuestion"
+  },
+  "exploration.SourceCapabilitiesResult": {
+    "properties": {
+      "capturedAt": {
+        "type": "string"
+      },
+      "families": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.SourceCapability"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "question": {
+        "$ref": "#/components/schemas/exploration.SourceCapabilitiesQuestion"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "capturedAt",
+      "families"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.SourceCapabilitiesResult"
+  },
+  "exploration.SourceCapability": {
+    "properties": {
+      "detail": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string"
+      },
+      "observation": {
+        "$ref": "#/components/schemas/exploration.SourceObservation"
+      },
+      "state": {
+        "type": "string"
+      },
+      "table": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind",
+      "table",
+      "state",
+      "detail",
+      "observation"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.SourceCapability"
+  },
+  "exploration.SourceObservation": {
+    "properties": {
+      "state": {
+        "type": "string"
+      },
+      "unit": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "state",
+      "unit"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.SourceObservation"
   },
   "exploration.SpanStatusSummary": {
     "properties": {
@@ -16555,6 +16703,19 @@
       "records": {
         "type": "integer"
       },
+      "sources": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/sourcecap.Family"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "warning": {
         "type": "string"
       }
@@ -16562,6 +16723,7 @@
     "required": [
       "question",
       "diagnostics",
+      "sources",
       "instruments",
       "records",
       "warning"
@@ -25878,6 +26040,30 @@
     },
     "type": "object",
     "x-go-type": "github.com/casselc/goo/scopedview.Support"
+  },
+  "sourcecap.Family": {
+    "properties": {
+      "detail": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      },
+      "table": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind",
+      "table",
+      "state",
+      "detail"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/internal/sourcecap.Family"
   },
   "sourcefailure.Refusal": {
     "properties": {

@@ -53,21 +53,22 @@ func TestExponentialDiscoveryOptionalTable376(t *testing.T) {
 			before := q.clone()
 			s := Source{Endpoint: "http://source", Client: &http.Client{Transport: discoveryTransport376(func(r *http.Request) (*http.Response, error) {
 				calls++
-				body, _ := io.ReadAll(r.Body)
-				sql := string(body)
+				raw, _ := io.ReadAll(r.Body)
+				sql := string(raw)
 				if r.URL.Query().Get("readonly") != "1" {
 					t.Fatal("source not readonly")
 				}
 				if calls == 1 {
-					if sql != "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
-						t.Fatal("unbounded optional probe", sql)
-					}
 					q.EnvironmentSelector.Policy = "current-only"
 					q.Namespace.Value = "changed"
-					if present {
-						return discoveryReply376(200, "{\"result\":1}\n"), nil
-					}
-					return discoveryReply376(200, "{\"result\":0}\n"), nil
+				}
+				if !present && sql == "DESCRIBE TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
+					response := discoveryReply376(404, "private missing-table detail")
+					response.Header.Set("X-ClickHouse-Exception-Code", "60")
+					return response, nil
+				}
+				if body, handled := sourceCapabilityResponse431(sql); handled {
+					return discoveryReply376(200, body), nil
 				}
 				unions := 2
 				if present {
@@ -83,15 +84,19 @@ func TestExponentialDiscoveryOptionalTable376(t *testing.T) {
 				return discoveryReply376(200, rows), nil
 			})}}
 			result, e := s.Discover(t.Context(), q)
-			if e != nil || result == nil || calls != 2 || !reflect.DeepEqual(result.Question, before) {
+			wantCalls := 9
+			if !present {
+				wantCalls = 8
+			}
+			if e != nil || result == nil || calls != wantCalls || !reflect.DeepEqual(result.Question, before) || len(result.Sources) != 4 {
 				t.Fatal("discovery source/ownership", result, e, calls)
 			}
 			if present {
 				if len(result.Diagnostics) != 0 || result.Records != 2 {
 					t.Fatal("available source labeled missing", result)
 				}
-			} else if !reflect.DeepEqual(result.Diagnostics, []DiscoveryDiagnostic{{Kind: exponentialHistogramKind, Reason: "optional-table-missing"}}) || result.Records != 1 || !result.Instruments[0].Supported {
-				t.Fatal("optional absence broke supported discovery", result)
+			} else if !reflect.DeepEqual(result.Diagnostics, []DiscoveryDiagnostic{{Kind: exponentialHistogramKind, Reason: "absent"}}) || result.Records != 1 || !result.Instruments[0].Supported {
+				t.Fatal("absence broke supported discovery", result)
 			}
 		})
 	}
@@ -101,42 +106,71 @@ func TestExponentialDiscoveryProbeRefusesMalformed376(t *testing.T) {
 		calls := 0
 		s := Source{Endpoint: "http://source", Client: &http.Client{Transport: discoveryTransport376(func(*http.Request) (*http.Response, error) { calls++; return discoveryReply376(200, body), nil })}}
 		result, e := s.Discover(t.Context(), DiscoveryQuestion{Environment: "prod", Service: "worker", FromMS: 1000, ToMS: 2000})
-		if e == nil || result != nil || calls != 1 {
-			t.Fatal("malformed availability became absence", body, result, e, calls)
+		if e == nil || result != nil || calls != 4 {
+			t.Fatal("malformed availability became absence or success", body, result, e, calls)
 		}
 	}
 }
 func TestExponentialDiscoverySourceFailures376(t *testing.T) {
-	for _, failAt := range []int{1, 2} {
-		calls := 0
-		s := Source{Endpoint: "http://source", Client: &http.Client{Transport: discoveryTransport376(func(*http.Request) (*http.Response, error) {
-			calls++
-			if calls == failAt {
-				return discoveryReply376(500, "unavailable"), nil
+	for _, phase := range []string{"all-probes", "union-race", "global-cap"} {
+		t.Run(phase, func(t *testing.T) {
+			catalogs := 0
+			s := Source{Endpoint: "http://source", Client: &http.Client{Transport: discoveryTransport376(func(r *http.Request) (*http.Response, error) {
+				raw, _ := io.ReadAll(r.Body)
+				sql := string(raw)
+				if phase == "all-probes" {
+					return discoveryReply376(500, "private upstream diagnostic"), nil
+				}
+				if body, handled := sourceCapabilityResponse431(sql); handled {
+					return discoveryReply376(200, body), nil
+				}
+				catalogs++
+				if phase == "union-race" {
+					return discoveryReply376(500, "private upstream diagnostic"), nil
+				}
+				return discoveryReply376(200, strings.Repeat(discoveryRow376("histogram"), RowLimit)+discoveryRow376(exponentialHistogramKind)), nil
+			})}}
+			result, e := s.Discover(t.Context(), DiscoveryQuestion{Environment: "prod", Service: "worker", FromMS: 1000, ToMS: 2000})
+			wantCatalogs := 1
+			if phase == "all-probes" {
+				wantCatalogs = 0
 			}
-			return discoveryReply376(200, "{\"result\":1}\n"), nil
-		})}}
-		result, e := s.Discover(t.Context(), DiscoveryQuestion{Environment: "prod", Service: "worker", FromMS: 1000, ToMS: 2000})
-		if e == nil || result != nil || calls != failAt {
-			t.Fatal("source error became partial discovery", result, e, calls)
-		}
-	}
-	calls := 0
-	s := Source{Endpoint: "http://source", Client: &http.Client{Transport: discoveryTransport376(func(*http.Request) (*http.Response, error) {
-		calls++
-		if calls == 1 {
-			return discoveryReply376(200, "{\"result\":1}\n"), nil
-		}
-		return discoveryReply376(200, strings.Repeat(discoveryRow376("histogram"), RowLimit)+discoveryRow376(exponentialHistogramKind)), nil
-	})}}
-	result, e := s.Discover(t.Context(), DiscoveryQuestion{Environment: "prod", Service: "worker", FromMS: 1000, ToMS: 2000})
-	if e == nil || result != nil || calls != 2 {
-		t.Fatal("combined supported/exponential limit truncated", result, e, calls)
+			if e == nil || result != nil || catalogs != wantCatalogs {
+				t.Fatal("source failure/combined limit published", result, e, catalogs)
+			}
+		})
 	}
 	ctx, cancel := context.WithCancel(t.Context())
 	cancel()
-	s.Client = &http.Client{Transport: discoveryTransport376(func(r *http.Request) (*http.Response, error) { return nil, r.Context().Err() })}
-	if result, e = s.Discover(ctx, DiscoveryQuestion{Environment: "prod", Service: "worker", FromMS: 1000, ToMS: 2000}); e == nil || result != nil {
+	s := Source{Endpoint: "http://source", Client: &http.Client{Transport: discoveryTransport376(func(r *http.Request) (*http.Response, error) {
+		t.Fatal("cancelled discovery read a source")
+		return nil, r.Context().Err()
+	})}}
+	if result, e := s.Discover(ctx, DiscoveryQuestion{Environment: "prod", Service: "worker", FromMS: 1000, ToMS: 2000}); e == nil || result != nil {
 		t.Fatal("cancellation became source absence", result, e)
+	}
+}
+func TestDiscoveryPartialFamilies431(t *testing.T) {
+	catalogs := 0
+	s := Source{Endpoint: "http://source", Client: &http.Client{Transport: discoveryTransport376(func(r *http.Request) (*http.Response, error) {
+		raw, _ := io.ReadAll(r.Body)
+		sql := string(raw)
+		if strings.HasPrefix(sql, "DESCRIBE TABLE ") && !strings.HasPrefix(sql, "DESCRIBE TABLE otel_metrics_gauge ") {
+			response := discoveryReply376(404, "private missing-table detail")
+			response.Header.Set("X-ClickHouse-Exception-Code", "60")
+			return response, nil
+		}
+		if body, handled := sourceCapabilityResponse431(sql); handled {
+			return discoveryReply376(200, body), nil
+		}
+		catalogs++
+		if strings.Contains(sql, " UNION ALL ") || !strings.Contains(sql, "otel_metrics_gauge") || strings.Contains(sql, "otel_metrics_sum") {
+			t.Fatal("unavailable native family queried", sql)
+		}
+		return discoveryReply376(200, discoveryRow376("gauge")), nil
+	})}}
+	result, e := s.Discover(t.Context(), DiscoveryQuestion{Environment: "prod", Service: "worker", FromMS: 1000, ToMS: 2000})
+	if e != nil || result == nil || catalogs != 1 || len(result.Sources) != 4 || len(result.Diagnostics) != 3 || len(result.Instruments) != 1 || !result.Instruments[0].Supported {
+		t.Fatal("gauge-only discovery", result, e, catalogs)
 	}
 }

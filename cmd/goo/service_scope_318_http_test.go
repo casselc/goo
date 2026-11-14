@@ -22,10 +22,7 @@ func TestTypedServiceScopeHTTP318(t *testing.T) {
 		sql, _ := io.ReadAll(r.Body)
 		sqls = append(sqls, string(sql))
 		bindings = append(bindings, r.URL.Query())
-		body := ""
-		if string(sql) == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
-			body = `{"result":1}`
-		}
+		body, _ := sourcecapFixture431(t, string(sql))
 		return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(body))}, nil
 	})}}
 	mux := http.NewServeMux()
@@ -47,7 +44,7 @@ func TestTypedServiceScopeHTTP318(t *testing.T) {
 				mux.ServeHTTP(response, httptest.NewRequest("POST", path, strings.NewReader(string(raw))))
 				expected := 1
 				if path == "/discovery" {
-					expected = 3
+					expected = 14
 				}
 				if response.Code != 200 || reads-before != expected || response.Header().Get("Cache-Control") != "no-store" {
 					t.Fatal("typed service source admission failed", response.Code, response.Body.String(), reads-before)
@@ -62,7 +59,7 @@ func TestTypedServiceScopeHTTP318(t *testing.T) {
 					t.Fatal("returned service question lost its typed identity")
 				}
 				for i, sql := range sqls[before:] {
-					if sql == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
+					if _, metadata := sourcecapFixture431(t, sql); metadata {
 						if strings.Join(bindings[before+i]["readonly"], "") != "1" || strings.Join(bindings[before+i]["param_environment"], "") != "" {
 							t.Fatal("probe gained scope parameters or write access")
 						}

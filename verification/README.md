@@ -1,5 +1,19 @@
 # Semantic properties and model conformance
 
+## Source readiness and discovery (431)
+
+The shared fixed-family inspector is checked by generated Hegel classifications
+and native Quint traces over actual metadata/access/publication observations:
+
+```sh
+go test -p 1 . -run '^Test(HegelSourceCapabilities431|QuintObservedSourceCapabilities431)$' -count=1 -v
+```
+
+The [partial-installation journey](../docs/journeys/source-capabilities.md) and
+`bombadil/source-capabilities431.ts` separately verify real source/browser
+continuation. The model covers readiness authority, not UI focus, presence totals
+or ingestion completeness.
+
 ## Unknown-data entry (430)
 
 The [real generic OTLP journey](../docs/journeys/unknown-data-entry.md) exercises

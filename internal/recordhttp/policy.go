@@ -10,6 +10,7 @@ import (
 )
 
 var policies = map[string]queryhttp.Policy{
+	"/source-capabilities":        {Effect: queryhttp.Read, BodyLimit: 4096, Timeout: 30 * time.Second, TrailingMessage: "expected one JSON object"},
 	"/environment-scopes":         {Effect: queryhttp.Read, BodyLimit: 4096, Timeout: 15 * time.Second, TrailingMessage: "expected one JSON object"},
 	"/environment-scopes/records": {Effect: queryhttp.Read, BodyLimit: 4096, Timeout: 15 * time.Second, TrailingMessage: "expected one JSON object"},
 	"/compare":                    {Effect: queryhttp.Pure, BodyLimit: 1 << 20, Timeout: 0, TrailingMessage: "expected one JSON object"},

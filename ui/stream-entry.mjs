@@ -148,7 +148,15 @@ function mount(host,{environment,autoStart=true,onOpenTrace,onOpenFixed,onOpenSe
     draftScope(false);tail.stage({...next,...(filters.where()?{where:structuredClone(filters.where())}:{})},undefined,{message:'Environment scope staged. Start stream explicitly; current Activity filters are kept.'});
     apply.hidden=true;draft.textContent=filterError||'Environment staged · current filters kept';viewOptions.open=false;if(filterError)filterOptions.open=true;updateViewAction();if(!filterError)tail.focusStart();else filterOptions.querySelector('summary').focus();
   }
-  environmentAdoption=EnvironmentAdoption.mount(toolbar,{signal,onRead:stop,onStage:stageEnvironment,before:signalLabel});environmentAdoption.setActive(enabled&&records&&route==='explore');environmentAdoption.setUnscoped(!autoStart&&!appliedSelector&&!scopeStaged);
+  function stageDiscoveredSignal(next){
+    if(!['logs','spans'].includes(next)||!enabled||!records||route!=='explore'||document.hidden)return false;
+    if(filterError)filters.replace(editor.snapshot());
+    signal.value=next;draftScope();clearInspection();selectedOpener=null;returnAnchor=null;
+    if(filterError){filterOptions.open=true;draft.textContent='Filters need review for '+next+'. All filters kept. '+filterError;}
+    else draft.textContent='Signal selected. Read environment scopes or start explicitly.';
+    return true;
+  }
+  environmentAdoption=EnvironmentAdoption.mount(toolbar,{signal,onRead:stop,onStage:stageEnvironment,onSignalStage:stageDiscoveredSignal,before:signalLabel});environmentAdoption.setActive(enabled&&records&&route==='explore');environmentAdoption.setUnscoped(!autoStart&&!appliedSelector&&!scopeStaged);
   function configuration(){if(!enabled||dirtyScope()||!appliedSelector)return null;return {kind:'activity',selector:structuredClone(appliedSelector),...tail.layout(),...(latency?.baselineReference()?{baselineCapture:latency.baselineReference()}:{})};}
   return {active:()=>enabled,configuration,stageConfiguration(v){if(dirtyScope()||titleDirty){throw Error('Apply or clear Activity changes before staging a recalled scope.');}viewGeneration++;viewController?.abort();history.replaceState(null,'','#explore');stageView({...v,title:'Recalled scope'});tail.focusStart();},enterFixed(){returnAnchor=null;selectedOpener=null;stop();enabled=false;advanced.open=true;present()},pause:stop,dispose(){disposed=true;serviceRevision++;environmentAdoption.dispose();numericPlot?.dispose();viewLibrary.dispose();triage?.dispose();explanation?.dispose();latency?.dispose();logContext?.dispose();valueLookup?.dispose();viewGeneration++;viewController?.abort();global.removeEventListener('goo:tail-state',tailState);live.remove();inspectionFocus.dispose();tail.dispose();global.removeEventListener('goo:question-state',fixed);global.removeEventListener('goo:workspace',workspace);global.removeEventListener('goo:explore-mode',mode);document.removeEventListener('visibilitychange',visibility);global.removeEventListener('hashchange',hash);global.removeEventListener('popstate',hash)}};
  }

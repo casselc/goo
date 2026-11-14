@@ -131,7 +131,7 @@ func TestServiceScopeQuestionOwnership318(t *testing.T) {
 				}
 				actual = result.Question
 			}
-			if !reflect.DeepEqual(actual, want) || reads != map[bool]int{false: 1, true: 3}[discover] {
+			if !reflect.DeepEqual(actual, want) || reads != map[bool]int{false: 1, true: 14}[discover] {
 				t.Fatal("returned scope aliases caller or read budget changed")
 			}
 			q.EnvironmentSelector.Scope.Value = "changed-after-return"

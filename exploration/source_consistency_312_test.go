@@ -155,7 +155,7 @@ func TestInventoryAndDiscoveryDetachNamespaceBeforeIO312(t *testing.T) {
 			returned = result.Question
 		}
 		q.Namespace.Value = "after-return"
-		if returned.Namespace.Value != "payments" || calls != map[bool]int{true: 3, false: 1}[discovery] {
+		if returned.Namespace.Value != "payments" || calls != map[bool]int{true: 14, false: 1}[discovery] {
 			t.Fatal("discovery receipt aliases caller namespace", returned, calls)
 		}
 	}

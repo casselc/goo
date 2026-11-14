@@ -1,11 +1,12 @@
 # Choose unfamiliar telemetry from Activity
 
-Activity's **Find environments** control sits beside Environment. You can discover
+Activity's **Find data** control sits beside Environment. You can discover
 what was reported before knowing any labels, without a manifest or sample package.
 In generic mode the chooser is highlighted until a scope is chosen; opening it
 performs no source read.
 
-1. Choose Logs or Spans and open Find environments.
+1. Open Find data. Read available signals if you do not know which signal exists;
+   Choose logs/spans stages the signal without reading environments or restarting Activity.
 2. Read a bounded window of environment labels across that signal's services.
 3. Preview a named, empty or unreported environment.
 4. Stage in Activity, then Start stream.
@@ -20,7 +21,7 @@ selector or direct-stage shortcut is introduced.
 
 ```mermaid
 flowchart LR
-  Entry[Blank generic Activity] -->|local| Chooser[Find environments]
+  Entry[Blank generic Activity] -->|local| Chooser[Find data]
   Chooser -->|explicit source read| Labels[Observed label groups]
   Labels -->|explicit source read| Preview[Record preview]
   Preview -->|local stage| Ready[Typed scope ready]
@@ -42,9 +43,10 @@ from a withdrawn request releases its private busy state without publishing data
 
 ## Remaining work
 
-Discovery still uses the selected Logs/Spans signal. It does not detect available
-signals, bootstrap a metrics-only installation or fix partial-schema source
-assumptions. Streaming still uses the latest 60 seconds of event time; sparse and
+[Source capability checks](SOURCE_CAPABILITIES.md) now identify available
+signal families and allow partial-family service/instrument inventories.
+Environment discovery still uses the selected Logs/Spans signal; metrics-only
+identity bootstrap remains planned. Streaming still uses the latest 60 seconds of event time; sparse and
 delayed-event recovery is separate work. See the
 [ad-hoc review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) and
 [current roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).

@@ -10,6 +10,7 @@ This index separates using Goo, extending it, and the development record.
 | Try the sample application | [Local lab](LOCAL_LAB.md) |
 | Connect existing ClickHouse telemetry | [Generic startup](GENERIC_STARTUP.md) |
 | Understand supported workflows and limits | [Capability guide](CAPABILITY_GUIDE.md) |
+| Find which supported signals are available | [Source capabilities](SOURCE_CAPABILITIES.md) |
 | Find telemetry without knowing environment labels | [Unknown-data entry](UNKNOWN_DATA_ENTRY.md) |
 | Follow a complete investigation | [Illustrated preserve/reopen journey](journeys/investigation-reuse.md) |
 | Browse worked examples | [Journey index](journeys/README.md) |

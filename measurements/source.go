@@ -192,7 +192,7 @@ func (s Source) read(ctx context.Context, plan Plan) ([]json.RawMessage, error) 
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, fmt.Errorf("measurement source HTTP %d", resp.StatusCode))
+		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, sourcehttp.Failure(resp))
 	}
 	rows, e := sourcejson.ReadObjects(resp.Body, sourcejson.Policy{MaxBytes: 8 << 20, MaxRows: RowLimit, BlankLines: sourcejson.RejectBlankLines, TrimRows: false})
 	switch e {

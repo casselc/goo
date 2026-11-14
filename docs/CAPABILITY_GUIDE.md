@@ -5,7 +5,7 @@ evidence → preserve or reuse the question**. Ordinary OpenTelemetry data is a
 useful starting point; a Goo manifest is optional.
 
 This is the current task-oriented capability index, reconciled through milestone
-430, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
+431, including [operator workbench polish](OPERATOR_WORKBENCH_POLISH.md) and
 [fleet service triage](SERVICE_TRIAGE.md).
 The [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md) owns execution order;
 [validation](../VALIDATION.md) records checks actually run. Historical proposals
@@ -26,7 +26,8 @@ Portable views can be imported before the first query.
 
 [Unknown-data entry](UNKNOWN_DATA_ENTRY.md) places existing bounded environment
 discovery beside Environment, with explicit preview/stage/start and keyboard-safe
-Pause/Resume. Signal availability and metrics-only bootstrap remain pending.
+Pause/Resume. [Signal availability](SOURCE_CAPABILITIES.md) now separates schema/access from
+bounded presence and supports partial-family catalogs. Metrics-only bootstrap remains pending.
 
 ## What users can do
 

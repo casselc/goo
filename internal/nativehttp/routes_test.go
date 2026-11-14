@@ -89,6 +89,14 @@ func TestNativeCustodyUsesConfiguredDirectoryOnlyForLifecycle(t *testing.T) {
 	row := map[string]any{"body": d.Lifecycle.Accepted, "service": d.Source.Services[0], "resource": map[string]string{"deployment.environment.name": d.Environment}, "attributes": map[string]string{
 		d.Lifecycle.EventID: "fixture-event", d.Lifecycle.EventTime: "150000000000", d.Lifecycle.Subject: "fixture-subject", d.Lifecycle.Tenant: "fixture-tenant", d.Lifecycle.Release: "fixture-release",
 	}}
+	metadata, err := os.ReadFile("../sourcecap/testdata/schema.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var schemas map[string][]json.RawMessage
+	if err = json.Unmarshal(metadata, &schemas); err != nil {
+		t.Fatal(err)
+	}
 	var reads, probes, unions atomic.Int32
 	source := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		reads.Add(1)
@@ -97,9 +105,27 @@ func TestNativeCustodyUsesConfiguredDirectoryOnlyForLifecycle(t *testing.T) {
 			t.Error(err)
 			return
 		}
-		if string(body) == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
+		if strings.HasPrefix(string(body), "DESCRIBE TABLE ") {
 			probes.Add(1)
-			io.WriteString(w, "{\"result\":1}\n")
+			table := strings.TrimSuffix(strings.TrimPrefix(string(body), "DESCRIBE TABLE "), " FORMAT JSONEachRow")
+			kind := map[string]string{"otel_metrics_gauge": "gauge", "otel_metrics_sum": "counter", "otel_metrics_histogram": "histogram", "otel_metrics_exp_histogram": "exponential-histogram"}[table]
+			if kind == "" {
+				t.Error("unexpected source capability table", table)
+				return
+			}
+			for _, row := range schemas[kind] {
+				compact, err := json.Marshal(row)
+				if err != nil {
+					t.Error(err)
+					return
+				}
+				w.Write(compact)
+				io.WriteString(w, "\n")
+			}
+			return
+		}
+		if strings.HasSuffix(string(body), " LIMIT 0 FORMAT JSONEachRow") {
+			probes.Add(1)
 			return
 		}
 		if strings.Contains(string(body), "UNION ALL") {
@@ -117,7 +143,7 @@ func TestNativeCustodyUsesConfiguredDirectoryOnlyForLifecycle(t *testing.T) {
 	discovery := fmt.Sprintf(`{"environment":%q,"service":%q,"fromMs":100000,"toMs":220000}`, d.Environment, d.Source.Services[0])
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, httptest.NewRequest("POST", "/metric-discovery", strings.NewReader(discovery)))
-	if w.Code != 200 || reads.Load() != 2 || probes.Load() != 1 || unions.Load() != 1 {
+	if w.Code != 200 || reads.Load() != 9 || probes.Load() != 8 || unions.Load() != 1 {
 		t.Fatal("discovery probe and global source read", w.Code, w.Body.String(), reads.Load(), probes.Load(), unions.Load())
 	}
 	if _, err := os.Stat(dir); !os.IsNotExist(err) {
@@ -148,7 +174,7 @@ func TestNativeCustodyUsesConfiguredDirectoryOnlyForLifecycle(t *testing.T) {
 			t.Fatal("repeated read rewrote custody observation")
 		}
 	}
-	if reads.Load() != 4 || probes.Load() != 1 || unions.Load() != 1 {
+	if reads.Load() != 11 || probes.Load() != 8 || unions.Load() != 1 {
 		t.Fatal("discovery/lifecycle source budgets", reads.Load(), probes.Load(), unions.Load())
 	}
 	entries, err := os.ReadDir(root)

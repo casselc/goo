@@ -1,5 +1,48 @@
 # Validation record
 
+## 431 — signal availability and partial-family discovery
+
+[Contract](docs/SOURCE_CAPABILITIES.md), [storyboard](docs/journeys/source-capabilities.md),
+[review](docs/reviews/SOURCE_CAPABILITIES_431.md), and
+[roadmap](docs/ROADMAP_2026_11_14_CHECKPOINT_430.md).
+
+- **All root Go packages pass** under Go 1.27.3. Final source-package checks also
+  pass after clarifying safe readiness details. Typed HTTP errors retain exception
+  headers without reading error prose; schema/access/presence tests distinguish
+  absence, denial, incompatibility, malformed output and post-check failure.
+- **1,658 frontend tests pass**, zero failures/skips (22.9s), including strict
+  six-family/window/clock validation, count/unit refusal, native action withdrawal,
+  late-result cleanup and no-read local signal selection.
+- The final real ClickHouse journey passes (**41.6s**, 43.6s runner), with a
+  **30-second Bombadil actor**. Five uniquely owned databases cover logs-only,
+  spans-only, gauge-only, incompatible and absent tables; all are cleaned up.
+  Successful-empty windows remain compatible. Partial service catalogs and
+  gauge-only instrument discovery work without unrelated tables. Catalogs with no
+  compatible family refuse. Fixture rows use real exporter schemas and direct
+  inserts; they are not claimed as collector-ingestion checks.
+- The actor observes completion with **one capability request, one environment
+  read, one preview and one tail start**, exact effective scope, safe local choice,
+  keyboard Pause focus and no writes. Choice also remains local after an applied
+  stream. Presence never supplies a population count.
+- Final 1440/390/320 source frames pass measured caption geometry and page
+  containment. At 320px the caption is 272px wide in a 274px container, 45px high,
+  with zero gap before the first row. This rejects the initial vertical-caption
+  failure that a horizontal-overflow-only assertion missed.
+- Existing generic startup (191, 13.0s) and unfamiliar OTLP entry (430, 39.5s,
+  including its actor) pass with the integrated source discovery. They continue to
+  verify real OTLP through the collector, separate from the isolated-schema tests.
+- New Hegel classifications/cancellation properties and **native Quint observed
+  readiness traces pass** (21.3s, no skips), including seven scenarios and rejecting
+  controls. Their model covers readiness authority, not presence or browser focus.
+- OpenAPI validation passes **115 operations**, 501 fixture responses, 202 admitted
+  requests, 29 mux refusals, and six valid/17 rejecting new source-state controls.
+  Five executed capability wire responses also conform to the generated schema.
+- Independent architecture and UX reviews accept the final bounded feature. Review
+  fixes reject UInt8 booleans, use exported-point wording for metrics, and repair
+  mobile caption sizing. Actual denied-user ClickHouse deployment and assistive
+  technology speech output were not newly tested; permission errors are covered
+  by structured transport checks. Metrics-only identity bootstrap remains 432.
+
 ## 430 — unknown-data scope entry and interaction reliability
 
 [Contract](docs/UNKNOWN_DATA_ENTRY.md), [storyboard](docs/journeys/unknown-data-entry.md),

@@ -1,5 +1,16 @@
 # Display component library
 
+## Source capability presentation (431)
+
+SourceCapabilities is an application-owned controller inside the existing Find data
+disclosure. It uses the shared compact table with native row headers and explicit
+Read/Choose buttons; display lifecycle never starts reads. Its pure response
+validator checks the six fixed families, exact window, UTC check clock, states and
+count units. The same source-state note is reused by service and instrument
+catalogs. Local signal choice has a dedicated staging callback, so it cannot
+accidentally invoke the ordinary signal-select auto-start handler.
+See [the contract](SOURCE_CAPABILITIES.md).
+
 ## Unknown-data scope entry (430)
 
 EnvironmentAdoption remains an application controller using one native disclosure

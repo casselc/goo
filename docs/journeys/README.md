@@ -1,5 +1,9 @@
 # User journeys and storyboards
 
+[Partial-source discovery](source-capabilities.md) (431) checks isolated logs-only,
+spans-only, gauge-only, incompatible and absent exporter schemas, with explicit
+local signal selection and existing environment-to-record continuation.
+
 [Unfamiliar OTLP scope entry](unknown-data-entry.md) (430) discovers environments
 without guessed labels or manifests, stages exact policy before streaming, and
 checks keyboard Pause/Resume with desktop and narrow frames.

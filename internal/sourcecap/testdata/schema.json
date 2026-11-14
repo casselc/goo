@@ -1,0 +1,310 @@
+{
+  "logs": [
+    {
+      "name": "Timestamp",
+      "type": "DateTime64(9, 'UTC')"
+    },
+    {
+      "name": "ServiceName",
+      "type": "LowCardinality(String)"
+    },
+    {
+      "name": "TraceId",
+      "type": "String"
+    },
+    {
+      "name": "SpanId",
+      "type": "String"
+    },
+    {
+      "name": "ResourceAttributes",
+      "type": "Map(LowCardinality(String), String)"
+    },
+    {
+      "name": "ScopeName",
+      "type": "String"
+    },
+    {
+      "name": "ScopeVersion",
+      "type": "String"
+    },
+    {
+      "name": "LogAttributes",
+      "type": "Map(LowCardinality(String), String)"
+    },
+    {
+      "name": "Body",
+      "type": "String"
+    },
+    {
+      "name": "SeverityText",
+      "type": "LowCardinality(String)"
+    }
+  ],
+  "spans": [
+    {
+      "name": "Timestamp",
+      "type": "DateTime64(9, 'UTC')"
+    },
+    {
+      "name": "ServiceName",
+      "type": "LowCardinality(String)"
+    },
+    {
+      "name": "TraceId",
+      "type": "String"
+    },
+    {
+      "name": "SpanId",
+      "type": "String"
+    },
+    {
+      "name": "ResourceAttributes",
+      "type": "Map(LowCardinality(String), String)"
+    },
+    {
+      "name": "ScopeName",
+      "type": "String"
+    },
+    {
+      "name": "ScopeVersion",
+      "type": "String"
+    },
+    {
+      "name": "SpanAttributes",
+      "type": "Map(LowCardinality(String), String)"
+    },
+    {
+      "name": "SpanName",
+      "type": "String"
+    },
+    {
+      "name": "SpanKind",
+      "type": "LowCardinality(String)"
+    },
+    {
+      "name": "ParentSpanId",
+      "type": "String"
+    },
+    {
+      "name": "Duration",
+      "type": "UInt64"
+    },
+    {
+      "name": "StatusCode",
+      "type": "LowCardinality(String)"
+    },
+    {
+      "name": "StatusMessage",
+      "type": "String"
+    },
+    {
+      "name": "Events.Timestamp",
+      "type": "Array(DateTime64(9, 'UTC'))"
+    },
+    {
+      "name": "Events.Name",
+      "type": "Array(String)"
+    },
+    {
+      "name": "Events.Attributes",
+      "type": "Array(Map(LowCardinality(String), String))"
+    },
+    {
+      "name": "Links.Attributes",
+      "type": "Array(Map(LowCardinality(String), String))"
+    },
+    {
+      "name": "Links.TraceId",
+      "type": "Array(String)"
+    },
+    {
+      "name": "Links.SpanId",
+      "type": "Array(String)"
+    }
+  ],
+  "gauge": [
+    {
+      "name": "TimeUnix",
+      "type": "DateTime64(9, 'UTC')"
+    },
+    {
+      "name": "ServiceName",
+      "type": "LowCardinality(String)"
+    },
+    {
+      "name": "ResourceAttributes",
+      "type": "Map(LowCardinality(String), String)"
+    },
+    {
+      "name": "ScopeName",
+      "type": "String"
+    },
+    {
+      "name": "ScopeVersion",
+      "type": "String"
+    },
+    {
+      "name": "ScopeSchemaUrl",
+      "type": "String"
+    },
+    {
+      "name": "ResourceSchemaUrl",
+      "type": "String"
+    },
+    {
+      "name": "MetricName",
+      "type": "String"
+    },
+    {
+      "name": "MetricUnit",
+      "type": "String"
+    },
+    {
+      "name": "Attributes",
+      "type": "Map(LowCardinality(String), String)"
+    }
+  ],
+  "counter": [
+    {
+      "name": "TimeUnix",
+      "type": "DateTime64(9, 'UTC')"
+    },
+    {
+      "name": "ServiceName",
+      "type": "LowCardinality(String)"
+    },
+    {
+      "name": "ResourceAttributes",
+      "type": "Map(LowCardinality(String), String)"
+    },
+    {
+      "name": "ScopeName",
+      "type": "String"
+    },
+    {
+      "name": "ScopeVersion",
+      "type": "String"
+    },
+    {
+      "name": "ScopeSchemaUrl",
+      "type": "String"
+    },
+    {
+      "name": "ResourceSchemaUrl",
+      "type": "String"
+    },
+    {
+      "name": "MetricName",
+      "type": "String"
+    },
+    {
+      "name": "MetricUnit",
+      "type": "String"
+    },
+    {
+      "name": "Attributes",
+      "type": "Map(LowCardinality(String), String)"
+    },
+    {
+      "name": "AggregationTemporality",
+      "type": "Int32"
+    },
+    {
+      "name": "IsMonotonic",
+      "type": "Bool"
+    }
+  ],
+  "histogram": [
+    {
+      "name": "TimeUnix",
+      "type": "DateTime64(9, 'UTC')"
+    },
+    {
+      "name": "ServiceName",
+      "type": "LowCardinality(String)"
+    },
+    {
+      "name": "ResourceAttributes",
+      "type": "Map(LowCardinality(String), String)"
+    },
+    {
+      "name": "ScopeName",
+      "type": "String"
+    },
+    {
+      "name": "ScopeVersion",
+      "type": "String"
+    },
+    {
+      "name": "ScopeSchemaUrl",
+      "type": "String"
+    },
+    {
+      "name": "ResourceSchemaUrl",
+      "type": "String"
+    },
+    {
+      "name": "MetricName",
+      "type": "String"
+    },
+    {
+      "name": "MetricUnit",
+      "type": "String"
+    },
+    {
+      "name": "Attributes",
+      "type": "Map(LowCardinality(String), String)"
+    },
+    {
+      "name": "AggregationTemporality",
+      "type": "Int32"
+    }
+  ],
+  "exponential-histogram": [
+    {
+      "name": "TimeUnix",
+      "type": "DateTime64(9, 'UTC')"
+    },
+    {
+      "name": "ServiceName",
+      "type": "LowCardinality(String)"
+    },
+    {
+      "name": "ResourceAttributes",
+      "type": "Map(LowCardinality(String), String)"
+    },
+    {
+      "name": "ScopeName",
+      "type": "String"
+    },
+    {
+      "name": "ScopeVersion",
+      "type": "String"
+    },
+    {
+      "name": "ScopeSchemaUrl",
+      "type": "String"
+    },
+    {
+      "name": "ResourceSchemaUrl",
+      "type": "String"
+    },
+    {
+      "name": "MetricName",
+      "type": "String"
+    },
+    {
+      "name": "MetricUnit",
+      "type": "String"
+    },
+    {
+      "name": "Attributes",
+      "type": "Map(LowCardinality(String), String)"
+    },
+    {
+      "name": "AggregationTemporality",
+      "type": "Int32"
+    }
+  ]
+}

@@ -6,7 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/casselc/goo/internal/optionalmetric"
+	"github.com/casselc/goo/internal/sourcecap"
 	"github.com/casselc/goo/internal/sourcefailure"
 	"strconv"
 	"strings"
@@ -35,6 +35,7 @@ type ServiceDiscoveryDiagnostic struct {
 }
 type ServiceDiscovery struct {
 	Diagnostics  []ServiceDiscoveryDiagnostic `json:"diagnostics"`
+	Sources      []sourcecap.Family           `json:"sources"`
 	Identity     string                       `json:"identity,omitempty"`
 	Question     InventoryQuestion            `json:"question"`
 	CapturedAt   string                       `json:"capturedAt"`
@@ -57,6 +58,13 @@ func CompileServiceDiscovery(q InventoryQuestion) (Plan, error) {
 	return compileServiceDiscovery(q, true)
 }
 func compileServiceDiscovery(q InventoryQuestion, exponentialPresent bool) (Plan, error) {
+	kinds := []string{sourcecap.Logs, sourcecap.Spans, sourcecap.Gauge, sourcecap.Counter, sourcecap.Histogram}
+	if exponentialPresent {
+		kinds = append(kinds, sourcecap.ExponentialHistogram)
+	}
+	return compileServiceDiscoveryKinds(q, kinds)
+}
+func compileServiceDiscoveryKinds(q InventoryQuestion, kinds []string) (Plan, error) {
 	if e := ValidateServiceDiscoveryQuestion(q); e != nil {
 		return Plan{}, e
 	}
@@ -85,44 +93,83 @@ func compileServiceDiscovery(q InventoryQuestion, exponentialPresent bool) (Plan
 	if err != nil {
 		return Plan{}, err
 	}
-	families := []string{"gauge", "sum", "histogram"}
-	if exponentialPresent {
-		families = append(families, "exp_histogram")
+	available := make(map[string]bool, len(kinds))
+	families := []string{}
+	for _, kind := range kinds {
+		if available[kind] {
+			continue
+		}
+		available[kind] = true
+		switch kind {
+		case sourcecap.Logs, sourcecap.Spans:
+		case sourcecap.Gauge:
+			families = append(families, "gauge")
+		case sourcecap.Counter:
+			families = append(families, "sum")
+		case sourcecap.Histogram:
+			families = append(families, "histogram")
+		case sourcecap.ExponentialHistogram:
+			families = append(families, "exp_histogram")
+		default:
+			return Plan{}, fmt.Errorf("unsupported service source family")
+		}
 	}
 	for _, family := range families {
 		metricParts = append(metricParts, "SELECT "+namespaceColumn("ResourceAttributes")+" AS namespace, ServiceName AS service, count() AS n, min(toUnixTimestamp64Milli(TimeUnix)) AS first_ms, max(toUnixTimestamp64Milli(TimeUnix)) AS last_ms FROM otel_metrics_"+family+" WHERE TimeUnix>=fromUnixTimestamp64Milli({from:Int64}) AND TimeUnix<fromUnixTimestamp64Milli({to:Int64}) AND "+metricEnvironment+" "+namespaceFilter(q.Namespace, c.params)+" GROUP BY namespace, service")
 	}
 	metrics := "SELECT namespace, service, 'metrics' AS signal, toString(sum(n)) AS count, toString(min(first_ms)) AS first_ms, toString(max(last_ms)) AS last_ms FROM (" + strings.Join(metricParts, " UNION ALL ") + ") GROUP BY namespace, service"
-	signals := "SELECT * FROM (" + aggregate("spans", spanBase) + " UNION ALL " + aggregate("logs", logBase) + " UNION ALL " + metrics + ") ORDER BY service, namespace, signal LIMIT 1001 FORMAT JSONEachRow"
+	parts := []string{}
+	if available[sourcecap.Spans] {
+		parts = append(parts, aggregate("spans", spanBase))
+	}
+	if available[sourcecap.Logs] {
+		parts = append(parts, aggregate("logs", logBase))
+	}
+	if len(metricParts) > 0 {
+		parts = append(parts, metrics)
+	}
+	if len(parts) == 0 {
+		return Plan{}, sourcefailure.Wrap(sourcefailure.Unavailable, fmt.Errorf("no compatible service discovery sources"))
+	}
+	signals := "SELECT * FROM (" + strings.Join(parts, " UNION ALL ") + ") ORDER BY service, namespace, signal LIMIT 1001 FORMAT JSONEachRow"
 	// Parent identity is exact reported trace/span identity, scoped to this environment
 	// and window. Ambiguous service ownership never becomes an arbitrary graph edge.
 	owner := "tuple(mapContains(ResourceAttributes,'service.namespace'),ResourceAttributes['service.namespace'],ServiceName)"
 	edges := "WITH captured AS (SELECT TraceId, SpanId, ParentSpanId, ServiceName, " + owner + " AS owner" + spanBase + "), parents AS (SELECT TraceId, SpanId, groupUniqArray(owner) AS services FROM captured GROUP BY TraceId, SpanId) SELECT c.ServiceName AS child, if(c.owner.1,toNullable(c.owner.2),NULL) AS child_namespace, if(length(p.services)=1,p.services[1].3,'') AS parent, if(length(p.services)=1 AND p.services[1].1,toNullable(p.services[1].2),NULL) AS parent_namespace, multiIf(NOT match(c.TraceId, '^[a-f0-9]{32}$') OR c.TraceId=repeat('0',32) OR NOT match(c.ParentSpanId, '^[a-f0-9]{16}$'), 'invalid', length(p.services)=0, 'unresolved', length(p.services)>1, 'ambiguous', c.owner=p.services[1], 'internal', 'edge') AS kind, toString(count()) AS count FROM captured AS c LEFT JOIN parents AS p ON c.TraceId=p.TraceId AND c.ParentSpanId=p.SpanId WHERE c.ParentSpanId NOT IN ('', '0000000000000000') GROUP BY child, child_namespace, parent, parent_namespace, kind ORDER BY child, child_namespace, parent, parent_namespace, kind LIMIT 1001 FORMAT JSONEachRow"
 
+	if !available[sourcecap.Spans] {
+		edges = ""
+	}
 	return Plan{Count: signals, Groups: edges, Parameters: c.params}, nil
 }
 func (s Source) DiscoverServices(ctx context.Context, q InventoryQuestion) (result *ServiceDiscovery, resultErr error) {
 	q = q.clone()
-	p, e := CompileServiceDiscovery(q)
-	if e != nil {
+	if e := ValidateServiceDiscoveryQuestion(q); e != nil {
 		return nil, e
 	}
 	defer func() { resultErr = sourcefailure.Protocol(resultErr) }()
-	probe, e := s.read(ctx, optionalmetric.ExponentialHistogramProbeSQL, nil)
-	if e != nil {
-		return nil, e
-	}
-	present, e := optionalmetric.DecodeExists(probe)
+	sources, e := sourcecap.Inspect(ctx, s.read)
 	if e != nil {
 		return nil, e
 	}
 	diagnostics := []ServiceDiscoveryDiagnostic{}
-	if !present {
-		diagnostics = append(diagnostics, ServiceDiscoveryDiagnostic{Kind: "exponential-histogram", Reason: "optional-table-missing"})
-		p, e = compileServiceDiscovery(q, false)
-		if e != nil {
-			return nil, e
+	kinds := []string{}
+	availableSignals := map[string]bool{}
+	for _, family := range sources {
+		if family.Compatible() {
+			kinds = append(kinds, family.Kind)
+			if family.Kind == sourcecap.Logs || family.Kind == sourcecap.Spans {
+				availableSignals[family.Kind] = true
+			} else {
+				availableSignals["metrics"] = true
+			}
+		} else {
+			diagnostics = append(diagnostics, ServiceDiscoveryDiagnostic{Kind: family.Kind, Reason: family.State})
 		}
+	}
+	p, e := compileServiceDiscoveryKinds(q, kinds)
+	if e != nil {
+		return nil, e
 	}
 	raw, e := s.read(ctx, p.Count, p.Parameters)
 	if e != nil {
@@ -131,7 +178,7 @@ func (s Source) DiscoverServices(ctx context.Context, q InventoryQuestion) (resu
 	if len(raw) > 1000 {
 		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("service/signal cardinality exceeds 1000; narrow window"))
 	}
-	r := &ServiceDiscovery{Identity: "otel-service-namespace/v1", Diagnostics: diagnostics, Question: q, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), Signals: []ServiceSignal{}, Dependencies: []Dependency{}, Plan: p, Warnings: []string{"Event timestamps and counts describe captured spans, logs and native metric data-point records, not ingestion lag, telemetry completeness, service health or declared membership. Metric counts are exported points across gauge, sum, explicit-histogram and available exponential-histogram tables, not values, unique streams or histogram observation counts.", "Parent links use reported trace/parent-span IDs within the environment and fixed window. Counts are child span records, not unique requests. Unresolved/ambiguous/invalid parents are diagnostics, not inferred edges.", "Optional source availability, signal presence and parent links are separate reads; no transactional consistency or complete topology is claimed. Metric-only services create no parent links. Summary metric families, asynchronous span links and external peer inference are not included. Missing optional sources are explicit diagnostics, not empty or complete discovery."}}
+	r := &ServiceDiscovery{Identity: "otel-service-namespace/v1", Diagnostics: diagnostics, Sources: sources, Question: q, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), Signals: []ServiceSignal{}, Dependencies: []Dependency{}, Plan: p, Warnings: []string{"Event timestamps and counts describe captured spans, logs and native metric data-point records, not ingestion lag, telemetry completeness, service health or declared membership. Metric counts are exported points across gauge, sum, explicit-histogram and available exponential-histogram tables, not values, unique streams or histogram observation counts.", "Parent links use reported trace/parent-span IDs within the environment and fixed window. Counts are child span records, not unique requests. Unresolved/ambiguous/invalid parents are diagnostics, not inferred edges.", "Source availability, signal presence and parent links are separate reads; no transactional consistency or complete topology is claimed. Metric-only services create no parent links. Summary metric families, asynchronous span links and external peer inference are not included. Absent, unreadable and incompatible source families are explicit diagnostics, not empty or complete discovery."}}
 	seen := map[[3]string]bool{}
 	for _, v := range raw {
 		var x struct {
@@ -142,7 +189,7 @@ func (s Source) DiscoverServices(ctx context.Context, q InventoryQuestion) (resu
 			First     string          `json:"first_ms"`
 			Last      string          `json:"last_ms"`
 		}
-		if json.Unmarshal(v, &x) != nil || x.Service == nil || x.Signal != "spans" && x.Signal != "logs" && x.Signal != "metrics" {
+		if json.Unmarshal(v, &x) != nil || x.Service == nil || !availableSignals[x.Signal] {
 			return nil, fmt.Errorf("invalid service signal")
 		}
 		n, e := inventoryNumber(x.Count)
@@ -168,9 +215,12 @@ func (s Source) DiscoverServices(ctx context.Context, q InventoryQuestion) (resu
 		seen[key] = true
 		r.Signals = append(r.Signals, ServiceSignal{Namespace: nspace, Service: *x.Service, Signal: x.Signal, Count: x.Count, FirstMS: first, LastMS: last})
 	}
-	raw, e = s.read(ctx, p.Groups, p.Parameters)
-	if e != nil {
-		return nil, e
+	raw = nil
+	if p.Groups != "" {
+		raw, e = s.read(ctx, p.Groups, p.Parameters)
+		if e != nil {
+			return nil, e
+		}
 	}
 	if len(raw) > 1000 {
 		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("dependency cardinality exceeds 1000; narrow window"))

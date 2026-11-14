@@ -59,10 +59,12 @@ distinct states.
 ## Choose scope before reading
 
 Generic Activity starts with a blank environment and an explicit **Start stream**
-action. **Find environments**, beside Environment, explicitly discovers labels
+action. **Find data**, beside Environment, offers **Read available signals** to
+check supported source families and event-window presence without knowing a
+service or environment. Choose Logs or Spans locally, then explicitly discover labels
 in the selected Logs/Spans signal. Preview a named, empty or unreported scope,
 then Stage and Start; no manifest or guessed label is required. See the
-[unknown-data guide](UNKNOWN_DATA_ENTRY.md). Typing changes intent; starting applies it. Failed/unknown UI configuration
+[unknown-data guide](UNKNOWN_DATA_ENTRY.md) and [source states](SOURCE_CAPABILITIES.md). Typing changes intent; starting applies it. Failed/unknown UI configuration
 also withholds automatic reads. Lab mode retains automatic local streaming and its
 explicit prepared/operation declarations. The standalone component gallery is
 `/ui-components`; browsable API docs are `/api-docs` and the spec is `/openapi.json`.

@@ -19,8 +19,8 @@ func TestServiceDiscoveryScopeAndValidation(t *testing.T) {
 	bad := false
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		b, _ := io.ReadAll(r.Body)
-		if string(b) == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
-			fmt.Fprintln(w, `{"result":1}`)
+		if response, handled := sourceCapabilityResponse431(string(b)); handled {
+			io.WriteString(w, response)
 			return
 		}
 		if strings.Contains(string(b), "WITH captured") {
@@ -64,8 +64,8 @@ func TestMetricServiceDiscoveryValidation(t *testing.T) {
 	rows := `{"service":"metrics-only","signal":"metrics","count":"18446744073709551615","first_ms":"1000","last_ms":"2999"}`
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		b, _ := io.ReadAll(r.Body)
-		if string(b) == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
-			fmt.Fprintln(w, `{"result":1}`)
+		if response, handled := sourceCapabilityResponse431(string(b)); handled {
+			io.WriteString(w, response)
 			return
 		}
 		if !strings.Contains(string(b), "WITH captured") {

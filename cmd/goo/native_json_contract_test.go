@@ -38,6 +38,9 @@ func nativeJSONWireResponse(t *testing.T, c planningWireCase) *httptest.Response
 	wantReads := 0
 	if c.Status == 502 {
 		wantReads = 1
+		if c.Path == "/metric-discovery" {
+			wantReads = 4
+		}
 	}
 	if reads != wantReads {
 		t.Fatal("unexpected source execution", reads, wantReads)

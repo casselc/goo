@@ -6,7 +6,7 @@ the lab collector. It does not load a manifest or bootstrap through a saved view
 
 ## Choose a scope without guessing labels
 
-Fresh Activity makes no telemetry POSTs. Find environments is next to Environment;
+Fresh Activity makes no telemetry POSTs. Find data is next to Environment;
 typing a draft retains Start stream rather than changing the first action to Apply.
 Opening the native chooser stays local. Read environment scopes explicitly reads
 the selected signal and bounded window.

@@ -40,8 +40,8 @@ func TestDiscoveryBoundedTransport(t *testing.T) {
 		if r.URL.Query().Get("readonly") != "1" {
 			t.Error("source request is not readonly")
 		}
-		if string(body) == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
-			io.WriteString(w, "{\"result\":1}\n")
+		if response, handled := sourceCapabilityResponse431(string(body)); handled {
+			io.WriteString(w, response)
 			return
 		}
 		if strings.Count(string(body), " UNION ALL ") != 3 || strings.Count(string(body), "LIMIT 10001") != 1 {
@@ -56,7 +56,7 @@ func TestDiscoveryBoundedTransport(t *testing.T) {
 	}))
 	defer server.Close()
 	_, e := (Source{Endpoint: server.URL}).Discover(context.Background(), DiscoveryQuestion{Environment: "local", Service: "x' OR 1=1", FromMS: 1000, ToMS: 2000})
-	if e == nil || reads.Load() != 2 {
+	if e == nil || reads.Load() != 9 {
 		t.Fatal("partial catalog accepted or global read not exercised", e, reads.Load())
 	}
 }

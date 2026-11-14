@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/casselc/goo/internal/sourcehttp"
 	"io"
 	"net/http"
 	"os"
@@ -75,8 +76,8 @@ func TestRecordSourceResponseWireContract(t *testing.T) {
 		{name: "single whitespace byte boundary", status: 200, payload: strings.Repeat(" ", 8<<20)},
 		{name: "single object byte boundary", status: 200, payload: `{"x":"` + strings.Repeat("a", (8<<20)-8) + `"}`, wantRows: 1},
 		{name: "unterminated final object", status: 200, payload: "{}\n{\"n\":1}", wantRows: 2},
-		{name: "created", status: 201, broken: true, wantError: "exploration source HTTP 201"},
-		{name: "unavailable", status: 503, broken: true, wantError: "exploration source HTTP 503"},
+		{name: "created", status: 201, broken: true, wantError: "source HTTP 201 (exception code 0)"},
+		{name: "unavailable", status: 503, broken: true, wantError: "source HTTP 503 (exception code 0)"},
 		{name: "read failure", status: 200, broken: true, wantError: "body failure"},
 	}
 	for _, tc := range cases {
@@ -99,6 +100,12 @@ func TestRecordSourceResponseWireContract(t *testing.T) {
 			if tc.wantError != "" {
 				if err == nil || err.Error() != tc.wantError || rows != nil {
 					t.Fatal(rows, err)
+				}
+				if tc.status != 200 {
+					response, ok := errors.AsType[*sourcehttp.HTTPError](err)
+					if !ok || response.Status != tc.status || response.Code != 0 {
+						t.Fatal("source HTTP identity lost", err)
+					}
 				}
 				if tc.status == 200 && tc.broken && !errors.Is(err, failure) {
 					t.Fatal("lost error identity")

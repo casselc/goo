@@ -8,7 +8,7 @@ The running server must include the current routes and assets; changing the
 checkout alone does not update an existing process. Rebuild an older image, or
 use the supported local code/asset installation and restart procedure.
 
-The spec inventories 108 supported Go operations. One Go process serves the UI,
+The spec inventories the supported Go operations. One Go process serves the UI,
 embedded assets, API documentation and observation/storage handlers. Browser
 `/api/*` requests and unprefixed API requests dispatch in process to the same mux,
 query budget, cancellation registry and stores. Compose publishes this one server
@@ -51,13 +51,48 @@ flowchart LR
   Spec --> Check
 ```
 
-## Observed metric discovery
+## Source readiness and presence
 
-`POST /metric-discovery` reads one fixed optional exponential-table presence probe,
-then a globally bounded metadata union for the supplied fixed question. An absent
-optional table adds a typed `diagnostics` entry while ordinary instrument discovery
-remains usable. Probe/query errors fail the request rather than implying absence.
-Counts refer to exported points; exponential instruments remain unsupported and
+`POST /source-capabilities` accepts only a fixed half-open `{fromMs,toMs}` window
+of at most 120 minutes. No known environment, service, manifest, source table name
+or SQL is required or accepted. It checks the six supported ClickStack exporter
+profiles: logs, spans, gauge, counter, explicit histogram and exponential histogram.
+
+Each family has a readiness state: `compatible`, `absent`, `incompatible` or
+`unreadable`. Compatibility means the profile's required columns have supported
+types and can be read; it does not authorize metric evaluation. Table absence
+requires an explicit typed source missing-table response. Denied metadata access
+and failed/malformed responses must not become absence.
+
+A compatible family receives an independent bounded `LIMIT 1` presence query in
+the requested window. Its `observation` is `observed`, `empty`, `unreadable` or
+`unknown`, with units `records` for logs/spans and `exported-points` for metrics.
+There are no totals: one presence witness is not one record in the population.
+`empty` means a successful no-match read, not a missing source or healthy system.
+
+The response version is `goo/source-capabilities/v1`, with the original `question`,
+`capturedAt`, and exactly six `families` in canonical order. At most one schema
+check, one read-access check and one presence probe run per family, under the
+shared admission/cancellation owner and a 30-second enclosing deadline. The reads
+are independent, not a transactional snapshot or collector-delivery check.
+
+Choosing Logs or Spans from the result stages the existing UI signal choice
+locally. Reading environment labels and starting Activity remain separate explicit
+actions. Metrics-only identity bootstrap remains separate work.
+
+## Observed service and metric discovery
+
+`POST /discovery` and `POST /metric-discovery` reuse the fixed source-profile
+checks. Responses retain checked `sources` and explicit `diagnostics` for absent,
+incompatible or unreadable excluded families. Available families remain usable;
+no compatible source refuses rather than returning a successful empty catalog.
+A source change or failure after probing still refuses the acquired catalog.
+
+Service discovery reads reported parent links only when spans are compatible.
+A logs-only or metrics-only source does not establish an empty or healthy topology.
+Metric discovery retains its global 10,000 exported-point limit across included
+families. Counts refer to points, not histogram observations, unique streams or
+complete inventory. Exponential instruments remain unsupported for evaluation and
 carry no executable definition. See [discovery contract](UNSUPPORTED_METRIC_DISCOVERY.md).
 
 ## Reported histogram exemplars

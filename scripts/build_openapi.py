@@ -40,25 +40,40 @@ reference['description'] = 'Stored source reference text; invalid IDs remain vis
 for shape in (exemplars, export, reference):
  shape['additionalProperties'] = False
 schemas['measurements.Result']['properties']['histogramExemplars'] = ref('measurements.HistogramExemplarReport')
-diagnostic = schemas['measurements.DiscoveryDiagnostic']
-diagnostic['additionalProperties'] = False
-diagnostic['properties']['kind'] = {'const': 'exponential-histogram'}
-diagnostic['properties']['reason'] = {'const': 'optional-table-missing'}
+source_family_tables = {
+ 'logs':'otel_logs', 'spans':'otel_traces', 'gauge':'otel_metrics_gauge',
+ 'counter':'otel_metrics_sum', 'histogram':'otel_metrics_histogram',
+ 'exponential-histogram':'otel_metrics_exp_histogram',
+}
+source_states = ['compatible','absent','incompatible','unreadable']
+metric_family_kinds = list(source_family_tables)[2:]
+# Fixed adapter identity and source readiness never imply an executable instrument.
+source_family = schemas['sourcecap.Family']
+source_family['additionalProperties'] = False
+source_family['properties']['kind']['enum'] = list(source_family_tables)
+source_family['properties']['state']['enum'] = source_states
+source_family['properties']['detail'].update(minLength=1,maxLength=256)
+source_family['oneOf'] = [{'properties':{'kind':{'const':kind},'table':{'const':table}}} for kind,table in source_family_tables.items()]
+source_family['description'] = 'Fixed exporter source profile. Compatible means required discovery/projection columns passed schema and read-access checks, not observed data, complete coverage or instrument evaluation support. Absent requires an explicit typed source missing-table response; denied metadata access remains unreadable.'
+for type_name,kinds in [('measurements.DiscoveryDiagnostic',metric_family_kinds),('exploration.ServiceDiscoveryDiagnostic',list(source_family_tables))]:
+ diagnostic = schemas[type_name]
+ diagnostic['additionalProperties'] = False
+ diagnostic['properties']['kind'] = {'enum':kinds}
+ diagnostic['properties']['reason'] = {'enum':source_states[1:]}
+
 instrument = schemas['measurements.Instrument']
 instrument.setdefault('allOf', []).append({
  'if': {'properties': {'kind': {'const': 'exponential-histogram'}}, 'required': ['kind']},
  'then': {'properties': {'supported': {'const': False}, 'capabilityPlan': {'properties': {'eligible': {'const': False}}}}, 'not': {'required': ['definition']}}
 })
 discovery = schemas['measurements.DiscoveryResult']
-discovery['properties']['diagnostics'] = {'type': 'array', 'maxItems': 1, 'items': ref('measurements.DiscoveryDiagnostic'), 'description': 'Empty when the optional exponential table is included; an explicit missing-table diagnostic otherwise. Source errors fail discovery, never imply absence.'}
+discovery['properties']['diagnostics'] = {'type':'array','maxItems':4,'items':ref('measurements.DiscoveryDiagnostic'),'description':'Excluded metric families retain explicit absent, incompatible or unreadable state. Available families are acquired together under the existing global limit; post-probe acquisition errors refuse the catalog.'}
+discovery['properties']['sources'] = {'type':'array','minItems':4,'maxItems':4,'items':ref('sourcecap.Family'),'description':'Checked metric discovery profiles, including excluded sources. These are separate reads, not a source snapshot or evaluation eligibility.'}
 discovery['properties']['records']['description'] = 'Retained exported data points across all included families, bounded globally at 10000. Not histogram bucket mass, health or ingestion completeness.'
 
-service_diagnostic = schemas['exploration.ServiceDiscoveryDiagnostic']
-service_diagnostic['additionalProperties'] = False
-service_diagnostic['properties']['kind'] = {'const': 'exponential-histogram'}
-service_diagnostic['properties']['reason'] = {'const': 'optional-table-missing'}
 service_discovery = schemas['exploration.ServiceDiscovery']
-service_discovery['properties']['diagnostics'] = {'type': 'array', 'maxItems': 1, 'items': ref('exploration.ServiceDiscoveryDiagnostic'), 'description': 'Optional-source availability, separate from empty matching data. Source probe/read errors fail the operation.'}
+service_discovery['properties']['diagnostics'] = {'type':'array','maxItems':6,'items':ref('exploration.ServiceDiscoveryDiagnostic'),'description':'Excluded source families retain absent, incompatible or unreadable state. Available families remain usable; no compatible source refuses instead of returning successful empty inventory.'}
+service_discovery['properties']['sources'] = {'type':'array','minItems':6,'maxItems':6,'items':ref('sourcecap.Family'),'description':'Checked fixed exporter profiles for all supported families. Parent-link reads require compatible spans; no span source means no inferred topology.'}
 service_discovery['properties']['signals']['description'] = 'At most 1000 service/signal pairs across all included sources. Metric counts are exported gauge, sum, explicit and optional exponential histogram data-point records, never histogram mass or execution support.'
 
 for name in ('workbench.ActivityView','workbench.ActivityViewInput'):
@@ -82,6 +97,28 @@ sp['signal']['enum']=['','logs','spans','metrics']
 sp['environment']['anyOf'][0]['maxLength']=128
 for name in ('matched','total'):search[name].update({'minimum':0,'maximum':10000})
 search['order']['enum']=['newest','oldest']
+# Source readiness plus independent bounded presence witnesses (431).
+for name in ('exploration.SourceCapabilitiesQuestionInput','exploration.SourceCapabilitiesQuestion'):
+ shape=schemas[name];shape['additionalProperties']=False
+ shape['properties']['fromMs']['minimum']=0
+ shape['properties']['toMs']['maximum']=4102444800000
+ shape['description']='Half-open fixed window, at most 120 minutes. No environment, service or arbitrary source/table fields. Cross-field ordering and width remain enforced by Go.'
+capabilities=schemas['exploration.SourceCapabilitiesResult'];capabilities['additionalProperties']=False
+capabilities['properties']['version']={'const':'goo/source-capabilities/v1'}
+capabilities['properties']['capturedAt']['format']='date-time'
+capability=schemas['exploration.SourceCapability'];capability['additionalProperties']=False
+capability['properties']['kind']['enum']=list(source_family_tables)
+capability['properties']['state']['enum']=source_states
+capability['properties']['detail'].update(minLength=1,maxLength=256)
+capability['oneOf']=[{'properties':{'kind':{'const':kind},'table':{'const':table},'observation':{'properties':{'unit':{'const':'records' if kind in ('logs','spans') else 'exported-points'}}}}} for kind,table in source_family_tables.items()]
+capability['allOf']=[{'if':{'properties':{'state':{'const':'compatible'}},'required':['state']},'then':{'properties':{'observation':{'properties':{'state':{'enum':['observed','empty','unreadable']}}}}},'else':{'properties':{'observation':{'properties':{'state':{'const':'unknown'}}}}}}]
+observation=schemas['exploration.SourceObservation'];observation['additionalProperties']=False
+observation['properties']['state']['enum']=['observed','empty','unreadable','unknown']
+observation['properties']['unit']['enum']=['records','exported-points']
+observation['description']='Independent LIMIT 1 presence witness in the requested window; observed is not a total count, empty is successful no-match, unreadable is a failed presence read, and unknown means the profile was not eligible for probing.'
+capabilities['properties']['families']={'type':'array','minItems':6,'maxItems':6,'prefixItems':[{'allOf':[ref('exploration.SourceCapability'),{'properties':{'kind':{'const':kind}}}]} for kind in source_family_tables],'items':False}
+capabilities['description']='Six fixed exporter profiles in canonical order. Readiness and observation presence have independent states/read clocks. No telemetry completeness, ingestion health, transactional source snapshot, population count or instrument evaluation authority is implied.'
+
 # Effective-environment adoption is a distinct readonly contract, not Query.
 for name in ('exploration.AdoptionWindowInput','exploration.AdoptionRecordsQuestionInput'):
  props=schemas[name]['properties'];props['signal']['enum']=['logs','spans'];props['fromMs']['minimum']=0;props['toMs']['maximum']=4102444800000
@@ -1208,14 +1245,14 @@ page['properties']['capturedAt']['format']='date-time'
 page['properties']['state']['enum']=['observed','no_data','changed_between_reads']
 page['properties']['resultToken']['pattern']='^[a-f0-9]{64}$'
 
-reads = {'/environment-scopes','/environment-scopes/records','/pod-metric-discovery','/host-discovery','/pod-discovery','/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/page', '/explore/counted-values', '/record-aggregates','/exception-groups', '/trace-search', '/trace-search/page', '/population/explain', '/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
+reads = {'/source-capabilities','/environment-scopes','/environment-scopes/records','/pod-metric-discovery','/host-discovery','/pod-discovery','/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/page', '/explore/counted-values', '/record-aggregates','/exception-groups', '/trace-search', '/trace-search/page', '/population/explain', '/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
 for profile,roles in [('container-memory-kubeletstats-v0.137.0',['working-set']),('container-memory-k8scluster-v0.137.0',['request','limit']),('container-cpu-kubeletstats-v0.137.0',['usage']),('container-cpu-k8scluster-v0.137.0',['request','limit'])]:
  podwidget_schema['allOf'].append({'if':{'properties':{'profile':{'const':profile}},'required':['profile']},'then':{'properties':{'role':{'enum':roles}}}})
 plans = {'/native-views/reuse','/view-artifacts/encode','/view-artifacts/decode','/pod-dashboard/plan','/host-dashboard/plan','/pool-signals/plan','/pool-signals/view','/container-memory/view','/container-cpu/view','/container-resources/history','/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
 publications = {'/native-views','/kept-observations/records','/kept-observations/tail','/activity-views','/measurement-packages', '/telemetry-packages', '/annotations', '/exploration-views', '/deployments', '/documents', '/captures/comparisons'}
 requests = {'/native-views':'NativeViewRequest','/native-views/reuse':'NativeViewReuseRequest','/view-artifacts/encode':'ViewArtifactEncodeRequest','/view-artifacts/decode':'ViewArtifactDecodeRequest','/view-templates/expand':'ViewTemplateExpansionRequest','/kept-observations/repair':'KeptRepairRequest','/kept-observations/records':'KeepRecordsIntent','/kept-observations/tail':'KeepTailIntent','/pod-metric-discovery':'PodMetricDiscoveryQuestion','/pod-dashboard/plan':'PodDashboardRequest','/host-discovery':'HostDiscoveryQuestion','/pod-discovery':'PodDiscoveryQuestion','/host-dashboard/plan':'HostDashboardRequest','/pool-signals/plan':'PoolSignalsRequest','/pool-signals/view':'PoolViewRequest','/container-memory/view':'ContainerMemoryViewRequest','/container-cpu/view':'ContainerCPUViewRequest','/container-resources/history':'ContainerResourceHistoryRequest','/activity-views':'ActivityViewRequest',
  '/retained-evidence/tail':'TailIntent','/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'ServiceDiscoveryRequest','/explore':'RecordQuery','/explore/page':'RecordQuery','/explore/counted-values':'RecordQuery','/record-aggregates':'RecordQuery','/exception-groups':'RecordQuery','/trace-search':'TraceSearchRequest','/trace-search/page':'TraceSearchPageRequest','/tail':'TailSelector',
- '/environment-scopes':'AdoptionWindow','/environment-scopes/records':'AdoptionRecordsQuestion','/measurements':'NativeQuestion','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
+ '/source-capabilities':'SourceCapabilitiesQuestion','/environment-scopes':'AdoptionWindow','/environment-scopes/records':'AdoptionRecordsQuestion','/measurements':'NativeQuestion','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
  '/telemetry-packages':'YAMLRequest','/telemetry-packages/draft':'TelemetryDraftRequest','/telemetry-packages/numeric-plan':'NumericPlanRequest','/telemetry-packages/plan':'TelemetryPlanRequest',
  '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/numeric-histograms/selection':'NumericHistogramSelectionRequest','/numeric-histograms/comparison-selection':'DistributionSelectionRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
  '/population/explain':'ExplanationRequest','/population/explain/plan':'ExplanationRequest','/population/explain/filter':'ExplanationFilterRequest','/captures':'CaptureRequest','/captures/live':'LiveComparisonRequest','/captures/comparisons':'SaveComparisonRequest','/investigations':'InvestigationRequest','/retained-evidence':'RetainRequest','/retained-evidence/{id}/annotations':'CorrectRequest',
@@ -1297,6 +1334,7 @@ hp['allOf']=[{'if':{'properties':{'state':{'enum':['unknown','invalid']}},'requi
 # Native registry responses are envelopes rather than Definition directly.
 schemas['NativePackage'] = {'type':'object','required':['definition','revision','yaml'],'properties':{'definition':ref('measurements.Definition'),'revision':{'type':'string'},'yaml':{'type':'string'}}}
 schemas['NativePlan'] = {'allOf':[ref('NativePackage'),{'type':'object','required':['question','plan'],'properties':{'question':ref('measurements.Question'),'plan':ref('measurements.Plan')}}]}
+responses['post','/source-capabilities']='SourceCapabilitiesResult'
 responses['post','/environment-scopes']='EnvironmentScopesResult'
 responses['post','/environment-scopes/records']='AdoptionRecordsResult'
 responses['post','/measurement-packages'] = 'NativePackage'
@@ -1311,7 +1349,7 @@ for name in ['measurements.Definition','measurements.Question','measurements.Pla
 def go_limit(path):
  if path=='/trace-search/page': return 66560
  if path.startswith('/native-views'): return 131072
- if path in ('/environment-scopes','/environment-scopes/records'): return 4096
+ if path in ('/source-capabilities','/environment-scopes','/environment-scopes/records'): return 4096
  if path in ('/container-memory/view','/container-cpu/view','/container-resources/history'): return 8388608
  if path == '/pool-signals/view': return 2097152
  if path in ('/compare','/numeric-histograms/comparison-selection'): return 1048576
@@ -1364,7 +1402,7 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if path=='/kept-observations/search':op['parameters']=[{'name':name,'in':'query','schema':({'type':'string','enum':['','tail-selection','result-page','saved-capture']} if name=='origin' else {'type':'string','enum':['','logs','spans']} if name=='signal' else {'type':'string','maxLength':256,'description':'Case-sensitive literal UTF-8 text, at most 256 bytes. Empty text lists metadata.'} if name=='text' else {'type':'string','maxLength':1024})} for name in ('origin','signal','text','cursor')]
  for p in {'/captures':['cursor'],'/captures/{id}':['cursor'],'/captures/{id}/followups':['row'],'/captures/{id}/compare':['selection','distribution']}.get(path,[]):
   if method=='get' and not any(v['name']==p and v['in']=='query' for v in op['parameters']):op['parameters'].append({'name':p,'in':'query','schema':{'type':'string'},'description':'Single canonical value; saved evidence is not reread from the telemetry source.'})
- controlled=method=='post' and path in ('/environment-scopes','/environment-scopes/records','/metric-discovery','/pod-metric-discovery','/host-discovery','/pod-discovery','/measurements','/explore','/explore/page','/explore/counted-values','/record-aggregates','/exception-groups','/trace-search','/trace-search/page','/population/explain','/inventory','/discovery','/captures','/captures/live')
+ controlled=method=='post' and path in ('/source-capabilities','/environment-scopes','/environment-scopes/records','/metric-discovery','/pod-metric-discovery','/host-discovery','/pod-discovery','/measurements','/explore','/explore/page','/explore/counted-values','/record-aggregates','/exception-groups','/trace-search','/trace-search/page','/population/explain','/inventory','/discovery','/captures','/captures/live')
  controlled = controlled or method=='get' and path in ('/http-package','/operations','/counter-rates','/histograms')
  if controlled:op['parameters'].append({'name':'X-Goo-Query-ID','in':'header','schema':{'type':'string','pattern':'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$'},'description':'Optional short-lived cancellation capability; repeated/cancelled IDs are refused.'})
  if method=='post' and path in requests:
@@ -1379,11 +1417,13 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if 'source-read' in e or e.startswith('xtdb-'): codes.add(502)
  if method=='post': codes.add(400)
  if controlled: codes.update((400,409,429))
- if path in ('/environment-scopes','/environment-scopes/records'): codes.update((400,409,429,502))
+ if path in ('/source-capabilities','/environment-scopes','/environment-scopes/records'): codes.update((400,409,429,502))
  if path.startswith('/retained-evidence') and not path.endswith('/status'): codes.add(503)
  if method=='get' and path in ('/http-package','/operation-packages','/operations','/counter-rates','/histograms'): codes.add(503)
  if path=='/metric-discovery':
-  op['description']='Explicit bounded metric metadata discovery: one fixed optional exponential-table presence probe, then one globally bounded metadata union. Missing optional table is reported in diagnostics while ordinary families remain usable. Probe/query errors fail the request. Exponential histograms are observed metadata only, unsupported for evaluation, without an executable definition. Counts are exported points, not histogram observations or complete inventory.'
+  op['description']='Explicit bounded metric metadata discovery over compatible fixed exporter families. Each family has schema/read-access checks; excluded absent, incompatible and unreadable sources remain explicit in sources and diagnostics. No usable source refuses; available metadata uses one globally bounded union, and post-probe acquisition errors refuse the catalog. Exponential histograms remain unsupported for evaluation without an executable definition. Counts are exported points, not histogram observations or complete inventory.'
+ if path=='/source-capabilities':
+  op['description']='Explicit bounded readiness and presence discovery across six fixed ClickStack exporter profiles, without a known environment or service. At most one schema check, one read-access check and one LIMIT 1 presence probe per family. Presence is not a total count; no records in the window is not absence or health. Invalid, denied and missing source states remain distinct. Selecting a signal in the UI stages locally and performs no source read. The enclosing source deadline is 30 seconds.'
  if path.startswith('/native-views'):
   codes.update((400,404,500))
   if method=='post':codes.add(413)

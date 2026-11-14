@@ -52,8 +52,8 @@ func TestExplorationAndTailRegistrationsKeepInjectedSources(t *testing.T) {
 				t.Error("injected auth/readonly changed")
 			}
 			sql, _ := io.ReadAll(r.Body)
-			if string(sql) == "EXISTS TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
-				io.WriteString(w, `{"result":1}`)
+			if response, handled := sourcecapFixture431(t, string(sql)); handled {
+				io.WriteString(w, response)
 			} else if strings.HasPrefix(string(sql), "SELECT toString(count()) AS count") {
 				io.WriteString(w, "{\"count\":\"0\"}\n")
 			}
@@ -87,7 +87,7 @@ func TestExplorationAndTailRegistrationsKeepInjectedSources(t *testing.T) {
 				wantReads = 1
 			}
 			if route.path == "/discovery" {
-				wantReads = 3
+				wantReads = 14
 			}
 			if w.Code != 200 || w.Header().Get("Cache-Control") != "no-store" || reg.reads.Load()-before != wantReads {
 				t.Fatal("injected route failed", route.path, w.Code, w.Body.String())

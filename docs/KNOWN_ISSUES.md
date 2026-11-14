@@ -4,8 +4,8 @@
 first-use scope discovery, partial-signal table assumptions, metric-only bootstrap,
 event-time empty-stream recovery and keyboard Pause focus as priority gaps.
 [430](UNKNOWN_DATA_ENTRY.md) improves first-use chooser placement and fixes explicit
-Pause/Resume focus. Partial-source availability, metrics bootstrap and empty-stream
-recovery remain planned in the [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
+Pause/Resume focus. [431 source capabilities](SOURCE_CAPABILITIES.md) now addresses partial-source
+availability; metrics bootstrap and empty-stream recovery remain planned in the [active roadmap](ROADMAP_2026_11_14_CHECKPOINT_430.md).
 The generic no-environment log path was exercised; partial-schema installations
 remain source-reviewed rather than newly integration-tested.
 

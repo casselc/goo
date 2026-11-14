@@ -5,7 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/casselc/goo/identity"
-	"github.com/casselc/goo/internal/optionalmetric"
+	"github.com/casselc/goo/internal/sourcecap"
+	"github.com/casselc/goo/internal/sourcefailure"
 	"sort"
 	"strconv"
 	"strings"
@@ -48,6 +49,7 @@ const exponentialHistogramUnsupportedReason = "Exponential histogram evaluation 
 type DiscoveryResult struct {
 	Question    DiscoveryQuestion     `json:"question"`
 	Diagnostics []DiscoveryDiagnostic `json:"diagnostics"`
+	Sources     []sourcecap.Family    `json:"sources"`
 	Instruments []Instrument          `json:"instruments"`
 	Records     int                   `json:"records"`
 	Warning     string                `json:"warning"`
@@ -62,16 +64,23 @@ func (s Source) Discover(ctx context.Context, q DiscoveryQuestion) (*DiscoveryRe
 	if e := q.Validate(); e != nil {
 		return nil, e
 	}
-	optionalPresent, err := s.exponentialHistogramTablePresent(ctx)
+	sources, err := sourcecap.Inspect(ctx, func(ctx context.Context, sql string, params map[string]string) ([]json.RawMessage, error) {
+		return s.read(ctx, Plan{SQL: sql, Parameters: params})
+	}, sourcecap.Gauge, sourcecap.Counter, sourcecap.Histogram, sourcecap.ExponentialHistogram)
 	if err != nil {
 		return nil, err
 	}
 	diagnostics := []DiscoveryDiagnostic{}
-	kinds := []string{"gauge", "counter", "histogram"}
-	if optionalPresent {
-		kinds = append(kinds, exponentialHistogramKind)
-	} else {
-		diagnostics = append(diagnostics, DiscoveryDiagnostic{Kind: exponentialHistogramKind, Reason: "optional-table-missing"})
+	kinds := []string{}
+	for _, family := range sources {
+		if family.Compatible() {
+			kinds = append(kinds, family.Kind)
+		} else {
+			diagnostics = append(diagnostics, DiscoveryDiagnostic{Kind: family.Kind, Reason: family.State})
+		}
+	}
+	if len(kinds) == 0 {
+		return nil, sourcefailure.Wrap(sourcefailure.Unavailable, fmt.Errorf("no compatible instrument discovery sources"))
 	}
 	parts := []string{}
 	namespaceSQL := ""
@@ -111,23 +120,27 @@ func (s Source) Discover(ctx context.Context, q DiscoveryQuestion) (*DiscoveryRe
 	if e != nil {
 		return nil, e
 	}
+	allowedKinds := make(map[string]bool, len(kinds))
+	for _, kind := range kinds {
+		allowedKinds[kind] = true
+	}
+	for _, row := range rows {
+		var observation struct {
+			Kind string `json:"kind"`
+		}
+		if json.Unmarshal(row, &observation) != nil || !allowedKinds[observation.Kind] {
+			return nil, sourcefailure.Wrap(sourcefailure.Malformed, fmt.Errorf("instrument row differs from checked source families"))
+		}
+	}
 	result, err := discoverRows(q, rows)
 	if err != nil {
 		return nil, err
 	}
 	result.Diagnostics = diagnostics
+	result.Sources = sources
 	return result, nil
 }
 
-// Probe only the fixed optional exporter table. A source failure or malformed
-// answer is not table absence; a later table race still fails the global read.
-func (s Source) exponentialHistogramTablePresent(ctx context.Context) (bool, error) {
-	rows, err := s.read(ctx, Plan{SQL: optionalmetric.ExponentialHistogramProbeSQL})
-	if err != nil {
-		return false, err
-	}
-	return optionalmetric.DecodeExists(rows)
-}
 func discoverRows(q DiscoveryQuestion, rows []json.RawMessage) (*DiscoveryResult, error) {
 	if len(rows) > RowLimit {
 		return nil, fmt.Errorf("source exceeds 10000 rows; no partial discovery")

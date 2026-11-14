@@ -17,7 +17,7 @@ test('catalog rejects non-UTC, rolled dates, invalid bounds and invalid namespac
  for(const minutes of [0,121,NaN,Infinity])assert.throws(()=>I.catalogQuestion({environmentFields:{environment:'prod'},minutes,nowMs:600000}));
 });
 test('catalog optional-source note never equates missing table with empty or executable data',()=>{
- assert.equal(I.catalogSourceNote({diagnostics:[]}), '');assert.equal(I.catalogSourceNote({}), '');assert.equal(I.catalogSourceNote({diagnostics:[{kind:'exponential-histogram',reason:'different'}]}),'');assert.match(I.catalogSourceNote({diagnostics:[{kind:'exponential-histogram',reason:'optional-table-missing'}]}),/unavailable.*incomplete/);
+ assert.equal(I.catalogSourceNote({diagnostics:[]}), '');assert.equal(I.catalogSourceNote({}), '');assert.equal(I.catalogSourceNote({diagnostics:[{kind:'exponential-histogram',reason:'different'}]}),'');assert.match(I.catalogSourceNote({sources:[{kind:'exponential-histogram',state:'absent'}]}),/table absent.*Available sources only/);
 });
 class Element{
  get isConnected(){return this.root||!!this.parentElement?.isConnected}
@@ -30,10 +30,10 @@ class Element{
 }
 const walk=root=>[root,...root.children.flatMap(walk)];
 function setup(){reads=[];scopes=[];opens=[];suspends=0;const host=new Element('main'),minutes=new Element('input');minutes.id='minutes';minutes.value='10';const root=new Element('body');root.root=true;root.append(host,minutes);globalThis.document={createElement:t=>new Element(t),getElementById:id=>walk(root).find(n=>n.id===id),addEventListener(){},removeEventListener(){}};globalThis.fetch=async()=>({ok:true,json:async()=>[]});const owner=I.mount(host),el=id=>document.getElementById(id);el('inventoryWindow').value='fixed';el('inventoryNamespace').value='value';el('inventoryFromUTC').value=fixed.fromUTC;el('inventoryToUTC').value=fixed.toUTC;el('inventoryEnvironment').value='prod';return{host,el,owner}}
-function finish(read,diagnostics=[],signals=[]){read.resolve({ok:true,data:{question:read.q,signals,dependencies:[],diagnostics}})}
+function finish(read,diagnostics=[],signals=[]){read.resolve({ok:true,data:{question:read.q,signals,dependencies:[],diagnostics,sources:diagnostics.map(d=>({kind:d.kind,state:d.reason}))}})}
 test('mounted catalog scope edits abort reads and retire late results; fixed UTC ignores unrelated global lookback',async()=>{
  const f=setup(),pending=f.el('inventoryRun').onclick(),old=reads[0];assert.deepEqual(old.q.namespace,{mode:'value',value:''});assert.equal(old.signal.aborted,false);f.el('inventoryNamespace').value='missing';f.el('inventoryNamespace').onchange();assert(old.signal.aborted);finish(old);await pending;assert.equal(f.el('serviceCatalog').children.length,0);assert.match(f.el('inventoryStatus').textContent,/Scope changed/);assert.equal(scopes.at(-1),null);
- const next=f.el('inventoryRun').onclick(),current=reads[1];assert.deepEqual(current.q.namespace,{mode:'missing'});document.getElementById('minutes').listeners.get('input')();assert.equal(current.signal.aborted,false);finish(current,[{kind:'exponential-histogram',reason:'optional-table-missing'}]);await next;assert.deepEqual(scopes.at(-1),current.q);assert(walk(f.el('serviceCatalog')).some(n=>n.dataset.sourceDiagnostic==='optional-table-missing'));f.el('inventoryFromUTC').oninput();assert.equal(f.el('serviceCatalog').children.length,0);assert.equal(scopes.at(-1),null);
+ const next=f.el('inventoryRun').onclick(),current=reads[1];assert.deepEqual(current.q.namespace,{mode:'missing'});document.getElementById('minutes').listeners.get('input')();assert.equal(current.signal.aborted,false);finish(current,[{kind:'exponential-histogram',reason:'absent'}]);await next;assert.deepEqual(scopes.at(-1),current.q);assert(walk(f.el('serviceCatalog')).some(n=>n.dataset.sourceDiagnostic==='excluded-families'));f.el('inventoryFromUTC').oninput();assert.equal(f.el('serviceCatalog').children.length,0);assert.equal(scopes.at(-1),null);
 });
 test('mounted catalog invalid fixed scope acquires nothing and external fixed scope populates exact controls',async()=>{
  const f=setup();f.el('inventoryFromUTC').value='invalid';await f.el('inventoryRun').onclick();assert.equal(reads.length,0);assert.match(f.el('inventoryStatus').textContent,/UTC/);

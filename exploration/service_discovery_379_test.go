@@ -2,20 +2,25 @@ package exploration
 
 import (
 	"fmt"
-	"github.com/casselc/goo/internal/optionalmetric"
-	"github.com/casselc/goo/internal/sourcefailure"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
+
+	"github.com/casselc/goo/internal/sourcefailure"
 )
 
 func serviceProbeResponse379(r *http.Request) string {
 	raw, _ := io.ReadAll(r.Body)
-	if string(raw) == optionalmetric.ExponentialHistogramProbeSQL {
-		return `{"result":1}`
+	body, _ := sourceCapabilityResponse431(string(raw))
+	return body
+}
+func serviceDiscoveryReply431(status int, body string, code string) *http.Response {
+	h := make(http.Header)
+	if code != "" {
+		h.Set("X-ClickHouse-Exception-Code", code)
 	}
-	return ""
+	return &http.Response{StatusCode: status, Header: h, Body: io.NopCloser(strings.NewReader(body))}
 }
 func TestOptionalMetricServiceDiscovery379(t *testing.T) {
 	for _, present := range []bool{false, true} {
@@ -25,32 +30,29 @@ func TestOptionalMetricServiceDiscovery379(t *testing.T) {
 				reads++
 				raw, _ := io.ReadAll(r.Body)
 				sql := string(raw)
-				body := ""
-				switch reads {
-				case 1:
-					if sql != optionalmetric.ExponentialHistogramProbeSQL {
-						t.Fatal(sql)
-					}
-					body = fmt.Sprintf(`{"result":%d}`, map[bool]int{false: 0, true: 1}[present])
-				case 2:
-					if strings.Contains(sql, "otel_metrics_exp_histogram") != present || strings.Count(sql, "LIMIT 1001") != 1 || strings.Contains(sql, "BucketCounts") {
-						t.Fatal("global metric union changed", sql)
-					}
-					body = `{"service":"exp-only","signal":"metrics","count":"7","first_ms":"1000","last_ms":"1999"}`
-				case 3:
-					if !strings.Contains(sql, "WITH captured") {
-						t.Fatal("edges changed")
-					}
-				default:
-					t.Fatal("extra source read")
+				if !present && sql == "DESCRIBE TABLE otel_metrics_exp_histogram FORMAT JSONEachRow" {
+					return serviceDiscoveryReply431(404, "private missing-table diagnostic", "60"), nil
 				}
-				return &http.Response{StatusCode: 200, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(body))}, nil
+				if body, handled := sourceCapabilityResponse431(sql); handled {
+					return serviceDiscoveryReply431(200, body, ""), nil
+				}
+				if strings.Contains(sql, "WITH captured") {
+					return serviceDiscoveryReply431(200, "", ""), nil
+				}
+				if strings.Contains(sql, "otel_metrics_exp_histogram") != present || strings.Count(sql, "LIMIT 1001") != 1 || strings.Contains(sql, "BucketCounts") {
+					t.Fatal("global metric union changed", sql)
+				}
+				return serviceDiscoveryReply431(200, `{"service":"exp-only","signal":"metrics","count":"7","first_ms":"1000","last_ms":"1999"}`, ""), nil
 			})}}
 			result, err := source.DiscoverServices(t.Context(), InventoryQuestion{Environment: "prod", FromMS: 1000, ToMS: 2000})
-			if err != nil || reads != 3 || result.Diagnostics == nil || len(result.Signals) != 1 || result.Signals[0].Count != "7" {
+			wantReads := 14
+			if !present {
+				wantReads = 13
+			}
+			if err != nil || reads != wantReads || len(result.Sources) != 6 || result.Diagnostics == nil || len(result.Signals) != 1 || result.Signals[0].Count != "7" {
 				t.Fatal(result, err, reads)
 			}
-			if present && len(result.Diagnostics) != 0 || !present && (len(result.Diagnostics) != 1 || result.Diagnostics[0] != (ServiceDiscoveryDiagnostic{Kind: "exponential-histogram", Reason: "optional-table-missing"})) {
+			if present && len(result.Diagnostics) != 0 || !present && (len(result.Diagnostics) != 1 || result.Diagnostics[0] != (ServiceDiscoveryDiagnostic{Kind: "exponential-histogram", Reason: "absent"})) {
 				t.Fatal(result.Diagnostics)
 			}
 		})
@@ -59,38 +61,39 @@ func TestOptionalMetricServiceDiscovery379(t *testing.T) {
 func TestOptionalMetricServiceFailures379(t *testing.T) {
 	for _, phase := range []string{"probe-malformed", "probe-http", "union-race", "global-cap"} {
 		t.Run(phase, func(t *testing.T) {
-			reads := 0
+			aggregates := 0
 			source := Source{Endpoint: "http://source", Client: &http.Client{Transport: serviceScopeTransport318(func(r *http.Request) (*http.Response, error) {
-				reads++
-				status := 200
-				body := `{"result":1}`
-				if reads == 1 && phase == "probe-malformed" {
-					body = `{"result":1,"result":0}`
+				raw, _ := io.ReadAll(r.Body)
+				sql := string(raw)
+				if strings.HasPrefix(sql, "DESCRIBE TABLE ") {
+					if phase == "probe-malformed" {
+						return serviceDiscoveryReply431(200, `{}`, ""), nil
+					}
+					if phase == "probe-http" {
+						return serviceDiscoveryReply431(503, "private upstream diagnostic", ""), nil
+					}
 				}
-				if reads == 1 && phase == "probe-http" || reads == 2 && phase == "union-race" {
-					status = 503
-					body = "private upstream failure"
+				if body, handled := sourceCapabilityResponse431(sql); handled {
+					return serviceDiscoveryReply431(200, body, ""), nil
 				}
-				if reads == 2 && phase == "global-cap" {
-					body = strings.Repeat(`{"service":"a","signal":"metrics","count":"1","first_ms":"1000","last_ms":"1000"}`+"\n", 1001)
+				aggregates++
+				if phase == "union-race" {
+					return serviceDiscoveryReply431(503, "private upstream diagnostic", ""), nil
 				}
-				return &http.Response{StatusCode: status, Header: make(http.Header), Body: io.NopCloser(strings.NewReader(body))}, nil
+				return serviceDiscoveryReply431(200, strings.Repeat(`{"service":"a","signal":"metrics","count":"1","first_ms":"1000","last_ms":"1000"}`+"\n", 1001), ""), nil
 			})}}
 			result, err := source.DiscoverServices(t.Context(), InventoryQuestion{Environment: "prod", FromMS: 1000, ToMS: 2000})
 			if err == nil || result != nil {
 				t.Fatal("failure published", result, err)
 			}
-			wantReads := 1
+			wantAggregates := 0
 			if phase == "union-race" || phase == "global-cap" {
-				wantReads = 2
+				wantAggregates = 1
 			}
-			if reads != wantReads {
-				t.Fatal(reads)
+			if aggregates != wantAggregates {
+				t.Fatal("unready source acquired", aggregates)
 			}
 			want := sourcefailure.Unavailable
-			if phase == "probe-malformed" {
-				want = sourcefailure.Malformed
-			}
 			if phase == "global-cap" {
 				want = sourcefailure.Budget
 			}

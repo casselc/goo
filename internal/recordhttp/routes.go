@@ -27,6 +27,7 @@ func Register(mux *http.ServeMux, source exploration.Source, snapshots *explorat
 		}
 		httpjson.Write(w, 200, result)
 	})
+	registerRead(mux, "/source-capabilities", exploration.SourceCapabilitiesQuestion.Validate, source.DiscoverSourceCapabilities)
 	registerRead(mux, "/environment-scopes", exploration.AdoptionWindow.Validate, source.DiscoverEnvironmentScopes)
 	registerRead(mux, "/environment-scopes/records", exploration.AdoptionRecordsQuestion.Validate, source.PreviewAdoptionRecords)
 	registerRead(mux, "/inventory", exploration.InventoryQuestion.Validate, source.Inventory)

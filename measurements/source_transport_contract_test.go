@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/casselc/goo/internal/sourcehttp"
 	"io"
 	"net/http"
 	"os"
@@ -90,10 +91,10 @@ func TestNativeSourceResponseWireContract(t *testing.T) {
 		{"exact byte limit", 200, atLimit, 8192, "", nil},
 		{"byte overflow", 200, atLimit + "x", 0, "measurement source exceeds 8 MiB", nil},
 		{"single object at byte limit", 200, `{"padding":"` + strings.Repeat("x", limit-14) + `"}`, 1, "", nil},
-		{"other success status", 201, "{}\n", 0, "measurement source HTTP 201", nil},
-		{"non-200", 503, "backend detail", 0, "measurement source HTTP 503", nil},
+		{"other success status", 201, "{}\n", 0, "source HTTP 201 (exception code 0)", nil},
+		{"non-200", 503, "backend detail", 0, "source HTTP 503 (exception code 0)", nil},
 		{"read error", 200, "{}\n", 0, failure.Error(), failure},
-		{"status precedes body read failure", 503, "backend detail", 0, "measurement source HTTP 503", failure},
+		{"status precedes body read failure", 503, "backend detail", 0, "source HTTP 503 (exception code 0)", failure},
 	} {
 		t.Run(c.name, func(t *testing.T) {
 			var reader io.Reader = strings.NewReader(c.body)
@@ -116,8 +117,14 @@ func TestNativeSourceResponseWireContract(t *testing.T) {
 			if body.closed != 1 || body.read > limit+1 {
 				t.Fatal("body lifetime/bound changed", body.closed, body.read)
 			}
-			if c.status != 200 && body.read != 0 {
-				t.Fatal("error status body consumed", body.read)
+			if c.status != 200 {
+				if body.read != 0 {
+					t.Fatal("error status body consumed", body.read)
+				}
+				response, ok := errors.AsType[*sourcehttp.HTTPError](e)
+				if !ok || response.Status != c.status || response.Code != 0 {
+					t.Fatal("source HTTP identity lost", e)
+				}
 			}
 			if c.cause != nil && c.status == 200 && !errors.Is(e, c.cause) {
 				t.Fatal("read error identity changed", e)

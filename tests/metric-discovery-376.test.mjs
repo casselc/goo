@@ -20,7 +20,7 @@ const {render}=await import('../ui/metric-discovery.mjs');
 const find=(host,tag)=>host.children.flatMap(child=>[...(child.tagName===tag?[child]:[]),...find(child,tag)]);
 const capability={version:'goo/instrument-capability-plan/v1alpha1',profile:'generic',title:'Generic binding',eligible:true,verification:'not-run',reasons:[],hints:[],coverage:{state:'unavailable',streams:[],dimensions:[]}};
 function instrument(overrides={}){return {kind:'gauge',metric:'load',unit:'1',scope:'app',version:'',schemaURL:'',records:7,temporality:0,supported:true,definition:{kind:'gauge'},capabilityPlan:structuredClone(capability),...overrides}}
-function setup(instruments,diagnostics=[]){const host=node('section');host.connected=true;const built=[];render(host,{instruments,diagnostics},{onBuild:i=>built.push(i)});return{host,built}}
+function setup(instruments,diagnostics=[]){const host=node('section');host.connected=true;const built=[];render(host,{instruments,diagnostics,sources:diagnostics.map(d=>({kind:d.kind,state:d.reason}))},{onBuild:i=>built.push(i)});return{host,built}}
 test('observed exponential points stay readable but never executable, including direct callback',()=>{
  const source=instrument({kind:'exponential-histogram',metric:'response.duration',unit:'s',records:13,supported:false,definition:undefined,unsupportedReason:'Zero-threshold and optional-statistic presence are unavailable.'});
  const {host,built}=setup([source]);assert.match(host.textContent,/Exponential histogram · s · 13 exported points/);assert.match(host.textContent,/Observed · unsupported for evaluation/);assert.match(host.textContent,/Zero-threshold/);assert.doesNotMatch(host.textContent,/13 observations/);
@@ -35,6 +35,6 @@ test('available ordinary instrument builds only through current visible row; loc
  find(host,'button').find(x=>x.textContent==='More instruments').onclick();assert.equal(built.length,1);old();assert.equal(built.length,1);find(host,'button').find(x=>x.textContent==='Previous instruments').onclick();host.append(use);old();assert.equal(built.length,1);
 });
 test('missing optional table is visible and an empty partial catalogue does not claim no instruments everywhere',()=>{
- const {host}=setup([],[{kind:'exponential-histogram',reason:'optional-table-missing'}]);assert.match(host.textContent,/optional source table is missing/);assert.match(host.textContent,/not a complete inventory/);assert.match(host.textContent,/available sources.*exponential histogram discovery is unavailable/);assert.doesNotMatch(host.textContent,/No instruments observed in this window/);
- const ordinary=setup([instrument()],[{kind:'exponential-histogram',reason:'optional-table-missing'}]);assert.equal(find(ordinary.host,'button').find(x=>x.textContent==='Build measurement package').disabled,false);
+ const {host}=setup([],[{kind:'exponential-histogram',reason:'absent'}]);assert.match(host.textContent,/Exponential histograms \(table absent\)/);assert.match(host.textContent,/Available sources only/);assert.match(host.textContent,/available sources for this window/);assert.doesNotMatch(host.textContent,/No instruments observed in this window/);
+ const ordinary=setup([instrument()],[{kind:'exponential-histogram',reason:'absent'}]);assert.equal(find(ordinary.host,'button').find(x=>x.textContent==='Build measurement package').disabled,false);
 });

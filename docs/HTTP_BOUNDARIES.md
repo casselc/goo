@@ -13,6 +13,34 @@ application's `newQueryBudget(..., 4)` composition function. Server
 header timeout is five seconds; write timeout is 90 seconds. Pure planning, source
 execution, filesystem publication and XTDB transactions retain different owners.
 
+## Source capability reads (431)
+
+`internal/recordhttp.PolicyFor` owns `POST /source-capabilities`: source-read
+effect, 4096-byte strict object decoding and a 30-second source deadline. The
+exact route participates in the shared four-slot admission budget and optional
+`X-Goo-Query-ID` cancellation registry. Browser `/api/source-capabilities` and the
+unprefixed route dispatch to the same in-process handler and policy.
+
+Validation admits only a half-open fixed window of at most 120 minutes. The
+source owner checks six fixed exporter profiles; neither request nor browser
+component chooses physical table/column names. Each eligible family has bounded
+schema/read-access checks and one presence probe. No full-population count or
+arbitrary SQL execution is exposed. All phases share the enclosing cancellation
+context; component lifecycle/disclosure never starts a read.
+
+Per-family readiness and presence failure states are safe closed data, not raw
+source messages. Missing-table classification uses an explicit typed ClickHouse
+response code; metadata denial and transport failures remain unreadable. Invalid
+request/admission/cancellation refusals stay distinct from these checked results.
+The API contract documents both readiness and observation state vocabularies in
+[API.md](API.md).
+
+Service and metric inventories reuse readiness checks and compile only compatible
+families, retaining excluded sources as diagnostics. Availability probes do not
+freeze the source: a later aggregate read failure still refuses the catalog.
+No compatible source is a refusal, not a successful empty inventory. Metric
+source compatibility never establishes executable instrument eligibility.
+
 ## Browser ownership for legacy reads (217)
 
 The four admitted source GETs now use `ui/queries.mjs` → `getJSON(url, signal)`.

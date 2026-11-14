@@ -1685,7 +1685,105 @@ def check_http_client_profile385(spec):
     assert 'not attempts' in spec['components']['schemas']['exploration.DashboardRequestInput']['properties']['profile']['description']
     print('Outgoing HTTP385: exact profile enum, nullable generic selection and native/alias refusal shape pass')
 
+def check_source_capabilities431(spec):
+    """Presence, readiness and profile identity must not masquerade as totals."""
+    operation = spec['paths']['/source-capabilities']['post']
+    request = validator(spec, operation['requestBody']['content']['application/json']['schema'])
+    response = validator(spec, operation['responses']['200']['content']['application/json']['schema'])
+    question = {'fromMs':0,'toMs':60000}
+    request.validate(question)
+    for changes in ({'environment':'prod'}, {'service':'orders'}, {'family':'logs'},
+                    {'sql':'SELECT 1'}, {'fromMs':-1}, {'toMs':4102444800001},
+                    {'fromMs':'0'}):
+        assert not request.is_valid({**question,**changes}), ('invalid readiness request accepted',changes)
+    families = [('logs','otel_logs'), ('spans','otel_traces'),
+                ('gauge','otel_metrics_gauge'), ('counter','otel_metrics_sum'),
+                ('histogram','otel_metrics_histogram'),
+                ('exponential-histogram','otel_metrics_exp_histogram')]
+    result = {'version':'goo/source-capabilities/v1', 'question':question,
+              'capturedAt':'2026-11-14T01:00:00Z', 'families':[
+                  {'kind':kind,'table':table,'state':'compatible','detail':'Checked profile.',
+                   'observation':{'state':'observed','unit':'records' if kind in ('logs','spans') else 'exported-points'}}
+                  for kind,table in families]}
+    response.validate(result)
+    accepted = 1
+    # A readable table may have no matching events, or fail its later presence
+    # read. A missing/incompatible/denied table was not eligible for that read.
+    for state, observation in [('compatible','empty'),('compatible','unreadable'),
+                               ('absent','unknown'),('incompatible','unknown'),
+                               ('unreadable','unknown')]:
+        valid = copy.deepcopy(result)
+        valid['families'][0]['state'] = state
+        valid['families'][0]['observation']['state'] = observation
+        response.validate(valid)
+        accepted += 1
+    mutants = []
+    for path, value in [(('families',0,'state'),'healthy'),
+                        (('families',0,'table'),'arbitrary_logs'),
+                        (('families',0,'observation','unit'),'exported-points'),
+                        (('families',2,'observation','unit'),'records'),
+                        (('families',0,'observation','state'),'complete'),
+                        (('families',0,'observation','count'),'1'),
+                        (('families',0,'supported'),True),
+                        (('families',0,'definition'),{'kind':'gauge'}),
+                        (('families',0,'observation','completeness'),'complete')]:
+        bad = copy.deepcopy(result)
+        target = bad
+        for key in path[:-1]:
+            target = target[key]
+        target[path[-1]] = value
+        mutants.append(bad)
+    for state, observation in [('compatible','unknown'),('absent','empty'),
+                               ('unreadable','observed'),('incompatible','observed')]:
+        bad = copy.deepcopy(result)
+        bad['families'][0]['state'] = state
+        bad['families'][0]['observation']['state'] = observation
+        mutants.append(bad)
+    bad = copy.deepcopy(result);bad['families'].reverse();mutants.append(bad)
+    bad = copy.deepcopy(result);bad['families'].pop();mutants.append(bad)
+    bad = copy.deepcopy(result);bad['families'].append(copy.deepcopy(bad['families'][0]));mutants.append(bad)
+    bad = copy.deepcopy(result);bad['families'][1] = copy.deepcopy(bad['families'][0]);mutants.append(bad)
+    for bad in mutants:
+        assert not response.is_valid(bad), 'source readiness/presence wire mutant accepted'
+    # Native source readiness has no authority to mark an unsupported
+    # exponential instrument executable; the existing instrument check owns it.
+    for name, kinds in [('measurements.DiscoveryDiagnostic',['gauge','counter','histogram','exponential-histogram']),
+                        ('exploration.ServiceDiscoveryDiagnostic',[kind for kind,_ in families])]:
+        diagnostic = validator(spec,{'$ref':'#/components/schemas/'+name})
+        for kind in kinds:
+            for state in ('absent','incompatible','unreadable'):
+                diagnostic.validate({'kind':kind,'reason':state})
+        for bad in ({'kind':kinds[0],'reason':'healthy'},
+                    {'kind':kinds[0],'reason':'optional-table-missing'},
+                    {'kind':'arbitrary','reason':'absent'}):
+            assert not diagnostic.is_valid(bad), 'unknown/obsolete source diagnostic accepted'
+    assert operation['x-effects'] == 'source-read'
+    assert operation['x-go-body-limit-bytes'] == 4096
+    assert any(item['name']=='X-Goo-Query-ID' for item in operation['parameters'])
+    print(f'Source readiness431: {accepted} state combinations valid; {len(mutants)} presence/profile/count/evaluation mutations rejected')
+
+
+def check_source_capability_observations431(spec, path):
+    """Optional actual wire cases: [{request,response}] or {cases:[...]} arrays."""
+    report = json.loads(Path(path).read_text())
+    cases = report if isinstance(report,list) else report['cases']
+    operation = spec['paths']['/source-capabilities']['post']
+    request = validator(spec, operation['requestBody']['content']['application/json']['schema'])
+    response = validator(spec, operation['responses']['200']['content']['application/json']['schema'])
+    count = 0
+    for case in cases:
+        if case.get('path','/source-capabilities') not in ('/source-capabilities','/api/source-capabilities') or case.get('status',200) != 200:
+            continue
+        request.validate(case['request'])
+        response.validate(case['response'])
+        assert case['response']['question'] == case['request'], 'capability result changed its admitted window'
+        count += 1
+    assert count, 'no successful source capability observations supplied'
+    print(f'Source readiness431: {count} actual wire responses conform')
+
+
 def check(spec):
+    check_source_capabilities431(spec)
     check_record_intent417(spec)
     review_responses,review_accepted=check_capture_reviews(spec)
     check_package_scopes(spec)
@@ -2305,6 +2403,7 @@ def check_histogram_exemplar_observations(spec, path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--observations')
+    parser.add_argument('--source-capability-observations')
     parser.add_argument('--status-view-observations')
     parser.add_argument('--histogram-view-observations')
     parser.add_argument('--histogram-comparison-observations')
@@ -2332,6 +2431,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    if args.source_capability_observations:
+        check_source_capability_observations431(spec,args.source_capability_observations)
     if args.histogram_exemplar_observations:
         check_histogram_exemplar_observations(spec,args.histogram_exemplar_observations)
     if args.unsupported_metric_discovery_observations:
