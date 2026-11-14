@@ -1,5 +1,7 @@
 # Ideal scene: behavioral contracts through the whole development lifecycle
 
+Shared upstream as a [design follow-up on gotogether #220](https://github.com/chucklehead-dev/gotogether/issues/220#issuecomment-6884857732).
+
 Design exercise, 2026-11-14. This is a proposal, not a claim that these features
 are implemented or a replacement for Goo's execution roadmap. It draws on Goo's
 [acquisition pilot](GOTOGETHER_ACQUISITION_PILOT.md),
