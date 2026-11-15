@@ -7,6 +7,9 @@ compare CEL/Goo/ClickHouse behavior. Interactive text editing remains planned.
 [Raw point → nearby records → held return](raw-observation-context.md) stages ordinary
 logs/spans from an exported metric point with exact time and reported scope.
 
+[Error logs beside slow spans](paired-activity-filters.md) applies independent lane
+conditions under one shared scope, then saves and recalls the pair paused.
+
 [Numeric severity](activity-severity.md) (435) inspects all OTel bands over full
 source counts, replots supplied time buckets locally and stages exact numeric
 filters or fixed banded explanations independently of SeverityText.

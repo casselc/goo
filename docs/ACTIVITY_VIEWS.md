@@ -10,8 +10,11 @@ custody clocks, membership tokens or instruction to execute.
 
 Choose **Logs + spans**, apply the shared scope, and arrange each lane’s record
 fields. Open **Views**, enter a title and **Save Activity view**. One definition
-stores the shared environment/filter and independent Logs and Spans columns.
-Saving a dirty scope or uncommitted CEL draft is disabled. Restored field and
+stores the shared environment/filter, independent Logs and Spans predicates, and
+each lane’s columns. [Lane filters](PAIRED_ACTIVITY_FILTERS.md) remain additional
+to the protected shared predicate. Saving a dirty scope or unresolved lane/CEL
+draft is disabled. Applied lane conditions are saved as ordinary predicate ASTs;
+rolling views do not preserve CEL source text or authoring provenance. Restored field and
 core-column order stays in place when either single or paired streams start.
 
 A paired view opens paused, with empty lanes and **Start streams**. Reopening or

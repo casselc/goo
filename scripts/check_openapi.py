@@ -1693,6 +1693,13 @@ def check_activity_scope_views(spec):
             assert list(check.iter_errors(bad)), 'unknown Activity selection policy accepted'
         pair={'version':1,'title':'Paired Activity','selector':{'signal':'both','environment':'prod'},'lanes':{'logs':{'columns':['utc','summary']},'spans':{'columns':['summary','service','utc']}}}
         check.validate(pair)
+        independent=copy.deepcopy(pair)
+        independent['lanes']['logs']['where']={'field':{'kind':'column','key':'body'},'op':'eq','value':''}
+        independent['lanes']['spans']['where']={'field':{'kind':'column','key':'duration_ns'},'op':'gte','value':'1000000'}
+        check.validate(independent)
+        for family in ('logs','spans'):
+            bad=copy.deepcopy(pair);bad['lanes'][family]['where']=None
+            assert list(check.iter_errors(bad)), 'null lane predicate accepted'
         for key,value in [('columns',[]),('fieldColumns',None),('baselineCapture',''),('readWindow',{})]:
             bad=copy.deepcopy(pair);bad[key]=value
             assert list(check.iter_errors(bad)), 'paired Activity flat/runtime field accepted: '+key

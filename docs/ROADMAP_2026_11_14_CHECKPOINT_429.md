@@ -7,8 +7,8 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–449 delivered and validated**. The current cadence is
-**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth**.
+Status: **429 and 437–450 delivered and validated**. The current cadence is
+**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation**.
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
 foundation; this does not extend a CEL platform queue.
@@ -248,13 +248,15 @@ gauge result. Gate with real metric→record OTLP journeys, missing-instance and
 no-recorded examples, boundary properties, stale controls, model/Bombadil and
 narrow-screen checks.
 
-## 450 — independent lane filters (next depth)
+## 450 — independent lane filters (delivered depth)
 
 A [checked design matrix](../verification/gotogether/design/paired-filters.md)
 compares shared scope with independent drafts, explicit acquisition and fenced
 responses against three interaction alternatives and a retirement control.
-It is a finite design trial; the product
-feature and real-source acceptance below remain next work.
+The design trial is finite; the implemented feature has its own
+[operator guide](PAIRED_ACTIVITY_FILTERS.md), [real OTLP storyboard](journeys/paired-activity-filters.md),
+[acceptance review](reviews/PAIRED_FILTERS_450_ACCEPTANCE.md) and
+[validation](../VALIDATION.md). The original design basis follows.
 
 Give paired Logs + Spans Activity independent record predicates beneath one
 shared environment, service and fixed/live time scope. An operator should be able
@@ -275,6 +277,10 @@ header/condition controls across single and paired Activity. Remove duplicate
 staging paths rather than preserve prerelease formats. Check density, accessible
 names, progressive enhancement and request counts against the same operator
 journeys. Preserve the distinction between shared scope and lane predicates.
+Humanize typed duration thresholds (for example, 100 ms rather than 100000000 ns)
+in shared applied-condition summaries while retaining exact raw values. Measure
+editor/suggestion work and default-screen density before introducing a new cache
+or state abstraction.
 
 ## Retained follow-ons
 
@@ -283,8 +289,8 @@ Typed numeric conditions are now delivered in 443 with the existing explicit
 presence/validity contract. General arithmetic, coercions and a third-party
 lowering registry remain separate proposals.
 
-A merged chronological stream and independently authored lane filters still
-need explicit semantics beyond the delivered two-lane shared-scope session.
+A merged chronological stream still needs semantics beyond the delivered
+two-lane session. Independent lane conditions are delivered in 450.
 Saved paired definitions are delivered in 446. Monitoring delivery, multi-user collaboration,
 arbitrary executable kinds and external warehouse/storage integration retain
 their separate design and operational gates. Existing dashboards, waterfalls,

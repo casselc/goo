@@ -4,12 +4,14 @@ import * as RecordColumns from './record-columns.mjs';
 import {object} from './intent-shape.mjs';
 import {validateField} from './predicate-validation.mjs';
 import * as PairPlan from './paired-activity-plan.mjs';
+import * as LaneFilter from './paired-lane-filter.mjs';
+import * as RecordEnvironment from './record-environment.mjs';
 import * as RecordPresentation from './record-presentation.mjs';
 import {nativeControlReady,revealFocus} from './dom-visibility.mjs';
 
 /* One session owner over two ordinary tails. No merged chronology or population. */
 let sequence=0;
-export function mount(host,{current=()=>true,onOpenFixed}={}){
+export function mount(host,{current=()=>true,onOpenFixed,onChange=()=>{}}={}){
  const id='paired-activity-'+(++sequence),root=UI.node('div',undefined,'paired-activity'),grid=UI.node('div',undefined,'paired-activity-lanes'),detail=UI.node('section');
  root.setAttribute('role','group');root.setAttribute('aria-label','Paired live activity');root.append(grid,detail);host.append(root);
  let disposed=false,epoch=0,plan=null,selector=null,inspection=null,lastFocus=null;
@@ -48,20 +50,30 @@ export function mount(host,{current=()=>true,onOpenFixed}={}){
  for(const signal of ['logs','spans']){
   const section=UI.node('section',undefined,'paired-activity-lane'),header=UI.node('header',undefined,'paired-activity-heading'),title=UI.node('h3',signal==='logs'?'Logs':'Spans'),window=UI.node('small','Window pending','paired-activity-window'),body=UI.node('div',undefined,'paired-activity-body');
   title.id=id+'-'+signal;section.setAttribute('aria-labelledby',title.id);section.setAttribute('role','region');section.dataset.signal=signal;section.dataset.pairedLane=signal;section.dataset.phase='stopped';header.append(title,window);section.append(header,body);grid.append(section);
-  const lane={section,window,tail:null,epoch:0};lanes.set(signal,lane);
-  lane.tail=Tail.mount(body,{open:true,compact:true,canUse:available,onState:state=>windowText(lane,state),onFind:state=>{section.dataset.findRevision=String(state.find.revision)},onResume:()=>{if(!available()||!plan)return false;retireLane(signal);return true},onInspect:(item,opener)=>inspect(signal,item,opener)});
+  const lane={section,window,tail:null,filter:null,epoch:0};lanes.set(signal,lane);
+  lane.tail=Tail.mount(body,{open:true,compact:true,canUse:available,onState:state=>windowText(lane,state),onFind:state=>{section.dataset.findRevision=String(state.find.revision)},onResume:()=>{if(!available()||!plan)return false;if(lane.filter?.dirty()){lane.filter.resolve();return false}retireLane(signal);if(Tail.transportIdentity(lane.tail.scope().selector)!==Tail.transportIdentity(plan[signal])){lane.tail.start(plan[signal]);return false}return true},onInspect:(item,opener)=>inspect(signal,item,opener)});
+  lane.filter=LaneFilter.mount(header,{signal,current:()=>available()&&!!plan,base:()=>{const now=Date.now(),window=lane.tail.scope().readWindow||{fromMs:now-60000,toMs:now};return {signal,...RecordEnvironment.questionFields(selector),...window,limit:100,offset:0}},records:()=>lane.tail.snapshot().rows.map(row=>row.record),validate:where=>PairPlan.create(selector,{...conditions(),[signal]:where}),onChange,
+   onApply:(where,opener,capability)=>{
+    if(!available()||!plan||!capability.current()||!nativeControlReady(opener)||!lane.tail.ready())return false;
+    const next=PairPlan.create(selector,{...conditions(),[signal]:where}),own=epoch;retireLane(signal);const laneEpoch=lane.epoch;
+    if(!lane.tail.start(next[signal]))return false;
+    if(epoch!==own||lane.epoch!==laneEpoch||!capability.current())return false;
+    plan[signal]=next[signal];return true;
+   }});
+
  }
- function adopt(value,next=PairPlan.create(value)){epoch++;for(const lane of lanes.values())lane.epoch++;clearInspection();selector=structuredClone(value);plan=next;return next}
+ function adopt(value,next=PairPlan.create(value,conditions())){const changed=Tail.canonical(selector)!==Tail.canonical(value);epoch++;for(const lane of lanes.values())lane.epoch++;clearInspection();selector=structuredClone(value);plan=next;if(changed)for(const lane of lanes.values())lane.filter?.retire();return next}
+ function conditions(){return Object.fromEntries([...lanes].map(([signal,lane])=>[signal,lane.filter?.where()]))}
  function stage(value,presentation){
-  if(disposed)return false;const next=PairPlan.create(value),checked={};
-  if(presentation!==undefined){object(presentation,['logs','spans'],'Choose both lane presentations.');for(const signal of ['logs','spans']){object(presentation[signal],['columns','fieldColumns'],'Save columns and qualified fields only.');checked[signal]=RecordColumns.validate(presentation[signal],['utc','service','summary']);for(const field of checked[signal].fieldColumns)validateField(field,signal)}}
-  adopt(value,next);const own=epoch;
+  if(disposed)return false;const checked={},local={};
+  if(presentation!==undefined){object(presentation,['logs','spans'],'Choose both lane presentations.');for(const signal of ['logs','spans']){object(presentation[signal],['columns','fieldColumns','where'],'Save lane conditions and qualified fields only.');local[signal]=presentation[signal].where;const {where,...layout}=presentation[signal];checked[signal]=RecordColumns.validate(layout,['utc','service','summary']);for(const field of checked[signal].fieldColumns)validateField(field,signal)}}
+  const next=PairPlan.create(value,local);adopt(value,next);for(const [signal,lane]of lanes)lane.filter?.reset(local[signal]);const own=epoch;
   for(const signal of ['logs','spans']){if(epoch!==own)return false;lanes.get(signal).tail.stage(next[signal],checked[signal],{message:'Ready. Start streams explicitly.'})}
   return true;
  }
  function ready(){return available()&&[...lanes.values()].every(lane=>lane.tail.ready())}
  function start(value=selector){
-  if(!ready())return false;const next=PairPlan.create(value);if(!ready())return false;
+  if(!ready())return false;const next=PairPlan.create(value,conditions());if(!ready())return false;
   adopt(value,next);const own=epoch,started=[];
   // Adopt both local selectors before any read, so withdrawal cannot leave an
   // old sibling bank labelled with the new pair's scope.
@@ -75,10 +87,10 @@ export function mount(host,{current=()=>true,onOpenFixed}={}){
   return true;
  }
  function pause(reason='Streams paused. Resume each lane explicitly.'){if(disposed||!plan)return;for(const lane of lanes.values())lane.tail.pause(reason)}
- function reset(){if(disposed)return;epoch++;plan=null;selector=null;clearInspection();for(const lane of lanes.values()){lane.epoch++;lane.tail.reset()}}
- function sync(){const ready=available();for(const lane of lanes.values())lane.tail.setReadBlocked(ready?'':'Apply shared scope before resuming.');if(inspection)inspection.analyze.disabled=typeof onOpenFixed!=='function'||!inspection.lease()}
- function layout(){return Object.fromEntries([...lanes].map(([signal,lane])=>[signal,lane.tail.layout()]))}
- function snapshot(){return {selector:structuredClone(selector),lanes:Object.fromEntries([...lanes].map(([signal,lane])=>[signal,{...lane.tail.snapshot(),owner:lane.owner,signal}]))}}
+ function reset(){if(disposed)return;epoch++;plan=null;selector=null;clearInspection();for(const lane of lanes.values()){lane.epoch++;lane.tail.reset();lane.filter?.reset(undefined)}}
+ function sync(){const ready=available();for(const lane of lanes.values())lane.tail.setReadBlocked(ready?'':'Apply shared scope before resuming.');for(const lane of lanes.values())lane.filter?.sync();if(inspection)inspection.analyze.disabled=typeof onOpenFixed!=='function'||!inspection.lease()}
+ function layout(){return Object.fromEntries([...lanes].map(([signal,lane])=>[signal,{...lane.tail.layout(),...(lane.filter?.where()===undefined?{}:{where:lane.filter.where()})}]))}
+ function snapshot(){return {selector:structuredClone(selector),lanes:Object.fromEntries([...lanes].map(([signal,lane])=>[signal,{...lane.tail.snapshot(),owner:lane.owner,signal,condition:lane.filter?.condition()}]))}}
  function focusStart(){lanes.get('logs').tail.focusStart()}
- return {stage,start,ready,layout,pause,reset,snapshot,focusStart,sync,restoreFocus(){if(!available())return false;const fallback=[...root.querySelectorAll('button')].find(button=>/^(Resume|Retry|Start)/.test(button.textContent)&&nativeControlReady(button));return !!revealFocus(lastFocus,inspection?.opener||fallback)},dispose(){if(disposed)return;disposed=true;epoch++;clearInspection();for(const lane of lanes.values())lane.tail.dispose();root.remove()}};
+ return {stage,start,ready,layout,pause,reset,snapshot,focusStart,sync,dirty:()=>[...lanes.values()].some(lane=>lane.filter?.dirty()),restoreFocus(){if(!available())return false;const fallback=[...root.querySelectorAll('button')].find(button=>/^(Resume|Retry|Start)/.test(button.textContent)&&nativeControlReady(button));return !!revealFocus(lastFocus,inspection?.opener||fallback)},dispose(){if(disposed)return;disposed=true;epoch++;clearInspection();for(const lane of lanes.values()){lane.filter?.dispose();lane.tail.dispose()}root.remove()}};
 }

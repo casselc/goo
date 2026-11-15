@@ -28227,6 +28227,16 @@
             "type": "null"
           }
         ]
+      },
+      "where": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.Predicate"
+          },
+          {
+            "type": "null"
+          }
+        ]
       }
     },
     "required": [
@@ -28272,6 +28282,23 @@
               ]
             },
             "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "where": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.PredicateInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"

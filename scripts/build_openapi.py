@@ -1941,6 +1941,8 @@ for suffix in ('','Input'):
  selector['description']='Saved rolling selector. both is a composition marker only: publication validates independent logs and spans projections; no tail endpoint accepts it.'
  layout=schemas['workbench.ActivityLayout'+suffix]
  layout['additionalProperties']=False
+ layout['properties']['where']=ref('exploration.Predicate'+suffix)
+ layout['description']='Lane presentation and optional family-specific predicate. Effective query ANDs shared selector.where with this where; combined ordinary predicate limits apply.'
  layout['properties']['columns']={'type':'array','minItems':2,'maxItems':3,'uniqueItems':True,'items':{'enum':['utc','service','summary']},'allOf':[{'contains':{'const':'utc'}},{'contains':{'const':'summary'}}]}
  layout['properties']['fieldColumns']={'type':'array','maxItems':8,'uniqueItems':True,'items':ref('exploration.Field'+suffix)}
  lanes=schemas['workbench.ActivityLanes'+suffix]
@@ -1957,7 +1959,7 @@ for suffix in ('','Input'):
  paired={'required':['selector'],'properties':{'selector':{'required':['signal'],'properties':{'signal':{'const':'both'}}}}}
  view.setdefault('allOf',[]).append({'if':paired,'then':{'required':['lanes'],'properties':{'lanes':ref('workbench.ActivityLanes'+suffix)},'not':{'anyOf':[{'required':[key]} for key in ('columns','fieldColumns','baselineCapture')]}},'else':{'required':['columns'],'not':{'required':['lanes']}}})
  view['description']='Reusable Activity configuration: single-family flat presentation or both with exact logs/spans layouts. Recall stages paused configuration; explicit Start alone acquires telemetry. No fixed window, cursors, observations or health.'
-spec['x-contract-notes'].append('Paired Activity view publication validates the complete shared predicate for both logs and spans and each lane presentation for its family. All-environments remains logs-only. Definitions contain no execution state; metadata publication/recall never reads telemetry.')
+spec['x-contract-notes'].append('Paired Activity view publication validates the complete shared predicate for both logs and spans and each lane presentation and predicate for its family, including the combined shared-plus-lane ordinary predicate budget. All-environments remains logs-only. Definitions contain no execution state; metadata publication/recall never reads telemetry.')
 
 (ROOT/'api/openapi.json').write_text(json.dumps(spec,indent=2,ensure_ascii=False)+'\n')
 print(f'Built OpenAPI: {sum(len(p) for p in spec["paths"].values())} operations, {len(schemas)} schemas')

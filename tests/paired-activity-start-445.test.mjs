@@ -3,12 +3,13 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import * as PairPlan from '../ui/paired-activity-plan.mjs';
+import {canonical} from '../ui/tail.mjs';
 const source=readFileSync(new URL('../ui/paired-activity.mjs',import.meta.url),'utf8');
 const actions=source.slice(source.indexOf(' function adopt('),source.indexOf(' function pause('));
 function fixture(){
  const calls={clears:0,stages:[],starts:[],pauses:[]},state={allowed:true,blocked:{logs:false,spans:false}},old={signal:'logs',environment:'old'},lanes=new Map();
  const held=()=>Object.fromEntries([...lanes].map(([signal,lane])=>[signal,structuredClone(lane.held)]));
- const context={PairPlan,structuredClone,epoch:4,disposed:false,selector:structuredClone(old),plan:PairPlan.create(old),lanes,available:()=>state.allowed,clearInspection(){calls.clears++}};
+ const context={PairPlan:{create:(value,conditions)=>PairPlan.create(structuredClone(value),structuredClone(conditions))},Tail:{canonical},structuredClone,epoch:4,disposed:false,selector:structuredClone(old),plan:PairPlan.create(old),lanes,available:()=>state.allowed,clearInspection(){calls.clears++}};
  for(const signal of ['logs','spans']){
   const lane={epoch:3,held:{selector:{signal,environment:'old'},keys:[signal+'-held'],phase:'paused'}};
   lane.tail={ready:()=>state.allowed&&!state.blocked[signal],stage(selector){calls.stages.push(signal);lane.held={selector:structuredClone(selector),keys:[],phase:'paused'};state.onStage?.(signal)},start(selector){calls.starts.push(signal);if(state.refuse?.[signal])return false;lane.held.selector=structuredClone(selector);lane.held.phase='loading';state.onStart?.(signal);return true},pause(){calls.pauses.push(signal);lane.held.phase='paused'}};lanes.set(signal,lane);

@@ -53582,6 +53582,9 @@
             "items": {
               "$ref": "#/components/schemas/exploration.Field"
             }
+          },
+          "where": {
+            "$ref": "#/components/schemas/exploration.Predicate"
           }
         },
         "required": [
@@ -53589,7 +53592,8 @@
         ],
         "type": "object",
         "x-go-type": "github.com/casselc/goo/workbench.ActivityLayout",
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Lane presentation and optional family-specific predicate. Effective query ANDs shared selector.where with this where; combined ordinary predicate limits apply."
       },
       "workbench.ActivityLayoutInput": {
         "additionalProperties": false,
@@ -53626,10 +53630,14 @@
             "items": {
               "$ref": "#/components/schemas/exploration.FieldInput"
             }
+          },
+          "where": {
+            "$ref": "#/components/schemas/exploration.PredicateInput"
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.ActivityLayout"
+        "x-go-type": "github.com/casselc/goo/workbench.ActivityLayout",
+        "description": "Lane presentation and optional family-specific predicate. Effective query ANDs shared selector.where with this where; combined ordinary predicate limits apply."
       },
       "workbench.ActivitySelector": {
         "properties": {
@@ -70218,6 +70226,6 @@
     "No generated handlers, semantic validator replacement, API stability guarantee or new authorization layer is introduced.",
     "Ordinary record Query input is a closed non-null graph: exact field names and one predicate arm; missing zero defaults remain permitted. Other input families retain their independently documented null policies.",
     "logSeverity:true requests exact numeric OTel bands in count, groups and time intervals for logs without numeric/split projections; SeverityText remains independent. Go enforces conservation, including equal-total per-band drift. Record-page inspection preserves the question but omits aggregate summaries. General scopedview and cohort/rate projections do not yet admit this profile.",
-    "Paired Activity view publication validates the complete shared predicate for both logs and spans and each lane presentation for its family. All-environments remains logs-only. Definitions contain no execution state; metadata publication/recall never reads telemetry."
+    "Paired Activity view publication validates the complete shared predicate for both logs and spans and each lane presentation and predicate for its family, including the combined shared-plus-lane ordinary predicate budget. All-environments remains logs-only. Definitions contain no execution state; metadata publication/recall never reads telemetry."
   ]
 }

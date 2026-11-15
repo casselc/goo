@@ -19,3 +19,11 @@
 
 .activity-recall-conflict{display:flex;align-items:center;flex-wrap:wrap;gap:6px;max-inline-size:100%;font-size:12px}
 .activity-recall-conflict[hidden]{display:none}
+/* Each lane owns its conditions; shared scope remains in the top toolbar. */
+.paired-lane-filters{flex:1 0 100%;min-inline-size:0;font-size:12px}
+.paired-lane-filters>summary{display:list-item;font-weight:500;padding-block:4px}
+.paired-lane-condition{flex:1 0 100%;min-inline-size:0;font-size:12px;display:block;max-inline-size:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);margin-block:2px 4px}
+.paired-lane-filters>fieldset{min-inline-size:0;margin:0;padding:4px;border:0}
+.paired-lane-filters>.controls{gap:6px;margin-block:6px}
+.paired-lane-filters>p{margin-block:4px;font-size:12px}
+.paired-lane-filters[data-phase=draft]>summary::after{content:' · draft';color:var(--warning)}

@@ -3,9 +3,9 @@
 Paired Activity shares responsive controls and UTC inspection with single
 streams ([measured behavior](ACTIVITY_COHERENCE.md)). Its two lanes remain
 independent acquisitions. [Reusable paired definitions](ACTIVITY_VIEWS.md) save
-shared scope and lane layouts, with paused recall and explicit Start. Merged
-chronology, independent lane predicates and paired baseline attachments remain
-outside this format. No combined count or health verdict is inferred.
+shared scope, [independent lane conditions](PAIRED_ACTIVITY_FILTERS.md) and layouts,
+with paused recall and explicit Start. Merged chronology and paired baseline
+attachments remain outside this format. No combined count or health verdict is inferred.
 
 [CEL predicate authoring](CEL_PREDICATE_PILOT.md) is a delivered library/CLI pilot
 over fixed nonnullable fields. [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md)
@@ -61,8 +61,8 @@ counts, diagnostic buckets and unavailable optional-statistic presence. Raw
 exponential histogram inspection is still a distinct future profile; raw point
 validity does not authorize merged distributions or full-window health claims.
 [448 shared inspection](RAW_OBSERVATION_CONSOLIDATION.md) adds compact exact clocks,
-consistent profile routing and instrument-key admission. Raw metric points still
-lack direct record-context navigation; that cross-signal flow is the next slice.
+consistent profile routing and instrument-key admission. [Nearby record context](RAW_OBSERVATION_CONTEXT.md) now stages exact ordinary
+log/span searches from held raw points, including missing instance identity.
 [442 shared attribute refinement](ATTRIBUTE_REFINEMENT.md) unifies Exclude and
 reported/missing gestures across record details, columns and facets. Exclude
 includes missing keys; CEL inequality remains reported-only. [443 typed numeric CEL conditions](CEL_NUMERIC_ATTRIBUTES.md) add exact ordering

@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import * as Views from '../ui/activity-views.mjs';
 import * as Environment from '../ui/record-environment.mjs';
 import * as PairPlan from '../ui/paired-activity-plan.mjs';
+import {canonical as pairCanonical} from '../ui/tail.mjs';
 import * as RecordColumns from '../ui/record-columns.mjs';
 import {object} from '../ui/intent-shape.mjs';
 import {validateField} from '../ui/predicate-validation.mjs';
@@ -39,17 +40,17 @@ test('paired definition rejects execution state, mixed layouts, lane omissions a
 const stream=readFileSync(new URL('../ui/stream-entry.mjs',import.meta.url),'utf8');
 const saveCode=stream.slice(stream.indexOf('  function viewPresentation(){'),stream.indexOf('  function stageView(v,'));
 function saveFixture(){
- const state={pair:true,dirty:false,cel:false,ready:true,layout:draft().lanes},calls={requests:[],refresh:0},context={enabled:true,records:true,route:'explore',viewGeneration:1,viewSaving:false,appliedSelector:draft().selector,currentView:null,titleDirty:true,viewTitle:{value:'API streams'},saveView:{disabled:false},viewSummary:{},viewStatus:{replaceChildren(...children){this.children=children}},shell:{addEventListener(){}},syncViews(){},pairMode:()=>state.pair,paired:{layout:()=>structuredClone(state.layout)},tail:{layout},latency:{baselineReference:()=> 'b'.repeat(64)},dirtyScope:()=>state.dirty,editor:{hasCELDraft:()=>state.cel},nativeControlReady:()=>state.ready,Tail:{canonical},structuredClone,n:(tag,text)=>({tag,text}),viewLibrary:{refresh(){calls.refresh++}}};
+ const state={pair:true,dirty:false,laneDirty:false,cel:false,ready:true,layout:draft().lanes},calls={requests:[],refresh:0},context={enabled:true,records:true,route:'explore',viewGeneration:1,viewSaving:false,appliedSelector:draft().selector,currentView:null,titleDirty:true,viewTitle:{value:'API streams'},saveView:{disabled:false},viewSummary:{},viewStatus:{replaceChildren(...children){this.children=children}},shell:{addEventListener(){}},syncViews(){},pairMode:()=>state.pair,paired:{layout:()=>structuredClone(state.layout),dirty:()=>state.laneDirty},tail:{layout},latency:{baselineReference:()=> 'b'.repeat(64)},dirtyScope:()=>state.dirty,editor:{hasCELDraft:()=>state.cel},nativeControlReady:()=>state.ready,Tail:{canonical},structuredClone,n:(tag,text)=>({tag,text}),viewLibrary:{refresh(){calls.refresh++}}};
  context.ActivityViews={...Views,input:value=>Views.input(plain(value)),model:Views.model,share:id=>({id}),api:async(_path,payload)=>{calls.requests.push(payload);return new Promise(resolve=>{state.resolve=resolve})}};
  vm.runInNewContext(saveCode+'\nthis.update=updateViewAction;',context);return {state,calls,context};
 }
 test('paired save writes only applied configuration and refuses dirty, hidden or pending actions',async()=>{
- for(const condition of ['dirty','cel','ready']){const f=saveFixture();f.state[condition]=condition!=='ready';await f.context.saveView.onclick();assert.equal(f.calls.requests.length,0)}
+ for(const condition of ['dirty','laneDirty','cel','ready']){const f=saveFixture();f.state[condition]=condition!=='ready';await f.context.saveView.onclick();assert.equal(f.calls.requests.length,0)}
  const invalid=saveFixture();invalid.context.viewTitle.value='😀'.repeat(31);await invalid.context.saveView.onclick();assert.equal(invalid.calls.requests.length,0);assert.equal(invalid.context.viewSaving,false);assert.match(invalid.context.viewStatus.textContent,/Invalid Activity view/);
  const f=saveFixture(),pending=f.context.saveView.onclick();assert.equal(f.calls.requests.length,1);assert.deepEqual(f.calls.requests[0],draft());assert.equal(f.context.saveView.disabled,true);await f.context.saveView.onclick();assert.equal(f.calls.requests.length,1);f.state.resolve(stored(f.calls.requests[0]));await pending;assert.equal(f.context.currentView.id,'a'.repeat(64));assert.equal(f.calls.refresh,1);assert.equal(f.context.viewSaving,false);assert.equal(f.context.titleDirty,false);
 });
 test('late save never adopts a configuration after lane, title, mode or route ownership changes',async()=>{
- for(const change of [f=>f.state.layout.spans.columns.reverse(),f=>f.context.viewTitle.value='',f=>{f.state.pair=false;f.context.appliedSelector={signal:'logs',environment:'prod'}},f=>f.context.viewGeneration++]){
+ for(const change of [f=>f.state.laneDirty=true,f=>f.state.layout.spans.columns.reverse(),f=>f.context.viewTitle.value='',f=>{f.state.pair=false;f.context.appliedSelector={signal:'logs',environment:'prod'}},f=>f.context.viewGeneration++]){
   const f=saveFixture(),pending=f.context.saveView.onclick();change(f);f.state.resolve(stored(f.calls.requests[0]));await pending;assert.equal(f.context.currentView,null);assert.equal(f.calls.refresh,0);assert.equal(f.context.titleDirty,true);assert.equal(f.context.viewSaving,false);
  }
  const f=saveFixture(),pending=f.context.saveView.onclick(),other=stored(f.calls.requests[0]);other.selector.environment='other';f.state.resolve(other);await pending;assert.equal(f.context.currentView,null);assert.match(f.context.viewStatus.textContent,/differs from the submitted/);
@@ -57,7 +58,7 @@ test('late save never adopts a configuration after lane, title, mode or route ow
 
 const pairSource=readFileSync(new URL('../ui/paired-activity.mjs',import.meta.url),'utf8'),stageCode=pairSource.slice(pairSource.indexOf(' function adopt('),pairSource.indexOf(' function ready('));
 function stageFixture(){
- const calls=[],state={disposed:false,epoch:0,selector:{environment:'old'},plan:null,structuredClone,PairPlan:{create:value=>PairPlan.create(plain(value))},RecordColumns:{validate:(value,available)=>RecordColumns.validate(plain(value),available)},object:(value,keys,message)=>object(plain(value),keys,message),validateField:(field,signal)=>validateField(plain(field),signal),clearInspection(){calls.push('clear')},lanes:new Map(['logs','spans'].map(signal=>[signal,{epoch:0,tail:{stage(q,layout){calls.push({signal,q:plain(q),layout:plain(layout)})}}}]))};
+ const calls=[],state={disposed:false,epoch:0,selector:{environment:'old'},plan:null,structuredClone,Tail:{canonical:pairCanonical},PairPlan:{create:(value,conditions)=>PairPlan.create(plain(value),conditions===undefined?undefined:plain(conditions))},RecordColumns:{validate:(value,available)=>RecordColumns.validate(plain(value),available)},object:(value,keys,message)=>object(plain(value),keys,message),validateField:(field,signal)=>validateField(plain(field),signal),clearInspection(){calls.push('clear')},lanes:new Map(['logs','spans'].map(signal=>[signal,{epoch:0,tail:{stage(q,layout){calls.push({signal,q:plain(q),layout:plain(layout)})}}}]))};
  vm.runInNewContext(stageCode+'\nthis.stage=stage;',state);return {state,calls};
 }
 test('paired recall validates both lane layouts before clearing and stages ordinary selectors without starting',()=>{

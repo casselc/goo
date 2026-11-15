@@ -77,12 +77,13 @@ func (s ActivitySelector) Queries() ([]exploration.Query, error) {
 }
 
 type ActivityLayout struct {
-	Columns      []string            `json:"columns"`
-	FieldColumns []exploration.Field `json:"fieldColumns,omitempty"`
+	Columns      []string               `json:"columns"`
+	FieldColumns []exploration.Field    `json:"fieldColumns,omitempty"`
+	Where        *exploration.Predicate `json:"where,omitempty"`
 }
 
 func (layout *ActivityLayout) UnmarshalJSON(raw []byte) error {
-	fields, err := activityObject(raw, "columns", "fieldColumns")
+	fields, err := activityObject(raw, "columns", "fieldColumns", "where")
 	if err != nil {
 		return err
 	}
@@ -93,9 +94,9 @@ func (layout *ActivityLayout) UnmarshalJSON(raw []byte) error {
 	if err := decoder.Decode(&decoded); err != nil {
 		return err
 	}
-	for _, key := range []string{"columns", "fieldColumns"} {
+	for _, key := range []string{"columns", "fieldColumns", "where"} {
 		if value, present := fields[key]; present && bytes.Equal(bytes.TrimSpace(value), []byte("null")) {
-			return fmt.Errorf("Activity %s must be an array", key)
+			return fmt.Errorf("Activity %s must not be null", key)
 		}
 	}
 	*layout = ActivityLayout(decoded)
@@ -177,11 +178,40 @@ func validateActivityLayout(title string, layout ActivityLayout, q exploration.Q
 	return (ExplorationView{Version: 1, Title: title, Queries: []exploration.Query{q}, Layout: "records", Columns: layout.Columns, FieldColumns: layout.FieldColumns}).Validate()
 }
 
+// Queries projects shared and lane predicates into independent ordinary queries.
+// The synthetic window validates configuration only and performs no source read.
+func (v ActivityView) Queries() ([]exploration.Query, error) {
+	queries, err := v.Selector.Queries()
+	if err != nil {
+		return nil, err
+	}
+	if v.Selector.Signal != "both" || v.Lanes == nil {
+		return queries, nil
+	}
+	for i, layout := range []ActivityLayout{v.Lanes.Logs, v.Lanes.Spans} {
+		lane, err := exploration.ClonePredicate(layout.Where, queries[i].Signal)
+		if err != nil {
+			return nil, fmt.Errorf("%s lane predicate: %w", queries[i].Signal, err)
+		}
+		if lane != nil {
+			if queries[i].Where == nil {
+				queries[i].Where = lane
+			} else {
+				queries[i].Where = &exploration.Predicate{All: []exploration.Predicate{*queries[i].Where, *lane}}
+			}
+		}
+		if err := queries[i].Validate(); err != nil {
+			return nil, fmt.Errorf("%s combined Activity predicate: %w", queries[i].Signal, err)
+		}
+	}
+	return queries, nil
+}
+
 func (v ActivityView) Validate() error {
 	if v.Version != 1 || !text(v.Title, 120, true, false) {
 		return errors.New("require version 1 and bounded Activity view title")
 	}
-	queries, err := v.Selector.Queries()
+	queries, err := v.Queries()
 	if err != nil {
 		return err
 	}

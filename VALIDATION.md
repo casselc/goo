@@ -1,5 +1,47 @@
 # Validation record
 
+## 450 independent paired Activity conditions — 2026-11-15
+
+[Operator guide](docs/PAIRED_ACTIVITY_FILTERS.md),
+[executed storyboard](docs/journeys/paired-activity-filters.md),
+[scoped acceptance](docs/reviews/PAIRED_FILTERS_450_ACCEPTANCE.md).
+
+- Full root Go suite passes on Go 1.27.3. Saved paired views admit per-lane
+  ordinary predicates, validate each shared+lane composition, retain content
+  identity and reject null/invalid/over-budget inputs. No new source endpoint.
+- Final full UI suite: **1,943 passed, zero skipped**. Actual adapter/owner tests
+  cover selective Apply, unchanged sibling bank/Find/connection/generation,
+  invalid drafts, synchronous retirement, scope replacement and dirty Resume.
+  Save controls also reject pending lane drafts and late save adoption.
+- Shared-editor regression checks preserve metadata-only constraint navigation
+  while hiding unavailable source-load controls; registered loaders remain usable.
+- Hegel: **40 generated saved pairs / 80 Go–JS projections**, passed in 0.14s,
+  zero skips. Current/effective environment policies, missing/empty attributes,
+  signal-specific fields, optional predicates, identity and deep copies are checked.
+- OpenAPI checker passes: **121 operations, 552 response fixtures, 229 admitted
+  requests, 32 mux refusals**, negative controls and SSE. Generated contracts are
+  current; lane predicates are visible in saved-view preview, search and detail.
+- Frozen-source real OTLP/ClickHouse journey: **passed in 1.4m**. Eight independent
+  source memberships cover initial lanes, error logs, missing/empty attributes,
+  slow Server spans, Resume and newly emitted matching records after recall.
+- Metered application work: **11 successful SQL calls** (eight main, three actor).
+  Initial/recalled Start opens two lanes; selected Apply/Resume opens one and
+  preserves the sibling. Draft edits open no connection, including while the
+  old stream remains active. Measured draft/Save/paused Recall add zero SQL;
+  an existing live connection may continue polling independently of edits.
+- Native observed replay reuses the paired ownership model: **27.98s**, zero skips,
+  with **15 rejected negative controls** and independently checked physical-source
+  ledger, composition and populations. Bombadil completes phase 8 over 856
+  snapshots with two log opens/one span open, intact sibling ownership and no overflow.
+- Keyboard Apply focuses its persistent lane summary; recall focuses Start.
+  Closed/default 1440/390/320 and draft frames pass overflow checks; saved-catalog
+  summaries do not overlap revision labels. UX, accessibility and web-standards
+  reviewers accepted the scoped sources, frames and keyboard evidence after fixes.
+- Final receipt: `artifacts/paired-activity-filters450/3ac641a0dadd/report.json`.
+  Owned runtime/proxy cleanup is true. The stopped existing ClickHouse/Redis lab
+  services and failed collector were restored without replacing their volumes.
+
+
 ## 450 paired-filter design matrix trial — 2026-11-15
 
 [Authored model and generated comparison](verification/gotogether/design/paired-filters.md).
