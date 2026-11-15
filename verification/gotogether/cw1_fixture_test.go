@@ -33,7 +33,8 @@ func TestCW1Fixture(t *testing.T) {
 			t.Fatalf("fixture hash drift: %s", name)
 		}
 	}
-	for snapshot, source := range map[string]string{"model/acquisition.qnt": "model/acquisition.qnt", "acquisition.binding.yaml": binding, "scenario.go.txt": "shadow.go"} {
+	// The frozen handoff remains intact; only the live binding's spec path moved.
+	for snapshot, source := range map[string]string{"acquisition.binding.yaml": binding, "scenario.go.txt": "shadow.go"} {
 		a, err := os.ReadFile(filepath.Join(dir, snapshot))
 		if err != nil {
 			t.Fatal(err)
@@ -42,9 +43,23 @@ func TestCW1Fixture(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if string(a) != string(b) {
-			t.Fatalf("refresh CW1 snapshot from %s", source)
+		if snapshot == "acquisition.binding.yaml" {
+			a = []byte(strings.Replace(string(a), "spec: model/acquisition.qnt", "spec: model/acquisition.md", 1))
 		}
+		if string(a) != string(b) {
+			t.Fatalf("review CW1 snapshot drift from %s", source)
+		}
+	}
+	model, err := os.ReadFile(filepath.Join(dir, "model/acquisition.qnt"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	authored, err := os.ReadFile("model/acquisition.md")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(authored), "```quint\n"+string(model)+"```\n") {
+		t.Fatal("authored contract changed: review the frozen CW1 replay basis")
 	}
 	document, err := os.ReadFile(filepath.Join(dir, "contract.md"))
 	if err != nil {

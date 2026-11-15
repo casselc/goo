@@ -1,4 +1,4 @@
-spec: model/acquisition.qnt
+spec: model/acquisition.md
 module: acquisition
 # Opaque DOM text identities retain raw strings in the log; equality only.
 intern:

@@ -36,7 +36,7 @@ func copyBinding(t *testing.T) string {
 	if err := os.Mkdir(filepath.Join(d, "model"), 0755); err != nil {
 		t.Fatal(err)
 	}
-	for _, f := range []string{binding, "model/acquisition.qnt"} {
+	for _, f := range []string{binding, "model/acquisition.md", "model/acquisition.qnt"} {
 		b, e := os.ReadFile(f)
 		if e != nil {
 			t.Fatal(e)
@@ -154,7 +154,7 @@ func TestRecordedJourney(t *testing.T) {
 		assertControls(t, b, artifact, ts, "truncated-tail")
 	})
 	t.Run("stale-artifact", func(t *testing.T) {
-		model := filepath.Join(filepath.Dir(b), "model/acquisition.qnt")
+		model := filepath.Join(filepath.Dir(b), "model/acquisition.md")
 		f, e := os.OpenFile(model, os.O_APPEND|os.O_WRONLY, 0644)
 		if e != nil {
 			t.Fatal(e)

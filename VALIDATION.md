@@ -1,5 +1,34 @@
 # Validation record
 
+## Gotogether CW1 consumer adoption — 2026-11-15
+
+[Adoption and recent-upstream review](docs/GOTOGETHER_LITERATE_TRIAL.md).
+
+- Pin `d4c558eec9b71d4f3b544a8fa519ffb317fdeb75` in the isolated verification
+  module, including its Go tool. The authored model is Markdown; generated
+  Quint retains the previous model body byte-for-byte. Frozen CW1 files unchanged.
+- Final `npm run test:gotogether-controls` passed in **65.982s**: drift check
+  before load, TypeScript model/Refutes witness, protocol controls, original
+  fixture source/compiled parity, authored-line diagnostics, stale/missing output
+  and hand-written sibling refusal. Strict mode; zero skips.
+- Deliberately false invariant and unknown symbol both name `acquisition.md:92`.
+  CLI stale/missing exit 1; hand-written overwrite refusal exits 2 and preserves
+  the file. An initial test incorrectly expected exit 1 for that refusal; corrected
+  to the documented configuration-error behavior before the final gate.
+- Live acquisition journey passed in **1.3m** against the embedded Goo binary.
+  Native source gate **8.997s**, gotogether replay **20.014s**, actor adapter
+  **0.063s**, all without skips. Native 24 SQL calls and actor nine calls accounted
+  separately; runtime/database cleanup true. Local receipt:
+  `artifacts/first-use439/4771fd6b62b6/report.json`.
+- Compiled replay without Node/Quint on PATH remains required; drain semantics
+  and independent physical-source/DOM oracles are unchanged. Three existing
+  acquisition screenshot frames refreshed by the live journey.
+- Independent review accepted unchanged behavior, CI ordering and isolated
+  dependencies. Product code and native model/source gates were not changed.
+  Several upstream CI jobs were still running when inspected; local acceptance
+  is not a claim of a wholly green upstream build.
+
+
 ## 445 Activity consolidation — 2026-11-15
 
 [Measured storyboard](docs/ACTIVITY_COHERENCE.md).
