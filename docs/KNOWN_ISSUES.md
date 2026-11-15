@@ -2,15 +2,17 @@
 
 [CEL predicate authoring](CEL_PREDICATE_PILOT.md) is a delivered library/CLI pilot
 over fixed nonnullable fields. [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md)
-add bounded resource/record string helpers and explicit presence checks. Bare
-indexing, typed attribute coercions, whole-query CEL and a general third-party
-lowering registry remain unimplemented.
+add bounded resource/record string helpers and explicit presence checks.
+[Typed numeric conditions](CEL_NUMERIC_ATTRIBUTES.md) reuse explicit type/unit/scale
+declarations and exact threshold strings. Bare indexing, implicit coercions,
+whole-query CEL and a general third-party lowering registry remain unimplemented.
 [Contextual text editing](CEL_CONTEXTUAL_EDITOR.md) is available in Activity and
 fixed-question Filters over one additional condition.
 Unsupported expressions refuse before evaluation; no local record-page fallback
 is used. Reference evaluation requires every referenced fixed column to be present and
 well typed, including short-circuited branches. Referenced attribute keys may be
-absent; comparison helpers then return false, including inequality.
+absent; string comparison helpers then return false, including inequality. Numeric
+comparisons match valid values only; missing, empty and invalid have explicit methods.
 
 The [whole-product design review](CEL_PRODUCT_INTEGRATION.md) identifies the next
 integration gaps: low-level AND-only Apply does not replace edited conditions;
@@ -49,8 +51,8 @@ queries. [441 raw sums](RAW_SUM_OBSERVATIONS.md) covers reported counters and
 cumulative nonmonotonic stocks without evaluator prerequisites.
 [442 shared attribute refinement](ATTRIBUTE_REFINEMENT.md) unifies Exclude and
 reported/missing gestures across record details, columns and facets. Exclude
-includes missing keys; CEL inequality remains reported-only. Typed numeric CEL
-conditions remain the proposed next depth slice in the
+includes missing keys; CEL inequality remains reported-only. [443 typed numeric CEL conditions](CEL_NUMERIC_ATTRIBUTES.md) add exact ordering
+and explicit parse states; paired Activity remains proposed in the
 [whole-product cycle](ROADMAP_2026_11_14_CHECKPOINT_429.md).
 
 Raw gauge and sum inspection is bounded and table-only. Missing instance

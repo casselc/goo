@@ -60,5 +60,5 @@ cannot retire a checked condition or alter a draft. Existing authored-condition
 conflict rules remain in force.
 
 See the [executable storyboard](journeys/cel-attributes.md) and
-[validation](../VALIDATION.md). Typed numeric CEL attributes remain a separate
-follow-on; this change performs no implicit coercion or numeric parsing.
+[validation](../VALIDATION.md). [Typed numeric CEL conditions](CEL_NUMERIC_ATTRIBUTES.md) are available through
+explicit declarations; these categorical actions perform no implicit coercion.

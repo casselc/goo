@@ -1,5 +1,55 @@
 # Validation record
 
+## 443 exact numeric CEL attributes — 2026-11-15
+
+[Guide](docs/CEL_NUMERIC_ATTRIBUTES.md), [real-source storyboard](docs/journeys/cel-numeric-attributes.md)
+and [independent acceptance](docs/reviews/CEL_NUMERIC_443_ACCEPTANCE.md).
+
+- Literal `int64`, `uint64`, `decimal64(key, unit, scale)` declarations and six
+  comparison/four parse-state methods lower to the existing NumericBinding AST.
+  Thresholds stay exact strings. Runtime terminals delegate the existing matcher;
+  no new parser, source executor, API route or wire format. Inverse printing
+  preserves the whole typed predicate or refuses. Parent scope/clock, condition
+  ownership and explicit execution remain unchanged.
+- Final querycel **0.165s**, CEL HTTP **0.010s**, full Go command/server suite
+  **7.548s** pass. Independent reviewer reran querycel **0.193s**, no skips. The
+  corrected metadata-only constructor estimate supports twelve ordinary numeric
+  clauses while preserving work budgets; long bounded invalid text is covered.
+- Independent **240-case Hegel** properties and exhaustive parse-state partitions
+  cover both signals/maps, canonical/noncanonical forms, integer/decimal extrema,
+  exact inverse printing and parent conservation. Together with **120 actual
+  ClickHouse parity cases**, final verification passes **1.861s**, zero skips.
+  Source checks use real adapter SQL and typed parameters with an independent
+  digit/sign/scale/math-big oracle, not a copy of Goo's parser.
+- Full UI regression suite: **1,856 passed**, zero skips, **19.651s**. Numeric
+  examples reuse the existing collapsed Attribute examples disclosure; opening it
+  remains source-free. Existing numeric visual controls remain text-based.
+- Final real OTLP/browser numeric journey passes **1.1m**: **24 explicit source
+  runs**, **38 condition plans**, **28 source-free local steps**, **12 intentional
+  HTTP400 positioned refusals**, recovery and typed visual editing for logs and
+  spans. Exact source IDs, parent/environment/window and empty grouping wire
+  normalization are checked. Three responsive frames assert no horizontal
+  overflow. No unexpected browser errors; owned runtime cleanup succeeds.
+  Receipt `artifacts/cel-numeric443/fcb86adaeb84/report.json`.
+- Existing contextual editor/Activity/fixed journey passes **34.9s**, including
+  the updated **25-second Bombadil campaign**: **513 snapshots**, typed terminal
+  marker true, one context/two plans, zero source reads/forbidden POSTs in the
+  campaign. This run chose `int64(...).invalid()`; it does not claim all three
+  typed random candidates ran. Receipt
+  `artifacts/cel-editor4364/14503da776/report.json`; cleanup succeeds.
+- The source-free CLI plans `examples/cel/numeric-attributes.cel`. Final embedded
+  UI startup checks pass **0.131s**. A pre-existing favicon404 discovered by the
+  new console assertion is fixed with a self-contained branded SVG favicon.
+  Screenshots/storyboards and current guides are refreshed; no raw full-run
+  reports are committed.
+- One rerun crossed midnight: the lab's `toDate(Timestamp)+1 day` TTL removed a
+  fixture after its independent oracle read, correctly failing the later source
+  assertion. Near midnight the synthetic test clock now moves just inside the
+  next UTC day; fresh capture passes without weakening source assertions or
+  changing retention. Numeric source data remains mutable, not a transactionally
+  frozen snapshot. No new monitoring, whole-query CEL or coercion is claimed.
+
+
 ## 442 shared attribute refinement — 2026-11-14
 
 [Contract](docs/ATTRIBUTE_REFINEMENT.md), [storyboard](docs/journeys/cel-attributes.md)

@@ -7,10 +7,10 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–442 delivered**. The cadence continues as
+Status: **429 and 437–443 delivered**. The cadence continues as
 **440 attribute breadth → 441 native metric depth → 442 consolidation**.
-Next: **443 typed numeric attribute conditions** (proposed depth slice; define the
-explicit type/parse/validity contract before extending CEL). The existing
+Next: **444 paired Logs + Spans Activity** (proposed breadth slice; independent
+family ownership and failure semantics must be agreed before implementation). The existing
 Go runtime, source adapters, typed questions and supplied-data components remain
 the foundation.
 
@@ -141,12 +141,46 @@ replay. Normal verification dependencies and independent source oracles remain
 unchanged. A stateful compiler/source differential pilot is still proposed;
 measure maintenance benefits before replacing existing bookkeeping.
 
+## 443 — typed numeric attribute conditions
+
+Delivered: [numeric CEL contract](CEL_NUMERIC_ATTRIBUTES.md) and
+[real-source storyboard](journeys/cel-numeric-attributes.md). Literal int64,
+uint64 and decimal64 declarations expose existing exact numeric predicates and
+valid/missing/empty/invalid states. Visual conditions, CEL reference evaluation,
+inverse printing and ClickHouse share the existing numeric binding and parser;
+no second evaluator, implicit conversion or numeric inference was introduced.
+
+## 444 — paired Logs + Spans Activity (proposed)
+
+The next breadth proposal returns to “what is happening now”: retain a log lane
+and a span lane in one Activity scope using existing tail components. Begin with
+one named, empty or unreported environment; All remains logs-only. Keep each
+family's window, source status, loss/continuity and loaded counts independent.
+A failed or delayed lane must not erase or block the other. Entering the pair
+must preserve supported predicates or explicitly refuse signal-specific filters;
+never drop a condition silently.
+
+Architecture/UX source review supports a bounded first slice: one coordinator
+over two existing tails, with lane-scoped events and explicit lane/epoch ownership
+for inspection and fixed drill-in. Do not duplicate the entire singleton Activity
+controller. A pair uses two of the server's four tail slots; preserve explicit
+capacity refusals. Retain both buffers and scroll/find state on local Return;
+the first pair can remain session-only rather than masquerading as a saved
+single-signal view. Detailed interaction/model acceptance still precedes implementation. Favor compact
+paired lanes over a falsely authoritative mixed-host chronology. Inspection and
+retained return should stay local; opening a fixed question uses that record's
+family and original window. No combined health/count, mixed capture format,
+automatic navigation reconnect or new query engine follows. Acceptance should
+include absent families, independent refusal/delay, canceled late batches,
+keyboard/mobile layouts and retained return. After breadth, measure the paired
+workflow before the next consolidation slice; do not extend CEL indefinitely.
+
 ## Retained follow-ons
 
 Presence-safe resource/record string attribute helpers are delivered in 440.
-Typed numeric attribute expressions still require a separate presence/validity
-contract through the existing predicate AST and source adapters. No new executor
-or unbounded extension registry follows from adding literal string helpers.
+Typed numeric conditions are now delivered in 443 with the existing explicit
+presence/validity contract. General arithmetic, coercions and a third-party
+lowering registry remain separate proposals.
 
 Combined log/span Activity needs explicit independent polling, ordering, loss and
 partial-failure semantics. Monitoring delivery, multi-user collaboration,

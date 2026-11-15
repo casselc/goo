@@ -1,0 +1,1 @@
+record.attributes.uint64("http.request.body.size", "By").gte("1024") || record.attributes.uint64("http.request.body.size", "By").invalid()

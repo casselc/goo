@@ -39,9 +39,9 @@ values are bounded literal strings; computed keys, map traversal and arbitrary
 functions do not gain source-query capability.
 
 These exporter maps contain strings. Comparing `"500"` compares text; it does
-not recover an original SDK number. Numeric ordering, parsing and implicit
-coercion are not part of this vocabulary. Existing explicitly typed numeric
-conditions retain their own grammar and validity rules.
+not recover an original SDK number. These string helpers do not parse or order numbers.
+[Explicit numeric constructors](CEL_NUMERIC_ATTRIBUTES.md) declare type, unit and
+scale and reuse the existing typed numeric conditions. There is no implicit coercion.
 
 ## One condition, one query model
 

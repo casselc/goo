@@ -75,7 +75,7 @@ func (OTelLibrary) CompileOptions() []cel.EnvOption {
 				}
 			}))))
 	}
-	return options
+	return append(options, numericOptions()...)
 }
 func (OTelLibrary) ProgramOptions() []cel.ProgramOption { return nil }
 
@@ -88,7 +88,12 @@ func (costEstimator) EstimateSize(node checker.AstNode) *checker.SizeEstimate {
 	return nil
 }
 func (costEstimator) EstimateCallCost(_ string, id string, _ *checker.AstNode, _ []checker.AstNode) *checker.CallEstimate {
-	if id == attributeEqualOverload || id == attributeNotEqualOverload || id == attributeContainsOverload {
+	if numericConstructor(id) {
+		// Admission bounds literal keys to 128 bytes and units to 64. A
+		// constructor validates only that metadata; it never reads a map value.
+		return &checker.CallEstimate{CostEstimate: checker.CostEstimate{Min: 1, Max: 256}}
+	}
+	if numericCost(id) || id == attributeEqualOverload || id == attributeNotEqualOverload || id == attributeContainsOverload {
 		return &checker.CallEstimate{CostEstimate: checker.CostEstimate{Min: 1, Max: MaxFieldBytes}}
 	}
 	if id == severityOverload {

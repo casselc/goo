@@ -55,7 +55,7 @@ func Compile(signal, expression string) (*Program, error) {
 		d.Span = astSpan(expression, checked.NativeRep(), checked.NativeRep().Expr())
 		return nil, d
 	}
-	lower := lowerer{source: expression, tree: checked.NativeRep(), fields: byName, used: map[string]fieldDeclaration{}}
+	lower := lowerer{signal: signal, source: expression, tree: checked.NativeRep(), fields: byName, used: map[string]fieldDeclaration{}}
 	predicate, err := lower.predicate(checked.NativeRep().Expr(), 0)
 	if err != nil {
 		return nil, err
@@ -83,6 +83,7 @@ func Compile(signal, expression string) (*Program, error) {
 }
 
 type lowerer struct {
+	signal string
 	source string
 	tree   *ast.AST
 	fields map[string]fieldDeclaration
@@ -208,6 +209,9 @@ func (l *lowerer) predicate(expression ast.Expr, depth int) (result *exploration
 			return nil, fmt.Errorf("CEL negation supports only literal attribute presence: %w", err)
 		}
 		return &exploration.Predicate{Field: &field.field, Op: "missing"}, nil
+	}
+	if op, ok := numericOperation(id); ok {
+		return l.numericPredicate(expression, op)
 	}
 	if id == attributeEqualOverload || id == attributeNotEqualOverload || id == attributeContainsOverload {
 		if !call.IsMemberFunction() || len(args) != 2 {

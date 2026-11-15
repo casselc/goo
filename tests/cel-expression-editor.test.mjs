@@ -131,7 +131,8 @@ test('attribute examples stay optional and local inside the existing expression 
  assert(examples);assert.equal(examples.open??false,false);assert.equal(ready(examples),false);
  await h.expression();assert.equal(ready(examples),true);const before={prepares:h.prepares(),calls:h.calls.length,changes:h.changes.length};examples.open=true;
  assert.deepEqual({prepares:h.prepares(),calls:h.calls.length,changes:h.changes.length},before);
- assert.deepEqual(walk(examples).filter(e=>e.tag==='code').map(e=>e.textContent),['resource.attributes.eq("service.namespace", "payments")','record.attributes.eq("http.route", "/checkout")']);
+ assert.deepEqual(walk(examples).filter(e=>e.tag==='code').map(e=>e.textContent),['resource.attributes.eq("service.namespace", "payments")','record.attributes.eq("http.route", "/checkout")','record.attributes.uint64("example.sequence", "1").gte("9007199254740993")','resource.attributes.decimal64("example.load", "1", 2).gte("1.20")','record.attributes.int64("app.retry_count", "1").invalid()']);
+ assert(walk(examples).some(e=>e.textContent==='Numeric conditions declare type and unit; comparisons match valid values only. Thresholds are exact strings; missing, empty and invalid stay distinct.'));
  assert(walk(examples).some(e=>e.textContent==='Missing differs from empty; comparisons match reported keys only.'));
  assert.equal(h.text.value,'');assert.equal(h.widget.hasUnappliedDraft(),false);
 });

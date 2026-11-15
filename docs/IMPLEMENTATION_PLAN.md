@@ -56,7 +56,10 @@
 > [attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md).
 > **441 raw sum observations is delivered**; see
 > [raw sums](RAW_SUM_OBSERVATIONS.md).
-> Next: **443 typed numeric attribute conditions** (proposed depth slice).
+> Next: **444 paired Logs + Spans Activity** (proposed breadth slice; architecture/
+design gate before implementation).
+**443 delivered:** [typed numeric CEL conditions](CEL_NUMERIC_ATTRIBUTES.md) reuse
+existing exact bindings, parsing, predicates and source lowering.
 **442 delivered:** [shared refinement](ATTRIBUTE_REFINEMENT.md) unifies categorical
 Exclude and compact presence actions while retaining explicit execution owners.
 > Definition recall and evidence capture retain separate semantics. The older labeling queue

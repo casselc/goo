@@ -17,9 +17,9 @@ const PhaseRepresentation = "representation"
 
 // PrintPredicate returns CEL only when checked inverse lowering preserves the
 // complete admitted predicate's identity, including branch order and nesting.
-// It covers fixed fields and bounded string attributes, not every visual predicate.
+// It covers fixed fields and bounded string/declared numeric attributes.
 // A refusal returns no partial expression; it never drops an unsupported leaf.
-// Nil, numeric bindings and noncanonical uint spellings
+// Nil and noncanonical fixed-column uint spellings
 // are not convertible. No clock, source, store or query policy is involved.
 func PrintPredicate(signal string, predicate *exploration.Predicate) (string, error) {
 	declarations, err := declarations(signal)
@@ -93,7 +93,10 @@ func printPredicate(p *exploration.Predicate, fields map[exploration.Field]field
 		}
 		return "(" + strings.Join(parts, operator) + ")", nil
 	}
-	if p.Numeric != nil || p.Field == nil {
+	if p.Numeric != nil {
+		return printNumericPredicate(p, path)
+	}
+	if p.Field == nil {
 		return "", representationError(CodeUnsupported, path, fmt.Errorf("numeric bindings have no fixed-field CEL representation"))
 	}
 	if p.Field.Kind == "resource" || p.Field.Kind == "attribute" {

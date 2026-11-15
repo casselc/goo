@@ -14,6 +14,7 @@ const state=extract(({document,window})=>{
  const phase=Number(document.documentElement.dataset.celActorStep||0);
  return {version:'goo.cel-editor-actor/1',phase,filters:!!filters,ready:!!root,open:!!filters?.open,
   mode:mode?.value||'',ownerPhase:root?.dataset.phase||'',text:text?.value||'',
+  typedNumeric:/\b(?:record|resource)\.attributes\.(?:int64|uint64|decimal64)\(/.test(text?.value||''),
   invalid:text?.getAttribute('aria-invalid')==='true',checkReady:!!check&&!check.disabled,
   diagnosticAssociated:!!text&&!!text.getAttribute('aria-describedby')?.split(' ').every(id=>!!document.getElementById(id)),
   savedDraft:document.documentElement.dataset.celActorDraft||'',
@@ -33,6 +34,7 @@ export const conditionsByDefault=always(()=>state.current.phase!==1||state.curre
 export const invalidCannotApply=always(()=>!state.current.open||!['draft','checking','invalid'].includes(state.current.ownerPhase)||!state.current.enabledPrimary);
 export const invalidDraftSurvives=always(()=>![5,6].includes(state.current.phase)||state.current.text===state.current.savedDraft);
 export const hiddenCallbackCannotCheck=always(()=>state.current.phase!==10||(state.current.contexts>=1&&state.current.plans>=2&&state.current.planning===state.current.planningBeforeHidden));
+export const completedTypedNumeric=always(()=>state.current.phase!==10||state.current.typedNumeric);
 export const completed=eventually(()=>state.current.phase===10).within(20,'seconds');
 
 const open=registerCustomAction('goo.celOpenFilters',async(document,window)=>{
@@ -82,7 +84,9 @@ export const choices=actions(()=>{
  if(s.phase===3)return s.checkReady?[checkInvalid()]:['Wait'];
  if(s.phase===4)return s.ownerPhase==='invalid'&&s.invalid?[conditions()]:['Wait'];
  if(s.phase===5)return [restore()];
- if(s.phase===6)return [valid('resource.attributes.eq("service.namespace", "payments")'),valid('record.attributes.ne("http.route", "")'),valid('"service.instance.id" in resource.attributes')];
+ // Each choice declares its numeric meaning explicitly; the campaign still
+ // checks invalid recovery, retained text, pure planning and hidden callbacks.
+ if(s.phase===6)return [valid('record.attributes.uint64("example.sequence", "1").gte("9007199254740993")'),valid('resource.attributes.decimal64("example.load", "1", 2).lt("1.20")'),valid('record.attributes.int64("app.retry_count", "1").invalid()')];
  if(s.phase===7)return s.checkReady?[checkValid()]:['Wait'];
  if(s.phase===8)return s.ownerPhase==='valid'?[retire()]:['Wait'];
  return ['Wait'];

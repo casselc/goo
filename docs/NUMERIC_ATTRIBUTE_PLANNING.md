@@ -6,6 +6,9 @@ status. It applies to the full selected span/log population independently of the
 inspection page, with the same result contract in totals, breakdowns, time cells,
 split charts and immutable captures. Native metric kernels remain separate.
 
+The same declarations are available as [numeric CEL conditions](CEL_NUMERIC_ATTRIBUTES.md),
+with exact threshold strings and explicit valid/missing/empty/invalid states.
+
 ## Declare a meaning over ordinary OTel data
 
 From an inspected attribute or observed field, choose [Plot values](CONTEXTUAL_NUMERIC_PLOTS.md),

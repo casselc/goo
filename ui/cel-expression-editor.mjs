@@ -30,6 +30,8 @@ export function mount(host,{owner:prepare,check,onChange=()=>{},current=()=>true
  for(const button of [verify,clear,discard])button.type='button';discard.title='Discard expression text; keep the current filters.';
  const examples=node('details',undefined,'cel-expression-examples'),examplesTitle=node('summary','Attribute examples'),resourceExample=node('code','resource.attributes.eq("service.namespace", "payments")'),recordExample=node('code','record.attributes.eq("http.route", "/checkout")');
  examples.append(examplesTitle,node('p','Missing differs from empty; comparisons match reported keys only.'));for(const code of [resourceExample,recordExample]){const pre=node('pre');pre.append(code);examples.append(pre)}
+ examples.append(node('p','Numeric conditions declare type and unit; comparisons match valid values only. Thresholds are exact strings; missing, empty and invalid stay distinct.'));
+ for(const expression of ['record.attributes.uint64("example.sequence", "1").gte("9007199254740993")','resource.attributes.decimal64("example.load", "1", 2).gte("1.20")','record.attributes.int64("app.retry_count", "1").invalid()']){const pre=node('pre');pre.append(node('code',expression));examples.append(pre)}
  details.append(detailsTitle,detailsBody);actions.append(verify,clear);pane.append(scope,label,text,hint,examples,actions);root.append(modeLabel,mode,pane,lockedNote,discard,feedback,details);host.append(root);
  let active=true,disposed=false,owned=null,preparing=null,preparation=null,job=null,stageToken=null,verification=null,modeInvocation=null,modeValue='conditions',hasDraft=false,hasCondition=false,needsAdoption=false,diagnostic=null,lastDetail='',preserved=null,preservedQuestion=null;
  const sourceForCheck=()=>preserved?.source??text.value;
