@@ -4,6 +4,9 @@
 versioned extension into the existing query model, preserve the parent scope and
 compare CEL/Goo/ClickHouse behavior. Interactive text editing remains planned.
 
+[Reported span link → exact target → held trace](span-link-target.md) stages a
+separate tuple lookup in the original environment/window, then returns locally.
+
 [Raw point → nearby records → held return](raw-observation-context.md) stages ordinary
 logs/spans from an exported metric point with exact time and reported scope.
 

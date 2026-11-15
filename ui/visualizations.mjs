@@ -6,6 +6,7 @@ import * as TracePageBreakdown from './trace-page-breakdown.mjs';
 import * as TracePageBreakdownView from './trace-page-breakdown-view.mjs';
 import * as UI from './components.mjs';
 import * as Waterfall from './waterfall.mjs';
+import * as SpanLinkIntent from './span-link-intent.mjs';
 const global=globalThis;
 const edges = [0, 10, 50, 100, 500, 1000, 10000, 18446744073710];
 const labels = ['0–10 ms', '10–50 ms', '50–100 ms', '100–500 ms', '0.5–1 s', '1–10 s', '≥10 s'];
@@ -14,7 +15,7 @@ const layout=rows=>waterfallAPI().layout(rows);
 function node(tag, text, cls) { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; }
 const actionVisible=UI.actionVisible;
 const pageHighlights=new WeakMap();
-function waterfall(container, rows, truncated, relatedActions, detailsId = 'spanDetails', {facts,canAct=()=>true} = {}) {
+function waterfall(container, rows, truncated, relatedActions, detailsId = 'spanDetails', {facts,canAct=()=>true,origin,onLinkTarget} = {}) {
     let page=null,analysis=null;if(TracePageBreakdown&&TracePageBreakdownView){try{analysis=TracePageBreakdown.analyze(rows,!!truncated);page=node('goo-trace-page-breakdown');page.data={rows,truncated:!!truncated};container.append(page)}catch{}}
     const element=node('goo-trace-waterfall');element.data={rows,truncated:!!truncated,...(facts===undefined?{}:{facts})};container.append(element);const allowed=()=>actionVisible(container)&&actionVisible(element)&&canAct();if(page){pageHighlights.set(container,{page,canAct:allowed});page.addEventListener('goo-trace-page-row',event=>{if(!allowed())return;const index=event.detail?.rowIndex;if(!Number.isInteger(index)||index<0||index>=rows.length)return;const local=page.querySelector('[data-span-row="'+index+'"]');if(!local||local.disabled||!actionVisible(local))return;const button=[...element.querySelectorAll('.waterfall-row')].find(row=>Number(row.dataset.rowIndex)===index);if(button){button.focus({preventScroll:true});button.click()}});page.addEventListener('goo-trace-page-group',event=>{if(!allowed())return;const indexes=event.detail?.rowIndexes;if(!Array.isArray(indexes)||indexes.some(i=>!Number.isInteger(i)||i<0||i>=rows.length))return;if(!Number.isInteger(event.detail?.groupIndex))return;const local=page.querySelector('[data-page-group="'+event.detail.groupIndex+'"]');if(!local||local.disabled||!actionVisible(local))return;const group=analysis?.groups[event.detail?.groupIndex];if(!group||JSON.stringify(group.rowIndexes)!==JSON.stringify(indexes))return;for(const button of container.querySelectorAll('.trace-breakdown button[aria-pressed]'))button.setAttribute('aria-pressed','false');const selected=!!event.detail.active,set=new Set(indexes);page.selectedGroupIndex=selected?event.detail.groupIndex:-1;for(const row of element.querySelectorAll('.waterfall-row')){const match=set.has(Number(row.dataset.rowIndex));row.classList.toggle('span-muted',selected&&!match);row.classList.toggle('span-highlighted',selected&&match)}})}
     if(!rows.length)return element;
@@ -27,12 +28,21 @@ function waterfall(container, rows, truncated, relatedActions, detailsId = 'span
       const content=node('div'),description=node('div'),view=RecordPresentation.describe(r,'spans');description.append(RecordPresentation.service(r),' · ',node('span',view.duration));if(facts?.[index]?.length){for(const fact of facts[index])description.append(' · ',node('span',fact.label+': '+fact.value))}else description.append(' · ',node('span',view.label));if(r.timestamp_ns)description.append(' · ',RecordPresentation.timestamp(r));
       if(analysis)content.append(TracePageBreakdownView.spanSummary(analysis.rows[index]));ExceptionDetail?.mount(content,r,'spans');RecordPresentation.attributes(content,r);
       const actions=[];for(const action of relatedActions?.(r)||[]){const button=node('button',action.label);button.onclick=action.select;actions.push(button)}
-      for(let i=0;i<(r.linked_traces||[]).length;i++){
-        const targetTrace=r.linked_traces[i],targetSpan=(r.linked_spans||[])[i];
-        const target=[...element.querySelectorAll('.waterfall-row')].find(n=>n.dataset.spanId===targetSpan&&n.dataset.traceId===targetTrace);
-        if(target){const button=node('button','Follow async link → '+targetSpan);button.onclick=()=>{target.focus();target.click()};actions.push(button)}
-        else content.append(node('p',`Async link outside returned spans: ${targetTrace} / ${targetSpan||'(span unspecified)'}`));
+      const linkCount=Math.max(...['linked_traces','linked_spans','linked_attributes'].map(key=>Array.isArray(r[key])?r[key].length:0));
+      for(let i=0;i<Math.min(linkCount,32);i++){
+        let intent;try{intent=origin?SpanLinkIntent.plan({origin,rows,rowIndex:index,linkIndex:i}):SpanLinkIntent.inspect({rows,rowIndex:index,linkIndex:i})}catch{
+          content.append(node('p','Reported span link unavailable: invalid or incomplete reference.'));continue;
+        }
+        if(intent.local.state==='unique'){
+          const target=[...element.querySelectorAll('.waterfall-row')].find(n=>Number(n.dataset.rowIndex)===intent.local.rowIndexes[0]);
+          if(target){const button=node('button','Follow linked span');button.type='button';button.append(node('small',` ${i+1} · ${intent.target.spanId.slice(-8)}`));button.setAttribute('aria-label',`${button.textContent}: trace ${intent.target.traceId}, span ${intent.target.spanId}`);button.title=intent.target.traceId+' / '+intent.target.spanId;button.onclick=()=>{if(!allowed()||!actionVisible(button)||!actionVisible(target))return;target.focus();target.click()};actions.push(button)}
+        }else if(origin&&typeof onLinkTarget==='function'){
+          const button=node('button','Look up linked span');button.type='button';button.append(node('small',` ${i+1} · ${intent.target.spanId.slice(-8)}`));button.setAttribute('aria-label',`${button.textContent}: trace ${intent.target.traceId}, span ${intent.target.spanId}`);button.title=intent.target.traceId+' / '+intent.target.spanId;
+          button.onclick=()=>{if(!allowed()||!actionVisible(button))return;onLinkTarget({rowIndex:index,linkIndex:i,opener:button})};actions.push(button);
+          if(intent.local.state==='ambiguous')content.append(node('p','Multiple returned spans report this target ID pair.'));
+        }else content.append(node('p',`Reported link ${intent.target.traceId} / ${intent.target.spanId} · ${intent.local.state==='ambiguous'?'multiple returned matches':'outside returned spans'}.`));
       }
+      if(linkCount>32)content.append(node('p',`${linkCount-32} additional reported links not displayed.`));
       inspector.show({key,title:r.SpanName,description,content,actions,opener:line});
     });
     return element;

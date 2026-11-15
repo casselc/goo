@@ -1,5 +1,56 @@
 # Validation record
 
+## 452 Reported span-link target lookup — 2026-11-15
+
+[Operator guide](docs/REPORTED_SPAN_LINKS.md),
+[executed storyboard](docs/journeys/span-link-target.md),
+[independent acceptance](docs/reviews/SPAN_LINK_TARGET_452_ACCEPTANCE.md).
+
+- Full root Go suite passes on Go 1.27.3. **1,974 UI tests pass, zero skipped**.
+  The final shared mobile-layout/held-scroll changes also pass their focused
+  adapter regressions. No new API, source schema or query language was added.
+- Pure planning retains the exact parent environment policy and fixed half-open
+  window, matches both canonical target IDs, and deliberately drops service,
+  namespace and population conditions. Correlated link arrays are required;
+  missing/invalid references refuse. Duplicate held tuples never select a first
+  match. Rendering offers 32 links with an explicit omitted count.
+- Hegel: **60 generated compiler-shaped link banks / 360 refusal controls** pass,
+  zero skips. Go independently checks exact ordinary questions, environment/window,
+  crossed tuples, absent/unique/ambiguous targets, detached outputs and zero IO.
+- Real OTLP/ClickHouse browser report **c983dd463de2** passes with zero browser
+  errors and clean runtime/proxy teardown. Cross-service lookup under effective
+  current/legacy environment policy returns one target, absent/excluded targets
+  return zero, and a duplicated tuple returns two separate observations.
+  Wrong-trace, wrong-span, wrong-environment and outside-window records are
+  independently inspected in the source oracle.
+- Stage and held Back add **zero source requests and zero physical SQL calls**.
+  Main flow: 12 source POSTs / 33 physical SQL calls. Successful ordinary target
+  reads use one source POST / three SQL calls. Pending Back may send a canonical
+  query-cancellation control POST; it does not acquire source data. Planted source
+  refusal is physical HTTP 403 / Go API 502; explicit retry succeeds. Cancellation,
+  a delayed actual 200 response and retired controls cannot publish or reacquire.
+- Bombadil completes its independent Stage → Run → Back path: **742 snapshots**,
+  five source POSTs, one lookup observation, three held trace rows, restored held
+  content/focus, no forbidden requests or overflow. Combined physical SQL ledger
+  contains 49 calls (33 main + 16 actor).
+- Native replay of the same immutable real report passes in **23.4s**, with
+  **14 rejected negative controls**, zero skips. Existing population-drilldown
+  model covers stage/read/back depth and read coherence; independent admission
+  checks source membership, exact questions, link-index witness, local read budgets,
+  held return, refusal/cancel/late/stale outcomes and actor completion. The checker
+  distinguishes cancellation-only control traffic from source acquisition.
+- UX and accessibility/web-standards follow-up accept actual 1440/390/320 frames.
+  Enter stages with visible Run focus; pending Run retains focus on Back; Tab stays
+  within the native dialog; Escape returns to the held span action. Exact held
+  scroll and focus remain stable. Shared responsive record layout avoids fractured
+  narrow timestamps; raw basis hashes remain in the provenance disclosure, with
+  separate parent and lookup read clocks. No broad WCAG/cross-browser claim.
+
+Retained receipt: `artifacts/span-link-target452/c983dd463de2/report.json`.
+Browser/actor success and subsequent native replay are separate executed gates;
+only test-side cancellation classification changed after the browser run.
+Inverse reference discovery (453) and consolidation (454) remain next.
+
 ## 451 Activity filter consolidation — 2026-11-15
 
 [Operator guide](docs/FILTER_CONSOLIDATION.md),

@@ -40,14 +40,20 @@ existing bounded renderer behavior. Async links never create parent edges.
 
 ## Application adapter
 
-`GooVisuals.waterfall(container, rows, truncated, relatedActions, detailsId)` remains
-the compatibility entry point. It mounts the component, listens to native row
+`GooVisuals.waterfall(container, rows, truncated, relatedActions, detailsId, options)`
+is the application entry point. It mounts the component, listens to native row
 clicks and supplies controlled selection. The adapter owns the separate detail
 section, `GooAttributes` inspection, callback actions and async-link navigation.
 The selected detail duration is formatted from exact `duration_ns`; it no longer
 requires callers to also provide a redundant floating-point `duration_ms`.
 Existing `.waterfall-row`, `.span-label`, `.span-track`, `.span-bar`, trace/span
 metadata and detail IDs remain available to app handlers and tests.
+
+The adapter validates reported link tuples, offers at most 32 reference actions,
+and selects only a unique held match. An owner may supply `origin` and
+`onLinkTarget({rowIndex,linkIndex,opener})` to stage a separate explicit lookup;
+the callback and component lifecycle never imply source acquisition. See
+[reported span links](REPORTED_SPAN_LINKS.md).
 
 The app loads `waterfall.mjs` before `visualizations.js`. `waterfall.css` supplies
 component-scoped fallback styling. Embedding view styles still own context-panel

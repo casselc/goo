@@ -7,8 +7,8 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–451 delivered and validated**. The current cadence is
-**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation**.
+Status: **429 and 437–452 delivered and validated**. The current cadence is
+**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup**.
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
 foundation; this does not extend a CEL platform queue.
@@ -295,6 +295,10 @@ links as the next general-purpose investigation path. Keep the raw metric plot
 proposal for the following cycle rather than start both tracks together.
 
 ### 452 — Follow a reported target (breadth)
+
+Delivered: [reported span-link lookup](REPORTED_SPAN_LINKS.md). Its executed
+checks are recorded in [validation](../VALIDATION.md); acceptance criteria below
+remain the design basis.
 
 Resolve an outside-returned-span link through an explicitly staged target lookup.
 Retain the environment policy and fixed event-time window; disclose that service
