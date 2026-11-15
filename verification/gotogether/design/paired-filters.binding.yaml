@@ -1,0 +1,42 @@
+spec: paired-filters.md
+module: pairedFilters
+constants:
+  SHARED_FILTER: 'false'
+  AUTO_READ: 'false'
+  SHARED_SCOPE: 'true'
+  FENCED: 'true'
+actions:
+  editFilter: {}
+  apply: {}
+  changeScope: {}
+  deliver: {}
+invariants: [alignedScope, independentDrafts, explicitAcquisition, currentResponseOnly]
+simulate:
+  terminal: 'turns == 4'
+  holds: [alignedScope, independentDrafts, explicitAcquisition, currentResponseOnly]
+  allows: []
+  possible:
+    - name: edited lane can read and finish
+      steps: [editFilter, apply, deliver]
+    - name: obsolete response can arrive after scope changes
+      steps: [apply, changeScope, deliver]
+  variants:
+    - name: independent
+      holds: [alignedScope, independentDrafts, explicitAcquisition, currentResponseOnly]
+      allows: []
+    - name: shared filter
+      constants: { SHARED_FILTER: 'true' }
+      holds: [alignedScope, explicitAcquisition, currentResponseOnly]
+      allows: [independentDrafts]
+    - name: automatic read
+      constants: { AUTO_READ: 'true' }
+      holds: [alignedScope, independentDrafts, currentResponseOnly]
+      allows: [explicitAcquisition]
+    - name: split scope
+      constants: { SHARED_SCOPE: 'false' }
+      holds: [independentDrafts, explicitAcquisition, currentResponseOnly]
+      allows: [alignedScope]
+    - name: unfenced result
+      constants: { FENCED: 'false' }
+      holds: [alignedScope, independentDrafts, explicitAcquisition]
+      allows: [currentResponseOnly]

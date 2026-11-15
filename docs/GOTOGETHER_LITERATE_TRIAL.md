@@ -68,8 +68,9 @@ refreshed by the live journey.
 Request-log settlement events, generated typed alignment, causal
 request/effect/adoption/display links and operational contract monitoring remain
 planned. These additions do not replace independent DOM observations or the
-physical-source oracle. The next product breadth task remains reusable paired
-Activity definitions, with paused recall and explicit acquisition.
+physical-source oracle. The [current roadmap](ROADMAP_2026_11_14_CHECKPOINT_429.md) owns product execution
+order. The next bounded use of CW2 is the [paired lane-filter design matrix](../verification/gotogether/design/paired-filters.md),
+which compares genuine alternatives before implementing independent lane filters.
 
 [Upstream issue #220](https://github.com/chucklehead-dev/gotogether/issues/220)
 tracks the handoff and consumer feedback. Successful local adoption does not by

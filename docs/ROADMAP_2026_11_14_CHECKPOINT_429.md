@@ -250,6 +250,12 @@ narrow-screen checks.
 
 ## 450 — independent lane filters (next depth)
 
+A [checked design matrix](../verification/gotogether/design/paired-filters.md)
+compares shared scope with independent drafts, explicit acquisition and fenced
+responses against three interaction alternatives and a retirement control.
+It is a finite design trial; the product
+feature and real-source acceptance below remain next work.
+
 Give paired Logs + Spans Activity independent record predicates beneath one
 shared environment, service and fixed/live time scope. An operator should be able
 to watch error logs beside slow server spans without changing the other lane.

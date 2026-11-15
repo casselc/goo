@@ -1,5 +1,32 @@
 # Validation record
 
+## 450 paired-filter design matrix trial — 2026-11-15
+
+[Authored model and generated comparison](verification/gotogether/design/paired-filters.md).
+This validates a finite design comparison; independent lane-filter UI remains
+planned. No product runtime, source adapter or browser behavior changed.
+
+- Existing gotogether pin `d4c558eec9b7`, Go 1.27.3, Quint 0.33.1 / TypeScript.
+  No dependency upgrade or private extractor/renderer was needed.
+- Five variants check four properties over complete four-transition graphs:
+  111/86/208/182/119 states. Coupled drafts, automatic acquisition and split scope
+  break their respective requirements in one step; unfenced scope-response
+  adoption breaks in three. Both required action sequences remain reachable.
+- A checked-in generated table and model join CI's freshness-first gate.
+  Writing the table changes the Markdown digest and makes its generated sibling
+  stale; the reproduced refusal and required retangle order are documented.
+- The toolkit's smallest example, `TestRetryPossible`, passed in 4.677s, zero skips.
+- Three focused design tests passed in 80.030s, zero skips. The coupled-edit
+  control is rejected by its intended invariant counterexample; disabling reads
+  is rejected because the required readable-lane example becomes impossible.
+- Full strict consumer controls passed in 127.918s, including unchanged acquisition
+  model/protocol, frozen CW1 fixture, authored-line diagnostics, source/compiled
+  parity and literate freshness checks. No gate was replaced or weakened.
+- The CI command explicitly selects TypeScript and checks both generated models
+  before any binding load. Runtime/UI journeys were not rerun: this round changes
+  verification/design documentation only.
+
+
 ## 449 raw-point nearby record context — 2026-11-15
 
 [Operator guide](docs/RAW_OBSERVATION_CONTEXT.md),
