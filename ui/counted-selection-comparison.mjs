@@ -8,7 +8,7 @@ import * as Composition from './view-composition.mjs';
 
 function parentQuestion(question,field){
  validateRecordQuestion(question);validateField(field,question.signal);
- if((question.offset??0)!==0||question.groupBy?.length!==1||question.groupBy[0].kind!==field.kind||question.groupBy[0].key!==field.key||question.numeric||question.numericHistogram||question.summary||question.spanStatus||question.groupTimeSeries||question.bucketMs||question.reportedEdge||!Comparison.eligible(question))throw Error('Compare values from one ordinary page-zero categorical Count scope.');
+ if((question.offset??0)!==0||question.groupBy?.length!==1||question.groupBy[0].kind!==field.kind||question.groupBy[0].key!==field.key||question.numeric||question.numericHistogram||question.summary||question.spanStatus||question.groupTimeSeries||question.bucketMs||(question.reportedEdge||question.linksTo)||!Comparison.eligible(question))throw Error('Compare values from one ordinary page-zero categorical Count scope.');
  const parent=structuredClone(question);parent.limit=100;parent.offset=0;return parent;
 }
 function combine(where,clause,signal){return validate(where?{all:[...(where.all||[where]),clause]}:clause,signal);}

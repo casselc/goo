@@ -1,5 +1,6 @@
 import {validateRecordQuestion} from './question-protocol.mjs';
 import * as Environment from './record-environment.mjs';
+import {validateTarget} from './span-link-membership.mjs';
 
 /* Pure admission and planning for one reported OTel link. Held-result ownership,
  * clocks, source reads and revocable navigation capabilities belong to callers. */
@@ -27,4 +28,14 @@ export function plan({origin,rows,rowIndex,linkIndex}){
  const question={signal:'spans',...Environment.questionFields(origin),fromMs:origin.fromMs,toMs:origin.toMs,where:{all:[{field:{kind:'column',key:'trace_id'},op:'eq',value:target.traceId},{field:{kind:'column',key:'span_id'},op:'eq',value:target.spanId}]},limit:100,offset:0};
  validateRecordQuestion(question);
  return {relation:'reported-span-link',question,target,local,origin:{question:structuredClone(origin),rowIndex,linkIndex,source},attributes:structuredClone(attributes)};
+}
+
+export function planIncoming({origin,rows,rowIndex}){
+ validateRecordQuestion(origin);
+ if(origin.signal!=='spans')throw Error('Reported span-link discovery requires an ordinary spans question.');
+ if(!Array.isArray(rows)||!Number.isInteger(rowIndex)||rowIndex<0||rowIndex>=rows.length||!Object.hasOwn(rows,rowIndex)||!record(rows[rowIndex]))throw Error('Select one held span row.');
+ const source=validateTarget({traceId:rows[rowIndex].TraceId,spanId:rows[rowIndex].SpanId}),target=structuredClone(source);
+ const question={signal:'spans',...Environment.questionFields(origin),fromMs:origin.fromMs,toMs:origin.toMs,linksTo:structuredClone(target),limit:100,offset:0};
+ validateRecordQuestion(question);
+ return {relation:'reported-span-link-incoming',question,target,origin:{question:structuredClone(origin),rowIndex,source}};
 }

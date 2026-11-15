@@ -2,6 +2,7 @@ import * as ExceptionFingerprint from './exception-fingerprint-identity.mjs';
 /* Bounded same-tab authored draft recovery. No DOM, requests or publication. */
 import * as LogPatternIdentity from './log-pattern-identity.mjs';
 import * as QuestionProtocol from './question-protocol.mjs';
+import {validateTarget} from './span-link-membership.mjs';
 const global=globalThis;
 'use strict';
 const MAX_BYTES=256*1024,TTL_MS=7*86400000,ID=/^[a-f0-9]{64}$/;
@@ -16,7 +17,8 @@ function map(v,count,keyMax,valueMax){requireThat(v&&typeof v==='object'&&!Array
 function namespace(v){object(v,['mode','value']);requireThat(['missing','value'].includes(v.mode));optional(v,'value',x=>text(x,128));requireThat(v.mode!=='missing'||!v.value)}
 function field(v){object(v,['kind','key']);requireThat(['column','attribute','resource'].includes(v.kind));text(v.key,128);requireThat(v.key!=='')}
 function record(q){
-  object(q,['environmentSelector','reportedEdge','numeric','numericHistogram','groupTimeSeries','spanStatus','logSeverity','bucketMs','summary','signal','environment','fromMs','toMs','where','groupBy','limit','offset']);
+  object(q,['environmentSelector','reportedEdge','linksTo','numeric','numericHistogram','groupTimeSeries','spanStatus','logSeverity','bucketMs','summary','signal','environment','fromMs','toMs','where','groupBy','limit','offset']);
+  if(q.linksTo!==undefined){requireThat(q.signal==='spans');validateTarget(q.linksTo)}
   const walk=(p,depth=0,state={n:0})=>{object(p,['all','any','field','numeric','op','value']);requireThat(depth<=4&&++state.n<=32);if(p.all||p.any){requireThat(!(p.all&&p.any)&&!p.field&&!p.numeric&&!p.op&&!p.value);const list=p.all||p.any;requireThat(Array.isArray(list)&&list.length>0);for(const c of list)walk(c,depth+1,state)}else if(p.numeric){const protocol=QuestionProtocol;protocol.validateNumericPredicate(p)}else{field(p.field);requireThat(['eq','ne','contains','exists','missing','gte','lte'].includes(p.op));optional(p,'value',x=>text(x,1024))}};
   optional(q,'where',x=>walk(x));optional(q,'groupBy',a=>{requireThat(Array.isArray(a)&&a.length<=2);a.forEach(field)});
   optional(q,'numericHistogram',v=>{object(v,['binning']);requireThat(!!q.numeric&&v.binning==='powers-of-two')});

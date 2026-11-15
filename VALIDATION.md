@@ -1,5 +1,75 @@
 # Validation record
 
+## 453 Find spans reporting a link — 2026-11-15
+
+[Operator guide](docs/REPORTED_SPAN_LINKS.md),
+[executed storyboard](docs/journeys/span-link-incoming.md),
+[independent acceptance](docs/reviews/SPAN_LINK_INCOMING_453_ACCEPTANCE.md).
+
+- Full root Go suite passes on Go 1.27.3. **1,987 UI tests pass, zero skipped**.
+  OpenAPI generation/checks pass (121 operations, 552 responses, 229 requests,
+  32 mux refusal controls, plus new selector controls). No HTTP operation added.
+- Ordinary spans questions accept a strict `linksTo: {traceId, spanId}` selector.
+  Both IDs are canonical/nonzero and match at the same link-array index. All
+  three arrays must align. `arrayExists` selects span records without multiplying
+  them for duplicate links. Source duplicates remain separate observations.
+- Independent Go/JS reference checks pass across **70 Hegel-generated banks**,
+  with **770 refusing mutations** and zero skips. Cases include crossed pairs,
+  duplicate links versus duplicate records, malformed arrays/maps, unrelated
+  invalid entries, detached values and exact environment/window planning.
+  Actual ClickHouse parity passes with short-circuit evaluation disabled, including
+  mismatched arrays and complete matching count versus bounded page.
+- The existing standard spans profile verifies nonnullable link-array column types
+  before population reads. Successful reference acquisition uses one source POST /
+  **five physical SQL calls** (two metadata checks plus ordinary source work).
+  Unsupported/missing columns refuse instead of publishing a broadened count.
+- Real browser report **7b82001b4524** passes all 33 observed steps with zero browser
+  errors, runtime teardown and disposable-database cleanup. An independent oracle
+  over 110 actual OTLP span records yields **105 matches**, returned as 100 / 5,
+  plus an explicit Previous read. Crossed tuple, different environment and
+  outside-window controls are excluded. Duplicate links add no records; repeated
+  span IDs retain both physical observations. An unreferenced held span returns zero.
+- Stage, Back and retired controls acquire **zero source requests/SQL**. Main flow:
+  **16 source POSTs / 57 SQL calls**. Pending Back sends only the canonical query
+  cancellation control. Planted source refusal, a missing nested column in the
+  disposable database, restore/retry, canceled acquisition, delayed actual 200
+  and stale callbacks all retain the original held bank and request authority.
+- Bombadil independently completes search → Next → held Back: **689 snapshots**,
+  six source POSTs / 23 SQL calls, 100 first-page observations, five last-page
+  observations, count 105, restored held content/focus, zero forbidden requests
+  or overflow. Combined physical ledger: **80 SQL calls**.
+- Native replay of the same immutable report passes in **31.6s**, with **14 rejected
+  negative controls**, zero skips. Independent admission checks actual oracle
+  membership, count/page keys, selector conservation, held return, local read
+  budgets, refusal/recovery, canceled/late/stale outcomes and actor completion.
+  The reused model covers stage/read/back depth and read coherence. A control
+  initially selected an unordered nonmatching oracle row; it now selects an
+  independently established member. Only the test control changed after browser
+  success; accepted JSON events are retained with the report.
+- Fixed-query editor Run, counted values, clones, scopes, captures, telemetry
+  packages and supported complete-query views retain `linksTo`. Unsupported
+  specialized displays, trace-search conversion and rolling tails refuse before
+  acquisition. Source labels and saved-draft identities retain the target tuple.
+- Architecture, UX and accessibility/web-standards follow-up accepted actual
+  1440/390/320 frames. Human page ranges, fresh-read wording, directional labels,
+  responsive records, native modal containment and exact held focus/scroll pass.
+  Enter Run/Next preserves visible Back focus before/after rendering and two
+  animation frames; full rect below sticky heading and center hit test pass.
+  Corrected screenshot framing is separate from these real interaction checks.
+
+- Outgoing 452 regression on the **same 453 binary** passes the full browser/actor
+  journey in 1.4m, native replay in 19.5s and all 14 negative controls, zero skips.
+  Report **d5d822731581** has 12 main source POSTs / 33 SQL calls, actor five POSTs /
+  16 SQL calls (708 snapshots), zero errors and clean teardown. Outgoing target
+  reads retain three SQL calls; inverse-only metadata checks do not leak into them.
+  Refreshed outgoing screenshots include the incoming-reference action.
+
+Retained receipt: `artifacts/span-link-incoming453/7b82001b4524/report.json`.
+Outgoing regression: `artifacts/span-link-target452/d5d822731581/report.json`.
+454 consolidates demonstrated selector propagation/reference duplication;
+raw metric visuals remain the following cycle. Pages are fresh reads, not a
+stable combined snapshot or a causal/delivery/completeness guarantee.
+
 ## 452 Reported span-link target lookup — 2026-11-15
 
 [Operator guide](docs/REPORTED_SPAN_LINKS.md),

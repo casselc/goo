@@ -14,6 +14,7 @@ import (
 // Selector and Binding retain exact typed constraints, including OTel namespaces.
 // Unknown schema/convention metadata is not guessed from names or library versions.
 type QuestionScope struct {
+	LinksTo             *SpanLinkTarget               `json:"linksTo,omitempty"`
 	EnvironmentSelector *identity.EnvironmentSelector `json:"environmentSelector,omitempty"`
 	ExplanationFields   []Field                       `json:"explanationFields,omitempty"`
 	ReportedEdge        *ReportedEdge                 `json:"reportedEdge,omitempty"`
@@ -95,6 +96,7 @@ func (q CaptureQuestion) Scope() (QuestionScope, error) {
 		s.ToMS = v.ToMS
 		s.Selector = detached(v.Where)
 		s.ReportedEdge = detached(v.ReportedEdge)
+		s.LinksTo = detached(v.LinksTo)
 	case "measurement":
 		v := q.Measurement
 		d := v.Definition
@@ -180,7 +182,7 @@ func DescribeTransform(origin, target CaptureQuestion, relation string) (*Questi
 			return nil, fmt.Errorf("same question changed")
 		}
 	case "exact-trace", "exact-span":
-		if target.Explore == nil || origin.Explore == nil || target.Explore.ReportedEdge != nil {
+		if target.Explore == nil || origin.Explore == nil || target.Explore.ReportedEdge != nil || target.Explore.LinksTo != nil {
 			return nil, fmt.Errorf("exact ID relationship requires records")
 		}
 		p := target.Explore.Where
@@ -233,6 +235,9 @@ func describeScopeChanges(origin, target CaptureQuestion, a, b QuestionScope, re
 			label += " (replaced by exact reported IDs; allow all services)"
 		}
 		add("selector", label, sameSelector)
+	}
+	if a.LinksTo != nil || b.LinksTo != nil {
+		add("linksTo", "Reported link target population", reflect.DeepEqual(a.LinksTo, b.LinksTo))
 	}
 	if a.ReportedEdge != nil || b.ReportedEdge != nil {
 		add("reportedEdge", "Reported parent population", reflect.DeepEqual(a.ReportedEdge, b.ReportedEdge))

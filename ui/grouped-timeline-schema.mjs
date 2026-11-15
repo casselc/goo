@@ -1,6 +1,6 @@
 /* Finite supplied grouped geometry. Exact values remain the scope keys. */
 export const groupedMeanQuery=q=>q?.signal==='spans'&&q.summary==='span-duration';
-export function groupedQuery(q){return !!q&&['logs','spans'].includes(q.signal)&&q.groupTimeSeries===true&&q.groupBy?.length===1&&!q.numeric&&!q.numericHistogram&&(!q.summary||groupedMeanQuery(q))&&!q.spanStatus&&!q.reportedEdge&&!(q.groupBy[0].kind==='column'&&['body_pattern_v1','duration_bucket'].includes(q.groupBy[0].key));}
+export function groupedQuery(q){return !!q&&['logs','spans'].includes(q.signal)&&q.groupTimeSeries===true&&q.groupBy?.length===1&&!q.numeric&&!q.numericHistogram&&(!q.summary||groupedMeanQuery(q))&&!q.spanStatus&&!q.reportedEdge&&!q.linksTo&&!(q.groupBy[0].kind==='column'&&['body_pattern_v1','duration_bucket'].includes(q.groupBy[0].key));}
 export function validateGrouped(s,fields,reasons){
  const fail=text=>reasons.push(text),q=s.scope?.selector,i=s.interval,mean=groupedMeanQuery(q);
  if(!groupedQuery(q)||s.dimensions?.length!==1||s.dimensions[0]!=='category'||fields.size!==(mean?6:4)||fields.get('category')?.type!=='string'||fields.get('category')?.nullable!==true||fields.get('count')?.type!=='number'||fields.get('count')?.unit!=='records'||fields.get('count')?.nullable!==true||fields.get('count')?.aggregation||s.partition!==undefined)fail('Grouped timelines require the pinned query and typed category/count fields');

@@ -12,8 +12,11 @@ and exact duration summaries across Activity. Discard changes predicates only;
 Environment/Signal drafts remain explicit. Closed suggestion rendering is deferred
 without changing polling. [Reported span-link lookup](REPORTED_SPAN_LINKS.md) now
 stages an exact target read from expanded trace inspection, with fixed environment/
-window and held return. Inverse tuple-safe discovery remains the next slice in
-the [reference cycle](reviews/PRODUCT_CHECKPOINT_AFTER_451.md).
+window and held return. Inverse search now finds referring span observations
+with same-position tuple membership and bounded fresh pages. Specialized profiles
+that cannot carry the selector refuse before reads. Selector conservation and
+reference consolidation are next in the
+[reference cycle](reviews/PRODUCT_CHECKPOINT_AFTER_451.md).
 
 [CEL predicate authoring](CEL_PREDICATE_PILOT.md) is a delivered library/CLI pilot
 over fixed nonnullable fields. [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md)

@@ -108,6 +108,7 @@ func (q CaptureQuestion) Normalized() CaptureQuestion {
 		v := *q.Explore
 		v.EnvironmentSelector = copyEnvironmentSelector(v.EnvironmentSelector)
 		v.ReportedEdge = detached(v.ReportedEdge)
+		v.LinksTo = detached(v.LinksTo)
 		v.Offset = 0
 		v.Limit = CapturePageSize
 		if len(v.GroupBy) == 0 {

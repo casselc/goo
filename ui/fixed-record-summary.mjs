@@ -10,6 +10,7 @@ function render(host,result,{receipt,retainedRecords,recordsLimited}={}){
  const scope=node('p',Environment.questionLabel(q)+' · '+window.text);scope.title=window.title;scope.className='fixed-record-window';
  const details=node('details'),summary=node('summary','Scope and evidence'),facts=node('dl');details.className='fixed-record-facts';
  const values=[['Signal',q.signal],['Environment',Environment.questionLabel(q)],['Fixed window · end excluded',window.text],['Selector',q.where?selectorText(q.where):'All matching records'],['Page offset',String(q.offset||0)],['Source read',result.capturedAt||'Unavailable in supplied evidence'],['Evidence basis',result.basis],['Coverage','Unverified; counts and rows are separate source reads.']];
+ if(q.linksTo)values.push(['Reports link to',q.linksTo.traceId+' / '+q.linksTo.spanId]);
  if(q.reportedEdge)values.push(['Reported relationship',JSON.stringify(q.reportedEdge)]);
  if(receipt)values.push(['Capture ID',receipt.id],['Stored custody time',receipt.capturedAt],['Retained inspection records',String(retainedRecords)],['Retention',recordsLimited?'More matching source records were not retained':'All records returned by the capture read were retained; source coverage remains unknown.']);
  for(const [label,value]of values){const group=node('div');group.append(node('dt',label),node('dd',value??'Unavailable'));facts.append(group)}

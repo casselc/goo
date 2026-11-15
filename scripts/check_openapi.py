@@ -20,6 +20,18 @@ def validator(spec, schema):
     return Draft202012Validator({'allOf': [schema], 'components': spec['components']})
 
 
+def check_span_link453(spec):
+    check=validator(spec,{'$ref':'#/components/schemas/RecordQuery'})
+    question={'signal':'spans','environment':'prod','fromMs':1000,'toMs':61000,'limit':1,'offset':1,'linksTo':{'traceId':'a'*32,'spanId':'b'*16}}
+    check.validate(question)
+    for mutate in (lambda q:q.update(signal='logs'),lambda q:q.update(linksTo=None),lambda q:q['linksTo'].pop('spanId'),lambda q:q['linksTo'].update(traceId='0'*32),lambda q:q['linksTo'].update(spanId='B'*16),lambda q:q['linksTo'].update(extra=True),lambda q:q['linksTo'].update(TraceId=q['linksTo'].pop('traceId')),lambda q:q['linksTo'].update(spanId=None)):
+        bad=copy.deepcopy(question);mutate(bad)
+        assert not check.is_valid(bad),bad
+    endpoint=spec['paths']['/exception-groups']['post']['requestBody']['content']['application/json']['schema']
+    assert not validator(spec,endpoint).is_valid(question),'specialized query dropped link membership'
+    print('453 canonical reported-link Query schema and unsupported-route guards valid')
+
+
 def check_raw_gauge438(spec):
     shape=spec['paths']['/metric-observations']['post']['requestBody']['content']['application/json']['schema']
     check=validator(spec,shape)
@@ -2855,6 +2867,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spec = json.loads((ROOT / 'api/openapi.json').read_text())
     check(spec)
+    check_span_link453(spec)
     check_raw_gauge438(spec)
     check_raw_sum441(spec)
     check_raw_histogram447(spec)

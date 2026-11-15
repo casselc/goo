@@ -5117,6 +5117,11 @@
                           "required": [
                             "reportedEdge"
                           ]
+                        },
+                        {
+                          "required": [
+                            "linksTo"
+                          ]
                         }
                       ]
                     },
@@ -20580,6 +20585,16 @@
           "limit": {
             "type": "integer"
           },
+          "linksTo": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.SpanLinkTarget"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "logSeverity": {
             "type": "boolean"
           },
@@ -20719,6 +20734,27 @@
           {
             "if": {
               "required": [
+                "linksTo"
+              ],
+              "properties": {
+                "linksTo": {
+                  "not": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "const": "spans"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
                 "reportedEdge"
               ],
               "properties": {
@@ -20794,6 +20830,16 @@
           },
           "grain": {
             "type": "string"
+          },
+          "linksTo": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.SpanLinkTarget"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "measurementKind": {
             "type": "string"
@@ -22448,6 +22494,54 @@
         "additionalProperties": false,
         "description": "Independent LIMIT 1 presence witness in the requested window; observed is not a total count, empty is successful no-match, unreadable is a failed presence read, and unknown means the profile was not eligible for probing."
       },
+      "exploration.SpanLinkTarget": {
+        "properties": {
+          "spanId": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16,
+            "pattern": "^(?!0{16}$)[a-f0-9]{16}$"
+          },
+          "traceId": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 32,
+            "pattern": "^(?!0{32}$)[a-f0-9]{32}$"
+          }
+        },
+        "required": [
+          "traceId",
+          "spanId"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.SpanLinkTarget",
+        "additionalProperties": false,
+        "description": "Exact canonical nonzero reported trace/span target tuple. LinksTo matches both IDs at one aligned link-array index; repeated matching links select one span record, not multiple links or unique invocations."
+      },
+      "exploration.SpanLinkTargetInput": {
+        "additionalProperties": false,
+        "properties": {
+          "spanId": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16,
+            "pattern": "^(?!0{16}$)[a-f0-9]{16}$"
+          },
+          "traceId": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 32,
+            "pattern": "^(?!0{32}$)[a-f0-9]{32}$"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.SpanLinkTarget",
+        "required": [
+          "traceId",
+          "spanId"
+        ],
+        "description": "Exact canonical nonzero reported trace/span target tuple. LinksTo matches both IDs at one aligned link-array index; repeated matching links select one span record, not multiple links or unique invocations."
+      },
       "exploration.SpanStatusSummary": {
         "properties": {
           "count": {
@@ -22954,6 +23048,16 @@
           "groupTimeSeries": {
             "type": "boolean"
           },
+          "linksTo": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.SpanLinkTarget"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "logSeverity": {
             "type": "boolean"
           },
@@ -23101,6 +23205,23 @@
             "anyOf": [
               {
                 "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "linksTo": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/exploration.SpanLinkTargetInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
                 "type": "null"
@@ -47808,6 +47929,9 @@
                         "reportedEdge": {
                           "type": "null"
                         },
+                        "linksTo": {
+                          "type": "null"
+                        },
                         "groupTimeSeries": {
                           "const": false
                         }
@@ -47891,6 +48015,9 @@
                             "reportedEdge": {
                               "type": "null"
                             },
+                            "linksTo": {
+                              "type": "null"
+                            },
                             "groupTimeSeries": {
                               "const": false
                             },
@@ -47941,6 +48068,9 @@
                               "type": "null"
                             },
                             "reportedEdge": {
+                              "type": "null"
+                            },
+                            "linksTo": {
                               "type": "null"
                             },
                             "spanStatus": {
@@ -48020,6 +48150,9 @@
                           "type": "null"
                         },
                         "reportedEdge": {
+                          "type": "null"
+                        },
+                        "linksTo": {
                           "type": "null"
                         },
                         "groupTimeSeries": {
@@ -55424,6 +55557,9 @@
                     "reportedEdge": {
                       "type": "null"
                     },
+                    "linksTo": {
+                      "type": "null"
+                    },
                     "spanStatus": {
                       "const": true
                     },
@@ -55817,6 +55953,9 @@
                       "type": "null"
                     },
                     "reportedEdge": {
+                      "type": "null"
+                    },
+                    "linksTo": {
                       "type": "null"
                     },
                     "spanStatus": {
@@ -56889,6 +57028,9 @@
                         "reportedEdge": {
                           "type": "null"
                         },
+                        "linksTo": {
+                          "type": "null"
+                        },
                         "groupTimeSeries": {
                           "const": false
                         },
@@ -57003,6 +57145,9 @@
                             }
                           },
                           "reportedEdge": {
+                            "type": "null"
+                          },
+                          "linksTo": {
                             "type": "null"
                           },
                           "groupTimeSeries": {
@@ -57162,6 +57307,9 @@
                       "reportedEdge": {
                         "type": "null"
                       },
+                      "linksTo": {
+                        "type": "null"
+                      },
                       "groupTimeSeries": {
                         "const": false
                       }
@@ -57311,6 +57459,9 @@
                         "type": "null"
                       },
                       "reportedEdge": {
+                        "type": "null"
+                      },
+                      "linksTo": {
                         "type": "null"
                       },
                       "spanStatus": {
@@ -57481,6 +57632,9 @@
                       "reportedEdge": {
                         "type": "null"
                       },
+                      "linksTo": {
+                        "type": "null"
+                      },
                       "groupTimeSeries": {
                         "const": false
                       },
@@ -57549,6 +57703,9 @@
                         "type": "null"
                       },
                       "reportedEdge": {
+                        "type": "null"
+                      },
+                      "linksTo": {
                         "type": "null"
                       },
                       "groupTimeSeries": {
@@ -57862,6 +58019,9 @@
                       "reportedEdge": {
                         "type": "null"
                       },
+                      "linksTo": {
+                        "type": "null"
+                      },
                       "spanStatus": {
                         "const": true
                       },
@@ -57977,6 +58137,9 @@
                       "reportedEdge": {
                         "type": "null"
                       },
+                      "linksTo": {
+                        "type": "null"
+                      },
                       "spanStatus": {
                         "const": true
                       },
@@ -58059,6 +58222,9 @@
                                     "type": "null"
                                   },
                                   "reportedEdge": {
+                                    "type": "null"
+                                  },
+                                  "linksTo": {
                                     "type": "null"
                                   },
                                   "spanStatus": {
@@ -58166,6 +58332,9 @@
                           "reportedEdge": {
                             "type": "null"
                           },
+                          "linksTo": {
+                            "type": "null"
+                          },
                           "groupTimeSeries": {
                             "const": false
                           },
@@ -58216,6 +58385,9 @@
                             "type": "null"
                           },
                           "reportedEdge": {
+                            "type": "null"
+                          },
+                          "linksTo": {
                             "type": "null"
                           },
                           "spanStatus": {
@@ -58294,6 +58466,9 @@
                         "type": "null"
                       },
                       "reportedEdge": {
+                        "type": "null"
+                      },
+                      "linksTo": {
                         "type": "null"
                       },
                       "groupTimeSeries": {
@@ -58388,6 +58563,9 @@
                         "type": "null"
                       },
                       "reportedEdge": {
+                        "type": "null"
+                      },
+                      "linksTo": {
                         "type": "null"
                       },
                       "spanStatus": {
@@ -58488,6 +58666,9 @@
                         "type": "null"
                       },
                       "reportedEdge": {
+                        "type": "null"
+                      },
+                      "linksTo": {
                         "type": "null"
                       },
                       "groupTimeSeries": {
@@ -59015,6 +59196,9 @@
                         "reportedEdge": {
                           "type": "null"
                         },
+                        "linksTo": {
+                          "type": "null"
+                        },
                         "groupTimeSeries": {
                           "const": false
                         },
@@ -59129,6 +59313,9 @@
                             }
                           },
                           "reportedEdge": {
+                            "type": "null"
+                          },
+                          "linksTo": {
                             "type": "null"
                           },
                           "groupTimeSeries": {
@@ -59288,6 +59475,9 @@
                       "reportedEdge": {
                         "type": "null"
                       },
+                      "linksTo": {
+                        "type": "null"
+                      },
                       "groupTimeSeries": {
                         "const": false
                       }
@@ -59437,6 +59627,9 @@
                         "type": "null"
                       },
                       "reportedEdge": {
+                        "type": "null"
+                      },
+                      "linksTo": {
                         "type": "null"
                       },
                       "spanStatus": {
@@ -59607,6 +59800,9 @@
                       "reportedEdge": {
                         "type": "null"
                       },
+                      "linksTo": {
+                        "type": "null"
+                      },
                       "groupTimeSeries": {
                         "const": false
                       },
@@ -59675,6 +59871,9 @@
                         "type": "null"
                       },
                       "reportedEdge": {
+                        "type": "null"
+                      },
+                      "linksTo": {
                         "type": "null"
                       },
                       "groupTimeSeries": {
@@ -59988,6 +60187,9 @@
                       "reportedEdge": {
                         "type": "null"
                       },
+                      "linksTo": {
+                        "type": "null"
+                      },
                       "spanStatus": {
                         "const": true
                       },
@@ -60103,6 +60305,9 @@
                       "reportedEdge": {
                         "type": "null"
                       },
+                      "linksTo": {
+                        "type": "null"
+                      },
                       "spanStatus": {
                         "const": true
                       },
@@ -60185,6 +60390,9 @@
                                     "type": "null"
                                   },
                                   "reportedEdge": {
+                                    "type": "null"
+                                  },
+                                  "linksTo": {
                                     "type": "null"
                                   },
                                   "spanStatus": {
@@ -60292,6 +60500,9 @@
                           "reportedEdge": {
                             "type": "null"
                           },
+                          "linksTo": {
+                            "type": "null"
+                          },
                           "groupTimeSeries": {
                             "const": false
                           },
@@ -60342,6 +60553,9 @@
                             "type": "null"
                           },
                           "reportedEdge": {
+                            "type": "null"
+                          },
+                          "linksTo": {
                             "type": "null"
                           },
                           "spanStatus": {
@@ -60420,6 +60634,9 @@
                         "type": "null"
                       },
                       "reportedEdge": {
+                        "type": "null"
+                      },
+                      "linksTo": {
                         "type": "null"
                       },
                       "groupTimeSeries": {
@@ -60514,6 +60731,9 @@
                         "type": "null"
                       },
                       "reportedEdge": {
+                        "type": "null"
+                      },
+                      "linksTo": {
                         "type": "null"
                       },
                       "spanStatus": {
@@ -60614,6 +60834,9 @@
                         "type": "null"
                       },
                       "reportedEdge": {
+                        "type": "null"
+                      },
+                      "linksTo": {
                         "type": "null"
                       },
                       "groupTimeSeries": {
@@ -67442,6 +67665,9 @@
                     "reportedEdge": {
                       "type": "null"
                     },
+                    "linksTo": {
+                      "type": "null"
+                    },
                     "groupTimeSeries": {
                       "const": false
                     },
@@ -67520,6 +67746,9 @@
                       }
                     },
                     "reportedEdge": {
+                      "type": "null"
+                    },
+                    "linksTo": {
                       "type": "null"
                     },
                     "groupTimeSeries": {
@@ -69422,6 +69651,9 @@
             "minimum": 1,
             "maximum": 100
           },
+          "linksTo": {
+            "$ref": "#/components/schemas/recordintent.exploration.SpanLinkTargetInput"
+          },
           "logSeverity": {
             "type": "boolean"
           },
@@ -69532,6 +69764,25 @@
                   "enum": [
                     "logs"
                   ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "linksTo"
+              ],
+              "properties": {
+                "linksTo": {
+                  "not": false
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "const": "spans"
                 }
               }
             }
@@ -69880,6 +70131,30 @@
             }
           }
         ]
+      },
+      "recordintent.exploration.SpanLinkTargetInput": {
+        "additionalProperties": false,
+        "properties": {
+          "spanId": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 16,
+            "pattern": "^(?!0{16}$)[a-f0-9]{16}$"
+          },
+          "traceId": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 32,
+            "pattern": "^(?!0{32}$)[a-f0-9]{32}$"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/exploration.SpanLinkTarget",
+        "required": [
+          "traceId",
+          "spanId"
+        ],
+        "description": "Exact canonical nonzero reported trace/span target tuple. LinksTo matches both IDs at one aligned link-array index; repeated matching links select one span record, not multiple links or unique invocations."
       },
       "recordintent.exploration.NumericBindingInput": {
         "additionalProperties": false,

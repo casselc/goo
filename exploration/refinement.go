@@ -63,6 +63,9 @@ func CloneQuery(q Query) (Query, error) {
 
 func cloneQuery(q Query) Query {
 	out := q
+	if q.LinksTo != nil {
+		out.LinksTo = new(*q.LinksTo)
+	}
 	out.Where = clonePredicate(q.Where)
 	out.GroupBy = slices.Clone(q.GroupBy)
 	if q.EnvironmentSelector != nil {

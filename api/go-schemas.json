@@ -10390,6 +10390,16 @@
       "limit": {
         "type": "integer"
       },
+      "linksTo": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.SpanLinkTarget"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "logSeverity": {
         "type": "boolean"
       },
@@ -10544,6 +10554,23 @@
         "anyOf": [
           {
             "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "linksTo": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.SpanLinkTargetInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"
@@ -10734,6 +10761,16 @@
       },
       "grain": {
         "type": "string"
+      },
+      "linksTo": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.SpanLinkTarget"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "measurementKind": {
         "type": "string"
@@ -11912,6 +11949,49 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/exploration.SourceObservation"
   },
+  "exploration.SpanLinkTarget": {
+    "properties": {
+      "spanId": {
+        "type": "string"
+      },
+      "traceId": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "traceId",
+      "spanId"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.SpanLinkTarget"
+  },
+  "exploration.SpanLinkTargetInput": {
+    "additionalProperties": false,
+    "properties": {
+      "spanId": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "traceId": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/exploration.SpanLinkTarget"
+  },
   "exploration.SpanStatusSummary": {
     "properties": {
       "count": {
@@ -12279,6 +12359,16 @@
       "groupTimeSeries": {
         "type": "boolean"
       },
+      "linksTo": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.SpanLinkTarget"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "logSeverity": {
         "type": "boolean"
       },
@@ -12426,6 +12516,23 @@
         "anyOf": [
           {
             "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "linksTo": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.SpanLinkTargetInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           {
             "type": "null"

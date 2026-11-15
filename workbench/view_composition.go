@@ -323,8 +323,8 @@ func (c ViewComposition) Validate(q exploration.Query) error {
 	if !aggregate && (len(c.Children) != rawChildren || !visibleRecords && !summary || q.Signal != "logs" && q.Signal != "spans") {
 		return errors.New("records-only composition requires visible logs or spans records with at most one facet")
 	}
-	if !aggregate && (q.Numeric != nil && !summary || q.NumericHistogram != nil || q.ReportedEdge != nil || q.GroupTimeSeries) {
-		return errors.New("records-only composition requires an ordinary raw query without numeric, histogram, reported-edge or grouped-time profiles")
+	if !aggregate && (q.Numeric != nil && !summary || q.NumericHistogram != nil || q.ReportedEdge != nil || q.LinksTo != nil || q.GroupTimeSeries) {
+		return errors.New("records-only composition requires an ordinary raw query without numeric, histogram, reported-edge, reported-link or grouped-time profiles")
 	}
 	return nil
 }

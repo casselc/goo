@@ -1,5 +1,6 @@
 import * as SourceRefusal from './source-refusal.mjs';
 import * as RecordEnvironment from './record-environment.mjs';
+import {validateTarget} from './span-link-membership.mjs';
 /* App-owned explicit breakdown reads. The editor remains a supplied-data renderer. */
 import * as FilterEditor from './filter-editor.mjs';
 import * as Queries from './queries.mjs';
@@ -8,7 +9,7 @@ const global=globalThis;
 const protocol=()=>QuestionSession||(null);
 const editorAPI=()=>FilterEditor||(null);
 function fieldReason(field,signal){try{editorAPI().validate({field,op:'exists'},signal);if(field.kind==='column'&&['duration_ns','timestamp_ns','severity_number'].includes(field.key))return 'Counted values require a categorical string field.';return '';}catch(error){return error.message}}
-function query(scope,field){if(!scope)throw Error('Apply or Run this scope before loading counted values.');const reason=fieldReason(field,scope.signal);if(reason)throw Error(reason);const q={signal:scope.signal,...RecordEnvironment.questionFields(scope),fromMs:scope.fromMs,toMs:scope.toMs,limit:1,offset:0,groupBy:[structuredClone(field)]};if(scope.where)q.where=editorAPI().normalize(scope.where);if(scope.reportedEdge)q.reportedEdge=structuredClone(scope.reportedEdge);if(!Number.isSafeInteger(q.fromMs)||!Number.isSafeInteger(q.toMs)||q.fromMs<0||q.toMs<=q.fromMs||q.toMs-q.fromMs>7200000)throw Error('Require an applied fixed window of at most 120 minutes.');return q}
+function query(scope,field){if(!scope)throw Error('Apply or Run this scope before loading counted values.');const reason=fieldReason(field,scope.signal);if(reason)throw Error(reason);const q={signal:scope.signal,...RecordEnvironment.questionFields(scope),fromMs:scope.fromMs,toMs:scope.toMs,limit:1,offset:0,groupBy:[structuredClone(field)]};if(scope.where)q.where=editorAPI().normalize(scope.where);if(scope.reportedEdge)q.reportedEdge=structuredClone(scope.reportedEdge);if(scope.linksTo!==undefined){if(scope.signal!=='spans')throw Error('Reported span-link membership requires spans.');q.linksTo=validateTarget(scope.linksTo)}if(!Number.isSafeInteger(q.fromMs)||!Number.isSafeInteger(q.toMs)||q.fromMs<0||q.toMs<=q.fromMs||q.toMs-q.fromMs>7200000)throw Error('Require an applied fixed window of at most 120 minutes.');return q}
 function result(request,data){
   if(data?.version!=='goo/counted-values/v1')throw Error('Unsupported counted value response.');
   for(const kind of ['count','groups']){const receipt=data.reads?.[kind];if(!receipt||typeof receipt.basis!=='string'||receipt.basis.length!==64||!/^[0-9a-f]{64}$/.test(receipt.basis)||!Number.isFinite(Date.parse(receipt.readAt)))throw Error('Invalid counted value read receipt.');}

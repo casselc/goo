@@ -227,7 +227,7 @@ func (b ViewTemplateBinding) Validate(q exploration.Query, c ViewComposition) er
 		if b.Version != "goo.template/1" || b.Group != "none" || b.Baseline != "" {
 			return errors.New("population summary templates require the pinned ungrouped binding without baseline")
 		}
-		if len(q.GroupBy) != 0 || q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.GroupTimeSeries {
+		if len(q.GroupBy) != 0 || q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.LinksTo != nil || q.GroupTimeSeries {
 			return errors.New("population summary templates require ungrouped ordinary records without specialized or numeric measures")
 		}
 		if err := c.Validate(q); err != nil {
@@ -241,7 +241,7 @@ func (b ViewTemplateBinding) Validate(q exploration.Query, c ViewComposition) er
 	if slices.ContainsFunc(c.Children, func(child ViewCompositionChild) bool { return child.Summary != nil }) {
 		return errors.New("summary children require the ungrouped population summary template profile")
 	}
-	if len(q.GroupBy) != 1 || q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.GroupTimeSeries || q.GroupBy[0] == (exploration.Field{Kind: "column", Key: "body_pattern_v1"}) {
+	if len(q.GroupBy) != 1 || q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.LinksTo != nil || q.GroupTimeSeries || q.GroupBy[0] == (exploration.Field{Kind: "column", Key: "body_pattern_v1"}) {
 		return errors.New("reusable templates require one ordinary nonnumeric grouping")
 	}
 	if err := c.Validate(q); err != nil {
@@ -298,7 +298,7 @@ func ExpandViewTemplate(in ViewTemplateExpansionRequest) (ViewTemplateExpansion,
 	if _, err = exploration.Compile(q); err != nil {
 		return ViewTemplateExpansion{}, err
 	}
-	if q.Signal != descriptor.Signal || len(q.GroupBy) != 1 || q.GroupBy[0] != descriptor.Group || q.Offset != 0 || q.ReportedEdge != nil {
+	if q.Signal != descriptor.Signal || len(q.GroupBy) != 1 || q.GroupBy[0] != descriptor.Group || q.Offset != 0 || q.ReportedEdge != nil || q.LinksTo != nil {
 		return ViewTemplateExpansion{}, errors.New("template requires its page-zero qualified record grouping")
 	}
 	if err = descriptor.validateProfile(q); err != nil {
@@ -307,7 +307,7 @@ func ExpandViewTemplate(in ViewTemplateExpansionRequest) (ViewTemplateExpansion,
 	// Optional shipped controls must not remove useful existing measure
 	// projections. Specialized widget questions retain their complete query and
 	// previous data-only composition; authored facet templates remain strict.
-	if q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.GroupTimeSeries {
+	if q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.LinksTo != nil || q.GroupTimeSeries {
 		children := make([]ViewCompositionChild, 0, len(descriptor.Composition.Children))
 		for _, child := range descriptor.Composition.Children {
 			if child.Facet == nil {

@@ -11,7 +11,7 @@ func ValidateCapturedCountQuery(q Query) error {
 	if err := q.Validate(); err != nil {
 		return err
 	}
-	if len(q.GroupBy) != 1 || q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.SpanStatus || q.LogSeverity || q.GroupTimeSeries || q.GroupBy[0].Kind == "column" && (q.GroupBy[0].Key == "body_pattern_v1" || q.GroupBy[0].Key == "duration_bucket") {
+	if len(q.GroupBy) != 1 || q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.LinksTo != nil || q.SpanStatus || q.LogSeverity || q.GroupTimeSeries || q.GroupBy[0].Kind == "column" && (q.GroupBy[0].Key == "body_pattern_v1" || q.GroupBy[0].Key == "duration_bucket") {
 		return errors.New("captured-count comparison requires an ordinary single-field record query without numeric, status, split-time or reported-edge profiles")
 	}
 	return nil

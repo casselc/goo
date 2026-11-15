@@ -150,10 +150,16 @@ func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnl
 		plan.Rows = originalPlan.Rows
 		plan.Parameters = originalPlan.Parameters
 	}
+	if e = s.requireSpanLinkSource(ctx, question); e != nil {
+		return nil, e
+	}
 	defer func() { resultErr = sourcefailure.Protocol(resultErr) }()
 	r := &Result{Question: question, CapturedAt: time.Now().UTC().Format(time.RFC3339Nano), Rows: []json.RawMessage{}, Groups: []json.RawMessage{}, Fields: []Field{}, Plan: plan, Warnings: []string{"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.", "Rows, counts, groups and field discovery are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; counts never derive from the page.", "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."}}
 	if pageOnly {
 		r.Warnings = []string{"Captured records only; sampling, ingestion completeness and clock accuracy are unverified.", "The matching count and bounded record page are separate source reads, not a transactional snapshot. Paging can change as telemetry arrives; the count never derives from this page.", "Aggregates, timelines and field discovery were not acquired by this page read. Existing charts retain their own basis and read clock.", "Attributes are exporter strings; missing keys and present empty strings remain distinct. Counts are records, not unique invocations or business outcomes."}
+	}
+	if q.LinksTo != nil {
+		r.Warnings = append(r.Warnings, "Reported-link population: span observations reporting the exact trace/span tuple at one link-array position. Repeated matching links select a record once; duplicate span observations remain separate records. Absence does not establish delivery failure, causality or ingestion completeness.")
 	}
 	if q.ReportedEdge != nil {
 		r.Warnings = append(r.Warnings, "Reported-edge population: child span records with one parent service owner in the original discovery environment/window/namespace scope. Parent ownership is resolved before child filters. Late parent evidence may change resolution on reread; captures reopen stored rows without a parent lookup. This is not unique calls, end-to-end latency or async causality.")

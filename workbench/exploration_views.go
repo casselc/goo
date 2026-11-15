@@ -81,6 +81,11 @@ func (v ExplorationView) Validate() error {
 	}
 
 	if v.Tail != nil {
+		for _, q := range v.Queries {
+			if q.Signal == v.Tail.Signal && q.LinksTo != nil {
+				return errors.New("rolling tails do not support reported-link membership; retain the fixed question")
+			}
+		}
 		if !signals[v.Tail.Signal] || (v.Tail.Baseline != "" && !ID.MatchString(v.Tail.Baseline)) {
 			return errors.New("tail requires a configured signal and valid optional baseline capture ID")
 		}

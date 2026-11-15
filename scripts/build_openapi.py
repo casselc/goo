@@ -11,10 +11,15 @@ ROOT = Path(__file__).resolve().parents[1]
 ref = lambda name: {'$ref': '#/components/schemas/' + name}
 # Summary rates can reuse the ordinary one-group count profile; interval rates
 # retain their original ungrouped contract. Arithmetic stays runtime-owned.
-record_rate_ungrouped418={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False},'logSeverity':{'const':False}}}
-record_rate_grouped418={'required':['groupBy'],'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'type':'array','minItems':1,'maxItems':1,'items':{'not':{'required':['kind','key'],'properties':{'kind':{'const':'column'},'key':{'enum':['body_pattern_v1','duration_bucket']}}}}},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'spanStatus':{'const':False},'logSeverity':{'const':False},'groupTimeSeries':{'const':False},'summary':{'enum':['','span-duration']}}}
+record_rate_ungrouped418={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'linksTo':{'type':'null'},'groupTimeSeries':{'const':False},'logSeverity':{'const':False}}}
+record_rate_grouped418={'required':['groupBy'],'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'type':'array','minItems':1,'maxItems':1,'items':{'not':{'required':['kind','key'],'properties':{'kind':{'const':'column'},'key':{'enum':['body_pattern_v1','duration_bucket']}}}}},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'linksTo':{'type':'null'},'spanStatus':{'const':False},'logSeverity':{'const':False},'groupTimeSeries':{'const':False},'summary':{'enum':['','span-duration']}}}
 record_rate_summary418={'anyOf':[record_rate_ungrouped418,record_rate_grouped418]}
 schemas = json.loads((ROOT / 'api/go-schemas.json').read_text())
+# Exact reported OTel link target. Membership preserves array positions and span-record grain.
+for wire in ('exploration.SpanLinkTarget','exploration.SpanLinkTargetInput'):
+ target=schemas[wire];target.update(required=['traceId','spanId'],additionalProperties=False)
+ target['properties'].update(traceId={'type':'string','minLength':32,'maxLength':32,'pattern':'^(?!0{32}$)[a-f0-9]{32}$'},spanId={'type':'string','minLength':16,'maxLength':16,'pattern':'^(?!0{16}$)[a-f0-9]{16}$'})
+ target['description']='Exact canonical nonzero reported trace/span target tuple. LinksTo matches both IDs at one aligned link-array index; repeated matching links select one span record, not multiple links or unique invocations.'
 # CEL checks are pure plans over one fully bound immutable base, not execution.
 schemas['querycel.ContextRequestInput']['required']=['base']
 schemas['querycel.ContextRequestInput']['properties']['base']={'$ref':'#/components/schemas/exploration.QueryInput'}
@@ -237,6 +242,7 @@ for wire in ('exploration.Query','exploration.QueryInput','exploration.TailSelec
  shape['description']='Choose a current-key-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge span questions apply the same checked environment policy to parent ownership and child membership.'
  shape.setdefault('allOf',[]).append({'if':all_environment_condition,'then':{'properties':{'signal':{'enum':['','logs'] if 'Selector' in wire else ['logs']}}}})
 for wire in ('exploration.Query','exploration.QueryInput'):
+ schemas[wire].setdefault('allOf',[]).append({'if':{'required':['linksTo'],'properties':{'linksTo':{'not':{'type':'null'}}}},'then':{'properties':{'signal':{'const':'spans'}}}})
  schemas[wire].setdefault('allOf',[]).append({'if':{'required':['reportedEdge'],'properties':{'reportedEdge':{'not':{'type':'null'}}}},'then':{'properties':{'signal':{'const':'spans'}}}})
 # Trace-wide search uses the same explicit selection as ordinary record questions.
 for wire in ('exploration.TraceSearchRequest','exploration.TraceSearchRequestInput'):
@@ -482,7 +488,7 @@ for name in ('workbench.NativeViewSummary','workbench.NativeViewListDiagnostic')
  else:shape['properties']['reason']={'const':'unavailable-artifact'}
 
 #407 reuses supplied fixed numeric bins; binding equality remains a runtime proof.
-histogram_query407={'required':['numeric','numericHistogram'],'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numeric':{'type':'object'},'numericHistogram':{'type':'object','required':['binning'],'properties':{'binning':{'const':'powers-of-two'}}},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False},'offset':{'const':0}}}
+histogram_query407={'required':['numeric','numericHistogram'],'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numeric':{'type':'object'},'numericHistogram':{'type':'object','required':['binning'],'properties':{'binning':{'const':'powers-of-two'}}},'reportedEdge':{'type':'null'},'linksTo':{'type':'null'},'groupTimeSeries':{'const':False},'offset':{'const':0}}}
 
 # Shipped and authored configuration-only template expansion share one endpoint.
 for suffix in ('', 'Input'):
@@ -494,7 +500,7 @@ for suffix in ('', 'Input'):
   for field in ('source','query','widget'):request['properties'][field]['type']='object'
   request['properties']['query'].setdefault('properties',{})['offset']={'const':0}
   summary_source={'required':['source'],'properties':{'source':{'required':['template'],'properties':{'template':{'required':['group','profile'],'properties':{'group':{'const':'none'},'profile':{'const':'ordinary-summary'}}}}}}}
-  summary_destination={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False},'offset':{'const':0},'summary':{'enum':['','span-duration']}}}
+  summary_destination={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'linksTo':{'type':'null'},'groupTimeSeries':{'const':False},'offset':{'const':0},'summary':{'enum':['','span-duration']}}}
   request.pop('required',None)
   request['properties']['baselineCapture'].update(type='string',pattern='^[a-f0-9]{64}$')
   request['properties']['baselineCapture']['description']='Explicit destination baseline for comparison templates only. Never defaults to the source specimen; pure expansion does not fetch or verify evidence. Existing Prepare checks the chosen stored capture against the destination.'
@@ -688,19 +694,19 @@ for suffix in ('', 'Input'):
    'properties':{'summary':{'properties':{'display':{'properties':{'fields':{'items':{'enum':[key for key in summary_keys if not key.startswith('numeric.')]}}}}}}}
   }
  }
- summary_template_query={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False},'offset':{'const':0},'summary':{'enum':['','span-duration']}}}
+ summary_template_query={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':0},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'linksTo':{'type':'null'},'groupTimeSeries':{'const':False},'offset':{'const':0},'summary':{'enum':['','span-duration']}}}
  histogram_template={'required':['template'],'properties':{'template':{'required':['group','profile'],'properties':{'group':{'const':'none'},'profile':{'const':'ordinary-histogram'}}}}}
  category_template_children={'contains':{'required':['aggregate']},'minContains':1,'not':{'contains':{'required':['summary']}}}
  view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'required':['composition'],'properties':{'queries':{'items':{'properties':{'offset':{'const':0}}}}},'if':summary_template,'then':{'properties':{'composition':{'properties':{'children':summary_template_children}},'queries':{'items':summary_template_query}}},'else':{'if':histogram_template,'then':{'properties':{'composition':{'properties':{'children':copy.deepcopy(histogram_children)}},'queries':{'items':copy.deepcopy(histogram_query407)}}},'else':{'properties':{'composition':{'properties':{'children':category_template_children}}}}}}})
  template_comparison={'properties':{'composition':{'properties':{'children':{'contains':{'required':['comparison']}}},'required':['children']}},'required':['composition']}
  view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'if':template_comparison,'then':{'properties':{'template':{'required':['baseline']}}},'else':{'properties':{'template':{'not':{'required':['baseline']}}}}}})
  view.setdefault('allOf',[]).append({'if':{'required':['template']},'then':{'properties':{'composition':{'properties':{'children':{'not':{'contains':{'required':['comparison'],'properties':{'comparison':{'properties':{'kind':{'properties':{'name':{'const':'query-count-comparison'}}}}}}}}}}}}}})
- view.setdefault('allOf',[]).append({'if':{'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['facet']}}}}}},'then':{'properties':{'queries':{'items':{'properties':{'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}}}}})
+ view.setdefault('allOf',[]).append({'if':{'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['facet']}}}}}},'then':{'properties':{'queries':{'items':{'properties':{'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'linksTo':{'type':'null'},'groupTimeSeries':{'const':False}}}}}}})
  flat=['layout','columns','fieldColumns','displays','breakdowns','tail']
  view.setdefault('allOf',[]).append({'if':{'required':['composition']},'then':{'required':['version','title','queries'],'properties':{'version':{'const':1},'queries':{'type':'array','minItems':1,'maxItems':1}},'not':{'anyOf':[{'required':[field]} for field in flat]}},'else':{'required':['layout','columns']}})
  raw_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'not':{'contains':{'anyOf':[{'required':['aggregate']},{'required':['summary']},{'required':['histogram']},grouped_timeline_child]}}}}}}}
  grouped_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':grouped_timeline_child}}}}}
- grouped_query={'required':['groupTimeSeries','groupBy','bucketMs'],'properties':{'signal':{'enum':['logs','spans']},'groupTimeSeries':{'const':True},'groupBy':{'minItems':1,'maxItems':1},'bucketMs':{'enum':[1000,10000,60000,300000]},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'summary':{'const':''},'spanStatus':{'const':False}}}
+ grouped_query={'required':['groupTimeSeries','groupBy','bucketMs'],'properties':{'signal':{'enum':['logs','spans']},'groupTimeSeries':{'const':True},'groupBy':{'minItems':1,'maxItems':1},'bucketMs':{'enum':[1000,10000,60000,300000]},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'linksTo':{'type':'null'},'summary':{'const':''},'spanStatus':{'const':False}}}
  grouped_query['properties'].pop('summary')
  view.setdefault('allOf',[]).append({'if':grouped_composition,'then':{'properties':{'queries':{'items':grouped_query}}}})
  for profile in ('grouped-count-v1','grouped-duration-mean-v1'):
@@ -713,7 +719,7 @@ for suffix in ('', 'Input'):
  histogram_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['histogram']}}}}}}
  view.setdefault('allOf',[]).append({'if':histogram_composition,'then':{'properties':{'queries':{'items':copy.deepcopy(histogram_query407)}}}})
  summary_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':{'required':['summary']}}}}}}
- summary_query={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':2,'items':{'not':{'required':['kind','key'],'properties':{'kind':{'const':'column'},'key':{'enum':['body_pattern_v1','duration_bucket']}}}}},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False},'summary':{'enum':['','span-duration']}}}
+ summary_query={'properties':{'signal':{'enum':['logs','spans']},'groupBy':{'maxItems':2,'items':{'not':{'required':['kind','key'],'properties':{'kind':{'const':'column'},'key':{'enum':['body_pattern_v1','duration_bucket']}}}}},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'linksTo':{'type':'null'},'groupTimeSeries':{'const':False},'summary':{'enum':['','span-duration']}}}
  view.setdefault('allOf',[]).append({'if':summary_composition,'then':{'properties':{'queries':{'items':summary_query}}}})
  for family in ('numeric.','duration.','status.'):
   field_condition={'required':['summary'],'properties':{'summary':{'properties':{'display':{'required':['fields'],'properties':{'fields':{'contains':{'enum':[key for key in summary_keys if key.startswith(family)]}}}}}}}}
@@ -739,7 +745,7 @@ for suffix in ('', 'Input'):
   rate_child={'required':[role],'properties':{role:{'properties':{'display':{'required':[display_field],'properties':{display_field:rate_value_shape}}}}}}
   rate_composition={'required':['composition'],'properties':{'composition':{'properties':{'children':{'contains':rate_child}}}}}
   view.setdefault('allOf',[]).append({'if':rate_composition,'then':{'properties':{'queries':{'items':copy.deepcopy(query_profile)}}}})
- view.setdefault('allOf',[]).append({'if':raw_composition,'then':{'properties':{'queries':{'items':{'properties':{'signal':{'enum':['logs','spans']},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}}}}})
+ view.setdefault('allOf',[]).append({'if':raw_composition,'then':{'properties':{'queries':{'items':{'properties':{'signal':{'enum':['logs','spans']},'numeric':{'type':'null'},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'linksTo':{'type':'null'},'groupTimeSeries':{'const':False}}}}}}})
 
 # Immutable selected observations, independent of source and annotation storage.
 keep=schemas['exploration.KeepTailIntentInput']
@@ -1059,7 +1065,7 @@ view['allOf'].append({'if':{'properties':{'shape':{'const':'grouped-time-series'
 view['allOf'].append({'if':{'properties':{'scope':{'properties':{'signal':{'const':'metrics'}}}}},'then':{'properties':{'shape':{'const':'histogram'},'histogram':{'properties':{'kind':{'const':'otel-explicit'}}},'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}:(native(-time)?:(0|[1-9][0-9]*):(0|[1-9][0-9]*)|native-window:(0|[1-9][0-9]*))$'}}}}},'else':{'properties':{'scope':{'properties':{'id':{'pattern':'^[a-f0-9]{64}$'},'selector':ref('exploration.Query')}}}}})
 
 rate_present={'required':['fields'],'properties':{'fields':{'contains':{'required':['key'],'properties':{'key':{'const':'record.rate'}}}}}}
-rate_selector={'properties':{'signal':{'enum':['logs','spans']},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'groupTimeSeries':{'const':False}}}
+rate_selector={'properties':{'signal':{'enum':['logs','spans']},'numericHistogram':{'type':'null'},'reportedEdge':{'type':'null'},'linksTo':{'type':'null'},'groupTimeSeries':{'const':False}}}
 view['allOf'].append({'if':rate_present,'then':{'properties':{'shape':{'enum':['summary','time-series']},'scope':{'properties':{'signal':{'enum':['logs','spans']},'selector':rate_selector}},'rows':{'items':{'properties':{'values':{'required':['record.rate']},'cells':{'required':['record.rate']}}}}}}})
 for shape,profile in [('summary',record_rate_summary418),('time-series',record_rate_ungrouped418)]:
  view['allOf'].append({'if':{'allOf':[rate_present,{'required':['shape'],'properties':{'shape':{'const':shape}}}]},'then':{'properties':{'scope':{'properties':{'selector':copy.deepcopy(profile)}}}}})
@@ -1910,7 +1916,7 @@ def strict_record_input_contract417():
  schemas['exploration.QueryInput']=ref(root_name)
  schemas['RecordQuery']=ref(root_name)
  op=spec['paths']['/exception-groups']['post']
- op['requestBody']['content']['application/json']['schema']={'allOf':[ref('RecordQuery'),{'not':{'anyOf':[{'required':[key]} for key in ('numeric','numericHistogram','reportedEdge')]},'properties':{'groupBy':{'type':'array','maxItems':0},'offset':{'const':0},'summary':{'const':''},'spanStatus':{'const':False},'logSeverity':{'const':False},'groupTimeSeries':{'const':False},'bucketMs':{'const':0}}}]}
+ op['requestBody']['content']['application/json']['schema']={'allOf':[ref('RecordQuery'),{'not':{'anyOf':[{'required':[key]} for key in ('numeric','numericHistogram','reportedEdge','linksTo')]},'properties':{'groupBy':{'type':'array','maxItems':0},'offset':{'const':0},'summary':{'const':''},'spanStatus':{'const':False},'logSeverity':{'const':False},'groupTimeSeries':{'const':False},'bucketMs':{'const':0}}}]}
 
 strict_record_input_contract417()
 

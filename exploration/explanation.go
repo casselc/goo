@@ -365,6 +365,13 @@ func (s Source) Explain(ctx context.Context, request ExplanationRequest) (*Expla
 	if e != nil {
 		return nil, e
 	}
+	linked := plan.Baseline
+	if linked.LinksTo == nil {
+		linked = plan.Selection
+	}
+	if e = s.requireSpanLinkSource(ctx, linked); e != nil {
+		return nil, e
+	}
 	read := func(sql string, params map[string]string) ([]json.RawMessage, error) {
 		child, cancel := context.WithTimeout(ctx, 3*time.Second)
 		defer cancel()

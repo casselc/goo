@@ -11,7 +11,7 @@ import * as ServiceIdentity from './service-identity.mjs';
 export function project(question){
  validateRecordQuestion(question);
  if(question.where)validatePredicate(question.where,question.signal);
- if(!['logs','spans'].includes(question.signal)||(question.offset??0)!==0||(question.limit??100)>100||question.numeric||question.numericHistogram||question.reportedEdge||question.groupTimeSeries||question.groupBy?.length!==1||question.groupBy[0].kind==='column'&&['body_pattern_v1','duration_bucket'].includes(question.groupBy[0].key))throw Error('Choose a page-zero ordinary single-group record widget with a limit up to 100.');
+ if(!['logs','spans'].includes(question.signal)||(question.offset??0)!==0||(question.limit??100)>100||question.numeric||question.numericHistogram||(question.reportedEdge||question.linksTo)||question.groupTimeSeries||question.groupBy?.length!==1||question.groupBy[0].kind==='column'&&['body_pattern_v1','duration_bucket'].includes(question.groupBy[0].key))throw Error('Choose a page-zero ordinary single-group record widget with a limit up to 100.');
  const query=structuredClone(question);
  // These directives request additional measures; they do not select records.
  delete query.summary;delete query.spanStatus;

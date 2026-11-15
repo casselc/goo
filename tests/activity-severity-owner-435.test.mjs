@@ -6,7 +6,7 @@ import vm from 'node:vm';
 test('fixed editor retains a requested numeric severity projection when editing log filters',()=>{
  const source=readFileSync(new URL('../ui/exploration.mjs',import.meta.url),'utf8');
  const body=source.match(/function withFilters\(q\)\{([^\n]+)\}/)?.[0];assert.ok(body);
- const state={question:{logSeverity:true},filterError:null,numericControls:{error:()=>null,get:()=>undefined,getHistogram:()=>undefined},draftWhere:()=>undefined,FilterEditor:{validate(){},normalize:()=>undefined},edgeScope:null,splitInput:{checked:false},bucketInput:{value:'10000'},statusInput:{checked:false},summaryInput:{checked:false},el:()=>({value:'logs'}),filterEditor:{grouping:()=>[]}};
+ const state={question:{logSeverity:true},filterError:null,numericControls:{error:()=>null,get:()=>undefined,getHistogram:()=>undefined},draftWhere:()=>undefined,FilterEditor:{validate(){},normalize:()=>undefined},edgeScope:null,linkScope:null,splitInput:{checked:false},bucketInput:{value:'10000'},statusInput:{checked:false},summaryInput:{checked:false},el:()=>({value:'logs'}),filterEditor:{grouping:()=>[]}};
  vm.runInNewContext(body+';result=withFilters({signal:"logs",fromMs:1,toMs:60001})',state);
  assert.equal(state.result.logSeverity,true);assert.equal(state.result.fromMs,1);assert.equal(state.result.toMs,60001);
  vm.runInNewContext('result=withFilters({signal:"spans"})',state);assert.equal(state.result.logSeverity,undefined);

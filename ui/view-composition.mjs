@@ -31,7 +31,7 @@ export function validate(value,q){
  const groupedTimeline=q.groupTimeSeries&&roles.size===2&&roles.has('timeline')&&roles.has('records');
  if(q.groupTimeSeries&&!groupedTimeline)throw Error('Grouped count views require only timeline and records.');
  if(roles.has('summary')&&roles.has('comparison'))throw Error('Population summary cannot share a comparison composition.');
- if(!roles.has('aggregate')&&!groupedTimeline&&!roles.has('summary')){if([...roles].some(role=>!['records','facet'].includes(role))||value.children.find(child=>child.records)?.hidden===true||!['logs','spans'].includes(q.signal)||q.numeric||q.numericHistogram||q.reportedEdge||q.groupTimeSeries)throw Error('Records-only compositions require one ordinary logs or spans records child without specialized query directives.');if(q.where)validatePredicate(q.where,q.signal);}
+ if(!roles.has('aggregate')&&!groupedTimeline&&!roles.has('summary')){if([...roles].some(role=>!['records','facet'].includes(role))||value.children.find(child=>child.records)?.hidden===true||!['logs','spans'].includes(q.signal)||q.numeric||q.numericHistogram||(q.reportedEdge||q.linksTo)||q.groupTimeSeries)throw Error('Records-only compositions require one ordinary logs or spans records child without specialized query directives.');if(q.where)validatePredicate(q.where,q.signal);}
  if(roles.has('facet')&&roles.has('comparison')){const pair=comparison(value);if(!CapturedCount.queryVariant(pair))throw Error('Facets require a fresh fixed-query comparison.');Facet.validate(facet(value),pair.baselineQuery);}
  if(!visible)throw Error('Keep at least one composition child visible.');
  return structuredClone(value);

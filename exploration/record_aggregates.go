@@ -71,6 +71,9 @@ func (s Source) FetchRecordAggregates(ctx context.Context, q Query) (result *Rec
 	if e != nil {
 		return nil, e
 	}
+	if e = s.requireSpanLinkSource(ctx, question); e != nil {
+		return nil, e
+	}
 	defer func() { resultErr = sourcefailure.Protocol(resultErr) }()
 	read := func(sql string) ([]json.RawMessage, CountedValuesRead, error) {
 		if e := ctx.Err(); e != nil {

@@ -2,7 +2,7 @@
 import {validateRecordQuestion} from './question-protocol.mjs';
 const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 function closed(value,keys){if(!object(value)||Object.keys(value).some(key=>!keys.includes(key)))throw Error('Unknown or invalid histogram declaration fields.');}
-export function eligible(q){try{validateRecordQuestion(q);return ['logs','spans'].includes(q.signal)&&(q.offset??0)===0&&(q.groupBy?.length??0)===0&&!q.groupTimeSeries&&!q.reportedEdge&&!!q.numeric&&q.numericHistogram?.binning==='powers-of-two'}catch{return false}}
+export function eligible(q){try{validateRecordQuestion(q);return ['logs','spans'].includes(q.signal)&&(q.offset??0)===0&&(q.groupBy?.length??0)===0&&!q.groupTimeSeries&&!q.reportedEdge&&!q.linksTo&&!!q.numeric&&q.numericHistogram?.binning==='powers-of-two'}catch{return false}}
 export function validate(value,q){
  if(!eligible(q))throw Error('Choose an ungrouped page-zero numeric histogram question.');
  closed(value,['version','scope','kind','display']);closed(value.scope,['kind','signal']);closed(value.kind,['name','version']);closed(value.display,['category','value','title','requiresComplete']);

@@ -19,7 +19,7 @@ const closed=(value,keys)=>{if(!value||typeof value!=='object'||Array.isArray(va
 
 export function question(parent){
  Protocol.validateRecordQuestion(parent);
- if(parent.reportedEdge||(parent.offset??0)!==0||parent.numeric||parent.numericHistogram)throw Error('Choose a page-zero ordinary log or span population.');
+ if((parent.reportedEdge||parent.linksTo)||(parent.offset??0)!==0||parent.numeric||parent.numericHistogram)throw Error('Choose a page-zero ordinary log or span population.');
  const q=clone(parent);for(const key of ['groupBy','bucketMs','groupTimeSeries','summary','spanStatus'])delete q[key];q.limit=100;q.offset=0;
  if(q.where)Predicates.validate(q.where,q.signal);return q;
 }

@@ -25,7 +25,7 @@ function traceSearchDetails(request,node){
  for(const condition of request.conditions){const item=node('li',FieldPresentation.selectorText(condition)),fields=new Set();item.title=JSON.stringify(condition);const visit=p=>{if(p.all||p.any){for(const child of p.all||p.any)visit(child)}else fields.add(FieldPresentation.qualified(p.numeric?.field||p.field))};visit(condition);item.append(node('small',' · '+[...fields].join(' · ')));list.append(item)}
  details.append(list,node('small','Trace list limit: '+request.limit));return details;
 }
-function recordPopulation(q){const e=q.reportedEdge;if(!e)return population(q.where);const id=ServiceIdentity;return 'Reported parent '+id.name(e.parent.service,e.parent.namespace)+' → '+id.name(e.child.service,e.child.namespace)+(q.where?' · '+population(q.where):'')}
+function recordPopulation(q){if(q.linksTo)return 'Reports link to '+q.linksTo.traceId+' / '+q.linksTo.spanId+(q.where?' · '+population(q.where):'');const e=q.reportedEdge;if(!e)return population(q.where);const id=ServiceIdentity;return 'Reported parent '+id.name(e.parent.service,e.parent.namespace)+' → '+id.name(e.child.service,e.child.namespace)+(q.where?' · '+population(q.where):'')}
 function move(cards,index,delta){const next=index+delta;if(next<0||next>=cards.length)return cards.slice();const result=cards.slice();[result[index],result[next]]=[result[next],result[index]];return result;}
 function mount(host){
  const controller={};

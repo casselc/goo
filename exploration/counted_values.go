@@ -90,6 +90,9 @@ func (s Source) FetchCountedValues(ctx context.Context, q Query) (result *Counte
 	if e != nil {
 		return nil, e
 	}
+	if e = s.requireSpanLinkSource(ctx, question); e != nil {
+		return nil, e
+	}
 	defer func() { resultErr = sourcefailure.Protocol(resultErr) }()
 	if e := ctx.Err(); e != nil {
 		return nil, e

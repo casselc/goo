@@ -4,6 +4,9 @@
 versioned extension into the existing query model, preserve the parent scope and
 compare CEL/Goo/ClickHouse behavior. Interactive text editing remains planned.
 
+[Find spans referencing a selected tuple](span-link-incoming.md) searches same-index
+reported link pairs with explicit paging and a source-free held return.
+
 [Reported span link → exact target → held trace](span-link-target.md) stages a
 separate tuple lookup in the original environment/window, then returns locally.
 

@@ -75,7 +75,7 @@ func HistogramViewEligible(q exploration.Query) bool {
 	if _, err := exploration.Compile(q); err != nil {
 		return false
 	}
-	return (q.Signal == "logs" || q.Signal == "spans") && q.Offset == 0 && len(q.GroupBy) == 0 && !q.GroupTimeSeries && q.ReportedEdge == nil && q.Numeric != nil && q.NumericHistogram != nil && q.NumericHistogram.Binning == "powers-of-two"
+	return (q.Signal == "logs" || q.Signal == "spans") && q.Offset == 0 && len(q.GroupBy) == 0 && !q.GroupTimeSeries && q.ReportedEdge == nil && q.LinksTo == nil && q.Numeric != nil && q.NumericHistogram != nil && q.NumericHistogram.Binning == "powers-of-two"
 }
 func (d HistogramViewDeclaration) Validate(q exploration.Query) error {
 	if !HistogramViewEligible(q) || d.Version != "goo.view/1" || d.Scope.Kind != "record-query" || d.Scope.Signal != q.Signal || d.Kind.Version != 1 || (d.Kind.Name != "histogram" && d.Kind.Name != "table") {

@@ -52,7 +52,10 @@ metadata and detail IDs remain available to app handlers and tests.
 The adapter validates reported link tuples, offers at most 32 reference actions,
 and selects only a unique held match. An owner may supply `origin` and
 `onLinkTarget({rowIndex,linkIndex,opener})` to stage a separate explicit lookup;
-the callback and component lifecycle never imply source acquisition. See
+the callback and component lifecycle never imply source acquisition.
+An owner may also supply `onFindIncoming({rowIndex,opener})` for any valid
+selected span, including spans without outgoing links. It stages inverse
+reference discovery using the same application-owned panel and held return. See
 [reported span links](REPORTED_SPAN_LINKS.md).
 
 The app loads `waterfall.mjs` before `visualizations.js`. `waterfall.css` supplies

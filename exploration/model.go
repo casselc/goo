@@ -29,6 +29,7 @@ type Predicate struct {
 	Value   string          `json:"value,omitempty" yaml:"value,omitempty"`
 }
 type Query struct {
+	LinksTo             *SpanLinkTarget               `json:"linksTo,omitempty" yaml:"linksTo,omitempty"`
 	EnvironmentSelector *identity.EnvironmentSelector `json:"environmentSelector,omitempty" yaml:"environmentSelector,omitempty"`
 	NumericHistogram    *NumericHistogramSpec         `json:"numericHistogram,omitempty" yaml:"numericHistogram,omitempty"`
 	ReportedEdge        *ReportedEdge                 `json:"reportedEdge,omitempty" yaml:"reportedEdge,omitempty"`
@@ -64,6 +65,14 @@ func (f Field) Type(signal string) (string, error) {
 	return "string", nil
 }
 func (q Query) Validate() error {
+	if q.LinksTo != nil {
+		if q.Signal != "spans" {
+			return fmt.Errorf("reported span links require spans")
+		}
+		if err := q.LinksTo.Validate(); err != nil {
+			return err
+		}
+	}
 	if q.NumericHistogram != nil {
 		if e := q.NumericHistogram.Validate(q.Numeric, q.Signal); e != nil {
 			return e

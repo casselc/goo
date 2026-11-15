@@ -73,7 +73,7 @@ func (d ViewDeclaration) Validate(q exploration.Query) error {
 	}
 	pattern := len(q.GroupBy) == 1 && q.Signal == "logs" && q.GroupBy[0] == (exploration.Field{Kind: "column", Key: "body_pattern_v1"})
 	if pattern {
-		if d.Display.Profile != "log-pattern-count-v1" || d.Display.Value != "count" || q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.Summary != "" || q.SpanStatus || q.GroupTimeSeries {
+		if d.Display.Profile != "log-pattern-count-v1" || d.Display.Value != "count" || q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.LinksTo != nil || q.Summary != "" || q.SpanStatus || q.GroupTimeSeries {
 			return errors.New("log-pattern displays require the pinned count-only profile")
 		}
 	} else if d.Display.Profile != "" {

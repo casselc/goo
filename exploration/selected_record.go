@@ -36,7 +36,7 @@ func validateSelectedRecord(selection identity.EnvironmentSelection, signal stri
 	return nil
 }
 func validateSelectedRows(q Query, rows []json.RawMessage) error {
-	if q.EnvironmentSelector == nil && q.ReportedEdge == nil {
+	if q.EnvironmentSelector == nil && q.ReportedEdge == nil && q.LinksTo == nil {
 		return nil
 	}
 	selection, err := q.EnvironmentSelection()
@@ -44,6 +44,11 @@ func validateSelectedRows(q Query, rows []json.RawMessage) error {
 		return err
 	}
 	for _, wire := range rows {
+		if q.LinksTo != nil {
+			if err = validateSpanLinkRecord(q.LinksTo, wire); err != nil {
+				return err
+			}
+		}
 		if q.ReportedEdge != nil {
 			if err = validateReportedEdgeRecord(q.ReportedEdge, wire); err != nil {
 				return err

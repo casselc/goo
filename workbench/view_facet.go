@@ -55,8 +55,8 @@ func (d FacetViewDeclaration) Validate(q exploration.Query) error {
 	if _, err := exploration.Compile(q); err != nil {
 		return err
 	}
-	if q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.GroupTimeSeries {
-		return errors.New("facets require ordinary record queries without numeric, histogram, reported-edge or grouped-time profiles")
+	if q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.LinksTo != nil || q.GroupTimeSeries {
+		return errors.New("facets require ordinary record queries without numeric, histogram, reported-edge, reported-link or grouped-time profiles")
 	}
 	// Match the existing counted-values adapter's count projection. Scope,
 	// predicates and environment remain intact; display measures are not a facet.

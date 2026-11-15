@@ -5,7 +5,7 @@ import {sameQuestionEnvironment} from './record-environment.mjs';
 import {identity} from './question-session.mjs';
 export function eligibilityReason(q){
  if(q?.numeric||q?.numericHistogram)return 'Count comparisons do not support numeric measures or histograms. Choose an ordinary categorical Count breakdown.';
- if(q?.reportedEdge)return 'Count comparisons do not support reported-edge measures. Choose an ordinary categorical Count breakdown.';
+ if(q?.reportedEdge||q?.linksTo)return 'Count comparisons do not support reported-edge or reported-link populations. Choose an ordinary categorical Count breakdown.';
  if(q?.groupTimeSeries)return 'Count comparisons do not support grouped time series. Choose an ordinary categorical Count breakdown.';
  if(q?.spanStatus)return 'Count comparisons do not support span status. Turn off Span status and errors in Measures, then Run.';
  if(q?.logSeverity)return 'Count comparisons do not support numeric log severity. Choose an ordinary categorical Count breakdown.';

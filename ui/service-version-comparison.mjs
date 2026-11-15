@@ -15,7 +15,7 @@ const clone=structuredClone,versionField={kind:'resource',key:'service.version'}
 
 function parent(question){
  validateRecordQuestion(question);if(question.where)validatePredicate(question.where,question.signal);
- if(question.signal!=='spans'||(question.offset??0)!==0||question.numeric||question.numericHistogram||question.reportedEdge||question.groupTimeSeries||question.groupBy?.length!==1||question.groupBy[0].kind==='column'&&['duration_bucket','body_pattern_v1'].includes(question.groupBy[0].key))throw Error('Choose a page-zero ordinary span breakdown.');
+ if(question.signal!=='spans'||(question.offset??0)!==0||question.numeric||question.numericHistogram||(question.reportedEdge||question.linksTo)||question.groupTimeSeries||question.groupBy?.length!==1||question.groupBy[0].kind==='column'&&['duration_bucket','body_pattern_v1'].includes(question.groupBy[0].key))throw Error('Choose a page-zero ordinary span breakdown.');
  const q=clone(question);q.limit=100;q.offset=0;for(const key of ['summary','spanStatus','bucketMs'])delete q[key];return q;
 }
 function projected(question){const q=parent(question);q.groupBy=[clone(versionField)];q.limit=1;return q;}

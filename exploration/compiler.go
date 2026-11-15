@@ -128,6 +128,9 @@ func (c *compiler) source(q Query, selection identity.EnvironmentSelection) (str
 		c.params[key] = value
 	}
 	where := "Timestamp >= fromUnixTimestamp64Milli({from:Int64}) AND Timestamp < fromUnixTimestamp64Milli({to:Int64}) AND " + environment + " AND " + c.predicate(q.Where)
+	if q.LinksTo != nil {
+		where += " AND " + c.spanLinksTo(q.LinksTo)
+	}
 	if q.ReportedEdge != nil {
 		where += " AND " + c.reportedEdge(q, environment)
 	}

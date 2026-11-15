@@ -7,8 +7,8 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–452 delivered and validated**. The current cadence is
-**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup**.
+Status: **429 and 437–453 delivered and validated**. The current cadence is
+**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup → 453 referring-span discovery depth**.
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
 foundation; this does not extend a CEL platform queue.
@@ -310,6 +310,10 @@ No automatic traversal, expanded-trace/exact-target equivalence or causal claim.
 
 ### 453 — Find spans reporting a link to this span (depth)
 
+Delivered: [operator guide](REPORTED_SPAN_LINKS.md),
+[storyboard](journeys/span-link-incoming.md) and
+[scoped review](reviews/SPAN_LINK_INCOMING_453_ACCEPTANCE.md).
+
 Add bounded inverse discovery for an exact selected trace/span pair. Match IDs at
 the same array index with an explicit typed membership selector; independent
 array containment is insufficient. Declare matching-record count grain and keep
@@ -323,6 +327,13 @@ Unify demonstrated reference display, admission, scope disclosure and keyboard
 behavior after those workflows are measured. Keep source/navigation owners
 explicit and components passive. Do not build a universal investigation owner or
 another DSL. Check source work and desktop/narrow operator journeys.
+
+453 exposed manual selector reconstruction across owners. Consolidate two or
+three identical pure transformations and add a shared selector-conservation
+case bank: exact carry or explicit pre-IO refusal, detached values, and matching
+request/response identity. Keep deliberately widened reference/trace questions
+explicit and specialized profile restrictions local; no generic policy registry
+or readiness cache. See [453 review](reviews/SPAN_LINK_INCOMING_453_ACCEPTANCE.md).
 
 ## Retained follow-ons
 

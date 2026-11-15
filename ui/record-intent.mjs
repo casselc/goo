@@ -3,7 +3,8 @@ import {object,text,array} from './intent-shape.mjs';
 import {validate as validatePredicate,validateField} from './predicate-validation.mjs';
 import {validateNumericPredicate} from './numeric-predicate.mjs';
 import * as Environment from './record-environment.mjs';
-const allowed=['environmentSelector','signal','environment','fromMs','toMs','limit','offset','where','groupBy','numeric','numericHistogram','summary','spanStatus','logSeverity','bucketMs','groupTimeSeries','reportedEdge'];
+import {validateTarget} from './span-link-membership.mjs';
+const allowed=['environmentSelector','signal','environment','fromMs','toMs','limit','offset','where','groupBy','numeric','numericHistogram','summary','spanStatus','logSeverity','bucketMs','groupTimeSeries','reportedEdge','linksTo'];
 const present=(q,k)=>q[k]!==undefined;
 function namespace(n){object(n,['mode','value'],'Invalid reported namespace.');if(!['missing','value'].includes(n.mode)||present(n,'value')&&!text(n.value,128)||n.mode==='missing'&&n.value!==undefined&&n.value!=='')throw Error('Invalid reported namespace.');return [n.mode,n.value??''];}
 function edge(e,signal){
@@ -29,5 +30,6 @@ export function validateRecordQuestion(q){
  if(q.bucketMs&&Math.ceil((q.toMs-q.fromMs)/q.bucketMs)>240)throw Error('Use at most 240 time intervals; increase bucket width or narrow window.');
  if(q.groupTimeSeries&&(!q.bucketMs||!q.groupBy?.length))throw Error('Split chart requires a time bucket and breakdown.');
  if(present(q,'reportedEdge'))edge(q.reportedEdge,q.signal);
+ if(present(q,'linksTo')){if(q.signal!=='spans')throw Error('Reported span-link membership requires spans.');validateTarget(q.linksTo)}
  return q;
 }

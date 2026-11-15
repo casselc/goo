@@ -59,7 +59,7 @@ func groupViewDataset(r *Result, exhaustiveGroups bool) *ViewDataset {
 		return nil
 	}
 	pattern := q.Signal == "logs" && len(q.GroupBy) == 1 && q.GroupBy[0] == (Field{Kind: "column", Key: "body_pattern_v1"})
-	if pattern && (q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.Summary != "" || q.SpanStatus || q.GroupTimeSeries) {
+	if pattern && (q.Numeric != nil || q.NumericHistogram != nil || q.ReportedEdge != nil || q.LinksTo != nil || q.Summary != "" || q.SpanStatus || q.GroupTimeSeries) {
 		return nil
 	}
 	for i, f := range q.GroupBy {

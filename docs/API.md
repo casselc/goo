@@ -649,6 +649,33 @@ Row selection retains the existing linked-log action; disclosure/group display
 does not issue telemetry requests.
 
 
+## Spans reporting an OTel link
+
+An ordinary spans query can include an exact `linksTo` selector:
+
+```json
+{
+  "linksTo": {
+    "traceId": "0123456789abcdef0123456789abcdef",
+    "spanId": "0123456789abcdef"
+  }
+}
+```
+
+Both IDs must be nonzero lowercase hexadecimal values of lengths 32 and 16.
+Membership requires both IDs at the same link-array position, with aligned trace,
+span and attribute arrays. Repeated matching links do not multiply records;
+independent source records with duplicate IDs remain separate observations.
+The selector combines with the question's environment, fixed window and `where`.
+Counts describe all matching span records, independently of the returned page.
+Pages are fresh reads, not a stable combined snapshot.
+
+The source must pass the existing standard spans profile, including nonnullable
+link-array column types, before population reads. Unsupported specialized
+projections refuse this selector rather than dropping it. Shared questions,
+captures, ordinary fixed views and telemetry packages retain it. See
+[reported span links](REPORTED_SPAN_LINKS.md) for the interactive workflow.
+
 ## Trace search across span conditions
 
 `POST /trace-search` (browser `/api/trace-search`) reads one full scoped source

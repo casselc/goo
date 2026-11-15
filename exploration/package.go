@@ -25,6 +25,7 @@ var packageName = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_.-]{0,127}$`)
 // TelemetryPackage binds existing OTel data without a source-code manifest.
 // A definition is reusable configuration, never a frozen evidence receipt.
 type TelemetryPackage struct {
+	LinksTo          *SpanLinkTarget       `json:"linksTo,omitempty" yaml:"linksTo,omitempty"`
 	NumericHistogram *NumericHistogramSpec `json:"numericHistogram,omitempty" yaml:"numericHistogram,omitempty"`
 	ReportedEdge     *ReportedEdge         `json:"reportedEdge,omitempty" yaml:"reportedEdge,omitempty"`
 	Numeric          *NumericBinding       `json:"numeric,omitempty" yaml:"numeric,omitempty"`
@@ -178,13 +179,16 @@ func (s *PackageSource) UnmarshalYAML(n *yaml.Node) error {
 	return json.Unmarshal(data, s)
 }
 func (p TelemetryPackage) rawQuestion(from, to int64) Query {
-	return Query{EnvironmentSelector: p.Source.EnvironmentSelector, NumericHistogram: p.NumericHistogram, ReportedEdge: p.ReportedEdge, Numeric: p.Numeric, GroupTimeSeries: p.GroupTimeSeries, SpanStatus: p.SpanStatus, LogSeverity: p.LogSeverity, BucketMS: p.BucketMS, Summary: p.Summary, Signal: p.Source.Signal, Environment: p.Source.Environment, FromMS: from, ToMS: to, Where: p.Where, GroupBy: p.GroupBy, Limit: 100, Offset: 0}
+	return Query{EnvironmentSelector: p.Source.EnvironmentSelector, NumericHistogram: p.NumericHistogram, ReportedEdge: p.ReportedEdge, LinksTo: p.LinksTo, Numeric: p.Numeric, GroupTimeSeries: p.GroupTimeSeries, SpanStatus: p.SpanStatus, LogSeverity: p.LogSeverity, BucketMS: p.BucketMS, Summary: p.Summary, Signal: p.Source.Signal, Environment: p.Source.Environment, FromMS: from, ToMS: to, Where: p.Where, GroupBy: p.GroupBy, Limit: 100, Offset: 0}
 }
 
 // Question detaches every mutable definition field without a JSON round trip
 // that could repair an invalid caller string into a different identity.
 func (p TelemetryPackage) Question(from, to int64) Query {
 	q := p.rawQuestion(from, to)
+	if q.LinksTo != nil {
+		q.LinksTo = new(*q.LinksTo)
+	}
 	q.EnvironmentSelector = copyEnvironmentSelector(q.EnvironmentSelector)
 	q.GroupBy = slices.Clone(q.GroupBy)
 	if q.Numeric != nil {
@@ -310,7 +314,7 @@ func DraftTelemetryPackage(q Query, name, title string, minutes int) (TelemetryP
 	b, _ := json.Marshal(q)
 	var clone Query
 	json.Unmarshal(b, &clone)
-	p := TelemetryPackage{NumericHistogram: clone.NumericHistogram, ReportedEdge: clone.ReportedEdge, Numeric: clone.Numeric, GroupTimeSeries: q.GroupTimeSeries, SpanStatus: q.SpanStatus, LogSeverity: q.LogSeverity, BucketMS: q.BucketMS, Summary: q.Summary, APIVersion: PackageVersion, Name: name, Title: title, Source: PackageSource{Adapter: "clickhouse.otel/v1", Signal: clone.Signal, Environment: clone.Environment, EnvironmentSelector: clone.EnvironmentSelector}, Where: clone.Where, GroupBy: clone.GroupBy, Measure: "captured-record-count", LookbackMinutes: minutes, Views: []string{"records", "trace-context"}}
+	p := TelemetryPackage{NumericHistogram: clone.NumericHistogram, ReportedEdge: clone.ReportedEdge, LinksTo: clone.LinksTo, Numeric: clone.Numeric, GroupTimeSeries: q.GroupTimeSeries, SpanStatus: q.SpanStatus, LogSeverity: q.LogSeverity, BucketMS: q.BucketMS, Summary: q.Summary, APIVersion: PackageVersion, Name: name, Title: title, Source: PackageSource{Adapter: "clickhouse.otel/v1", Signal: clone.Signal, Environment: clone.Environment, EnvironmentSelector: clone.EnvironmentSelector}, Where: clone.Where, GroupBy: clone.GroupBy, Measure: "captured-record-count", LookbackMinutes: minutes, Views: []string{"records", "trace-context"}}
 	if len(p.GroupBy) == 1 {
 		p.Views = []string{"records", "distribution", "trace-context"}
 	}
@@ -377,6 +381,9 @@ func PlanTelemetryPackage(p TelemetryPackage, from, to int64, target *Annotation
 	if seen[Field{Kind: "column", Key: "severity_number"}] {
 		handoff.Notes = append(handoff.Notes, "severity_number is intrinsic OTel log SeverityNumber, not an attribute numeric binding. Preserve the independent raw SeverityText; do not infer numeric severity from its spelling.")
 	}
+	if p.LinksTo != nil {
+		handoff.Notes = append(handoff.Notes, "Reported-link queries require standard OTel span links with exact paired trace/span IDs. Repeated matching links select one span record; no single-function annotation expresses inverse reference discovery.")
+	}
 	if p.ReportedEdge != nil {
 		add(Field{Kind: "column", Key: "trace_id"})
 		add(Field{Kind: "resource", Key: "service.namespace"})
@@ -391,6 +398,9 @@ func PlanTelemetryPackage(p TelemetryPackage, from, to int64, target *Annotation
 			return nil, fmt.Errorf("Go annotation templates require a current-key-only named environment; use this telemetry package directly without an annotation target")
 		}
 
+		if p.LinksTo != nil {
+			return nil, fmt.Errorf("reported-link membership cannot be generated as a single-function annotation; retain the reusable telemetry package")
+		}
 		if p.ReportedEdge != nil {
 			return nil, fmt.Errorf("reported-edge relationships cannot be generated as a single-function annotation; retain the reusable telemetry package")
 		}

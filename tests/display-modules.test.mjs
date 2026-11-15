@@ -80,7 +80,9 @@ test('display entry imports a closed passive graph without publishing namespaces
   assert.ok(visited.has(new URL('../ui/log-severity.mjs', import.meta.url).href));
   // Attribute gestures share pure intent admission, never a source client.
   assert.ok(visited.has(new URL('../ui/field-refinement.mjs', import.meta.url).href));
-  assert.equal(visited.size, 70);
+  // Exact reported-link targets add only pure tuple admission to the graph.
+  assert.ok(visited.has(new URL('../ui/span-link-membership.mjs', import.meta.url).href));
+  assert.equal(visited.size, 71);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

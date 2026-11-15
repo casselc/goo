@@ -90,7 +90,7 @@ func SummaryViewFields(q exploration.Query) []string {
 	if _, err := exploration.Compile(q); err != nil {
 		return nil
 	}
-	if q.NumericHistogram != nil || q.GroupTimeSeries || q.ReportedEdge != nil {
+	if q.NumericHistogram != nil || q.GroupTimeSeries || q.ReportedEdge != nil || q.LinksTo != nil {
 		return nil
 	}
 	for _, field := range q.GroupBy {
