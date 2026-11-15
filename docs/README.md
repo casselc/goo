@@ -84,3 +84,5 @@ Services/native record context and saved reuse, with the next operator roadmap.
 [Refine by an attribute](ATTRIBUTE_REFINEMENT.md): Include, Exclude, reported and missing across record details, columns, facets and CEL.
 
 [Numeric CEL conditions](CEL_NUMERIC_ATTRIBUTES.md): exact typed thresholds and explicit parse states over resource/record attributes.
+
+[Logs and spans together](PAIRED_ACTIVITY.md): independent live lanes, local inspection and read-free retained return.

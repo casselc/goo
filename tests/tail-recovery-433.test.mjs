@@ -18,7 +18,7 @@ class Element{
 }
 function fixture(response){
  globalThis.document={hidden:false,activeElement:null};const rows=[{key:'held',record:{Body:'held'}}],timers=[],calls={fetch:0,clear:0,render:[],publish:[],resume:0};
- const state={TailRecovery,SSEParser,transportIdentity,canonical,nativeControlReady,renderRefusal:(_host,error)=>calls.render.push(error),document,AbortController,TextDecoder,Date,Number,JSON,Error,structuredClone,RegExp,
+ const state={usable:()=>true,TailRecovery,SSEParser,transportIdentity,canonical,nativeControlReady,renderRefusal:(_host,error)=>calls.render.push(error),document,AbortController,TextDecoder,Date,Number,JSON,Error,structuredClone,RegExp,
   staged:false,signalKind:'logs',resume:new Element(),retry:new Element(),pause:new Element(),status:new Element(),failureHost:new Element(),section:new Element(),terminalFailure:null,renderedFailure:null,completedRead:{successful:true},readRevision:1,generation:0,controller:null,timer:null,watchdog:null,selector:{environment:'prod'},sequence:0,lastBatch:0,lastTo:null,gap:false,phase:'unknown',compact:true,connection:'a'.repeat(64),localInspector:null,buffer:{rows,append(items){rows.push(...items)}},
   clear(){calls.clear++;rows.length=0;state.connection=null},reconcile(){},setInterval:()=>1,clearInterval(){},clearTimeout(){},setTimeout(fn){timers.push(fn);return timers.length},
   halt(){state.generation++;state.controller?.abort();state.controller=null;state.timer=null},publish(phase,text){state.phase=phase;state.status.textContent=text;state.pause.hidden=!state.controller;state.pause.disabled=!state.controller;state.resume.hidden=!!state.controller;calls.publish.push({phase,text})},
@@ -62,7 +62,7 @@ test('actual loaded-match selection remains local for a stopped terminal failure
  const sourceBody=between('  function batchState(','  function resetFind('),row={key:'held',record:{Body:'match'}},items=new Set(),calls={writes:0,reads:0,add:0};
  const node=(tag,text)=>{const e=new Element();e.tagName=tag;e.textContent=text;e.children=[];e.setAttribute=()=>{};e.append=(...children)=>e.children.push(...children);e.replaceChildren=(...children)=>e.children=children;return e};
  for(const [phase,failure,controller,enabled]of [['unavailable',missing,null,true],['paused',null,null,true],['unavailable',null,null,false],['unavailable',missing,{},false],['loading',null,{},false]]){
-  items.clear();calls.add=0;const batchHost=node('div'),state={phase,terminalFailure:failure,controller,RecordPresentation:{findQuery:()=>{},matchesLoaded:()=>true},find:{value:'match'},findText:'match',columnControl:{layout:()=>({fieldColumns:[]})},buffer:{rows:[row]},signalKind:'logs',keepBusy:false,keepIntent:null,kept:null,saving:false,pendingIntent:null,outcome:null,selector:{environment:'prod'},selected:{planMany:()=>({added:items.has(row.key)?0:1}),addMany(rows){calls.add++;rows.forEach(r=>items.add(r.key));return{added:1}}},selectionGeneration:0,generation:7,connection:'a'.repeat(64),canonical,batchHost,batchSignature:'',batchRevision:0,batchButton:null,batchCommitting:false,n:node,document:{activeElement:null,hidden:false},UI:{actionVisible:e=>!e.hidden},save:{hidden:true},keep:{disabled:false},keepStatus:node('span'),refreshSelection(){},fetch(){calls.reads++}};
+  items.clear();calls.add=0;const batchHost=node('div'),state={usable:()=>true,nativeControlReady:e=>!e.hidden&&!e.disabled,phase,terminalFailure:failure,controller,RecordPresentation:{findQuery:()=>{},matchesLoaded:()=>true},find:{value:'match'},findText:'match',columnControl:{layout:()=>({fieldColumns:[]})},buffer:{rows:[row]},signalKind:'logs',keepBusy:false,keepIntent:null,kept:null,saving:false,pendingIntent:null,outcome:null,selector:{environment:'prod'},selected:{planMany:()=>({added:items.has(row.key)?0:1}),addMany(rows){calls.add++;rows.forEach(r=>items.add(r.key));return{added:1}}},selectionGeneration:0,generation:7,connection:'a'.repeat(64),canonical,batchHost,batchSignature:'',batchRevision:0,batchButton:null,batchCommitting:false,n:node,document:{activeElement:null,hidden:false},UI:{actionVisible:e=>!e.hidden},save:{hidden:true},keep:{disabled:false},keepStatus:node('span'),refreshSelection(){},fetch(){calls.reads++}};
   vm.runInNewContext(sourceBody+'\nthis.refreshBatch=refreshBatch;this.batchState=batchState;',state);state.refreshBatch();const button=state.batchButton;assert.equal(button.disabled,!enabled);button.onclick();assert.equal(calls.add,enabled?1:0);assert.equal(calls.reads,0);assert.equal(calls.writes,0);
   if(enabled){state.refreshBatch();assert.equal(state.batchButton.disabled,true,'existing proof/membership plan prevents repeated selection');const old=button.onclick;state.generation++;state.refreshBatch();old();assert.equal(calls.add,1,'retired matching control cannot add again')}
  }
@@ -78,4 +78,12 @@ test('authoring blocks native tail start/retry and retained connect without read
  await state.connect();assert.equal(calls.fetch,0);assert.equal(rows.length,1);assert.equal(calls.clear,0);
  state.block('');assert.equal(state.resume.disabled,false);assert.equal(state.retry.disabled,false);
  await state.connect();assert.equal(calls.fetch,1);
+});
+
+test('inactive lane denies initial connect and explicit retry without altering held observations',async()=>{
+ const f=fixture(http(400,{error:'Invalid tail selector.',reason:'invalid_selector',retry:'explicit'}));
+ f.state.usable=()=>false;await f.state.connect();assert.equal(f.calls.fetch,0);assert.equal(f.rows.length,1);assert.equal(f.calls.clear,0);
+ f.state.usable=()=>true;await f.state.connect();assert.equal(f.calls.fetch,1);const retry=f.state.retry.onclick;
+ f.state.usable=()=>false;retry();assert.equal(f.calls.fetch,1);assert.equal(f.calls.resume,0);assert.equal(f.rows.length,1);
+ f.state.usable=()=>true;f.state.onResume=()=>{f.state.usable=()=>false;return true};retry();assert.equal(f.calls.fetch,1,'withdrawal during owning resume callback is rechecked');assert.equal(f.rows.length,1);
 });

@@ -15,7 +15,7 @@ for a deployment target. See [capabilities and limits](docs/CAPABILITY_GUIDE.md)
 
 ## What you can do
 
-- **Watch and narrow activity.** Stream logs or spans, inspect structured attributes,
+- **Watch and narrow activity.** Stream logs, spans or both, inspect structured attributes,
   choose columns, filter by service or environment, and count field values.
 - **Investigate across services.** Open trace waterfalls, follow related logs,
   explore discovered services and resources, and group reported errors.
@@ -41,7 +41,8 @@ docker compose up --build -d
 
 Open **http://localhost:8088**. The lab starts sample services and sends their OTel
 telemetry to ClickHouse; allow 20–40 seconds for data. Start in Explore, choose
-Logs or Spans, pause a record and inspect its attributes or trace.
+Logs, Spans or Logs + spans. Start paired streams explicitly, then inspect a
+record and drill into a fixed investigation.
 
 The lab needs roughly 4 GB of memory and several GB of disk. It uses local-only
 ports and disposable credentials. [Lab instructions](docs/LOCAL_LAB.md) cover

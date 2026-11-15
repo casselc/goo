@@ -1,0 +1,25 @@
+/* Paired composition owns layout; native tail and inspector controls stay shared. */
+.paired-activity[hidden]{display:none}
+.paired-activity-lanes{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.paired-activity-lane,.paired-activity-body{min-inline-size:0}
+.paired-activity-heading{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:3px 8px;margin-block-end:4px}
+.paired-activity-heading h3{font-size:13px;line-height:1.4;margin:0}
+.paired-activity-window{font-size:11px;color:var(--muted);overflow-wrap:anywhere}
+.paired-activity .compact-tail>goo-table{max-block-size:34vh;min-block-size:120px}
+.paired-activity .tail-record-tools{flex-wrap:wrap}
+.paired-activity .tail-record-tools small{font-size:11px}
+.paired-activity-lane[data-phase=stopped] .tail-record-tools,.paired-activity-lane[data-phase=stopped] .compact-tail>goo-table{display:none}
+.paired-activity>.ui-inspector{margin-block-start:12px}
+@media(min-width:1100px){
+ .paired-activity-lanes{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+ .paired-activity .compact-tail>goo-table{max-block-size:56vh}
+}
+@media(max-width:700px){
+ .paired-activity-lanes{gap:12px}
+ .paired-activity .compact-tail>goo-table{max-block-size:30vh}
+ .paired-activity .tail-record-tools label{max-inline-size:100%}
+ .paired-activity .tail-record-tools input{max-inline-size:100%;box-sizing:border-box}
+}
+
+.activity-recall-conflict{display:flex;align-items:center;flex-wrap:wrap;gap:6px;max-inline-size:100%;font-size:12px}
+.activity-recall-conflict[hidden]{display:none}

@@ -56,8 +56,9 @@
 > [attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md).
 > **441 raw sum observations is delivered**; see
 > [raw sums](RAW_SUM_OBSERVATIONS.md).
-> Next: **444 paired Logs + Spans Activity** (proposed breadth slice; architecture/
-design gate before implementation).
+> Next: **445 single/paired Activity coherence and measured work** (consolidation).
+**444 delivered:** [paired Activity](PAIRED_ACTIVITY.md) composes independent tails
+with local inspection and scope-preserving fixed drill-in/retained Return.
 **443 delivered:** [typed numeric CEL conditions](CEL_NUMERIC_ATTRIBUTES.md) reuse
 existing exact bindings, parsing, predicates and source lowering.
 **442 delivered:** [shared refinement](ATTRIBUTE_REFINEMENT.md) unifies categorical

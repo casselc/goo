@@ -5,10 +5,10 @@ import vm from 'node:vm';
 const source=readFileSync(new URL('../ui/tail.mjs',import.meta.url),'utf8');
 const between=(start,end)=>source.slice(source.indexOf(start),source.indexOf(end,source.indexOf(start)));
 function element(){return {hidden:false,disabled:false,dataset:{},attrs:{},writes:0,stateWrites:0,attrWrites:0,_text:'',_state:'unknown',get textContent(){return this._text},set textContent(value){this.writes++;this._text=value},get state(){return this._state},set state(value){this.stateWrites++;this._state=value},getAttribute(key){return this.attrs[key]??null},setAttribute(key,value){this.attrWrites++;this.attrs[key]=value}}}
-function controls({compact=true,onResume}={}){
+function controls({compact=true,onResume,canUse=()=>true}={}){
  const document={activeElement:null},pause=element(),resume=element(),other=element(),calls={pause:0,connect:0,align:0};
  for(const control of [pause,resume,other])control.focus=()=>{document.activeElement=control};
- const context={terminalFailure:null,nativeControlReady:control=>!control.hidden&&!control.disabled,document,pause,resume,compact,selector:{environment:'prod'},staged:false,onResume,viewport:{},header:{},body:{children:[]},pauseStream(){calls.pause++;pause.hidden=compact;resume.hidden=false},alignPausedRecords(){calls.align++},connect(){calls.connect++;resume.hidden=compact;pause.hidden=false}};
+ const context={usable:canUse,terminalFailure:null,nativeControlReady:control=>!control.hidden&&!control.disabled,document,pause,resume,compact,selector:{environment:'prod'},staged:false,onResume,viewport:{},header:{},body:{children:[]},pauseStream(){calls.pause++;pause.hidden=compact;resume.hidden=false},alignPausedRecords(){calls.align++},connect(){calls.connect++;resume.hidden=compact;pause.hidden=false}};
  vm.runInNewContext(between('pause.onclick=','stop.onclick='),context);
  return {document,pause,resume,other,calls};
 }
@@ -22,7 +22,7 @@ test('programmatic and noncompact controls do not steal focus; refused Resume do
  const refused=controls({onResume:()=>false});refused.resume.focus();refused.resume.onclick();assert.equal(refused.document.activeElement,refused.resume);assert.equal(refused.calls.connect,0);
 });
 test('repeated source polls publish status only when the semantic state or message changes',()=>{
- const status=element(),context={phase:'stopped',section:element(),buffer:{rows:[],evicted:0,observed:0},gap:false,selector:{environment:'prod'},status,compact:false,counts:element(),controller:null,pause:element(),resume:element(),saving:false,generation:1,refreshBatch(){},global:{dispatchEvent(){}},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}}};
+ const status=element(),context={notification:()=>({}),onState:undefined,structuredClone,phase:'stopped',section:element(),buffer:{rows:[],evicted:0,observed:0},gap:false,selector:{environment:'prod'},status,compact:false,counts:element(),controller:null,pause:element(),resume:element(),saving:false,generation:1,refreshBatch(){},global:{dispatchEvent(){}},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}}};
  vm.runInNewContext(between('  function publish(','  function halt(')+';this.publish=publish',context);
  context.publish('unknown','Listening');context.publish('unknown','Listening');assert.equal(status.writes,1);assert.equal(status.stateWrites,0);
  context.publish('partial','Limited');assert.equal(status.writes,2);assert.equal(status.stateWrites,1);
@@ -36,4 +36,14 @@ test('loaded Find count is quiet without a query and avoids rewriting unchanged 
  context.applyFind();context.applyFind();assert.equal(findStatus.writes,1);assert.equal(findStatus.getAttribute('aria-live'),'off');assert.equal(findStatus.attrWrites,1);
  context.findText='alpha';context.find.value='alpha';context.applyFind();context.applyFind();assert.equal(findStatus.getAttribute('aria-live'),'polite');assert.equal(findStatus.attrWrites,2);assert.equal(findStatus.writes,1);
  context.RecordPresentation.matchesLoaded=()=>false;context.applyFind();assert.equal(findStatus.writes,2);assert.equal(findStatus.textContent,'0 of 1 loaded');
+});
+
+
+test('captured Resume callback cannot reconnect an inactive lane',()=>{
+ let asked=0;const c=controls({canUse:()=>false,onResume:()=>{asked++;return true}});c.resume.focus();c.resume.onclick();assert.equal(c.calls.connect,0);assert.equal(asked,0);assert.equal(c.document.activeElement,c.resume);
+});
+
+
+test('Resume rechecks lane ownership after the application callback',()=>{
+ let allowed=true;const c=controls({canUse:()=>allowed,onResume:()=>{allowed=false;return true}});c.resume.focus();c.resume.onclick();assert.equal(c.calls.connect,0);assert.equal(c.document.activeElement,c.resume);
 });

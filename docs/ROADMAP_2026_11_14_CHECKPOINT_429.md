@@ -7,12 +7,11 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–443 delivered**. The cadence continues as
-**440 attribute breadth → 441 native metric depth → 442 consolidation**.
-Next: **444 paired Logs + Spans Activity** (proposed breadth slice; independent
-family ownership and failure semantics must be agreed before implementation). The existing
-Go runtime, source adapters, typed questions and supplied-data components remain
-the foundation.
+Status: **429 and 437–444 delivered and validated**. The current cadence is
+**443 numeric-condition depth → 444 paired Activity breadth → 445 consolidation**.
+Next: **445 single/paired Activity coherence and measured work**. The existing
+Go runtime, source adapters, typed questions and shared components remain the
+foundation; this does not extend a CEL platform queue.
 
 ## 437 — explicit All-environments log entry
 
@@ -150,30 +149,38 @@ valid/missing/empty/invalid states. Visual conditions, CEL reference evaluation,
 inverse printing and ClickHouse share the existing numeric binding and parser;
 no second evaluator, implicit conversion or numeric inference was introduced.
 
-## 444 — paired Logs + Spans Activity (proposed)
+## 444 — paired Logs + Spans Activity
 
-The next breadth proposal returns to “what is happening now”: retain a log lane
-and a span lane in one Activity scope using existing tail components. Begin with
-one named, empty or unreported environment; All remains logs-only. Keep each
-family's window, source status, loss/continuity and loaded counts independent.
-A failed or delayed lane must not erase or block the other. Entering the pair
-must preserve supported predicates or explicitly refuse signal-specific filters;
-never drop a condition silently.
+Delivered: [paired Activity contract](PAIRED_ACTIVITY.md),
+[real-source storyboard](journeys/paired-activity.md) and
+[independent acceptance](reviews/PAIRED_ACTIVITY_444_ACCEPTANCE.md).
+One coordinator composes two ordinary Tail owners. Complete common predicates
+and narrow environment policy are admitted before either source connection.
+Each family retains its own window, buffer, Find, pause/retry/refusal and local
+inspection. Fixed drill-in keeps the selected occurrence's full parent/window;
+Return reads neither lane. All remains logs-only, and the pair remains session-only.
 
-Architecture/UX source review supports a bounded first slice: one coordinator
-over two existing tails, with lane-scoped events and explicit lane/epoch ownership
-for inspection and fixed drill-in. Do not duplicate the entire singleton Activity
-controller. A pair uses two of the server's four tail slots; preserve explicit
-capacity refusals. Retain both buffers and scroll/find state on local Return;
-the first pair can remain session-only rather than masquerading as a saved
-single-signal view. Detailed interaction/model acceptance still precedes implementation. Favor compact
-paired lanes over a falsely authoritative mixed-host chronology. Inspection and
-retained return should stay local; opening a fixed question uses that record's
-family and original window. No combined health/count, mixed capture format,
-automatic navigation reconnect or new query engine follows. Acceptance should
-include absent families, independent refusal/delay, canceled late batches,
-keyboard/mobile layouts and retained return. After breadth, measure the paired
-workflow before the next consolidation slice; do not extend CEL indefinitely.
+Live source controls cover refusal, retry, canceled real success, empty family,
+visible saved-single adoption and shared-filter refusal. Bombadil and native
+Quint trace validation exercise the real mounted workflow with rejecting controls.
+Initial-state, native inactive-callback, recall-conflict and focus fixes are part
+of the delivered shared path, not separate follow-up promises.
+
+## 445 — consolidate single/paired Activity (planned)
+
+Measure the exercised single/paired scope-edit → Start/Apply → Inspect → fixed
+handoff → retained Return workflow at 320/390/1440. Keep one shared control bar and
+consistent native focus/refusal behavior without restoring ambiguous global
+pair tools. Extract only matching pure scope-admission, viewport/focus and
+control-state projections. Retain separate connection, custody and source owners.
+
+Record cold/retained connection counts and per-family SQL work before proposing
+caching or polling changes. Include capacity pressure with the existing four-tail
+limit, an unavailable family, withdrawn controls and inactive late completion.
+Compare the same applied/read state when assessing density or speed. No durable
+readiness cache, combined totals, source-health inference or default expansion
+of All scope follows. Keep native model/Bombadil/storyboards current; review the
+resulting product before adding another narrow language or preservation sequence.
 
 ## Retained follow-ons
 
@@ -182,8 +189,9 @@ Typed numeric conditions are now delivered in 443 with the existing explicit
 presence/validity contract. General arithmetic, coercions and a third-party
 lowering registry remain separate proposals.
 
-Combined log/span Activity needs explicit independent polling, ordering, loss and
-partial-failure semantics. Monitoring delivery, multi-user collaboration,
+A merged chronological stream, independently authored lane filters and saved
+paired definitions still need explicit semantics beyond the delivered two-lane
+shared-scope session. Monitoring delivery, multi-user collaboration,
 arbitrary executable kinds and external warehouse/storage integration retain
 their separate design and operational gates. Existing dashboards, waterfalls,
 templates, annotations and captures are delivered capabilities, not new gaps.

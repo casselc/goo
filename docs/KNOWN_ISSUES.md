@@ -52,7 +52,9 @@ cumulative nonmonotonic stocks without evaluator prerequisites.
 [442 shared attribute refinement](ATTRIBUTE_REFINEMENT.md) unifies Exclude and
 reported/missing gestures across record details, columns and facets. Exclude
 includes missing keys; CEL inequality remains reported-only. [443 typed numeric CEL conditions](CEL_NUMERIC_ATTRIBUTES.md) add exact ordering
-and explicit parse states; paired Activity remains proposed in the
+and explicit parse states. [444 paired Activity](PAIRED_ACTIVITY.md) now provides
+independent logs/spans lanes for a shared narrow scope. The next consolidation is
+recorded in the
 [whole-product cycle](ROADMAP_2026_11_14_CHECKPOINT_429.md).
 
 Raw gauge and sum inspection is bounded and table-only. Missing instance
@@ -2356,3 +2358,9 @@ unknown. No byte-derived ratio, alignment, threshold or health interpretation.
 single-choice selectors may be hidden; exact selection/read cost remains in the
 summary. Evidence is local, lazy structured metadata; Refresh never implies the
 prior attempt succeeded. No new numerical or source capability is added.
+
+Paired Activity is session-only and supports one complete shared predicate valid
+for both families. All-environments spans, a merged chronology, independent
+lane-authored filters and paired saved definitions/captures are not implemented.
+Each lane retains ordinary bounded tail semantics and unknown upstream coverage;
+a pair consumes two of the unchanged four server tail slots.

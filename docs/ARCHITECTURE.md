@@ -2050,3 +2050,10 @@ not become judgments. See [contract, Go usage and planned storyboard](CAPTURE_RE
 consolidates only literal Escaped-text conversion inside `internal/sourcehttp`.
 Record and measurement adapters retain their own policies, budgets, compilers and
 result decoders. The transport diagram and actual-byte proof are in that contract.
+
+[Paired Logs + Spans Activity](PAIRED_ACTIVITY.md) adds one coordinator above two
+existing, independently canceled Tail owners. Both selectors are admitted before
+start; ordinary Go tail routes/source adapters and their four-connection capacity
+remain unchanged. Fixed drill-in retains the original family/window/predicate,
+and retained Return reads neither lane. The ownership diagram and bounded limits
+are in the linked guide.

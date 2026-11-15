@@ -1,5 +1,56 @@
 # Validation record
 
+## 444 paired Logs + Spans Activity — 2026-11-15
+
+[Guide](docs/PAIRED_ACTIVITY.md), [real-source storyboard](docs/journeys/paired-activity.md),
+[independent acceptance](docs/reviews/PAIRED_ACTIVITY_444_ACCEPTANCE.md).
+
+- One paired coordinator reuses two existing Tail owners and the shared
+  inspector. A pure shared-selector planner admits the whole predicate for both
+  families before either connection. Scope/Find events are owner-scoped;
+  connection, window, buffer, failure/retry and local inspection stay independent.
+  No new Go endpoint, merged chronology/count, saved pair format or broader All
+  scope. A pair uses two of the unchanged four tail slots.
+- Full UI regression suite: **1,870 pass**, zero skips, **28.667s**. Focused
+  planner/captured-callback suites also pass; independent reviewer reran four
+  relevant files **0.332s**, no skips. Hidden/inert/disabled/retired callbacks
+  cannot start reads, alter Find/selection, clear rows or publish evidence.
+  Parent lifecycle pause/reset remain available while inactive.
+- Final real OTLP/fault/browser journey: **57.2s** body (**1.0m** total),
+  **19 observed main steps**, **seven main tail connections**; **14 steps** add
+  no connection. Independent exporter IDs establish actual lane contents.
+  Span-only403/refusal, Retry, held real200 after cancellation, empty span family,
+  full-parent/original-occurrence fixed scope, Return focus/Find/scroll and saved
+  single-view adoption all pass. All/body-specific paired scope refuses locally.
+  Three responsive frames assert no overflow. No browser errors; runtime/source
+  meter cleanup succeeds. Receipt
+  `artifacts/paired-activity444/12b1bd3df522/report.json`.
+- Separate **25-second Bombadil** campaign: **409 snapshots**, required phase7
+  reached over actual records in both families; exactly **two** tail requests,
+  zero forbidden POSTs, no mixed-family rows, and held custody/focus restored.
+  Its request counters are separate from the main native trace.
+- Test-only source meter records **nine source attempts** across the main and
+  actor paths: three logs/six spans, eight actual200 responses and one deliberate
+  403. No successful source/UI responses are synthesized. These measurements are
+  not a polling-throughput, source completeness or performance-improvement claim.
+- Quint safety simulation **50 samples × 30 steps** plus **seven protocol
+  mutants** pass **10.543s**, zero skips. Final actual observed trace and **five
+  real-log rejecting mutations** pass **12.71s**. Model logical ownership epochs
+  are separate from private abort counters; native checks retain exact selector,
+  keys, connection, window and Find. This is observed custody validation, not
+  a claim that generated model traces drove the browser or prove causal order.
+- Existing saved Activity late-save race147 passes **6.4s** with zero telemetry
+  reads; its conflict stays guarded after a late save acknowledgment. The full
+  Go command/server suite passes **9.532s**; Go 1.27.3 builds the embedded app.
+- Live/review checks caught and fixed Return synchronization/focus, saved-single
+  stream retirement, a hidden paired recall decision, inactive Tail callbacks,
+  discovery leaking a display-only both selector, and fixed handoff dropping the
+  parent predicate. Fixed handoff now uses the existing record-question wrapper;
+  trace-context widening remains a separate explicitly named operation.
+  Source/focused review and actual browser/model results remain distinguished;
+  physical assistive-technology and cross-engine audits were not performed.
+
+
 ## 443 exact numeric CEL attributes — 2026-11-15
 
 [Guide](docs/CEL_NUMERIC_ATTRIBUTES.md), [real-source storyboard](docs/journeys/cel-numeric-attributes.md)

@@ -2254,3 +2254,8 @@ Attribute refinement uses the pure [field intent helper](../ui/field-refinement.
 and shared native action disclosures. Display components emit canonical staged
 selection intents; application adapters retain draft, revision and read authority.
 See [attribute refinement](ATTRIBUTE_REFINEMENT.md).
+
+[Paired Activity](PAIRED_ACTIVITY.md) composes two existing Tail owners and the
+shared inspector. It is an application coordinator, not a new passive display
+kind or mixed source grammar. Tail-local callbacks and inactive-user-action
+guards preserve lane custody without adding queries to display elements.
