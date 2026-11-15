@@ -3,6 +3,7 @@ const {test,expect}=require('@playwright/test');
 const fs=require('node:fs/promises'),path=require('node:path'),http=require('node:http');
 const {once}=require('node:events'),{randomBytes}=require('node:crypto');
 const {startRuntime}=require('./191-generic-runtime');
+const {sourceReadAt,framePath,measureRaw,finishMeasurements}=require('./support/raw-observation-measure');
 const {source,startBombadil,verifyWithGo}=require('./support/cross-app');
 const attrs=o=>Object.entries(o).map(([key,stringValue])=>({key,value:{stringValue}}));
 const canonical=o=>JSON.stringify(o,(_k,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
@@ -34,7 +35,7 @@ test('438 read raw ordinary gauge observations without claiming evaluator readin
  async function step(action,run,{local=false}={}){const before=counters(),ci=report.calls.length,si=proxy.calls.length,focusBefore=await page.evaluate(()=>({id:document.activeElement?.id,role:document.activeElement?.getAttribute('aria-label'),text:document.activeElement?.textContent})),result=await run();await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));const after=counters();if(local)expect(after,action+' must stay local').toEqual(before);const focus=await page.evaluate(()=>({id:document.activeElement?.id,role:document.activeElement?.getAttribute('aria-label'),text:document.activeElement?.textContent}));report.steps.push({action,before,after,calls:report.calls.slice(ci),sql:proxy.calls.slice(si),focusBefore,focus});return result}
  const post=p=>page.waitForResponse(r=>r.request().method()==='POST'&&new URL(r.url()).pathname===p,{timeout:60000});
  const row=metric=>page.locator('#metricInstruments tr[data-instrument="'+metric+'"]');
- async function frame(name,width){await page.setViewportSize({width,height:1000});await page.locator(name==='held-inspection'?'[data-raw-observations] [aria-label="Selected item details"]':'[data-raw-observations]').evaluate(e=>e.scrollIntoView({block:'start'}));expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'docs/journeys/screenshots/438-'+name+'-'+width+'.png'})}
+ async function frame(name,width){await page.setViewportSize({width,height:1000});await page.locator(name==='held-inspection'?'[data-raw-observations] [aria-label="Selected item details"]':'[data-raw-observations]').evaluate(e=>e.scrollIntoView({block:'start'}));expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:framePath('docs/journeys/screenshots/438-'+name+'-'+width+'.png',dir)})}
  try{
   const baseResource={'service.name':service,'deployment.environment.name':environment,'service.namespace':namespace,'fixture.bank':token};
   const resources=[{...baseResource},{...baseResource,'service.instance.id':'worker-a'}];
@@ -53,7 +54,7 @@ test('438 read raw ordinary gauge observations without claiming evaluator readin
   async function read(name,button=readButton()){
    const sent=page.waitForRequest(r=>r.method()==='POST'&&new URL(r.url()).pathname==='/api/metric-observations');await button.click();const sentRequest=await sent,r=await sentRequest.response(),response=await r.json(),acquisition={name,request:r.request().postDataJSON(),response,status:r.status()};report.acquisitions.push(acquisition);return acquisition;
   }
-  async function bank(name,acquisition){const rows=await panel().locator('tbody tr[data-occurrence-key]:not([hidden])').evaluateAll(rows=>rows.map(r=>({key:r.dataset.occurrenceKey,visibleText:r.textContent})));const supplied=acquisition.response.rows;for(const row of rows){row.record=supplied.find(r=>r.occurrenceKey===row.key);expect(row.record,'each rendered occurrence belongs to the exact response').toBeTruthy()}const readAt=await panel().locator('dt').filter({hasText:/^Source read UTC$/}).evaluate(e=>e.nextElementSibling.textContent);expect(readAt).toBe(acquisition.response.readAt);report.rowBank.push({name,rows,readAt});return rows}
+  async function bank(name,acquisition){const rows=await panel().locator('tbody tr[data-occurrence-key]:not([hidden])').evaluateAll(rows=>rows.map(r=>({key:r.dataset.occurrenceKey,visibleText:r.textContent})));const supplied=acquisition.response.rows;for(const row of rows){row.record=supplied.find(r=>r.occurrenceKey===row.key);expect(row.record,'each rendered occurrence belongs to the exact response').toBeTruthy()}const readAt=await sourceReadAt(panel());expect(readAt).toBe(acquisition.response.readAt);report.rowBank.push({name,rows,readAt});return rows}
   await expect(gauge().getByRole('button',{name:'Build measurement package',exact:true})).toBeDisabled();
   await step('metadata-open',async()=>{await gauge().getByText('Metadata and support',{exact:true}).click();await expect(gauge()).toContainText(/instance/i)},{local:true});
   const main=await step('read-observations',()=>read('main'));expect(main.status).toBe(200);expect(main.response.rows).toHaveLength(6);await expect(panel().locator('tbody tr[data-occurrence-key]')).toHaveCount(6);await bank('all-held',main);
@@ -63,6 +64,7 @@ test('438 read raw ordinary gauge observations without claiming evaluator readin
   await bank('find-standard',main);
   await step('inspect-observation',async()=>{await panel().getByRole('button',{name:/^Inspect observation/}).filter({visible:true}).first().focus();await page.keyboard.press('Enter');await expect(panel().getByRole('region',{name:'Selected item details',exact:true})).toBeVisible()},{local:true});
   report.rowBank.at(-1).detail=await panel().getByRole('region',{name:'Selected item details',exact:true}).innerText();
+  await measureRaw(page,{family:'gauge',dir,report,counters,heldRows:main.response.rows.length});
   for(const width of [1440,390,320])await frame('held-inspection',width);await page.setViewportSize({width:1440,height:1000});
   await step('close-details',async()=>{await panel().getByRole('button',{name:'Close selected item details',exact:true}).click();await expect(panel().getByRole('button',{name:/^Inspect observation/}).filter({visible:true}).first()).toBeFocused()},{local:true});
   await step('reset-held-find',()=>find().fill(''),{local:true});
@@ -87,6 +89,6 @@ test('438 read raw ordinary gauge observations without claiming evaluator readin
   const actorStart=proxy.calls.length;const actorURL=new URL(runtime.base+'/');actorURL.searchParams.set('raw438',JSON.stringify({environment,service}));const actor=await startBombadil({dir:path.join(dir,'bombadil'),url:String(actorURL),specification:'verification/bombadil/raw-gauge-observations.ts',seconds:28,width:390,height:1000});try{const campaign=await actor.finish({snapshot:{name:'state',version:'goo.rawGauge438Actor/1'}});report.bombadil={snapshots:campaign.states.length,completed:campaign.states.find(s=>s.phase===6)};expect(report.bombadil.completed).toBeTruthy()}finally{await actor.stop();report.actorSQL=proxy.calls.slice(actorStart)}
   expect(report.errors).toEqual([]);report.status='passed';
  }catch(error){report.status='failed';report.failure=error.message;await page.screenshot({path:path.join(dir,'failure.png')}).catch(()=>{});throw error}
- finally{release?.();await page.goto('about:blank').catch(()=>{});if(runtime){await runtime.stop();report.cleanup=runtime.receipt.cleanup}report.sql=proxy.calls;await proxy.stop();if(created){await sql('DROP DATABASE '+database+' SYNC');report.databaseCleanup=true}await fs.writeFile(path.join(dir,'report.json'),JSON.stringify(report,null,2))}
+ finally{release?.();await page.goto('about:blank').catch(()=>{});if(runtime){await runtime.stop();report.cleanup=runtime.receipt.cleanup}report.sql=proxy.calls;await proxy.stop();if(created){await sql('DROP DATABASE '+database+' SYNC');report.databaseCleanup=true}finishMeasurements(report);await fs.writeFile(path.join(dir,'report.json'),JSON.stringify(report,null,2))}
  await verifyWithGo(dir,'TestQuintRawGauge438Observed',{GOO_RAW_GAUGE_438_REPORT:path.join(dir,'report.json')},{timeoutSeconds:180});
 });

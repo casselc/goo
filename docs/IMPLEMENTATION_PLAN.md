@@ -63,8 +63,10 @@
 > [Activity views](ACTIVITY_VIEWS.md) and the [real-source storyboard](journeys/paired-activity-views.md).
 > **447 raw native histogram point inspection is delivered**; see the
 > [point profile](RAW_HISTOGRAM_OBSERVATIONS.md) and [storyboard](journeys/raw-histogram-observations.md).
-> Next: **448 raw-observation consolidation**: shared clocks/presentation, compact
-> controls and measured source/held work, retaining family-specific semantics.
+> **448 raw-observation consolidation is delivered**; see
+> [compact shared inspection](RAW_OBSERVATION_CONSOLIDATION.md).
+> Next: **449 records around a held raw point** (cross-signal breadth), staging
+> exact contextual questions without evaluator prerequisites or causal claims.
 **444 delivered:** [paired Activity](PAIRED_ACTIVITY.md) composes independent tails
 with local inspection and scope-preserving fixed drill-in/retained Return.
 **443 delivered:** [typed numeric CEL conditions](CEL_NUMERIC_ATTRIBUTES.md) reuse

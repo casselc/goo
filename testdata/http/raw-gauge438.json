@@ -126,7 +126,7 @@
         "Content-Type": "application/json",
         "X-Content-Type-Options": ""
       },
-      "response": "{\"error\":\"json: unknown field \\\"extra\\\"\"}\n"
+      "response": "{\"error\":\"unsupported instrument field extra\"}\n"
     },
     {
       "name": "oversize",

@@ -7,8 +7,8 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–447 delivered and validated**. The current cadence is
-**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation**.
+Status: **429 and 437–448 delivered and validated**. The current cadence is
+**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth**.
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
 foundation; this does not extend a CEL platform queue.
@@ -206,21 +206,42 @@ retired successful response, separate unit/temporality, Bombadil and native
 negative controls. No scalar histogram substitute, percentile chart, merged
 population or exponential-point profile was introduced.
 
-## 448 — consolidate raw-observation inspection (next consolidation)
+## 448 — consolidate raw-observation inspection (delivered)
 
-Review gauge/sum/histogram together after these three delivered raw families.
-Measure cold acquisition and held local work before proposing caching or more
-polling. Reuse matching source/clock/flag/scalar presentation and request dispatch;
-retain family-specific instrument admission, temporality, bucket validity and
-measurement eligibility. Do not turn shared rendering into source authority.
+Delivered [compact shared inspection](RAW_OBSERVATION_CONSOLIDATION.md): typed
+UTC/range facts, exact native clock attributes, compact Find/paging/inspector
+presentation, one scope disclosure and explicit scalar recording uncertainty.
+A closed profile map unifies routing/field projection without a gauge fallback;
+Go instrument admission now rejects case-variant overrides consistently.
 
-Compact verbose inspector/read clocks through the shared UTC/tooltip components,
-and reduce repeated provenance prose while keeping uncertainty visible. Review
-entry controls, paging, keyboard focus, cancellation, refusal and late completion
-as one operator flow. Carry retirement controls separately from new read/store
-authority in traces. Keep actual source, Go/JS, properties, model and actor gates;
-finish with measured before/after screenshots. No compatibility migration or
-universal point DSL is needed for this prerelease consolidation.
+Compared the prior binary with final 448 using all three actual OTLP journeys.
+First points appear about 45px sooner on desktop and 122–165px sooner at narrow
+widths; first histogram buckets appear 175–474px sooner. Cold point reads retain
+one product request/three SQL calls, and local held actions remain zero-IO.
+Independent source/a11y/visual review and existing model/actor gates accepted the
+result. No source cache, poll change or family-semantic unification was needed.
+
+## 449 — records around a held raw point (next breadth)
+
+Add **Nearby logs** / **Nearby spans** from a selected raw gauge, sum or explicit
+histogram point. This is cross-signal investigation, independent of evaluator
+readiness or custody. Existing evaluated-gauge navigation is not sufficient:
+raw points can have no instance identity or no recorded magnitude.
+
+Plan an ordinary typed record question in a contextual ±60-second event-time
+window, clipped to the original discovery window. Preserve exact environment,
+service and actual namespace missing/empty/value. Preserve a reported instance;
+if absent, make the service-wide time association explicit. Do not copy metric
+attributes into record filters or imply causality, contributing transactions,
+producer continuity or collection completeness.
+
+Staging performs no IO; Run is explicit. Return restores held read time, page,
+Find, detail and keyboard focus without a read. A new read, scope edit or retired
+owner invalidates obsolete context actions. Reuse ordinary question/Return
+infrastructure through a distinct raw-point capability, never a forged evaluated
+gauge result. Gate with real metric→record OTLP journeys, missing-instance and
+no-recorded examples, boundary properties, stale controls, model/Bombadil and
+narrow-screen checks.
 
 ## Retained follow-ons
 

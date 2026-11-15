@@ -1,5 +1,8 @@
 # Inspect explicit histogram points
 
+The [shared compact viewer](RAW_OBSERVATION_CONSOLIDATION.md) keeps exact clocks,
+local interaction and family-specific uncertainty.
+
 Discovered explicit histograms offer **Read observations** independently of
 measurement readiness. The held viewer shows exported points, exact source
 counts and bucket details. It does not calculate a percentile, rate, merged

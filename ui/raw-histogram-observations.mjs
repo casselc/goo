@@ -37,7 +37,7 @@ export function summary(row){
 }
 export function intervals(row){if(row.bucketsState!=='valid')return [];return row.bucketCounts.map((count,index)=>({interval:row.bounds.length===0?'(−∞, +∞)':index===0?'(−∞, '+row.bounds[index]+']':index===row.bounds.length?'('+row.bounds[index-1]+', +∞)':'('+row.bounds[index-1]+', '+row.bounds[index]+']',count}));}
 export function detail(host,row,{active=()=>true}={}){
- const status=n('p',row.recordingState==='no-recorded-value'?'No recorded value. Raw source fields remain available below.':row.recordingState==='unknown'?'Recording validity is unknown. Source values are not an evaluated distribution.':'One exported point; not an evaluated or merged distribution.','evidence-note');host.append(status);
+ if(row.recordingState!=='recorded')host.append(n('p',row.recordingState==='no-recorded-value'?'No recorded value. Raw fields remain available below.':'Recording validity unknown. Source values are not an evaluated distribution.','evidence-note'));
  const bucketRows=intervals(row),section=n('section'),title=n('h4','Buckets');section.append(title);host.append(section);
  if(!bucketRows.length)section.append(n('p',row.bucketsState==='absent'?'Bucket data unavailable for this point.':'Invalid bucket vector; inspect diagnostics and raw source fields.'));
  else {

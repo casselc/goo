@@ -1,5 +1,41 @@
 # Validation record
 
+## 448 raw-observation consolidation — 2026-11-15
+
+[Measured guide](docs/RAW_OBSERVATION_CONSOLIDATION.md),
+[independent acceptance](docs/reviews/RAW_OBSERVATION_448_ACCEPTANCE.md).
+
+- Full root Go suite and API checker pass. Wire contracts remain **121 operations,
+  552 response fixtures, 229 admitted requests and 32 mux refusals**. Only two
+  expected gauge/sum unknown-key error strings changed to the shared decoder
+  wording; successful profiles and source/evaluator logic remain unchanged.
+- Final UI suite: **1,913 passed, zero skipped**. Typed fact tests cover SSR,
+  detached properties/lifecycle, exact clock precision, invalid formatted values
+  and no IO. Native label-in-name, compact controls, explicit scalar recording
+  uncertainty and closed family dispatch have regression checks.
+- Go/HTTP instrument tests reject wrongcase aliases, null/missing/type/trailing
+  input before source reads for all three families, preserving zero/false/empty.
+- Prior embedded 447 baseline: **three actual OTLP journeys passed in 2.7m**.
+  Final embedded 448: **three passed in 2.8m** (gauge 1.2m, histogram 59.9s, sum
+  36.5s), including source refusals, budget/late-success cases, native controls
+  and Bombadil. All owned runtime/database cleanup flags are true.
+- Same held Find/Inspect state at 1440/390/320: first-point panel offset improves
+  about **45px desktop / 122–165px narrow**. First histogram bucket improves
+  **175/322/474px** relative to its inspector. All nine measured frames have
+  zero document overflow. These are geometry measurements, not latency claims.
+- Each cold point read remains **one product request / three SQL calls**. Local
+  Find, page, Inspect and Return remain **zero requests / zero SQL**; density
+  capture itself adds no work. Sum now meters real forwarded SQL as well.
+- Final local receipts: gauge `artifacts/raw-gauge438/653d574fd202/report.json`,
+  sum `artifacts/raw-sum441/416d6fc2be4f/report.json`, histogram
+  `artifacts/raw-histogram447/ef8cd45c3aba/report.json`. Each includes raw448
+  geometry and source-work projections; baseline frames stay in artifacts.
+- The first consolidated trial also passed all three journeys. Final capture
+  followed the explicit scalar-recording label and paging label-in-name fixes.
+  Independent architecture/UX/accessibility review accepted the final sources
+  and refreshed narrow frames without outstanding blockers.
+
+
 ## 447 raw explicit histogram observations — 2026-11-15
 
 [Profile](docs/RAW_HISTOGRAM_OBSERVATIONS.md),

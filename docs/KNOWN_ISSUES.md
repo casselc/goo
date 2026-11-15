@@ -60,6 +60,9 @@ cumulative nonmonotonic stocks without evaluator prerequisites.
 counts, diagnostic buckets and unavailable optional-statistic presence. Raw
 exponential histogram inspection is still a distinct future profile; raw point
 validity does not authorize merged distributions or full-window health claims.
+[448 shared inspection](RAW_OBSERVATION_CONSOLIDATION.md) adds compact exact clocks,
+consistent profile routing and instrument-key admission. Raw metric points still
+lack direct record-context navigation; that cross-signal flow is the next slice.
 [442 shared attribute refinement](ATTRIBUTE_REFINEMENT.md) unifies Exclude and
 reported/missing gestures across record details, columns and facets. Exclude
 includes missing keys; CEL inequality remains reported-only. [443 typed numeric CEL conditions](CEL_NUMERIC_ATTRIBUTES.md) add exact ordering

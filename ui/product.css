@@ -1964,3 +1964,14 @@ input::placeholder,textarea::placeholder {color:var(--muted);opacity:1}
  .tail-record-tools{grid-template-columns:minmax(0,1fr) auto}
  .tail-record-tools>.activity-source-search{grid-column:1/-1}
 }
+
+/* Held point tools share one compact, wrapping control row. */
+.raw-observation-tools{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin:8px 0;min-width:0}
+.raw-observation-tools>label{display:flex;align-items:center;gap:6px;flex:1 1 160px;min-width:0;margin:0;font-size:12px}
+.raw-observation-tools input[type=search]{width:100%;max-width:100%;min-width:0;min-height:32px;padding:4px 6px;font-size:12px;box-sizing:border-box}
+.raw-observation-tools>button{min-height:32px;padding:4px 8px;font-size:12px}
+.raw-observation-tools>p{flex:1 1 180px;margin:0;font-size:12px;color:var(--muted)}
+[data-raw-observations]>.controls{margin:4px 0}
+[data-raw-observations]>.controls>button{min-height:32px;padding:4px 8px;font-size:12px}
+[data-raw-observations] .raw-read-context{margin:4px 0}
+@media(pointer:coarse){.raw-observation-tools input[type=search],.raw-observation-tools>button,[data-raw-observations]>.controls>button{min-height:44px}}

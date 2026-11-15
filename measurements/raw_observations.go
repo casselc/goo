@@ -13,6 +13,32 @@ import (
 	"github.com/casselc/goo/internal/sourcefailure"
 )
 
+// decodeRawInstrument admits exactly the declared source tuple. Go's default
+// case-insensitive field matching must not let an extra alias overwrite an
+// already checked key, or differ from the closed JavaScript and wire models.
+func decodeRawInstrument(data []byte, required []string, target any) error {
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil || fields == nil {
+		return fmt.Errorf("instrument requires one object")
+	}
+	allowed := make(map[string]bool, len(required))
+	for _, key := range required {
+		allowed[key] = true
+		value, present := fields[key]
+		if !present || bytes.Equal(bytes.TrimSpace(value), []byte("null")) {
+			return fmt.Errorf("instrument requires explicit non-null %s", key)
+		}
+	}
+	for key := range fields {
+		if !allowed[key] {
+			return fmt.Errorf("unsupported instrument field %s", key)
+		}
+	}
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	return decoder.Decode(target)
+}
+
 type rawObservationInstrument struct{ Scope, Version, SchemaURL, Metric, Unit string }
 
 // RawObservationStream is reported metadata, never an inferred unique producer.

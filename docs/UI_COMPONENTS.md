@@ -1,5 +1,10 @@
 # Display component library
 
+[Compact typed facts](RAW_OBSERVATION_CONSOLIDATION.md) extend `goo-stat-list`
+with UTC, Unix-nanosecond and half-open range formatting. Exact native times
+and tooltips survive readable display text. `density="compact"` is shared
+presentation; lifecycle, property changes and rendering perform no IO.
+
 The raw-observation viewer shares acquisition/held interaction across gauges,
 sums and [explicit histogram points](RAW_HISTOGRAM_OBSERVATIONS.md). Histogram
 facts/detail helpers are passive: exact count strings, accessible bucket paging

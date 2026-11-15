@@ -1,5 +1,8 @@
 # Raw gauge observations
 
+The [shared compact viewer](RAW_OBSERVATION_CONSOLIDATION.md) keeps exact clocks,
+local interaction and family-specific uncertainty.
+
 Milestone 438 adds explicit inspection of reported gauge rows from discovered
 instruments. This is a raw-observation profile, separate from evaluated
 measurements. Discovery metadata alone does not contain the values.

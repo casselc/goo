@@ -31,33 +31,15 @@ type RawHistogramQuestion struct {
 }
 
 func (i *RawHistogramInstrument) UnmarshalJSON(data []byte) error {
-	var fields map[string]json.RawMessage
-	if json.Unmarshal(data, &fields) != nil || fields == nil {
-		return fmt.Errorf("instrument requires an object")
-	}
-	for _, key := range []string{"kind", "scope", "version", "schemaURL", "metric", "unit", "temporality"} {
-		raw, ok := fields[key]
-		if !ok || bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-			return fmt.Errorf("instrument requires explicit non-null %s", key)
-		}
-	}
-	for key := range fields {
-		switch key {
-		case "kind", "scope", "version", "schemaURL", "metric", "unit", "temporality":
-		default:
-			return fmt.Errorf("unsupported instrument field %s", key)
-		}
-	}
 	type wire RawHistogramInstrument
 	var value wire
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	if err := decoder.Decode(&value); err != nil {
+	if err := decodeRawInstrument(data, []string{"kind", "scope", "version", "schemaURL", "metric", "unit", "temporality"}, &value); err != nil {
 		return err
 	}
 	*i = RawHistogramInstrument(value)
 	return nil
 }
+
 func (q RawHistogramQuestion) Validate() error {
 	if q.Instrument.Kind != "histogram" {
 		return fmt.Errorf("require one exact explicit histogram instrument")

@@ -1,5 +1,8 @@
 # Inspect reported sum observations
 
+The [shared compact viewer](RAW_OBSERVATION_CONSOLIDATION.md) keeps exact clocks,
+local interaction and family-specific uncertainty.
+
 Discovered OTel sums offer **Read observations** independently of measurement
 readiness. This includes monotonic counters and nonmonotonic sums. The interface
 calls them **Raw sum observations**: the reported number is not automatically a
