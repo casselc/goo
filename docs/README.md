@@ -14,6 +14,7 @@ This index separates using Goo, extending it, and the development record.
 | Investigate metrics without known service or environment labels | [Metric scope discovery](METRIC_SCOPE_DISCOVERY.md) |
 | Return to held metric observations without rereading | [First-use acquisition](FIRST_USE_ACQUISITION.md) |
 | Inspect exported metric points before evaluation | [Raw gauges](RAW_GAUGE_OBSERVATIONS.md), [raw sums](RAW_SUM_OBSERVATIONS.md) and [explicit histogram points](RAW_HISTOGRAM_OBSERVATIONS.md); [compact inspection](RAW_OBSERVATION_CONSOLIDATION.md) |
+| Find logs or spans around an exported metric point | [Nearby raw-point context](RAW_OBSERVATION_CONTEXT.md) |
 | Understand instrument preview eligibility | [Instrument preflight](INSTRUMENT_PREFLIGHT.md) |
 | Recover a failed live source without losing held rows | [Activity source recovery](ACTIVITY_SOURCE_RECOVERY.md) |
 | Search stored log messages from local Find | [Activity message search](ACTIVITY_MESSAGE_SEARCH.md) |

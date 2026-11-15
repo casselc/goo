@@ -1,5 +1,38 @@
 # Validation record
 
+## 449 raw-point nearby record context — 2026-11-15
+
+[Operator guide](docs/RAW_OBSERVATION_CONTEXT.md),
+[storyboard](docs/journeys/raw-observation-context.md).
+
+- Full root Go suite passes with Go 1.27.3. No product API, source adapter or
+  evaluator behavior changed; raw protocol admission moved into a pure module.
+- Final full UI suite: **1,926 passed, zero skipped**. Focused coverage includes
+  read/scope retirement, hidden controls, exact held Return, missing/empty
+  instance labels and scope/error announcements after inspector cache eviction.
+- Hegel property gate: **120 actual Go-admitted banks, 240 independently checked
+  ordinary record questions**, passed in 0.40s, zero skips. It spans gauge/sum/
+  histogram families, five environment policies, exact nanosecond boundaries,
+  values beyond 2^53 and missing/empty namespace and instance labels.
+- Real OTLP/ClickHouse journey passed in **1.8m** across six contexts: missing-
+  instance/no-recorded gauge, reported-empty-instance stock and named-instance
+  histogram, each to logs and spans. Independent source rows prove exact lower/
+  upper nanosecond boundaries and environment/service/namespace/instance scope.
+- Each record Run is **one product POST / three SQL calls**. Every Stage and
+  Return is **zero source requests / zero SQL**; held bank, Find, detail, scroll
+  and focus compare exactly. Enter staging reveals/focuses Run; Enter Return
+  restores the original control. Desktop/390/320 frames have no document overflow.
+- Native observed replay passed in **21.76s**, zero skips, with **15 rejected
+  negative controls**. Bombadil reached phase 12 with one raw read, two completed
+  record reads, no forbidden request, and restored held bank/focus.
+- Independent accessibility review accepted final source, narrow frames and real
+  keyboard evidence after the cache-notice and hidden-focus fixes. Owned runtime
+  and database cleanup flags are true. The real scope-edit test also rejects a
+  retained point action with zero source requests / zero SQL.
+- Final local receipt: `artifacts/raw-observation-context449/af6cbcc5714c/report.json`;
+  final actor records 971 snapshots and both HTTP/body-completed record reads.
+
+
 ## 448 raw-observation consolidation — 2026-11-15
 
 [Measured guide](docs/RAW_OBSERVATION_CONSOLIDATION.md),

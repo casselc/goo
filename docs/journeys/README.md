@@ -4,6 +4,9 @@
 versioned extension into the existing query model, preserve the parent scope and
 compare CEL/Goo/ClickHouse behavior. Interactive text editing remains planned.
 
+[Raw point → nearby records → held return](raw-observation-context.md) stages ordinary
+logs/spans from an exported metric point with exact time and reported scope.
+
 [Numeric severity](activity-severity.md) (435) inspects all OTel bands over full
 source counts, replots supplied time buckets locally and stages exact numeric
 filters or fixed banded explanations independently of SeverityText.

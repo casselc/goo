@@ -7,7 +7,7 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–448 delivered and validated**. The current cadence is
+Status: **429 and 437–449 delivered and validated**. The current cadence is
 **444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth**.
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
@@ -221,7 +221,12 @@ one product request/three SQL calls, and local held actions remain zero-IO.
 Independent source/a11y/visual review and existing model/actor gates accepted the
 result. No source cache, poll change or family-semantic unification was needed.
 
-## 449 — records around a held raw point (next breadth)
+## 449 — records around a held raw point (delivered breadth)
+
+Delivered: [operator guide](RAW_OBSERVATION_CONTEXT.md),
+[real OTLP storyboard](journeys/raw-observation-context.md),
+[independent acceptance](reviews/RAW_OBSERVATION_449_ACCEPTANCE.md) and
+[validation](../VALIDATION.md). The design basis follows.
 
 Add **Nearby logs** / **Nearby spans** from a selected raw gauge, sum or explicit
 histogram point. This is cross-signal investigation, independent of evaluator
@@ -242,6 +247,28 @@ infrastructure through a distinct raw-point capability, never a forged evaluated
 gauge result. Gate with real metric→record OTLP journeys, missing-instance and
 no-recorded examples, boundary properties, stale controls, model/Bombadil and
 narrow-screen checks.
+
+## 450 — independent lane filters (next depth)
+
+Give paired Logs + Spans Activity independent record predicates beneath one
+shared environment, service and fixed/live time scope. An operator should be able
+to watch error logs beside slow server spans without changing the other lane.
+Reuse ordinary typed predicates and the existing visual/CEL editor policy.
+Shared scope controls stay singular; each lane exposes its own applied condition.
+Keep lane-specific bounds, gaps, refusals and explicit acquisition visible.
+Do not imply a merged ordering or atomic snapshot across the two reads.
+
+Gate real OTLP error-log/slow-span populations, changing one lane without
+restarting the other, exact missing/empty conditions, Pause/Resume and held
+inspection, keyboard/narrow layouts, source work and model/actor controls.
+
+## 451 — single/paired filter consolidation
+
+After independent filters are measured, unify filter ownership and shared lane
+header/condition controls across single and paired Activity. Remove duplicate
+staging paths rather than preserve prerelease formats. Check density, accessible
+names, progressive enhancement and request counts against the same operator
+journeys. Preserve the distinction between shared scope and lane predicates.
 
 ## Retained follow-ons
 
