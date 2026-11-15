@@ -28,4 +28,7 @@ A saved paired view preserves the shared selector, each lane's applied predicate
 
 Saved rolling views contain compiled ordinary predicate ASTs. CEL expression text and authoring provenance are not saved in this format. No held rows, read windows, cursors, or execution state are saved.
 
+Single and paired Activity share [draft/summary behavior](FILTER_CONSOLIDATION.md),
+including exact duration units and raw-reference titles.
+
 See the [executable storyboard](journeys/paired-activity-filters.md) and [paired Activity contract](PAIRED_ACTIVITY.md).

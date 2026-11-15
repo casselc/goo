@@ -189,3 +189,7 @@ Reusable measurement packages, shared question-step codecs and named-only servic
 or native bridges retain their explicit capability limits. This cut enables the
 Activity view round trip; it does not invent rolling semantics for fixed saved
 compositions.
+
+[Consistent filter drafts](FILTER_CONSOLIDATION.md) distinguish checked source
+text from an unapplied condition. After Apply, rolling views may save the checked
+ordinary AST; pending edits still block Save. Source text is not saved by this format.

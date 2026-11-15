@@ -7,7 +7,7 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–450 delivered and validated**. The current cadence is
+Status: **429 and 437–451 delivered and validated**. The current cadence is
 **444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation**.
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
@@ -270,7 +270,12 @@ Gate real OTLP error-log/slow-span populations, changing one lane without
 restarting the other, exact missing/empty conditions, Pause/Resume and held
 inspection, keyboard/narrow layouts, source work and model/actor controls.
 
-## 451 — single/paired filter consolidation
+## 451 — single/paired filter consolidation (delivered)
+
+Delivered: [operator contract](FILTER_CONSOLIDATION.md),
+[measured storyboard](journeys/filter-consolidation.md), [acceptance](reviews/FILTER_CONSOLIDATION_451_ACCEPTANCE.md)
+and [validation](../VALIDATION.md). Shared state and exact condition presentation
+are implemented without merging source ownership. The original design basis follows.
 
 After independent filters are measured, unify filter ownership and shared lane
 header/condition controls across single and paired Activity. Remove duplicate
@@ -281,6 +286,39 @@ Humanize typed duration thresholds (for example, 100 ms rather than 100000000 ns
 in shared applied-condition summaries while retaining exact raw values. Measure
 editor/suggestion work and default-screen density before introducing a new cache
 or state abstraction.
+
+## Next finite cycle — reported asynchronous references
+
+The [post-451 checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_451.md) reconciles
+independent product/UX and architecture reviews. Choose existing reported span
+links as the next general-purpose investigation path. Keep the raw metric plot
+proposal for the following cycle rather than start both tracks together.
+
+### 452 — Follow a reported target (breadth)
+
+Resolve an outside-returned-span link through an explicitly staged target lookup.
+Retain the environment policy and fixed event-time window; disclose that service
+and namespace restrictions may be broader. Run reads; Back restores the held
+origin. Local exact returned targets remain local selections. Admit canonical
+trace/span tuples, invalid/missing IDs and duplicates without guessing identity.
+Test real cross-trace OTLP links, absent/excluded targets, cancellation and keyboard.
+No automatic traversal, expanded-trace/exact-target equivalence or causal claim.
+
+### 453 — Find spans reporting a link to this span (depth)
+
+Add bounded inverse discovery for an exact selected trace/span pair. Match IDs at
+the same array index with an explicit typed membership selector; independent
+array containment is insufficient. Declare matching-record count grain and keep
+paging/duplicates visible. Gate crossed tuples, duplicate link entries, malformed
+arrays, source absence, window/environment bounds and ClickHouse/reference parity.
+A link is a reported reference, not proof of message delivery or processing.
+
+### 454 — Consolidate reference interactions
+
+Unify demonstrated reference display, admission, scope disclosure and keyboard
+behavior after those workflows are measured. Keep source/navigation owners
+explicit and components passive. Do not build a universal investigation owner or
+another DSL. Check source work and desktop/narrow operator journeys.
 
 ## Retained follow-ons
 
@@ -295,3 +333,8 @@ Saved paired definitions are delivered in 446. Monitoring delivery, multi-user c
 arbitrary executable kinds and external warehouse/storage integration retain
 their separate design and operational gates. Existing dashboards, waterfalls,
 templates, annotations and captures are delivered capabilities, not new gaps.
+
+The following visual cycle should plot already-held raw gauge observations,
+visualize one explicit histogram point, then consolidate their presentation.
+Preserve recording/value validity, exact counts and source grain; use existing
+kind/data contracts, no implicit reads, interpolation or fleet-distribution claims.

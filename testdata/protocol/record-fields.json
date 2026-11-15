@@ -317,7 +317,7 @@
       "display": {
         "field": "column:duration_ns",
         "operator": "≥",
-        "value": "\"18446744073709551615\""
+        "value": "18446744073.709551615 s"
       }
     }
   ]

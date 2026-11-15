@@ -22,6 +22,16 @@ single and paired streams. `tail-presentation.mjs` projects status and loaded
 facts without IO; Tail retains connection and buffer ownership. Named container
 queries adapt the shared toolbar and record columns to available lane width.
 
+## Activity condition feedback (451)
+
+`condition-summary.mjs` is a passive supplied-predicate/selector presenter using
+shared exact field formatting and raw-reference titles. It is used by single
+chips/applied scope and paired lane summaries; it performs no IO.
+`PredicateDraft` is private application state, separately instantiated by each
+adapter. It owns draft/adoption semantics, not Environment, Signal or source
+reads. [Filter consolidation](FILTER_CONSOLIDATION.md) explains the operator
+policies, local Discard and measured deferred suggestion rendering.
+
 ## Metric scope discovery (432a)
 
 MetricScopes is an application-owned controller inside the existing instrument

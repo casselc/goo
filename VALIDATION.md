@@ -1,5 +1,54 @@
 # Validation record
 
+## 451 Activity filter consolidation — 2026-11-15
+
+[Operator guide](docs/FILTER_CONSOLIDATION.md),
+[executed storyboard](docs/journeys/filter-consolidation.md),
+[scoped acceptance](docs/reviews/FILTER_CONSOLIDATION_451_ACCEPTANCE.md),
+[next-cycle checkpoint](docs/reviews/PRODUCT_CHECKPOINT_AFTER_451.md).
+
+- Full root Go suite passes on Go 1.27.3. **1,957 UI tests pass, zero skipped**.
+  Go protocol fixtures retain identical predicate/canonical data; only their
+  client display expectation changes. No query, saved schema or physical source adapter changed.
+- Single/shared scope and each paired lane now use separate instances of one
+  pure PredicateDraft implementation. Canonical null/default aliases cannot make
+  an invalid draft clean. Fresh token checks, applied-state isolation, pending/
+  invalid refusal and Discard share the same implementation.
+- Hegel: **50 generated sequences / 1,250 independently checked Go–JS transitions**,
+  passed in 0.29s, zero skips; staged validation, stale/ABA tokens, pending/errors,
+  reset/discard/retire, exact predicates, deep-copy isolation and zero IO checked.
+- Exact BigInt duration summaries round-trip UInt64 nanoseconds without rounding,
+  including values above 2^53. Fixed fields alone receive unit formatting; raw AST
+  references and raw-unit authoring remain available. Query identities are unchanged.
+- Frozen latest single journey: **59s**, native existing stream-entry model
+  **12.31s / 12 rejected negative controls**, zero skips. Real OTLP/ClickHouse
+  evidence covers source-free invalid/CEL Discard, Environment/Signal intent,
+  checked Apply, exact AST Save, incompatible-signal refusal and correct original
+  Applied-scope labels after recalled views. Enter Apply and Discard reveal/focus
+  Filters. Exactly two explicit tail opens and four physical SQL calls in the flow.
+- Single closed-editor baseline → 451: **6 → 0 subtree mutations**, **199 → 7 hidden
+  suggestion nodes**, **4,184 → 3,980 document nodes**. Both observe real rolling
+  polls without opening another connection. Baseline observation is about six
+  seconds/three polls; final is about four seconds/two polls. These are work/DOM
+  measurements, not latency or polling-frequency claims. Reopening hydrates all
+  199 suggestion nodes and tenant metadata with zero source reads.
+- Paired regression: **1.3m**, existing ownership model/fifteen negative controls
+  and Bombadil pass, zero skips. Source work remains **eleven SQL calls** (eight
+  main, three actor); passive measurements add zero reads. First row relative to
+  the pair stays **269.5px at 1440 / 234.5px at 390 and 320**; visible lane controls
+  stay **71**. Document nodes change 2,353 → 2,355. No density gain is claimed.
+- UX, accessibility and web-standards scoped reviews accept sources, desktop/
+  narrow frames and keyboard evidence. Review found and fixed the missing/stale
+  Applied environment label on recalled views. Standards review was source/
+  supplied-frame inspection, not an independent AT or cross-engine run.
+- Final single: `artifacts/predicate-draft451/final-c83d23bd9ceb/report.json`;
+  baseline: `artifacts/predicate-draft451/baseline-2bf9f38a0921/report.json`.
+  Final pair: `artifacts/paired-activity-filters450/e81c5b746c1a/report.json`;
+  baseline: `artifacts/paired-activity-filters450/2f39cacb7b1a/report.json`.
+  Owned runtime/proxy cleanup is true. The paired harness pauses both native lane
+  controls in one browser turn; the strict held-bank model remains unchanged.
+
+
 ## 450 independent paired Activity conditions — 2026-11-15
 
 [Operator guide](docs/PAIRED_ACTIVITY_FILTERS.md),

@@ -40,7 +40,7 @@ test('Activity previous-window planner keeps named, empty and missing typed envi
 // Editor roundtrips may reorder object keys and omit wire-default empty values.
 test('Activity draft identity survives editor normalization without losing actual changes',()=>{
  const {normalize}=require('../ui/filter-editor.mjs');
- const original={all:[{op:'eq',value:'',field:{key:'tenant',kind:'resource'}},{any:[{op:'missing',field:{key:'region',kind:'attribute'}},{numeric:{parse:'canonical-decimal',unit:'{job}',scale:0,type:'int64',field:{key:'jobs',kind:'attribute'}},op:'ge',value:'2'}]}]};
+ const original={all:[{op:'eq',value:'',field:{key:'tenant',kind:'resource'}},{any:[{op:'missing',field:{key:'region',kind:'attribute'}},{numeric:{parse:'canonical-decimal',unit:'{job}',scale:0,type:'int64',field:{key:'jobs',kind:'attribute'}},op:'gte',value:'2'}]}]};
  const filters=new ScopeFilters();filters.restore(original);const held=filters.where(true);filters.replace(normalize(original));assert.equal(filters.dirty,false);assert.deepEqual(filters.where(true),held);
  const edited=normalize(original);edited.all[0].op='missing';delete edited.all[0].value;filters.replace(edited);assert.equal(filters.dirty,true);
  filters.replace(normalize(original));assert.equal(filters.dirty,false);const reordered=normalize(original);reordered.all.reverse();filters.replace(reordered);assert.equal(filters.dirty,true);

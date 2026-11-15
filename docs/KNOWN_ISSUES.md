@@ -7,6 +7,13 @@ shared scope, [independent lane conditions](PAIRED_ACTIVITY_FILTERS.md) and layo
 with paused recall and explicit Start. Merged chronology and paired baseline
 attachments remain outside this format. No combined count or health verdict is inferred.
 
+[Filter consolidation](FILTER_CONSOLIDATION.md) now shares draft/adoption rules
+and exact duration summaries across Activity. Discard changes predicates only;
+Environment/Signal drafts remain explicit. Closed suggestion rendering is deferred
+without changing polling. Reported async links outside the returned span set
+remain a navigation gap; the [next cycle](reviews/PRODUCT_CHECKPOINT_AFTER_451.md)
+addresses target lookup and tuple-safe inverse discovery.
+
 [CEL predicate authoring](CEL_PREDICATE_PILOT.md) is a delivered library/CLI pilot
 over fixed nonnullable fields. [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md)
 add bounded resource/record string helpers and explicit presence checks.

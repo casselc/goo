@@ -245,11 +245,20 @@ func TestQuintPairedFilters450Observed(t *testing.T) {
 			if err != nil {
 				return false
 			}
+			if coherent && !held {
+				t.Logf("unheld observed step %s", step.Name)
+			}
 			rec.Record(t.Context(), action, nil, "obs.logsReads", step.After.Reads["logs"]-base["logs"], "obs.spansReads", step.After.Reads["spans"]-base["spans"], "obs.logsActive", paired444Active(step.After.Lanes["logs"].Phase), "obs.spansActive", paired444Active(step.After.Lanes["spans"].Phase), "obs.held", held && coherent)
 		}
 		verdict, err := checker.Check(t.Context(), sink.Steps())
 		if err != nil {
 			t.Fatal(err)
+		}
+		if coherent && !verdict.OK() {
+			t.Logf("paired model: %s", verdict.Summary())
+			for _, actor := range verdict.Actors {
+				t.Logf("failure %+v output%s", actor.Failure, actor.Output)
+			}
 		}
 		return verdict.OK()
 	}

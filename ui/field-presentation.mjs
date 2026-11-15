@@ -51,7 +51,19 @@ const global=globalThis;
  function qualified(field){return field.kind+':'+field.key}
  function label(field){return field.kind==='column'?(columns[field.key]||field.key):field.kind+' '+field.key}
  function operator(op){return operators[op]||op}
+ // Fixed duration columns are integer nanoseconds. Decimal units remain exact:
+ // never convert through Number or round a comparison threshold.
+ function durationText(value){
+  if(typeof value!=='string'||value.length>20||!/^(0|[1-9][0-9]*)$/.test(value))return null;
+  const ns=BigInt(value);if(ns>18446744073709551615n)return null;
+  const [factor,unit,digits]=ns>=1000000000n?[1000000000n,'s',9]:ns>=1000000n?[1000000n,'ms',6]:ns>=1000n?[1000n,'µs',3]:[1n,'ns',0];
+  const remainder=ns%factor,fraction=remainder?'.'+String(remainder).padStart(digits,'0').replace(/0+$/,''):'';
+  return String(ns/factor)+fraction+' '+unit;
+ }
+ // A display-only reference: preserve the authored ordinary predicate verbatim.
+ function referenceText(predicate){return JSON.stringify(predicate)}
  function valueText(field,value){
+  if(field?.kind==='column'&&field.key==='duration_ns'){const duration=durationText(value);if(duration!==null)return duration}
   if(field?.kind==='column'&&field.key==='body_pattern_v1'){try{return (PatternIdentity).decode(value).label}catch{return 'Invalid pattern identity'}}
   if(field?.kind==='column'&&field.key==='timestamp_ns'&&typeof value==='string'&&/^(0|[1-9][0-9]*)$/.test(value)){
    const ns=BigInt(value);if(ns<=18446744073709551615n)return new Date(Number(ns/1000000n)).toISOString().slice(0,19)+'.'+String(ns%1000000000n).padStart(9,'0')+'Z';
@@ -59,5 +71,5 @@ const global=globalThis;
   return (value??'')===''?'Empty string':JSON.stringify(value);
  }
  function parts(p){if(p.numeric)return {field:qualified(p.numeric.field),operator:operator(p.op),type:p.numeric.type,...(p.numeric.scale===undefined||p.numeric.scale===0?{}:{scale:p.numeric.scale}),unit:p.numeric.unit,parse:p.numeric.parse,...(['valid','missing','empty','invalid'].includes(p.op)?{}:{value:p.value})};return {field:qualified(p.field),operator:operator(p.op),...(['exists','missing'].includes(p.op)?{}:{value:valueText(p.field,p.value??'')})}}
- function selectorText(p){if(!p)return 'No additional selectors';if(p.all||p.any)return '('+(p.all||p.any).map(selectorText).join(p.all?' AND ':' OR ')+')';if(p.numeric){const b=p.numeric,state=['valid','missing','empty','invalid'].includes(p.op);return label(b.field)+' ['+b.type+(b.scale?' · scale '+b.scale:'')+' · '+b.unit+'] '+(state?operator(p.op):'valid value '+operator(p.op)+' '+p.value)}return label(p.field)+' '+operator(p.op)+(['exists','missing'].includes(p.op)?'':' '+(p.field?.kind==='column'&&['timestamp_ns','body_pattern_v1'].includes(p.field.key)?valueText(p.field,p.value??''):JSON.stringify(p.value??'')))}
- export {valueText,qualified,label,operator,parts,selectorText,hint,searchText,missingLabel};
+ function selectorText(p){if(!p)return 'No additional selectors';if(p.all||p.any)return '('+(p.all||p.any).map(selectorText).join(p.all?' AND ':' OR ')+')';if(p.numeric){const b=p.numeric,state=['valid','missing','empty','invalid'].includes(p.op);return label(b.field)+' ['+b.type+(b.scale?' · scale '+b.scale:'')+' · '+b.unit+'] '+(state?operator(p.op):'valid value '+operator(p.op)+' '+p.value)}return (p.field?.kind==='column'&&p.field.key==='duration_ns'?'Span duration':label(p.field))+' '+operator(p.op)+(['exists','missing'].includes(p.op)?'':' '+(p.field?.kind==='column'&&['timestamp_ns','body_pattern_v1','duration_ns'].includes(p.field.key)?valueText(p.field,p.value??''):JSON.stringify(p.value??'')))}
+ export {referenceText,valueText,qualified,label,operator,parts,selectorText,hint,searchText,missingLabel};

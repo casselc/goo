@@ -7,6 +7,9 @@ compare CEL/Goo/ClickHouse behavior. Interactive text editing remains planned.
 [Raw point → nearby records → held return](raw-observation-context.md) stages ordinary
 logs/spans from an exported metric point with exact time and reported scope.
 
+[Filter draft consolidation](filter-consolidation.md) checks exact readable conditions,
+source-free Discard, accepted-scope labels and measured local rendering work.
+
 [Error logs beside slow spans](paired-activity-filters.md) applies independent lane
 conditions under one shared scope, then saves and recalls the pair paused.
 

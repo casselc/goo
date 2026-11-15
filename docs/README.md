@@ -16,6 +16,7 @@ This index separates using Goo, extending it, and the development record.
 | Inspect exported metric points before evaluation | [Raw gauges](RAW_GAUGE_OBSERVATIONS.md), [raw sums](RAW_SUM_OBSERVATIONS.md) and [explicit histogram points](RAW_HISTOGRAM_OBSERVATIONS.md); [compact inspection](RAW_OBSERVATION_CONSOLIDATION.md) |
 | Find logs or spans around an exported metric point | [Nearby raw-point context](RAW_OBSERVATION_CONTEXT.md) |
 | Understand instrument preview eligibility | [Instrument preflight](INSTRUMENT_PREFLIGHT.md) |
+| Edit or discard filters without confusing the applied scope | [Consistent Activity drafts](FILTER_CONSOLIDATION.md) |
 | Watch error logs beside slow spans | [Independent paired lane filters](PAIRED_ACTIVITY_FILTERS.md) |
 | Recover a failed live source without losing held rows | [Activity source recovery](ACTIVITY_SOURCE_RECOVERY.md) |
 | Search stored log messages from local Find | [Activity message search](ACTIVITY_MESSAGE_SEARCH.md) |
