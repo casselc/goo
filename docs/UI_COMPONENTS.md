@@ -1,5 +1,11 @@
 # Display component library
 
+[Saved Activity views](ACTIVITY_VIEWS.md) compose the same record picker/table
+for one or two lanes. Application-owned view validation keeps branch-specific
+layouts separate from transport state. Tail retains a validated detached layout
+per signal across programmatic stage and Start; passive picker restoration does
+not emit a user-change event or acquire source data.
+
 Activity uses the [same responsive record controls](ACTIVITY_COHERENCE.md) in
 single and paired streams. `tail-presentation.mjs` projects status and loaded
 facts without IO; Tail retains connection and buffer ownership. Named container

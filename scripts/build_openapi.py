@@ -118,7 +118,7 @@ service_discovery['properties']['sources'] = {'type':'array','minItems':6,'maxIt
 service_discovery['properties']['signals']['description'] = 'At most 1000 service/signal pairs across all included sources. Metric counts are exported gauge, sum, explicit and optional exponential histogram data-point records, never histogram mass or execution support.'
 
 for name in ('workbench.ActivityView','workbench.ActivityViewInput'):
- schemas[name]['properties']['baselineCapture']['description']='Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and the same checked environment policy/scope; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity.'
+ schemas[name]['properties']['baselineCapture']['description']='Optional exact immutable raw-span duration capture ID for single-span definitions only. Publication verifies stored evidence and the same checked environment policy/scope; opening a view stages configuration without loading evidence or starting telemetry.'
 
 schemas['annotations.OperationSpan']['properties']['reportedStatus']['description']='Optional exact exporter StatusCode, independent of declared outcome. Omission means not retained in this evidence; empty and future values remain explicit unknown values. Legacy saved bytes are unchanged.'
 
@@ -230,12 +230,12 @@ metric_scopes['properties']['choices']={'type':'array','maxItems':128,'items':re
 metric_scopes['properties']['unit']={'const':'exported-points'}
 metric_scopes['description']='Explicit complete bounded scope/service discovery over compatible metric families, without a manifest or prior identity. No usable source, more than 128 groups, a 1 MiB encoded result, or a later data-read failure refuses rather than returning a partial catalog. Source readiness is independent from observations and instrument eligibility. Empty choices mean no matching points in the successful read, not absent tables or health.'
 
-for wire in ('exploration.Query','exploration.QueryInput','exploration.TailSelector','exploration.TailSelectorInput'):
+for wire in ('exploration.Query','exploration.QueryInput','exploration.TailSelector','exploration.TailSelectorInput','workbench.ActivitySelector','workbench.ActivitySelectorInput'):
  shape=schemas[wire];input_wire=wire.endswith('Input');target='identity.EnvironmentSelectorInput' if input_wire else 'identity.EnvironmentSelector'
  if input_wire:shape['required']=[key for key in shape.get('required',[]) if key!='environment']
  shape['oneOf']=[{'required':['environment'],'properties':{'environment':{'type':'string','minLength':1},'environmentSelector':{'type':'null'}}},{'required':['environmentSelector'],'properties':{'environment':{'const':''},'environmentSelector':{'$ref':'#/components/schemas/'+target}}}]
  shape['description']='Choose a current-key-only environment name or a versioned environmentSelector with an empty/omitted name. No implicit wildcard. Reported-edge span questions apply the same checked environment policy to parent ownership and child membership.'
- shape.setdefault('allOf',[]).append({'if':all_environment_condition,'then':{'properties':{'signal':{'enum':['','logs'] if 'TailSelector' in wire else ['logs']}}}})
+ shape.setdefault('allOf',[]).append({'if':all_environment_condition,'then':{'properties':{'signal':{'enum':['','logs'] if 'Selector' in wire else ['logs']}}}})
 for wire in ('exploration.Query','exploration.QueryInput'):
  schemas[wire].setdefault('allOf',[]).append({'if':{'required':['reportedEdge'],'properties':{'reportedEdge':{'not':{'type':'null'}}}},'then':{'properties':{'signal':{'const':'spans'}}}})
 # Trace-wide search uses the same explicit selection as ordinary record questions.
@@ -1872,6 +1872,33 @@ for name in ['exploration.Result','exploration.RecordAggregatesResult']:
  absent={'not':{'required':['logSeverity']},'properties':{'groups':{'items':{'not':{'required':['logSeverity']}}},'timeSeries':{'items':{'not':{'required':['logSeverity']}}}}}
  shape.setdefault('allOf',[]).append({'if':requested,'then':then,'else':absent})
 spec['x-contract-notes'].append('logSeverity:true requests exact numeric OTel bands in count, groups and time intervals for logs without numeric/split projections; SeverityText remains independent. Go enforces conservation, including equal-total per-band drift. Record-page inspection preserves the question but omits aggregate summaries. General scopedview and cohort/rate projections do not yet admit this profile.')
+
+# Saved paired Activity is configuration; physical TailSelector remains single-signal.
+for suffix in ('','Input'):
+ selector=schemas['workbench.ActivitySelector'+suffix]
+ selector['additionalProperties']=False
+ selector['properties']['signal']={'enum':['','logs','spans','both']}
+ selector['properties']['where']=ref('exploration.Predicate'+suffix)
+ selector['description']='Saved rolling selector. both is a composition marker only: publication validates independent logs and spans projections; no tail endpoint accepts it.'
+ layout=schemas['workbench.ActivityLayout'+suffix]
+ layout['additionalProperties']=False
+ layout['properties']['columns']={'type':'array','minItems':2,'maxItems':3,'uniqueItems':True,'items':{'enum':['utc','service','summary']},'allOf':[{'contains':{'const':'utc'}},{'contains':{'const':'summary'}}]}
+ layout['properties']['fieldColumns']={'type':'array','maxItems':8,'uniqueItems':True,'items':ref('exploration.Field'+suffix)}
+ lanes=schemas['workbench.ActivityLanes'+suffix]
+ lanes['additionalProperties']=False
+ lanes['required']=['logs','spans']
+ for family in ('logs','spans'):
+  lanes['properties'][family]=ref('workbench.ActivityLayout'+suffix)
+ view=schemas['workbench.ActivityView'+suffix]
+ view['additionalProperties']=False
+ view['properties']['selector']=ref('workbench.ActivitySelector'+suffix)
+ view['properties']['columns']=copy.deepcopy(layout['properties']['columns'])
+ view['properties']['fieldColumns']=copy.deepcopy(layout['properties']['fieldColumns'])
+ view['properties']['baselineCapture']={'type':'string','pattern':'^([a-f0-9]{64})?$','description':'Single-span view only: exact optional immutable duration baseline capture ID.'}
+ paired={'required':['selector'],'properties':{'selector':{'required':['signal'],'properties':{'signal':{'const':'both'}}}}}
+ view.setdefault('allOf',[]).append({'if':paired,'then':{'required':['lanes'],'properties':{'lanes':ref('workbench.ActivityLanes'+suffix)},'not':{'anyOf':[{'required':[key]} for key in ('columns','fieldColumns','baselineCapture')]}},'else':{'required':['columns'],'not':{'required':['lanes']}}})
+ view['description']='Reusable Activity configuration: single-family flat presentation or both with exact logs/spans layouts. Recall stages paused configuration; explicit Start alone acquires telemetry. No fixed window, cursors, observations or health.'
+spec['x-contract-notes'].append('Paired Activity view publication validates the complete shared predicate for both logs and spans and each lane presentation for its family. All-environments remains logs-only. Definitions contain no execution state; metadata publication/recall never reads telemetry.')
 
 (ROOT/'api/openapi.json').write_text(json.dumps(spec,indent=2,ensure_ascii=False)+'\n')
 print(f'Built OpenAPI: {sum(len(p) for p in spec["paths"].values())} operations, {len(schemas)} schemas')

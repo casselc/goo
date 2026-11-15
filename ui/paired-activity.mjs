@@ -1,5 +1,8 @@
 import * as UI from './components.mjs';
 import * as Tail from './tail.mjs';
+import * as RecordColumns from './record-columns.mjs';
+import {object} from './intent-shape.mjs';
+import {validateField} from './predicate-validation.mjs';
 import * as PairPlan from './paired-activity-plan.mjs';
 import * as RecordPresentation from './record-presentation.mjs';
 import {nativeControlReady,revealFocus} from './dom-visibility.mjs';
@@ -49,7 +52,13 @@ export function mount(host,{current=()=>true,onOpenFixed}={}){
   lane.tail=Tail.mount(body,{open:true,compact:true,canUse:available,onState:state=>windowText(lane,state),onFind:state=>{section.dataset.findRevision=String(state.find.revision)},onResume:()=>{if(!available()||!plan)return false;retireLane(signal);return true},onInspect:(item,opener)=>inspect(signal,item,opener)});
  }
  function adopt(value,next=PairPlan.create(value)){epoch++;for(const lane of lanes.values())lane.epoch++;clearInspection();selector=structuredClone(value);plan=next;return next}
- function stage(value){if(disposed)return false;const next=adopt(value);for(const signal of ['logs','spans'])lanes.get(signal).tail.stage(next[signal],undefined,{message:'Ready. Start streams explicitly.'});return true}
+ function stage(value,presentation){
+  if(disposed)return false;const next=PairPlan.create(value),checked={};
+  if(presentation!==undefined){object(presentation,['logs','spans'],'Choose both lane presentations.');for(const signal of ['logs','spans']){object(presentation[signal],['columns','fieldColumns'],'Save columns and qualified fields only.');checked[signal]=RecordColumns.validate(presentation[signal],['utc','service','summary']);for(const field of checked[signal].fieldColumns)validateField(field,signal)}}
+  adopt(value,next);const own=epoch;
+  for(const signal of ['logs','spans']){if(epoch!==own)return false;lanes.get(signal).tail.stage(next[signal],checked[signal],{message:'Ready. Start streams explicitly.'})}
+  return true;
+ }
  function ready(){return available()&&[...lanes.values()].every(lane=>lane.tail.ready())}
  function start(value=selector){
   if(!ready())return false;const next=PairPlan.create(value);if(!ready())return false;
@@ -68,7 +77,8 @@ export function mount(host,{current=()=>true,onOpenFixed}={}){
  function pause(reason='Streams paused. Resume each lane explicitly.'){if(disposed||!plan)return;for(const lane of lanes.values())lane.tail.pause(reason)}
  function reset(){if(disposed)return;epoch++;plan=null;selector=null;clearInspection();for(const lane of lanes.values()){lane.epoch++;lane.tail.reset()}}
  function sync(){const ready=available();for(const lane of lanes.values())lane.tail.setReadBlocked(ready?'':'Apply shared scope before resuming.');if(inspection)inspection.analyze.disabled=typeof onOpenFixed!=='function'||!inspection.lease()}
+ function layout(){return Object.fromEntries([...lanes].map(([signal,lane])=>[signal,lane.tail.layout()]))}
  function snapshot(){return {selector:structuredClone(selector),lanes:Object.fromEntries([...lanes].map(([signal,lane])=>[signal,{...lane.tail.snapshot(),owner:lane.owner,signal}]))}}
  function focusStart(){lanes.get('logs').tail.focusStart()}
- return {stage,start,ready,pause,reset,snapshot,focusStart,sync,restoreFocus(){if(!available())return false;const fallback=[...root.querySelectorAll('button')].find(button=>/^(Resume|Retry|Start)/.test(button.textContent)&&nativeControlReady(button));return !!revealFocus(lastFocus,inspection?.opener||fallback)},dispose(){if(disposed)return;disposed=true;epoch++;clearInspection();for(const lane of lanes.values())lane.tail.dispose();root.remove()}};
+ return {stage,start,ready,layout,pause,reset,snapshot,focusStart,sync,restoreFocus(){if(!available())return false;const fallback=[...root.querySelectorAll('button')].find(button=>/^(Resume|Retry|Start)/.test(button.textContent)&&nativeControlReady(button));return !!revealFocus(lastFocus,inspection?.opener||fallback)},dispose(){if(disposed)return;disposed=true;epoch++;clearInspection();for(const lane of lanes.values())lane.tail.dispose();root.remove()}};
 }

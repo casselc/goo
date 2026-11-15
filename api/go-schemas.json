@@ -27791,6 +27791,227 @@
     "type": "object",
     "x-go-type": "github.com/casselc/goo/internal/tailprotocol.Response"
   },
+  "workbench.ActivityLanes": {
+    "properties": {
+      "logs": {
+        "$ref": "#/components/schemas/workbench.ActivityLayout"
+      },
+      "spans": {
+        "$ref": "#/components/schemas/workbench.ActivityLayout"
+      }
+    },
+    "required": [
+      "logs",
+      "spans"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ActivityLanes"
+  },
+  "workbench.ActivityLanesInput": {
+    "additionalProperties": false,
+    "properties": {
+      "logs": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ActivityLayoutInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "spans": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ActivityLayoutInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ActivityLanes"
+  },
+  "workbench.ActivityLayout": {
+    "properties": {
+      "columns": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fieldColumns": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/exploration.Field"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "columns"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ActivityLayout"
+  },
+  "workbench.ActivityLayoutInput": {
+    "additionalProperties": false,
+    "properties": {
+      "columns": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fieldColumns": {
+        "anyOf": [
+          {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/exploration.FieldInput"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ActivityLayout"
+  },
+  "workbench.ActivitySelector": {
+    "properties": {
+      "environment": {
+        "type": "string"
+      },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/identity.EnvironmentSelector"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "signal": {
+        "type": "string"
+      },
+      "where": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/exploration.Predicate"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "environment"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ActivitySelector"
+  },
+  "workbench.ActivitySelectorInput": {
+    "additionalProperties": false,
+    "properties": {
+      "environment": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "environmentSelector": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "signal": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "where": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exploration.PredicateInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/workbench.ActivitySelector"
+  },
   "workbench.ActivityView": {
     "properties": {
       "baselineCapture": {
@@ -27825,8 +28046,18 @@
       "id": {
         "type": "string"
       },
+      "lanes": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/workbench.ActivityLanes"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "selector": {
-        "$ref": "#/components/schemas/exploration.TailSelector"
+        "$ref": "#/components/schemas/workbench.ActivitySelector"
       },
       "title": {
         "type": "string"
@@ -27838,8 +28069,7 @@
     "required": [
       "version",
       "title",
-      "selector",
-      "columns"
+      "selector"
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/workbench.ActivityView"
@@ -27907,10 +28137,27 @@
           }
         ]
       },
+      "lanes": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ActivityLanesInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "selector": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/exploration.TailSelectorInput"
+            "$ref": "#/components/schemas/workbench.ActivitySelectorInput"
           },
           {
             "type": "null"

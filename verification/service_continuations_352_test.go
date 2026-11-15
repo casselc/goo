@@ -101,7 +101,7 @@ func TestHegelServiceContinuations352(t *testing.T) {
 			{Field: &exploration.Field{Kind: "resource", Key: "service.namespace"}, Op: "eq", Value: "saved-other-namespace"},
 			{Field: &exploration.Field{Kind: "column", Key: "body"}, Op: "contains", Value: "saved-only predicate"},
 		}}
-		view := workbench.ActivityView{Version: 1, ID: strings.Repeat("a", 64), Title: "Independent saved view", Selector: exploration.TailSelector{Signal: "logs", Environment: scope.Environment, EnvironmentSelector: scope.EnvironmentSelector, Where: savedWhere}, Columns: []string{"utc", "service", "summary"}}
+		view := workbench.ActivityView{Version: 1, ID: strings.Repeat("a", 64), Title: "Independent saved view", Selector: workbench.ActivitySelector{Signal: "logs", Environment: scope.Environment, EnvironmentSelector: scope.EnvironmentSelector, Where: savedWhere}, Columns: []string{"utc", "service", "summary"}}
 		foreign := map[string]any{"environmentSelector": identity.EnvironmentSelector{Version: identity.EnvironmentSelectorVersion, Policy: "effective", Scope: identity.EnvironmentScope{Mode: "named", Value: name}}}
 		if mode == 2 {
 			foreign = map[string]any{"environment": name}

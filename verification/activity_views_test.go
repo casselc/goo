@@ -17,7 +17,7 @@ import (
 func TestActivityViewProperties(t *testing.T) {
 	hegel.Test(t, func(tc *hegel.T) {
 		n := hegel.Draw(tc, hegel.Integers(0, 1000))
-		v := workbench.ActivityView{Version: 1, Title: "Activity " + strconv.Itoa(n), Selector: exploration.TailSelector{Signal: "logs", Environment: "prod"}, Columns: []string{"utc", "summary"}, FieldColumns: []exploration.Field{{Kind: "resource", Key: "service.namespace"}}}
+		v := workbench.ActivityView{Version: 1, Title: "Activity " + strconv.Itoa(n), Selector: workbench.ActivitySelector{Signal: "logs", Environment: "prod"}, Columns: []string{"utc", "summary"}, FieldColumns: []exploration.Field{{Kind: "resource", Key: "service.namespace"}}}
 		s := workbench.Store{Dir: t.TempDir()}
 		a, e := s.CreateActivityView(v)
 		if e != nil {

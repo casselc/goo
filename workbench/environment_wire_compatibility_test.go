@@ -29,7 +29,7 @@ func TestLegacyEnvironmentWires249(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	v := workbench.ActivityView{Version: 1, Title: "SDK logs", Selector: tail, Columns: []string{"utc", "service", "summary"}}
+	v := workbench.ActivityView{Version: 1, Title: "SDK logs", Selector: workbench.ActivitySelector(tail), Columns: []string{"utc", "service", "summary"}}
 	store := workbench.Store{Dir: t.TempDir()}
 	saved, err := store.CreateActivityView(v)
 	if err != nil {

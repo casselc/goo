@@ -53,7 +53,11 @@ func TestActivityViewExactEnvironmentScopeRoundTripAndCatalog(t *testing.T) {
 			t.Fatal(wire, len(page.Items), want)
 		}
 		for _, candidate := range page.Items {
-			got, e := candidate.Selector.Query(60000).EnvironmentSelection()
+			queries, e := candidate.Selector.Queries()
+			if e != nil {
+				t.Fatal(e)
+			}
+			got, e := queries[0].EnvironmentSelection()
 			if e != nil || !selection.Equal(got) {
 				t.Fatal("catalog mixed policies/scopes", candidate, e)
 			}
@@ -69,7 +73,15 @@ func TestActivityViewExactEnvironmentScopeRoundTripAndCatalog(t *testing.T) {
 		t.Fatal("legacy filter widened to effective scope", page, err)
 	}
 	for _, v := range page.Items {
-		if !v.Selector.Query(60000).SameEnvironment(legacy.Selector.Query(60000)) {
+		queries, e := v.Selector.Queries()
+		if e != nil {
+			t.Fatal(e)
+		}
+		previous, e := legacy.Selector.Queries()
+		if e != nil {
+			t.Fatal(e)
+		}
+		if !queries[0].SameEnvironment(previous[0]) {
 			t.Fatal("current-only changed")
 		}
 	}

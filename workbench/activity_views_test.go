@@ -9,7 +9,7 @@ import (
 )
 
 func activityFixture() ActivityView {
-	return ActivityView{Version: 1, Title: "API activity", Selector: exploration.TailSelector{Signal: "logs", Environment: "prod"}, Columns: []string{"summary", "utc"}, FieldColumns: []exploration.Field{{Kind: "resource", Key: "service.namespace"}}}
+	return ActivityView{Version: 1, Title: "API activity", Selector: ActivitySelector{Signal: "logs", Environment: "prod"}, Columns: []string{"summary", "utc"}, FieldColumns: []exploration.Field{{Kind: "resource", Key: "service.namespace"}}}
 }
 func TestActivityViewConfigurationAndIntegrity(t *testing.T) {
 	s := Store{Dir: t.TempDir()}
@@ -81,12 +81,12 @@ func TestActivityBaselineReferenceIdentityAndLegacyBytes(t *testing.T) {
 	v := activityFixture()
 	// The old wire projection pins pre-extension content IDs and permits no new default field.
 	legacy := struct {
-		Version      int                      `json:"version"`
-		ID           string                   `json:"id,omitempty"`
-		Title        string                   `json:"title"`
-		Selector     exploration.TailSelector `json:"selector"`
-		Columns      []string                 `json:"columns"`
-		FieldColumns []exploration.Field      `json:"fieldColumns,omitempty"`
+		Version      int                 `json:"version"`
+		ID           string              `json:"id,omitempty"`
+		Title        string              `json:"title"`
+		Selector     ActivitySelector    `json:"selector"`
+		Columns      []string            `json:"columns"`
+		FieldColumns []exploration.Field `json:"fieldColumns,omitempty"`
 	}{v.Version, "", v.Title, v.Selector, v.Columns, v.FieldColumns}
 	want, e := digest(legacy)
 	if e != nil {

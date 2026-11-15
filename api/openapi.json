@@ -52686,43 +52686,396 @@
           }
         ]
       },
-      "workbench.ActivityView": {
+      "workbench.ActivityLanes": {
         "properties": {
-          "baselineCapture": {
-            "type": "string",
-            "description": "Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and the same checked environment policy/scope; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity."
+          "logs": {
+            "$ref": "#/components/schemas/workbench.ActivityLayout"
           },
+          "spans": {
+            "$ref": "#/components/schemas/workbench.ActivityLayout"
+          }
+        },
+        "required": [
+          "logs",
+          "spans"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ActivityLanes",
+        "additionalProperties": false
+      },
+      "workbench.ActivityLanesInput": {
+        "additionalProperties": false,
+        "properties": {
+          "logs": {
+            "$ref": "#/components/schemas/workbench.ActivityLayoutInput"
+          },
+          "spans": {
+            "$ref": "#/components/schemas/workbench.ActivityLayoutInput"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ActivityLanes",
+        "required": [
+          "logs",
+          "spans"
+        ]
+      },
+      "workbench.ActivityLayout": {
+        "properties": {
           "columns": {
-            "anyOf": [
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 3,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "utc",
+                "service",
+                "summary"
+              ]
+            },
+            "allOf": [
               {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
+                "contains": {
+                  "const": "utc"
+                }
               },
               {
-                "type": "null"
+                "contains": {
+                  "const": "summary"
+                }
               }
             ]
           },
           "fieldColumns": {
+            "type": "array",
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/components/schemas/exploration.Field"
+            }
+          }
+        },
+        "required": [
+          "columns"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ActivityLayout",
+        "additionalProperties": false
+      },
+      "workbench.ActivityLayoutInput": {
+        "additionalProperties": false,
+        "properties": {
+          "columns": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 3,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "utc",
+                "service",
+                "summary"
+              ]
+            },
+            "allOf": [
+              {
+                "contains": {
+                  "const": "utc"
+                }
+              },
+              {
+                "contains": {
+                  "const": "summary"
+                }
+              }
+            ]
+          },
+          "fieldColumns": {
+            "type": "array",
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/components/schemas/exploration.FieldInput"
+            }
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ActivityLayout"
+      },
+      "workbench.ActivitySelector": {
+        "properties": {
+          "environment": {
+            "type": "string"
+          },
+          "environmentSelector": {
             "anyOf": [
               {
-                "items": {
-                  "$ref": "#/components/schemas/exploration.Field"
-                },
-                "type": "array"
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
               },
               {
                 "type": "null"
               }
             ]
           },
+          "signal": {
+            "enum": [
+              "",
+              "logs",
+              "spans",
+              "both"
+            ]
+          },
+          "where": {
+            "$ref": "#/components/schemas/exploration.Predicate"
+          }
+        },
+        "required": [
+          "environment"
+        ],
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ActivitySelector",
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              },
+              "environmentSelector": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              },
+              "environmentSelector": {
+                "$ref": "#/components/schemas/identity.EnvironmentSelector"
+              }
+            }
+          }
+        ],
+        "description": "Saved rolling selector. both is a composition marker only: publication validates independent logs and spans projections; no tail endpoint accepts it.",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "environmentSelector"
+              ],
+              "properties": {
+                "environmentSelector": {
+                  "type": "object",
+                  "required": [
+                    "scope"
+                  ],
+                  "properties": {
+                    "scope": {
+                      "required": [
+                        "mode"
+                      ],
+                      "properties": {
+                        "mode": {
+                          "const": "all"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "enum": [
+                    "",
+                    "logs"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "additionalProperties": false
+      },
+      "workbench.ActivitySelectorInput": {
+        "additionalProperties": false,
+        "properties": {
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "environmentSelector": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "signal": {
+            "enum": [
+              "",
+              "logs",
+              "spans",
+              "both"
+            ]
+          },
+          "where": {
+            "$ref": "#/components/schemas/exploration.PredicateInput"
+          }
+        },
+        "type": "object",
+        "x-go-type": "github.com/casselc/goo/workbench.ActivitySelector",
+        "required": [],
+        "oneOf": [
+          {
+            "required": [
+              "environment"
+            ],
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1
+              },
+              "environmentSelector": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "required": [
+              "environmentSelector"
+            ],
+            "properties": {
+              "environment": {
+                "const": ""
+              },
+              "environmentSelector": {
+                "$ref": "#/components/schemas/identity.EnvironmentSelectorInput"
+              }
+            }
+          }
+        ],
+        "description": "Saved rolling selector. both is a composition marker only: publication validates independent logs and spans projections; no tail endpoint accepts it.",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "environmentSelector"
+              ],
+              "properties": {
+                "environmentSelector": {
+                  "type": "object",
+                  "required": [
+                    "scope"
+                  ],
+                  "properties": {
+                    "scope": {
+                      "required": [
+                        "mode"
+                      ],
+                      "properties": {
+                        "mode": {
+                          "const": "all"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "signal": {
+                  "enum": [
+                    "",
+                    "logs"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "workbench.ActivityView": {
+        "properties": {
+          "baselineCapture": {
+            "type": "string",
+            "pattern": "^([a-f0-9]{64})?$",
+            "description": "Single-span view only: exact optional immutable duration baseline capture ID."
+          },
+          "columns": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 3,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "utc",
+                "service",
+                "summary"
+              ]
+            },
+            "allOf": [
+              {
+                "contains": {
+                  "const": "utc"
+                }
+              },
+              {
+                "contains": {
+                  "const": "summary"
+                }
+              }
+            ]
+          },
+          "fieldColumns": {
+            "type": "array",
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/components/schemas/exploration.Field"
+            }
+          },
           "id": {
             "type": "string"
           },
+          "lanes": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/workbench.ActivityLanes"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "selector": {
-            "$ref": "#/components/schemas/exploration.TailSelector"
+            "$ref": "#/components/schemas/workbench.ActivitySelector"
           },
           "title": {
             "type": "string"
@@ -52734,65 +53087,113 @@
         "required": [
           "version",
           "title",
-          "selector",
-          "columns"
+          "selector"
         ],
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.ActivityView"
+        "x-go-type": "github.com/casselc/goo/workbench.ActivityView",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "selector"
+              ],
+              "properties": {
+                "selector": {
+                  "required": [
+                    "signal"
+                  ],
+                  "properties": {
+                    "signal": {
+                      "const": "both"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "lanes"
+              ],
+              "properties": {
+                "lanes": {
+                  "$ref": "#/components/schemas/workbench.ActivityLanes"
+                }
+              },
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "columns"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "fieldColumns"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "baselineCapture"
+                    ]
+                  }
+                ]
+              }
+            },
+            "else": {
+              "required": [
+                "columns"
+              ],
+              "not": {
+                "required": [
+                  "lanes"
+                ]
+              }
+            }
+          }
+        ],
+        "description": "Reusable Activity configuration: single-family flat presentation or both with exact logs/spans layouts. Recall stages paused configuration; explicit Start alone acquires telemetry. No fixed window, cursors, observations or health."
       },
       "workbench.ActivityViewInput": {
         "additionalProperties": false,
         "properties": {
           "baselineCapture": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional exact immutable raw-span duration capture ID. Publication verifies stored evidence and the same checked environment policy/scope; opening a view stages configuration without loading evidence or starting telemetry. Omitted/empty preserves legacy identity."
+            "type": "string",
+            "pattern": "^([a-f0-9]{64})?$",
+            "description": "Single-span view only: exact optional immutable duration baseline capture ID."
           },
           "columns": {
-            "anyOf": [
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 3,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "utc",
+                "service",
+                "summary"
+              ]
+            },
+            "allOf": [
               {
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "type": "array"
+                "contains": {
+                  "const": "utc"
+                }
               },
               {
-                "type": "null"
+                "contains": {
+                  "const": "summary"
+                }
               }
             ]
           },
           "fieldColumns": {
-            "anyOf": [
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/components/schemas/exploration.FieldInput"
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "type": "array",
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/components/schemas/exploration.FieldInput"
+            }
           },
           "id": {
             "anyOf": [
@@ -52804,15 +53205,25 @@
               }
             ]
           },
-          "selector": {
+          "lanes": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/exploration.TailSelectorInput"
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/workbench.ActivityLanesInput"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               {
                 "type": "null"
               }
             ]
+          },
+          "selector": {
+            "$ref": "#/components/schemas/workbench.ActivitySelectorInput"
           },
           "title": {
             "anyOf": [
@@ -52836,7 +53247,68 @@
           }
         },
         "type": "object",
-        "x-go-type": "github.com/casselc/goo/workbench.ActivityView"
+        "x-go-type": "github.com/casselc/goo/workbench.ActivityView",
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "selector"
+              ],
+              "properties": {
+                "selector": {
+                  "required": [
+                    "signal"
+                  ],
+                  "properties": {
+                    "signal": {
+                      "const": "both"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "lanes"
+              ],
+              "properties": {
+                "lanes": {
+                  "$ref": "#/components/schemas/workbench.ActivityLanesInput"
+                }
+              },
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "columns"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "fieldColumns"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "baselineCapture"
+                    ]
+                  }
+                ]
+              }
+            },
+            "else": {
+              "required": [
+                "columns"
+              ],
+              "not": {
+                "required": [
+                  "lanes"
+                ]
+              }
+            }
+          }
+        ],
+        "description": "Reusable Activity configuration: single-family flat presentation or both with exact logs/spans layouts. Recall stages paused configuration; explicit Start alone acquires telemetry. No fixed window, cursors, observations or health."
       },
       "workbench.ActivityViewList": {
         "properties": {
@@ -68917,6 +69389,7 @@
     "Health is process liveness only; it does not query ClickHouse or certify telemetry ingestion.",
     "No generated handlers, semantic validator replacement, API stability guarantee or new authorization layer is introduced.",
     "Ordinary record Query input is a closed non-null graph: exact field names and one predicate arm; missing zero defaults remain permitted. Other input families retain their independently documented null policies.",
-    "logSeverity:true requests exact numeric OTel bands in count, groups and time intervals for logs without numeric/split projections; SeverityText remains independent. Go enforces conservation, including equal-total per-band drift. Record-page inspection preserves the question but omits aggregate summaries. General scopedview and cohort/rate projections do not yet admit this profile."
+    "logSeverity:true requests exact numeric OTel bands in count, groups and time intervals for logs without numeric/split projections; SeverityText remains independent. Go enforces conservation, including equal-total per-band drift. Record-page inspection preserves the question but omits aggregate summaries. General scopedview and cohort/rate projections do not yet admit this profile.",
+    "Paired Activity view publication validates the complete shared predicate for both logs and spans and each lane presentation for its family. All-environments remains logs-only. Definitions contain no execution state; metadata publication/recall never reads telemetry."
   ]
 }

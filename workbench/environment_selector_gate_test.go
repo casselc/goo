@@ -14,7 +14,7 @@ func TestSelectorAuthoringBoundaries(t *testing.T) {
 	if err := v.Validate(); err != nil {
 		t.Fatal("exploration view rejected typed selector", err)
 	}
-	a := ActivityView{Version: 1, Title: "Scope", Selector: exploration.TailSelector{EnvironmentSelector: &wire}, Columns: []string{"utc", "summary"}}
+	a := ActivityView{Version: 1, Title: "Scope", Selector: ActivitySelector{EnvironmentSelector: &wire}, Columns: []string{"utc", "summary"}}
 	if err := a.Validate(); err != nil {
 		t.Fatal("Activity view rejected selector", err)
 	}

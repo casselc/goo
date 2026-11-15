@@ -2,8 +2,10 @@
 
 Paired Activity shares responsive controls and UTC inspection with single
 streams ([measured behavior](ACTIVITY_COHERENCE.md)). Its two lanes remain
-independent, session-only acquisitions; reusable paired definitions are next
-on the roadmap. No combined count or health verdict is inferred.
+independent acquisitions. [Reusable paired definitions](ACTIVITY_VIEWS.md) save
+shared scope and lane layouts, with paused recall and explicit Start. Merged
+chronology, independent lane predicates and paired baseline attachments remain
+outside this format. No combined count or health verdict is inferred.
 
 [CEL predicate authoring](CEL_PREDICATE_PILOT.md) is a delivered library/CLI pilot
 over fixed nonnullable fields. [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md)

@@ -37,7 +37,8 @@ func registerActivityViews(mux *http.ServeMux, dir string) {
 				return
 			}
 			q := c.Question.Explore
-			if c.Question.Kind != "explore" || q == nil || !q.SameEnvironment(in.Selector.Query(60000)) {
+			queries, _ := in.Selector.Queries() // Validate above admitted the single baseline branch.
+			if c.Question.Kind != "explore" || q == nil || !q.SameEnvironment(queries[0]) {
 				fail(w, errors.New("baseline capture must use this environment"))
 				return
 			}

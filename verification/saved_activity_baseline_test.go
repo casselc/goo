@@ -18,7 +18,7 @@ func TestHegelSavedActivityBaselineIdentity(t *testing.T) {
 	hegel.Test(t, func(tc *hegel.T) {
 		n := hegel.Draw(tc, hegel.Integers(1, 1000000))
 		s := workbench.Store{Dir: t.TempDir()}
-		v := workbench.ActivityView{Version: 1, Title: fmt.Sprintf("Span view %d", n), Selector: exploration.TailSelector{Signal: "spans", Environment: "prod", Where: &exploration.Predicate{Any: []exploration.Predicate{{Field: &exploration.Field{Kind: "resource", Key: "service.namespace"}, Op: "missing"}, {Field: &exploration.Field{Kind: "resource", Key: "service.namespace"}, Op: "eq", Value: ""}}}}, Columns: []string{"utc", "summary"}}
+		v := workbench.ActivityView{Version: 1, Title: fmt.Sprintf("Span view %d", n), Selector: workbench.ActivitySelector{Signal: "spans", Environment: "prod", Where: &exploration.Predicate{Any: []exploration.Predicate{{Field: &exploration.Field{Kind: "resource", Key: "service.namespace"}, Op: "missing"}, {Field: &exploration.Field{Kind: "resource", Key: "service.namespace"}, Op: "eq", Value: ""}}}}, Columns: []string{"utc", "summary"}}
 		a, e := s.CreateActivityView(v)
 		if e != nil {
 			tc.Fatal(e)

@@ -36,8 +36,10 @@ policy. Choose an observed empty/unreported scope through single-signal **Find
 data** before pairing. That discovery control is unavailable in paired mode.
 **All environments** remains logs-only. Blank input never means All.
 
-The pair is session-only. Existing saved Activity views still describe one
-family; this change adds no mixed save/capture format. Existing per-lane
+Use **Views** to save the applied shared scope and each lane’s columns as a
+[reusable Activity view](ACTIVITY_VIEWS.md). Reopening stages empty paused lanes;
+Start streams explicitly acquires new windows. Saved definitions contain no
+held observations or per-lane Find state. Existing per-lane
 observation selection remains scoped to its own connection. Shared single-family
 comparison/explanation tools are not retargeted to an arbitrary lane; use the
 record's fixed-question handoff. A pair consumes two of the server's four tail

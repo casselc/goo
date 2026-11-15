@@ -2,7 +2,6 @@ package verification
 
 import (
 	"encoding/json"
-	"github.com/casselc/goo/exploration"
 	"github.com/casselc/goo/identity"
 	"github.com/casselc/goo/workbench"
 	"hegel.dev/go/hegel"
@@ -21,7 +20,7 @@ func TestHegelActivitySelectorViewParity(t *testing.T) {
 			scope.Value = "scope-" + strings.Repeat("x", seed%12)
 		}
 		selector := &identity.EnvironmentSelector{Version: identity.EnvironmentSelectorVersion, Policy: "effective", Scope: scope}
-		v := workbench.ActivityView{Version: 1, Title: "Portable Activity", Selector: exploration.TailSelector{Signal: []string{"logs", "spans"}[seed%2], EnvironmentSelector: selector}, Columns: []string{"utc", "service", "summary"}}
+		v := workbench.ActivityView{Version: 1, Title: "Portable Activity", Selector: workbench.ActivitySelector{Signal: []string{"logs", "spans"}[seed%2], EnvironmentSelector: selector}, Columns: []string{"utc", "service", "summary"}}
 		switch variant {
 		case 1:
 			selector.Policy = "invalid"

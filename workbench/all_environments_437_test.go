@@ -22,7 +22,7 @@ func TestAllEnvironments437ExistingCarriersRetainTypedScope(t *testing.T) {
 	if err != nil || !reflect.DeepEqual(loaded.Queries, view.Queries) {
 		t.Fatal("saved view lost All scope", loaded, err)
 	}
-	activity := ActivityView{Version: 1, Title: "All current logs", Selector: exploration.TailSelector{Signal: "logs", EnvironmentSelector: &wire}, Columns: []string{"summary", "utc"}}
+	activity := ActivityView{Version: 1, Title: "All current logs", Selector: ActivitySelector{Signal: "logs", EnvironmentSelector: &wire}, Columns: []string{"summary", "utc"}}
 	kept, err := store.CreateActivityView(activity)
 	if err != nil {
 		t.Fatal(err)

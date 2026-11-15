@@ -1665,6 +1665,22 @@ def check_activity_scope_views(spec):
             assert list(check.iter_errors(bad)), 'ambiguous Activity environment accepted'
             bad=copy.deepcopy(view);bad['selector']['environmentSelector']['policy']='wildcard'
             assert list(check.iter_errors(bad)), 'unknown Activity selection policy accepted'
+        pair={'version':1,'title':'Paired Activity','selector':{'signal':'both','environment':'prod'},'lanes':{'logs':{'columns':['utc','summary']},'spans':{'columns':['summary','service','utc']}}}
+        check.validate(pair)
+        for key,value in [('columns',[]),('fieldColumns',None),('baselineCapture',''),('readWindow',{})]:
+            bad=copy.deepcopy(pair);bad[key]=value
+            assert list(check.iter_errors(bad)), 'paired Activity flat/runtime field accepted: '+key
+        for family in ('logs','spans'):
+            bad=copy.deepcopy(pair);del bad['lanes'][family]
+            assert list(check.iter_errors(bad)), 'missing Activity lane accepted'
+            bad=copy.deepcopy(pair);bad['lanes'][family]['fieldColumns']=None
+            assert list(check.iter_errors(bad)), 'null lane fieldColumns accepted'
+        bad=copy.deepcopy(pair);bad['lanes']['metrics']={'columns':['utc','summary']}
+        assert list(check.iter_errors(bad)), 'unknown Activity lane accepted'
+        bad=copy.deepcopy(pair);bad['selector']['signal']='logs'
+        assert list(check.iter_errors(bad)), 'single Activity lanes accepted'
+        bad=copy.deepcopy(pair);bad['selector']={'signal':'both','environment':'','environmentSelector':{'version':'goo/environment-selector/v1','policy':'current-only','scope':{'mode':'all'}}}
+        assert list(check.iter_errors(bad)), 'paired All-environments accepted'
     parameters={p['name']:p for p in spec['paths']['/activity-views']['get']['parameters']}
     assert parameters['environmentSelector']['schema']['maxLength']==1024
     assert parameters['environment']['schema']['minLength']==1

@@ -7,8 +7,8 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–445 delivered and validated**. The current cadence is
-**443 numeric-condition depth → 444 paired Activity breadth → 445 consolidation**.
+Status: **429 and 437–446 delivered and validated**. The current cadence is
+**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth**.
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
 foundation; this does not extend a CEL platform queue.
@@ -176,22 +176,37 @@ add no connections or SQL; real four-slot pressure leaves the healthy lane alone
 The existing unavailable/late-read journey, native model gate and Bombadil actor
 remain acceptance checks. No readiness cache or polling change was justified.
 
-## 446 — reusable paired Activity definitions (next breadth)
+## 446 — reusable paired Activity definitions (delivered)
 
-Extend the existing Activity definition/library family with an explicit paired
-composition: one shared selector plus independent logs/spans presentation. Save
-the applied scope; distinguish or refuse an unapplied draft. Recall stages paused
-configuration, with the existing held/draft decision across single↔pair changes.
-Only explicit Start acquires telemetry. Never persist windows, cursors, buffers,
-Find, health, inspection or baseline attachments.
+Delivered in the existing [Activity view library](ACTIVITY_VIEWS.md), with
+[real-source storyboard](journeys/paired-activity-views.md): shared exact scope,
+independent lane layouts, applied-only saving, paused recall and explicit Start.
+The saved-view selector projects two admitted ordinary tail queries; physical
+tail transport still refuses mixed signals. Both grammars admit the full filter;
+All remains logs-only. Runtime fields and incompatible branch layouts refuse.
 
-Agree the canonical Go/UI contract before parallel backend and frontend work.
-Validate shared predicates against both signal grammars; All remains logs-only.
-Require exact named/empty/unreported scope and lane-column round trips, refusal of
-runtime fields, real OTLP save→recall→Start→independent failure→Inspect/Return,
-zero-read recall accounting, keyboard/narrow layouts, model/property checks and
-Bombadil actions. No merged chronology or independent lane-filter authoring in
-this slice. Follow with a depth cut only after reviewing this reusable flow.
+Shared Tail preparation now retains restored layouts across Start for single
+and paired views. Independent review, Hegel storage/identity properties,
+existing paired-model trace validation, ten negative controls and a real
+Bombadil save/recall/Return flow cover the result. No duplicate transport model,
+merged chronology or per-lane filter authoring was introduced.
+
+## 447 — raw native histogram point inspection (next depth)
+
+Complete the next raw-observation family after gauge and sum inspection. First
+agree a separate explicit-histogram point profile: exact instrument/temporality,
+event and start clocks, flags, bounds, counts, reported count/sum/min/max and
+attributes. Preserve unknown/absent fields and distinguish raw exported points
+from eligible merged measurements. Do not derive rates, percentiles or fleet
+health from a row. Exponential histograms need a distinct supported profile;
+never silently reinterpret their buckets.
+
+Reuse the held raw-observation table/detail, explicit acquisition and local
+Find/inspection/Return controls. Gate the profile and any chart affordance on its
+data requirements; retain the existing histogram evaluator's stricter semantics.
+Require actual OTLP points, source identity/bucket checks, exact numeric
+properties and source-free held actions. Confirm this design before widening
+native metric reads; follow the depth cut with a measured consolidation pass.
 
 ## Retained follow-ons
 
@@ -202,7 +217,7 @@ lowering registry remain separate proposals.
 
 A merged chronological stream and independently authored lane filters still
 need explicit semantics beyond the delivered two-lane shared-scope session.
-Saved paired definitions are the bounded 446 task above. Monitoring delivery, multi-user collaboration,
+Saved paired definitions are delivered in 446. Monitoring delivery, multi-user collaboration,
 arbitrary executable kinds and external warehouse/storage integration retain
 their separate design and operational gates. Existing dashboards, waterfalls,
 templates, annotations and captures are delivered capabilities, not new gaps.

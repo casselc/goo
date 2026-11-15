@@ -1,10 +1,45 @@
 # Reusable Activity views
 
-Activity views save a rolling log/span selector, record-column layout and optional exact captured latency baseline reference. Open a
+Activity views save a rolling logs, spans, or paired Logs + spans scope and record layouts. Single-span views may also reference an exact captured latency baseline. Open a
 view from Activity’s Views menu, its exact share link, Saved, or a service's environment-scoped library;
-then explicitly Start stream. Opening, inspection, sharing and reload do not read
+then explicitly Start stream or Start streams. Opening, inspection, sharing and reload do not read
 telemetry. The view contains no fixed time window, observations, totals, read or
 custody clocks, membership tokens or instruction to execute.
+
+## Logs + spans
+
+Choose **Logs + spans**, apply the shared scope, and arrange each lane’s record
+fields. Open **Views**, enter a title and **Save Activity view**. One definition
+stores the shared environment/filter and independent Logs and Spans columns.
+Saving a dirty scope or uncommitted CEL draft is disabled. Restored field and
+core-column order stays in place when either single or paired streams start.
+
+A paired view opens paused, with empty lanes and **Start streams**. Reopening or
+reloading fetches configuration only. Starting creates two ordinary independent
+tail requests with new rolling windows. Failures, loaded counts, Find and local
+inspection retain their lane ownership. Analyze and Return behave like an
+unsaved pair; neither configuration recall nor retained Return reads telemetry.
+
+Paired definitions omit the single-view flat layout and baseline reference. They
+contain no buffers, Find state, windows, cursors, health, or saved observations.
+Both signal grammars must admit the complete shared filter; All environments
+remains logs-only. One definition library serves both single and paired views.
+Switching between them uses the same keep/discard decision for unsaved changes.
+
+```mermaid
+flowchart LR
+  Applied[Applied shared scope + lane layouts] --> Save[Save immutable definition]
+  Save --> Library[Activity view library / exact link]
+  Library --> Recall[Metadata only: stage paused lanes]
+  Recall --> Start[Explicit Start streams]
+  Start --> Logs[Ordinary logs tail]
+  Start --> Spans[Ordinary spans tail]
+  Logs --> Source[Configured telemetry source]
+  Spans --> Source
+```
+
+[Executable paired storyboard](journeys/paired-activity-views.md) covers real
+OTLP data, save/recall, keyboard focus, independent refusal and retained Return.
 
 ## Product flow
 
@@ -14,7 +49,7 @@ eight qualified field columns. Unapplied scope changes block saving. Saving does
 not stop or start a source read. The saved link and Copy view link share only an
 immutable configuration ID. Subsequent edits produce a new configuration identity.
 
-A reopened view starts with empty rows and a visible Start stream action. Its
+A reopened view starts with empty rows and a visible Start action. Its
 selector and columns are restored locally; the first actual read receives a new
 connection, current rolling window and optional membership capability. Old held
 observations are not restored from a configuration. Existing pending evidence
