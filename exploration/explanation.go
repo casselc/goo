@@ -106,25 +106,19 @@ func (r ExplanationRequest) Validate() error {
 	}
 	return nil
 }
-func explanationCountQuery(q Query) Query {
-	v := detached(q)
-	v.Numeric = nil
-	v.NumericHistogram = nil
-	v.Summary = ""
-	v.SpanStatus = false
-	v.LogSeverity = false
-	v.BucketMS = 0
-	v.GroupTimeSeries = false
-	v.GroupBy = nil
-	v.Offset = 0
-	v.Limit = 100
-	return v
-}
 func PlanExplanation(r ExplanationRequest) (*ExplanationPlan, error) {
 	if e := r.Validate(); e != nil {
 		return nil, e
 	}
-	return &ExplanationPlan{Request: detached(r), Baseline: explanationCountQuery(r.Baseline), Selection: explanationCountQuery(r.Selection)}, nil
+	baseline, err := PopulationQuery(r.Baseline, 100, 0)
+	if err != nil {
+		return nil, err
+	}
+	selection, err := PopulationQuery(r.Selection, 100, 0)
+	if err != nil {
+		return nil, err
+	}
+	return &ExplanationPlan{Request: detached(r), Baseline: baseline, Selection: selection}, nil
 }
 func explanationDigest(v any) string {
 	raw, _ := json.Marshal(v)

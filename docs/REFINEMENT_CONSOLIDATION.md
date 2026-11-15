@@ -87,3 +87,10 @@ positioned diagnostics; [436.3](CEL_REPRESENTATION_OWNERSHIP.md) delivers exact
 representation and owner state. [436.4](CEL_CONTEXTUAL_EDITOR.md) mounts the
 contextual editor; [436.5](CEL_SAVED_QUESTIONS.md) preserves source with saved views.
 Whole-product acceptance is next in 436.6.
+
+## Population projection (454)
+
+[Selector conservation](SELECTOR_CONSERVATION.md) adds checked `PopulationQuery`
+for projection changes while retaining the complete population, including typed
+relationships and numeric predicates. Reference expansion remains a separate,
+explicit operation.

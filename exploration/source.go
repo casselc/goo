@@ -125,14 +125,10 @@ func (s Source) fetchProfile(ctx context.Context, q Query, rowLimit int, pageOnl
 	if pageOnly {
 		// The original question remains the page's scope. Presentation/aggregate
 		// requirements are not independent source work for record inspection.
-		q.GroupBy = nil
-		q.BucketMS = 0
-		q.GroupTimeSeries = false
-		q.Summary = ""
-		q.SpanStatus = false
-		q.LogSeverity = false
-		q.Numeric = nil
-		q.NumericHistogram = nil
+		q, e = PopulationQuery(question, question.Limit, question.Offset)
+		if e != nil {
+			return nil, e
+		}
 	}
 	plan, e := compile(q, rowLimit)
 	if e != nil {

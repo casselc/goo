@@ -1,5 +1,54 @@
 # Validation record
 
+## 454 Selector and reference consolidation — 2026-11-15
+
+[Developer guide](docs/SELECTOR_CONSERVATION.md),
+[scoped acceptance](docs/reviews/SELECTOR_CONSERVATION_454_ACCEPTANCE.md),
+[updated source storyboard](docs/journeys/span-link-incoming.md).
+
+- Full root Go suite passes on Go 1.27.3. **1,995 UI tests pass, zero skipped**.
+  No HTTP API, wire format, UI layout/style or source-owner change.
+- Checked Go/JS population projections validate the original, clone the complete
+  query, clear projection-only directives and validate output paging. Adoption:
+  Go record-page reads and explanation planning; JS counted-value planning.
+  Signal, environment, window, predicates (including numeric bindings) and both
+  relationship selectors remain. Invalid originals cannot become valid through
+  erasure; unknown JS projection options refuse.
+- Shared fixture: **nine valid cases / seven refusals**, including ordinary,
+  edge, incoming-link and combined selectors, environment policies, typed numeric
+  predicates and separate numeric projections. Tests also check source clauses/
+  bindings, existing specialized refusals, derived record columns and detachment.
+- Hegel passes **60 generated cases** with independent Go/JS output and selector
+  checks, random windows/pages, clone isolation, invalid-original refusal and
+  zero IO; zero skips. Deliberate reference widening remains a separate helper.
+  Shared tuple/array admission replaces duplicated outgoing checks. Null/false/
+  zero optional span IDs now refuse rather than silently becoming trace-only.
+- Incoming full browser journey passes in **1.9m**, native replay **27.2s** with
+  **14 rejected negative controls**, zero skips. Report **300ba6569170** retains
+  the original 105 matches, pages 100/5/Previous, main 16 source POSTs / 57 SQL,
+  actor six POSTs / 23 SQL (686 snapshots, completed phase 9), zero browser errors,
+  clean runtime teardown and disposable database cleanup.
+- Added a separate actual-source conservation check after the actor. The browser
+  imports the production counted-value builder/adopter, preserves the staged
+  reference question, and independently checks physical-oracle service groups
+  **52 + 53 = 105**, observed state and exact request identity. It adds four SQL
+  calls (two metadata + two aggregates): combined ledger **84 SQL**, compared with
+  80 for the unchanged navigation/actor flow. The direct assertion is separate
+  from existing native model coverage; no new machine or evidence carrier.
+- Outgoing full browser regression passes in **1.4m**, native replay **21.1s**
+  with **14 rejected negative controls**, zero skips. Report **c9dc92bcb1a1** keeps
+  main 12 source POSTs / 33 SQL and actor five POSTs / 16 SQL (734 snapshots,
+  phase 8): combined **49 SQL**, unchanged. Zero errors and clean teardown.
+- Both actual journeys retain explicit Stage/Run, source-free held Back, narrow
+  keyboard/focus/scroll checks, refusal/retry, cancellation/late response and
+  stale-control refusal. Screenshots/storyboards refreshed. Source-call accounting
+  is unchanged by consolidation; no latency or allocation improvement is claimed.
+  Independent source review found no remaining blocker.
+
+Retained reports: `artifacts/span-link-incoming453/300ba6569170/report.json` and
+`artifacts/span-link-target452/c9dc92bcb1a1/report.json`, with accepted native JSON
+logs. No new dependency or compatibility path. Next: held raw-gauge visuals.
+
 ## 453 Find spans reporting a link — 2026-11-15
 
 [Operator guide](docs/REPORTED_SPAN_LINKS.md),

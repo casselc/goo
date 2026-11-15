@@ -68,7 +68,10 @@ See the [reference-search storyboard](journeys/span-link-incoming.md).
 
 ## Implementation
 
-`ui/span-link-intent.mjs` owns pure tuple admission and ordinary-question planning.
+`ui/span-link-intent.mjs` owns pure action planning; shared tuple/array admission
+lives in `ui/span-link-membership.mjs`, and deliberate reference questions in
+`ui/span-reference-question.mjs`. [Population conservation](SELECTOR_CONSERVATION.md)
+keeps display projection changes separate from that widening.
 The ordinary spans question accepts `linksTo: {traceId, spanId}` for inverse
 membership; it can be combined with ordinary `where` conditions. The compiler
 binds both IDs and tests correlated array positions without expanding records.

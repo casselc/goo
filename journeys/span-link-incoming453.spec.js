@@ -42,6 +42,29 @@ test('453 find and page spans referencing a selected tuple without inventing lin
   await page.route('**/api/explore',async route=>{const response=await route.fetch();actualLate={request:route.request().postDataJSON(),status:response.status(),response:await response.json()};completed();await delivery;await route.fulfill({response})},{times:1});await step('run-late','read',async()=>{await run().click();await ready;expect(actualLate.status).toBe(200);await expect(back()).toBeFocused()});await returnHeld('late',late.held,late.control);await step('deliver-late-success','hold',async()=>{release();release=null;await page.waitForTimeout(100);await expect(panel()).toBeHidden();expect(await late.control.evaluate(e=>document.activeElement===e)).toBe(true);expect({...await bank('after-late-success'),name:late.held.name}).toEqual(late.held);report.late={...actualLate,ignored:true}},{local:true});await page.evaluate(()=>window.fetch=window.__incoming453Fetch);
   const stale=await stage('stale'),staleRun=await run().elementHandle();await returnHeld('stale',stale.held,stale.control);await step('retired-run-refused','hold',async()=>{await staleRun.evaluate(e=>e.onclick());await expect(panel()).toBeHidden();report.stale={runRefused:true}},{local:true});await step('close-trace','hold',async()=>{await dialog().getByRole('button',{name:'Close trace inspector',exact:true}).focus();await page.keyboard.press('Escape');await expect(dialog()).toBeHidden();await stale.control.evaluate(e=>e.onclick());await staleRun.evaluate(e=>e.onclick());report.stale.closedRefused=true},{local:true});
   const actorURL=new URL(runtime.base+'/'+questionLink(f.origin));actorURL.searchParams.set('incoming453',JSON.stringify({target:f.target}));await page.goto(String(actorURL));await expect(page.locator('#exploration')).toHaveAttribute('data-question-phase','draft');const actor=await startBombadil({dir:path.join(dir,'bombadil'),url:String(actorURL),specification:'verification/bombadil/span-link-incoming453.ts',seconds:35,width:390,height:1000});try{const campaign=await actor.finish({snapshot:{name:'state',version:'goo.spanLinkIncoming453Actor/1'}}),completed=campaign.states.find(s=>s.phase===9);expect(completed,'incoming-link actor completes explicit paged search and held Back').toBeTruthy();report.bombadil={snapshots:campaign.states.length,completed}}finally{await actor.stop()}
+  // Exercise the production counted-values projection over the same reported-link
+  // population. This is separate from the retained Stage/Run/Back model trace.
+  const projectionParent=structuredClone(main.context.question),field={kind:'column',key:'service'};
+  const projectionQuestion=await page.evaluate(async({parent,field})=>{
+   const {query}=await import('/filter-values.mjs');return query(parent,field);
+  },{parent:projectionParent,field});
+  expect(projectionQuestion).toEqual({...projectionParent,limit:1,offset:0,groupBy:[field]});
+  const sqlBefore=meter.calls.length;
+  const projectionResponse=await page.evaluate(async question=>{
+   const response=await fetch('/api/explore/counted-values',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(question)});
+   return{status:response.status,data:await response.json()};
+  },projectionQuestion);
+  expect(projectionResponse.status,JSON.stringify(projectionResponse.data)).toBe(200);
+  await page.evaluate(async({question,data})=>{const {result}=await import('/filter-values.mjs');result(question,data)}, {question:projectionQuestion,data:projectionResponse.data});
+  const expectedGroups=new Map();for(const row of F.members(report.oracle,f.target,f.origin))expectedGroups.set(row.service,(expectedGroups.get(row.service)||0)+1);
+  const canonicalGroups=groups=>groups.map(g=>({g0:g.g0,count:String(g.count)})).sort((a,b)=>String(a.g0).localeCompare(String(b.g0)));
+  const expected=canonicalGroups([...expectedGroups].map(([g0,count])=>({g0,count})));
+  expect(projectionResponse.data.question).toEqual(projectionQuestion);
+  expect(projectionResponse.data.state).toBe('observed');expect(projectionResponse.data.count).toBe('105');
+  expect(canonicalGroups(projectionResponse.data.groups)).toEqual(expected);
+  expect(projectionResponse.data.groups.reduce((sum,g)=>sum+BigInt(g.count),0n)).toBe(105n);
+  expect(meter.calls.length-sqlBefore).toBe(4);
+  report.projectionConservation={parent:projectionParent,question:projectionQuestion,field,...projectionResponse,expectedGroups:expected,sqlBefore,sqlAfter:meter.calls.length};
   expect(report.errors).toEqual([]);report.status='passed';
  }catch(error){report.status='failed';report.failure=error.message;await page.screenshot({path:path.join(dir,'failure.png')}).catch(()=>{});throw error}
  finally{release?.();await page.goto('about:blank').catch(()=>{});await runtime?.stop();await meter?.stop();report.cleanup=runtime?.receipt.cleanup||false;if(renamed)await sql('ALTER TABLE '+database+'.otel_traces RENAME COLUMN `Links.BrokenSpanId` TO `Links.SpanId`');if(created){await sql('DROP DATABASE '+database+' SYNC');report.databaseCleanup=true}report.source=meter?.calls||[];await fs.writeFile(path.join(dir,'report.json'),JSON.stringify(report,null,2))}

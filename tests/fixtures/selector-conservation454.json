@@ -1,0 +1,1135 @@
+{
+  "version": "goo/selector-conservation/v1",
+  "cases": [
+    {
+      "name": "none",
+      "query": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 7,
+        "offset": 100
+      },
+      "limit": 17,
+      "offset": 100,
+      "population": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "limit": 17,
+        "offset": 100
+      },
+      "specializedCount": "allow"
+    },
+    {
+      "name": "edge",
+      "query": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 7,
+        "offset": 100,
+        "reportedEdge": {
+          "parent": {
+            "service": "producer",
+            "namespace": {
+              "mode": "value",
+              "value": "apps"
+            }
+          },
+          "child": {
+            "service": "consumer",
+            "namespace": {
+              "mode": "missing"
+            }
+          }
+        }
+      },
+      "limit": 17,
+      "offset": 100,
+      "population": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "limit": 17,
+        "offset": 100,
+        "reportedEdge": {
+          "parent": {
+            "service": "producer",
+            "namespace": {
+              "mode": "value",
+              "value": "apps"
+            }
+          },
+          "child": {
+            "service": "consumer",
+            "namespace": {
+              "mode": "missing"
+            }
+          }
+        }
+      },
+      "specializedCount": "refuse"
+    },
+    {
+      "name": "linksTo",
+      "query": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 7,
+        "offset": 100,
+        "linksTo": {
+          "traceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "spanId": "bbbbbbbbbbbbbbbb"
+        }
+      },
+      "limit": 17,
+      "offset": 100,
+      "population": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "limit": 17,
+        "offset": 100,
+        "linksTo": {
+          "traceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "spanId": "bbbbbbbbbbbbbbbb"
+        }
+      },
+      "specializedCount": "refuse"
+    },
+    {
+      "name": "both",
+      "query": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 7,
+        "offset": 100,
+        "reportedEdge": {
+          "parent": {
+            "service": "producer",
+            "namespace": {
+              "mode": "value",
+              "value": "apps"
+            }
+          },
+          "child": {
+            "service": "consumer",
+            "namespace": {
+              "mode": "missing"
+            }
+          }
+        },
+        "linksTo": {
+          "traceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "spanId": "bbbbbbbbbbbbbbbb"
+        }
+      },
+      "limit": 17,
+      "offset": 100,
+      "population": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "limit": 17,
+        "offset": 100,
+        "reportedEdge": {
+          "parent": {
+            "service": "producer",
+            "namespace": {
+              "mode": "value",
+              "value": "apps"
+            }
+          },
+          "child": {
+            "service": "consumer",
+            "namespace": {
+              "mode": "missing"
+            }
+          }
+        },
+        "linksTo": {
+          "traceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "spanId": "bbbbbbbbbbbbbbbb"
+        }
+      },
+      "specializedCount": "refuse"
+    },
+    {
+      "name": "effective-empty",
+      "query": {
+        "signal": "spans",
+        "environment": "",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 7,
+        "offset": 100,
+        "environmentSelector": {
+          "version": "goo/environment-selector/v1",
+          "policy": "effective",
+          "scope": {
+            "mode": "empty"
+          }
+        },
+        "linksTo": {
+          "traceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "spanId": "bbbbbbbbbbbbbbbb"
+        }
+      },
+      "limit": 100,
+      "offset": 0,
+      "population": {
+        "signal": "spans",
+        "environment": "",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "limit": 100,
+        "offset": 0,
+        "environmentSelector": {
+          "version": "goo/environment-selector/v1",
+          "policy": "effective",
+          "scope": {
+            "mode": "empty"
+          }
+        },
+        "linksTo": {
+          "traceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "spanId": "bbbbbbbbbbbbbbbb"
+        }
+      },
+      "specializedCount": "refuse"
+    },
+    {
+      "name": "effective-unreported",
+      "query": {
+        "signal": "spans",
+        "environment": "",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 7,
+        "offset": 100,
+        "environmentSelector": {
+          "version": "goo/environment-selector/v1",
+          "policy": "effective",
+          "scope": {
+            "mode": "unreported"
+          }
+        },
+        "linksTo": {
+          "traceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "spanId": "bbbbbbbbbbbbbbbb"
+        }
+      },
+      "limit": 100,
+      "offset": 0,
+      "population": {
+        "signal": "spans",
+        "environment": "",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "limit": 100,
+        "offset": 0,
+        "environmentSelector": {
+          "version": "goo/environment-selector/v1",
+          "policy": "effective",
+          "scope": {
+            "mode": "unreported"
+          }
+        },
+        "linksTo": {
+          "traceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "spanId": "bbbbbbbbbbbbbbbb"
+        }
+      },
+      "specializedCount": "refuse"
+    },
+    {
+      "name": "effective-both",
+      "query": {
+        "signal": "spans",
+        "environment": "",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 7,
+        "offset": 100,
+        "environmentSelector": {
+          "version": "goo/environment-selector/v1",
+          "policy": "effective",
+          "scope": {
+            "mode": "named",
+            "value": "prod"
+          }
+        },
+        "reportedEdge": {
+          "parent": {
+            "service": "producer",
+            "namespace": {
+              "mode": "value",
+              "value": "apps"
+            }
+          },
+          "child": {
+            "service": "consumer",
+            "namespace": {
+              "mode": "missing"
+            }
+          }
+        },
+        "linksTo": {
+          "traceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "spanId": "bbbbbbbbbbbbbbbb"
+        }
+      },
+      "limit": 1,
+      "offset": 1000,
+      "population": {
+        "signal": "spans",
+        "environment": "",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "limit": 1,
+        "offset": 1000,
+        "environmentSelector": {
+          "version": "goo/environment-selector/v1",
+          "policy": "effective",
+          "scope": {
+            "mode": "named",
+            "value": "prod"
+          }
+        },
+        "reportedEdge": {
+          "parent": {
+            "service": "producer",
+            "namespace": {
+              "mode": "value",
+              "value": "apps"
+            }
+          },
+          "child": {
+            "service": "consumer",
+            "namespace": {
+              "mode": "missing"
+            }
+          }
+        },
+        "linksTo": {
+          "traceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "spanId": "bbbbbbbbbbbbbbbb"
+        }
+      },
+      "specializedCount": "refuse"
+    },
+    {
+      "name": "numeric-predicate-and-projection",
+      "query": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            },
+            {
+              "numeric": {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.units"
+                },
+                "type": "uint64",
+                "unit": "1",
+                "parse": "canonical-decimal"
+              },
+              "op": "gte",
+              "value": "9007199254740993"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 7,
+        "offset": 100,
+        "numeric": {
+          "field": {
+            "kind": "attribute",
+            "key": "work.units"
+          },
+          "type": "uint64",
+          "unit": "1",
+          "parse": "canonical-decimal"
+        },
+        "numericHistogram": {
+          "binning": "powers-of-two"
+        }
+      },
+      "limit": 23,
+      "offset": 0,
+      "population": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            },
+            {
+              "numeric": {
+                "field": {
+                  "kind": "attribute",
+                  "key": "work.units"
+                },
+                "type": "uint64",
+                "unit": "1",
+                "parse": "canonical-decimal"
+              },
+              "op": "gte",
+              "value": "9007199254740993"
+            }
+          ]
+        },
+        "limit": 23,
+        "offset": 0
+      },
+      "specializedCount": "allow"
+    },
+    {
+      "name": "all-environments-logs",
+      "query": {
+        "signal": "logs",
+        "environment": "",
+        "environmentSelector": {
+          "version": "goo/environment-selector/v1",
+          "policy": "effective",
+          "scope": {
+            "mode": "all"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "field": {
+            "kind": "column",
+            "key": "body"
+          },
+          "op": "contains",
+          "value": "task"
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "logSeverity": true,
+        "bucketMs": 10000,
+        "limit": 10,
+        "offset": 0
+      },
+      "limit": 100,
+      "offset": 0,
+      "population": {
+        "signal": "logs",
+        "environment": "",
+        "environmentSelector": {
+          "version": "goo/environment-selector/v1",
+          "policy": "effective",
+          "scope": {
+            "mode": "all"
+          }
+        },
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "field": {
+            "kind": "column",
+            "key": "body"
+          },
+          "op": "contains",
+          "value": "task"
+        },
+        "limit": 100,
+        "offset": 0
+      },
+      "specializedCount": "allow"
+    }
+  ],
+  "invalid": [
+    {
+      "name": "invalid-parent-projection",
+      "query": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 7,
+        "offset": 100
+      },
+      "limit": 17,
+      "offset": 0
+    },
+    {
+      "name": "invalid-link-target",
+      "query": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 7,
+        "offset": 100,
+        "linksTo": {
+          "traceId": "00000000000000000000000000000000",
+          "spanId": "bbbbbbbbbbbbbbbb"
+        }
+      },
+      "limit": 17,
+      "offset": 0
+    },
+    {
+      "name": "null-selector",
+      "query": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 7,
+        "offset": 100,
+        "linksTo": null
+      },
+      "limit": 17,
+      "offset": 0
+    },
+    {
+      "name": "unknown-selector",
+      "query": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 7,
+        "offset": 100,
+        "futureScope": {
+          "value": "must-not-be-dropped"
+        }
+      },
+      "limit": 17,
+      "offset": 0
+    },
+    {
+      "name": "invalid-output-limit",
+      "query": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 7,
+        "offset": 100
+      },
+      "limit": 0,
+      "offset": 0
+    },
+    {
+      "name": "invalid-output-offset",
+      "query": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 7,
+        "offset": 100
+      },
+      "limit": 100,
+      "offset": 1001
+    },
+    {
+      "name": "invalid-parent-page-not-repaired",
+      "query": {
+        "signal": "spans",
+        "environment": "prod",
+        "fromMs": 1000,
+        "toMs": 61000,
+        "where": {
+          "all": [
+            {
+              "field": {
+                "kind": "column",
+                "key": "service"
+              },
+              "op": "eq",
+              "value": "consumer"
+            },
+            {
+              "field": {
+                "kind": "resource",
+                "key": "service.namespace"
+              },
+              "op": "missing"
+            }
+          ]
+        },
+        "groupBy": [
+          {
+            "kind": "column",
+            "key": "service"
+          }
+        ],
+        "summary": "span-duration",
+        "spanStatus": true,
+        "bucketMs": 10000,
+        "groupTimeSeries": true,
+        "limit": 0,
+        "offset": 100
+      },
+      "limit": 100,
+      "offset": 0
+    }
+  ]
+}

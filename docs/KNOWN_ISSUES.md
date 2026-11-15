@@ -14,9 +14,11 @@ without changing polling. [Reported span-link lookup](REPORTED_SPAN_LINKS.md) no
 stages an exact target read from expanded trace inspection, with fixed environment/
 window and held return. Inverse search now finds referring span observations
 with same-position tuple membership and bounded fresh pages. Specialized profiles
-that cannot carry the selector refuse before reads. Selector conservation and
-reference consolidation are next in the
-[reference cycle](reviews/PRODUCT_CHECKPOINT_AFTER_451.md).
+that cannot carry the selector refuse before reads.
+[Selector conservation](SELECTOR_CONSERVATION.md) now shares checked projection
+and explicit reference-question builders; extending the query model still needs
+case-bank coverage and profile-specific admission. Held raw-gauge visualization
+is the next cycle.
 
 [CEL predicate authoring](CEL_PREDICATE_PILOT.md) is a delivered library/CLI pilot
 over fixed nonnullable fields. [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md)

@@ -45,6 +45,16 @@ requests and fifty-seven SQL calls; the actor uses six requests and twenty-three
 SQL calls. Stage, Back and stale local actions acquire zero data. The missing
 selector is refused after one successful DESCRIBE, before population acquisition.
 
+A separate conservation check uses the production counted-values query builder on
+that same reference question, then explicitly reads its service breakdown. The
+physical oracle independently predicts 52 observations from one publisher and 53
+from the other. Both groups sum to 105: the reported-link tuple, environment and
+fixed window survive the projection, while the deliberately omitted original
+service and population filters stay omitted. This adds four SQL calls (two
+metadata checks and two aggregates), outside the original journey/model trace.
+The direct browser assertion checks this receipt; the existing native gate still
+validates the original navigation, membership and fault controls.
+
 A separate browser transport fault holds a completed real Go response until after
 Back. Releasing it must not change the restored trace. Retained callbacks invoked
 after Back or dialog close must acquire no source authority. The independent

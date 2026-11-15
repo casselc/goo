@@ -7,8 +7,8 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–453 delivered and validated**. The current cadence is
-**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup → 453 referring-span discovery depth**.
+Status: **429 and 437–454 delivered and validated**. The current cadence is
+**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup → 453 referring-span discovery depth → 454 selector/reference consolidation**.
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
 foundation; this does not extend a CEL platform queue.
@@ -323,6 +323,10 @@ A link is a reported reference, not proof of message delivery or processing.
 
 ### 454 — Consolidate reference interactions
 
+Delivered: [selector conservation](SELECTOR_CONSERVATION.md),
+[scoped acceptance](reviews/SELECTOR_CONSERVATION_454_ACCEPTANCE.md) and
+[validation](../VALIDATION.md).
+
 Unify demonstrated reference display, admission, scope disclosure and keyboard
 behavior after those workflows are measured. Keep source/navigation owners
 explicit and components passive. Do not build a universal investigation owner or
@@ -353,3 +357,19 @@ The following visual cycle should plot already-held raw gauge observations,
 visualize one explicit histogram point, then consolidate their presentation.
 Preserve recording/value validity, exact counts and source grain; use existing
 kind/data contracts, no implicit reads, interpolation or fleet-distribution claims.
+
+## Next visual cycle: 455–457
+
+455: Add a local Points display for held raw gauge observations, using the shared
+kind/data grammar. Dots represent source occurrences, with UTC time and exact raw
+detail. Preserve duplicate multiplicity and explicit recording/value validity;
+invalid, missing or uncertain observations remain inspectable and accounted for.
+No connected series, invented instance identity, implicit read or fleet mean.
+
+456: Add bucket bars for one explicit histogram observation, retaining exact
+counts, boundaries, recording state and raw inspection. Do not merge observations
+or derive fleet percentiles from this display.
+
+457: Consolidate the demonstrated data/presentation primitives, local selection,
+Table/visual handoff, accessibility and measured source-free rendering. Reuse
+existing components and profile rules; do not introduce a second plotting grammar.
