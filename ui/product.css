@@ -1331,7 +1331,7 @@ td details {
 .stream-entry .compact-tail td[data-record-core=service] .ui-actions-body{position:static;min-width:0}
 .stream-entry .attribute-actions>.ui-actions{gap:4px;align-items:center;margin:0}
 .stream-entry .attribute-actions .ui-action-menu>summary{font-size:11px;min-height:28px;display:flex;align-items:center;cursor:pointer}
-@media(pointer:coarse){.stream-entry .compact-tail .tail-record-line>.ui-actions>button,.stream-entry .compact-tail td[data-record-core=service] .ui-action-menu>summary{min-height:40px}}
+@media(pointer:coarse){.stream-entry .compact-tail .tail-record-line>.ui-actions>button,.stream-entry .compact-tail td[data-record-core=service] .ui-action-menu>summary{min-height:44px}}
 .stream-entry .tail-counts,.stream-entry goo-result-state{font-size:12px;margin:4px 0}
 .entry-advanced{margin:14px 0;border-top:1px solid var(--border);padding-top:10px}
 .entry-advanced>summary{font-size:12px;cursor:pointer;color:var(--muted)}
@@ -1615,17 +1615,26 @@ td details {
 .population-workspace>.population-actions{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center}
 @media(max-width:600px){.population-workspace>.population-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.population-workspace>.population-actions>button{min-width:0;white-space:normal}.population-workspace>.section-heading>button{flex:none}}
 
-/* Find affects only the existing local tail rows, beside record-field controls. */
-.tail-record-tools{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;margin:4px 0}
-.tail-record-tools>label{display:flex;align-items:center;flex-wrap:wrap;gap:4px;font-size:12px;margin:0;min-width:0}
-.tail-record-tools input[type=search]{min-width:140px;max-width:100%;width:210px;min-height:32px;padding:4px 6px;font-size:12px}
-.tail-record-tools>button{min-height:32px;padding:4px 8px;font-size:12px}
-.tail-record-tools>.tail-find-status,.tail-record-tools>small,.tail-hidden-selection{font-size:12px;color:var(--muted);margin:0}
-@media(pointer:coarse){.tail-record-tools input[type=search],.tail-record-tools>button{min-height:44px}}
-.tail-match-selection:not([hidden]){display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px}
-.tail-match-selection>button{min-height:32px;padding:4px 8px;font-size:12px}
+/* Find and field actions adapt to their Tail, including half-width lanes. */
+.live-tail{container-type:inline-size;container-name:tail-controls}
+.tail-record-tools{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;margin:6px 0;min-inline-size:0}
+.tail-find-row,.tail-record-options{display:flex;align-items:center;gap:4px 8px;min-inline-size:0}
+.tail-find-row>label{display:flex;flex:1 1 140px;min-inline-size:0;margin:0;font-size:0}
+.tail-find-row input[type=search]{inline-size:100%;min-inline-size:0;max-inline-size:100%;min-block-size:32px;padding:4px 6px;font-size:12px;box-sizing:border-box}
+.tail-find-row>button{flex:0 0 auto;min-block-size:32px;padding:4px 8px;font-size:12px}
+.tail-find-status,.tail-hidden-selection{font-size:11px;color:var(--muted);margin:0}
+.tail-find-status{flex:0 0 auto;white-space:nowrap}
+.tail-record-options{flex-wrap:wrap;min-block-size:32px}
+.tail-record-options>goo-record-columns{margin-inline-start:auto}
+.tail-record-tools>small{display:none}
+.tail-record-tools>.activity-source-search{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;min-inline-size:0}
+.tail-match-selection:not([hidden]){display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;min-inline-size:0}
+.tail-match-selection>button{min-block-size:32px;padding:4px 8px;font-size:12px}
 .tail-match-selection-reason{font-size:11px;color:var(--muted)}
-@media(pointer:coarse){.tail-match-selection>button{min-height:44px}}
+@media(pointer:coarse){
+ .tail-find-row input[type=search],.tail-find-row>button,.tail-match-selection>button{min-block-size:44px}
+ .tail-record-options{min-block-size:44px}
+}
 
 /* Retained page comparisons show independent clocks and page grains. */
 .saved-page-comparison{margin-block:10px}
@@ -1757,11 +1766,6 @@ td details {
 .stream-entry-toolbar>details[open]>summary {display:inline-flex;margin-bottom:8px;background:var(--surface-raised)}
 .stream-entry .tail-meta goo-result-state::before {content:'';display:inline-block;width:6px;height:6px;margin-right:7px;border-radius:50%;background:var(--accent)}
 .stream-entry .tail-meta goo-result-state:not([state=observed])::before {background:var(--muted)}
-.tail-record-tools {margin-block:8px;gap:6px 10px}
-.tail-record-tools>label {font-size:0}
-.tail-record-tools>small {display:none}
-.tail-record-tools>goo-record-columns {margin-left:auto}
-.tail-record-tools>.activity-source-search {display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;flex-basis:100%;min-width:0}
 .activity-source-search>span {color:var(--muted);font-size:11px;overflow-wrap:anywhere;min-width:0}
 @media(pointer:coarse){.activity-source-search>button {min-height:44px}}
 .stream-entry .compact-tail .tail-record-line {display:flex;align-items:center;gap:12px;min-height:28px}
@@ -1792,9 +1796,6 @@ td details {
  .stream-entry .compact-tail .tail-record-line {flex-wrap:wrap;gap:4px;min-height:0}
  .stream-entry .compact-tail .tail-record-line>goo-record-summary {flex:1 1 100%;width:100%}
  .stream-entry .compact-tail .tail-record-line>.ui-actions {margin:2px 0 0}
- .tail-record-tools>label {flex:1 1 100%;min-width:0}
- .tail-record-tools input[type=search] {width:100%;min-width:0}
- .tail-record-tools>goo-record-columns {margin-left:0}
  .fixed-record-summary>.fixed-record-facts {margin-left:0}
 }
 @media(pointer:coarse){
@@ -1958,3 +1959,8 @@ input::placeholder,textarea::placeholder {color:var(--muted);opacity:1}
 .stream-entry-toolbar>.entry-all-environments{display:inline-flex;align-items:center;gap:6px;min-height:32px;font-size:12px;color:var(--ink)}
 .stream-entry-toolbar>.entry-all-environments>input{width:14px;height:14px;min-width:14px;min-height:0;padding:0;margin:0;flex:none}
 @media(max-width:700px){.stream-entry-toolbar>.entry-all-environments{min-height:44px}}
+
+@container tail-controls (min-width:900px){
+ .tail-record-tools{grid-template-columns:minmax(0,1fr) auto}
+ .tail-record-tools>.activity-source-search{grid-column:1/-1}
+}

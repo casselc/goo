@@ -86,3 +86,12 @@ goo-table[record-layout]>.telemetry-table>caption {position:absolute;width:1px;m
 }
 
 .record-environment{display:inline-block;max-width:28ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;font-size:11px;color:var(--muted,#98a8bf)}
+
+
+/* Compact tables budget columns against their actual viewport, including a
+   half-width Activity lane. Native table/header semantics remain unchanged. */
+goo-table[record-layout=compact][density=compact]{container-type:inline-size;container-name:record-viewport}
+@container record-viewport (max-width:760px){
+ goo-table[record-layout=compact][density=compact]>table>thead>tr>th[data-record-core=utc]{width:104px}
+ goo-table[record-layout=compact][density=compact]>table>thead>tr>th[data-record-core=service]{width:22%}
+}

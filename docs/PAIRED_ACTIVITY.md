@@ -43,6 +43,9 @@ comparison/explanation tools are not retargeted to an arbitrary lane; use the
 record's fixed-question handoff. A pair consumes two of the server's four tail
 slots, with the existing capacity/refusal policy intact.
 
+The [shared Activity controls and measured storyboard](ACTIVITY_COHERENCE.md)
+cover responsive layout, UTC inspection, admission and capacity isolation.
+
 ## Ownership
 
 ```mermaid

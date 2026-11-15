@@ -7,9 +7,9 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–444 delivered and validated**. The current cadence is
+Status: **429 and 437–445 delivered and validated**. The current cadence is
 **443 numeric-condition depth → 444 paired Activity breadth → 445 consolidation**.
-Next: **445 single/paired Activity coherence and measured work**. The existing
+**445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
 foundation; this does not extend a CEL platform queue.
 
@@ -166,21 +166,32 @@ Quint trace validation exercise the real mounted workflow with rejecting control
 Initial-state, native inactive-callback, recall-conflict and focus fixes are part
 of the delivered shared path, not separate follow-up promises.
 
-## 445 — consolidate single/paired Activity (planned)
+## 445 — consolidate single/paired Activity (delivered)
 
-Measure the exercised single/paired scope-edit → Start/Apply → Inspect → fixed
-handoff → retained Return workflow at 320/390/1440. Keep one shared control bar and
-consistent native focus/refusal behavior without restoring ambiguous global
-pair tools. Extract only matching pure scope-admission, viewport/focus and
-control-state projections. Retain separate connection, custody and source owners.
+Delivered [shared controls and measured storyboard](ACTIVITY_COHERENCE.md):
+responsive Find/field actions, container-aware record columns, UTC inspection,
+compact paused facts, paired start admission and native Return focus. Source,
+connection and custody owners remain separate. Measured staging/inspection/Return
+add no connections or SQL; real four-slot pressure leaves the healthy lane alone.
+The existing unavailable/late-read journey, native model gate and Bombadil actor
+remain acceptance checks. No readiness cache or polling change was justified.
 
-Record cold/retained connection counts and per-family SQL work before proposing
-caching or polling changes. Include capacity pressure with the existing four-tail
-limit, an unavailable family, withdrawn controls and inactive late completion.
-Compare the same applied/read state when assessing density or speed. No durable
-readiness cache, combined totals, source-health inference or default expansion
-of All scope follows. Keep native model/Bombadil/storyboards current; review the
-resulting product before adding another narrow language or preservation sequence.
+## 446 — reusable paired Activity definitions (next breadth)
+
+Extend the existing Activity definition/library family with an explicit paired
+composition: one shared selector plus independent logs/spans presentation. Save
+the applied scope; distinguish or refuse an unapplied draft. Recall stages paused
+configuration, with the existing held/draft decision across single↔pair changes.
+Only explicit Start acquires telemetry. Never persist windows, cursors, buffers,
+Find, health, inspection or baseline attachments.
+
+Agree the canonical Go/UI contract before parallel backend and frontend work.
+Validate shared predicates against both signal grammars; All remains logs-only.
+Require exact named/empty/unreported scope and lane-column round trips, refusal of
+runtime fields, real OTLP save→recall→Start→independent failure→Inspect/Return,
+zero-read recall accounting, keyboard/narrow layouts, model/property checks and
+Bombadil actions. No merged chronology or independent lane-filter authoring in
+this slice. Follow with a depth cut only after reviewing this reusable flow.
 
 ## Retained follow-ons
 
@@ -189,9 +200,9 @@ Typed numeric conditions are now delivered in 443 with the existing explicit
 presence/validity contract. General arithmetic, coercions and a third-party
 lowering registry remain separate proposals.
 
-A merged chronological stream, independently authored lane filters and saved
-paired definitions still need explicit semantics beyond the delivered two-lane
-shared-scope session. Monitoring delivery, multi-user collaboration,
+A merged chronological stream and independently authored lane filters still
+need explicit semantics beyond the delivered two-lane shared-scope session.
+Saved paired definitions are the bounded 446 task above. Monitoring delivery, multi-user collaboration,
 arbitrary executable kinds and external warehouse/storage integration retain
 their separate design and operational gates. Existing dashboards, waterfalls,
 templates, annotations and captures are delivered capabilities, not new gaps.

@@ -1,5 +1,10 @@
 # Display component library
 
+Activity uses the [same responsive record controls](ACTIVITY_COHERENCE.md) in
+single and paired streams. `tail-presentation.mjs` projects status and loaded
+facts without IO; Tail retains connection and buffer ownership. Named container
+queries adapt the shared toolbar and record columns to available lane width.
+
 ## Metric scope discovery (432a)
 
 MetricScopes is an application-owned controller inside the existing instrument

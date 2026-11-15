@@ -35,7 +35,7 @@ test('actual tail connect stops terminal HTTP/source/protocol outcomes, retains 
  }
 });
 test('actual transient transport, timeout, rollover and recognized capacity keep the two-second reconnect path',async()=>{
- for(const response of [new TypeError('secret network host'),http(429,{error:'Live stream capacity reached.',reason:'capacity',retry:'automatic'}),stream([reset,{event:'gap',data:timeout}]),stream([reset,{event:'gap',data:{reason:'connection_ended',retry:'automatic'}}]),stream([])]){const f=fixture(response);await f.state.connect();assert.equal(f.state.phase,'stale');assert.equal(f.state.completedRead,null);assert.equal(f.timers.length,1);assert.equal(f.state.terminalFailure,null);assert.equal(f.rows.length,1);assert.doesNotMatch(f.state.status.textContent,/secret/)}
+ for(const response of [new TypeError('secret network host'),http(429,{error:'Live stream capacity reached.',reason:'capacity',retry:'automatic'}),stream([reset,{event:'gap',data:timeout}]),stream([reset,{event:'gap',data:{reason:'connection_ended',retry:'automatic'}}]),stream([])]){const f=fixture(response);await f.state.connect();assert.equal(f.state.phase,'stale');assert.equal(f.state.completedRead,null);assert.equal(f.timers.length,1);assert.equal(f.state.terminalFailure,null);assert.equal(f.rows.length,1);assert.doesNotMatch(f.state.status.textContent,/secret/);if(response.status===429)assert.equal(f.state.status.textContent,'Stream capacity reached; reconnecting in 2 seconds.')}
 });
 test('actual Retry rechecks native visibility, dirty scope and generation after the owner guard without clearing held rows',async()=>{
  for(const edit of [f=>f.state.retry.hidden=true,f=>f.state.retry.disabled=true,f=>f.state.retry.inert=true,f=>document.hidden=true,f=>f.state.generation++,f=>f.state.onResume=()=>false,f=>f.state.onResume=()=>{f.state.generation++;return true},f=>f.state.onResume=()=>{throw Error('refused')}]){const f=fixture(stream([reset,{event:'gap',data:missing}]));await f.state.connect();const handler=f.state.retry.onclick;edit(f);assert.doesNotThrow(handler);assert.equal(f.calls.fetch,1);assert.equal(f.rows.length,1);assert.equal(f.calls.clear,0)}
@@ -86,4 +86,12 @@ test('inactive lane denies initial connect and explicit retry without altering h
  f.state.usable=()=>true;await f.state.connect();assert.equal(f.calls.fetch,1);const retry=f.state.retry.onclick;
  f.state.usable=()=>false;retry();assert.equal(f.calls.fetch,1);assert.equal(f.calls.resume,0);assert.equal(f.rows.length,1);
  f.state.usable=()=>true;f.state.onResume=()=>{f.state.usable=()=>false;return true};retry();assert.equal(f.calls.fetch,1,'withdrawal during owning resume callback is rechecked');assert.equal(f.rows.length,1);
+});
+
+
+test('loading callbacks can withdraw admission before the first source request',async()=>{
+ const f=fixture(http(429,{error:'Live stream capacity reached.',reason:'capacity',retry:'automatic'}));
+ const publish=f.state.publish;let accepted=false;f.state.publish=(phase,message)=>{publish(phase,message);if(phase==='loading')f.state.usable=()=>false};
+ assert.equal(await f.state.connect(false,()=>{accepted=true}),false);
+ assert.equal(accepted,false);assert.equal(f.calls.fetch,0);assert.equal(f.timers.length,0);assert.equal(f.state.controller,null);assert.equal(f.state.phase,'paused');assert.equal(f.rows.length,1);
 });

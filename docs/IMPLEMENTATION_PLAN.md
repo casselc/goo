@@ -56,7 +56,8 @@
 > [attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md).
 > **441 raw sum observations is delivered**; see
 > [raw sums](RAW_SUM_OBSERVATIONS.md).
-> Next: **445 single/paired Activity coherence and measured work** (consolidation).
+> **445 Activity consolidation is delivered**; see [measured controls and storyboard](ACTIVITY_COHERENCE.md).
+> Next: **446 reusable paired Activity definitions** (breadth).
 **444 delivered:** [paired Activity](PAIRED_ACTIVITY.md) composes independent tails
 with local inspection and scope-preserving fixed drill-in/retained Return.
 **443 delivered:** [typed numeric CEL conditions](CEL_NUMERIC_ATTRIBUTES.md) reuse

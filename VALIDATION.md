@@ -1,5 +1,23 @@
 # Validation record
 
+## 445 Activity consolidation — 2026-11-15
+
+[Measured storyboard](docs/ACTIVITY_COHERENCE.md).
+
+- UI regression: **1,881 passed, zero skipped**. Focused admission, reentrant
+  withdrawal, interaction and presentation tests use the actual owners/helpers.
+- Final real OTLP coherence journey passed: six single/paired viewport captures,
+  UTC inspector, keyboard Return focus, unchanged held identities/windows,
+  zero-read stage/Inspect/Return, real four-slot capacity pressure and recovery.
+- Before/after geometry uses the embedded 444 binary and the same fixture sizes,
+  paused state, columns and widths. No performance or source-health claim.
+- Existing paired real-source journey passed with `GOO_PAIRED444_VERIFY=1`,
+  including source refusal, late completion, Bombadil and native trace controls.
+- Go 1.27.3 embedded-server build passed. Product Go code and server policies
+  did not change. Independent architecture and UX review accepted the bounded
+  consolidation; no runtime/custody owner was merged.
+
+
 ## 444 paired Logs + Spans Activity — 2026-11-15
 
 [Guide](docs/PAIRED_ACTIVITY.md), [real-source storyboard](docs/journeys/paired-activity.md),

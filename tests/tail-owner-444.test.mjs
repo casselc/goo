@@ -2,12 +2,13 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
+import * as TailPresentation from '../ui/tail-presentation.mjs';
 const source=readFileSync(new URL('../ui/tail.mjs',import.meta.url),'utf8');
 const between=(a,b)=>source.slice(source.indexOf(a),source.indexOf(b,source.indexOf(a)));
 const control=()=>({dataset:{},state:'unknown',textContent:'',hidden:false,disabled:false});
 
 test('actual state and Find notifications are owner-tagged detached scope observations',()=>{
- const events=[],states=[],finds=[],selector={signal:'spans',environment:'prod',where:{field:{kind:'attribute',key:'region'},op:'eq',value:'west'}},completedRead={fromMs:1000,toMs:61000,revision:2},s={owner:'tail-fixture',signalKind:'spans',selector,completedRead,phase:'paused',staged:false,find:{value:'needle'},findDraft:'needle',findRevision:1,lastTo:61000,connection:'a'.repeat(64),buffer:{rows:[{key:'one'}],evicted:0,observed:1},gap:false,generation:3,structuredClone,status:control(),section:control(),counts:control(),pause:control(),resume:control(),controller:null,saving:false,compact:false,refreshBatch(){},global:{dispatchEvent:e=>events.push(e)},CustomEvent:class{constructor(type,{detail}){this.type=type;this.detail=detail}},
+ const events=[],states=[],finds=[],selector={signal:'spans',environment:'prod',where:{field:{kind:'attribute',key:'region'},op:'eq',value:'west'}},completedRead={fromMs:1000,toMs:61000,revision:2},s={TailPresentation,bufferFacts:control(),owner:'tail-fixture',signalKind:'spans',selector,completedRead,phase:'paused',staged:false,find:{value:'needle'},findDraft:'needle',findRevision:1,lastTo:61000,connection:'a'.repeat(64),buffer:{rows:[{key:'one'}],evicted:0,observed:1},gap:false,generation:3,structuredClone,status:control(),section:control(),counts:control(),pause:control(),resume:control(),controller:null,saving:false,compact:false,refreshBatch(){},global:{dispatchEvent:e=>events.push(e)},CustomEvent:class{constructor(type,{detail}){this.type=type;this.detail=detail}},
   onState:value=>{states.push(structuredClone(value));value.selector.environment='callback edit';value.completedRead.revision=9;value.find.text='changed';value.keys.push('bad')},onFind:value=>{finds.push(structuredClone(value));value.selector.where.value='callback edit'}};
  vm.runInNewContext(source.match(/function scopeSnapshot\(\)\{[^\n]+\}/)[0]+between('  function notification(','  function halt(')+';this.publish=publish;this.notifyFind=notifyFind;',s);
  s.publish('unknown','Listening');s.notifyFind();assert.equal(states.length,1);assert.equal(finds.length,1);assert.equal(events.length,2);
@@ -16,10 +17,10 @@ test('actual state and Find notifications are owner-tagged detached scope observ
 });
 
 test('actual exposed start refuses an inactive lane before clearing or preparing held state',()=>{
- let allowed=false,prepared=0,connected=0;const held={phase:'paused',selector:{environment:'prod'}},context={usable:()=>allowed,resume:{dataset:{}},scopeSnapshot:()=>structuredClone(held),reset(){},pauseStream(){},prepare(){prepared++},connect(){connected++}};
+ let allowed=false,prepared=0,connected=0;const held={phase:'paused',selector:{environment:'prod'}},context={usable:()=>allowed,resume:{dataset:{}},scopeSnapshot:()=>structuredClone(held),reset(){},pauseStream(){},prepare(){prepared++},connect(_reconnect,onAccepted){connected++;onAccepted?.()}};context.ready=()=>context.usable()&&!context.resume.dataset.readBlocked;
  const line=source.split('\n').find(line=>line.startsWith('  return {setReadBlocked('));assert(line);vm.runInNewContext(line.replace('  return ','this.api='),context);
  assert.equal(context.api.start({signal:'logs',environment:'prod'}),false);assert.equal(prepared,0);assert.equal(connected,0);assert.deepEqual(context.api.scope(),held);
- allowed=true;context.api.start({signal:'logs',environment:'prod'});assert.equal(prepared,1);assert.equal(connected,1);
+ allowed=true;assert.equal(context.api.start({signal:'logs',environment:'prod'}),true);assert.equal(prepared,1);assert.equal(connected,1);
 });
 
 

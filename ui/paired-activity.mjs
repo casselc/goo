@@ -1,7 +1,6 @@
 import * as UI from './components.mjs';
 import * as Tail from './tail.mjs';
 import * as PairPlan from './paired-activity-plan.mjs';
-import * as Attributes from './attributes.mjs';
 import * as RecordPresentation from './record-presentation.mjs';
 import {nativeControlReady,revealFocus} from './dom-visibility.mjs';
 
@@ -30,7 +29,7 @@ export function mount(host,{current=()=>true,onOpenFixed}={}){
   const own=epoch,laneEpoch=lane.epoch,origin=structuredClone(plan[signal]),captured=structuredClone(item),key=own+':'+signal+':'+item.key+':'+item.readWindow.fromMs+':'+item.readWindow.toMs;
   const lease=()=>available()&&epoch===own&&lane.epoch===laneEpoch&&inspection?.key===key;
   const content=UI.node('div'),analyze=UI.node('button','Analyze observation window');analyze.type='button';analyze.setAttribute('aria-label','Analyze observation window · '+signal);
-  Attributes.mount(content,captured.record);
+  RecordPresentation.attributes(content,captured.record);
   content.append(UI.disclosure('Original observation window',[UI.node('p',new Date(item.readWindow.fromMs).toISOString()+' → '+new Date(item.readWindow.toMs).toISOString())]));
   analyze.disabled=typeof onOpenFixed!=='function';
   analyze.onclick=()=>{
@@ -49,13 +48,27 @@ export function mount(host,{current=()=>true,onOpenFixed}={}){
   const lane={section,window,tail:null,epoch:0};lanes.set(signal,lane);
   lane.tail=Tail.mount(body,{open:true,compact:true,canUse:available,onState:state=>windowText(lane,state),onFind:state=>{section.dataset.findRevision=String(state.find.revision)},onResume:()=>{if(!available()||!plan)return false;retireLane(signal);return true},onInspect:(item,opener)=>inspect(signal,item,opener)});
  }
- function adopt(value){const next=PairPlan.create(value);epoch++;for(const lane of lanes.values())lane.epoch++;clearInspection();selector=structuredClone(value);plan=next;return next}
+ function adopt(value,next=PairPlan.create(value)){epoch++;for(const lane of lanes.values())lane.epoch++;clearInspection();selector=structuredClone(value);plan=next;return next}
  function stage(value){if(disposed)return false;const next=adopt(value);for(const signal of ['logs','spans'])lanes.get(signal).tail.stage(next[signal],undefined,{message:'Ready. Start streams explicitly.'});return true}
- function start(value=selector){if(!available())return false;const next=adopt(value);for(const signal of ['logs','spans'])lanes.get(signal).tail.start(next[signal]);return true}
+ function ready(){return available()&&[...lanes.values()].every(lane=>lane.tail.ready())}
+ function start(value=selector){
+  if(!ready())return false;const next=PairPlan.create(value);if(!ready())return false;
+  adopt(value,next);const own=epoch,started=[];
+  // Adopt both local selectors before any read, so withdrawal cannot leave an
+  // old sibling bank labelled with the new pair's scope.
+  for(const signal of ['logs','spans']){if(epoch!==own)return false;lanes.get(signal).tail.stage(next[signal],undefined,{message:'Ready. Start streams explicitly.'})}
+  const withdraw=()=>{if(epoch===own)for(const signal of started)lanes.get(signal).tail.pause('Start withdrawn. Resume explicitly.');return false};
+  for(const signal of ['logs','spans']){
+   if(epoch!==own||!ready())return withdraw();
+   if(!lanes.get(signal).tail.start(next[signal]))return withdraw();started.push(signal);
+   if(epoch!==own||!ready())return withdraw();
+  }
+  return true;
+ }
  function pause(reason='Streams paused. Resume each lane explicitly.'){if(disposed||!plan)return;for(const lane of lanes.values())lane.tail.pause(reason)}
  function reset(){if(disposed)return;epoch++;plan=null;selector=null;clearInspection();for(const lane of lanes.values()){lane.epoch++;lane.tail.reset()}}
  function sync(){const ready=available();for(const lane of lanes.values())lane.tail.setReadBlocked(ready?'':'Apply shared scope before resuming.');if(inspection)inspection.analyze.disabled=typeof onOpenFixed!=='function'||!inspection.lease()}
  function snapshot(){return {selector:structuredClone(selector),lanes:Object.fromEntries([...lanes].map(([signal,lane])=>[signal,{...lane.tail.snapshot(),owner:lane.owner,signal}]))}}
  function focusStart(){lanes.get('logs').tail.focusStart()}
- return {stage,start,pause,reset,snapshot,focusStart,sync,restoreFocus(){if(!available())return false;const fallback=[...root.querySelectorAll('button')].find(button=>/^(Resume|Retry|Start)/.test(button.textContent)&&nativeControlReady(button));return !!revealFocus(lastFocus,inspection?.opener||fallback)},dispose(){if(disposed)return;disposed=true;epoch++;clearInspection();for(const lane of lanes.values())lane.tail.dispose();root.remove()}};
+ return {stage,start,ready,pause,reset,snapshot,focusStart,sync,restoreFocus(){if(!available())return false;const fallback=[...root.querySelectorAll('button')].find(button=>/^(Resume|Retry|Start)/.test(button.textContent)&&nativeControlReady(button));return !!revealFocus(lastFocus,inspection?.opener||fallback)},dispose(){if(disposed)return;disposed=true;epoch++;clearInspection();for(const lane of lanes.values())lane.tail.dispose();root.remove()}};
 }

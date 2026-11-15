@@ -2,6 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
+import * as TailPresentation from '../ui/tail-presentation.mjs';
 const source=readFileSync(new URL('../ui/tail.mjs',import.meta.url),'utf8');
 const between=(start,end)=>source.slice(source.indexOf(start),source.indexOf(end,source.indexOf(start)));
 function element(){return {hidden:false,disabled:false,dataset:{},attrs:{},writes:0,stateWrites:0,attrWrites:0,_text:'',_state:'unknown',get textContent(){return this._text},set textContent(value){this.writes++;this._text=value},get state(){return this._state},set state(value){this.stateWrites++;this._state=value},getAttribute(key){return this.attrs[key]??null},setAttribute(key,value){this.attrWrites++;this.attrs[key]=value}}}
@@ -22,7 +23,7 @@ test('programmatic and noncompact controls do not steal focus; refused Resume do
  const refused=controls({onResume:()=>false});refused.resume.focus();refused.resume.onclick();assert.equal(refused.document.activeElement,refused.resume);assert.equal(refused.calls.connect,0);
 });
 test('repeated source polls publish status only when the semantic state or message changes',()=>{
- const status=element(),context={notification:()=>({}),onState:undefined,structuredClone,phase:'stopped',section:element(),buffer:{rows:[],evicted:0,observed:0},gap:false,selector:{environment:'prod'},status,compact:false,counts:element(),controller:null,pause:element(),resume:element(),saving:false,generation:1,refreshBatch(){},global:{dispatchEvent(){}},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}}};
+ const status=element(),context={TailPresentation,bufferFacts:element(),notification:()=>({}),onState:undefined,structuredClone,phase:'stopped',section:element(),buffer:{rows:[],evicted:0,observed:0},gap:false,selector:{environment:'prod'},status,compact:false,counts:element(),controller:null,pause:element(),resume:element(),saving:false,generation:1,refreshBatch(){},global:{dispatchEvent(){}},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}}};
  vm.runInNewContext(between('  function publish(','  function halt(')+';this.publish=publish',context);
  context.publish('unknown','Listening');context.publish('unknown','Listening');assert.equal(status.writes,1);assert.equal(status.stateWrites,0);
  context.publish('partial','Limited');assert.equal(status.writes,2);assert.equal(status.stateWrites,1);
