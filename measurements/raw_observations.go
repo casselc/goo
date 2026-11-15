@@ -46,6 +46,12 @@ type RawObservation struct {
 }
 
 func rawObservationRows(q DiscoveryQuestion, i rawObservationInstrument, rows []json.RawMessage) ([]RawObservation, error) {
+	return rawObservationRowsForFamily(q, i, rows, true)
+}
+
+// The histogram adapter reuses identity, clock and flag admission without
+// manufacturing a scalar value. Existing scalar profiles retain their own facts.
+func rawObservationRowsForFamily(q DiscoveryQuestion, i rawObservationInstrument, rows []json.RawMessage, scalar bool) ([]RawObservation, error) {
 	if len(rows) > RowLimit {
 		return nil, sourcefailure.Wrap(sourcefailure.Budget, fmt.Errorf("raw observation rows exceed limit"))
 	}
@@ -112,10 +118,12 @@ func rawObservationRows(q DiscoveryQuestion, i rawObservationInstrument, rows []
 				diagnostic("startNS", "after-observation")
 			}
 		}
-		row.RawValue = bytes.Clone(fields["value"])
-		row.Value, row.ValueState = rawObservationValue(row.RawValue)
-		if row.ValueState != "finite" {
-			diagnostic("value", row.ValueState)
+		if scalar {
+			row.RawValue = bytes.Clone(fields["value"])
+			row.Value, row.ValueState = rawObservationValue(row.RawValue)
+			if row.ValueState != "finite" {
+				diagnostic("value", row.ValueState)
+			}
 		}
 		row.FlagsState = "absent"
 		if flag, exists := fields["flags"]; exists && !bytes.Equal(bytes.TrimSpace(flag), []byte("null")) {
@@ -128,7 +136,7 @@ func rawObservationRows(q DiscoveryQuestion, i rawObservationInstrument, rows []
 				if flags & ^uint32(1) != 0 {
 					diagnostic("flags", "unknown-bits")
 				}
-				if flags&1 != 0 {
+				if scalar && flags&1 != 0 {
 					row.Value = nil
 					row.ValueState = "absent"
 					diagnostic("value", "no-recorded-value")
@@ -227,7 +235,7 @@ func validateRawObservation(q DiscoveryQuestion, i rawObservationInstrument) err
 }
 
 // The optional sum tuple selects only the fixed sum source and its exact reported metadata.
-func compileRawObservation(q DiscoveryQuestion, i rawObservationInstrument, sum *RawSumInstrument) (Plan, error) {
+func rawObservationPlan(q DiscoveryQuestion, i rawObservationInstrument) (Plan, string, error) {
 	p := Plan{Parameters: map[string]string{}}
 	param := func(value, typ string) string {
 		key := fmt.Sprintf("p%d", len(p.Parameters))
@@ -238,11 +246,11 @@ func compileRawObservation(q DiscoveryQuestion, i rawObservationInstrument, sum 
 	where := "TimeUnix>=fromUnixTimestamp64Milli(" + param(strconv.FormatInt(d.FromMS, 10), "Int64") + ") AND TimeUnix<fromUnixTimestamp64Milli(" + param(strconv.FormatInt(d.ToMS, 10), "Int64") + ")"
 	selection, err := d.EnvironmentSelection()
 	if err != nil {
-		return Plan{}, err
+		return Plan{}, "", err
 	}
 	environment, err := metricEnvironmentPredicate(selection, param)
 	if err != nil {
-		return Plan{}, err
+		return Plan{}, "", err
 	}
 	where += " AND " + environment + " AND ServiceName=" + param(d.Service, "String")
 	if n := d.Namespace; n != nil {
@@ -255,6 +263,20 @@ func compileRawObservation(q DiscoveryQuestion, i rawObservationInstrument, sum 
 	for _, pair := range [][2]string{{"ScopeName", i.Scope}, {"ScopeVersion", i.Version}, {"ScopeSchemaUrl", i.SchemaURL}, {"MetricName", i.Metric}, {"MetricUnit", i.Unit}} {
 		where += " AND " + pair[0] + "=" + param(pair[1], "String")
 	}
+	return p, where, nil
+}
+
+func compileRawObservation(q DiscoveryQuestion, i rawObservationInstrument, sum *RawSumInstrument) (Plan, error) {
+	p, where, err := rawObservationPlan(q, i)
+	if err != nil {
+		return Plan{}, err
+	}
+	param := func(value, typ string) string {
+		key := fmt.Sprintf("p%d", len(p.Parameters))
+		p.Parameters[key] = value
+		return "{" + key + ":" + typ + "}"
+	}
+
 	fields := "SELECT mapUpdate(ResourceAttributes,map('service.name',toString(ServiceName))) AS resource, ResourceSchemaUrl AS resource_schema_url, ScopeName AS scope, ScopeVersion AS version, ScopeSchemaUrl AS schema_url, MetricName AS name, MetricUnit AS unit, Attributes AS attributes, toString(toUnixTimestamp64Nano(StartTimeUnix)) AS start_ns, toString(toUnixTimestamp64Nano(TimeUnix)) AS end_ns, toString(Value) AS value, Flags AS flags"
 	table := "otel_metrics_gauge"
 	if sum != nil {

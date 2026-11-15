@@ -58,6 +58,32 @@ def check_raw_sum441(spec):
         bad=copy.deepcopy(result);mutate(bad);assert not response.is_valid(bad),bad
 
 
+def check_raw_histogram447(spec):
+    operation=spec['paths']['/histogram-observations']['post']
+    check=validator(spec,operation['requestBody']['content']['application/json']['schema'])
+    request={'question':{'environment':'prod','service':'api','fromMs':1000,'toMs':2000},
+             'instrument':{'kind':'histogram','scope':'','version':'','schemaURL':'','metric':'latency','unit':'s','temporality':1}}
+    check.validate(request)
+    assert not check.is_valid(None), 'Raw histogram request must be an object'
+    unknown=copy.deepcopy(request);unknown['instrument']['temporality']=-2147483648;check.validate(unknown)
+    for mutate in (lambda q:q['instrument'].pop('temporality'),lambda q:q['instrument'].update(temporality=None),
+                   lambda q:q['instrument'].update(temporality=2147483648),lambda q:q['instrument'].update(temporality='1'),
+                   lambda q:q['instrument'].update(kind='exponential-histogram'),lambda q:q['instrument'].update(monotonic=True),
+                   lambda q:q['instrument'].update(unit=None),lambda q:q.update(cursor='opaque'),
+                   lambda q:q.update(question={'service':'api','fromMs':1000,'toMs':2000,'environmentSelector':{'version':'goo/environment-selector/v1','policy':'effective','scope':{'mode':'all'}}})):
+        bad=copy.deepcopy(request);mutate(bad);assert not check.is_valid(bad),bad
+    cases=json.loads((ROOT/'testdata/http/raw-histogram447.json').read_text())['cases']
+    response=validator(spec,operation['responses']['200']['content']['application/json']['schema'])
+    result=json.loads(next(c['response'] for c in cases if c['name']=='observed'));response.validate(result)
+    for mutate in (lambda r:r.update(version='wrong'),lambda r:r.update(limit=1),
+                   lambda r:r['rows'][0].update(endNS='nan'),lambda r:r['rows'][0].update(flags=-1),
+                   lambda r:r['rows'][0].update(value=1),lambda r:r['rows'][0].update(temporality=2147483648),
+                   lambda r:r['rows'][0].update(count=1),lambda r:r['rows'][0].update(countState='absent'),
+                   lambda r:r['rows'][0].update(boundsState='absent'),lambda r:r['rows'][0]['sum'].update(presenceState='reported'),
+                   lambda r:r['rows'][0]['sum'].update(valueState='absent'),lambda r:r['rows'][0].update(recordingState='no-recorded-value')):
+        bad=copy.deepcopy(result);mutate(bad);assert not response.is_valid(bad),bad
+
+
 def check_cel_authoring4365(spec):
     """Closed provenance carriers; Go owns CEL checking and exact hash equality."""
     base={'signal':'logs','environment':'prod','fromMs':1000,'toMs':61000,'limit':100,'offset':0}
@@ -2334,9 +2360,9 @@ def check(spec):
                 requests += 1
                 if isinstance(request, dict):
                     accepted.append((shape, request))
-    # Native histogram discovery adds five actual successful GET responses
-    # to the prior 471/186/28 fixture baseline.
-    assert responses == 529 and requests == 215 and mux_refusals == 31, (responses, requests, mux_refusals)
+    # Raw explicit histograms add 23 actual response fixtures, 14 admitted
+    # source requests and one method refusal to the prior 529/215/31 baseline.
+    assert responses == 552 and requests == 229 and mux_refusals == 32, (responses, requests, mux_refusals)
     # Rejecting controls: a no-op validator or open input schemas must fail here.
     for shape, request in accepted:
         wrong = copy.deepcopy(request)
@@ -2824,6 +2850,7 @@ if __name__ == '__main__':
     check(spec)
     check_raw_gauge438(spec)
     check_raw_sum441(spec)
+    check_raw_histogram447(spec)
     if args.log_severity_observations:
         check_log_severity_observations435(spec,args.log_severity_observations)
 

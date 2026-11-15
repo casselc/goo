@@ -7,8 +7,8 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–446 delivered and validated**. The current cadence is
-**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth**.
+Status: **429 and 437–447 delivered and validated**. The current cadence is
+**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation**.
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
 foundation; this does not extend a CEL platform queue.
@@ -191,22 +191,36 @@ existing paired-model trace validation, ten negative controls and a real
 Bombadil save/recall/Return flow cover the result. No duplicate transport model,
 merged chronology or per-lane filter authoring was introduced.
 
-## 447 — raw native histogram point inspection (next depth)
+## 447 — raw native histogram point inspection (delivered)
 
-Complete the next raw-observation family after gauge and sum inspection. First
-agree a separate explicit-histogram point profile: exact instrument/temporality,
-event and start clocks, flags, bounds, counts, reported count/sum/min/max and
-attributes. Preserve unknown/absent fields and distinguish raw exported points
-from eligible merged measurements. Do not derive rates, percentiles or fleet
-health from a row. Exponential histograms need a distinct supported profile;
-never silently reinterpret their buckets.
+Delivered [explicit histogram points](RAW_HISTOGRAM_OBSERVATIONS.md) through the
+shared held viewer: exact count strings, diagnostic bucket vectors, explicit
+recording state and unavailable optional-statistic presence. The source adapter
+uses the original instrument/temporality/window, retains duplicates and refuses
+identity drift or oversized reads. Optional physical statistic columns use the
+existing schema read; they do not imply producer presence.
 
-Reuse the held raw-observation table/detail, explicit acquisition and local
-Find/inspection/Return controls. Gate the profile and any chart affordance on its
-data requirements; retain the existing histogram evaluator's stricter semantics.
-Require actual OTLP points, source identity/bucket checks, exact numeric
-properties and source-free held actions. Confirm this design before widening
-native metric reads; follow the depth cut with a measured consolidation pass.
+The [actual OTLP storyboard](journeys/raw-histogram-observations.md) covers source
+oracle parity, local pages/Find/inspection/Return, declared source refusal,
+retired successful response, separate unit/temporality, Bombadil and native
+negative controls. No scalar histogram substitute, percentile chart, merged
+population or exponential-point profile was introduced.
+
+## 448 — consolidate raw-observation inspection (next consolidation)
+
+Review gauge/sum/histogram together after these three delivered raw families.
+Measure cold acquisition and held local work before proposing caching or more
+polling. Reuse matching source/clock/flag/scalar presentation and request dispatch;
+retain family-specific instrument admission, temporality, bucket validity and
+measurement eligibility. Do not turn shared rendering into source authority.
+
+Compact verbose inspector/read clocks through the shared UTC/tooltip components,
+and reduce repeated provenance prose while keeping uncertainty visible. Review
+entry controls, paging, keyboard focus, cancellation, refusal and late completion
+as one operator flow. Carry retirement controls separately from new read/store
+authority in traces. Keep actual source, Go/JS, properties, model and actor gates;
+finish with measured before/after screenshots. No compatibility migration or
+universal point DSL is needed for this prerelease consolidation.
 
 ## Retained follow-ons
 

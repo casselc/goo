@@ -61,8 +61,10 @@
 > consolidates acquisition verification; the product queue remains unchanged.
 > **446 reusable paired Activity definitions is delivered**; see
 > [Activity views](ACTIVITY_VIEWS.md) and the [real-source storyboard](journeys/paired-activity-views.md).
-> Next: **447 raw native histogram point inspection** (depth), starting with its
-> distinct point profile and source admission.
+> **447 raw native histogram point inspection is delivered**; see the
+> [point profile](RAW_HISTOGRAM_OBSERVATIONS.md) and [storyboard](journeys/raw-histogram-observations.md).
+> Next: **448 raw-observation consolidation**: shared clocks/presentation, compact
+> controls and measured source/held work, retaining family-specific semantics.
 **444 delivered:** [paired Activity](PAIRED_ACTIVITY.md) composes independent tails
 with local inspection and scope-preserving fixed drill-in/retained Return.
 **443 delivered:** [typed numeric CEL conditions](CEL_NUMERIC_ATTRIBUTES.md) reuse

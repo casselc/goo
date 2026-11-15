@@ -1,5 +1,47 @@
 # Validation record
 
+## 447 raw explicit histogram observations — 2026-11-15
+
+[Profile](docs/RAW_HISTOGRAM_OBSERVATIONS.md),
+[executed storyboard](docs/journeys/raw-histogram-observations.md),
+[independent acceptance](docs/reviews/RAW_HISTOGRAM_447_ACCEPTANCE.md).
+
+- Final root Go suite passed. Native route-policy coverage updated from ten to
+  eleven routes; existing raw gauge/sum admission regression tests pass.
+- Full UI suite: **1,900 passed, zero skipped**. The same scalar parser serves
+  all three raw families. New checks include Go HTTP fixture admission, exact
+  count/bucket semantics, native table names and 151-bucket accessible paging.
+- API checker: **121 operations, 552 response fixtures, 229 admitted requests,
+  32 mux refusals**, plus negative controls and SSE. The new endpoint has 24
+  actual Go wire cases; generated contracts are current.
+- Hegel: **100 cases**; Go/JS parity: **six banks, 72 rows, ten mutants**,
+  passed together in **0.167s**, zero skips. Exact arithmetic includes counts
+  above 2^53, UInt64 limits/overflow, omitted/all-values/malformed vectors,
+  recording states, optional presence, duplicate occurrences and detachment.
+- Final real OTLP/browser/model/actor journey passed in **1.2m**. Local receipt:
+  `artifacts/raw-histogram447/b960f04b6a01/report.json`. Independently checked
+  214 actual exports and all 210 main-instrument points. Separate unit and
+  temporality reads match the oracle. Typed refusals perform zero SQL.
+- Local pages, Find, inspection and Return add no source requests or SQL. An
+  actual missing-column refusal retains the held bank. A completed real 200
+  delivered after retirement cannot change the bank, read time or focus.
+- Bombadil reaches phase 8 with one histogram acquisition, no forbidden writes
+  and retained detail/Return. Final native observed check **12.361s**, zero skips,
+  all **eleven negative controls rejected**, reusing the existing population
+  interaction model. Query cancellation is permitted only as UUID retirement
+  in the owned pending-read phase; arbitrary writes/local cancels still refuse.
+- Existing real gauge and sum journeys pass in **51.1s / 35.4s**, including their
+  source-fault, actor and model checks. Their documentation frames are refreshed
+  alongside the three histogram frames. Owned databases and runtimes cleaned up.
+- Initial oracle refusal came from the helper default 101-row result cap; the
+  independent fixture read now declares a bounded 1000-row allowance. One
+  browser load failed with Chromium ERR_NETWORK_CHANGED; a subsequent load
+  completed. Live testing caught wrapper-only table labels, now applied to the
+  native tables. Initial native projection rejected legitimate cancellation;
+  corrected and strengthened with wrong-phase and late-bank controls before
+  the final complete pipeline passed. Product source semantics were not relaxed.
+
+
 ## 446 reusable paired Activity definitions — 2026-11-15
 
 [Guide](docs/ACTIVITY_VIEWS.md), [executed storyboard](docs/journeys/paired-activity-views.md),

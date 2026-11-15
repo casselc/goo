@@ -1337,7 +1337,7 @@ page['properties']['capturedAt']['format']='date-time'
 page['properties']['state']['enum']=['observed','no_data','changed_between_reads']
 page['properties']['resultToken']['pattern']='^[a-f0-9]{64}$'
 
-reads = {'/metric-scopes','/source-capabilities','/environment-scopes','/environment-scopes/records','/pod-metric-discovery','/host-discovery','/pod-discovery','/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/page', '/explore/counted-values', '/record-aggregates','/exception-groups', '/trace-search', '/trace-search/page', '/population/explain', '/metric-observations','/sum-observations','/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
+reads = {'/metric-scopes','/source-capabilities','/environment-scopes','/environment-scopes/records','/pod-metric-discovery','/host-discovery','/pod-discovery','/http-package', '/operations', '/counter-rates', '/histograms', '/inventory', '/discovery', '/explore', '/explore/page', '/explore/counted-values', '/record-aggregates','/exception-groups', '/trace-search', '/trace-search/page', '/population/explain', '/metric-observations','/sum-observations','/histogram-observations','/metric-discovery', '/measurements', '/investigations', '/captures', '/tail', '/query'}
 for profile,roles in [('container-memory-kubeletstats-v0.137.0',['working-set']),('container-memory-k8scluster-v0.137.0',['request','limit']),('container-cpu-kubeletstats-v0.137.0',['usage']),('container-cpu-k8scluster-v0.137.0',['request','limit'])]:
  podwidget_schema['allOf'].append({'if':{'properties':{'profile':{'const':profile}},'required':['profile']},'then':{'properties':{'role':{'enum':roles}}}})
 # Raw gauges share a bounded metadata selection, never a measurement result.
@@ -1389,18 +1389,75 @@ sumrow['properties']['temporality']={'type':'integer','minimum':-2147483648,'max
 sumrow['properties']['monotonic']={'type':'boolean'}
 raw['description']='Bounded reported sum occurrences with exact temporality and monotonicity; stock labels mean cumulative nonmonotonic metadata only. Unknown enums remain visible. No evaluator, rate, reset, continuity, fleet total or completeness claim.'
 
+# Explicit histogram points have their own evidence profile, never scalar rows.
+schemas['RawHistogramRequest']=ref('measurements.RawHistogramQuestionInput')
+request=schemas['measurements.RawHistogramQuestionInput']
+request.update(required=['question','instrument'],additionalProperties=False)
+request['properties']['question']=ref('measurements.DiscoveryQuestionInput')
+request['properties']['instrument']=ref('measurements.RawHistogramInstrumentInput')
+for name in ('measurements.RawHistogramInstrument','measurements.RawHistogramInstrumentInput'):
+ item=schemas[name];item.update(additionalProperties=False,required=['kind','scope','version','schemaURL','metric','unit','temporality'])
+ props=item['properties'];props['kind']={'const':'histogram'}
+ for key,bound in (('scope',256),('version',128),('schemaURL',1024),('metric',256),('unit',64)):
+  props[key]={'type':'string','maxLength':bound}
+ props['metric']['minLength']=1
+ props['temporality']={'type':'integer','minimum':-2147483648,'maximum':2147483647}
+raw=schemas['measurements.RawHistogramResult']
+raw.update(additionalProperties=False,required=['version','question','instrument','readAt','rows','limit'])
+raw['properties']['version']={'const':'goo/raw-histogram-observations/v1'}
+raw['properties']['limit']={'const':10000}
+raw['properties']['readAt']={'type':'string','pattern':r'^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,9})?Z$'}
+raw['properties']['question']={**copy.deepcopy(schemas['measurements.DiscoveryQuestion']),'additionalProperties':False}
+raw['properties']['rows']={'type':'array','maxItems':10000,'items':ref('measurements.RawHistogramObservation')}
+raw['description']='Bounded explicit-histogram exported occurrences. Exact count and bucket-count strings remain separate from floating scalar summaries. Recording, clock, shape and scalar validity are independent. No merged distribution, percentile, health, continuity or completeness verdict; scalar producer presence is unavailable in this exporter profile.'
+hist=schemas['measurements.RawHistogramObservation'];hist['additionalProperties']=False
+props=hist['properties']
+props['occurrenceKey']={'type':'string','pattern':'^[1-9][0-9]*$'}
+props['endNS']={'type':'string','pattern':'^(0|[1-9][0-9]*)$'}
+props['startNS']={'anyOf':[{'type':'string'},{'type':'null'}]}
+props['startState']={'enum':['valid','absent','invalid']}
+props['flagsState']={'enum':['valid','absent','invalid']}
+props['flags']={'anyOf':[{'type':'integer','minimum':0,'maximum':4294967295},{'type':'null'}]}
+props['recordingState']={'enum':['recorded','no-recorded-value','unknown']}
+props['temporality']={'type':'integer','minimum':-2147483648,'maximum':2147483647}
+props['count']={'anyOf':[copy.deepcopy(exact_count),{'type':'null'}]}
+props['countState']={'enum':['valid','absent','invalid']}
+props['bounds']={'anyOf':[{'type':'array','maxItems':10000,'items':{'type':'number'}},{'type':'null'}]}
+props['boundsState']={'enum':['valid','absent','invalid']}
+props['bucketCounts']={'anyOf':[{'type':'array','maxItems':10001,'items':copy.deepcopy(exact_count)},{'type':'null'}]}
+props['bucketCountsState']={'enum':['valid','absent','invalid']}
+props['bucketsState']={'enum':['valid','absent','invalid']}
+props['rawRow']={'type':'object'}
+stream=copy.deepcopy(schemas['measurements.RawObservationStream']);stream['additionalProperties']=False
+for key in ('resource','attributes'):stream['properties'][key]={'type':'object','additionalProperties':{'type':'string'}}
+props['stream']=stream
+props['diagnostics']={'type':'array','items':{**copy.deepcopy(schemas['measurements.RawObservationDiagnostic']),'additionalProperties':False}}
+scalar=schemas['measurements.RawHistogramScalar'];scalar.update(additionalProperties=False,required=['rawValue','value','valueState','presenceState'])
+scalar['properties']['valueState']={'enum':['finite','nonfinite','absent','invalid']}
+scalar['properties']['presenceState']={'const':'unavailable'}
+scalar['allOf']=[{'if':{'properties':{'valueState':{'const':'finite'}},'required':['valueState']},'then':{'properties':{'value':{'type':'number'}}},'else':{'properties':{'value':{'type':'null'}}}}]
+# No-recorded values retain rawRow, not a usable count or bucket payload.
+hist['allOf']=[
+ {'if':{'properties':{'flagsState':{'const':'valid'}},'required':['flagsState']},'then':{'properties':{'flags':{'type':'integer','minimum':0,'maximum':4294967295}}},'else':{'properties':{'flags':{'type':'null'}}}},
+ {'if':{'properties':{'countState':{'const':'valid'}},'required':['countState']},'then':{'properties':{'count':copy.deepcopy(exact_count)}},'else':{'properties':{'count':{'type':'null'}}}},
+ {'if':{'properties':{'boundsState':{'const':'valid'}},'required':['boundsState']},'then':{'properties':{'bounds':{'type':'array'}}},'else':{'properties':{'bounds':{'type':'null'}}}},
+ {'if':{'properties':{'bucketCountsState':{'const':'valid'}},'required':['bucketCountsState']},'then':{'properties':{'bucketCounts':{'type':'array'}}},'else':{'properties':{'bucketCounts':{'type':'null'}}}},
+ {'if':{'properties':{'bucketsState':{'const':'valid'}},'required':['bucketsState']},'then':{'properties':{'countState':{'const':'valid'},'boundsState':{'const':'valid'},'bucketCountsState':{'const':'valid'},'bucketCounts':{'type':'array','minItems':1}}}},
+ {'if':{'properties':{'recordingState':{'const':'no-recorded-value'}},'required':['recordingState']},'then':{'properties':{'count':{'type':'null'},'bounds':{'type':'null'},'bucketCounts':{'type':'null'},'countState':{'const':'absent'},'boundsState':{'const':'absent'},'bucketCountsState':{'const':'absent'},'bucketsState':{'const':'absent'},**{name:{'properties':{'valueState':{'const':'absent'},'value':{'type':'null'}}} for name in ('sum','min','max')}}}}
+]
+
 plans = {'/cel/context','/cel/plan','/native-views/reuse','/view-artifacts/encode','/view-artifacts/decode','/pod-dashboard/plan','/host-dashboard/plan','/pool-signals/plan','/pool-signals/view','/container-memory/view','/container-cpu/view','/container-resources/history','/measurement-packages/plan', '/telemetry-packages/draft', '/telemetry-packages/numeric-plan', '/telemetry-packages/plan', '/recipes', '/dashboards/plan', '/population/plan', '/population/explain/plan', '/population/explain/filter', '/numeric-histograms/selection', '/numeric-histograms/comparison-selection', '/compare', '/explain'}
 publications = {'/native-views','/kept-observations/records','/kept-observations/tail','/activity-views','/measurement-packages', '/telemetry-packages', '/annotations', '/exploration-views', '/deployments', '/documents', '/captures/comparisons'}
 requests = {'/cel/context':'CELContextRequest','/cel/plan':'CELPlanRequest','/native-views':'NativeViewRequest','/native-views/reuse':'NativeViewReuseRequest','/view-artifacts/encode':'ViewArtifactEncodeRequest','/view-artifacts/decode':'ViewArtifactDecodeRequest','/view-templates/expand':'ViewTemplateExpansionRequest','/kept-observations/repair':'KeptRepairRequest','/kept-observations/records':'KeepRecordsIntent','/kept-observations/tail':'KeepTailIntent','/pod-metric-discovery':'PodMetricDiscoveryQuestion','/pod-dashboard/plan':'PodDashboardRequest','/host-discovery':'HostDiscoveryQuestion','/pod-discovery':'PodDiscoveryQuestion','/host-dashboard/plan':'HostDashboardRequest','/pool-signals/plan':'PoolSignalsRequest','/pool-signals/view':'PoolViewRequest','/container-memory/view':'ContainerMemoryViewRequest','/container-cpu/view':'ContainerCPUViewRequest','/container-resources/history':'ContainerResourceHistoryRequest','/activity-views':'ActivityViewRequest',
  '/retained-evidence/tail':'TailIntent','/compare':'CompareRequest','/inventory':'InventoryRequest','/discovery':'ServiceDiscoveryRequest','/explore':'RecordQuery','/explore/page':'RecordQuery','/explore/counted-values':'RecordQuery','/record-aggregates':'RecordQuery','/exception-groups':'RecordQuery','/trace-search':'TraceSearchRequest','/trace-search/page':'TraceSearchPageRequest','/tail':'TailSelector',
- '/metric-scopes':'MetricScopesQuestion','/source-capabilities':'SourceCapabilitiesQuestion','/environment-scopes':'AdoptionWindow','/environment-scopes/records':'AdoptionRecordsQuestion','/measurements':'NativeQuestion','/metric-observations':'RawGaugeRequest','/sum-observations':'RawSumRequest','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
+ '/metric-scopes':'MetricScopesQuestion','/source-capabilities':'SourceCapabilitiesQuestion','/environment-scopes':'AdoptionWindow','/environment-scopes/records':'AdoptionRecordsQuestion','/measurements':'NativeQuestion','/metric-observations':'RawGaugeRequest','/sum-observations':'RawSumRequest','/histogram-observations':'RawHistogramRequest','/metric-discovery':'MetricDiscoveryRequest','/measurement-packages/plan':'NativePlanRequest','/measurement-packages':'YAMLRequest',
  '/telemetry-packages':'YAMLRequest','/telemetry-packages/draft':'TelemetryDraftRequest','/telemetry-packages/numeric-plan':'NumericPlanRequest','/telemetry-packages/plan':'TelemetryPlanRequest',
  '/recipes':'RecipeRequest','/dashboards/plan':'DashboardRequest','/population/plan':'PopulationRequest','/numeric-histograms/selection':'NumericHistogramSelectionRequest','/numeric-histograms/comparison-selection':'DistributionSelectionRequest','/annotations':'MeaningInput','/exploration-views':'ExplorationView','/deployments':'DeploymentInput','/documents':'DocumentRequest',
  '/population/explain':'ExplanationRequest','/population/explain/plan':'ExplanationRequest','/population/explain/filter':'ExplanationFilterRequest','/captures':'CaptureRequest','/captures/live':'LiveComparisonRequest','/captures/comparisons':'SaveComparisonRequest','/investigations':'InvestigationRequest','/retained-evidence':'RetainRequest','/retained-evidence/{id}/annotations':'CorrectRequest',
 }
 responses = {('post','/cel/context'):'CELRecordContext',('post','/cel/plan'):'CELRecordPlan',('get','/native-views'):'NativeViewList',('post','/native-views'):'NativeView',('get','/native-views/{id}'):'NativeView',('post','/native-views/reuse'):'NativeView',('post','/view-artifacts/encode'):'ViewArtifactResult',('post','/view-artifacts/decode'):'ViewArtifactResult',('post','/view-templates/expand'):'ViewTemplateExpansion',('get','/kept-observations/search'):'KeptSearchPage',('post','/kept-observations/repair'):'KeptRepairPage',('post','/kept-observations/records'):'KeptRecords',('post','/kept-observations/tail'):'KeptObservations',('get','/kept-observations/{id}'):'KeptResource',('post','/pod-metric-discovery'):'PodMetricDiscovery',('post','/pod-dashboard/plan'):'PodDashboardPlan',('post','/host-discovery'):'HostDiscovery',('post','/pod-discovery'):'PodDiscovery',('post','/host-dashboard/plan'):'HostDashboardPlan',('post','/pool-signals/plan'):'PoolSignalsPlan',('post','/pool-signals/view'):'PoolView',('post','/container-memory/view'):'ContainerMemoryView',('post','/container-cpu/view'):'ContainerCPUView',('post','/container-resources/history'):'ContainerResourceHistory',('get','/capabilities'):'RuntimeCapabilities',('post','/population/explain'):'ExplanationResult',('post','/population/explain/plan'):'ExplanationPlan',('post','/population/explain/filter'):'ExplanationStagedQuestion',('post','/activity-views'):'ActivityView',('get','/activity-views/{id}'):'ActivityView',('get','/activity-views'):'ActivityViewList',
  ('post','/compare'):'CompareResult',('post','/inventory'):'InventoryResult',('post','/discovery'):'ServiceDiscovery',('post','/explore'):'RecordResult',('post','/explore/page'):'RecordPageResult',('post','/explore/counted-values'):'CountedValuesResult',('post','/record-aggregates'):'RecordAggregatesResult',('post','/exception-groups'):'ExceptionGroupsResult',('post','/trace-search'):'TraceSearchResult',('post','/trace-search/page'):'TraceSearchResult',
- ('post','/measurements'):'NativeResult',('post','/metric-observations'):'RawGaugeResult',('post','/sum-observations'):'RawSumResult',('post','/metric-discovery'):'MetricDiscoveryResult',('post','/telemetry-packages/draft'):'PackagePlan',('post','/telemetry-packages/plan'):'PackagePlan',('post','/telemetry-packages/numeric-plan'):'NumericPlan',('post','/telemetry-packages'):'SavedPackage',('get','/telemetry-packages/{revision}'):'SavedPackage',
+ ('post','/measurements'):'NativeResult',('post','/metric-observations'):'RawGaugeResult',('post','/sum-observations'):'RawSumResult',('post','/histogram-observations'):'RawHistogramResult',('post','/metric-discovery'):'MetricDiscoveryResult',('post','/telemetry-packages/draft'):'PackagePlan',('post','/telemetry-packages/plan'):'PackagePlan',('post','/telemetry-packages/numeric-plan'):'NumericPlan',('post','/telemetry-packages'):'SavedPackage',('get','/telemetry-packages/{revision}'):'SavedPackage',
  ('post','/recipes'):'RecipePlan',('post','/dashboards/plan'):'DashboardPlan',('post','/population/plan'):'PopulationPlan',('post','/numeric-histograms/selection'):'NumericHistogramSelection',('post','/numeric-histograms/comparison-selection'):'NumericHistogramSelection',
  ('get','/http-package'):'LiveHTTPResult',('get','/operations'):'LiveOperations',('get','/counter-rates'):'LiveRates',('get','/histograms'):'LiveHistograms',
  ('get','/captures'):'CaptureList',('get','/captures/search'):'CaptureSearchPage',('post','/captures'):'CapturePage',('get','/captures/{id}'):'CapturePage',('get','/investigations/{id}'):'InvestigationCapture',('post','/investigations'):'InvestigationCapture',
@@ -1498,7 +1555,7 @@ def go_limit(path):
  if path in ('/compare','/numeric-histograms/comparison-selection'): return 1048576
  if path == '/dashboards/plan': return 262144
  if path == '/pod-dashboard/plan': return 8389632
- if path.startswith(('/telemetry-packages','/measurement-packages')) or path in ('/pod-metric-discovery','/host-dashboard/plan','/pool-signals/plan','/population/explain','/population/explain/plan','/population/explain/filter','/measurements','/metric-observations','/sum-observations','/metric-discovery','/trace-search'): return 65536
+ if path.startswith(('/telemetry-packages','/measurement-packages')) or path in ('/pod-metric-discovery','/host-dashboard/plan','/pool-signals/plan','/population/explain','/population/explain/plan','/population/explain/filter','/measurements','/metric-observations','/sum-observations','/histogram-observations','/metric-discovery','/trace-search'): return 65536
  if path in ('/view-artifacts/encode','/view-artifacts/decode','/annotations','/exploration-views','/deployments','/documents','/population/plan', '/view-templates/expand', '/numeric-histograms/selection','/captures/comparisons'): return 131072
  return 16384
 
@@ -1545,7 +1602,7 @@ for (method,path),(file,block) in sorted(route_source.items()):
  if path=='/kept-observations/search':op['parameters']=[{'name':name,'in':'query','schema':({'type':'string','enum':['','tail-selection','result-page','saved-capture']} if name=='origin' else {'type':'string','enum':['','logs','spans']} if name=='signal' else {'type':'string','maxLength':256,'description':'Case-sensitive literal UTF-8 text, at most 256 bytes. Empty text lists metadata.'} if name=='text' else {'type':'string','maxLength':1024})} for name in ('origin','signal','text','cursor')]
  for p in {'/captures':['cursor'],'/captures/{id}':['cursor'],'/captures/{id}/followups':['row'],'/captures/{id}/compare':['selection','distribution']}.get(path,[]):
   if method=='get' and not any(v['name']==p and v['in']=='query' for v in op['parameters']):op['parameters'].append({'name':p,'in':'query','schema':{'type':'string'},'description':'Single canonical value; saved evidence is not reread from the telemetry source.'})
- controlled=method=='post' and path in ('/metric-scopes','/source-capabilities','/environment-scopes','/environment-scopes/records','/metric-observations','/sum-observations','/metric-discovery','/pod-metric-discovery','/host-discovery','/pod-discovery','/measurements','/explore','/explore/page','/explore/counted-values','/record-aggregates','/exception-groups','/trace-search','/trace-search/page','/population/explain','/inventory','/discovery','/captures','/captures/live')
+ controlled=method=='post' and path in ('/metric-scopes','/source-capabilities','/environment-scopes','/environment-scopes/records','/metric-observations','/sum-observations','/histogram-observations','/metric-discovery','/pod-metric-discovery','/host-discovery','/pod-discovery','/measurements','/explore','/explore/page','/explore/counted-values','/record-aggregates','/exception-groups','/trace-search','/trace-search/page','/population/explain','/inventory','/discovery','/captures','/captures/live')
  controlled = controlled or method=='get' and path in ('/http-package','/operations','/counter-rates','/histograms')
  if controlled:op['parameters'].append({'name':'X-Goo-Query-ID','in':'header','schema':{'type':'string','pattern':'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$'},'description':'Optional short-lived cancellation capability; repeated/cancelled IDs are refused.'})
  if method=='post' and path in requests:
@@ -1567,6 +1624,8 @@ for (method,path),(file,block) in sorted(route_source.items()):
   op['description']='Explicit bounded raw gauge read from exact discovered metadata. Requires kind gauge and the original narrow service/environment/namespace and fixed window; missing instance identity does not block raw inspection. Gauge metadata compatibility is checked separately from the value projection. Unsupported kinds/scopes refuse before SQL; later projection failure, invalid identity/observation time, row and byte overruns refuse atomically. Scalar invalidity remains per-row diagnostics. No capture, evaluator or continuity claim.'
  if path=='/sum-observations':
   op['description']='Explicit bounded raw sum read from exact discovered counter/stock tuple. Requires reported int32 temporality and explicit monotonicity, including false. Stock is exactly cumulative nonmonotonic. Missing instance identity does not block inspection. Unknown temporality remains diagnostic; malformed or differing metadata refuses atomically. Same narrow fixed scope, source budgets and cancellation as raw gauges; no rate, reset, health, fleet aggregate or custody claim.'
+ if path=='/histogram-observations':
+  op['description']='Explicit bounded raw explicit-histogram point read from an exact instrument tuple, including reported temporality. Narrow environment/service/namespace and fixed half-open window only. Repeated exports remain occurrences; exported count, bounds, bucket counts, scalar summaries, flags and clock validity stay separate facts. Invalid or incomplete point evidence is diagnostic, not a measurement, rate, percentile, health or completeness claim. Exponential histograms require a different profile and are refused here.'
  if path=='/metric-discovery':
   op['description']='Explicit bounded metric metadata discovery over compatible fixed exporter families. Each family has schema/read-access checks; excluded absent, incompatible and unreadable sources remain explicit in sources and diagnostics. No usable source refuses; available metadata uses one globally bounded union, and post-probe acquisition errors refuse the catalog. Exponential histograms remain unsupported for evaluation without an executable definition. Counts are exported points, not histogram observations or complete inventory.'
  if path=='/metric-scopes':

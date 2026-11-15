@@ -1,5 +1,11 @@
 # Display component library
 
+The raw-observation viewer shares acquisition/held interaction across gauges,
+sums and [explicit histogram points](RAW_HISTOGRAM_OBSERVATIONS.md). Histogram
+facts/detail helpers are passive: exact count strings, accessible bucket paging
+and presence-qualified source statistics. They use shared tables and the same
+scalar parser, not a scalar measurement substitute or another fetch controller.
+
 [Saved Activity views](ACTIVITY_VIEWS.md) compose the same record picker/table
 for one or two lanes. Application-owned view validation keeps branch-specific
 layouts separate from transport state. Tail retains a validated detached layout

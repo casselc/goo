@@ -1456,6 +1456,19 @@
   "RawGaugeResult": {
     "$ref": "#/components/schemas/measurements.RawGaugeResult"
   },
+  "RawHistogramRequest": {
+    "anyOf": [
+      {
+        "$ref": "#/components/schemas/measurements.RawHistogramQuestionInput"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "RawHistogramResult": {
+    "$ref": "#/components/schemas/measurements.RawHistogramResult"
+  },
   "RawSumRequest": {
     "anyOf": [
       {
@@ -20154,6 +20167,359 @@
     ],
     "type": "object",
     "x-go-type": "github.com/casselc/goo/measurements.RawGaugeResult"
+  },
+  "measurements.RawHistogramInstrument": {
+    "properties": {
+      "kind": {
+        "type": "string"
+      },
+      "metric": {
+        "type": "string"
+      },
+      "schemaURL": {
+        "type": "string"
+      },
+      "scope": {
+        "type": "string"
+      },
+      "temporality": {
+        "type": "integer"
+      },
+      "unit": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "kind",
+      "scope",
+      "version",
+      "schemaURL",
+      "metric",
+      "unit",
+      "temporality"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawHistogramInstrument"
+  },
+  "measurements.RawHistogramInstrumentInput": {
+    "additionalProperties": false,
+    "properties": {
+      "kind": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "metric": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "schemaURL": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "scope": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "temporality": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "unit": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawHistogramInstrument"
+  },
+  "measurements.RawHistogramObservation": {
+    "properties": {
+      "bounds": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "boundsState": {
+        "type": "string"
+      },
+      "bucketCounts": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "bucketCountsState": {
+        "type": "string"
+      },
+      "bucketsState": {
+        "type": "string"
+      },
+      "count": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "countState": {
+        "type": "string"
+      },
+      "diagnostics": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.RawObservationDiagnostic"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "endNS": {
+        "type": "string"
+      },
+      "flags": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "flagsState": {
+        "type": "string"
+      },
+      "max": {
+        "$ref": "#/components/schemas/measurements.RawHistogramScalar"
+      },
+      "min": {
+        "$ref": "#/components/schemas/measurements.RawHistogramScalar"
+      },
+      "occurrenceKey": {
+        "type": "string"
+      },
+      "rawRow": {},
+      "recordingState": {
+        "type": "string"
+      },
+      "startNS": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "startState": {
+        "type": "string"
+      },
+      "stream": {
+        "$ref": "#/components/schemas/measurements.RawObservationStream"
+      },
+      "sum": {
+        "$ref": "#/components/schemas/measurements.RawHistogramScalar"
+      },
+      "temporality": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "recordingState",
+      "occurrenceKey",
+      "stream",
+      "startNS",
+      "endNS",
+      "startState",
+      "flags",
+      "flagsState",
+      "temporality",
+      "count",
+      "countState",
+      "bounds",
+      "boundsState",
+      "bucketCounts",
+      "bucketCountsState",
+      "bucketsState",
+      "sum",
+      "min",
+      "max",
+      "diagnostics",
+      "rawRow"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawHistogramObservation"
+  },
+  "measurements.RawHistogramQuestionInput": {
+    "additionalProperties": false,
+    "properties": {
+      "instrument": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.RawHistogramInstrumentInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "question": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/measurements.DiscoveryQuestionInput"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawHistogramQuestion"
+  },
+  "measurements.RawHistogramResult": {
+    "properties": {
+      "instrument": {
+        "$ref": "#/components/schemas/measurements.RawHistogramInstrument"
+      },
+      "limit": {
+        "type": "integer"
+      },
+      "question": {
+        "$ref": "#/components/schemas/measurements.DiscoveryQuestion"
+      },
+      "readAt": {
+        "type": "string"
+      },
+      "rows": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/components/schemas/measurements.RawHistogramObservation"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "version": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "version",
+      "question",
+      "instrument",
+      "readAt",
+      "rows",
+      "limit"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawHistogramResult"
+  },
+  "measurements.RawHistogramScalar": {
+    "properties": {
+      "presenceState": {
+        "type": "string"
+      },
+      "rawValue": {},
+      "value": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "valueState": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "rawValue",
+      "value",
+      "valueState",
+      "presenceState"
+    ],
+    "type": "object",
+    "x-go-type": "github.com/casselc/goo/measurements.RawHistogramScalar"
   },
   "measurements.RawObservation": {
     "properties": {

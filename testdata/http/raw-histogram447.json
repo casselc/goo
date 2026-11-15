@@ -1,0 +1,343 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "name": "observed",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"histogram\",\"metric\":\"request.duration\",\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"bounds\":[1],\"boundsState\":\"valid\",\"bucketCounts\":[\"1\",\"2\"],\"bucketCountsState\":\"valid\",\"bucketsState\":\"valid\",\"count\":\"3\",\"countState\":\"valid\",\"diagnostics\":[{\"code\":\"presence-unavailable\",\"field\":\"sum\"},{\"code\":\"presence-unavailable\",\"field\":\"min\"},{\"code\":\"presence-unavailable\",\"field\":\"max\"}],\"endNS\":\"1500000000\",\"flags\":0,\"flagsState\":\"valid\",\"max\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"min\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"bounds\":[\"1\"],\"bucket_counts\":[\"1\",\"2\"],\"count\":\"3\",\"end_ns\":\"1500000000\",\"flags\":0,\"max\":\"0\",\"min\":\"0\",\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"sum\":\"0\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"recordingState\":\"recorded\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"s\",\"version\":\"\"},\"sum\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"temporality\":1}],\"version\":\"goo/raw-histogram-observations/v1\"}\n"
+    },
+    {
+      "name": "unknown-temporality",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":7}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"histogram\",\"metric\":\"request.duration\",\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":7,\"unit\":\"s\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"bounds\":[1],\"boundsState\":\"valid\",\"bucketCounts\":[\"1\",\"2\"],\"bucketCountsState\":\"valid\",\"bucketsState\":\"valid\",\"count\":\"3\",\"countState\":\"valid\",\"diagnostics\":[{\"code\":\"unrecognized\",\"field\":\"temporality\"},{\"code\":\"presence-unavailable\",\"field\":\"sum\"},{\"code\":\"presence-unavailable\",\"field\":\"min\"},{\"code\":\"presence-unavailable\",\"field\":\"max\"}],\"endNS\":\"1500000000\",\"flags\":0,\"flagsState\":\"valid\",\"max\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"min\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"bounds\":[\"1\"],\"bucket_counts\":[\"1\",\"2\"],\"count\":\"3\",\"end_ns\":\"1500000000\",\"flags\":0,\"max\":\"0\",\"min\":\"0\",\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"sum\":\"0\",\"temporality\":7,\"unit\":\"s\",\"version\":\"\"},\"recordingState\":\"recorded\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"s\",\"version\":\"\"},\"sum\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"temporality\":7}],\"version\":\"goo/raw-histogram-observations/v1\"}\n"
+    },
+    {
+      "name": "missing-temporality",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\"}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"instrument requires explicit non-null temporality\"}\n"
+    },
+    {
+      "name": "null-temporality",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":null}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"instrument requires explicit non-null temporality\"}\n"
+    },
+    {
+      "name": "wrong-kind",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"exponential-histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"require one exact explicit histogram instrument\"}\n"
+    },
+    {
+      "name": "missing-unit",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"temporality\":1}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"instrument requires explicit non-null unit\"}\n"
+    },
+    {
+      "name": "wrongcase",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"Scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"instrument requires explicit non-null scope\"}\n"
+    },
+    {
+      "name": "all-scope",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environmentSelector\":{\"version\":\"goo/environment-selector/v1\",\"policy\":\"effective\",\"scope\":{\"mode\":\"all\"}},\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"all-environments scope is unavailable for native measurements; choose one environment\"}\n"
+    },
+    {
+      "suffix": "{}",
+      "name": "trailing",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "name": "unknown",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"extra\":true,\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"unsupported instrument field extra\"}\n"
+    },
+    {
+      "name": "oversize",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "padTo": 65537,
+      "status": 400,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"one JSON object required\"}\n"
+    },
+    {
+      "name": "method",
+      "method": "GET",
+      "path": "/histogram-observations",
+      "body": "",
+      "status": 405,
+      "headers": {
+        "Allow": "POST",
+        "Cache-Control": "",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "response": "Method Not Allowed\n"
+    },
+    {
+      "name": "metadata-mismatch",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"Source response rejected.\",\"refusal\":{\"kind\":\"malformed\",\"detail\":\"The source returned invalid or unsupported record data. No partial result was admitted.\"}}\n"
+    },
+    {
+      "name": "source-failure",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"Source unavailable.\",\"refusal\":{\"kind\":\"unavailable\",\"detail\":\"The source request could not be completed.\"}}\n"
+    },
+    {
+      "name": "malformed-end",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"Source response rejected.\",\"refusal\":{\"kind\":\"malformed\",\"detail\":\"The source returned invalid or unsupported record data. No partial result was admitted.\"}}\n"
+    },
+    {
+      "name": "rows-budget",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 502,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"error\":\"Source read exceeded a limit.\",\"refusal\":{\"kind\":\"budget\",\"detail\":\"The source response exceeded a bounded read or grouping limit. Try a narrower scope.\"}}\n"
+    },
+    {
+      "name": "empty",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"histogram\",\"metric\":\"request.duration\",\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[],\"version\":\"goo/raw-histogram-observations/v1\"}\n"
+    },
+    {
+      "name": "no-recorded",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"histogram\",\"metric\":\"request.duration\",\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"bounds\":null,\"boundsState\":\"absent\",\"bucketCounts\":null,\"bucketCountsState\":\"absent\",\"bucketsState\":\"absent\",\"count\":null,\"countState\":\"absent\",\"diagnostics\":[{\"code\":\"no-recorded-value\",\"field\":\"count\"},{\"code\":\"no-recorded-value\",\"field\":\"buckets\"},{\"code\":\"no-recorded-value\",\"field\":\"sum\"},{\"code\":\"presence-unavailable\",\"field\":\"sum\"},{\"code\":\"no-recorded-value\",\"field\":\"min\"},{\"code\":\"presence-unavailable\",\"field\":\"min\"},{\"code\":\"no-recorded-value\",\"field\":\"max\"},{\"code\":\"presence-unavailable\",\"field\":\"max\"}],\"endNS\":\"1500000000\",\"flags\":1,\"flagsState\":\"valid\",\"max\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":null,\"valueState\":\"absent\"},\"min\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":null,\"valueState\":\"absent\"},\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"bounds\":[\"1\"],\"bucket_counts\":[\"1\",\"2\"],\"count\":\"3\",\"end_ns\":\"1500000000\",\"flags\":1,\"max\":\"0\",\"min\":\"0\",\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"sum\":\"0\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"recordingState\":\"no-recorded-value\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"s\",\"version\":\"\"},\"sum\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":null,\"valueState\":\"absent\"},\"temporality\":1}],\"version\":\"goo/raw-histogram-observations/v1\"}\n"
+    },
+    {
+      "name": "unknown-flags",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"histogram\",\"metric\":\"request.duration\",\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"bounds\":[1],\"boundsState\":\"valid\",\"bucketCounts\":[\"1\",\"2\"],\"bucketCountsState\":\"valid\",\"bucketsState\":\"valid\",\"count\":\"3\",\"countState\":\"valid\",\"diagnostics\":[{\"code\":\"unknown-bits\",\"field\":\"flags\"},{\"code\":\"presence-unavailable\",\"field\":\"sum\"},{\"code\":\"presence-unavailable\",\"field\":\"min\"},{\"code\":\"presence-unavailable\",\"field\":\"max\"}],\"endNS\":\"1500000000\",\"flags\":8,\"flagsState\":\"valid\",\"max\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"min\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"bounds\":[\"1\"],\"bucket_counts\":[\"1\",\"2\"],\"count\":\"3\",\"end_ns\":\"1500000000\",\"flags\":8,\"max\":\"0\",\"min\":\"0\",\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"sum\":\"0\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"recordingState\":\"unknown\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"s\",\"version\":\"\"},\"sum\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"temporality\":1}],\"version\":\"goo/raw-histogram-observations/v1\"}\n"
+    },
+    {
+      "name": "count-mismatch",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"histogram\",\"metric\":\"request.duration\",\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"bounds\":[1],\"boundsState\":\"valid\",\"bucketCounts\":[\"1\",\"2\"],\"bucketCountsState\":\"valid\",\"bucketsState\":\"invalid\",\"count\":\"4\",\"countState\":\"valid\",\"diagnostics\":[{\"code\":\"count-mismatch\",\"field\":\"buckets\"},{\"code\":\"presence-unavailable\",\"field\":\"sum\"},{\"code\":\"presence-unavailable\",\"field\":\"min\"},{\"code\":\"presence-unavailable\",\"field\":\"max\"}],\"endNS\":\"1500000000\",\"flags\":0,\"flagsState\":\"valid\",\"max\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"min\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"bounds\":[\"1\"],\"bucket_counts\":[\"1\",\"2\"],\"count\":\"4\",\"end_ns\":\"1500000000\",\"flags\":0,\"max\":\"0\",\"min\":\"0\",\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"sum\":\"0\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"recordingState\":\"recorded\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"s\",\"version\":\"\"},\"sum\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"temporality\":1}],\"version\":\"goo/raw-histogram-observations/v1\"}\n"
+    },
+    {
+      "name": "count-only",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"histogram\",\"metric\":\"request.duration\",\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"bounds\":[],\"boundsState\":\"valid\",\"bucketCounts\":[],\"bucketCountsState\":\"valid\",\"bucketsState\":\"absent\",\"count\":\"3\",\"countState\":\"valid\",\"diagnostics\":[{\"code\":\"absent\",\"field\":\"buckets\"},{\"code\":\"presence-unavailable\",\"field\":\"sum\"},{\"code\":\"presence-unavailable\",\"field\":\"min\"},{\"code\":\"presence-unavailable\",\"field\":\"max\"}],\"endNS\":\"1500000000\",\"flags\":0,\"flagsState\":\"valid\",\"max\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"min\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"bounds\":[],\"bucket_counts\":[],\"count\":\"3\",\"end_ns\":\"1500000000\",\"flags\":0,\"max\":\"0\",\"min\":\"0\",\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"sum\":\"0\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"recordingState\":\"recorded\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"s\",\"version\":\"\"},\"sum\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"temporality\":1}],\"version\":\"goo/raw-histogram-observations/v1\"}\n"
+    },
+    {
+      "name": "all-values",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"histogram\",\"metric\":\"request.duration\",\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"bounds\":[],\"boundsState\":\"valid\",\"bucketCounts\":[\"3\"],\"bucketCountsState\":\"valid\",\"bucketsState\":\"valid\",\"count\":\"3\",\"countState\":\"valid\",\"diagnostics\":[{\"code\":\"presence-unavailable\",\"field\":\"sum\"},{\"code\":\"presence-unavailable\",\"field\":\"min\"},{\"code\":\"presence-unavailable\",\"field\":\"max\"}],\"endNS\":\"1500000000\",\"flags\":0,\"flagsState\":\"valid\",\"max\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"min\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"bounds\":[],\"bucket_counts\":[\"3\"],\"count\":\"3\",\"end_ns\":\"1500000000\",\"flags\":0,\"max\":\"0\",\"min\":\"0\",\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"sum\":\"0\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"recordingState\":\"recorded\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"s\",\"version\":\"\"},\"sum\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"temporality\":1}],\"version\":\"goo/raw-histogram-observations/v1\"}\n"
+    },
+    {
+      "name": "nonfinite-stat",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"histogram\",\"metric\":\"request.duration\",\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"bounds\":[1],\"boundsState\":\"valid\",\"bucketCounts\":[\"1\",\"2\"],\"bucketCountsState\":\"valid\",\"bucketsState\":\"valid\",\"count\":\"3\",\"countState\":\"valid\",\"diagnostics\":[{\"code\":\"nonfinite\",\"field\":\"sum\"},{\"code\":\"presence-unavailable\",\"field\":\"sum\"},{\"code\":\"presence-unavailable\",\"field\":\"min\"},{\"code\":\"presence-unavailable\",\"field\":\"max\"}],\"endNS\":\"1500000000\",\"flags\":0,\"flagsState\":\"valid\",\"max\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"min\":{\"presenceState\":\"unavailable\",\"rawValue\":\"0\",\"value\":0,\"valueState\":\"finite\"},\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"bounds\":[\"1\"],\"bucket_counts\":[\"1\",\"2\"],\"count\":\"3\",\"end_ns\":\"1500000000\",\"flags\":0,\"max\":\"0\",\"min\":\"0\",\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"sum\":\"nan\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"recordingState\":\"recorded\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"s\",\"version\":\"\"},\"sum\":{\"presenceState\":\"unavailable\",\"rawValue\":\"nan\",\"value\":null,\"valueState\":\"nonfinite\"},\"temporality\":1}],\"version\":\"goo/raw-histogram-observations/v1\"}\n"
+    },
+    {
+      "name": "missing-stat-columns",
+      "method": "POST",
+      "path": "/histogram-observations",
+      "body": "{\"question\":{\"environment\":\"prod\",\"service\":\"api\",\"fromMs\":1000,\"toMs\":2000},\"instrument\":{\"kind\":\"histogram\",\"scope\":\"\",\"version\":\"\",\"schemaURL\":\"\",\"metric\":\"request.duration\",\"unit\":\"s\",\"temporality\":1}}",
+      "status": 200,
+      "headers": {
+        "Allow": "",
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json",
+        "X-Content-Type-Options": ""
+      },
+      "response": "{\"instrument\":{\"kind\":\"histogram\",\"metric\":\"request.duration\",\"schemaURL\":\"\",\"scope\":\"\",\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"limit\":10000,\"question\":{\"environment\":\"prod\",\"fromMs\":1000,\"service\":\"api\",\"toMs\":2000},\"readAt\":\"2026-11-14T00:00:00Z\",\"rows\":[{\"bounds\":[1],\"boundsState\":\"valid\",\"bucketCounts\":[\"1\",\"2\"],\"bucketCountsState\":\"valid\",\"bucketsState\":\"valid\",\"count\":\"3\",\"countState\":\"valid\",\"diagnostics\":[{\"code\":\"absent\",\"field\":\"sum\"},{\"code\":\"presence-unavailable\",\"field\":\"sum\"},{\"code\":\"absent\",\"field\":\"min\"},{\"code\":\"presence-unavailable\",\"field\":\"min\"},{\"code\":\"absent\",\"field\":\"max\"},{\"code\":\"presence-unavailable\",\"field\":\"max\"}],\"endNS\":\"1500000000\",\"flags\":0,\"flagsState\":\"valid\",\"max\":{\"presenceState\":\"unavailable\",\"rawValue\":null,\"value\":null,\"valueState\":\"absent\"},\"min\":{\"presenceState\":\"unavailable\",\"rawValue\":null,\"value\":null,\"valueState\":\"absent\"},\"occurrenceKey\":\"1\",\"rawRow\":{\"attributes\":{},\"bounds\":[\"1\"],\"bucket_counts\":[\"1\",\"2\"],\"count\":\"3\",\"end_ns\":\"1500000000\",\"flags\":0,\"max\":null,\"min\":null,\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resource_schema_url\":\"\",\"schema_url\":\"\",\"scope\":\"\",\"start_ns\":\"0\",\"sum\":null,\"temporality\":1,\"unit\":\"s\",\"version\":\"\"},\"recordingState\":\"recorded\",\"startNS\":\"0\",\"startState\":\"valid\",\"stream\":{\"attributes\":{},\"name\":\"request.duration\",\"resource\":{\"deployment.environment.name\":\"prod\",\"service.name\":\"api\"},\"resourceSchemaURL\":\"\",\"schemaURL\":\"\",\"scope\":\"\",\"unit\":\"s\",\"version\":\"\"},\"sum\":{\"presenceState\":\"unavailable\",\"rawValue\":null,\"value\":null,\"valueState\":\"absent\"},\"temporality\":1}],\"version\":\"goo/raw-histogram-observations/v1\"}\n"
+    }
+  ]
+}

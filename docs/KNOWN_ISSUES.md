@@ -56,6 +56,10 @@ across temporary navigation without rereading.
 [440 attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md) add presence-safe string
 queries. [441 raw sums](RAW_SUM_OBSERVATIONS.md) covers reported counters and
 cumulative nonmonotonic stocks without evaluator prerequisites.
+[447 explicit histogram points](RAW_HISTOGRAM_OBSERVATIONS.md) adds exact source
+counts, diagnostic buckets and unavailable optional-statistic presence. Raw
+exponential histogram inspection is still a distinct future profile; raw point
+validity does not authorize merged distributions or full-window health claims.
 [442 shared attribute refinement](ATTRIBUTE_REFINEMENT.md) unifies Exclude and
 reported/missing gestures across record details, columns and facets. Exclude
 includes missing keys; CEL inequality remains reported-only. [443 typed numeric CEL conditions](CEL_NUMERIC_ATTRIBUTES.md) add exact ordering
