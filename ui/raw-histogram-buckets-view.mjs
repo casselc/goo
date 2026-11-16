@@ -1,6 +1,6 @@
 /* Passive categorical count bars for one raw histogram occurrence. */
 import './chart-frame.mjs';
-import './components.mjs';
+import * as UI from './components.mjs';
 import {model} from './raw-histogram-buckets.mjs';
 import {nativeControlReady} from './dom-visibility.mjs';
 export {model};
@@ -17,6 +17,7 @@ if(globalThis.customElements&&globalThis.HTMLElement){
    if(!['bars','table'].includes(mode)){this.append(n('p','Histogram display unavailable.'));return}
    const frame=n('goo-chart-frame');frame.setAttribute('density','compact');frame.data={headingLevel:this.getAttribute('heading-level')||'3',title:this.getAttribute('heading')||'Histogram buckets',unit:m.unit||'Unit not reported',state:m.state==='observed'?'unknown':m.state==='no_data'?'no_data':m.state,note:mode==='bars'&&m.eligible?'Count bars · interval widths are not to scale':''};this.append(frame);
    if(m.reason)frame.append(n('p',m.reason,'raw-histogram-buckets-note'));
+   frame.append(UI.disclosure('Chart help',[n('p','Bars compare source bucket counts. Intervals have equal spacing, not numeric interval width or density; infinite edge intervals have no finite width.'),n('p','Counts remain exact text; bar lengths are approximate. Previous and More page through supplied buckets locally with the same scale. Switching Bars and Table keeps the current page.')],{className:'ui-context-help'}));
    if(!m.rows.length||mode==='bars'&&!m.eligible)return;
    const summary=n('p',m.rows.length+' buckets · '+m.count+' source count'+(m.count==='0'?' · recorded empty point':''),'raw-histogram-buckets-summary');frame.append(summary);
    const viewport=n('goo-table'),table=n('table'),head=n('thead'),header=n('tr'),body=n('tbody'),pages=n('div',undefined,'raw-histogram-buckets-pages'),previous=n('button','Previous buckets'),next=n('button','More buckets'),range=n('span');previous.type=next.type='button';range.setAttribute('role','status');viewport.setAttribute('density','compact');table.setAttribute('aria-label','Source histogram buckets');

@@ -3,8 +3,11 @@
 [Shared UI polish](UI_POLISH_459.md) reduces attribute/control and service-card
 chrome, adds route-preserving skip navigation, and retains visible state labels
 with redundant markers. The Activity custody explanation is now on demand.
-The [guidance proposal](CONTEXTUAL_GUIDANCE.md) identifies further prose migrations;
-a common Help panel and optional walkthroughs remain unimplemented. Long actual
+[Contextual guidance](CONTEXTUAL_GUIDANCE.md) now provides route-aware Help, a
+manual five-page reading guide and Services/comparison/chart disclosures. The
+guide does not observe task completion or persist across reloads. Duplicate
+applied/Parent predicate consolidation remains deferred for identity-aware UX
+review. Task-specific guides remain future work. Long actual
 messages can still require scrolling in the bounded inspector.
 
 Paired Activity shares responsive controls and UTC inspection with single

@@ -1,5 +1,38 @@
 # Validation record
 
+## 460 Contextual Help and optional reading guide — 2026-11-16
+
+A single header Help button opens a modeless, full-width inline panel. Seven
+route contexts and five manually paged guide steps use a passive shared element.
+Help changes reading state only; it does not navigate, query, filter, save or
+claim that an investigation task completed. Services signal-grain, comparison
+saving and chart mechanics now use closed native disclosures. Actual source
+facts, warnings, counts, geometry caveats and action consequences remain visible.
+
+- Full root Go suite passes on Go **1.27.3** (`go test -p 2 ./... -count=1`).
+- Full UI suite: **2,098 tests pass, zero skipped**. The initial sandbox run
+  could not execute the localhost query test; the complete socket-enabled rerun
+  passes. Guidance state/renderer and passive display graph checks pass.
+- Final real-OTLP journey passes on `/tmp/goo460-final`: 30 ordinary logs and
+  30 spans, both live lanes preserved while reading; paused Help interactions
+  execute zero SQL. Fixed-question identities, inspector Find, route/page
+  retention, visible source refusal and stored capture remain intact. Keyboard
+  Enter/Space/Escape, safe Close/Return focus, 320/390/1440 layouts and coarse
+  44px targets pass with zero browser errors; runtime cleanup succeeds.
+- Independent Bombadil reading driver: **339 snapshots**, terminal phase 8,
+  no API POSTs, navigation or horizontal overflow; focus returns to Help.
+  Twelve screenshots and the executed [storyboard](docs/journeys/contextual-guidance.md)
+  are current. [Independent acceptance](docs/reviews/CONTEXTUAL_GUIDANCE_460_ACCEPTANCE.md)
+  covers source ownership and all four responsive surfaces. This is not a
+  full WCAG certification or screen-reader audit.
+- Existing held-chronology 458 regression passes on the final binary: 21
+  steps, 562 Bombadil snapshots reaching phase 12, native Quint replay and all
+  nine negative controls rejected (zero skips). Runtime/database cleanup passes;
+  five affected 458 screenshots were refreshed.
+- The final owner-focused rerun also checks redundant context events retain
+  native disclosure nodes and focus. Guide pages indicate reading position,
+  not observed task completion; no state is persisted across reloads.
+
 ## 459 Shared UI/UX/accessibility polish and guidance assessment — 2026-11-16
 
 [Shared changes](docs/UI_POLISH_459.md),

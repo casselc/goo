@@ -1,6 +1,6 @@
 /* Passive supplied-data gauge scatter. Acquisition and inspection belong to callers. */
 import './chart-frame.mjs';
-import './components.mjs';
+import * as UI from './components.mjs';
 import {model} from './raw-gauge-points.mjs';
 import {compactScalar} from './numeric-values.mjs';
 import {nativeControlReady} from './dom-visibility.mjs';
@@ -58,7 +58,7 @@ if(globalThis.customElements&&globalThis.HTMLElement){
     }
     viewport.append(table);valueList.replaceChildren(viewport);before.disabled=valueOffset===0;after.disabled=valueOffset+100>=data.rows.length;valuePaging.hidden=data.rows.length<=100;position.textContent=(data.rows.length?valueOffset+1:0)+'–'+Math.min(valueOffset+100,data.rows.length)+' of '+data.rows.length;this.syncSelection();
    };
-   values.ontoggle=()=>{if(values.open&&revision===this._revision&&this.isConnected)drawValues()};before.onclick=()=>{if(!allowed(before))return;valueOffset=Math.max(0,valueOffset-100);drawValues();valueList.querySelector('button')?.focus()};after.onclick=()=>{if(!allowed(after))return;valueOffset+=100;drawValues();valueList.querySelector('button')?.focus()};if(mode==='table'){values.open=true;valuesSummary.hidden=true}frame.append(values);this.append(frame);if(mode==='table')drawValues();this.syncSelection();
+   values.ontoggle=()=>{if(values.open&&revision===this._revision&&this.isConnected)drawValues()};before.onclick=()=>{if(!allowed(before))return;valueOffset=Math.max(0,valueOffset-100);drawValues();valueList.querySelector('button')?.focus()};after.onclick=()=>{if(!allowed(after))return;valueOffset+=100;drawValues();valueList.querySelector('button')?.focus()};if(mode==='table'){values.open=true;valuesSummary.hidden=true}frame.append(values);if(mode!=='table')frame.append(UI.disclosure('Chart help',[n('p','Dots show source occurrences, not a continuous series. Approximate positions may overlap; Observation values lists every supplied occurrence.'),n('p','Tab enters plotted locations. Arrow keys move between locations; Home and End jump to the first and last. Enter or Space inspects a point or opens its occurrence chooser.')],{className:'ui-context-help'}));this.append(frame);if(mode==='table')drawValues();this.syncSelection();
   }
  }
  if(!globalThis.customElements.get('goo-raw-gauge-points'))globalThis.customElements.define('goo-raw-gauge-points',GooRawGaugePoints);

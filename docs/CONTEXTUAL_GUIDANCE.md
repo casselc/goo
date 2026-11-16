@@ -3,8 +3,8 @@
 This is the consolidated outcome of the independent
 [designer review](reviews/PROSE_GUIDANCE_DESIGN_459.md) and
 [UX review](reviews/PROSE_GUIDANCE_UX_459.md), performed after the 459 UI polish.
-The Activity disclosure below is implemented. The broader help panel and
-walkthroughs are proposed, not shipped.
+The Activity disclosure and the 460 contextual reading surface are implemented.
+The guide is manual reading assistance, not an observed workflow-completion system.
 
 ## What belongs where
 
@@ -54,14 +54,16 @@ This diagram is guidance, not an execution flow. Capture can read fresh source
 records; Keep requires its supported occurrence/proof contract. A guide must not
 perform either action or silently turn configuration into evidence.
 
-## Proposed help model
+## Implemented contextual help (460)
 
-Use a consistent **Help / Learn this view** entry with route-relevant content.
+The header **Help** entry opens a full-width inline panel below the workspace
+heading, with route-relevant content and a five-page **First investigation guide**.
+The panel starts closed and preserves workspace lane widths.
 Reuse native Read facts, Scope and receipt, Tail scope and limits, and contextual
 `UI.disclosure` patterns. Exact current facts stay in their existing owners;
 guidance explains them rather than copying another stale snapshot.
 
-Offer short, opt-in, replayable guides from Help or an appropriate empty state:
+The opt-in, replayable reading guide covers:
 
 1. Choose a source scope and Start explicitly.
 2. Pause or Hold chronology; inspect a retained occurrence.
@@ -69,25 +71,45 @@ Offer short, opt-in, replayable guides from Help or an appropriate empty state:
 4. Follow reported context or stage the original observation window; Run explicitly.
 5. Save configuration or preserve observations through the appropriate action.
 
-Allow Skip, Back, Close and replay without losing scope, Find, selected data or
-navigation. Keep focus on meaningful controls, restore it when help closes, and
-respect reduced motion and narrow screens. Completion comes from observed state,
-not merely clicking a highlighted control. No automatic tour, source read,
+Previous, Next, Replay and Back to help change reading position only. Close
+restores the Help trigger; Return to work focuses the workspace outside record
+viewports. Route changes retain the current guide page while contextual topics
+follow the route. There is no persistence across reloads, automatic tour,
+highlighted-target activation or observed task completion. No source read,
 subscription, filter edit or persistence action is part of guidance.
 
-## Suggested implementation order
+Services count definitions, comparison save mechanics and raw-gauge/histogram
+geometry and keyboard lessons now use closed native contextual disclosures.
+**Saves questions · not observations** keeps the configuration/evidence distinction
+visible. Actual counts, units, windows, uncertainty, overlap/display limits,
+refusal reasons and dynamic unsaved-comparison warnings remain in their owners.
 
-1. Migrate repeated Services count definitions, comparison save semantics and
-   chart keyboard/geometry lessons into one consistent contextual-help treatment.
-   Keep units, actual limitations and action consequences visible.
-2. Consolidate duplicate applied/Parent predicate prose while retaining genuine
-   parent/slot differences and diagnostics.
-3. Add one route-aware help surface and the five-step first investigation guide.
-   Start with declarative content/targets and existing native components; no new
-   tour SDK or tutorial language is needed for this increment.
-4. Add task-specific metrics, comparison and authoring guides after the first guide
-   has usable keyboard/mobile behavior and source-side-effect tests.
+See the [executable journey](journeys/contextual-guidance.md) for keyboard, live
+stream, held inspection, refused source and responsive acceptance scenarios.
 
-Validate each migration against a before/after information inventory, actual
-browser focus/overflow checks, and assertions that opening or closing help never
-reads or changes source data. See [459 validation](../VALIDATION.md).
+## Remaining boundaries
+
+Duplicate applied/Parent predicate consolidation is deferred pending an
+identity-aware UX review: similar text can carry genuinely different parent/slot
+scope. It was not delivered in 460. Task-specific metrics, comparison and
+authoring guides remain future work. The following 461 related-held-trace-context
+depth step remains unchanged.
+
+Validate migrations against their information inventory, browser focus/overflow
+checks and source-side-effect assertions. See [validation](../VALIDATION.md).
+
+## Ownership
+
+```mermaid
+flowchart LR
+  Workspace[Workspace route and Explore mode] --> Owner[Application guidance owner]
+  Buttons[Explicit reading controls] --> Owner
+  Owner --> State[Immutable reading context and page]
+  State --> View[Passive goo-guidance element]
+  View --> Intent[Reading intent only]
+  Intent --> Owner
+```
+
+The owner changes panel visibility and safe focus. Source acquisition, filter
+application, navigation and preservation remain in their existing application
+owners; this reading loop does not invoke them.

@@ -7,7 +7,7 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–459 delivered and validated**. The current cadence is
+Status: **429 and 437–459 delivered and validated; 460 implemented, final browser acceptance pending**. The current cadence is
 **444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup → 453 referring-span discovery depth → 454 selector/reference consolidation → 455 held raw-gauge Points breadth → 456 single-point histogram bucket depth → 457 raw-display consolidation → 458 held log/span chronology breadth → 459 requested UI/UX/accessibility polish and guidance assessment**.
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
@@ -405,15 +405,18 @@ markers and chronology announcements are improved. Independent designer and UX
 reviews produced a [content/guidance proposal](CONTEXTUAL_GUIDANCE.md). The first
 native Activity disclosure is implemented; a broader tutorial system is not.
 
-## Next proposal: 460 contextual guidance
+## 460 — implemented: contextual guidance
 
-Migrate repeated generic Services/comparison/chart explanations into consistent
-contextual help, retaining current scope, values, clocks, uncertainty, failures and
-action consequences. Consolidate duplicate applied/Parent predicate prose while
-preserving real parent/slot differences. Then add one route-aware, optional,
-replayable first-investigation guide using existing native components. Guidance
-must never execute source reads, edit filters or create captures on its own.
-This proposal is described in the independent inventories; it is not shipped.
+Services/comparison/chart teaching now uses closed native contextual help,
+retaining current scope, values, clocks, uncertainty, failures and action
+consequences. Route-aware header Help opens an inline reading panel and an
+optional manual five-page first-investigation guide. It does not execute source
+reads, edit filters, create captures, observe task completion or persist across
+reloads. [Design and bounds](CONTEXTUAL_GUIDANCE.md) and the
+[executable journey](journeys/contextual-guidance.md) document the delivered slice.
+Full UI tests (2098, zero skips), Go tests, real-OTLP browser journey and
+independent responsive review pass. Duplicate applied/Parent predicate consolidation was not delivered and
+is deferred until an identity-aware UX review preserves real parent/slot scope.
 
 ## Following depth step: 461 related held trace context
 

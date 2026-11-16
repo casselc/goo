@@ -162,8 +162,27 @@ current route; chronology announces one coherent counts/page update.
 Use `UI.disclosure(summary, content, {className: 'ui-context-help'})` for optional
 explanations whose summary retains the relevant visible state. This shared style
 also works in native server-rendered HTML. It does not implement a walkthrough or
-own source operations. The [guidance proposal](CONTEXTUAL_GUIDANCE.md) separates
-persistent facts from teaching/reference content.
+own source operations. The [guidance design](CONTEXTUAL_GUIDANCE.md) separates
+persistent facts from teaching/reference content. Services count definitions,
+comparison save mechanics and raw chart lessons use this disclosure. Actual
+limitations, refusal reasons and dynamic action consequences stay visible.
+
+The application-owned Help controller supplies route context to `goo-guidance`,
+a display-only reading component with manual Previous/Next/Replay controls. Its
+full-width inline panel preserves stream lane width. Reading state is local to
+the mounted page; it neither observes workflow completion nor persists across
+reloads. See the [journey](journeys/contextual-guidance.md).
+
+`Guidance.initial(context)`, `withContext(state, context)` and
+`transition(state, action)` produce immutable `goo.guidance/1` reading state.
+Assign it to `element.data`, or supply JSON through the `data` attribute for
+server-rendered HTML. Supported contexts are Activity (`activity`), Measurements,
+Services, Operations, Saved, Definitions and Examples (lowercase keys).
+`goo-guidance-action` carries `{action}` from an explicit native button. The
+embedding owner handles `close` and `work`; reading actions are `start-guide`,
+`previous`, `next`, `replay` and `about`. Unknown states are refused visibly.
+The element never discovers routes or controls the application's source owners.
+
 
 ## Public elements
 

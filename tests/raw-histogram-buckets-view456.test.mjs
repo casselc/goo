@@ -17,7 +17,7 @@ class Element{
  dispatchEvent(event){globalThis.events.push({target:this,event});this.listeners.get(event.type)?.(event);return true}
 }
 const registry=new Map();globalThis.HTMLElement=Element;globalThis.customElements={get:name=>registry.get(name),define:(name,type)=>registry.set(name,type)};globalThis.document={createElement:tag=>new Element(tag)};globalThis.CustomEvent=class{constructor(type,init){this.type=type;Object.assign(this,init)}};globalThis.events=[];
-mock.module('../ui/components.mjs',{exports:{}});
+mock.module('../ui/components.mjs',{exports:{disclosure:(label,children=[],{open=false,className=''}={})=>{const details=new Element('details');details.className='ui-disclosure '+className;details.open=open;details.append(new Element('summary',label),...children);return details}}});
 mock.module('../ui/chart-frame.mjs',{exports:{}});
 mock.module('../ui/dom-visibility.mjs',{exports:{nativeControlReady:element=>{for(let node=element;node;node=node.parentElement)if(node.hidden||node.disabled||!node.isConnected)return false;return true}}});
 const {facts}=await import('../ui/raw-histogram-values.mjs');
@@ -47,3 +47,5 @@ test('457 uncertain table pages survive a refused Bars view, and SSR data replac
  const view=mount(row({size:205,flags:2}));view.setAttribute('mode','table');view.querySelectorAll('button')[1].onclick();view.setAttribute('mode','bars');assert.equal(view.querySelectorAll('[data-bucket-index]').length,0);view.setAttribute('mode','table');assert.equal(view.querySelector('[data-bucket-index]').dataset.bucketIndex,'100');
  view.setAttribute('data',JSON.stringify(row({size:105,flags:2})));assert.equal(view.querySelector('[data-bucket-index]').dataset.bucketIndex,'0');
 });
+
+test('native chart help explains geometry while the actual count warning remains visible',()=>{const view=mount(),frame=view.children[0],help=frame.children.find(child=>child.tagName==='DETAILS'&&child.children[0]?.textContent==='Chart help');assert.ok(help);assert.equal(help.open,false);assert.match(help.children.map(child=>child.textContent).join(' '),/not numeric interval width or density/);assert.match(frame.data.note,/Count bars.*not to scale/);const before=globalThis.events.length;help.open=true;assert.equal(globalThis.events.length,before)});

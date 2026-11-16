@@ -17,7 +17,7 @@ class Element{
  dispatchEvent(event){globalThis.events.push({target:this,event});this.listeners.get(event.type)?.(event);return true}
 }
 const registry=new Map();globalThis.HTMLElement=Element;globalThis.customElements={get:name=>registry.get(name),define:(name,type)=>registry.set(name,type)};globalThis.document={createElement:tag=>new Element(tag)};globalThis.CustomEvent=class{constructor(type,init){this.type=type;Object.assign(this,init)}};globalThis.events=[];
-mock.module('../ui/components.mjs',{exports:{}});
+mock.module('../ui/components.mjs',{exports:{disclosure:(label,children=[],{open=false,className=''}={})=>{const details=new Element('details');details.className='ui-disclosure '+className;details.open=open;details.append(new Element('summary',label),...children);return details}}});
 mock.module('../ui/chart-frame.mjs',{exports:{}});
 mock.module('../ui/raw-gauge-points.mjs',{exports:{model:value=>value?.testModel||{state:'unavailable'}}});
 mock.module('../ui/dom-visibility.mjs',{exports:{nativeControlReady:element=>{for(let node=element;node;node=node.parentElement)if(node.hidden||node.disabled||!node.isConnected)return false;return true}}});
@@ -37,3 +37,5 @@ test('an exactly-at-budget bank retains unknown coverage rather than asserting t
 test('the visual location budget is explicit and separate from the raw read budget',()=>{const data=fixture();data.testModel.counts={...data.testModel.counts,loaded:1001,eligible:1001,plotted:1000,unplotted:1,undisplayed:1};data.testModel.excluded=[{key:'extra',reason:'visual-budget'}];const view=mount(data);assert.match(view.querySelector('.raw-gauge-points-summary').textContent,/1,000-location display limit/);assert.doesNotMatch(view.querySelector('.raw-gauge-points-summary').textContent,/read budget/)});
 
 test('table mode uses held-observation copy without plot-only notes or exclusions',()=>{const view=mount();view.setAttribute('mode','table');assert.equal(view.children[0].data.note,'');assert.equal(view.querySelector('.raw-gauge-points-summary').textContent,'3 held observations');assert.equal(view.querySelector('.raw-gauge-points-plot'),null);assert.equal(view.querySelector('.raw-gauge-points-excluded'),null);assert.equal(view.querySelectorAll('[data-point-key]').length,0)});
+
+test('native chart help exposes keyboard guidance without hiding actual overlap or changing selection',()=>{const view=mount(),frame=view.children[0],help=frame.children.find(child=>child.tagName==='DETAILS'&&child.children[0]?.textContent==='Chart help');assert.ok(help);assert.equal(help.open,false);assert.match(help.children.map(child=>child.textContent).join(' '),/Arrow keys.*Home and End.*Enter or Space/);assert.match(frame.data.note,/Approximate positions may overlap/);const before=globalThis.events.length;help.open=true;assert.equal(globalThis.events.length,before);assert.equal(view.querySelectorAll('[data-point-key]').length,2)});

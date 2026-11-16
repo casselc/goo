@@ -47,7 +47,7 @@ This index separates using Goo, extending it, and the development record.
 - [Measurement packages](MEASUREMENT_PACKAGES.md): code-managed measurement definitions.
 - [Preserving query populations](SELECTOR_CONSERVATION.md): checked projections and explicit reference expansion.
 - [Shared UI polish](UI_POLISH_459.md): compact inspection, keyboard bypass and readable state cues.
-- [Contextual guidance proposal](CONTEXTUAL_GUIDANCE.md): persistent facts, on-demand explanations and optional walkthroughs.
+- [Contextual guidance](CONTEXTUAL_GUIDANCE.md): persistent facts, on-demand Help and a manual first-investigation guide ([journey](journeys/contextual-guidance.md)).
 - [Shared UI components](UI_COMPONENTS.md): supplied-data display contracts.
 - [Contributing](../CONTRIBUTING.md): builds, tests and documentation conventions.
 - [Gotogether shadow pilot](GOTOGETHER_ACQUISITION_PILOT.md): pinned browser/model checks, completion controls and compiled replay.

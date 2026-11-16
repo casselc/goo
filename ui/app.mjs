@@ -1,3 +1,4 @@
+import * as ContextualGuidance from './contextual-guidance.mjs';
 import {revealFocus} from './dom-visibility.mjs';
 import * as ScopeHistory from './scope-history.mjs';
 import * as ScopePicker from './scope-picker.mjs';
@@ -126,6 +127,7 @@ function openWorkspaceCatalogs(route){
  if(route==='definitions'||route==='operations')loadOperationCatalog();
 }
 const appWorkspace=Workspace.mount();
+ContextualGuidance.mount({route:appWorkspace.current});
 openWorkspaceCatalogs(appWorkspace.current());
 // Source owners stop hidden/superseded work; saved publications are independent.
 globalThis.addEventListener('goo:workspace',event=>{if(event.detail.route!=='operations')stopOperationRead();if(event.detail.route!=='definitions')stopHTTPRead();openWorkspaceCatalogs(event.detail.route)});
