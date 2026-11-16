@@ -1,5 +1,60 @@
 # Validation record
 
+## 456 Single raw histogram-point bucket bars — 2026-11-16
+
+[Operator/component contract](docs/UI_RAW_HISTOGRAM_BUCKETS.md),
+[executed storyboard](docs/journeys/raw-histogram-buckets.md),
+[review and corrections](docs/reviews/RAW_HISTOGRAM_BUCKETS_456_ACCEPTANCE.md).
+
+- Full root Go suite passes on Go 1.27.3. **2,041 UI tests pass, zero skipped**;
+  affected component/grammar/owner tests pass again after final visual corrections.
+  No production dependency or HTTP operation was added. The public display graph
+  remains passive and is checked as **82 modules**.
+- Existing `goo.dataset/1` admits a closed singleton `rawHistogram` observation
+  profile. Common `goo-chart` Histogram/Table modes delegate to one passive
+  component. The intact source occurrence, exact UInt64 strings, original
+  boundaries, request, temporality and read clock are retained. Ordinary evaluated
+  histogram restrictions and snapshot budgets are unchanged. Raw-profile import
+  retains unknown coverage and does not invent source basis or completeness.
+- Only known-recorded, structurally valid vectors plot. Unknown recording remains
+  explicit in Table; no-recorded, missing and malformed vectors refuse bars while
+  retaining original raw fields. Recorded zero totals remain distinct from absent
+  data. Categorical bars compare counts, not density; no observations are merged,
+  resampled or converted into a percentile/rate. All **10,001 legal buckets**
+  remain available through local 100-row pages with full-vector normalization.
+- Hegel passes **53 synthetic Go-source-admitted points**, zero skips, **1.05s**:
+  50 generated plus UInt64 maximum, zero/all-values and 10,001-bucket boundaries.
+  Independent checks cover exact counts/boundaries, recording-state partition,
+  finite approximate geometry, conservation, copied values, forged facts and no
+  fetch. These fixtures are separate from actual ingestion evidence.
+- Real journey **a3e9415202ab** passes in **35.2s** against `/tmp/goo456-accepted`,
+  with 16 observed steps, no browser errors and clean runtime/disposable database
+  teardown. Eight ordinary OTLP/collector/ClickHouse observations include negative
+  bounds, a zero bucket, a count above 2^53, zero total, flags 1/2, malformed and
+  omitted vectors, and a 105-bucket point. Independent physical-source reads check
+  exact raw fields. Absent flags are not fabricated in the nonnullable exporter.
+- Main discovery/read: **two source requests / 11 SQL**. All display switches,
+  Find, bucket pages, inspection, Close and Nearby staging/held return add **zero
+  source/API SQL**. Native radio and end-page focus assertions pass. Bombadil
+  completes phase 8 in **583 snapshots**, with one discovery/read, preserved
+  selection, no forbidden requests and no overflow; combined main/actor **22 SQL**.
+- Actual 320/390/1440 frames verify all four ordinary buckets are visible. Review
+  corrected inherited header nowrap, faint bar boundaries and the inspector’s
+  nested-scroller clipping, then removed repeated headings/units. Measured bar
+  outline contrast is **8.69:1**, exact-count text over fill **9.27:1**; narrow
+  header labels fit their own cells. This is scoped acceptance, not a general
+  accessibility certification. No new Quint model is claimed for local plotting;
+  source/browser assertions and the maintained actor cover this display.
+
+- Existing cross-signal regression **82efa4fad1d4** passes against the same final
+  binary in **1.9m**: 29 browser steps across gauge/sum/histogram inspection,
+  context staging, held return and source retirement. Main **10 requests / 35
+  SQL**; actor **four requests / 17 SQL**, **939 snapshots**, completed phase 12;
+  combined **52 SQL**, no browser errors and clean runtime/database teardown.
+  Native Quint replay passes in **24.02s**, with **15 rejected negative controls**
+  and zero skips. Affected 449 screenshots are refreshed. Intermediate 456 run
+  directories and obsolete candidate binaries were removed after acceptance.
+
 ## 455 Held raw gauge Points — 2026-11-15
 
 [Workflow](docs/RAW_GAUGE_OBSERVATIONS.md#points-over-the-held-bank),

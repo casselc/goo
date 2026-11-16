@@ -10,6 +10,8 @@ reported link pairs with explicit paging and a source-free held return.
 [Reported span link → exact target → held trace](span-link-target.md) stages a
 separate tuple lookup in the original environment/window, then returns locally.
 
+[Raw histogram buckets](raw-histogram-buckets.md) covers one-point Bars/Table, exact source counts and recording uncertainty.
+
 [Raw gauge points](raw-gauge-points.md) covers local Table/Points display,
 exact duplicate selection and inspectable unplotted source observations.
 

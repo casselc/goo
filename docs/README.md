@@ -14,6 +14,7 @@ This index separates using Goo, extending it, and the development record.
 | Investigate metrics without known service or environment labels | [Metric scope discovery](METRIC_SCOPE_DISCOVERY.md) |
 | Return to held metric observations without rereading | [First-use acquisition](FIRST_USE_ACQUISITION.md) |
 | Plot held gauge points without another read | [Gauge Points](RAW_GAUGE_OBSERVATIONS.md#points-over-the-held-bank) and [component contract](UI_RAW_GAUGE_POINTS.md) |
+| Compare buckets within one exported histogram point | [Histogram Bars / Table](UI_RAW_HISTOGRAM_BUCKETS.md) |
 | Inspect exported metric points before evaluation | [Raw gauges](RAW_GAUGE_OBSERVATIONS.md), [raw sums](RAW_SUM_OBSERVATIONS.md) and [explicit histogram points](RAW_HISTOGRAM_OBSERVATIONS.md); [compact inspection](RAW_OBSERVATION_CONSOLIDATION.md) |
 | Follow an OTel link or find spans referencing a span | [Reported span links](REPORTED_SPAN_LINKS.md) |
 | Find logs or spans around an exported metric point | [Nearby raw-point context](RAW_OBSERVATION_CONTEXT.md) |

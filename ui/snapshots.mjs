@@ -106,7 +106,7 @@ function hold(raw){
  return raw;
 }
 function importLimits(raw){
- try{const shape=Object.getOwnPropertyDescriptor(raw,'shape'),profile=Object.getOwnPropertyDescriptor(raw,'rawGauge');if(shape?.value==='observations'&&record(profile?.value))return RAW_OBSERVATION_LIMITS}catch{}
+ try{const shape=Object.getOwnPropertyDescriptor(raw,'shape'),profile=Object.getOwnPropertyDescriptor(raw,'rawGauge'),histogram=Object.getOwnPropertyDescriptor(raw,'rawHistogram');if(shape?.value==='observations'&&(record(profile?.value)||record(histogram?.value)))return RAW_OBSERVATION_LIMITS}catch{}
  return SNAPSHOT_LIMITS;
 }
 export function importSnapshot(raw){
@@ -205,7 +205,7 @@ function parse(text,limits,admit){
 }
 // The serialized marker only selects a bounded parsing ceiling. Object preflight
 // and the closed raw profile still decide admission; other shapes keep 8 MiB.
-export const parseSnapshotJSON=text=>parse(text,typeof text==='string'&&text.length<=RAW_OBSERVATION_LIMITS.maxBytes&&/"shape"\s*:\s*"observations"/.test(text)&&/"rawGauge"\s*:/.test(text)?RAW_OBSERVATION_LIMITS:SNAPSHOT_LIMITS,asSnapshot);
+export const parseSnapshotJSON=text=>parse(text,typeof text==='string'&&text.length<=RAW_OBSERVATION_LIMITS.maxBytes&&/"shape"\s*:\s*"observations"/.test(text)&&/"(?:rawGauge|rawHistogram)"\s*:/.test(text)?RAW_OBSERVATION_LIMITS:SNAPSHOT_LIMITS,asSnapshot);
 export const parseComparisonJSON=text=>parse(text,COMPARISON_LIMITS,asComparison);
 
 export const isHistogramComparison=value=>value!==null&&typeof value==='object'&&histogramComparisons.has(value);

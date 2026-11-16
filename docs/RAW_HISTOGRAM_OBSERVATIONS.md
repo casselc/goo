@@ -84,3 +84,11 @@ large counts, omitted/invalid buckets, source refusal, obsolete success and
 Bombadil exploration. Evaluated histogram distributions, continuity and merged
 population charts retain their separate, stricter contracts. Exponential point
 inspection remains a separate future profile.
+
+## Bucket bars for one held point
+
+**Inspect** opens one occurrence with local **Bars / Table** controls. Bars compare
+source counts across categorical intervals; they do not encode density or merge
+points. Unknown recording and invalid/absent vectors refuse bars while retaining
+diagnostics and raw fields. Large vectors page without sampling or new reads.
+See the [shared component contract](UI_RAW_HISTOGRAM_BUCKETS.md).

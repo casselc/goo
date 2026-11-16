@@ -1989,3 +1989,6 @@ input::placeholder,textarea::placeholder {color:var(--muted);opacity:1}
 
 .raw-observation-display-note{margin:3px 0 6px;font-size:12px;color:var(--muted)}
 [data-raw-observations] tbody tr[data-selected=true]{background:color-mix(in srgb,var(--accent) 9%,transparent)}
+/* A selected histogram has its own paged bucket viewport; keep its overview in
+   document flow instead of clipping it inside a second inspector scroller. */
+[data-raw-observations] .ui-inspector-body:has(.raw-histogram-bucket-detail){max-height:none;overflow:visible;overscroll-behavior:auto;scrollbar-gutter:auto}

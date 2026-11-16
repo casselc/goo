@@ -35,3 +35,5 @@ export * as ScopeView from './scope-view.mjs';
 export * as MeasureSummary from './measure-summary.mjs';
 
 export * as RawGaugePoints from './raw-gauge-points-view.mjs';
+
+export * as RawHistogramBuckets from './raw-histogram-buckets-view.mjs';

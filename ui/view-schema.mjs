@@ -1,3 +1,4 @@
+import {validateRawHistogram} from './raw-histogram-schema.mjs';
 import {validateRawGauge} from './raw-gauge-schema.mjs';
 import {rateEligible as summaryRateEligible} from './summary-declaration.mjs';
 import {validateGrouped,groupedMeanQuery} from './grouped-timeline-schema.mjs';
@@ -83,8 +84,8 @@ export function validateSnapshot(s){
  if(!record(s.quality))reasons.push('Dataset quality is required');
  else {enumField(s.quality,'extent',['complete','partial','unknown'],reasons);enumField(s.quality,'basis',['captured-query'],reasons);enumField(s.quality,'value',['recorded','derived','estimated','unknown'],reasons);enumField(s.quality,'sampling',['unknown','none','sampled'],reasons);enumField(s.quality,'freshness',['fixed','live'],reasons)}
  if(s.completeness!==undefined){const c=s.completeness;if(!record(c)||c.basis!=='captured-query'||!text(c.revision)||!text(c.scopeId)||!Array.isArray(c.aspects)||c.aspects.some(a=>!member(a,['groups','intervals','grouped-intervals','summary','bins']))||new Set(c.aspects).size!==c.aspects.length)reasons.push('Invalid completeness attestation')}
- if(s.shape==='observations')reasons.push(...validateRawGauge(s));
- else if(s.rawGauge!==undefined)reasons.push('Raw gauge profile requires an observation dataset');
+ if(s.shape==='observations'){if(s.rawHistogram!==undefined)reasons.push(...validateRawHistogram(s));else reasons.push(...validateRawGauge(s));}
+ else if(s.rawGauge!==undefined||s.rawHistogram!==undefined)reasons.push('Raw observation profiles require an observation dataset');
  if(s.shape==='time-series')validateIntervals(s,fields,reasons);
  if(s.shape==='grouped-time-series')validateGrouped(s,fields,reasons);
  if(s.shape==='summary')validateSummary(s,fields,reasons);
@@ -100,7 +101,7 @@ export function eligibleKinds(snapshot){
  if(snapshot.shape==='grouped-time-series')return ['small-multiples','table',...(Math.ceil((Number(snapshot.interval.toMs)-Number(snapshot.interval.fromMs))/Number(snapshot.interval.bucketMs))<=32?['heatmap']:[])];
  if(snapshot.dimensions?.length>1)return ['table'];
  if(snapshot.shape==='histogram')return ['table','histogram'];
- if(snapshot.shape==='observations')return ['table','points'];
+ if(snapshot.shape==='observations')return snapshot.rawHistogram?['table','histogram']:['table','points'];
  const fields=snapshot.fields,numericFields=fields.filter(numericType);
  return Object.entries(kinds).filter(([,kind])=>(!kind.shape||kind.shape===snapshot.shape)&&(!kind.numericValue||kind.shape==='time-series'||numericFields.length>0&&(kind.category==='number'?numericFields.length>=2&&fields.some(field=>field.type==='number'&&(!snapshot.dimensions||snapshot.dimensions.includes(field.key))):fields.length>=2))).map(([name])=>name);
 }
@@ -123,9 +124,9 @@ export function validateDisplay(snapshot,display){
  if(display.requiresComplete!==undefined&&typeof display.requiresComplete!=='boolean')reasons.push('requiresComplete must be boolean');
  if(snapshot.dimensions?.length>1&&display.kind!=='table')reasons.push('Multiple group dimensions require the exact table until a series mapping is declared');
  if(snapshot.shape==='grouped-time-series'){if(!['small-multiples','table','heatmap'].includes(display.kind)||(display.value??'count')!==(groupedMeanQuery(snapshot.scope.selector)?'duration.mean':'count')||display.scale!==undefined||display.category!==undefined||display.start!==undefined||display.end!==undefined)reasons.push('Grouped timelines require their declared count or mean-duration geometry');if(display.kind==='heatmap'&&Math.ceil((Number(snapshot.interval.toMs)-Number(snapshot.interval.fromMs))/Number(snapshot.interval.bucketMs))>32)reasons.push('Heatmaps support at most 32 intervals; use Small multiples or Table.');}
- if(snapshot.shape==='observations'&&(!['table','points'].includes(display.kind)||['category','value','start','end','scale','query','order'].some(key=>display[key]!==undefined)))reasons.push('Raw gauge observations use their supplied point geometry or table only');
+ if(snapshot.shape==='observations'&&(!(snapshot.rawHistogram?['table','histogram']:['table','points']).includes(display.kind)||['category','value','start','end','scale','query','order'].some(key=>display[key]!==undefined)))reasons.push('Raw observations use their declared supplied geometry or table only');
  const kind=kinds[display.kind];
- if(kind.shape&&kind.shape!==snapshot.shape)reasons.push('Display kind does not support this dataset shape');
+ if(kind.shape&&kind.shape!==snapshot.shape&&!(snapshot.rawHistogram&&display.kind==='histogram'))reasons.push('Display kind does not support this dataset shape');
  if(display.kind==='histogram'){
   if(display.category!==undefined||display.value!==undefined||display.start!==undefined||display.end!==undefined)reasons.push('Histograms use their declared bin bounds and captured counts');
  }else if(display.kind==='time-bar'){
@@ -136,7 +137,7 @@ export function validateDisplay(snapshot,display){
   if(!category||!value||!numericType(value)||category.key===value.key)reasons.push('Display requires distinct declared category and numeric value fields');
   if(kind.category==='number'&&(category?.type!=='number'||snapshot.dimensions&&!snapshot.dimensions.includes(category?.key)))reasons.push('Line requires an ordered numeric category dimension');
  }
- if(kind.numericValue){const valueKey=display.value??(['time-bar','histogram'].includes(display.kind)?'count':undefined);if(valueKey)for(const row of snapshot.rows){const value=measureValue(snapshot,row,valueKey);if(member(value.state,['recorded','derived','estimated'])&&value.coordinate===null)reasons.push('A known measure is outside the finite plotting range; use exact values')}}
+ if(kind.numericValue&&!snapshot.rawHistogram){const valueKey=display.value??(['time-bar','histogram'].includes(display.kind)?'count':undefined);if(valueKey)for(const row of snapshot.rows){const value=measureValue(snapshot,row,valueKey);if(member(value.state,['recorded','derived','estimated'])&&value.coordinate===null)reasons.push('A known measure is outside the finite plotting range; use exact values')}}
  if(display.requiresComplete){if(snapshot.quality.extent!=='complete'||!attested(snapshot))reasons.push(`Complete captured-query ${aspect(snapshot)} are required for this scope and revision`)}
  return result(reasons);
 }

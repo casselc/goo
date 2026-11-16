@@ -8,6 +8,7 @@ import {histogramFacts,histogramBoundText,histogramRangeText,histogramCompactRan
 import './chart-frame.mjs';
 import './time-bars.mjs';
 import './raw-gauge-points-view.mjs';
+import './raw-histogram-buckets-view.mjs';
 
 const n=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=String(text);if(cls)node.className=cls;return node};
 const exact=categoryText;
@@ -234,6 +235,10 @@ class Chart extends SuppliedElement {
           const status=n('p',checked.reasons.join('; '),'scope-view-unavailable');status.setAttribute('role','status');const values=table(this,snapshot,{...rawDisplay,kind:'table'});values.querySelector('caption').textContent='Supplied values · shares unavailable';frame.append(quality(snapshot),status,values,readFacts(snapshot,factsOpen));this.replaceChildren(frame);if(factsFocused)frame.querySelector('.scope-view-read-facts>summary')?.focus({preventScroll:true});return;
         }
         this.refuse(checked.reasons);return;
+      }
+      if(snapshot.shape==='observations'&&snapshot.rawHistogram){
+        const buckets=n('goo-raw-histogram-buckets');if(this.hasAttribute('heading-level'))buckets.setAttribute('heading-level',this.getAttribute('heading-level'));buckets.setAttribute('mode',display.kind==='histogram'?'bars':'table');if(display.title)buckets.setAttribute('heading',display.title);buckets.data=snapshot.rows[0].observation;
+        this.replaceChildren(buckets,readFacts(snapshot,factsOpen));if(factsFocused)this.querySelector('.scope-view-read-facts>summary')?.focus({preventScroll:true});return;
       }
       if(snapshot.shape==='observations'){
         const points=n('goo-raw-gauge-points');points.setAttribute('mode',display.kind);if(display.title)points.setAttribute('heading',display.title);points.data=snapshot;

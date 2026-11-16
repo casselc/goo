@@ -43,7 +43,7 @@ function renderRows(host,data,{active=()=>true,onRecordContext,contextLease=()=>
  function inspectOccurrence(index,opener){
   if(!active()||!nativeControlReady(opener))return false;
   const row=rows[index]?.row;if(!row)return false;selectedKey=row.occurrenceKey;if(plot)plot.selectedKey=selectedKey;
-  const content=n('div');content.append(UI.stats(pointFacts(data,row),{density:'compact',className:'raw-point-facts'}));if(data.instrument.kind==='histogram')HistogramObservations.detail(content,row,{active});Attributes.mountStream(content,row.stream);if(row.diagnostics.length){const list=n('ul');for(const d of row.diagnostics)list.append(n('li',d.field+': '+d.code));content.append(UI.disclosure('Diagnostics',[list]));}content.append(UI.disclosure('Raw source row',[n('pre',JSON.stringify(row.rawRow,null,2))]));
+  const content=n('div');content.append(UI.stats(pointFacts(data,row),{density:'compact',className:'raw-point-facts'}));if(data.instrument.kind==='histogram')HistogramObservations.detail(content,row,{active,bank:data});Attributes.mountStream(content,row.stream);if(row.diagnostics.length){const list=n('ul');for(const d of row.diagnostics)list.append(n('li',d.field+': '+d.code));content.append(UI.disclosure('Diagnostics',[list]));}content.append(UI.disclosure('Raw source row',[n('pre',JSON.stringify(row.rawRow,null,2))]));
     let actions=[];
     if(onRecordContext){
      for(const key of contextGroups.keys())if(!inspector.has(key))contextGroups.delete(key);

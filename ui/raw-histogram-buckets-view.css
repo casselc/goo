@@ -1,0 +1,15 @@
+goo-raw-histogram-buckets{display:block;min-width:0}
+goo-raw-histogram-buckets .raw-histogram-buckets-summary,goo-raw-histogram-buckets .raw-histogram-buckets-note{font-size:12px;margin:6px 0 10px;color:var(--muted,#aeb8c7)}
+goo-raw-histogram-buckets .raw-histogram-buckets-pages{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+goo-raw-histogram-buckets table{width:100%;table-layout:fixed}
+goo-raw-histogram-buckets th,goo-raw-histogram-buckets td{overflow-wrap:anywhere;white-space:normal}
+goo-raw-histogram-buckets goo-table>table>thead>tr>th{white-space:normal;overflow-wrap:anywhere}
+goo-raw-histogram-buckets thead th:first-child{width:40%}
+goo-raw-histogram-buckets .raw-histogram-buckets-amount{position:relative}
+goo-raw-histogram-buckets .raw-histogram-buckets-track{display:block;position:absolute;inset:6px 8px;pointer-events:none}
+goo-raw-histogram-buckets .raw-histogram-buckets-bar{display:block;height:100%;border-radius:2px;background:color-mix(in srgb,var(--accent,#8ab4fa) 22%,transparent)}
+goo-raw-histogram-buckets .raw-histogram-buckets-bar[data-nonzero=true]{min-width:1px;outline:1px solid var(--accent,#8ab4fa)}
+goo-raw-histogram-buckets .raw-histogram-buckets-count{position:relative;font-variant-numeric:tabular-nums}
+goo-raw-histogram-buckets [hidden]{display:none!important}
+@media(pointer:coarse){goo-raw-histogram-buckets button{min-height:44px}}
+@media(forced-colors:active){goo-raw-histogram-buckets .raw-histogram-buckets-bar{background:Canvas;outline-color:Highlight}}
