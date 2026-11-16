@@ -105,6 +105,13 @@ export function mount(host,{current=()=>true,onOpenFixed,onChange=()=>{}}={}){
   if(!original||!opener||!nativeControlReady(opener))return;
   inspect(signal,original.item,opener);
  });
+ chronology.addEventListener('goo-chronology-return',event=>{
+  if(!available()||view!=='chronology'||!frozen||event.target!==chronology||!nativeControlReady(chronology))return;
+  const selectedKey=event.detail?.selectedKey,original=originals.get(selectedKey);
+  if(!original||chronology.selectedKey!==selectedKey)return;
+  const opener=[...chronology.querySelectorAll('[data-chronology-inspect]')].find(button=>button.dataset.chronologyInspect===selectedKey)||chronology.querySelector('input');
+  if(opener&&nativeControlReady(opener))inspect(original.signal,original.item,opener);
+ });
  function adopt(value,next=PairPlan.create(value,conditions())){retireChronology();const changed=Tail.canonical(selector)!==Tail.canonical(value);epoch++;for(const lane of lanes.values())lane.epoch++;clearInspection();selector=structuredClone(value);plan=next;refreshHold();if(changed)for(const lane of lanes.values())lane.filter?.retire();return next}
  function conditions(){return Object.fromEntries([...lanes].map(([signal,lane])=>[signal,lane.filter?.where()]))}
  function stage(value,presentation){

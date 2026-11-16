@@ -433,3 +433,9 @@ selection/capture and paired baseline attachments remain separate design work.
 
 462 then consolidates the demonstrated record-context projections, interaction
 state, accessible controls and performance before the next breadth cycle.
+
+
+The [461 UX review](reviews/RELATED_HELD_461_UX.md) also feeds 462: consider
+compact shared row-context disclosures and clearer navigation hierarchy without
+adding another control, and reconcile the paired toolbar's Pause state. These
+are consolidation refinements, not missing trace/source authority primitives.

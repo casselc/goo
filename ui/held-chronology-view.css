@@ -23,3 +23,7 @@ goo-held-chronology .held-related-scope h4{margin:0;font-size:14px}
 goo-held-chronology .held-related-scope p{flex:1 1 100%;margin:0;font-size:12px;overflow-wrap:anywhere;color:var(--muted,#98a8bf)}
 goo-held-chronology .held-related-scope label{display:flex;align-items:center;gap:6px;font-size:12px;margin:0;min-block-size:32px}
 @media(pointer:coarse){goo-held-chronology .held-related-scope label{min-block-size:44px}}
+
+goo-held-chronology .held-related-anchor{font-size:12px;color:var(--muted,#98a8bf);overflow-wrap:anywhere}
+goo-held-chronology .held-selected-marker{display:inline-block;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-inline-end:6px;font-size:10px;line-height:1.6}
+@media(forced-colors:active){goo-held-chronology tr[aria-current=true]{outline:2px solid Highlight;outline-offset:-2px}goo-held-chronology .held-selected-marker{color:CanvasText;border-color:CanvasText;background:Canvas}}

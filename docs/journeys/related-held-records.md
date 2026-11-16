@@ -31,14 +31,14 @@ a trace was complete or healthy.
 
 ## Executed acceptance — 2026-11-16
 
-Final real-OTLP journey passed in 54.8 seconds with 120 held occurrences.
-Both local drill-in/return boundaries issued zero SQL and zero API POSTs. The
-independent Bombadil driver reached phase 8 across 103 snapshots, with its held
+Final reviewed real-OTLP journey passed in 37.5 seconds with 120 held occurrences.
+All three local drill-in/return boundaries issued zero SQL and zero API POSTs. The
+independent Bombadil driver reached phase 8 across 388 snapshots, with its held
 bank and route unchanged and no local API calls or horizontal overflow. The
 complete fixture used six SQL reads, including the independent driver's explicit
 source setup. Runtime cleanup succeeded; no browser errors occurred.
 
-Receipt: `artifacts/related-held461/864daa4aa683/report.json`.
+Receipt: `artifacts/related-held461/4b47fa3041d3/report.json`.
 
 [Desktop](screenshots/461-related-held-1440.png) ·
 [390px](screenshots/461-related-held-390.png) ·
@@ -50,6 +50,21 @@ its native Quint source-authority contract; that model does not yet describe the
 related-scope reading state itself.
 
 
-The existing chronology regression also passed on this binary: 21 steps, 510
+Before this review follow-up, the existing chronology regression passed on the
+461 implementation: 21 steps, 510
 Bombadil snapshots and native Quint replay with all nine negative controls
 rejected, zero skips. Runtime and isolated database cleanup succeeded.
+
+## Independent polish acceptance
+
+[UX](../reviews/RELATED_HELD_461_UX.md) and
+[accessibility/web standards](../reviews/RELATED_HELD_461_ACCESSIBILITY.md)
+reviewers accepted the fixes and refreshed responsive frames. The extended
+journey also hides the original inspector row with both Find and paging, inspects
+a different related occurrence, then restores the original inspector without
+changing Find/page. Its fixed anchor remains accessible by description throughout.
+
+[390px forced colors](screenshots/461-related-forced-colors-390.png) shows the
+persistent Selected marker and 2px system-color boundary. The runtime records no
+browser errors and cleans up successfully. Native disclosure activation and local
+source isolation remain covered.

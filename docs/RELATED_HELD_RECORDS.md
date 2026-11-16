@@ -3,7 +3,9 @@
 Hold both Activity lanes, inspect a record, then choose **Related held records**.
 Goo shows held logs and spans with the same valid reported TraceId. **Same
 reported span** narrows this to the inspected occurrence's valid SpanId within
-that trace. It is disabled when no valid span ID was reported.
+that trace. Its visible **Anchor span** ID stays fixed while other related
+records are inspected. When no valid span ID was reported, the disabled control
+has an associated visible reason.
 
 This is a local scope over the immutable held bank, independent of chronology
 Find and each lane's Find. It does not broaden the source scope, subscribe,
@@ -36,7 +38,12 @@ flowchart LR
 The passive chronology accepts `showRelated(signal, occurrenceKey)` for a current
 held occurrence. The application supplies that occurrence from its guarded
 inspector. A new supplied bank resets local reading state. The component emits
-its existing inspect intent when Return restores the original selected record;
-source and preservation authority remain with the application.
+`goo-chronology-return` with `{selectedKey}` on explicit Return. The application
+restores that original inspector even when Find or paging hides its row, using
+visible Find as the focus fallback. Source and preservation authority remain
+with the application.
 
 [Executable storyboard](journeys/related-held-records.md).
+
+Selected occurrences have a persistent text marker and forced-color outline,
+in addition to programmatic `aria-current`.

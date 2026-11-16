@@ -2350,8 +2350,11 @@ the component does not acquire authority to navigate or read a source.
 
 Related mode retains the chronology's Find, page, selection and scroll return
 point. Same reported span is optional and stays inside the selected TraceId.
-Return restores the previous selected occurrence through the existing
-`goo-chronology-inspect` intent. New supplied data retires the local scope.
+Explicit Return emits `goo-chronology-return` with `{selectedKey}`. The owner
+restores that inspector independently of visible row availability, preserving
+Find/page and using visible Find as the fallback opener. New supplied data retires
+the local scope. The span checkbox describes a visible fixed anchor ID or
+unavailable reason; selected rows retain a text marker and forced-color boundary.
 Reported parent display reuses `goo-record-context`, using only held spans as
 parent candidates. Repeated occurrences remain separate; parent ambiguity and
 unknown trace coverage stay explicit. See [contract](RELATED_HELD_RECORDS.md).

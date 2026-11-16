@@ -1,5 +1,31 @@
 # Validation record
 
+## 461 Independent UX/accessibility follow-up — 2026-11-16
+
+[UX review](docs/reviews/RELATED_HELD_461_UX.md) and
+[accessibility/web standards review](docs/reviews/RELATED_HELD_461_ACCESSIBILITY.md).
+
+- Fixed all acceptance findings: Return restores the original inspector even
+  when its row is hidden by Find/paging; a visible, described anchor ID identifies
+  the fixed span filter; selected rows have a non-color text marker and explicit
+  forced-color outline while retaining `aria-current`.
+- Restoration is a guarded local `goo-chronology-return` intent, resolved against
+  the immutable bank independently of visible rows. It preserves Find/page and
+  uses visible Find for safe focus when the original row is absent.
+- **2,107 UI tests pass, zero skipped**; embedded Go runtime rebuilt successfully.
+  New focused view/owner cases cover hidden-row restoration, stale intents,
+  visible marker and checkbox description.
+- Independent actual Chromium probes pass in light and dark forced palettes:
+  selected outline is 2px solid Highlight; marker is CanvasText on Canvas,
+  21:1 in both. No product acceptance blockers remain in follow-up source review.
+- Final real-OTLP journey passes (37.5s): all three local boundaries execute
+  zero SQL/API POSTs, including original-inspector restoration when Find and
+  paging hide its row. Bombadil reaches phase 8 across 388 snapshots with bank
+  and route unchanged. No browser errors; successful runtime cleanup.
+- Both reviewers grant final acceptance after inspecting 1440/390/320 refreshed
+  frames and the 390px forced-color frame. Nonblocking compact-row/toolbar
+  refinements are recorded for 462. This completes the bounded 461 UX review.
+
 ## 461 Related held trace records — 2026-11-16
 
 [Contract](docs/RELATED_HELD_RECORDS.md) and
