@@ -10,6 +10,7 @@ import {validateRecordQuestion} from './question-protocol.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
 
 export const SNAPSHOT_LIMITS=Object.freeze({maxBytes:8*1024*1024,maxNodes:250000,maxDepth:32});
+export const RAW_OBSERVATION_LIMITS=Object.freeze({maxBytes:16*1024*1024,maxNodes:1000000,maxDepth:32});
 export const COMPARISON_LIMITS=Object.freeze({maxBytes:16*1024*1024+65536,maxNodes:500000,maxDepth:34});
 const witnesses=new WeakMap(),comparisons=new WeakSet(),histogramComparisons=new WeakSet(),encoder=new TextEncoder();
 let nextSource=0,nextLocal=0;
@@ -97,15 +98,19 @@ export const hasGuarantee=(value,guarantee)=>isSnapshot(value)&&witnesses.get(va
 function hold(raw){
  if(!record(raw))fail('shape','A dataset snapshot object is required');
  if(typeof raw.id!=='string'||!raw.id.length||raw.id.length>1024||typeof raw.revision!=='string'||!raw.revision.length||raw.revision.length>1024)fail('shape','Raw snapshots require bounded dataset identity claims');
- if(raw.origin==='source-read'&&raw.sourceBasis===undefined)raw.sourceBasis=raw.revision;
+ if(raw.origin==='source-read'&&raw.sourceBasis===undefined&&raw.shape!=='observations')raw.sourceBasis=raw.revision;
  const id='goo.local/'+ ++nextLocal;raw.id=id;raw.revision=id;
  raw.origin='browser-held';delete raw.completeness;
  if(record(raw.quality))raw.quality.extent='unknown';
  if(raw.shape==='grouped-time-series'&&Array.isArray(raw.rows))for(const row of raw.rows)if(row?.state==='no_data'&&row.values?.count==='0'){row.state='unknown';row.values.count=null;for(const key of ['duration.sum','duration.mean'])if(Object.hasOwn(row.values,key)){row.values[key]=null;(row.cells??={})[key]={state:'unknown'}}}
  return raw;
 }
+function importLimits(raw){
+ try{const shape=Object.getOwnPropertyDescriptor(raw,'shape'),profile=Object.getOwnPropertyDescriptor(raw,'rawGauge');if(shape?.value==='observations'&&record(profile?.value))return RAW_OBSERVATION_LIMITS}catch{}
+ return SNAPSHOT_LIMITS;
+}
 export function importSnapshot(raw){
- preflight(raw);
+ preflight(raw,importLimits(raw));
  const copy=hold(structuredClone(raw));checked(copy);
  return make(copy,{entry:'held',sourceId:null,sourceInstance:null,parent:null,projection:null,guarantees:[]});
 }
@@ -168,7 +173,7 @@ export function createSourceAdapter(configuration){
 }
 export function selectRows(snapshot,keys){
  if(!isSnapshot(snapshot))fail('snapshot-required','Row projection requires an admitted snapshot handle');
- if(!['ranked','time-series'].includes(snapshot.shape))fail('projection-shape','Population summaries cannot be projected into rows');
+ if(!['ranked','time-series','observations'].includes(snapshot.shape))fail('projection-shape','Population summaries cannot be projected into rows');
  preflight(keys);
  if(!Array.isArray(keys)||keys.some(key=>typeof key!=='string')||new Set(keys).size!==keys.length)fail('projection-keys','Projection keys must be distinct supplied row keys');
  const wanted=new Set(keys),available=new Set(snapshot.rows.map(row=>row.key));
@@ -198,7 +203,9 @@ function parse(text,limits,admit){
  let raw;try{raw=JSON.parse(text)}catch{fail('non-json','Invalid snapshot JSON')}
  return admit(raw);
 }
-export const parseSnapshotJSON=text=>parse(text,SNAPSHOT_LIMITS,asSnapshot);
+// The serialized marker only selects a bounded parsing ceiling. Object preflight
+// and the closed raw profile still decide admission; other shapes keep 8 MiB.
+export const parseSnapshotJSON=text=>parse(text,typeof text==='string'&&text.length<=RAW_OBSERVATION_LIMITS.maxBytes&&/"shape"\s*:\s*"observations"/.test(text)&&/"rawGauge"\s*:/.test(text)?RAW_OBSERVATION_LIMITS:SNAPSHOT_LIMITS,asSnapshot);
 export const parseComparisonJSON=text=>parse(text,COMPARISON_LIMITS,asComparison);
 
 export const isHistogramComparison=value=>value!==null&&typeof value==='object'&&histogramComparisons.has(value);

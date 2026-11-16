@@ -7,8 +7,8 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–454 delivered and validated**. The current cadence is
-**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup → 453 referring-span discovery depth → 454 selector/reference consolidation**.
+Status: **429 and 437–455 delivered and validated**. The current cadence is
+**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup → 453 referring-span discovery depth → 454 selector/reference consolidation → 455 held raw-gauge Points breadth**.
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
 foundation; this does not extend a CEL platform queue.
@@ -353,14 +353,18 @@ arbitrary executable kinds and external warehouse/storage integration retain
 their separate design and operational gates. Existing dashboards, waterfalls,
 templates, annotations and captures are delivered capabilities, not new gaps.
 
-The following visual cycle should plot already-held raw gauge observations,
-visualize one explicit histogram point, then consolidate their presentation.
+The visual cycle now has held raw-gauge Points; next visualize one explicit
+histogram point, then consolidate their presentation.
 Preserve recording/value validity, exact counts and source grain; use existing
 kind/data contracts, no implicit reads, interpolation or fleet-distribution claims.
 
 ## Next visual cycle: 455–457
 
-455: Add a local Points display for held raw gauge observations, using the shared
+455 — delivered: [held gauge Points](RAW_GAUGE_OBSERVATIONS.md#points-over-the-held-bank),
+[component contract](UI_RAW_GAUGE_POINTS.md), [scoped acceptance](reviews/RAW_GAUGE_POINTS_455_ACCEPTANCE.md)
+and [validation](../VALIDATION.md). The acceptance basis follows.
+
+Add a local Points display for held raw gauge observations, using the shared
 kind/data grammar. Dots represent source occurrences, with UTC time and exact raw
 detail. Preserve duplicate multiplicity and explicit recording/value validity;
 invalid, missing or uncertain observations remain inspectable and accounted for.

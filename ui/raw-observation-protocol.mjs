@@ -1,7 +1,7 @@
 /* Pure raw-point protocol admission. No source acquisition or navigation. */
 import * as Environment from './record-environment.mjs';
 import {scalarValue} from './raw-observation-values.mjs';
-import * as HistogramObservations from './raw-histogram-observations.mjs';
+import * as HistogramObservations from './raw-histogram-values.mjs';
 import {profile} from './raw-observation-profiles.mjs';
 import {object,text} from './intent-shape.mjs';
 import {isSumKind as isSum} from './instrument-reporting.mjs';

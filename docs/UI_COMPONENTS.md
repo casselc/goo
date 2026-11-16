@@ -5,6 +5,9 @@ with UTC, Unix-nanosecond and half-open range formatting. Exact native times
 and tooltips survive readable display text. `density="compact"` is shared
 presentation; lifecycle, property changes and rendering perform no IO.
 
+[Held gauge Points](UI_RAW_GAUGE_POINTS.md) extends the common dataset/kind grammar
+with explicit row certainty and an accessible passive renderer.
+
 The raw-observation viewer shares acquisition/held interaction across gauges,
 sums and [explicit histogram points](RAW_HISTOGRAM_OBSERVATIONS.md). Histogram
 facts/detail helpers are passive: exact count strings, accessible bucket paging
@@ -155,6 +158,7 @@ future priority. Earlier audits are dated design inputs, not another execution q
 | `goo-trace-waterfall` | `data` / `.data`, controlled `selected-index` / `.selectedIndex` | [Waterfall](UI_WATERFALL.md); supplied spans, not complete-trace inference. |
 | `goo-aligned-histogram` | `comparison` / `.comparison`, `display` / `.display`; typed side/range intent | [Canonical aligned histograms](SCOPED_HISTOGRAM_COMPARISONS.md); independent immutable operands and exact denominator choices, no source ownership. |
 | `goo-time-bars` | `data` / `.data`, controlled key and optional range intent | [Time bars](UI_TIME_BARS.md); exact supplied count domain. |
+| `goo-raw-gauge-points` | Shared `goo.dataset/1` observations / `.data`, controlled `.selectedKey`, explicit occurrence selection | [Gauge points](UI_RAW_GAUGE_POINTS.md); passive Points/Table through the common chart grammar. |
 | `goo-chart-frame` | Heading/unit/window/state attributes or `.data`; caller-owned children | [Chart frame](UI_CHART_FRAME.md). |
 | `goo-value-timeline` | `data` / `.data`, controlled key, optional brush intent | [Native timelines](NATIVE_TIMELINES.md); unavailable observations use a separate time-aligned rail outside the numeric domain. |
 | `goo-bucket-heatmap` | `data` / `.data`, controlled cell, optional range intent | [Bucket matrix](NATIVE_HEATMAPS.md); raw-span/native adapters remain separate. |

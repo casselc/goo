@@ -1,5 +1,73 @@
 # Validation record
 
+## 455 Held raw gauge Points — 2026-11-15
+
+[Workflow](docs/RAW_GAUGE_OBSERVATIONS.md#points-over-the-held-bank),
+[component/data contract](docs/UI_RAW_GAUGE_POINTS.md),
+[executed storyboard](docs/journeys/raw-gauge-points.md),
+[independent acceptance](docs/reviews/RAW_GAUGE_POINTS_455_ACCEPTANCE.md).
+
+- Full root Go suite passes on Go 1.27.3. **2,023 UI tests pass, zero skipped**.
+  No production dependency or HTTP operation added. The public display graph is
+  checked as 79 passive modules; acquisition/context owners remain outside it.
+- Existing `goo.dataset/1` now admits the closed `observations` raw-gauge profile
+  with Points/Table kinds, exact source observation/time/raw text and explicit
+  row certainty. The numeric field is the parsed binary64 value as an exact
+  rational; it does not replace raw source text. Generic `goo-chart` delegates
+  both kinds to the passive renderer, with UTC Table formatting.
+- Only finite, known-recorded values plot. Unknown flags, no-recorded and invalid/
+  nonfinite values remain counted and inspectable. Geometry uses exact relative
+  nanoseconds before conversion, handles extreme finite values/subnormals, and
+  preserves every member of coordinate collisions. A 1,000-location display
+  budget is explicit; domains include all eligible held values.
+- Coverage remains **unknown at every admitted row count**. Exactly 10,000 rows
+  is a budget fact, not proof of clipping; 10,001 refuses atomically. Snapshot
+  import retains immutable browser-held downgrade without inventing a basis or
+  attestation. A raw-profile-only 16 MiB / one-million-node import envelope admits
+  10,000 source rows through object and SSR paths; ordinary limits are unchanged.
+  Complete-only kinds refuse this profile.
+- Hegel passes **52 synthetic Go-source-admitted banks** (50 generated plus
+  1,001-location and 10,000-row boundaries), zero skips, **2.95s**. Independent
+  checks cover eligibility/reasons, full occurrence/raw-value partition, extreme
+  and colliding coordinates, display budgets, copying, invalid-bank refusal and
+  zero fetch. These are unit/property fixtures, separate from live ingestion.
+- Real journey **6c7689424000** passes in **41.5s**, zero browser errors and clean
+  runtime/disposable database teardown. Ordinary OTLP/collector/ClickHouse retains
+  nine physical observations: negative, zero, extreme finite, two identical
+  records, flags 1/2, NaN and Infinity. The independent source oracle confirms
+  multiplicity and diagnostics. **Five plotted / four unplotted** remain nine
+  inspectable observations. Actual missing flags are not fabricated in the
+  nonnullable exporter schema; property tests cover that protocol state.
+- All 18 observed steps pass: nonempty Table Find → explicit all-loaded Points,
+  roving arrows/Home/End, duplicate chooser/exact member, unplotted inspection,
+  native radio focus, explicit visible inspector heading, original/cross-mode
+  Close focus, and source-free Nearby staging/held return. Table Find is preserved;
+  excluded selections get a notice. Marker and member hit tests precede screenshot
+  framing. Approximate nearby screen overlap remains explicit with all-values access.
+- Main discovery/read uses **two source requests / 11 SQL calls** (8 + 3); every
+  local interaction adds zero source calls. Bombadil completes **674 snapshots**,
+  phase 9, with one discovery + one raw read, preserved selection and no forbidden
+  requests/overflow. Combined main/actor ledger: **22 SQL calls**.
+- Existing model-backed raw context regression **a75b64d214fa** passes on the same
+  final binary in **1.6m**, native replay **27.1s**, **15 rejected negative controls**,
+  zero skips. Gauge/sum/histogram scope, source authority, held return and focus
+  remain intact. Main ten source requests / 35 SQL, actor four / 17 SQL (841
+  snapshots, completed phase 12): **52 SQL total**. Cleanup and database cleanup
+  true, errors empty. Plot gestures use direct source/browser/actor assertions;
+  no additional state machine is claimed for them.
+- Architecture/OTel, UX and accessibility/web-standards follow-up accept the
+  actual desktop/390/320 frames and focus/selection corrections. No remaining
+  scoped blocker; no broad WCAG, nearest-point, continuity, rate or fleet claim.
+- Regression found and fixed from 454: counted-value response labels referenced
+  an import removed during cleanup. Restored it; the existing facet read/adoption
+  tests and full UI suite pass. Histogram parsing facts now live in a pure module
+  so shared raw schema admission does not depend on its display renderer.
+
+Retained receipts: `artifacts/raw-gauge-points455/6c7689424000/report.json` and
+`artifacts/raw-observation-context449/a75b64d214fa/report.json` with accepted
+regression native JSON events. Storyboards/screenshots refreshed; failed and
+pre-focus candidates pruned. Next: 456 single raw histogram-point bucket bars.
+
 ## 454 Selector and reference consolidation — 2026-11-15
 
 [Developer guide](docs/SELECTOR_CONSERVATION.md),

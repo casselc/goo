@@ -1,3 +1,4 @@
+import {validateRawGauge} from './raw-gauge-schema.mjs';
 import {rateEligible as summaryRateEligible} from './summary-declaration.mjs';
 import {validateGrouped,groupedMeanQuery} from './grouped-timeline-schema.mjs';
 import {validateMeasurementIntervalSelector,binary64Rational,nativeRationalCoordinate} from './measurement-scope.mjs';
@@ -48,7 +49,7 @@ function aggregationValid(field){
  return a.method==='exact'&&a.quantile===undefined;
 }
 // This is the public pilot registry, not a vendor-renderer registry.
-export const kinds=Object.freeze({table:Object.freeze({category:'any',numericValue:false}),bar:Object.freeze({shape:'ranked',category:'any',numericValue:true}),line:Object.freeze({shape:'ranked',category:'number',numericValue:true}),'small-multiples':Object.freeze({shape:'grouped-time-series',category:'any',numericValue:false}),heatmap:Object.freeze({shape:'grouped-time-series',category:'any',numericValue:false}),'time-bar':Object.freeze({shape:'time-series',category:'timestamp',numericValue:true}),histogram:Object.freeze({shape:'histogram',category:'rational',numericValue:true})});
+export const kinds=Object.freeze({points:Object.freeze({shape:'observations',category:'none',numericValue:false}),table:Object.freeze({category:'any',numericValue:false}),bar:Object.freeze({shape:'ranked',category:'any',numericValue:true}),line:Object.freeze({shape:'ranked',category:'number',numericValue:true}),'small-multiples':Object.freeze({shape:'grouped-time-series',category:'any',numericValue:false}),heatmap:Object.freeze({shape:'grouped-time-series',category:'any',numericValue:false}),'time-bar':Object.freeze({shape:'time-series',category:'timestamp',numericValue:true}),histogram:Object.freeze({shape:'histogram',category:'rational',numericValue:true})});
 const result=reasons=>({ok:reasons.length===0,reasons});
 const enumField=(o,k,a,r)=>{if(!member(o?.[k],a))r.push(`Invalid ${k}`)};
 export function validateSnapshot(s){
@@ -59,9 +60,9 @@ export function validateSnapshot(s){
  if(s.origin==='browser-held'&&(s.completeness!==undefined||s.quality?.extent==='complete'))reasons.push('Browser-held snapshots cannot attest complete source coverage');
  for(const key of ['sourceBasis','capturedAt'])if(s[key]!==undefined&&!text(s[key]))reasons.push('Invalid optional dataset provenance '+key);
  for(const k of ['id','revision'])if(!text(s[k]))reasons.push(`Missing dataset ${k}`);
- if(!member(s.shape,['ranked','time-series','grouped-time-series','summary','histogram']))reasons.push('Unsupported dataset shape');
+ if(!member(s.shape,['ranked','time-series','grouped-time-series','summary','histogram','observations']))reasons.push('Unsupported dataset shape');
  if(!record(s.scope)||!text(s.scope.id)||!(text(s.scope.generation)||Number.isSafeInteger(s.scope.generation)&&s.scope.generation>=0)||!member(s.scope.signal,['spans','logs','metrics'])||!record(s.scope.selector))reasons.push('A checked scope identity, generation, signal and selector are required');
- if(s.scope?.signal==='metrics'){try{validateMeasurementIntervalSelector(s.scope.selector)}catch(error){reasons.push(error.message)}if(s.shape!=='histogram'||s.histogram?.kind!=='otel-explicit')reasons.push('Measurement scopes require explicit native observation histograms')}
+ if(s.scope?.signal==='metrics'&&s.shape!=='observations'){try{validateMeasurementIntervalSelector(s.scope.selector)}catch(error){reasons.push(error.message)}if(s.shape!=='histogram'||s.histogram?.kind!=='otel-explicit')reasons.push('Measurement scopes require explicit native observation histograms')}
  const fields=new Map();
  if(!Array.isArray(s.fields)||!s.fields.length||s.fields.length>64)reasons.push('Dataset requires 1–64 fields');
  else for(const f of s.fields){if(!record(f)||!text(f.key)||!text(f.label)||!member(f.type,['string','number','timestamp','rational','histogram-bound'])||fields.has(f.key)||f.unit!==undefined&&!text(f.unit)||f.type==='timestamp'&&f.unit!=='ms'||f.nullable!==undefined&&typeof f.nullable!=='boolean')reasons.push('Invalid or duplicate field');else {fields.set(f.key,f);if(f.aggregation!==undefined&&!aggregationValid(f))reasons.push('Invalid aggregation method, family, type or unit')}}
@@ -82,6 +83,8 @@ export function validateSnapshot(s){
  if(!record(s.quality))reasons.push('Dataset quality is required');
  else {enumField(s.quality,'extent',['complete','partial','unknown'],reasons);enumField(s.quality,'basis',['captured-query'],reasons);enumField(s.quality,'value',['recorded','derived','estimated','unknown'],reasons);enumField(s.quality,'sampling',['unknown','none','sampled'],reasons);enumField(s.quality,'freshness',['fixed','live'],reasons)}
  if(s.completeness!==undefined){const c=s.completeness;if(!record(c)||c.basis!=='captured-query'||!text(c.revision)||!text(c.scopeId)||!Array.isArray(c.aspects)||c.aspects.some(a=>!member(a,['groups','intervals','grouped-intervals','summary','bins']))||new Set(c.aspects).size!==c.aspects.length)reasons.push('Invalid completeness attestation')}
+ if(s.shape==='observations')reasons.push(...validateRawGauge(s));
+ else if(s.rawGauge!==undefined)reasons.push('Raw gauge profile requires an observation dataset');
  if(s.shape==='time-series')validateIntervals(s,fields,reasons);
  if(s.shape==='grouped-time-series')validateGrouped(s,fields,reasons);
  if(s.shape==='summary')validateSummary(s,fields,reasons);
@@ -97,6 +100,7 @@ export function eligibleKinds(snapshot){
  if(snapshot.shape==='grouped-time-series')return ['small-multiples','table',...(Math.ceil((Number(snapshot.interval.toMs)-Number(snapshot.interval.fromMs))/Number(snapshot.interval.bucketMs))<=32?['heatmap']:[])];
  if(snapshot.dimensions?.length>1)return ['table'];
  if(snapshot.shape==='histogram')return ['table','histogram'];
+ if(snapshot.shape==='observations')return ['table','points'];
  const fields=snapshot.fields,numericFields=fields.filter(numericType);
  return Object.entries(kinds).filter(([,kind])=>(!kind.shape||kind.shape===snapshot.shape)&&(!kind.numericValue||kind.shape==='time-series'||numericFields.length>0&&(kind.category==='number'?numericFields.length>=2&&fields.some(field=>field.type==='number'&&(!snapshot.dimensions||snapshot.dimensions.includes(field.key))):fields.length>=2))).map(([name])=>name);
 }
@@ -119,6 +123,7 @@ export function validateDisplay(snapshot,display){
  if(display.requiresComplete!==undefined&&typeof display.requiresComplete!=='boolean')reasons.push('requiresComplete must be boolean');
  if(snapshot.dimensions?.length>1&&display.kind!=='table')reasons.push('Multiple group dimensions require the exact table until a series mapping is declared');
  if(snapshot.shape==='grouped-time-series'){if(!['small-multiples','table','heatmap'].includes(display.kind)||(display.value??'count')!==(groupedMeanQuery(snapshot.scope.selector)?'duration.mean':'count')||display.scale!==undefined||display.category!==undefined||display.start!==undefined||display.end!==undefined)reasons.push('Grouped timelines require their declared count or mean-duration geometry');if(display.kind==='heatmap'&&Math.ceil((Number(snapshot.interval.toMs)-Number(snapshot.interval.fromMs))/Number(snapshot.interval.bucketMs))>32)reasons.push('Heatmaps support at most 32 intervals; use Small multiples or Table.');}
+ if(snapshot.shape==='observations'&&(!['table','points'].includes(display.kind)||['category','value','start','end','scale','query','order'].some(key=>display[key]!==undefined)))reasons.push('Raw gauge observations use their supplied point geometry or table only');
  const kind=kinds[display.kind];
  if(kind.shape&&kind.shape!==snapshot.shape)reasons.push('Display kind does not support this dataset shape');
  if(display.kind==='histogram'){
@@ -138,7 +143,7 @@ export function validateDisplay(snapshot,display){
 function context(snapshot){const v=validateSnapshot(snapshot);if(!v.ok)throw TypeError(v.reasons.join('; '));return {datasetId:snapshot.id,revision:snapshot.revision,scopeId:snapshot.scope.id,generation:snapshot.scope.generation}}
 export function scopeIntent(snapshot,field,value){
  const c=context(snapshot),definition=snapshot.fields.find(f=>f.key===field);
- if(['summary','histogram'].includes(snapshot.shape)||!definition||definition.aggregation||snapshot.dimensions&&!snapshot.dimensions.includes(field)||value===undefined||value!==null&&!typed(value,definition))throw TypeError('Scope filter requires a declared field and typed value');
+ if(['summary','histogram','observations'].includes(snapshot.shape)||!definition||definition.aggregation||snapshot.dimensions&&!snapshot.dimensions.includes(field)||value===undefined||value!==null&&!typed(value,definition))throw TypeError('Scope filter requires a declared field and typed value');
  if(!snapshot.rows.some(row=>own(row.values,field)&&row.values[field]===value))throw TypeError('Scope filter value is not in the supplied dataset');
  return {type:'scope-filter',...c,field,value,op:value===null?'missing':'eq'};
 }
@@ -242,6 +247,7 @@ function validateCells(snapshot,fields,reasons){
 export function measureValue(snapshot,row,fieldKey){
  const field=snapshot.fields?.find(field=>field.key===fieldKey),cell=row?.cells?.[fieldKey],raw=row?.values?.[fieldKey];
  if(!field||!numericType(field))return {state:'unknown',exact:null,coordinate:null,unit:field?.unit??'',aggregation:field?.aggregation??null,support:null,reason:'No numeric measure is declared'};
+ if(snapshot.shape==='observations'){const state=row.state==='recorded'?'recorded':row.state==='not-recorded'?'no_data':'unknown',coordinate=state==='recorded'&&raw!==null&&raw!==undefined?rationalCoordinate(raw):null;return {state,exact:raw??null,coordinate,unit:field.unit??'',aggregation:null,support:null,...(state!=='recorded'?{reason:row.state==='not-recorded'?'No recorded value':row.state==='invalid'?'Invalid source value':'Recording state unknown'}:{})};}
  const state=field.aggregation?(cell?.state??'unknown'):row.state==='unknown'||raw===null||raw===undefined?'unknown':row.state==='no_data'?'no_data':snapshot.quality?.value??'unknown';
  const exact=raw===undefined?null:raw,known=member(state,['recorded','derived','estimated'])||!field.aggregation&&state==='no_data';
  const coordinate=!known||raw===null||raw===undefined?null:field.type==='rational'?rationalCoordinate(raw):numericCoordinate(raw);
@@ -256,7 +262,7 @@ function validateSummary(snapshot,fields,reasons){
  for(const field of fields.values())if(field.key!=='count'&&(!field.aggregation||field.type!=='rational'&&field.aggregation.family!=='span-status'))reasons.push('Population summaries contain only captured count and declared exact rational aggregate measures');
 }
 
-const shapeCapabilities=Object.freeze({ranked:Object.freeze({selectRows:true,filterDimensions:true,selectWindows:false}), 'grouped-time-series':Object.freeze({selectRows:true,filterDimensions:false,selectWindows:true}), 'time-series':Object.freeze({selectRows:true,filterDimensions:false,selectWindows:true}), summary:Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false}),histogram:Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false})});
+const shapeCapabilities=Object.freeze({observations:Object.freeze({selectRows:true,filterDimensions:false,selectWindows:false}),ranked:Object.freeze({selectRows:true,filterDimensions:true,selectWindows:false}), 'grouped-time-series':Object.freeze({selectRows:true,filterDimensions:false,selectWindows:true}), 'time-series':Object.freeze({selectRows:true,filterDimensions:false,selectWindows:true}), summary:Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false}),histogram:Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false})});
 const none=Object.freeze({selectRows:false,filterDimensions:false,selectWindows:false,completeAspects:Object.freeze([])});
 export function capabilities(snapshot){
  if(!validateSnapshot(snapshot).ok)return none;

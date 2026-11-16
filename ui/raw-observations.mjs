@@ -6,11 +6,13 @@ import * as Refusal from './source-refusal.mjs';
 import {renderRefusal} from './source-refusal-view.mjs';
 import {compactScalar} from './numeric-values.mjs';
 import * as HistogramObservations from './raw-histogram-observations.mjs';
+import * as GaugePoints from './raw-gauge-points.mjs';
+import './raw-gauge-points-view.mjs';
 import {profile} from './raw-observation-profiles.mjs';
 import {checkedRequest,checkedResult} from './raw-observation-protocol.mjs';
 export {checkedRequest,checkedResult} from './raw-observation-protocol.mjs';
 import * as RawRecordContext from './raw-observation-context.mjs';
-import {nativeControlReady,completionControlReady} from './dom-visibility.mjs';
+import {nativeControlReady,completionControlReady,revealFocus} from './dom-visibility.mjs';
 import {isSumKind as isSum,temporalityLabel as temporality,sumReportingLabel as reportedSum} from './instrument-reporting.mjs';
 const n=UI.node,has=(o,k)=>Object.hasOwn(o,k);
 
@@ -34,10 +36,14 @@ function readContext(data,question){
  const range='['+BigInt(question.fromMs)*1000000n+', '+BigInt(question.toMs)*1000000n+')';
  const context=UI.stats([...(isSum(data.instrument.kind)?[{label:'Reported sum',value:reportedSum(data.instrument)}]:[]),{label:'Source read UTC',value:data.readAt,format:'utc'},{label:'Fixed window',value:range,format:'unix-ns-range'}],{density:'compact',className:'raw-read-context'});context.dataset.rawReadContext='';return context;
 }
+let displayInstance=0;
 function renderRows(host,data,{active=()=>true,onRecordContext,contextLease=()=>()=>false}={}){
- const controls=n('div',undefined,'raw-observation-tools'),label=n('label','Find '),find=n('input'),count=n('p'),previous=n('button','Previous observations'),next=n('button','More observations'),viewport=n('goo-table'),table=n('table'),head=n('thead'),header=n('tr'),body=n('tbody'),panel=n('section');find.type='search';find.placeholder='Loaded points';find.title='Find within held source points; no source read.';find.setAttribute('aria-label','Find held observations');label.append(find);count.setAttribute('role','status');previous.type=next.type='button';previous.setAttribute('aria-label','Previous observations');next.setAttribute('aria-label','More observations');previous.textContent='Previous';next.textContent='More';controls.append(label,previous,next,count);viewport.setAttribute('density','compact');viewport.setAttribute('mobile-layout','stacked');viewport.setAttribute('aria-label','Raw '+profile(data.instrument.kind).label+' observations');for(const name of ['Observed UTC',data.instrument.kind==='histogram'?'Count / buckets':'Value','Reported instance','Details']){const th=n('th',name);th.scope='col';header.append(th);}head.append(header);table.append(n('caption','Exported '+profile(data.instrument.kind).label+' observations · repeated rows retained'),head,body);viewport.append(table);host.replaceChildren(controls,viewport,panel);const inspector=UI.inspector(panel),rows=data.rows.map((row,index)=>({row,index,text:stable(row).toLocaleLowerCase()}));let offset=0,revision=0;const contextGroups=new Map();
- function draw(){const epoch=++revision,query=find.value.toLocaleLowerCase(),matched=rows.filter(row=>row.text.includes(query));offset=Math.min(offset,Math.max(0,Math.floor((matched.length-1)/100)*100));body.replaceChildren();
-  for(const {row,index}of matched.slice(offset,offset+100)){const tr=n('tr'),time=n('td'),value=n('td'),producer=n('td',instance(row)),action=n('td'),inspect=n('button','Inspect');tr.dataset.occurrenceKey=row.occurrenceKey;time.append(Evidence.timestamp(row.endNS));value.textContent=data.instrument.kind==='histogram'?HistogramObservations.summary(row):scalar(row)+(row.stream.unit?'':' · unit not reported');if(data.instrument.kind==='histogram'&&row.countState==='valid')value.title='Exact source count: '+row.count;inspect.type='button';inspect.setAttribute('aria-label','Inspect observation '+(index+1));inspect.onclick=()=>{if(epoch!==revision||!active()||!nativeControlReady(inspect))return;const content=n('div');content.append(UI.stats(pointFacts(data,row),{density:'compact',className:'raw-point-facts'}));if(data.instrument.kind==='histogram')HistogramObservations.detail(content,row,{active});Attributes.mountStream(content,row.stream);if(row.diagnostics.length){const list=n('ul');for(const d of row.diagnostics)list.append(n('li',d.field+': '+d.code));content.append(UI.disclosure('Diagnostics',[list]));}content.append(UI.disclosure('Raw source row',[n('pre',JSON.stringify(row.rawRow,null,2))]));
+ const controls=n('div',undefined,'raw-observation-tools'),label=n('label','Find '),find=n('input'),count=n('p'),previous=n('button','Previous observations'),next=n('button','More observations'),viewport=n('goo-table'),table=n('table'),head=n('thead'),header=n('tr'),body=n('tbody'),panel=n('section');find.type='search';find.placeholder='Loaded points';find.title='Find within held source points; no source read.';find.setAttribute('aria-label','Find held observations');label.append(find);count.setAttribute('role','status');previous.type=next.type='button';previous.setAttribute('aria-label','Previous observations');next.setAttribute('aria-label','More observations');previous.textContent='Previous';next.textContent='More';controls.append(label,previous,next,count);viewport.setAttribute('density','compact');viewport.setAttribute('mobile-layout','stacked');viewport.setAttribute('aria-label','Raw '+profile(data.instrument.kind).label+' observations');for(const name of ['Observed UTC',data.instrument.kind==='histogram'?'Count / buckets':'Value','Reported instance','Details']){const th=n('th',name);th.scope='col';header.append(th);}head.append(header);table.append(n('caption','Exported '+profile(data.instrument.kind).label+' observations · repeated rows retained'),head,body);viewport.append(table);host.replaceChildren(controls,viewport,panel);
+ const inspector=UI.inspector(panel,{onClose:(key,opener)=>{if(!active())return false;const rowOpener=!pointView?[...body.children].find(row=>row.dataset.occurrenceKey===key)?.querySelector('button'):null;if(revealFocus(opener,rowOpener,{disclosures:true}))return false;const currentMode=displayPicker?.querySelectorAll('input');revealFocus(currentMode?[...currentMode].find(input=>input.checked):find);return false}}),rows=data.rows.map((row,index)=>({row,index,text:stable(row).toLocaleLowerCase()})),contextGroups=new Map();let offset=0,revision=0,selectedKey=null,pointView=false,plot=null,displayPicker=null,pointsReady=false,displayNote=null;
+ function inspectOccurrence(index,opener){
+  if(!active()||!nativeControlReady(opener))return false;
+  const row=rows[index]?.row;if(!row)return false;selectedKey=row.occurrenceKey;if(plot)plot.selectedKey=selectedKey;
+  const content=n('div');content.append(UI.stats(pointFacts(data,row),{density:'compact',className:'raw-point-facts'}));if(data.instrument.kind==='histogram')HistogramObservations.detail(content,row,{active});Attributes.mountStream(content,row.stream);if(row.diagnostics.length){const list=n('ul');for(const d of row.diagnostics)list.append(n('li',d.field+': '+d.code));content.append(UI.disclosure('Diagnostics',[list]));}content.append(UI.disclosure('Raw source row',[n('pre',JSON.stringify(row.rawRow,null,2))]));
     let actions=[];
     if(onRecordContext){
      for(const key of contextGroups.keys())if(!inspector.has(key))contextGroups.delete(key);
@@ -47,8 +53,31 @@ function renderRows(host,data,{active=()=>true,onRecordContext,contextLease=()=>
      for(const button of group.buttons){button.disabled=!current();button.title='Stage nearby '+button.dataset.rawRecordContext+'; Run reads explicitly.';button.onclick=()=>{if(!active()||!nativeControlReady(button)||!selected())return false;try{const detail=RawRecordContext.plan(data,row.occurrenceKey,button.dataset.rawRecordContext);return onRecordContext(detail,button,{current:selected})===true}catch(error){group.status.textContent='Nearby context unavailable · '+error.message;return false}}}
      actions=group.buttons;
     }
-    inspector.show({key:row.occurrenceKey,title:(data.instrument.kind==='histogram'?'Histogram':isSum(data.instrument.kind)?'Sum':'Gauge')+' observation '+(index+1),description:row.stream.name,content,actions,opener:inspect});};action.append(inspect);tr.append(time,value,producer,action);[...tr.children].forEach((cell,i)=>cell.dataset.label=header.children[i].textContent);body.append(tr);}
+    inspector.show({key:row.occurrenceKey,title:(data.instrument.kind==='histogram'?'Histogram':isSum(data.instrument.kind)?'Sum':'Gauge')+' observation '+(index+1),description:row.stream.name,content,actions,opener});
+  const heading=panel.querySelector('h4');if(heading){heading.tabIndex=-1;revealFocus(heading)}
+  return true;
+ }
+ function draw(){const epoch=++revision,query=find.value.toLocaleLowerCase(),matched=rows.filter(row=>row.text.includes(query));offset=Math.min(offset,Math.max(0,Math.floor((matched.length-1)/100)*100));body.replaceChildren();
+  for(const {row,index}of matched.slice(offset,offset+100)){const tr=n('tr'),time=n('td'),value=n('td'),producer=n('td',instance(row)),action=n('td'),inspect=n('button','Inspect');tr.dataset.occurrenceKey=row.occurrenceKey;if(row.occurrenceKey===selectedKey){tr.dataset.selected='true';tr.setAttribute('aria-current','true')}time.append(Evidence.timestamp(row.endNS));value.textContent=data.instrument.kind==='histogram'?HistogramObservations.summary(row):scalar(row)+(row.stream.unit?'':' · unit not reported');if(data.instrument.kind==='histogram'&&row.countState==='valid')value.title='Exact source count: '+row.count;inspect.type='button';inspect.setAttribute('aria-label','Inspect observation '+(index+1));inspect.onclick=()=>{if(epoch!==revision||pointView)return false;return inspectOccurrence(index,inspect)};action.append(inspect);tr.append(time,value,producer,action);[...tr.children].forEach((cell,i)=>cell.dataset.label=header.children[i].textContent);body.append(tr);}
   previous.hidden=next.hidden=matched.length<=100;previous.disabled=offset===0;next.disabled=offset+100>=matched.length;count.textContent=(matched.length?offset+1:0)+'–'+Math.min(offset+100,matched.length)+' of '+matched.length+(query?' matches · '+rows.length+' loaded':' points')+(!matched.length&&rows.length?' · No matches':'');
+ }
+ function showDisplay(points){
+  if(points&&!pointsReady){plot.data=GaugePoints.dataset(data);pointsReady=true;plot.selectedKey=selectedKey}
+  pointView=points;controls.hidden=points;viewport.hidden=points;plot.hidden=!points;
+  for(const input of displayPicker.querySelectorAll('input'))input.checked=input.value===(points?'points':'table');
+  displayNote.textContent=points?'All '+rows.length+' loaded'+(find.value?' · Table Find not applied':''):'';displayNote.hidden=!points;
+  if(!points&&selectedKey){const query=find.value.toLocaleLowerCase(),matched=rows.filter(item=>item.text.includes(query)),at=matched.findIndex(item=>item.row.occurrenceKey===selectedKey);if(at>=0)offset=Math.floor(at/100)*100;else{displayNote.textContent='Selected observation is outside Table Find.';displayNote.hidden=false}draw();}
+ }
+ if(data.instrument.kind==='gauge'){
+  displayPicker=n('fieldset',undefined,'raw-observation-display');displayPicker.append(n('legend','Observation display'));const name='raw-observation-display-'+(++displayInstance);
+  for(const [value,text]of [['table','Table'],['points','Points']]){const label=n('label'),input=n('input');input.type='radio';input.name=name;input.value=value;input.checked=value==='table';input.setAttribute('aria-label',text);label.append(input,text);displayPicker.append(label);input.onchange=()=>{if(!active()||!nativeControlReady(input)||!input.checked)return;showDisplay(value==='points')}}
+  plot=n('goo-raw-gauge-points');plot.hidden=true;displayNote=n('p',undefined,'raw-observation-display-note');displayNote.hidden=true;controls.after(displayPicker);displayPicker.after(displayNote);displayNote.after(plot);
+  plot.addEventListener('goo-raw-gauge-point',event=>{
+   if(!pointView||!active()||!nativeControlReady(plot))return;
+   const keys=event.detail?.occurrenceKeys;if(!Array.isArray(keys)||keys.length!==1||typeof keys[0]!=='string')return;
+   const opener=event.composedPath?.().find(element=>element?.localName==='button'&&plot.contains(element));if(!opener||!nativeControlReady(opener))return;
+   const index=rows.findIndex(item=>item.row.occurrenceKey===keys[0]);if(index<0)return;inspectOccurrence(index,opener);
+  });
  }
  find.oninput=()=>{if(!active()||!nativeControlReady(find))return;offset=0;draw();};previous.onclick=()=>{if(!active()||!nativeControlReady(previous))return;offset-=100;draw();};next.onclick=()=>{if(!active()||!nativeControlReady(next))return;offset+=100;draw();};draw();if(!rows.length)host.append(n('p','No exported observations returned for this instrument and fixed window.'));return {retireContexts(){for(const group of contextGroups.values())for(const button of group.buttons){button.disabled=true;button.title='Inspect this point again after the read.'}}};
 }

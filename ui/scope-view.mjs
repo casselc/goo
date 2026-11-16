@@ -7,6 +7,7 @@ import {asSnapshot,parseSnapshotJSON,hasGuarantee} from './snapshots.mjs';
 import {histogramFacts,histogramBoundText,histogramRangeText,histogramCompactRangeText,nativeHistogramCompactRangeText} from './histogram-values.mjs';
 import './chart-frame.mjs';
 import './time-bars.mjs';
+import './raw-gauge-points-view.mjs';
 
 const n=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=String(text);if(cls)node.className=cls;return node};
 const exact=categoryText;
@@ -26,7 +27,7 @@ export function frozenConfig(value){
 
 // Read chrome is presentation only: no certainty is inferred from displayed rows.
 export function qualityFacts(snapshot){
- const q=snapshot.quality,kind=snapshot.shape==='grouped-time-series'?'grouped intervals':snapshot.shape==='time-series'?'intervals':snapshot.shape==='histogram'?'bins':snapshot.shape==='summary'?'summary':'groups';
+ const q=snapshot.quality,kind=snapshot.shape==='observations'?'observations':snapshot.shape==='grouped-time-series'?'grouped intervals':snapshot.shape==='time-series'?'intervals':snapshot.shape==='histogram'?'bins':snapshot.shape==='summary'?'summary':'groups';
  const values=[`${q.extent} ${kind}`,`${q.value} values`,`${q.sampling} upstream sampling`];
  return {visible:[...values,...(q.freshness!=='fixed'?[`${q.freshness} snapshot`]:[])],exact:[snapshot.origin,...values,`${q.freshness} snapshot`,snapshot.capturedAt?'Captured '+snapshot.capturedAt:'Capture time unavailable'].filter(Boolean)};
 }
@@ -220,8 +221,8 @@ class Chart extends SuppliedElement {
   set display(value){this.setInput('display',value)}
   get display(){return this.read('display')}
   clearRange(){this.querySelector('goo-time-bars')?.clearRange();this.querySelector('.scope-time-track')?._rangeGesture?.clear()}
-  set selectedKey(value){const bars=this.querySelector('goo-time-bars');if(bars)bars.selectedKey=value}
-  get selectedKey(){return this.querySelector('goo-time-bars')?.selectedKey??null}
+  set selectedKey(value){const plot=this.querySelector('goo-raw-gauge-points')||this.querySelector('goo-time-bars');if(plot)plot.selectedKey=value}
+  get selectedKey(){return this.querySelector('goo-raw-gauge-points')?.selectedKey??this.querySelector('goo-time-bars')?.selectedKey??null}
   render(){
     try{
       const snapshot=this.read('snapshot'),display=this.read('display'),oldFacts=this.querySelector('.scope-view-read-facts'),sameFacts=this._factsSnapshot===snapshot,factsOpen=sameFacts&&!!oldFacts?.open,factsFocused=sameFacts&&oldFacts?.contains(document.activeElement);this._factsSnapshot=snapshot;
@@ -233,6 +234,11 @@ class Chart extends SuppliedElement {
           const status=n('p',checked.reasons.join('; '),'scope-view-unavailable');status.setAttribute('role','status');const values=table(this,snapshot,{...rawDisplay,kind:'table'});values.querySelector('caption').textContent='Supplied values · shares unavailable';frame.append(quality(snapshot),status,values,readFacts(snapshot,factsOpen));this.replaceChildren(frame);if(factsFocused)frame.querySelector('.scope-view-read-facts>summary')?.focus({preventScroll:true});return;
         }
         this.refuse(checked.reasons);return;
+      }
+      if(snapshot.shape==='observations'){
+        const points=n('goo-raw-gauge-points');points.setAttribute('mode',display.kind);if(display.title)points.setAttribute('heading',display.title);points.data=snapshot;
+        points.addEventListener('goo-raw-gauge-point',event=>{const keys=event.detail?.occurrenceKeys;if(!points.isConnected||!this.contains(points)||this.read('snapshot')!==snapshot||!Array.isArray(keys)||keys.length!==1)return;try{emit(this,'goo-select',selectionIntent(snapshot,keys[0]))}catch{}});
+        this.replaceChildren(points,readFacts(snapshot,factsOpen));if(factsFocused)this.querySelector('.scope-view-read-facts>summary')?.focus({preventScroll:true});return;
       }
       const rows=snapshot.shape==='ranked'?displayRows(snapshot,display):snapshot.rows;
       const root=n('goo-chart-frame',undefined,'scope-view');if(this.hasAttribute('embedded'))root.setAttribute('appearance','embedded');root.data={title:display.title||(snapshot.shape==='histogram'?(snapshot.histogram.kind==='otel-explicit'?'Instrument observation distribution':snapshot.histogram.kind==='span-duration'?'Captured span duration distribution':'Captured numeric distribution'):snapshot.shape==='grouped-time-series'?(display.value==='duration.mean'?'Mean duration by group over time':'Captured records by group over time'):snapshot.shape==='time-series'?'Captured records over time':snapshot.shape==='summary'?'Population summary':'Scoped breakdown'),window:capturedClock(snapshot.capturedAt),state:snapshot.quality.extent==='unknown'||snapshot.quality.value==='unknown'?'unknown':snapshot.quality.extent==='partial'?'partial':!snapshot.rows.length||snapshot.shape==='histogram'&&histogramFacts(snapshot).total==='0'||snapshot.shape==='summary'&&snapshot.rows[0].values.count==='0'?'no_data':'observed'};root.dataset.valueKnowledge=snapshot.quality.value;if(snapshot.shape==='grouped-time-series')root.setAttribute('density','compact');root.append(quality(snapshot));

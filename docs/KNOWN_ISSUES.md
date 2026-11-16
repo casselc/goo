@@ -17,8 +17,10 @@ with same-position tuple membership and bounded fresh pages. Specialized profile
 that cannot carry the selector refuse before reads.
 [Selector conservation](SELECTOR_CONSERVATION.md) now shares checked projection
 and explicit reference-question builders; extending the query model still needs
-case-bank coverage and profile-specific admission. Held raw-gauge visualization
-is the next cycle.
+case-bank coverage and profile-specific admission.
+[Held gauge Points](RAW_GAUGE_OBSERVATIONS.md#points-over-the-held-bank) now uses
+the common dataset grammar with explicit certainty, duplicate membership and
+source-free inspection. One raw histogram-point bucket display is next.
 
 [CEL predicate authoring](CEL_PREDICATE_PILOT.md) is a delivered library/CLI pilot
 over fixed nonnullable fields. [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md)

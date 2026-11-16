@@ -72,6 +72,34 @@ stream continuity, rate, reset, health, freshness or source completeness. A futu
 timeline requires its own reported-identity and sample-validity contract before
 connecting any points.
 
+## Points over the held bank
+
+After **Read observations**, choose **Points** for a local value/time display.
+It shows the entire loaded bank, independently of the Table's local Find; that
+boundary is labelled when Find is active. Returning to Table keeps Find. If the
+selected point is outside those matches, the viewer says so instead of clearing
+Find or silently broadening the table.
+
+Only finite values with valid, known-recorded flags are plotted. Unknown
+recording, no-recorded-value and invalid/nonfinite values remain counted and
+inspectable. Plotted members represent source occurrences; no instance identity or connecting
+series is inferred. Identical screen coordinates can represent multiple raw
+values, so a marker with a count opens explicit occurrence choices.
+
+Choose a point or **Observation values** entry to reveal the shared inspector.
+Close restores a visible opener or display control. Native radio navigation
+retains radio focus; arrow/Home/End keys navigate plotted locations. All these
+operations, including Table paging and Nearby-record staging, perform no source
+read. Nearby records still require their separate explicit Run.
+
+The plot renders up to 1,000 coordinate locations and visibly counts eligible
+observations beyond that display budget. Domains include all eligible held
+values. All loaded occurrences remain available through Table and local value
+pages. Nearby points can overlap visually; this is neither a nearest-point
+selector nor a complete distribution. See the
+[passive component contract](UI_RAW_GAUGE_POINTS.md) and
+[executed storyboard](journeys/raw-gauge-points.md).
+
 ## Acceptance
 
 Exercise real OTLP gauges with and without instance identity, repeated exports,
