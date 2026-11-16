@@ -25,3 +25,10 @@ goo-chart-frame[appearance=embedded]{border:0;border-radius:0;padding:0;backgrou
 goo-chart-frame[appearance=embedded]>.chart-frame-header{margin-bottom:6px}
 goo-chart-frame[appearance=embedded]>.chart-frame-header>.chart-frame-title{font-size:13px;margin-bottom:4px}
 goo-chart-frame[appearance=embedded]>.chart-frame-header>.chart-frame-meta{font-size:11px;gap:4px 10px;line-height:1.4}
+/* State remains explicit text; marker shape also supports scanning without
+   assigning a health verdict to observed telemetry. */
+goo-chart-frame .chart-frame-state{display:inline-flex;align-items:center;gap:5px}
+goo-chart-frame .chart-frame-state::before{content:'';box-sizing:border-box;flex:none;inline-size:7px;block-size:7px;border:1px solid currentColor;border-radius:50%}
+goo-chart-frame .chart-frame-state[data-state=observed]::before{background:currentColor}
+goo-chart-frame .chart-frame-state:is([data-state=partial],[data-state=stale],[data-state=unavailable],[data-state=incompatible])::before{border-radius:1px;transform:rotate(45deg);background:currentColor}
+@media(forced-colors:active){goo-chart-frame .chart-frame-state::before{border-color:CanvasText}goo-chart-frame .chart-frame-state[data-state=observed]::before{background:CanvasText}goo-chart-frame .chart-frame-state:is([data-state=partial],[data-state=stale],[data-state=unavailable],[data-state=incompatible])::before{border-color:CanvasText;background:Mark}}

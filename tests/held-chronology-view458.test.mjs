@@ -52,3 +52,9 @@ test('retained rows or an earlier window do not become never-read when the lates
 test('an explicitly unconfigured sibling remains distinct from a scoped empty successful read',()=>{
  const input=structuredClone(data(1,0));Object.assign(input.lanes.spans,{selector:null,phase:'paused',staged:false,readWindow:null,completedRead:null,connection:null,evicted:0,gap:false,find:{text:'',revision:0}});const view=mount(input),sources=view.querySelectorAll('.held-chronology-source');assert.equal(rows(view).length,1);assert.match(sources[1].querySelector('summary').textContent,/Spans · 0 held · Not configured/);assert.match(sources[1].textContent,/ScopeNot configured/);assert.doesNotMatch(sources[1].textContent,/Source condition|All records in scope/);assert.equal(view.data.lanes.spans.selector,null);
 });
+
+test('one atomic announcement combines current signal matches and page range',()=>{
+ const view=mount(data(100,100)),status=view.querySelectorAll('[role="status"]');assert.equal(status.length,1);assert.equal(status[0].getAttribute('aria-atomic'),'true');assert.match(status[0].textContent,/Logs 100\/100 · Spans 100\/100 held · Rows 1–100/);
+ const [,next]=controls(view);next.onclick();assert.match(status[0].textContent,/Rows 101–200/);assert.match(status[0].textContent,/Logs 100\/100 · Spans 100\/100 held/);const search=find(view);search.value='message 0';search.oninput();assert.match(status[0].textContent,/Logs 1\/100 · Spans 0\/100 held · Rows 1–1/);assert.equal(view.querySelectorAll('[role="status"]').length,1);
+ search.value='x'.repeat(257);search.oninput();assert.equal(search.getAttribute('aria-invalid'),'true');assert.match(status[0].textContent,/at most 256/);
+});

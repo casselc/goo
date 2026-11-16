@@ -1991,3 +1991,19 @@ input::placeholder,textarea::placeholder {color:var(--muted);opacity:1}
 .raw-histogram-source-statistics>table{width:100%;table-layout:fixed}
 .raw-histogram-source-statistics>table>thead>tr>th,.raw-histogram-source-statistics>table>tbody>tr>th,.raw-histogram-source-statistics>table>tbody>tr>td{white-space:normal;overflow-wrap:anywhere}
 .raw-histogram-source-statistics>table>thead>tr>th:first-child{width:32%}
+
+/* Native keyboard bypass; workspace enhancement preserves the current route. */
+.skip-link{position:fixed;inset-block-start:8px;inset-inline-start:8px;z-index:10000;padding:8px 12px;border:1px solid var(--accent);border-radius:5px;background:var(--surface);color:var(--ink);font-weight:600;transform:translateY(calc(-100% - 16px))}
+.skip-link:focus{transform:translateY(0)}
+#mainContent{scroll-margin-block-start:8px}
+/* Catalog identities and signal counts stay together on narrow screens. Native
+   column headers retain their associations; repeated cell labels add no action. */
+@media(max-width:700px){
+ .service-catalog-viewport[mobile-layout=stacked]>.service-catalog-table>tbody>tr{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 10px}
+ .service-catalog-viewport[mobile-layout=stacked]>.service-catalog-table>tbody>tr>td:first-child{grid-column:1/-1}
+ .service-catalog-viewport[mobile-layout=stacked]>.service-catalog-table>tbody>tr>td:first-child::before,.service-catalog-viewport[mobile-layout=stacked]>.service-catalog-table>tbody>tr>td:last-child::before{display:none}
+ .service-catalog-viewport[mobile-layout=stacked]>.service-catalog-table>tbody>tr>td:nth-child(5){grid-column:1/span 2}
+ .service-catalog-viewport[mobile-layout=stacked]>.service-catalog-table>tbody>tr>td:last-child{grid-column:3;align-self:end}
+ .service-catalog-viewport[mobile-layout=stacked]>.service-catalog-table>tbody>tr>td:last-child>button{max-inline-size:100%;white-space:normal;min-block-size:32px;padding:4px 6px;font-size:12px}
+}
+@media(max-width:700px) and (pointer:coarse){.service-catalog-viewport[mobile-layout=stacked]>.service-catalog-table>tbody>tr>td:last-child>button{min-block-size:44px}}

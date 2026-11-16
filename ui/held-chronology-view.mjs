@@ -34,11 +34,11 @@ if(globalThis.customElements&&globalThis.HTMLElement){
    const revision=this._revision=(this._revision||0)+1;this.replaceChildren();const supplied=this.data;
    let current;try{current=model(supplied,{query:this._query||''})}catch(error){this.dataset.state='unavailable';const message=n('p','Held chronology unavailable · '+(this._error||error.message),'held-chronology-status');message.setAttribute('role','status');this.append(message);return}
    this.dataset.state='held';const data=current.data,sources=n('div',undefined,'held-chronology-sources');for(const signal of signals)sources.append(sourceFacts(signal,data.lanes[signal]));
-   const controls=n('div',undefined,'held-chronology-controls'),findLabel=n('label','Find '),find=n('input'),counts=n('span',undefined,'held-chronology-counts'),previous=n('button','Previous records'),next=n('button','More records'),range=n('span');find.type='search';find.maxLength=256;find.value=this._query||'';find.placeholder='Held records';find.setAttribute('aria-label','Find held records');findLabel.append(find);previous.type=next.type='button';counts.setAttribute('role','status');range.setAttribute('role','status');controls.append(findLabel,previous,next,range,counts);
+   const controls=n('div',undefined,'held-chronology-controls'),findLabel=n('label','Find '),find=n('input'),counts=n('span',undefined,'held-chronology-counts'),previous=n('button','Previous records'),next=n('button','More records'),range=n('span');find.type='search';find.maxLength=256;find.value=this._query||'';find.placeholder='Held records';find.setAttribute('aria-label','Find held records');findLabel.append(find);previous.type=next.type='button';const announcement=n('span',undefined,'visually-hidden');announcement.setAttribute('role','status');announcement.setAttribute('aria-atomic','true');controls.append(findLabel,previous,next,range,counts);
    const records=Records.table({compact:true,context:false,labels:['Observed UTC','Service','Record'],caption:'Held records · newest event time first',label:'Held log and span chronology'}),{viewport,body}=records;
    records.element.querySelector('caption').title='Event-time presentation only; not causality or a shared source order. Ties use lane then held occurrence order. Unavailable timestamps follow.';
    const note=n('p',undefined,'held-chronology-note');note.hidden=!signals.some(signal=>data.lanes[signal].find.text);note.textContent='All held rows · lane Find not applied';
-   this.append(sources,controls,note,viewport);
+   this.append(sources,controls,note,viewport,announcement);
    const allowed=button=>revision===this._revision&&this.isConnected&&this.contains(button)&&nativeControlReady(button);
    const draw=()=>{
     const length=current.rows.length;this._offset=Math.min(this._offset||0,Math.max(0,Math.floor((length-1)/100)*100));body.replaceChildren();let unplaced=false;
@@ -49,9 +49,10 @@ if(globalThis.customElements&&globalThis.HTMLElement){
     this.dataset.logs=String(current.matched.logs);this.dataset.spans=String(current.matched.spans);this.dataset.unplaced=String(current.unplaced.length);
     counts.textContent='Logs '+current.matched.logs+'/'+current.counts.logs+' · Spans '+current.matched.spans+'/'+current.counts.spans+' held';
     previous.hidden=next.hidden=length<=100;previous.disabled=this._offset===0;next.disabled=this._offset+100>=length;range.hidden=length<=100;range.textContent=length?'Rows '+(this._offset+1)+'–'+Math.min(this._offset+100,length):'';
+    announcement.textContent=counts.textContent+(range.textContent?' · '+range.textContent:'');
     note.hidden=!signals.some(signal=>data.lanes[signal].find.text)&&length!==0;note.textContent=length?(signals.some(signal=>data.lanes[signal].find.text)?'All held rows · lane Find not applied':''):(current.query?'No matching held records.':'No held records. Source coverage remains unknown.');this.syncSelection();
    };
-   find.oninput=()=>{if(!allowed(find))return;try{current=model(data,{query:find.value});this._query=find.value;this._offset=0;find.removeAttribute('aria-invalid');draw()}catch(error){find.setAttribute('aria-invalid','true');counts.textContent=error.message}};
+   find.oninput=()=>{if(!allowed(find))return;try{current=model(data,{query:find.value});this._query=find.value;this._offset=0;find.removeAttribute('aria-invalid');draw()}catch(error){find.setAttribute('aria-invalid','true');counts.textContent=error.message;announcement.textContent=error.message}};
    previous.onclick=()=>{if(!allowed(previous))return;this._offset=Math.max(0,this._offset-100);draw();(previous.disabled?next:previous).focus()};next.onclick=()=>{if(!allowed(next))return;this._offset+=100;draw();(next.disabled?previous:next).focus()};draw();
   }
  }

@@ -8,6 +8,11 @@ function mount({onExamples}={}){
   let current='',definitionFamily='records',measurements=false;const buttons=[...document.querySelectorAll('[data-workspace]')],panels=[...document.querySelectorAll('[data-workspace-panel]')];
   const sidebar=document.querySelector('.app-sidebar'),menu=sidebar.querySelector('.entry-menu');
   function closeMenu({focus=false}={}){menu.setAttribute('aria-expanded','false');sidebar.classList.remove('navigation-expanded');if(focus)menu.focus()}
+  const skip=document.querySelector('.skip-link');
+  if(skip)skip.onclick=event=>{
+   const target=document.getElementById('mainContent');if(!target||typeof target.focus!=='function')return;
+   event.preventDefault();closeMenu();target.focus({preventScroll:true});target.scrollIntoView({block:'start',behavior:'instant'});
+  };
   menu.onclick=()=>{const expanded=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(expanded));sidebar.classList.toggle('navigation-expanded',expanded)};
   sidebar.addEventListener('keydown',event=>{if(event.key==='Escape'&&menu.getAttribute('aria-expanded')==='true'){event.preventDefault();closeMenu({focus:true})}});
   function syncContext(){document.getElementById('workspaceDescription').textContent=current==='explore'&&measurements?routes.explore.measurementsDescription:routes[current].description;const lookback=document.getElementById('minutes'),scope=lookback.closest('.scope-control'),label=scope.querySelector('label[for="minutes"]');scope.hidden=current==='investigations'||(current==='definitions'&&definitionFamily!=='contracts')||(current==='explore'&&measurements);scope.closest('.app-topbar').hidden=scope.hidden;label.textContent=({services:'New discovery lookback',operations:'New operation read lookback',definitions:'HTTP preview lookback',examples:'New example read lookback'})[current]||'New query lookback';lookback.setAttribute('aria-label',label.textContent+' minutes');lookback.title='Default for a new read. Saved evidence and fixed question bounds stay unchanged until an explicit scope edit.';}

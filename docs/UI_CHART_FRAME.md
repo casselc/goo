@@ -17,6 +17,11 @@ legend, explanation and native actions as ordinary child elements.
 For an SPA, set `.data = {title, unit, window, state, note, headingLevel}` before
 or after registration/attachment. The attributes are the canonical state;
 `.data` returns a new plain snapshot. Set individual attributes to patch chrome.
+State labels remain visible. A neutral outlined marker distinguishes unknown/empty
+state from a neutral filled observation marker; warning states use a diamond and
+their existing text. These markers support scanning and never imply service health.
+They remain distinguishable in forced-colors mode.
+
 Supported states are `observed`, `no_data`, `unknown`, `loading`, `partial`,
 `stale`, `unavailable` and `incompatible`. Unsupported states display as unknown.
 Text is rendered literally, bounded to 4096 characters per chrome field.

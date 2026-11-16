@@ -1,5 +1,12 @@
 # Known issues and gaps
 
+[Shared UI polish](UI_POLISH_459.md) reduces attribute/control and service-card
+chrome, adds route-preserving skip navigation, and retains visible state labels
+with redundant markers. The Activity custody explanation is now on demand.
+The [guidance proposal](CONTEXTUAL_GUIDANCE.md) identifies further prose migrations;
+a common Help panel and optional walkthroughs remain unimplemented. Long actual
+messages can still require scrolling in the bounded inspector.
+
 Paired Activity shares responsive controls and UTC inspection with single
 streams ([measured behavior](ACTIVITY_COHERENCE.md)). Its two lanes remain
 independent acquisitions. [Reusable paired definitions](ACTIVITY_VIEWS.md) save

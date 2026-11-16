@@ -1,5 +1,54 @@
 # Validation record
 
+## 459 Shared UI/UX/accessibility polish and guidance assessment — 2026-11-16
+
+[Shared changes](docs/UI_POLISH_459.md),
+[executed storyboard](docs/journeys/ui-polish.md),
+[independent acceptance](docs/reviews/UI_POLISH_459_ACCEPTANCE.md),
+[designer/UX guidance proposal](docs/CONTEXTUAL_GUIDANCE.md).
+
+- Full root Go suite passes on **Go 1.27.3**. **2,085 UI tests pass, zero skipped**;
+  **154 affected Activity/attribute/navigation/chronology tests** pass again after
+  the agreed native-help extraction. No production dependency, HTTP operation or
+  source/query/preservation semantics changed.
+- Shared attribute controls use a compact native labelled toolbar and responsive
+  key/action/value rows. Copy/menu accessible names include namespace and key.
+  Service cards retain all six cells, three signal-count columns, latest UTC,
+  opener and **Not observed**. Keyboard skip bypasses navigation without changing
+  the current route; native no-JavaScript fallback is retained.
+- Chronology now uses one atomic polite counts/page/error announcement. Chart
+  markers supplement persistent state labels, with neutral observed/unknown and
+  warning shapes. Actual standalone Chromium normal/light/dark forced-color probes
+  confirm the CanvasText warning boundary remains visible (**21:1** in both forced
+  palettes), state text is unchanged and generated decorative content is empty.
+- Real ordinary OTLP before/after journey: baseline **29.9s**, accepted **50.1s**
+  on runtime `2cf11b4f…`, zero browser errors and successful runtime/proxy cleanup.
+  Fixed Records, Services and Saved preserve the same **30 source identities**,
+  timestamps, durations, statuses, service names, fixed question and capture rows.
+  Activity uses a separate fresh rolling-window bank in each pass.
+- At **390px**, attribute toolbar **146→52.5px**, first field relative to viewer
+  top **206→112.5px**, and service card **228→156px**. These are layout measurements,
+  not latency claims. All service cells and explicit missing-signal state remain
+  visible at 320px. Long actual messages can still require inspector scrolling;
+  the result does not claim every field is initially visible.
+- **Eight local before/after assertions add zero product POST/SQL work**: inspector
+  Search/Scope, qualified menu Enter/Escape/focus and hit geometry at 320/390,
+  contextual help Enter/Space, fixed inspection, Services/Saved skip route/hash,
+  stored reopening and coarse-pointer inspection. Actual touch controls/actions
+  are **44px**; JavaScript-disabled native skip focuses the main target correctly.
+- Existing chronology regression **6b8f19517175** passes on the identical runtime
+  in **1.7m**: 21 steps, **335 Bombadil snapshots**, completed phase 12, two actor
+  Tail connections, preserved keys/paused sources and no forbidden reads/overflow.
+  Main plus actor **six SQL**; held operations remain source-free. Native Quint
+  replay passes **38.78s**, **nine negative controls rejected**, zero skips. Runtime
+  and disposable database cleanup pass without browser errors; 458 frames refresh.
+- Independent UX/accessibility follow-ups accepted final frames and source. Then
+  a designer and a separate UX specialist classified prose across Activity,
+  filters/CEL, Services/topology, metrics/charts, comparisons, Saved/preservation,
+  Definitions and Operations. Their agreed first extraction is implemented as a
+  native **Local observation · not saved** disclosure with its full explanation.
+  A route-aware Help panel and optional replayable mini-guides remain proposals.
+
 ## 458 Held log/span chronology — 2026-11-16
 
 [Operator/component contract](docs/HELD_CHRONOLOGY.md),

@@ -152,6 +152,19 @@ it does not move focus, fetch or subscribe. Option values/labels are captured at
 creation. [Raw displays](RAW_OBSERVATION_CONSOLIDATION.md#display-state-and-prepared-banks)
 use the same helper across bank and single-point presentations.
 
+## Compact inspection and contextual explanations
+
+The [459 shared polish](UI_POLISH_459.md) keeps native attribute Search/Scope
+controls, field-qualified action names and compact responsive rows. Chart-frame
+markers supplement visible state labels. The workspace skip link preserves the
+current route; chronology announces one coherent counts/page update.
+
+Use `UI.disclosure(summary, content, {className: 'ui-context-help'})` for optional
+explanations whose summary retains the relevant visible state. This shared style
+also works in native server-rendered HTML. It does not implement a walkthrough or
+own source operations. The [guidance proposal](CONTEXTUAL_GUIDANCE.md) separates
+persistent facts from teaching/reference content.
+
 ## Public elements
 
 | Element | Supplied input / controlled state | Current contract or source |

@@ -35,9 +35,9 @@ test('29 inspect structured attributes, refine facets and navigate with keyboard
   await expect(viewer.locator('.attribute-value-text')).toHaveText(unsafe);expect(await page.evaluate(()=>globalThis.polishInjected)).toBeUndefined();await expect(viewer.locator('img')).toHaveCount(0);
   await search.fill('test.multiline');expect(await viewer.locator('.attribute-value-text').textContent()).toBe(multiline);
   await page.context().grantPermissions(['clipboard-read','clipboard-write'],{origin:goo});
-  await viewer.getByRole('button',{name:'Copy value for test.multiline',exact:true}).click();await expect(viewer.getByRole('status')).toContainText('Copied value');expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe(multiline);
+  await viewer.getByRole('button',{name:'Copy value for attribute:test.multiline',exact:true}).click();await expect(viewer.getByRole('status')).toContainText('Copied value');expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe(multiline);
   await search.fill('test.long');await viewer.locator('.attribute-long > summary').click();expect(await viewer.locator('.attribute-value-text').textContent()).toBe(long);
-  await viewer.getByRole('button',{name:'Copy value for test.long',exact:true}).click();expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe(long);
+  await viewer.getByRole('button',{name:'Copy value for attribute:test.long',exact:true}).click();expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe(long);
   await search.fill('test.counter');await expect(viewer.locator('.attribute-value-text')).toHaveText('9007199254740993');await expect(viewer.locator('.attribute-type')).toHaveText('string');
   const counterRow=viewer.locator('.attribute-row[data-key="test.counter"]'),fieldMenu=counterRow.locator('.ui-action-menu > summary');
   await fieldMenu.click();await counterRow.getByRole('button',{name:'Plot values of attribute:test.counter',exact:true}).click();

@@ -7,8 +7,8 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–458 delivered and validated**. The current cadence is
-**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup → 453 referring-span discovery depth → 454 selector/reference consolidation → 455 held raw-gauge Points breadth → 456 single-point histogram bucket depth → 457 raw-display consolidation → 458 held log/span chronology breadth**.
+Status: **429 and 437–459 delivered and validated**. The current cadence is
+**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup → 453 referring-span discovery depth → 454 selector/reference consolidation → 455 held raw-gauge Points breadth → 456 single-point histogram bucket depth → 457 raw-display consolidation → 458 held log/span chronology breadth → 459 requested UI/UX/accessibility polish and guidance assessment**.
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
 foundation; this does not extend a CEL platform queue.
@@ -397,7 +397,25 @@ verdict. [Executed journey](journeys/held-chronology.md) and
 [validation](../VALIDATION.md) distinguish actual OTLP checks from synthetic
 ordering/ownership properties and native model negative controls.
 
-## Next depth step: 459 related held trace context
+## 459 — delivered: shared polish and guidance assessment
+
+The user-requested [polish](UI_POLISH_459.md) takes priority over the next trace
+feature. Shared attribute controls/rows, service cards, keyboard bypass, chart-state
+markers and chronology announcements are improved. Independent designer and UX
+reviews produced a [content/guidance proposal](CONTEXTUAL_GUIDANCE.md). The first
+native Activity disclosure is implemented; a broader tutorial system is not.
+
+## Next proposal: 460 contextual guidance
+
+Migrate repeated generic Services/comparison/chart explanations into consistent
+contextual help, retaining current scope, values, clocks, uncertainty, failures and
+action consequences. Consolidate duplicate applied/Parent predicate prose while
+preserving real parent/slot differences. Then add one route-aware, optional,
+replayable first-investigation guide using existing native components. Guidance
+must never execute source reads, edit filters or create captures on its own.
+This proposal is described in the independent inventories; it is not shipped.
+
+## Following depth step: 461 related held trace context
 
 From a selected chronology record, offer explicit **Related held records** using
 validated reported TraceId and optional SpanId across the two held lanes. Reuse
@@ -410,5 +428,5 @@ selection; do not silently rewrite text Find, broaden source scope, infer trace
 completeness or start a query. Saving a chronology-specific format, merged
 selection/capture and paired baseline attachments remain separate design work.
 
-460 then consolidates the demonstrated record-context projections, interaction
+462 then consolidates the demonstrated record-context projections, interaction
 state, accessible controls and performance before the next breadth cycle.

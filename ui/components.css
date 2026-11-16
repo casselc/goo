@@ -59,11 +59,10 @@ goo-facet-list>[data-facet-item][hidden]{display:none}
 goo-facet-list>[data-facet-item]{min-width:0}
 goo-field-value .attribute-type{display:inline-block;margin:4px 0 0;padding:1px 5px;border:1px solid var(--border,#2b3545);border-radius:4px;font:10px/1.5 system-ui,sans-serif;color:var(--muted,#98a8bf)}
 .attribute-viewer {min-width:0;border:1px solid var(--border,#2b3545);border-radius:6px;background:var(--surface,#151a23);padding:12px;margin-top:5px;text-align:left}
-.attribute-tools {display:flex;gap:12px;align-items:end;margin-bottom:12px;flex-wrap:wrap}
-.attribute-tools>label:first-child {flex:1;min-width:140px}
-.attribute-tools>label {min-width:110px}
-.attribute-tools input,.attribute-tools select {width:100%;min-height:33px;padding:5px 8px}
-.attribute-count {font-size:12px;color:var(--muted,#98a8bf);padding-bottom:7px;white-space:nowrap}
+goo-attribute-list .attribute-tools {display:grid;grid-template-columns:minmax(0,1fr) minmax(110px,150px) auto;gap:6px 8px;align-items:center;margin-bottom:8px}
+goo-attribute-list .attribute-tools>label {display:block;min-width:0;margin:0}
+goo-attribute-list .attribute-tools input,goo-attribute-list .attribute-tools select {width:100%;min-width:0;box-sizing:border-box;min-height:32px;padding:4px 6px;font-size:12px}
+.attribute-count {font-size:11px;color:var(--muted,#98a8bf);white-space:nowrap}
 .attribute-group h4 {font-size:12px;color:var(--muted,#98a8bf);font-weight:600;margin:18px 0 5px;padding-bottom:7px;border-bottom:1px solid var(--border,#2b3545);display:flex;gap:10px}
 .attribute-group-count {color:var(--muted,#98a8bf);font-weight:400}
 .attribute-row {display:grid;grid-template-columns:minmax(110px,25%) minmax(0,1fr) auto;gap:8px;padding:9px 0;border-bottom:1px solid #233041;align-items:start;font-size:12px;min-width:0}
@@ -80,6 +79,7 @@ goo-field-value .attribute-type{display:inline-block;margin:4px 0 0;padding:1px 
 .attribute-actions .ui-actions-body {display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:4px 0;max-width:190px}
 .attribute-actions .ui-actions-body>button {text-align:left;justify-content:start;white-space:normal;overflow-wrap:anywhere}
 .attribute-actions button {background:transparent;font-size:12px;padding:4px 6px;color:#9fb6c5;border-color:transparent;min-height:30px}
+@media(pointer:coarse){goo-attribute-list .attribute-tools input,goo-attribute-list .attribute-tools select{min-height:44px}}
 @media(pointer:coarse){.attribute-actions button,.attribute-actions .ui-action-menu>summary{min-height:44px;min-width:44px}}
 .attribute-actions button:hover:not(:disabled),.attribute-actions button:focus-visible {border-color:#4c6b77;color:var(--accent,#79ddc6)}
 .attribute-feedback {font-size:11px;margin:8px 0 0;color:var(--accent,#79ddc6)}
@@ -92,7 +92,6 @@ goo-field-value .attribute-type{display:inline-block;margin:4px 0 0;padding:1px 
 .raw-record {margin-top:12px;padding-top:8px}
 .raw-record pre {max-height:260px}
 
-@media(max-width:700px){goo-attribute-list .attribute-row{grid-template-columns:minmax(0,1fr);gap:6px}goo-attribute-list .attribute-actions{grid-column:1;gap:8px}goo-attribute-list .attribute-actions button{min-height:40px;min-width:40px;padding:8px 12px}}
 
 .distribution-row {
   display:grid;
@@ -129,16 +128,20 @@ goo-field-value>.attribute-type{margin-inline-start:6px}
 goo-facet-list [aria-pressed=true]{border-color:var(--accent,#79ddc6);background:#193632}
 
 @media(max-width:700px){
- .attribute-row {grid-template-columns:minmax(110px,30%) minmax(0,1fr)}
- .attribute-actions {grid-column:2;max-width:none}
  .attribute-viewer {padding:10px}
- .attribute-tools {gap:8px}
- .attribute-tools>label {width:100%}
- .attribute-row {grid-template-columns:minmax(0,1fr);gap:5px}
- .attribute-actions {grid-column:1;gap:8px}
- .attribute-key {font-size:12px}
- .attribute-count {padding-bottom:0}
+ goo-attribute-list .attribute-tools {grid-template-columns:minmax(0,1fr) minmax(100px,.8fr);gap:4px 6px}
+ goo-attribute-list .attribute-tools>.attribute-count {grid-column:1/-1;justify-self:end}
+ goo-attribute-list .attribute-row {grid-template-columns:minmax(0,1fr) auto;gap:4px 6px;padding:8px 0}
+ goo-attribute-list .attribute-key {grid-column:1;grid-row:1;align-self:center;font-size:12px}
+ goo-attribute-list .attribute-value {grid-column:1/-1;grid-row:2}
+ goo-attribute-list .attribute-actions {grid-column:2;grid-row:1;justify-self:end;max-width:none;gap:4px}
+ /* Open native action menus get a full-width row so long qualified actions
+    remain readable instead of squeezing the field name into a narrow column. */
+ goo-attribute-list .attribute-actions:has(.ui-action-menu[open]) {grid-column:1/-1;grid-row:3;justify-self:stretch}
+ goo-attribute-list .attribute-actions:has(.ui-action-menu[open])>.ui-actions {display:grid;grid-template-columns:auto minmax(0,1fr);width:100%}
+ goo-attribute-list .attribute-actions .ui-actions-body {max-width:none}
 }
+
 goo-facet-list .distribution-label:disabled{opacity:1;color:var(--ink,#e3e9f3)}
 
 /* Paired charts can nest in narrower frames; table cells retain their own minima. */
@@ -365,3 +368,8 @@ goo-table[sticky-header][sticky-first-column][data-overflow-inline]>table>thead>
 goo-stat-list[density=compact]>.ui-stats{gap:4px 12px;margin:4px 0}
 goo-stat-list[density=compact]>.ui-stats dt,goo-stat-list[density=compact]>.ui-stats small{font-size:11px}
 goo-stat-list[density=compact]>.ui-stats dd{font-size:13px;line-height:1.4;margin-top:1px}
+/* Optional explanatory text keeps the current fact in its native summary. */
+.ui-context-help{padding:0;margin-block:4px 8px;border:0;background:transparent;font-size:12px;color:var(--muted,#98a8bf)}
+.ui-context-help>summary{padding-block:4px;cursor:pointer}
+.ui-context-help>p{margin-block:4px 8px}
+@media(pointer:coarse){.ui-context-help>summary{min-block-size:44px;align-content:center}}

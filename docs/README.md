@@ -46,6 +46,8 @@ This index separates using Goo, extending it, and the development record.
 - [Architecture diagrams](ARCHITECTURE_DIAGRAMS.md): instrumentation, planning and telemetry paths.
 - [Measurement packages](MEASUREMENT_PACKAGES.md): code-managed measurement definitions.
 - [Preserving query populations](SELECTOR_CONSERVATION.md): checked projections and explicit reference expansion.
+- [Shared UI polish](UI_POLISH_459.md): compact inspection, keyboard bypass and readable state cues.
+- [Contextual guidance proposal](CONTEXTUAL_GUIDANCE.md): persistent facts, on-demand explanations and optional walkthroughs.
 - [Shared UI components](UI_COMPONENTS.md): supplied-data display contracts.
 - [Contributing](../CONTRIBUTING.md): builds, tests and documentation conventions.
 - [Gotogether shadow pilot](GOTOGETHER_ACQUISITION_PILOT.md): pinned browser/model checks, completion controls and compiled replay.
