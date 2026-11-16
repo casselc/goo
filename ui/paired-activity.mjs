@@ -1,5 +1,7 @@
 import * as UI from './components.mjs';
 import * as Tail from './tail.mjs';
+import * as Chronology from './held-chronology.mjs';
+import './held-chronology-view.mjs';
 import * as RecordColumns from './record-columns.mjs';
 import {object} from './intent-shape.mjs';
 import {validateField} from './predicate-validation.mjs';
@@ -9,20 +11,22 @@ import * as RecordEnvironment from './record-environment.mjs';
 import * as RecordPresentation from './record-presentation.mjs';
 import {nativeControlReady,revealFocus} from './dom-visibility.mjs';
 
-/* One session owner over two ordinary tails. No merged chronology or population. */
+/* Two source owners; an explicit hold can order their immutable observations. */
 let sequence=0;
 export function mount(host,{current=()=>true,onOpenFixed,onChange=()=>{}}={}){
  const id='paired-activity-'+(++sequence),root=UI.node('div',undefined,'paired-activity'),grid=UI.node('div',undefined,'paired-activity-lanes'),detail=UI.node('section');
- root.setAttribute('role','group');root.setAttribute('aria-label','Paired live activity');root.append(grid,detail);host.append(root);
- let disposed=false,epoch=0,plan=null,selector=null,inspection=null,lastFocus=null;
+ const toolbar=UI.node('div',undefined,'paired-activity-view'),hold=UI.node('button','Hold chronology'),back=UI.node('button','Back to lanes'),notice=UI.node('p',undefined,'paired-activity-view-status'),chronology=UI.node('goo-held-chronology');
+ hold.type=back.type='button';hold.title='Pause both streams and order all held records by event time.';hold.disabled=true;back.hidden=true;chronology.hidden=true;notice.hidden=true;notice.setAttribute('role','status');toolbar.append(hold,back,notice);root.dataset.view='lanes';root.setAttribute('role','group');root.setAttribute('aria-label','Paired live activity');root.append(toolbar,grid,chronology,detail);host.append(root);
+ let disposed=false,epoch=0,plan=null,selector=null,inspection=null,lastFocus=null,view='lanes',viewRevision=0,frozen=null;
+ const originals=new Map(),detailGroups=new Map();
  const lanes=new Map(),available=()=>!disposed&&current()&&root.isConnected&&!document.hidden&&!root.closest('[hidden], [aria-hidden="true"], [inert]');
- const inspector=UI.inspector(detail,{onClose:()=>{inspection=null;return true}});
+ const inspector=UI.inspector(detail,{onClose:(key,opener)=>{inspection=null;chronology.selectedKey=null;revealFocus(opener,view==='chronology'?chronology.querySelector('input'):hold);return false}});
  const close=detail.querySelector('[aria-label="Close selected item details"]'),closeInspection=close.onclick;close.onclick=event=>{if(available()&&nativeControlReady(close))closeInspection.call(close,event)};
  const heading=detail.querySelector('.ui-inspector-heading>h4');heading.id=id+'-detail';heading.tabIndex=-1;detail.setAttribute('aria-labelledby',heading.id);
- function clearInspection(){inspection=null;lastFocus=null;inspector.clear()}
- function retireLane(signal){const lane=lanes.get(signal);lane.epoch++;if(inspection?.signal===signal)clearInspection()}
+ function clearInspection(){inspection=null;lastFocus=null;detailGroups.clear();inspector.clear();chronology.selectedKey=null}
+ function retireLane(signal){retireChronology();const lane=lanes.get(signal);lane.epoch++;if(inspection?.signal===signal)clearInspection()}
  function windowText(lane,state){
-  lane.owner=state.owner;lane.section.dataset.phase=state.phase;
+  lane.owner=state.owner;lane.section.dataset.phase=state.phase;refreshHold();
   const window=state.readWindow;
   if(!window){lane.window.textContent='Window pending';lane.window.removeAttribute('title');return}
   const from=new Date(window.fromMs).toISOString(),to=new Date(window.toMs).toISOString(),sameDay=from.slice(0,10)===to.slice(0,10);
@@ -33,17 +37,23 @@ export function mount(host,{current=()=>true,onOpenFixed,onChange=()=>{}}={}){
   const lane=lanes.get(signal);if(!available()||!lane||!plan||!nativeControlReady(opener))return false;
   const own=epoch,laneEpoch=lane.epoch,origin=structuredClone(plan[signal]),captured=structuredClone(item),key=own+':'+signal+':'+item.key+':'+item.readWindow.fromMs+':'+item.readWindow.toMs;
   const lease=()=>available()&&epoch===own&&lane.epoch===laneEpoch&&inspection?.key===key;
-  const content=UI.node('div'),analyze=UI.node('button','Analyze observation window');analyze.type='button';analyze.setAttribute('aria-label','Analyze observation window · '+signal);
-  RecordPresentation.attributes(content,captured.record);
-  content.append(UI.disclosure('Original observation window',[UI.node('p',new Date(item.readWindow.fromMs).toISOString()+' → '+new Date(item.readWindow.toMs).toISOString())]));
+  for(const old of detailGroups.keys())if(!inspector.has(old))detailGroups.delete(old);
+  let group=detailGroups.get(key);
+  if(!group){
+   const content=UI.node('div'),analyze=UI.node('button','Analyze observation window');analyze.type='button';analyze.setAttribute('aria-label','Analyze observation window · '+signal);
+   RecordPresentation.attributes(content,captured.record);
+   content.append(UI.disclosure('Original observation window',[UI.node('p',new Date(item.readWindow.fromMs).toISOString()+' → '+new Date(item.readWindow.toMs).toISOString()),...(item.observedAt?[UI.stats([{label:'Source read UTC',value:item.observedAt,format:'utc'}],{density:'compact'})]:[])]));
+   group={content,analyze};detailGroups.set(key,group);
+  }
+  const {content,analyze}=group;
   analyze.disabled=typeof onOpenFixed!=='function';
   analyze.onclick=()=>{
    if(!lease()||!nativeControlReady(analyze))return;
    const question=Tail.recordQuestion(origin,signal,captured),layout=lane.tail.layout();
-   pause('Paused for fixed investigation.');lastFocus=analyze;
+   if(!pause('Paused for fixed investigation.')||!lease()||!nativeControlReady(analyze))return;lastFocus=analyze;
    onOpenFixed(question,{...layout,columns:[...layout.columns,'context']},analyze);
   };
-  inspection={key,signal,opener,analyze,lease};lastFocus=opener;
+  inspection={key,signal,opener,analyze,lease};if(view==='chronology')chronology.selectedKey=signal+':'+item.key;lastFocus=opener;
   inspector.show({key,title:signal==='logs'?'Observed log':'Observed span',description:RecordPresentation.description(captured.record),content,actions:[analyze],opener});
   revealFocus(heading,opener);return true;
  }
@@ -62,7 +72,37 @@ export function mount(host,{current=()=>true,onOpenFixed,onChange=()=>{}}={}){
    }});
 
  }
- function adopt(value,next=PairPlan.create(value,conditions())){const changed=Tail.canonical(selector)!==Tail.canonical(value);epoch++;for(const lane of lanes.values())lane.epoch++;clearInspection();selector=structuredClone(value);plan=next;if(changed)for(const lane of lanes.values())lane.filter?.retire();return next}
+ function refreshHold(){
+  const observed=[...lanes.values()].some(lane=>{const state=lane.tail?.scope();return state&&(state.retained>0||state.completedRead||state.readWindow)});
+  hold.disabled=!available()||!plan||!observed;hold.hidden=view!=='lanes';back.hidden=view!=='chronology';
+ }
+ function retireChronology(){
+  if(view!=='chronology'&&!frozen)return;
+  viewRevision++;view='lanes';root.dataset.view=view;frozen=null;originals.clear();chronology.data=null;chronology.hidden=true;grid.hidden=false;clearInspection();refreshHold();
+ }
+ hold.onclick=()=>{
+  if(!available()||!plan||!nativeControlReady(hold)||view!=='lanes')return false;
+  const own=epoch,sourcePlan=plan,revision=++viewRevision,laneEpochs=[...lanes.values()].map(lane=>({lane,epoch:lane.epoch}));
+  const retained=()=>available()&&epoch===own&&plan===sourcePlan&&viewRevision===revision&&laneEpochs.every(state=>state.lane.epoch===state.epoch);
+  notice.hidden=true;if(!pause('Paused for held chronology.')||!retained())return false;
+  try{
+   const snapshots=Object.fromEntries([...lanes].map(([signal,lane])=>[signal,lane.tail.snapshot()]));
+   const next=Chronology.prepare(snapshots);
+   for(const signal of ['logs','spans'])if(next.lanes[signal].selector!==null&&Tail.transportIdentity(next.lanes[signal].selector)!==Tail.transportIdentity(plan[signal]))throw Error('Lane scope changed; return to its current observations.');
+   if(!retained())return false;
+   originals.clear();for(const signal of ['logs','spans'])for(const item of snapshots[signal].rows)originals.set(signal+':'+item.key,{signal,item});
+   clearInspection();frozen=next;chronology.data=next;view='chronology';root.dataset.view=view;grid.hidden=true;chronology.hidden=false;refreshHold();revealFocus(chronology.querySelector('input'),back);return true;
+  }catch(error){notice.textContent='Chronology unavailable · '+error.message;notice.hidden=false;return false}
+ };
+ back.onclick=()=>{if(!available()||view!=='chronology'||!nativeControlReady(back))return false;retireChronology();revealFocus(hold);return true};
+ chronology.addEventListener('goo-chronology-inspect',event=>{
+  if(!available()||view!=='chronology'||!frozen||!nativeControlReady(chronology))return;
+  const {signal,key}=event.detail||{};if(!['logs','spans'].includes(signal)||typeof key!=='string')return;
+  const opener=event.composedPath?.().find(element=>element?.localName==='button'&&chronology.contains(element)),original=originals.get(signal+':'+key);
+  if(!original||!opener||!nativeControlReady(opener))return;
+  inspect(signal,original.item,opener);
+ });
+ function adopt(value,next=PairPlan.create(value,conditions())){retireChronology();const changed=Tail.canonical(selector)!==Tail.canonical(value);epoch++;for(const lane of lanes.values())lane.epoch++;clearInspection();selector=structuredClone(value);plan=next;refreshHold();if(changed)for(const lane of lanes.values())lane.filter?.retire();return next}
  function conditions(){return Object.fromEntries([...lanes].map(([signal,lane])=>[signal,lane.filter?.where()]))}
  function stage(value,presentation){
   if(disposed)return false;const checked={},local={};
@@ -86,11 +126,16 @@ export function mount(host,{current=()=>true,onOpenFixed,onChange=()=>{}}={}){
   }
   return true;
  }
- function pause(reason='Streams paused. Resume each lane explicitly.'){if(disposed||!plan)return;for(const lane of lanes.values())lane.tail.pause(reason)}
- function reset(){if(disposed)return;epoch++;plan=null;selector=null;clearInspection();for(const lane of lanes.values()){lane.epoch++;lane.tail.reset();lane.filter?.reset(undefined)}}
- function sync(){const ready=available();for(const lane of lanes.values())lane.tail.setReadBlocked(ready?'':'Apply shared scope before resuming.');for(const lane of lanes.values())lane.filter?.sync();if(inspection)inspection.analyze.disabled=typeof onOpenFixed!=='function'||!inspection.lease()}
+ function pause(reason='Streams paused. Resume each lane explicitly.'){
+  if(disposed||!plan)return false;const own=epoch,sourcePlan=plan,states=[...lanes.values()].map(lane=>({lane,epoch:lane.epoch}));
+  const retained=()=>!disposed&&epoch===own&&plan===sourcePlan&&states.every(state=>state.lane.epoch===state.epoch);
+  for(const {lane}of states){if(!retained())return false;lane.tail.pause(reason)}
+  return retained();
+ }
+ function reset(){if(disposed)return;retireChronology();epoch++;plan=null;selector=null;clearInspection();for(const lane of lanes.values()){lane.epoch++;lane.tail.reset();lane.filter?.reset(undefined)}}
+ function sync(){const ready=available();for(const lane of lanes.values())lane.tail.setReadBlocked(ready?'':'Apply shared scope before resuming.');for(const lane of lanes.values())lane.filter?.sync();if(inspection)inspection.analyze.disabled=typeof onOpenFixed!=='function'||!inspection.lease();refreshHold()}
  function layout(){return Object.fromEntries([...lanes].map(([signal,lane])=>[signal,{...lane.tail.layout(),...(lane.filter?.where()===undefined?{}:{where:lane.filter.where()})}]))}
- function snapshot(){return {selector:structuredClone(selector),lanes:Object.fromEntries([...lanes].map(([signal,lane])=>[signal,{...lane.tail.snapshot(),owner:lane.owner,signal,condition:lane.filter?.condition()}]))}}
+ function snapshot(){return {view,selector:structuredClone(selector),lanes:Object.fromEntries([...lanes].map(([signal,lane])=>[signal,{...lane.tail.snapshot(),owner:lane.owner,signal,condition:lane.filter?.condition()}]))}}
  function focusStart(){lanes.get('logs').tail.focusStart()}
- return {stage,start,ready,layout,pause,reset,snapshot,focusStart,sync,dirty:()=>[...lanes.values()].some(lane=>lane.filter?.dirty()),restoreFocus(){if(!available())return false;const fallback=[...root.querySelectorAll('button')].find(button=>/^(Resume|Retry|Start)/.test(button.textContent)&&nativeControlReady(button));return !!revealFocus(lastFocus,inspection?.opener||fallback)},dispose(){if(disposed)return;disposed=true;epoch++;clearInspection();for(const lane of lanes.values()){lane.filter?.dispose();lane.tail.dispose()}root.remove()}};
+ return {stage,start,ready,layout,pause,reset,snapshot,focusStart,sync,retireHeld:retireChronology,dirty:()=>[...lanes.values()].some(lane=>lane.filter?.dirty()),restoreFocus(){if(!available())return false;const fallback=[...root.querySelectorAll('button')].find(button=>/^(Resume|Retry|Start)/.test(button.textContent)&&nativeControlReady(button));return !!revealFocus(lastFocus,inspection?.opener||fallback)},dispose(){if(disposed)return;disposed=true;epoch++;frozen=null;originals.clear();clearInspection();for(const lane of lanes.values()){lane.filter?.dispose();lane.tail.dispose()}root.remove()}};
 }

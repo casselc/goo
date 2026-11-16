@@ -6,6 +6,10 @@ then explicitly Start stream or Start streams. Opening, inspection, sharing and 
 telemetry. The view contains no fixed time window, observations, totals, read or
 custody clocks, membership tokens or instruction to execute.
 
+The optional [held chronology](HELD_CHRONOLOGY.md) is a local presentation of
+retained observations. Saving a paired definition continues to save applied lane
+scope, conditions and columns; it does not save the held chronology or its rows.
+
 ## Logs + spans
 
 Choose **Logs + spans**, apply the shared scope, and arrange each lane’s record

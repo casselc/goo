@@ -4,8 +4,9 @@ Paired Activity shares responsive controls and UTC inspection with single
 streams ([measured behavior](ACTIVITY_COHERENCE.md)). Its two lanes remain
 independent acquisitions. [Reusable paired definitions](ACTIVITY_VIEWS.md) save
 shared scope, [independent lane conditions](PAIRED_ACTIVITY_FILTERS.md) and layouts,
-with paused recall and explicit Start. Merged chronology and paired baseline
-attachments remain outside this format. No combined count or health verdict is inferred.
+with paused recall and explicit Start. [Held chronology](HELD_CHRONOLOGY.md) orders paused lane observations locally.
+Saving a chronology-specific presentation, merged selection/capture and paired
+baseline attachments remain outside this format. No combined count or health verdict is inferred.
 
 [Filter consolidation](FILTER_CONSOLIDATION.md) now shares draft/adoption rules
 and exact duration summaries across Activity. Discard changes predicates only;
@@ -24,8 +25,8 @@ source-free inspection. [Single histogram-point bucket displays](UI_RAW_HISTOGRA
 now share the grammar with exact counts and explicit recording uncertainty.
 [Raw-display consolidation](RAW_OBSERVATION_CONSOLIDATION.md#display-state-and-prepared-banks)
 now shares native controls, immutable prepared projections and retained local
-histogram pages. Paired Activity’s merged held chronology remains a breadth gap;
-the next roadmap step designs that presentation while preserving lane boundaries.
+histogram pages. Paired Activity now has an explicit held chronology with independent source
+provenance; portable chronology preservation remains a separate depth step.
 
 [CEL predicate authoring](CEL_PREDICATE_PILOT.md) is a delivered library/CLI pilot
 over fixed nonnullable fields. [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md)

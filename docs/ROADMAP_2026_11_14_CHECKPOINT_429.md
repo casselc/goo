@@ -7,8 +7,8 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–457 delivered and validated**. The current cadence is
-**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup → 453 referring-span discovery depth → 454 selector/reference consolidation → 455 held raw-gauge Points breadth → 456 single-point histogram bucket depth → 457 raw-display consolidation**.
+Status: **429 and 437–458 delivered and validated**. The current cadence is
+**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup → 453 referring-span discovery depth → 454 selector/reference consolidation → 455 held raw-gauge Points breadth → 456 single-point histogram bucket depth → 457 raw-display consolidation → 458 held log/span chronology breadth**.
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
 foundation; this does not extend a CEL platform queue.
@@ -381,23 +381,34 @@ immediate Table selection and compact statistics preserve exact source semantics
 Prepared immutable banks avoid repeated full-bank admission during inspection;
 synthetic projection costs and actual source-free journeys are recorded separately.
 
-## Next breadth step: 458 held log/span chronology
+## 458 — delivered: held log/span chronology
 
-Design and implement an optional merged presentation of the two existing held
-Activity lanes. This addresses the explicitly retained merged-chronology gap,
-without changing the default entry or source subscriptions as a side effect.
+[Held chronology](HELD_CHRONOLOGY.md) explicitly pauses both existing tails and
+orders immutable held observations with exact event times, stable ties and an
+unplaced group. Each lane and occurrence retains its source selector, clocks,
+windows, gaps and evictions. Find, pages, shared inspection and held return add
+no source reads. View adoption and Analyze handoff guard reentrant replacement
+across both global and lane epochs. Source capabilities are absent from passive
+display data; existing source owners retain the originals.
 
-- Reuse the held log/span pages and shared record components. Preserve each
-  lane’s source question, read clock, bounds, state and occurrence identity.
-- Interleave valid event times with deterministic ties; preserve duplicates and
-  put invalid/unavailable timestamps in an explicit unplaced population. Temporal
-  adjacency must not claim causality or a shared source ordering.
-- Inspect and return locally. Filters, refresh and resume remain explicit lane
-  operations; a merged display never invents a combined completeness/health total.
-- Review the design against OTel and current Activity contracts before choosing
-  capture or reusable-view semantics. Keep planned preservation behavior explicit.
-- Extend existing browser/property/model coverage where the implementation adds
-  state transitions, and keep the single/paired lane workflows intact.
+This is an optional presentation, not the default entry, a merged source,
+evaluated aggregate, saved chronology format, or combined completeness/health
+verdict. [Executed journey](journeys/held-chronology.md) and
+[validation](../VALIDATION.md) distinguish actual OTLP checks from synthetic
+ordering/ownership properties and native model negative controls.
 
-This is the next breadth proposal after the 455 breadth / 456 depth / 457
-consolidation cycle. It is not an implemented merged data source or default.
+## Next depth step: 459 related held trace context
+
+From a selected chronology record, offer explicit **Related held records** using
+validated reported TraceId and optional SpanId across the two held lanes. Reuse
+the existing record-context/ancestry components. Preserve repeated observations,
+ambiguous repeated span IDs, original lane/window provenance and unknown coverage.
+Reported parent links and time adjacency must remain distinct.
+
+Keep this as a local derived scope with explicit Return restoring Find, page and
+selection; do not silently rewrite text Find, broaden source scope, infer trace
+completeness or start a query. Saving a chronology-specific format, merged
+selection/capture and paired baseline attachments remain separate design work.
+
+460 then consolidates the demonstrated record-context projections, interaction
+state, accessible controls and performance before the next breadth cycle.

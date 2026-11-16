@@ -1,5 +1,66 @@
 # Validation record
 
+## 458 Held log/span chronology — 2026-11-16
+
+[Operator/component contract](docs/HELD_CHRONOLOGY.md),
+[executed storyboard](docs/journeys/held-chronology.md),
+[independent acceptance](docs/reviews/HELD_CHRONOLOGY_458_ACCEPTANCE.md).
+
+- Full root Go suite passes on **Go 1.27.3**. **2,080 UI tests pass, zero skipped**.
+  No production dependency or HTTP operation was added. The public display graph
+  is checked as **88 passive modules**, excluding Tail acquisition owners.
+- Paired Activity’s explicit **Hold chronology** pauses both sources, freezes their
+  held observations and reuses shared UTC/service/summary/Find components. Local
+  pages preserve every supplied occurrence. BigInt event ordering, stable lane/
+  ordinal ties and explicit unplaced timestamps do not infer shared source order,
+  causality or completeness. Back returns to the same paused lane buffers without
+  reconnecting. There is no new saved chronology or capture format.
+- The closed `goo.held-activity/1` rich-observation profile preserves selectors,
+  phases, latest read facts, gaps/evictions and each occurrence’s original window/
+  clock. It strips preservation tokens; original items stay in the owner lookup.
+  Snapshot copies are immutable and bounded. Strict empty null-selector lanes
+  retain **Not configured** rather than an invented scope. Retained history with
+  no latest completion remains distinct from never-read and known-empty states.
+- Hold and Pause guard the global and both lane epochs before/after synchronous
+  callbacks. Analyze rechecks its lease after pause. Cached inspection uses the
+  actual retained action node. Owner tests reject reentrant pair/lane replacement,
+  stale actions, wrong source keys and withdrawn/focus-hidden controls. Original
+  clocks/windows remain exact despite later changes to current lane buffers.
+- Hegel passes **53 synthetic banks**, zero skips, **0.53s**: 51 Go TailTracker-
+  admitted banks (50 generated + 200-row boundary), one public timestamp diagnostic
+  bank and one closed-empty-lane bank. Independent checks cover exact ordering,
+  ties, duplicate/lane membership, unplaced conservation, immutable snapshots and
+  no IO. Public diagnostic/empty-lane inputs are not claimed as actual OTLP rows.
+- The small native Quint machine passes; its fixture and **seven protocol mutants**
+  pass in **11.82s** by rejecting unpaused holds, invented membership, added SQL,
+  wrong windows/selectors, stale mode and forbidden source starts. Actual replay
+  adds nine targeted negative controls over the full observed journey.
+- Final real OTLP/collector/ClickHouse journey **5143e2393c66** passes in **1.8m**,
+  with **21 observed steps**, no browser errors and clean runtime/disposable
+  database teardown. Independent physical-source checks confirm 55 logs + 55
+  spans, including identical log observations and nanosecond ties. A separate real
+  scope verifies one log and a completed zero-row span read without a health claim.
+- Main: **four explicit Tail requests / four SQL** across the original and empty
+  scopes. Its local Hold/Find/page/Inspect/Back/fixed staging/held return add zero
+  source work. An initial lane Find while streams are active permits existing
+  background polling, but opens no new connection. The separate Bombadil actor
+  completes phase 12 in **378 snapshots**, two Tail requests, no forbidden reads,
+  preserved keys, paused sources and no overflow; combined main/actor **six SQL**.
+- Native observed replay passes in **22.09s**, **nine negative controls rejected**,
+  zero skips. The first observer incorrectly erased retained selection while its
+  route was hidden; the observer was corrected to report logical held selection,
+  without weakening the model. Fresh 320/390/1440 views and focused inspection
+  frames pass source/focus/overflow assertions and independent follow-up review.
+
+- Existing independent-lane regression **3eb2fd01e8f6** passes in **1.6m** on the
+  identical final runtime `57dbb87e…`: 19 steps, **489 actor snapshots**, completed
+  phase 8. Main **eight Tail requests / eight SQL** (five logs, three spans), actor
+  **three requests / three SQL**, **11 SQL combined**. Native replay passes in
+  **27.77s**, **15 negative controls rejected**, zero skips. Runtime cleanup passes
+  without browser errors; affected 450 screenshots are refreshed. Failed interim
+  chronology artifacts and obsolete candidate binaries were removed after final
+  acceptance; final reports/model traces remain available for regression work.
+
 ## 457 Raw-display consolidation — 2026-11-16
 
 [Shared display/preparation contract](docs/RAW_OBSERVATION_CONSOLIDATION.md#display-state-and-prepared-banks),

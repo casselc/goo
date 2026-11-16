@@ -42,7 +42,8 @@ docker compose up --build -d
 Open **http://localhost:8088**. The lab starts sample services and sends their OTel
 telemetry to ClickHouse; allow 20–40 seconds for data. Start in Explore, choose
 Logs, Spans or Logs + spans. Start paired streams explicitly, then inspect a
-record and drill into a fixed investigation.
+record and drill into a fixed investigation. **Hold chronology** pauses both
+streams and orders their held records together.
 
 The lab needs roughly 4 GB of memory and several GB of disk. It uses local-only
 ports and disposable credentials. [Lab instructions](docs/LOCAL_LAB.md) cover

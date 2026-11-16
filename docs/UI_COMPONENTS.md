@@ -170,6 +170,7 @@ use the same helper across bank and single-point presentations.
 | `goo-time-bars` | `data` / `.data`, controlled key and optional range intent | [Time bars](UI_TIME_BARS.md); exact supplied count domain. |
 | `goo-raw-gauge-points` | Shared `goo.dataset/1` observations / `.data`, controlled `.selectedKey`, explicit occurrence selection | [Gauge points](UI_RAW_GAUGE_POINTS.md); passive Points/Table through the common chart grammar. |
 | `goo-raw-histogram-buckets` | One admitted raw histogram occurrence / `.data`, Bars or Table | [Histogram buckets](UI_RAW_HISTOGRAM_BUCKETS.md); passive source counts through the common chart grammar. |
+| `goo-held-chronology` | `goo.held-activity/1` supplied lane observations / `.data`, controlled `.selectedKey`; explicit Inspect intent | Passive mixed log/span record display; exact source occurrence keys, local Find/pages, independent source facts. |
 | `goo-chart-frame` | Heading/unit/window/state attributes or `.data`; caller-owned children | [Chart frame](UI_CHART_FRAME.md). |
 | `goo-value-timeline` | `data` / `.data`, controlled key, optional brush intent | [Native timelines](NATIVE_TIMELINES.md); unavailable observations use a separate time-aligned rail outside the numeric domain. |
 | `goo-bucket-heatmap` | `data` / `.data`, controlled cell, optional range intent | [Bucket matrix](NATIVE_HEATMAPS.md); raw-span/native adapters remain separate. |

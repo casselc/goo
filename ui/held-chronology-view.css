@@ -1,0 +1,20 @@
+goo-held-chronology{display:block;min-inline-size:0}goo-held-chronology[hidden]{display:none}
+goo-held-chronology .held-chronology-sources{display:flex;flex-wrap:wrap;gap:4px 18px;margin-block:4px 8px;font-size:12px;color:var(--muted,#98a8bf)}
+goo-held-chronology .held-chronology-source{min-inline-size:0;max-inline-size:100%;border:0;padding:0;margin:0}
+goo-held-chronology .held-chronology-source summary{cursor:pointer;padding-block:4px;overflow-wrap:anywhere}
+goo-held-chronology .held-chronology-source summary strong{color:var(--text,#e6edf5)}
+goo-held-chronology .held-chronology-source dl{margin:4px 0 8px;font-size:12px}
+goo-held-chronology .held-chronology-source dl>div{display:grid;grid-template-columns:minmax(7rem,auto) minmax(0,1fr);gap:4px 12px;margin-block:4px}
+goo-held-chronology .held-chronology-source dd{margin:0;overflow-wrap:anywhere}
+goo-held-chronology .held-chronology-controls{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin-block:6px;font-size:12px}
+goo-held-chronology .held-chronology-controls>label{display:flex;align-items:center;gap:6px;flex:1 1 180px;min-inline-size:0;margin:0}
+goo-held-chronology input[type=search]{inline-size:100%;min-inline-size:0;min-block-size:32px;padding:4px 6px;font-size:12px;box-sizing:border-box}
+goo-held-chronology button{min-block-size:32px;padding:4px 8px;font-size:12px}
+goo-held-chronology .held-chronology-counts{color:var(--muted,#98a8bf);font-variant-numeric:tabular-nums}
+goo-held-chronology .held-chronology-kind{display:inline-block;border:1px solid var(--border,#334155);border-radius:3px;padding:0 4px;margin-inline-end:6px;color:var(--muted,#98a8bf);font-size:10px;line-height:1.6}
+goo-held-chronology .held-chronology-note,goo-held-chronology .held-chronology-status{margin-block:4px 8px;font-size:12px;color:var(--muted,#98a8bf)}
+goo-held-chronology tr[aria-current=true]{background:color-mix(in srgb,var(--accent,#8ab4fa) 9%,transparent)}
+goo-held-chronology .held-chronology-unplaced td{font-size:12px;white-space:normal;color:var(--muted,#98a8bf)}
+goo-held-chronology [hidden]{display:none!important}
+@media(max-width:700px){goo-held-chronology .held-chronology-sources{display:block}goo-held-chronology .held-chronology-source{margin-block:2px}goo-held-chronology .held-chronology-source dl>div{grid-template-columns:minmax(0,1fr)}}
+@media(pointer:coarse){goo-held-chronology button,goo-held-chronology input[type=search]{min-block-size:44px}goo-held-chronology .held-chronology-source summary{min-block-size:32px}}

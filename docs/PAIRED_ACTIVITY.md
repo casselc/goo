@@ -8,8 +8,9 @@ complete shared filter, plus each lane’s [independent condition](PAIRED_ACTIVI
 Each lane has its own recent window, loaded observations, Find, columns,
 Pause/Resume, source refusal and Retry. A span failure does not erase or restart
 the log lane. An empty lane remains coverage-unknown. The two windows are
-independent; there is no merged chronology, combined population count or shared
-health verdict.
+independent; there is no combined population count or shared health verdict.
+**Hold chronology** pauses both and orders their held records in one optional
+[event-time view](HELD_CHRONOLOGY.md). **Back to lanes** does not reconnect.
 
 ## Inspect and investigate
 
