@@ -418,17 +418,17 @@ Full UI tests (2098, zero skips), Go tests, real-OTLP browser journey and
 independent responsive review pass. Duplicate applied/Parent predicate consolidation was not delivered and
 is deferred until an identity-aware UX review preserves real parent/slot scope.
 
-## Following depth step: 461 related held trace context
+## 461 — implemented: related held trace context
 
-From a selected chronology record, offer explicit **Related held records** using
-validated reported TraceId and optional SpanId across the two held lanes. Reuse
-the existing record-context/ancestry components. Preserve repeated observations,
+From a selected chronology record, explicit **Related held records** uses
+validated reported TraceId and optional SpanId across the two held lanes. It reuses
+the existing record-context/ancestry components and preserves repeated observations,
 ambiguous repeated span IDs, original lane/window provenance and unknown coverage.
 Reported parent links and time adjacency must remain distinct.
 
-Keep this as a local derived scope with explicit Return restoring Find, page and
-selection; do not silently rewrite text Find, broaden source scope, infer trace
-completeness or start a query. Saving a chronology-specific format, merged
+This is a local derived scope with explicit Return restoring Find, page, scroll and
+selection. It does not rewrite text Find, broaden source scope, infer trace
+completeness or start a query. See [implemented contract](RELATED_HELD_RECORDS.md). Saving a chronology-specific format, merged
 selection/capture and paired baseline attachments remain separate design work.
 
 462 then consolidates the demonstrated record-context projections, interaction

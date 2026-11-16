@@ -2339,3 +2339,19 @@ See [attribute refinement](ATTRIBUTE_REFINEMENT.md).
 shared inspector. It is an application coordinator, not a new passive display
 kind or mixed source grammar. Tail-local callbacks and inactive-user-action
 guards preserve lane custody without adding queries to display elements.
+
+
+## Local held-record context (461)
+
+`goo-held-chronology.showRelated(signal, occurrenceKey)` derives a local exact-ID
+scope from its currently supplied immutable bank. It returns false for invalid,
+missing or withdrawn occurrences. The owning inspector supplies the occurrence;
+the component does not acquire authority to navigate or read a source.
+
+Related mode retains the chronology's Find, page, selection and scroll return
+point. Same reported span is optional and stays inside the selected TraceId.
+Return restores the previous selected occurrence through the existing
+`goo-chronology-inspect` intent. New supplied data retires the local scope.
+Reported parent display reuses `goo-record-context`, using only held spans as
+parent candidates. Repeated occurrences remain separate; parent ambiguity and
+unknown trace coverage stay explicit. See [contract](RELATED_HELD_RECORDS.md).

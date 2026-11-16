@@ -72,3 +72,8 @@ test('a reentrant single-lane Apply changes the ownership vector and prevents st
 test('a closed unconfigured sibling does not block useful held data or acquire an invented selector',()=>{
  const f=fixture();f.spans.reset();f.owner.sync();assert.equal(f.hold.disabled,false);assert.equal(f.hold.onclick(),true);assert.equal(f.owner.snapshot().view,'chronology');assert.equal(f.chronology.data.lanes.logs.rows.length,2);assert.equal(f.chronology.data.lanes.spans.selector,null);assert.equal(f.chronology.data.lanes.spans.completedRead,null);assert.deepEqual(f.chronology.data.lanes.spans.rows,[]);assert.equal(f.spans.calls.starts.length,0);f.inspect();assert.equal(button(f.host,'Analyze observation window').disabled,false);f.back.onclick();assert.equal(f.owner.snapshot().view,'lanes');assert.equal(f.spans.state.selector,null);assert.deepEqual(f.spans.state.rows,[]);assert.equal(f.spans.calls.starts.length,0);
 });
+
+test('related held intent requires a current chronology inspector and valid reported trace identity',()=>{
+ const f=fixture();f.logs.state.rows[0].record.TraceId='a'.repeat(32);f.hold.onclick();f.inspect();const related=button(f.host,'Related held records'),calls=[];f.chronology.showRelated=(...args)=>calls.push(args);const before=stats(f);assert.equal(related.disabled,false);related.onclick();assert.deepEqual(calls,[['logs',f.logs.state.rows[0].key]]);assert.deepEqual(stats(f),before);related.hidden=true;related.onclick();assert.equal(calls.length,1);related.hidden=false;f.back.onclick();related.onclick();assert.equal(calls.length,1);assert.equal(f.handoffs.length,0);
+ const invalid=fixture();invalid.hold.onclick();invalid.inspect();assert.equal(button(invalid.host,'Related held records').disabled,true);
+});

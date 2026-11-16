@@ -15,6 +15,8 @@ streams ([measured behavior](ACTIVITY_COHERENCE.md)). Its two lanes remain
 independent acquisitions. [Reusable paired definitions](ACTIVITY_VIEWS.md) save
 shared scope, [independent lane conditions](PAIRED_ACTIVITY_FILTERS.md) and layouts,
 with paused recall and explicit Start. [Held chronology](HELD_CHRONOLOGY.md) orders paused lane observations locally.
+[Related held records](RELATED_HELD_RECORDS.md) follows valid reported IDs locally
+and restores the original chronology. Trace coverage remains unknown.
 Saving a chronology-specific presentation, merged selection/capture and paired
 baseline attachments remain outside this format. No combined count or health verdict is inferred.
 

@@ -1,5 +1,30 @@
 # Validation record
 
+## 461 Related held trace records — 2026-11-16
+
+[Contract](docs/RELATED_HELD_RECORDS.md) and
+[executed storyboard/screenshots](docs/journeys/related-held-records.md).
+
+- Related held records matches valid reported TraceId across both immutable held
+  lanes; optional SpanId refinement stays inside that trace. Repeated occurrences
+  and ambiguous parent IDs remain distinct. Shared reported context uses held
+  spans only as parent candidates; trace coverage remains unknown.
+- Return restores Find, page, selected occurrence, inspector and table scroll.
+  Hidden, detached and retired inspector controls cannot enter the local scope.
+  Keyboard disclosure and visible-heading focus after inspector Close pass.
+- **2,104 UI tests pass, zero skipped**; full root Go suite passes on Go 1.27.3.
+  Focused model/owner/view checks include 80 generated held-bank scenarios against
+  an independent exact-ID subset oracle, malformed/zero IDs and new-bank retirement.
+- Final ordinary-OTLP journey passes (54.8s): 60 logs and 60 spans. Both local
+  boundaries issue zero SQL and zero API POSTs. The independent Bombadil driver
+  records 103 snapshots and returns with bank/route unchanged. No page errors;
+  runtime cleanup succeeds. Responsive screenshots at 1440/390/320 are current.
+- Existing 458 regression passes on the final binary: 21 steps, 510 Bombadil
+  snapshots, native Quint replay (17.39s) and nine rejected negative controls,
+  zero skips. Runtime/database cleanup succeeds; five affected frames refreshed.
+  This model validates the existing source-authority contract, not the new
+  related-scope reading state, which is covered by focused and browser tests.
+
 ## 460 Contextual Help and optional reading guide — 2026-11-16
 
 A single header Help button opens a modeless, full-width inline panel. Seven

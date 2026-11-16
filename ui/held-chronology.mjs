@@ -2,7 +2,7 @@
 import {object,text,array} from './intent-shape.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
 import * as Environment from './record-environment.mjs';
-import {describe,findQuery,matchesLoaded} from './record-presentation.mjs';
+import {describe,findQuery,matchesLoaded,validID} from './record-presentation.mjs';
 export const limits=Object.freeze({maxRowsPerLane:100,maxBytes:8*1024*1024,maxNodes:250000,maxDepth:32});
 const signals=['logs','spans'],laneFields=['selector','phase','staged','find','readWindow','completedRead','connection','evicted','gap','rows'],itemFields=['key','record','readWindow','observedAt','limited','late'];
 const admitted=new WeakSet(),encoder=new TextEncoder(),own=(v,k)=>Object.hasOwn(v,k),fail=message=>{throw Error(message||'Invalid held Activity observations.');};
@@ -62,4 +62,17 @@ export function model(value,{query=''}={}){
  }}
  rows.sort((a,b)=>{if(a.placed!==b.placed)return a.placed?-1:1;if(a.placed){const x=BigInt(a.timeNS),y=BigInt(b.timeNS);if(x!==y)return x>y?-1:1}return signals.indexOf(a.signal)-signals.indexOf(b.signal)||a.index-b.index});
  return {data,rows,placed:rows.filter(row=>row.placed),unplaced:rows.filter(row=>!row.placed),counts,matched,query};
+}
+
+// Exact reported correlation over held occurrences; never a trace-completeness claim.
+export function related(value,{signal,key,spanOnly=false}={}){
+ const data=adopt(value);
+ if(!signals.includes(signal)||typeof key!=='string'||typeof spanOnly!=='boolean')fail('Choose a held occurrence.');
+ const item=data.lanes[signal].rows.find(item=>item.key===key);
+ if(!item||!validID(item.record.TraceId,32))fail('A valid reported trace ID is required.');
+ const traceId=item.record.TraceId,spanId=validID(item.record.SpanId,16)?item.record.SpanId:null;
+ if(spanOnly&&!spanId)fail('A valid reported span ID is required.');
+ const current=model(data),rows=current.rows.filter(entry=>entry.item.record.TraceId===traceId&&(!spanOnly||entry.item.record.SpanId===spanId));
+ const matched=Object.fromEntries(signals.map(signal=>[signal,rows.filter(entry=>entry.signal===signal).length]));
+ return {...current,rows,placed:rows.filter(row=>row.placed),unplaced:rows.filter(row=>!row.placed),matched,traceId,spanId,spanOnly};
 }

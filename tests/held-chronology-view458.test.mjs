@@ -58,3 +58,18 @@ test('one atomic announcement combines current signal matches and page range',()
  const [,next]=controls(view);next.onclick();assert.match(status[0].textContent,/Rows 101–200/);assert.match(status[0].textContent,/Logs 100\/100 · Spans 100\/100 held/);const search=find(view);search.value='message 0';search.oninput();assert.match(status[0].textContent,/Logs 1\/100 · Spans 0\/100 held · Rows 1–1/);assert.equal(view.querySelectorAll('[role="status"]').length,1);
  search.value='x'.repeat(257);search.oninput();assert.equal(search.getAttribute('aria-invalid'),'true');assert.match(status[0].textContent,/at most 256/);
 });
+
+test('related held scope ignores Find, retains duplicate observations and restores page, selection, Find and scroll',()=>{
+ const input=structuredClone(data(100,100)),trace='a'.repeat(32),span='b'.repeat(16);
+ for(const signal of ['logs','spans'])for(const item of input.lanes[signal].rows){item.record.TraceId=trace;item.record.SpanId=span}
+ const view=mount(input),search=find(view);search.value='message';search.oninput();search.value='';search.oninput();controls(view)[1].onclick();const chosen=rows(view)[20].dataset.chronologyKey;view.selectedKey=chosen;view.querySelector('goo-table').scrollTop=37;
+ const entry=rows(view)[20];assert.equal(view.showRelated(entry.dataset.signal,entry.dataset.sourceKey),true);assert.equal(view.dataset.related,'trace');assert.match(view.textContent,/coverage unknown/);assert.equal(rows(view).length,100);assert.equal(view.querySelectorAll('goo-record-context').length,100);
+ const spanControl=view.querySelectorAll('input').find(input=>input.type==='checkbox');spanControl.checked=true;spanControl.onchange();assert.equal(view.dataset.related,'span');assert.equal(rows(view).length,100);
+ const back=view.querySelector('[data-related-return]');back.onclick();assert.equal(view.dataset.related,'none');assert.equal(find(view).value,'');assert.match(view.textContent,/Rows 101–200/);assert.equal(view.selectedKey,chosen);assert.equal(view.querySelector('goo-table').scrollTop,37);assert.equal(document.activeElement.dataset.chronologyInspect,chosen);
+ view.hidden=true;assert.equal(view.showRelated('logs',input.lanes.logs.rows[0].key),false);view.hidden=false;assert.equal(view.showRelated('logs','forged'),false);back.onclick();assert.equal(view.dataset.related,'none');
+});
+
+test('related mode temporarily bypasses chronology Find and resets on a new supplied bank',()=>{
+ const input=structuredClone(data());input.lanes.logs.rows[0].record.TraceId='a'.repeat(32);input.lanes.spans.rows[0].record.TraceId='a'.repeat(32);const view=mount(input),search=find(view);search.value='message';search.oninput();const key=input.lanes.logs.rows[0].key;view.selectedKey='logs:'+key;
+ assert.equal(view.showRelated('logs',key),true);assert.equal(rows(view).length,2);const span=view.querySelectorAll('input').find(input=>input.type==='checkbox');assert.equal(span.disabled,true);view.querySelector('[data-related-return]').onclick();assert.equal(find(view).value,'message');assert.equal(rows(view).length,2);view.showRelated('logs',key);view.data=data();assert.equal(view.dataset.related,'none');assert.equal(rows(view).length,4);
+});

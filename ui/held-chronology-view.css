@@ -18,3 +18,8 @@ goo-held-chronology .held-chronology-unplaced td{font-size:12px;white-space:norm
 goo-held-chronology [hidden]{display:none!important}
 @media(max-width:700px){goo-held-chronology .held-chronology-sources{display:block}goo-held-chronology .held-chronology-source{margin-block:2px}goo-held-chronology .held-chronology-source dl>div{grid-template-columns:minmax(0,1fr)}}
 @media(pointer:coarse){goo-held-chronology button,goo-held-chronology input[type=search]{min-block-size:44px}goo-held-chronology .held-chronology-source summary{min-block-size:32px}}
+goo-held-chronology .held-related-scope{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;border-block:1px solid var(--border,#334155);padding-block:8px;margin-block:8px;min-inline-size:0}
+goo-held-chronology .held-related-scope h4{margin:0;font-size:14px}
+goo-held-chronology .held-related-scope p{flex:1 1 100%;margin:0;font-size:12px;overflow-wrap:anywhere;color:var(--muted,#98a8bf)}
+goo-held-chronology .held-related-scope label{display:flex;align-items:center;gap:6px;font-size:12px;margin:0;min-block-size:32px}
+@media(pointer:coarse){goo-held-chronology .held-related-scope label{min-block-size:44px}}

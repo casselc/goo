@@ -12,7 +12,9 @@ record summaries identify each occurrence. Exact timestamps remain in native
 adjacency does not establish causality. Duplicate source observations remain
 separate rows. Unavailable or unrenderable timestamps follow in an explicit group.
 
-**Inspect** opens the existing shared record detail. **Analyze observation window**
+**Inspect** opens the existing shared record detail. **Related held records**
+[locally follows reported trace/span IDs](RELATED_HELD_RECORDS.md) across both
+held lanes, with an explicit return to the previous chronology reading state. **Analyze observation window**
 stages the selected occurrence’s original lane selector and poll window, not the
 latest lane window. The selected record’s original source read clock is retained.
 A later explicit Run reads data. Returning from analysis retains the held view.

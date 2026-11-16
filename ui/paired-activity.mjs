@@ -20,7 +20,7 @@ export function mount(host,{current=()=>true,onOpenFixed,onChange=()=>{}}={}){
  let disposed=false,epoch=0,plan=null,selector=null,inspection=null,lastFocus=null,view='lanes',viewRevision=0,frozen=null;
  const originals=new Map(),detailGroups=new Map();
  const lanes=new Map(),available=()=>!disposed&&current()&&root.isConnected&&!document.hidden&&!root.closest('[hidden], [aria-hidden="true"], [inert]');
- const inspector=UI.inspector(detail,{onClose:(key,opener)=>{inspection=null;chronology.selectedKey=null;revealFocus(opener,view==='chronology'?chronology.querySelector('input'):hold);return false}});
+ const inspector=UI.inspector(detail,{onClose:(key,opener)=>{inspection=null;chronology.selectedKey=null;revealFocus(opener,view==='chronology'?(chronology.querySelector('[data-related-heading]')||chronology.querySelector('input')):hold);return false}});
  const close=detail.querySelector('[aria-label="Close selected item details"]'),closeInspection=close.onclick;close.onclick=event=>{if(available()&&nativeControlReady(close))closeInspection.call(close,event)};
  const heading=detail.querySelector('.ui-inspector-heading>h4');heading.id=id+'-detail';heading.tabIndex=-1;detail.setAttribute('aria-labelledby',heading.id);
  function clearInspection(){inspection=null;lastFocus=null;detailGroups.clear();inspector.clear();chronology.selectedKey=null}
@@ -40,12 +40,15 @@ export function mount(host,{current=()=>true,onOpenFixed,onChange=()=>{}}={}){
   for(const old of detailGroups.keys())if(!inspector.has(old))detailGroups.delete(old);
   let group=detailGroups.get(key);
   if(!group){
-   const content=UI.node('div'),analyze=UI.node('button','Analyze observation window');analyze.type='button';analyze.setAttribute('aria-label','Analyze observation window · '+signal);
+   const content=UI.node('div'),context=UI.node('goo-record-context'),analyze=UI.node('button','Analyze observation window');context.setAttribute('signal',signal);context.record=captured.record;content.append(context);analyze.type='button';analyze.setAttribute('aria-label','Analyze observation window · '+signal);
    RecordPresentation.attributes(content,captured.record);
    content.append(UI.disclosure('Original observation window',[UI.node('p',new Date(item.readWindow.fromMs).toISOString()+' → '+new Date(item.readWindow.toMs).toISOString()),...(item.observedAt?[UI.stats([{label:'Source read UTC',value:item.observedAt,format:'utc'}],{density:'compact'})]:[])]));
-   group={content,analyze};detailGroups.set(key,group);
+   const related=UI.node('button','Related held records');related.type='button';group={content,analyze,related,context};detailGroups.set(key,group);
   }
-  const {content,analyze}=group;
+  const {content,analyze,related,context}=group;
+  context.records=frozen?.lanes.spans.rows.map(item=>({TraceId:item.record.TraceId,SpanId:item.record.SpanId,ParentSpanId:item.record.ParentSpanId}))||[];
+  related.hidden=view!=='chronology';related.disabled=!RecordPresentation.validID(captured.record.TraceId,32);related.title=related.disabled?'Valid reported trace ID required':'Explore matching reported IDs in held logs and spans; no source read.';
+  related.onclick=()=>{if(!lease()||view!=='chronology'||!nativeControlReady(related))return;chronology.showRelated(signal,item.key)};
   analyze.disabled=typeof onOpenFixed!=='function';
   analyze.onclick=()=>{
    if(!lease()||!nativeControlReady(analyze))return;
@@ -54,7 +57,7 @@ export function mount(host,{current=()=>true,onOpenFixed,onChange=()=>{}}={}){
    onOpenFixed(question,{...layout,columns:[...layout.columns,'context']},analyze);
   };
   inspection={key,signal,opener,analyze,lease};if(view==='chronology')chronology.selectedKey=signal+':'+item.key;lastFocus=opener;
-  inspector.show({key,title:signal==='logs'?'Observed log':'Observed span',description:RecordPresentation.description(captured.record),content,actions:[analyze],opener});
+  inspector.show({key,title:signal==='logs'?'Observed log':'Observed span',description:RecordPresentation.description(captured.record),content,actions:[analyze,related],opener});
   revealFocus(heading,opener);return true;
  }
  for(const signal of ['logs','spans']){

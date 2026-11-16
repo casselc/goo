@@ -97,3 +97,5 @@ Services/native record context and saved reuse, with the next operator roadmap.
 [Numeric CEL conditions](CEL_NUMERIC_ATTRIBUTES.md): exact typed thresholds and explicit parse states over resource/record attributes.
 
 [Logs and spans together](PAIRED_ACTIVITY.md): independent live lanes, local inspection and read-free retained return.
+
+- [Related held records](RELATED_HELD_RECORDS.md): local trace/span context and return.
