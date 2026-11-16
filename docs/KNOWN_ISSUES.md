@@ -17,6 +17,8 @@ shared scope, [independent lane conditions](PAIRED_ACTIVITY_FILTERS.md) and layo
 with paused recall and explicit Start. [Held chronology](HELD_CHRONOLOGY.md) orders paused lane observations locally.
 [Related held records](RELATED_HELD_RECORDS.md) follows valid reported IDs locally
 and restores the original chronology. Trace coverage remains unknown.
+[462 consolidation](CHRONOLOGY_CONSOLIDATION.md) centralizes reading transitions
+and shares immutable parent projections while retaining defensive public data.
 The independent [UX](reviews/RELATED_HELD_461_UX.md) and
 [accessibility](reviews/RELATED_HELD_461_ACCESSIBILITY.md) follow-ups address
 hidden-row inspector restoration, visible span anchors and non-color selection.

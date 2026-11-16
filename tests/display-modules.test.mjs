@@ -85,7 +85,7 @@ test('display entry imports a closed passive graph without publishing namespaces
   // Raw observation points add checked supplied-data admission and geometry only.
   for(const name of ['raw-gauge-points-view','raw-gauge-points','raw-gauge-schema','raw-observation-protocol'])assert.ok(visited.has(new URL('../ui/'+name+'.mjs',import.meta.url).href));
   for(const name of ['raw-observations','raw-observation-context'])assert.equal(visited.has(new URL('../ui/'+name+'.mjs',import.meta.url).href),false);
-  assert.equal(visited.size, 90);
+  assert.equal(visited.size, 91);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

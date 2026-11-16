@@ -68,3 +68,16 @@ changing Find/page. Its fixed anchor remains accessible by description throughou
 persistent Selected marker and 2px system-color boundary. The runtime records no
 browser errors and cleans up successfully. Native disclosure activation and local
 source isolation remain covered.
+
+## Consolidation regression (462)
+
+The same storyboard passed after immutable reading-state extraction and shared
+parent-context projection: 43.3s, three zero-SQL/API local boundaries, 226
+Bombadil snapshots reaching phase 8, bank/route unchanged, no browser errors and
+successful cleanup. Receipt: `artifacts/related-held461/10a0702b0295/report.json`.
+Refreshed frames retain the independently accepted UI; no new controls were added.
+
+The existing native chronology regression also passed on the consolidated build:
+21 steps, 615 Bombadil snapshots and nine rejected Quint negative controls.
+Native Hegel order/conservation checks pass over 53 synthetic banks; these are
+property fixtures, not OTLP ingestion evidence.

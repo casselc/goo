@@ -7,8 +7,16 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–459 delivered and validated; 460 implemented, final browser acceptance pending**. The current cadence is
-**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup → 453 referring-span discovery depth → 454 selector/reference consolidation → 455 held raw-gauge Points breadth → 456 single-point histogram bucket depth → 457 raw-display consolidation → 458 held log/span chronology breadth → 459 requested UI/UX/accessibility polish and guidance assessment**.
+Status: **429 and 437–462 delivered and validated**. The current cadence is
+**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup → 453 referring-span discovery depth → 454 selector/reference consolidation → 455 held raw-gauge Points breadth → 456 single-point histogram bucket depth → 457 raw-display consolidation → 458 held log/span chronology breadth → 459 requested UI/UX/accessibility polish and guidance assessment → 460 contextual Help → 461 related held records and independent UX fixes → 462 reading-state/projection consolidation**.
+**Next cycle adopted after architecture review:** 463 explicit All-environments
+ordinary span entry → 464 bounded raw exponential-histogram inspection → 465
+capability/uncertainty consolidation → whole-product checkpoint. See the
+[planning proposal](reviews/ROADMAP_AFTER_462_PROPOSAL.md). Before 463 coding,
+review its exact owner/carrier matrix; before 464 coding, review raw source/profile
+admission separately from evaluation. Neither step globally widens specialized
+or paired scope guards.
+
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
 foundation; this does not extend a CEL platform queue.
@@ -431,8 +439,12 @@ selection. It does not rewrite text Find, broaden source scope, infer trace
 completeness or start a query. See [implemented contract](RELATED_HELD_RECORDS.md). Saving a chronology-specific format, merged
 selection/capture and paired baseline attachments remain separate design work.
 
-462 then consolidates the demonstrated record-context projections, interaction
-state, accessible controls and performance before the next breadth cycle.
+## 462 — implemented: chronology state and context consolidation
+
+[Reading state and parent-context projection](CHRONOLOGY_CONSOLIDATION.md) now
+share immutable transitions and admitted-bank caches. Public data remains detached,
+and the independently accepted interface and guarded return behavior are preserved.
+This completes the structural step before the next breadth cycle.
 
 
 The [461 UX review](reviews/RELATED_HELD_461_UX.md) also feeds 462: consider

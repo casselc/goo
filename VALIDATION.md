@@ -1,5 +1,39 @@
 # Validation record
 
+## 462 Chronology state and parent-context consolidation — 2026-11-16
+
+[Contract](docs/CHRONOLOGY_CONSOLIDATION.md) and
+[independent acceptance](docs/reviews/CONSOLIDATION_462_ACCEPTANCE.md).
+
+- Pure immutable transitions own Find/page/related/return reading state; DOM
+  focus, scroll and guarded inspection/restoration remain in existing owners.
+  Generated campaigns exercise 100 seeds × 80 steps, including re-anchoring,
+  span refinement, Return and reset barriers.
+- Parent-ID projection is shared by record-list and chronology/inspectors, cached
+  per admitted immutable bank. Trusted projections retain frozen primitive data;
+  arbitrary public arrays and public readback remain detached. Internal rendering
+  avoids cloning the full held bank. Tests retain duplicate/invalid/missing parent
+  outcomes and verify projection identity and mutation isolation. No latency
+  improvement is claimed without a timing benchmark.
+- **2,111 UI tests pass, zero skipped**; embedded Go runtime rebuilt on Go 1.27.3.
+  Independent reviewer reran six focused files and accepted source/ownership.
+- Real-OTLP journey passes on the final binary (43.3s): three local boundaries
+  issue zero SQL/API POSTs, including hidden-original-row restoration. Bombadil
+  reaches phase 8 over 226 snapshots with bank/route unchanged. No browser errors;
+  successful runtime cleanup. Refreshed desktop/mobile/forced-color frames pass
+  independent visual acceptance. Receipt: `artifacts/related-held461/10a0702b0295/report.json`.
+- Existing 458 regression passes on the final binary: 21 steps, 615 Bombadil
+  snapshots, native Quint replay (14.13s) and nine rejected negative controls,
+  zero skips. Runtime and isolated database cleanup succeed. This checks source
+  authority; local reading transitions are covered by the generated JS campaigns.
+- Native Hegel order/conservation checks pass over 53 synthetic banks (51
+  tracker-admitted plus timestamp/closed-lane diagnostics), including immutable
+  snapshots and no IO. The initial attempt hit a read-only default cache; the
+  workspace-cache rerun passes with no code change.
+- A planning agent reconciled the remaining backlog. Architecture accepted the
+  next breadth/depth/consolidation sequence, with explicit span-carrier and raw
+  exponential-profile design gates before implementation.
+
 ## 461 Independent UX/accessibility follow-up — 2026-11-16
 
 [UX review](docs/reviews/RELATED_HELD_461_UX.md) and

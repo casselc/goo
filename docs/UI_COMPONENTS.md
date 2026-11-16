@@ -2358,3 +2358,11 @@ unavailable reason; selected rows retain a text marker and forced-color boundary
 Reported parent display reuses `goo-record-context`, using only held spans as
 parent candidates. Repeated occurrences remain separate; parent ambiguity and
 unknown trace coverage stay explicit. See [contract](RELATED_HELD_RECORDS.md).
+
+
+Chronology's internal reading transitions and cached parent-context projection
+are described in [462 consolidation](CHRONOLOGY_CONSOLIDATION.md). Shared
+`contextRecord` / `contextRecords` helpers now live with record presentation;
+record-list exports refer to that same implementation. A trusted immutable
+projection can be shared internally without per-element parent-array copies.
+Raw public inputs and public readback retain defensive-copy behavior.

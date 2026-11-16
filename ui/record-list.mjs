@@ -27,10 +27,7 @@ export function displayOptions(value=defaults){
 export function fieldValue(record,field){return Columns.presentation(record,field);}
 // Context consumes reported identifiers only. Bound malformed public values too:
 // compact metadata must not clone rich page payloads once per displayed record.
-export function contextRecord(record){
- const out={};for(const [key,max]of [['TraceId',32],['SpanId',16],['ParentSpanId',16]])if(Object.hasOwn(record,key)){const value=record[key];out[key]=value==null?null:typeof value==='string'&&value.length<=max?value:'invalid'}return out;
-}
-export const contextRecords=rows=>rows.map(contextRecord);
+export const contextRecord=Records.contextRecord,contextRecords=Records.contextRecords;
 export function listModel(page,display=defaults){
  page=Pages.adoptPage(page);display=displayOptions(display);
  recordDisplay({version:'goo.view/1',scope:{kind:'record-query',signal:page.signal},kind:{name:'record-list',version:1},display},page.question);

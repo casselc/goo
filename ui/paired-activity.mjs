@@ -46,7 +46,7 @@ export function mount(host,{current=()=>true,onOpenFixed,onChange=()=>{}}={}){
    const related=UI.node('button','Related held records');related.type='button';group={content,analyze,related,context};detailGroups.set(key,group);
   }
   const {content,analyze,related,context}=group;
-  context.records=frozen?.lanes.spans.rows.map(item=>({TraceId:item.record.TraceId,SpanId:item.record.SpanId,ParentSpanId:item.record.ParentSpanId}))||[];
+  context.records=frozen?Chronology.parentRecords(frozen):[];
   related.hidden=view!=='chronology';related.disabled=!RecordPresentation.validID(captured.record.TraceId,32);related.title=related.disabled?'Valid reported trace ID required':'Explore matching reported IDs in held logs and spans; no source read.';
   related.onclick=()=>{if(!lease()||view!=='chronology'||!nativeControlReady(related))return;chronology.showRelated(signal,item.key)};
   analyze.disabled=typeof onOpenFixed!=='function';

@@ -99,3 +99,5 @@ Services/native record context and saved reuse, with the next operator roadmap.
 [Logs and spans together](PAIRED_ACTIVITY.md): independent live lanes, local inspection and read-free retained return.
 
 - [Related held records](RELATED_HELD_RECORDS.md): local trace/span context and return.
+
+- [Chronology consolidation](CHRONOLOGY_CONSOLIDATION.md): local reading state and shared parent context.

@@ -2,7 +2,7 @@
 import {object,text,array} from './intent-shape.mjs';
 import {validate as validatePredicate} from './predicate-validation.mjs';
 import * as Environment from './record-environment.mjs';
-import {describe,findQuery,matchesLoaded,validID} from './record-presentation.mjs';
+import {describe,findQuery,matchesLoaded,validID,contextRecords} from './record-presentation.mjs';
 export const limits=Object.freeze({maxRowsPerLane:100,maxBytes:8*1024*1024,maxNodes:250000,maxDepth:32});
 const signals=['logs','spans'],laneFields=['selector','phase','staged','find','readWindow','completedRead','connection','evicted','gap','rows'],itemFields=['key','record','readWindow','observedAt','limited','late'];
 const admitted=new WeakSet(),encoder=new TextEncoder(),own=(v,k)=>Object.hasOwn(v,k),fail=message=>{throw Error(message||'Invalid held Activity observations.');};
@@ -76,3 +76,6 @@ export function related(value,{signal,key,spanOnly=false}={}){
  const matched=Object.fromEntries(signals.map(signal=>[signal,rows.filter(entry=>entry.signal===signal).length]));
  return {...current,rows,placed:rows.filter(row=>row.placed),unplaced:rows.filter(row=>!row.placed),matched,traceId,spanId,spanOnly};
 }
+
+const parentProjections=new WeakMap();
+export function parentRecords(value){const data=adopt(value);let projection=parentProjections.get(data);if(!projection){projection=contextRecords(data.lanes.spans.rows.map(item=>item.record));parentProjections.set(data,projection)}return projection}
