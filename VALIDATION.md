@@ -1,5 +1,58 @@
 # Validation record
 
+## 457 Raw-display consolidation — 2026-11-16
+
+[Shared display/preparation contract](docs/RAW_OBSERVATION_CONSOLIDATION.md#display-state-and-prepared-banks),
+[independent follow-up acceptance](docs/reviews/RAW_DISPLAY_CONSOLIDATION_457_ACCEPTANCE.md).
+
+- Full root Go suite passes on **Go 1.27.3**. **2,056 UI tests pass, zero skipped**;
+  affected statistics/owner tests pass after the final narrow-header correction.
+  No production dependency or HTTP operation was added. The checked public
+  display graph is **85 passive modules**.
+- `prepare(bank, expectedRequest)` validates and freezes its own bank copy once,
+  with a private occurrence index. Histogram inspection projects and validates
+  only the selected point. Returned snapshots detach values; arbitrary-input
+  convenience APIs still admit the whole bank. Mutation, forged members, wrong
+  expected requests, duplicate keys, recording certainty and no IO are checked.
+  Canonical local identity logic is shared without adding source authority.
+- Synthetic Node 24 workload, five warmed samples: at 1,000 rows / 1.25 MB,
+  full-validation convenience median **87.08ms**, prepared projection **0.37ms**,
+  one preparation **80.5ms**. At 5,000 rows / 6.26 MB: **402.5ms / 0.41ms**,
+  preparation **576.6ms**. These are local projection costs, not browser/source
+  latency claims. `scripts/measure_raw_projection457.mjs` reproduces the workload;
+  correctness tests have no timing thresholds.
+- Existing Hegel campaigns pass **52 gauge banks + 53 histogram points**, zero
+  skips, **8.03s** combined. Exact counts/boundaries, raw occurrence conservation,
+  finite geometry, uncertainty, display budgets and source-free behavior survive
+  the new projection path. The generated inputs are separate from actual OTLP.
+- Histogram Bars/Table now retain their page and exact rows on the same admitted
+  snapshot; new supplied data resets it. Cached inspector content avoids repeated
+  projection/DOM work and renews Nearby leases. Visible Table selection updates
+  immediately without replacing the opener. Shared native display choices capture
+  stable option values, guard withdrawn controls and retain native focus.
+- Final gauge journey **d8d9f01388f7** passes in **42.6s**, 19 observed steps,
+  **566 Bombadil snapshots**, completed phase 9. Final histogram journey
+  **915e06614a6e** passes in **38.3s**, 19 steps, **536 snapshots**, completed phase
+  18. Both use the same final runtime `d7bf1ea661…`, preserve source facts and
+  have no browser errors with clean runtime/disposable database teardown.
+  Each main flow makes **two source requests / 11 SQL**, and each separate actor
+  brings its combined total to **22 SQL**. All local Find, mode/page, inspection,
+  cached reopen and context staging/return actions add zero source requests/SQL.
+- Fresh 320/390/1440 frames retain four visible histogram buckets and replace
+  repeated statistic caveats/cards with two columns, three rows and one presence
+  note. Narrow headers fit their cells. Existing contrast checks remain **8.69:1**
+  bar boundary and **9.27:1** count text. Independent source and visual follow-up
+  reviews accepted; no broad accessibility certification is claimed. Storyboards,
+  actors and affected screenshots are current.
+
+- Existing cross-signal journey **35ca67834d77** passes against the same runtime
+  in **1.6m**, with 29 steps across gauge/sum/histogram contexts, held return and
+  source retirement. Main **10 requests / 35 SQL**; actor **four requests / 17
+  SQL**, **873 snapshots**, completed phase 12; combined **52 SQL**. Native Quint
+  replay passes in **27.95s**, zero skips, with **15 rejected negative controls**.
+  Browser errors are empty and runtime/database cleanup passes. Refreshed 449
+  frames retain the existing scope/lease behavior after cached inspection changes.
+
 ## 456 Single raw histogram-point bucket bars — 2026-11-16
 
 [Operator/component contract](docs/UI_RAW_HISTOGRAM_BUCKETS.md),

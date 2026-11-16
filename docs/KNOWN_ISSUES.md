@@ -22,7 +22,10 @@ case-bank coverage and profile-specific admission.
 the common dataset grammar with explicit certainty, duplicate membership and
 source-free inspection. [Single histogram-point bucket displays](UI_RAW_HISTOGRAM_BUCKETS.md)
 now share the grammar with exact counts and explicit recording uncertainty.
-Consolidating the raw-display adapters and local presentation state is next.
+[Raw-display consolidation](RAW_OBSERVATION_CONSOLIDATION.md#display-state-and-prepared-banks)
+now shares native controls, immutable prepared projections and retained local
+histogram pages. Paired Activity’s merged held chronology remains a breadth gap;
+the next roadmap step designs that presentation while preserving lane boundaries.
 
 [CEL predicate authoring](CEL_PREDICATE_PILOT.md) is a delivered library/CLI pilot
 over fixed nonnullable fields. [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md)

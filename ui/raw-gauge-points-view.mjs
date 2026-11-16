@@ -11,7 +11,7 @@ function utc(value){try{const ns=BigInt(value),iso=new Date(Number(ns/1000000n))
 const coordinate=value=>compactScalar(value)?.text??String(value);
 if(globalThis.customElements&&globalThis.HTMLElement){
  class GooRawGaugePoints extends globalThis.HTMLElement{
-  static get observedAttributes(){return ['data','selected-key','mode','heading']}
+  static get observedAttributes(){return ['data','selected-key','mode','heading','heading-level']}
   set data(value){try{this._data=structuredClone(value)}catch{this._data=null}if(this.isConnected)this.render()}
   get data(){if(this._data!==undefined)return structuredClone(this._data);try{const text=this.getAttribute('data');return text&&text.length<=2097152?JSON.parse(text):null}catch{return null}}
   set selectedKey(value){if(value===null||value===undefined)this.removeAttribute('selected-key');else this.setAttribute('selected-key',String(value))}
@@ -22,8 +22,8 @@ if(globalThis.customElements&&globalThis.HTMLElement){
   render(){
    const revision=this._revision=(this._revision||0)+1,data=this.data,m=model(data),mode=this.getAttribute('mode')||'points';this.replaceChildren();this.dataset.state=m.state;this._groups=new Map();
    if(m.state==='unavailable'||!['points','table'].includes(mode)){this.append(n('p','Gauge points unavailable.'));return}
-   const frame=n('goo-chart-frame'),summary=n('p',undefined,'raw-gauge-points-summary'),plotArea=n('div',undefined,'raw-gauge-points-area'),scale=n('div',undefined,'raw-gauge-points-scale'),plot=n('div',undefined,'raw-gauge-points-plot'),axis=n('div',undefined,'raw-gauge-points-axis'),chooser=n('section',undefined,'raw-gauge-points-chooser');chooser.hidden=true;
-   frame.data={title:this.getAttribute('heading')||'Gauge observations',unit:m.unit||'Unit not reported',state:m.state==='no_data'?'no_data':'unknown',note:mode==='table'?'':'Approximate positions may overlap. Observation values lists every row.'};
+   const frame=n('goo-chart-frame'),summary=n('p',undefined,'raw-gauge-points-summary'),plotArea=n('div',undefined,'raw-gauge-points-area'),scale=n('div',undefined,'raw-gauge-points-scale'),plot=n('div',undefined,'raw-gauge-points-plot'),axis=n('div',undefined,'raw-gauge-points-axis'),chooser=n('section',undefined,'raw-gauge-points-chooser');chooser.hidden=true;frame.setAttribute('density','compact');
+   frame.data={headingLevel:this.getAttribute('heading-level')||'3',title:this.getAttribute('heading')||'Gauge observations',unit:m.unit||'Unit not reported',state:m.state==='no_data'?'no_data':'unknown',note:mode==='table'?'':'Approximate positions may overlap. Observation values lists every row.'};
    for(const key of ['loaded','plotted','unplotted'])this.dataset[key]=String(m.counts[key]);
    summary.textContent=mode==='table'?m.counts.loaded+' held observations':m.counts.plotted+' plotted · '+m.counts.unplotted+' unplotted · '+m.points.length+' locations'+(m.counts.undisplayed?' · 1,000-location display limit':'')+(m.atLimit?' · read budget '+m.counts.loaded:'');summary.setAttribute('role','status');
    const min=m.domain?.min,max=m.domain?.max;scale.append(n('span',max===null||max===undefined?'':coordinate(max)),n('span',min===null||min===undefined?'':coordinate(min)));scale.title='Approximate value coordinates; inspect an observation for its raw value.';

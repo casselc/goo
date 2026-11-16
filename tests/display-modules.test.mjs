@@ -11,7 +11,7 @@ test('display entry imports a closed passive graph without publishing namespaces
   assert.equal(display.ScopeView, await import('../ui/scope-view.mjs'));
   assert.equal(display.MeasureSummary, await import('../ui/measure-summary.mjs'));
   assert.equal(display, await import('../ui/display.mjs'));
-  assert.deepEqual(Object.keys(display).sort(), ['AlignedHistogram', 'Attributes', 'BucketHeatmap', 'CategoricalFacet', 'ChartFrame', 'ComparisonSeries', 'ComparisonVisual', 'EvidenceSummary', 'ExceptionDetail', 'FacetDeclaration', 'FieldPresentation', 'GroupingControl', 'MeasureSummary', 'RawGaugePoints', 'RawHistogramBuckets', 'RecordColumns', 'RecordList', 'RecordPresentation', 'RecordSpanWaterfall', 'ScopeView', 'ServiceIdentity', 'StateObservations', 'TagList', 'TimeBars', 'TimeRange', 'TraceComparisonView', 'TracePageBreakdown', 'TracePageBreakdownView', 'TracePageComparison', 'UI', 'ValueTimeline', 'Waterfall']);
+  assert.deepEqual(Object.keys(display).sort(), ['AlignedHistogram', 'Attributes', 'BucketHeatmap', 'CategoricalFacet', 'ChartFrame', 'ComparisonSeries', 'ComparisonVisual', 'DisplayChoice', 'EvidenceSummary', 'ExceptionDetail', 'FacetDeclaration', 'FieldPresentation', 'GroupingControl', 'MeasureSummary', 'RawGaugePoints', 'RawHistogramBuckets', 'RecordColumns', 'RecordList', 'RecordPresentation', 'RecordSpanWaterfall', 'ScopeView', 'ServiceIdentity', 'StateObservations', 'TagList', 'TimeBars', 'TimeRange', 'TraceComparisonView', 'TracePageBreakdown', 'TracePageBreakdownView', 'TracePageComparison', 'UI', 'ValueTimeline', 'Waterfall']);
   assert.deepEqual(Object.getOwnPropertyNames(globalThis).filter(k => !before.has(k)), []);
 
   // The public graph must remain independent of app owners and their bridge.
@@ -85,7 +85,7 @@ test('display entry imports a closed passive graph without publishing namespaces
   // Raw observation points add checked supplied-data admission and geometry only.
   for(const name of ['raw-gauge-points-view','raw-gauge-points','raw-gauge-schema','raw-observation-protocol'])assert.ok(visited.has(new URL('../ui/'+name+'.mjs',import.meta.url).href));
   for(const name of ['raw-observations','raw-observation-context'])assert.equal(visited.has(new URL('../ui/'+name+'.mjs',import.meta.url).href),false);
-  assert.equal(visited.size, 82);
+  assert.equal(visited.size, 85);
 });
 
 test('feature imports expose the existing exact-data helpers through ESM', async () => {

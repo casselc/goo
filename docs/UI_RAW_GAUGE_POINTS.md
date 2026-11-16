@@ -21,6 +21,12 @@ Attributes accept at most 2 MiB; the property supports the validated raw-bank
 budget. Pre-definition `data` and `selectedKey` properties upgrade on connection.
 Assignment and readback detach values.
 
+The shared frame uses compact density and accepts `heading-level` for the
+containing document hierarchy. The application shares native display controls and
+prepares its immutable held bank once; see
+[display state and prepared banks](RAW_OBSERVATION_CONSOLIDATION.md#display-state-and-prepared-banks).
+Inspection immediately marks the corresponding Table row and retains its opener.
+
 ## Exact values and approximate positions
 
 Known finite recorded observations receive value/time coordinates. UTC bounds and

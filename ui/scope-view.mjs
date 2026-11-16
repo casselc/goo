@@ -210,7 +210,7 @@ class SuppliedElement extends (globalThis.HTMLElement||class {}) {
 }
 
 class Chart extends SuppliedElement {
-  static get observedAttributes(){return [...super.observedAttributes,'mobile-layout','embedded']}
+  static get observedAttributes(){return [...super.observedAttributes,'mobile-layout','embedded','heading-level']}
   attributeChangedCallback(name,previous,value){
     if(name==='embedded'){
       const frame=Array.from(this.children).find(child=>child.localName==='goo-chart-frame');
@@ -237,8 +237,15 @@ class Chart extends SuppliedElement {
         this.refuse(checked.reasons);return;
       }
       if(snapshot.shape==='observations'&&snapshot.rawHistogram){
-        const buckets=n('goo-raw-histogram-buckets');if(this.hasAttribute('heading-level'))buckets.setAttribute('heading-level',this.getAttribute('heading-level'));buckets.setAttribute('mode',display.kind==='histogram'?'bars':'table');if(display.title)buckets.setAttribute('heading',display.title);buckets.data=snapshot.rows[0].observation;
-        this.replaceChildren(buckets,readFacts(snapshot,factsOpen));if(factsFocused)this.querySelector('.scope-view-read-facts>summary')?.focus({preventScroll:true});return;
+        // A display mapping changes presentation, not the held occurrence. Keep
+        // its local bucket page while this admitted immutable snapshot survives.
+        let buckets=this.querySelector('goo-raw-histogram-buckets');
+        const reuse=this._rawHistogramSnapshot===snapshot&&!!buckets;
+        if(!reuse)buckets=n('goo-raw-histogram-buckets');
+        const attributes={mode:display.kind==='histogram'?'bars':'table',heading:display.title??null,'heading-level':this.getAttribute('heading-level')};
+        for(const [key,value]of Object.entries(attributes)){if(value===null){if(buckets.hasAttribute(key))buckets.removeAttribute(key)}else if(buckets.getAttribute(key)!==value)buckets.setAttribute(key,value)}
+        if(!reuse){buckets.data=snapshot.rows[0].observation;this._rawHistogramSnapshot=snapshot;this.replaceChildren(buckets,readFacts(snapshot,factsOpen));}
+        if(factsFocused)this.querySelector('.scope-view-read-facts>summary')?.focus({preventScroll:true});return;
       }
       if(snapshot.shape==='observations'){
         const points=n('goo-raw-gauge-points');points.setAttribute('mode',display.kind);if(display.title)points.setAttribute('heading',display.title);points.data=snapshot;

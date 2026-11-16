@@ -33,3 +33,17 @@ test('stale, hidden, disconnected and disabled pagination does not advance',()=>
 test('SSR attributes and pre-upgrade data work; malformed data and mode refuse safely',()=>{const view=new View();view.setAttribute('data',JSON.stringify(row()));view.connected=true;view.connectedCallback();assert.equal(view.querySelectorAll('[data-bucket-index]').length,4);const early=new View();Object.defineProperty(early,'data',{value:row(),writable:true,configurable:true});early.connected=true;early.connectedCallback();assert.equal(early.querySelectorAll('[data-bucket-index]').length,4);view.setAttribute('data','{"broken":true}');assert.equal(view.dataset.state,'unavailable');assert.equal(view.querySelectorAll('[data-bucket-index]').length,0);view.data=row();view.setAttribute('mode','density');assert.equal(view.querySelectorAll('[data-bucket-index]').length,0);});
 
 test('compact frame supports contextual semantic heading level without replacing source data',()=>{const view=mount();assert.equal(view.children[0].getAttribute('density'),'compact');assert.equal(view.children[0].data.headingLevel,'3');view.setAttribute('heading-level','5');assert.equal(view.children[0].data.headingLevel,'5');assert.equal(view.querySelectorAll('[data-bucket-index]').length,4);});
+
+test('457 display and heading changes preserve the same bucket page without moving external focus',()=>{
+ const view=mount(row({size:205}));view.querySelectorAll('button')[1].onclick();
+ const before=view.querySelectorAll('.raw-histogram-buckets-count').map(element=>element.textContent),stale=view.querySelectorAll('button')[1],radio=new Element('input');radio.focus();
+ view.setAttribute('mode','table');assert.equal(globalThis.focused,radio);assert.equal(view.querySelector('[data-bucket-index]').dataset.bucketIndex,'100');assert.deepEqual(view.querySelectorAll('.raw-histogram-buckets-count').map(element=>element.textContent),before);assert.equal(view.querySelectorAll('.raw-histogram-buckets-bar').length,0);
+ stale.onclick();assert.equal(view.querySelector('[data-bucket-index]').dataset.bucketIndex,'100','a retired presentation callback cannot move the page');
+ view.setAttribute('heading','Selected point');view.setAttribute('heading-level','5');assert.equal(view.querySelector('[data-bucket-index]').dataset.bucketIndex,'100');
+ view.setAttribute('mode','bars');assert.equal(view.querySelector('[data-bucket-index]').dataset.bucketIndex,'100');assert.deepEqual(view.querySelectorAll('.raw-histogram-buckets-count').map(element=>element.textContent),before);assert.equal(view.querySelectorAll('.raw-histogram-buckets-bar').length,100);assert.equal(globalThis.focused,radio);
+ view.data=row({size:205});assert.equal(view.querySelector('[data-bucket-index]').dataset.bucketIndex,'0','replacement supplied data starts at its first page, even with the same read-local key');
+});
+test('457 uncertain table pages survive a refused Bars view, and SSR data replacement resets page',()=>{
+ const view=mount(row({size:205,flags:2}));view.setAttribute('mode','table');view.querySelectorAll('button')[1].onclick();view.setAttribute('mode','bars');assert.equal(view.querySelectorAll('[data-bucket-index]').length,0);view.setAttribute('mode','table');assert.equal(view.querySelector('[data-bucket-index]').dataset.bucketIndex,'100');
+ view.setAttribute('data',JSON.stringify(row({size:105,flags:2})));assert.equal(view.querySelector('[data-bucket-index]').dataset.bucketIndex,'0');
+});

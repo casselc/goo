@@ -2,7 +2,7 @@
 import {object} from './intent-shape.mjs';
 import {checkedRequest,checkedResult} from './raw-observation-protocol.mjs';
 import {binary64Rational} from './measurement-scope.mjs';
-const canonical=value=>JSON.stringify(value,(_,entry)=>entry&&typeof entry==='object'&&!Array.isArray(entry)?Object.fromEntries(Object.entries(entry).sort(([a],[b])=>a.localeCompare(b))):entry);
+import {canonical} from './raw-observation-identity.mjs';
 const same=(a,b)=>canonical(a)===canonical(b);
 export function recording(row){return row.flagsState==='valid'&&row.flags===0?'recorded':row.flagsState==='valid'&&(row.flags&1)!==0?'no-recorded-value':'unknown'}
 export function state(row){const reported=recording(row);return reported==='no-recorded-value'?'not-recorded':reported==='unknown'?'unknown':row.valueState==='finite'?'recorded':'invalid'}

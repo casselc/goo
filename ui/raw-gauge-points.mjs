@@ -1,17 +1,8 @@
 /* Raw gauge supplied-data projection and disposable plot geometry. */
-import {checkedRequest,checkedResult} from './raw-observation-protocol.mjs';
-import {recording,state,values,rawGaugeFields} from './raw-gauge-schema.mjs';
-import {validateSnapshot,validateDisplay} from './view-schema.mjs';
-const canonical=value=>JSON.stringify(value,(_,entry)=>entry&&typeof entry==='object'&&!Array.isArray(entry)?Object.fromEntries(Object.entries(entry).sort(([a],[b])=>a.localeCompare(b))):entry);
-// Local snapshot identity only: this is not a cryptographic source receipt.
-function identity(value){let a=2166136261,b=2246822519;for(const byte of new TextEncoder().encode(canonical(value))){a=Math.imul(a^byte,16777619);b=Math.imul(b^byte,3266489917)}return (a>>>0).toString(16).padStart(8,'0')+(b>>>0).toString(16).padStart(8,'0')}
-export function dataset(data){
- const request=checkedRequest({question:data?.question,instrument:data?.instrument}),bank=checkedResult(data,request);
- if(bank.instrument.kind!=='gauge')throw Error('Points require raw gauge observations.');
- const id='raw-gauge:'+identity(request),revision='held:'+identity(bank);
- const snapshot={version:'goo.dataset/1',id,revision,origin:'source-read',capturedAt:bank.readAt,shape:'observations',scope:{id,generation:revision,signal:'metrics',selector:request},rawGauge:{request,readAt:bank.readAt,limit:bank.limit},fields:rawGaugeFields(bank.instrument.unit),rows:bank.rows.map(row=>({key:row.occurrenceKey,state:state(row),values:values(row),observation:row})),quality:{extent:'unknown',basis:'captured-query',value:'unknown',sampling:'unknown',freshness:'fixed'}};
- const admitted=validateSnapshot(snapshot);if(!admitted.ok)throw Error(admitted.reasons.join('; '));return structuredClone(snapshot);
-}
+import {recording} from './raw-gauge-schema.mjs';
+import {validateDisplay} from './view-schema.mjs';
+import {prepare} from './raw-observation-dataset.mjs';
+export function dataset(data){return prepare(data).gauge()}
 function reason(row){const state=recording(row);if(state==='no-recorded-value')return 'not-recorded';if(state==='unknown')return 'recording-unknown';if(row.valueState!=='finite'||typeof row.value!=='number'||!Number.isFinite(row.value))return 'invalid-value';return null}
 export function model(snapshot){
  const admitted=validateDisplay(snapshot,{kind:'points'});

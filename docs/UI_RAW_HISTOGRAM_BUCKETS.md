@@ -48,6 +48,13 @@ raw-observation envelope. Include
 It performs no requests, subscribes to no data source and emits no bucket-to-record
 selection intent: summarized metric samples do not identify log/span records.
 
+Bars/Table and heading changes preserve the current bucket page while the same
+admitted snapshot remains mounted. Replacing supplied data resets it and retires
+old callbacks. The application also retains inspected content through Close/reopen
+within its bounded cache. Repeated inspection uses a
+[prepared immutable bank](RAW_OBSERVATION_CONSOLIDATION.md#display-state-and-prepared-banks)
+rather than revalidating every other occurrence.
+
 At most 100 bucket rows render per page. A vector may contain up to 10,001
 buckets; paging preserves all counts and uses the maximum across the full vector
 for a stable count scale. No sampled prefix replaces the vector. Exact interval

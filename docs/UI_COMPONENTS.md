@@ -142,6 +142,16 @@ This is the current component contract index. [Known issues](KNOWN_ISSUES.md)
 records product/backend limits; the [active roadmap](ROADMAP_2026_11_11_CHECKPOINT_405.md) owns
 future priority. Earlier audits are dated design inputs, not another execution queue.
 
+## Native display choices
+
+`DisplayChoice.displayChoice` from `display.mjs` returns a native fieldset with a
+legend and grouped radios. Supply `{legend, options: [{value, label}], value,
+active, onChange}` and include `display-choice.css`. The caller owns rendering and
+source authority. The helper guards inactive, hidden, inert and unchecked controls;
+it does not move focus, fetch or subscribe. Option values/labels are captured at
+creation. [Raw displays](RAW_OBSERVATION_CONSOLIDATION.md#display-state-and-prepared-banks)
+use the same helper across bank and single-point presentations.
+
 ## Public elements
 
 | Element | Supplied input / controlled state | Current contract or source |

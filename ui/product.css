@@ -1981,14 +1981,13 @@ input::placeholder,textarea::placeholder {color:var(--muted);opacity:1}
 .entry-filter-options[data-phase=draft]>summary::after{content:' · draft';color:var(--warning)}
 
 /* Raw observation views share one held bank and inspector. */
-.raw-observation-display{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;border:0;padding:0;margin:6px 0;min-width:0}
-.raw-observation-display>legend{float:left;font-size:12px;color:var(--muted);margin-right:12px;padding:0}
-.raw-observation-display>label{display:inline-flex;align-items:center;gap:5px;margin:0;min-height:32px;font-size:12px;cursor:pointer}
-.raw-observation-display input[type=radio]{width:auto;min-height:0;margin:0;accent-color:var(--accent)}
-@media(pointer:coarse){.raw-observation-display>label{min-height:44px}}
-
 .raw-observation-display-note{margin:3px 0 6px;font-size:12px;color:var(--muted)}
 [data-raw-observations] tbody tr[data-selected=true]{background:color-mix(in srgb,var(--accent) 9%,transparent)}
 /* A selected histogram has its own paged bucket viewport; keep its overview in
    document flow instead of clipping it inside a second inspector scroller. */
 [data-raw-observations] .ui-inspector-body:has(.raw-histogram-bucket-detail){max-height:none;overflow:visible;overscroll-behavior:auto;scrollbar-gutter:auto}
+
+/* Exact source statistics stay a compact two-column table on narrow screens. */
+.raw-histogram-source-statistics>table{width:100%;table-layout:fixed}
+.raw-histogram-source-statistics>table>thead>tr>th,.raw-histogram-source-statistics>table>tbody>tr>th,.raw-histogram-source-statistics>table>tbody>tr>td{white-space:normal;overflow-wrap:anywhere}
+.raw-histogram-source-statistics>table>thead>tr>th:first-child{width:32%}

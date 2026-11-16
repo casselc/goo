@@ -7,8 +7,8 @@ The [architecture checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_ARCH.md) and
 [product/UX checkpoint](reviews/PRODUCT_CHECKPOINT_AFTER_429_UX.md) review the
 broader product rather than extend another preservation queue.
 
-Status: **429 and 437–456 delivered and validated**. The current cadence is
-**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup → 453 referring-span discovery depth → 454 selector/reference consolidation → 455 held raw-gauge Points breadth → 456 single-point histogram bucket depth**.
+Status: **429 and 437–457 delivered and validated**. The current cadence is
+**444 paired Activity breadth → 445 consolidation → 446 reusable paired views → 447 native histogram inspection depth → 448 consolidation → 449 cross-signal investigation breadth → 450 independent lane-filter depth → 451 filter consolidation → 452 explicit reported-link target lookup → 453 referring-span discovery depth → 454 selector/reference consolidation → 455 held raw-gauge Points breadth → 456 single-point histogram bucket depth → 457 raw-display consolidation**.
 **445 single/paired Activity coherence and measured work is delivered**. The existing
 Go runtime, source adapters, typed questions and shared components remain the
 foundation; this does not extend a CEL platform queue.
@@ -354,7 +354,7 @@ their separate design and operational gates. Existing dashboards, waterfalls,
 templates, annotations and captures are delivered capabilities, not new gaps.
 
 The visual cycle now has held raw-gauge Points and one explicit histogram-point
-bucket display; next consolidate their presentation.
+bucket display with shared controls, retained local state and prepared projections.
 Preserve recording/value validity, exact counts and source grain; use existing
 kind/data contracts, no implicit reads, interpolation or fleet-distribution claims.
 
@@ -375,6 +375,29 @@ with exact counts, source boundaries, recording uncertainty and original raw
 inspection. Bars/Table and bucket pages are local, preserving all source buckets.
 No observations are merged and no fleet percentile is inferred.
 
-457: Consolidate the demonstrated data/presentation primitives, local selection,
-Table/visual handoff, accessibility and measured source-free rendering. Reuse
-existing components and profile rules; do not introduce a second plotting grammar.
+457 — delivered: [raw-display consolidation](RAW_OBSERVATION_CONSOLIDATION.md#display-state-and-prepared-banks).
+Shared native display controls, retained histogram pages, cached point content,
+immediate Table selection and compact statistics preserve exact source semantics.
+Prepared immutable banks avoid repeated full-bank admission during inspection;
+synthetic projection costs and actual source-free journeys are recorded separately.
+
+## Next breadth step: 458 held log/span chronology
+
+Design and implement an optional merged presentation of the two existing held
+Activity lanes. This addresses the explicitly retained merged-chronology gap,
+without changing the default entry or source subscriptions as a side effect.
+
+- Reuse the held log/span pages and shared record components. Preserve each
+  lane’s source question, read clock, bounds, state and occurrence identity.
+- Interleave valid event times with deterministic ties; preserve duplicates and
+  put invalid/unavailable timestamps in an explicit unplaced population. Temporal
+  adjacency must not claim causality or a shared source ordering.
+- Inspect and return locally. Filters, refresh and resume remain explicit lane
+  operations; a merged display never invents a combined completeness/health total.
+- Review the design against OTel and current Activity contracts before choosing
+  capture or reusable-view semantics. Keep planned preservation behavior explicit.
+- Extend existing browser/property/model coverage where the implementation adds
+  state transitions, and keep the single/paired lane workflows intact.
+
+This is the next breadth proposal after the 455 breadth / 456 depth / 457
+consolidation cycle. It is not an implemented merged data source or default.

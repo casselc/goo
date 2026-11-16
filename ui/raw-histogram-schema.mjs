@@ -1,7 +1,7 @@
 /* Closed supplied-data profile for one raw explicit histogram occurrence. */
 import {object} from './intent-shape.mjs';
 import {checkedRequest,checkedResult} from './raw-observation-protocol.mjs';
-const canonical=value=>JSON.stringify(value,(_,entry)=>entry&&typeof entry==='object'&&!Array.isArray(entry)?Object.fromEntries(Object.entries(entry).sort(([a],[b])=>a.localeCompare(b))):entry);
+import {canonical} from './raw-observation-identity.mjs';
 const same=(a,b)=>canonical(a)===canonical(b);
 export function state(row){return row.recordingState==='no-recorded-value'?'not-recorded':row.recordingState!=='recorded'?'unknown':row.bucketsState==='valid'?'recorded':'invalid'}
 export function values(row){return {endNS:row.endNS,occurrence:row.occurrenceKey,count:row.countState==='valid'?row.count:null}}

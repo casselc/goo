@@ -7,6 +7,7 @@ with an ordinary instrument: no manifest or producer identity is required.
 | --- | --- |
 | Discover and read | Nine physical source observations are retained, including two identical observations |
 | Find in Table | A local attribute search narrows the table to one held row |
+| Inspect a Table row | The visible row immediately becomes the current selection; cached details retain their disclosure state on reopening |
 | Choose Points | All nine loaded observations remain the plot's population; the Table Find boundary is explicit |
 | Move between locations | Arrow keys, Home and End move keyboard focus without choosing a point or reading data |
 | Activate a repeated location | A chooser exposes both occurrences; selecting one reveals and focuses its exact existing inspector |
@@ -28,6 +29,12 @@ accessible labels and the inspector. Coordinates may overlap, and the values
 list preserves every occurrence. There are no connecting lines, inferred producer
 streams, resampling or completeness claims. Coverage, value certainty and sampling
 remain unknown for this held source read.
+
+The consolidation run `d8d9f01388f7` passes in 42.6 seconds with nineteen
+observed steps. Immediate Table selection and cached inspector/disclosure state
+are checked alongside the original point interactions. Bombadil reaches its
+completed phase in 566 snapshots with no forbidden reads or overflow. Runtime
+and disposable database cleanup both pass without browser errors.
 
 Discovery makes eight SQL calls and the explicit observation read makes three.
 All subsequent display, Find, marker, member, inspector and context-staging

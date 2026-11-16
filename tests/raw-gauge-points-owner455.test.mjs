@@ -47,3 +47,13 @@ test('Close after display switch reveals an equivalent visible Table action or t
  button(h.host,'Inspect observation 1').onclick();mode(h.host,'points');button(h.host,'Close details').onclick();assert.equal(document.activeElement,radio(h.host,'points'));
  emit(plot,[key],pointOpener);mode(h.host,'table');const find=h.host.querySelector('input');find.value='outside selected observation';find.oninput();button(h.host,'Close details').onclick();assert.equal(document.activeElement,radio(h.host,'table'));assert.equal(find.value,'outside selected observation');assert.equal(h.calls.length,1);
 });
+
+test('457 inspection marks only the visible selected table row without replacing its opener',async()=>{
+ const h=setup(),data=response(),first=data.rows[0];data.rows=[first,{...structuredClone(first),occurrenceKey:'2'}];h.pending.push({ok:true,data});await h.owner.read(request(),h.opener);
+ const rows=h.host.querySelectorAll('tr').filter(row=>row.dataset.occurrenceKey),firstOpener=button(h.host,'Inspect observation 1');firstOpener.onclick();assert.equal(rows[0].getAttribute('aria-current'),'true');assert.equal(rows[1].getAttribute('aria-current'),null);assert.equal(rows[0].querySelector('button'),firstOpener);
+ button(h.host,'Inspect observation 2').onclick();assert.equal(rows[0].getAttribute('aria-current'),null);assert.equal(rows[0].dataset.selected,undefined);assert.equal(rows[1].getAttribute('aria-current'),'true');assert.equal(rows[1].dataset.selected,'true');assert.equal(h.calls.length,1);
+});
+test('457 cached inspection reuses its content and renews context actions without rebuilding the point',async()=>{
+ const h=setup();await h.owner.read(request(),h.opener);const inspect=button(h.host,'Inspect observation 1');inspect.onclick();const body=h.host.querySelector('.ui-inspector-body'),content=body.firstChild,nearby=button(h.host,'Nearby logs');button(h.host,'Close details').onclick();inspect.onclick();assert.equal(body.firstChild,content);assert.equal(button(h.host,'Nearby logs'),nearby);assert.equal(nearby.onclick(),true);assert.equal(h.calls.length,1);
+ h.pending.push({ok:false,status:503,data:{error:'unavailable'}});await h.owner.read(request(),h.opener);assert.equal(nearby.disabled,true);inspect.onclick();assert.equal(body.firstChild,content);assert.equal(nearby.disabled,false);assert.equal(nearby.onclick(),true);assert.equal(h.calls.length,2);
+});

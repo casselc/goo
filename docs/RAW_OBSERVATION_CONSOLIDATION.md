@@ -36,7 +36,71 @@ remain family-specific. Go instrument decoding shares exact-key admission;
 case-variant keys cannot override the declared tuple. Empty metadata, zero
 temporality and false monotonicity keep their meanings.
 
-## Measured result
+## Display state and prepared banks
+
+Gauge Points and histogram Bars/Table share a native display picker. Its labels
+retain the scope distinction: **Observation display** chooses the held gauge bank;
+**Bucket display** chooses a presentation of one histogram occurrence. Native
+radio navigation retains focus and never starts a read.
+
+Histogram Bars/Table preserve the current bucket page and exact counts while the
+same admitted snapshot remains mounted. A new supplied snapshot resets the page.
+Closing and reopening an inspector reuses its retained content, including display,
+page and disclosures; the bounded inspector cache can evict older occurrences.
+Nearby actions receive a fresh ownership lease when the point is inspected again.
+Selecting a Table occurrence marks its existing row immediately, without replacing
+the opener. Histogram source statistics use two columns and one presence-qualified
+caption rather than repeating the same caveat for Sum, Min and Max.
+
+The application prepares each successful raw bank once against its original
+fixed request. `prepare` owns a deeply frozen, validated clone and an occurrence
+index. Single-histogram projection checks only the selected occurrence. The
+convenience `dataset(bank, key)` API still validates arbitrary whole-bank input;
+there is no public flag to skip admission.
+
+```js
+import {prepare} from '/raw-observation-dataset.mjs';
+const held = prepare(response, originalRequest);
+// Called when the operator inspects a point:
+chart.snapshot = held.histogram(occurrenceKey);
+chart.display = {kind: 'histogram'};
+// For a gauge bank instead: points.data = held.gauge();
+```
+
+The handle's `.data` is read-only. Returned snapshots are detached copies with the
+ordinary common grammar, original clocks and unknown coverage. Mutating the
+original input, readback or a returned projection cannot change the held bank.
+Prepared handles are local runtime objects; use the returned snapshots for
+portable supplied-data views.
+
+```mermaid
+flowchart LR
+  read[Explicit source read] --> admit[Check fixed request and freeze bank once]
+  admit --> keys[Private occurrence index]
+  keys --> point[Checked singleton snapshot]
+  point --> view[Bars / Table with retained page]
+  keys --> cache[Retained inspector content]
+  cache --> lease[Renew explicit Nearby action lease]
+```
+
+### Projection measurements
+
+Run `node scripts/measure_raw_projection457.mjs`. Five warmed synthetic Node 24
+samples compare the full-validation convenience call with projection from one
+prepared bank. These are local projection costs, not browser rendering or source
+latency measurements. One-time preparation costs are reported separately.
+
+| Synthetic bank | One preparation | Convenience median / point | Prepared median / point |
+| --- | ---: | ---: | ---: |
+| 1,000 rows / 1.25 MB | 80.5 ms | 87.08 ms | 0.37 ms |
+| 5,000 rows / 6.26 MB | 576.6 ms | 402.5 ms | 0.41 ms |
+
+There is no timing threshold in correctness tests. Full-bank admission remains
+necessary for arbitrary inputs; the application avoids repeating it during local
+inspection. Mutation, membership, expected-request and source-free tests check the
+ownership boundary. Live journey checks remain in [validation](../VALIDATION.md).
+
+## Earlier compact read-context measurements (448)
 
 Compared embedded 447 with 448 using the same actual OTLP journeys, held
 Find/Inspect state, viewport sizes and zero source work during capture. Table

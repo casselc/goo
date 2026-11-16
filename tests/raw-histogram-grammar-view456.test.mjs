@@ -23,3 +23,13 @@ test('common chart renders one raw histogram point with the same exact Table/bar
  chart.display={kind:'table'};buckets=chart.querySelector('goo-raw-histogram-buckets');assert.equal(buckets.getAttribute('mode'),'table');assert.equal(chart.querySelector('.scope-view-unavailable'),null);buckets.connectedCallback();assert.equal(buckets.querySelectorAll('tbody').length,1);
  chart.display={kind:'histogram',requiresComplete:true};assert.equal(chart.querySelector('goo-raw-histogram-buckets'),null);assert.match(chart.textContent,/Complete-only display/);
 });
+
+test('457 common chart retains bucket page only for the same admitted snapshot',()=>{
+ const source=structuredClone(bank),point=source.rows[0];point.rawRow.bounds=Array.from({length:204},(_,i)=>String(i));point.bounds=Array.from({length:204},(_,i)=>i);point.rawRow.bucket_counts=point.bucketCounts=Array(205).fill('1');point.rawRow.count=point.count='205';
+ const chart=new Chart();chart.root=true;chart.snapshot=dataset(source,'1');chart.display={kind:'histogram'};
+ const buckets=chart.querySelector('goo-raw-histogram-buckets');buckets.connectedCallback();buckets.querySelectorAll('button')[1].onclick();assert.equal(buckets.querySelectorAll('tbody')[0].children[0].dataset.bucketIndex,'100');
+ chart.display={kind:'table',title:'Same point'};assert.equal(chart.querySelector('goo-raw-histogram-buckets'),buckets);assert.equal(buckets.getAttribute('mode'),'table');assert.equal(buckets.querySelectorAll('tbody')[0].children[0].dataset.bucketIndex,'100');
+ chart.display={kind:'histogram'};assert.equal(chart.querySelector('goo-raw-histogram-buckets'),buckets);assert.equal(buckets.querySelectorAll('tbody')[0].children[0].dataset.bucketIndex,'100');
+ chart.snapshot=structuredClone(chart.snapshot);const replacement=chart.querySelector('goo-raw-histogram-buckets');assert.notEqual(replacement,buckets);replacement.connectedCallback();assert.equal(replacement.querySelectorAll('tbody')[0].children[0].dataset.bucketIndex,'0');
+ chart.display={kind:'histogram',requiresComplete:true};assert.equal(chart.querySelector('goo-raw-histogram-buckets'),null);chart.display={kind:'table'};assert.notEqual(chart.querySelector('goo-raw-histogram-buckets'),replacement,'removed/refused presentations do not retain detached page authority');
+});
