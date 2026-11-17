@@ -1,5 +1,33 @@
 # Validation record
 
+## Generic journeys without reservation lifecycle — 2026-11-17
+
+The first bounded cut from the [simplicity proposal](docs/reviews/understandability/implementation-plan.md)
+is implemented. `npm run test:journeys -- SPEC` only invokes Playwright. It does
+not invoke Docker/Redis, Python, traffic pause/drain/restore or automatic pruning.
+No selection fails with usage; it does not silently run the full lab suite.
+
+- `--reservation` / `test:journeys:reservation` explicitly selects the prior
+  lifecycle helper, copied byte-for-byte from the old runner. Existing wrapped
+  campaigns and smoke opt into it. Generic journeys still own their source,
+  runtime and optional native-tool prerequisites.
+- Three shell-boundary tests pass: exact argument/failed-exit forwarding with
+  forbidden lab commands, side-effect-free help/selection errors, and explicit
+  reservation dispatch. Seven diagnostic-retention tests pass, including traffic
+  restoration and test-failure preservation despite pruning failure. Bash syntax
+  and whitespace checks pass. Full reservation integration was not rerun.
+- Actual ordinary-OTLP related-held journey passed through the npm wrapper in
+  34.4s with Docker/Python sentinel commands forbidden and Redis stopped. No
+  forbidden command was called. Its runtime cleans up; no browser errors occur.
+  Receipt: `artifacts/related-held461/2c0a2ae4e271/report.json`.
+- The restored environment required recreation of disposable `/tmp` output/cache
+  targets, a Go 1.27.3 rebuild, and source-only ClickHouse/collector startup.
+  Native Bombadil needed loopback proxy exclusions. These setup failures were
+  resolved; the accepted run preserves the external proxy for other traffic.
+- No product UI, HTTP/storage format or Go implementation changed. Existing UI
+  screenshots remain applicable; test-generated timestamp-only changes are not
+  retained. The wider core/optional decision remains proposed.
+
 ## Component walkthroughs and whole-product simplicity review — 2026-11-17
 
 [Walkthrough index](docs/walkthroughs/README.md) and

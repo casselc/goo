@@ -89,12 +89,18 @@ woven runner. It validates exact tool versions and named Go test events; skips
 are not successful coverage. The gotogether control entry is
 `npm run test:gotogether-controls`; its dependency is pinned in its own module.
 
-For real data, follow the [lab guide](../LOCAL_LAB.md), then
-`npm run test:journeys`. The wrapper currently pauses lab traffic, drains the
-reservation stream and restores traffic on exit. Generic-runtime journeys may be
-run directly with Playwright and an explicit `GOO_GENERIC_BINARY`; inspect their
-own setup requirements. They often launch an isolated runtime on port 18088, so
-run those journeys serially.
+For real data, provide the source prerequisites named by the journey. The generic
+entry is `GOO_GENERIC_BINARY=/absolute/path/to/goo npm run test:journeys -- journeys/NAME.spec.js`.
+It only invokes Playwright: no Docker/Redis, reservation traffic lifecycle, Python
+or automatic diagnostic pruning. With no spec/options it fails with usage instead
+of silently running the full lab. Each journey may still need its own collector,
+ClickHouse or native test tools; generic does not mean source-free.
+
+Reservation fixtures explicitly use `npm run test:journeys:reservation -- [specs]`
+(or no specs for the full lab suite). Only that mode pauses/drains/restores demo
+traffic and applies diagnostic retention. `npm run test:smoke` opts into it too.
+Generic-runtime journeys often launch an isolated runtime on port 18088; run them
+serially. See [contributing](../../CONTRIBUTING.md) for a checked example.
 
 Playwright exercises intended gestures and creates documentation frames.
 Bombadil independently explores allowed actions/invariants. Native Quint checks

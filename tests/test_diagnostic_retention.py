@@ -118,7 +118,7 @@ class DiagnosticRetention(unittest.TestCase):
         }
         for name, content in commands.items():
             path=binary/name;path.write_text(content);path.chmod(0o755)
-        result=subprocess.run(['bash',str(r.REPO/'scripts/run_journeys.sh'),'--smoke'],
+        result=subprocess.run(['bash',str(r.REPO/'scripts/run_journeys.sh'),'--reservation','--smoke'],
                               env={**os.environ,'PATH':str(binary)+':'+os.environ['PATH'],
                                    'WRAPPER_LOG':str(log)},capture_output=True,text=True)
         self.assertEqual(result.returncode,7,result.stderr)

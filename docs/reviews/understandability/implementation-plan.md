@@ -1,7 +1,7 @@
 # Reconciled simplicity proposal
 
-Status: proposed follow-on implementation, 2026-11-17. The walkthroughs and reviews
-are delivered; the refactors below are not. This reconciles the component reports
+Status: follow-on proposal, 2026-11-17. The walkthroughs/reviews and generic
+journey dependency cut are delivered; the remaining refactors are proposed. This reconciles the component reports
 with the independent [Go](holistic-go.md), [architecture](holistic-architecture.md)
 and [product](holistic-product.md) reviews, followed by the deliberately dissenting
 [adversarial essentials review](adversarial-essentials.md).
@@ -40,16 +40,18 @@ parallel operation storage need task-path, caller and artifact decisions before
 removal. The critic's cut table records the losses and counterarguments; these
 choices remain visible decisions, not an assumed consensus.
 
-**One bounded next implementation:** remove reservation lifecycle work from the
-generic journey path. Keep ordinary runtime/source checks runnable without Redis
-reservations/inventory or the reservation traffic generator; let named reservation
-fixtures retain their explicit drain/cleanup. This removes a concrete dependency
-from core development without discarding the distributed-system assertions. It is
-not implemented in this review. This development dependency cut does not settle
-the outstanding product-boundary choices; record those before expanding refactoring
-beyond clearly retained core owners. The acceptance test is a generic journey on a
-host with no reservation services, plus the existing reservation path with owned
-cleanup intact. No new orchestration framework is needed.
+**First bounded cut delivered:** the generic runner now invokes only selected
+Playwright work. It does not manage Docker/Redis, reservation traffic, Python or
+automatic diagnostic pruning. `--reservation` / `test:journeys:reservation` explicitly
+select the original pause/drain/restore path. Named reservation campaigns and
+smoke opt in; fixture-specific prerequisites remain with each journey.
+
+This development dependency cut does not settle outstanding product-boundary
+choices. Record those before expanding refactoring beyond retained core owners.
+Acceptance covers exact argument/exit propagation without lab executables,
+reservation cleanup with controlled external commands, and an actual generic
+journey with Docker/Python blocked and Redis stopped. No new orchestration
+framework was introduced.
 
 After that cut, format/extract one retained core owner at a time. Do not turn the
 candidate list below into a requirement to preserve or refactor everything.

@@ -29,11 +29,18 @@ tools must not be reported as passing checks.
 For real integration journeys, start the [local lab](docs/LOCAL_LAB.md), then run:
 
 ```sh
-npm run test:journeys
+GOO_GENERIC_BINARY=/tmp/goo npm run test:journeys -- journeys/related-held461.spec.js --workers=1
 ```
 
-The wrapper pauses and restores the lab traffic generator while retaining stored
-data. Journey tests may require additional native tools; consult their guides.
+The default runner invokes only the selected Playwright specs; it does not touch
+Docker, Redis, traffic generators or diagnostic retention. Each journey owns its
+runtime/source prerequisites; the example requires ClickHouse, the OTLP collector
+and Bombadil. An empty selection is an error rather than an implicit full lab run.
+
+Use `npm run test:journeys:reservation -- [specs]` for reservation fixtures (or omit
+the specs for the full lab suite). That explicit mode pauses/drains/restores the
+reservation traffic generator and applies diagnostic retention. `npm run test:smoke`
+uses that same lab mode. Journey tests may require additional native tools; consult their guides.
 [Bombadil testing](docs/BOMBADIL_TESTING.md) covers exploratory UI actions and invariants.
 See [VALIDATION.md](VALIDATION.md) for executed checks, rather than assuming every
 workflow is covered by one command.

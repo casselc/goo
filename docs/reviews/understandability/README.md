@@ -52,6 +52,10 @@ per-milestone review/test growth and automatic 464 sequencing. The reconciled
 proposal preserves those disagreements rather than implying unanimous approval
 of every cut. No code, data or requested capability was removed.
 
+The generic/reservation journey split has since been implemented and validated;
+the wider product-boundary and owner proposals remain open. See the reconciled
+proposal for that distinction.
+
 ## What is already established
 
 - Dense authored JavaScript makes small physical line counts misleading. A reader

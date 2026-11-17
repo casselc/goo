@@ -31,8 +31,10 @@ Embedded ClickHouse checks complement the real container smoke test. Report skip
 
 The Go lifecycle/aggregate pilots have independent local checks documented in
 docs/LIFECYCLE_PREPARATION.md and verification/README.md. Run `npm ci` before
-`npm run test:journeys`; the wrapper pauses and restores only this demo's traffic
-generator and retains existing stream entries/volumes. Browser screenshots under
+`npm run test:journeys -- journeys/NAME.spec.js`. The generic wrapper invokes
+Playwright without lab lifecycle work. Reservation fixtures must explicitly use
+`npm run test:journeys:reservation`; that mode pauses/restores only this demo's
+traffic generator and retains existing stream entries/volumes. Browser screenshots under
 docs/journeys/screenshots are generated evidence, not hand-edited mockups.
 
 - Commit validated milestones promptly; do not let completed project work accumulate untracked. Review staged files, keep generated caches and secrets excluded, and report the commit ID.
