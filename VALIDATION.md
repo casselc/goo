@@ -1,5 +1,27 @@
 # Validation record
 
+## Shared conformance/HTTP integration design — 2026-11-17
+
+[Implementation design](docs/CONFORMANCE_INTEGRATION.md), following the accepted
+fold/unify-then-remove decisions. Documentation only: no endpoint, capture family,
+UI or stored artifact was changed.
+
+- Source inspection confirmed existing declaration-matching Service queries are
+  not conformance inputs: their name/role filter hides undeclared observations.
+  The design preserves full-binding admission, the 1,000/1,001 raw-row boundary,
+  exact duplicate/conflict rules and declared-versus-reported outcome semantics.
+- Generic span projection already retains events/links/status; ordinary Query and
+  RecordPage limits and existing CaptureQuestion families do not yet provide the
+  proposed complete bounded span bank. New producer/route/family names are
+  explicitly planned, not existing capabilities or test results.
+- Replacement journey gates cover conformance, scoped subjects, HTTP policy,
+  independent native metrics, bounds, uncertain writes and source-free recall.
+  Stored-data conversion/export is required before old store removal; source
+  rereads and invented clocks are not migrations.
+- Checked 165 local file-link targets across design/plan/index references and
+  `git diff --check`. No new runtime tests, integration campaigns or screenshots
+  are claimed for this design-only change.
+
 ## Generic journeys without reservation lifecycle — 2026-11-17
 
 The first bounded cut from the [simplicity proposal](docs/reviews/understandability/implementation-plan.md)

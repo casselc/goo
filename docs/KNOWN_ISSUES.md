@@ -1,5 +1,9 @@
 # Known issues and gaps
 
+The [shared conformance/HTTP integration](CONFORMANCE_INTEGRATION.md) is designed
+but not implemented. Parallel Operations/prepared HTTP paths remain until the
+replacement and artifact-handling gates pass.
+
 [Shared UI polish](UI_POLISH_459.md) reduces attribute/control and service-card
 chrome, adds route-preserving skip navigation, and retains visible state labels
 with redundant markers. The Activity custody explanation is now on demand.

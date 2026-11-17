@@ -33,6 +33,10 @@ prove the replacement journey, and record export/retention handling. No stored
 user data is authorized for deletion. A prerelease compatibility floor does not
 require keeping obsolete APIs or formats once their useful outcomes are moved.
 
+The [conformance integration design](../../CONFORMANCE_INTEGRATION.md) now specifies
+the shared carrier, preservation semantics and replacement journey gates. It is
+a design; none of its new producers/routes or retirements is delivered yet.
+
 Recommended implementation order: establish the shared Services/view/capture
 carrier for conformance and subject navigation; port the useful Operations and
 prepared HTTP paths; verify their replacement journeys; retire parallel routes,
