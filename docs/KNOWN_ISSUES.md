@@ -1,8 +1,10 @@
 # Known issues and gaps
 
-The [shared conformance/HTTP integration](CONFORMANCE_INTEGRATION.md) is designed
-but not implemented. Parallel Operations/prepared HTTP paths remain until the
-replacement and artifact-handling gates pass.
+Operations now lives under **Services → Operations**, using the existing readers
+and operation capture store. Its separate workspace/navigation entry is removed.
+The larger [conformance integration proposal](CONFORMANCE_INTEGRATION.md) is set
+aside; no new span producer or capture type is being introduced for this move.
+Prepared HTTP remains in Definitions for a separate simplification step.
 
 [Shared UI polish](UI_POLISH_459.md) reduces attribute/control and service-card
 chrome, adds route-preserving skip navigation, and retains visible state labels

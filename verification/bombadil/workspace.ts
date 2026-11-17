@@ -6,7 +6,7 @@ export { noUncaughtExceptions, noUnhandledPromiseRejections } from '@antithesish
 const shell = extract(({ document, window }) => ({
   nativeSelected:document.querySelector('#exploreMeasurementsMode')?.getAttribute('aria-selected')==='true',
   savedLookbackHidden: document.querySelector('#minutes')?.closest<HTMLElement>('.scope-control')?.hidden === true,
-  liveOwned: document.querySelector('#operations')?.closest('[data-workspace-panel]')?.getAttribute('data-workspace-panel') === 'operations',
+  liveOwned: document.querySelector('#operations')?.closest('[data-workspace-panel]')?.getAttribute('data-workspace-panel') === 'services',
   savedHasEditor: !!document.querySelector('[data-workspace-panel=investigations] #operationPackage'),
   examples: document.documentElement.dataset.examples === 'configured',
   visited: (document.documentElement.dataset.catalogVisited || '').split(','),
@@ -50,5 +50,5 @@ export const workspaceNavigation = actions(() => {
   if (!state.ready) return ['Wait'];
   if (!state.visited.includes('definitions')) return [navigate('definitions')];
   if (state.examples && !state.visited.includes('examples')) return [navigate('examples')];
-  return ['explore', 'services', 'operations', 'investigations', 'definitions', ...(state.examples ? ['examples'] : [])].map(route => navigate(route));
+  return ['explore', 'services', 'investigations', 'definitions', ...(state.examples ? ['examples'] : [])].map(route => navigate(route));
 });

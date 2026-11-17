@@ -1,3 +1,4 @@
+const {openOperations}=require('./support/operations');
 const {test,expect}=require('@playwright/test');
 const {startBombadil}=require('./support/cross-app');
 const fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os');
@@ -39,7 +40,7 @@ test('219 Activity defers workspace catalogs, first open loads once, explicit re
 });
 
 for(const route of ['examples','definitions','operations'])test('219 direct '+route+' entry activates only its required deferred catalogs',async({page})=>{
- const observed=observe(page);await page.goto(base+'/#'+route);
+ const observed=observe(page);if(route==='operations')await openOperations(page,base);else await page.goto(base+'/#'+route);
  if(route==='examples'){
   await expect(page.locator('#exampleQuestionCards .definition-card')).not.toHaveCount(0);await expect(page.locator('#measurementCards .definition-card')).not.toHaveCount(0);
   expect(observed.count('/api/example-questions')).toBe(1);expect(observed.count('/api/operation-packages')).toBe(0);expect(observed.count('/api/prebuilts')).toBe(0);

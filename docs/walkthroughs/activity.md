@@ -11,6 +11,10 @@ execution and feature wiring. Use the path below, then follow one interaction.
 The [component review](../reviews/understandability/activity.md) identifies the
 specific code changes needed to make the source itself easier to read.
 
+Declared Operations is now a tab under Services, not another workspace route.
+`ResourceTabs` owns its visibility; the existing operation reader is cancelled
+on tab leave and Saved return selects the same tab. Its backend/store is retained.
+
 ## An afternoon reading path
 
 Read the named functions, not every imported feature implementation.

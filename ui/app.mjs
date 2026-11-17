@@ -72,7 +72,7 @@ function showSavedCapture(c){
  if(hist)Histograms.render(saved('histogramView'),hist,explorer.choose);
  for(const [component,error]of Object.entries(c.evidence.errors||{})){const target=saved(component==='rates'?'counterRateView':'histogramView');target.hidden=false;target.append(textNode('summary',component+' unavailable in this capture'),textNode('p',error));}
  saved('operationMode').textContent='Saved capture '+c.id.slice(0,12)+' · '+c.capturedAt+' · fixed evidence';explorer.restore(c.selection);ratio?.restore(c.selection.ratio);comparison?.restore(c.selection.comparison);
- el('savedOperationLive').onclick=()=>appWorkspace.navigate('operations',{focus:true});
+ el('savedOperationLive').onclick=()=>openOperations();
 }
 let operationCatalogStarted=false;
 function loadOperationCatalog(){if(operationCatalogStarted)return;operationCatalogStarted=true;
@@ -81,7 +81,7 @@ runtimeCapabilities.then(config=>config?.declaredOperations.state==='configured'
 
 el('operationPackage').onchange=()=>{stopOperationRead();el('operationMode').textContent='No operation evidence loaded.';activeOperation=null;activeExplorer=null;activeRatio=null;activeComparison=null;operationGeneration++;el('runOperations').disabled=false;el('operationView').replaceChildren();el('operationExplorer').replaceChildren();el('fleetCoverageView').replaceChildren();el('fleetCoverageView').hidden=true;el('fleetCoverageView').open=false;el('errorRatioView').replaceChildren();el('errorRatioView').hidden=true;el('errorRatioView').open=false;el('counterRateView').replaceChildren();el('counterRateView').hidden=true;el('counterRateView').open=false;el('histogramView').replaceChildren();el('histogramView').hidden=true;el('histogramView').open=false;el('operationExplain').textContent='';el('operationPackageTitle').textContent='';el('operationStatus').textContent='Package changed. Inspect operations to capture its evidence.'};
 el('runOperations').onclick=async()=>{
- appWorkspace.navigate('operations',{writeHash:false});stopOperationRead();const controller=operationController=new AbortController();activeOperation=null;activeExplorer=null;activeRatio=null;activeComparison=null;const generation=++operationGeneration;const current=()=>generation===operationGeneration&&!controller.signal.aborted&&appWorkspace.current()==='operations';const button=el('runOperations');button.disabled=true;el('operationStatus').textContent='Reading operation evidence…';el('operationView').replaceChildren();el('operationExplorer').replaceChildren();el('fleetCoverageView').replaceChildren();el('fleetCoverageView').hidden=true;el('fleetCoverageView').open=false;el('errorRatioView').replaceChildren();el('errorRatioView').hidden=true;el('errorRatioView').open=false;el('counterRateView').replaceChildren();el('counterRateView').hidden=true;el('counterRateView').open=false;el('histogramView').replaceChildren();el('histogramView').hidden=true;el('histogramView').open=false;
+ if(!operationsVisible())return;stopOperationRead();const controller=operationController=new AbortController();activeOperation=null;activeExplorer=null;activeRatio=null;activeComparison=null;const generation=++operationGeneration;const current=()=>generation===operationGeneration&&!controller.signal.aborted&&operationsVisible();const button=el('runOperations');button.disabled=true;el('operationStatus').textContent='Reading operation evidence…';el('operationView').replaceChildren();el('operationExplorer').replaceChildren();el('fleetCoverageView').replaceChildren();el('fleetCoverageView').hidden=true;el('fleetCoverageView').open=false;el('errorRatioView').replaceChildren();el('errorRatioView').hidden=true;el('errorRatioView').open=false;el('counterRateView').replaceChildren();el('counterRateView').hidden=true;el('counterRateView').open=false;el('histogramView').replaceChildren();el('histogramView').hidden=true;el('histogramView').open=false;
  try{const response=await Queries.getJSON('/api/operations?minutes='+encodeURIComponent(el('minutes').value)+(el('operationPackage').value?'&package='+encodeURIComponent(el('operationPackage').value):''),controller.signal);const data=response.data;if(!current())return;if(!response.ok)throw Error(data.error);
  const explorer=renderOperationData(data);if(!current())return;
  if(data.package.definition.views.includes('counter-rates')||data.package.definition.views.includes('error-ratios')||data.package.definition.views.includes('fleet-coverage')){
@@ -124,13 +124,13 @@ function loadExampleCatalogs(){
 function openWorkspaceCatalogs(route){
  if(route==='examples')loadExampleCatalogs();
  if(route==='definitions')loadDefinitionExamples();
- if(route==='definitions'||route==='operations')loadOperationCatalog();
+ if(route==='definitions')loadOperationCatalog();
 }
 const appWorkspace=Workspace.mount();
 ContextualGuidance.mount({route:appWorkspace.current});
 openWorkspaceCatalogs(appWorkspace.current());
 // Source owners stop hidden/superseded work; saved publications are independent.
-globalThis.addEventListener('goo:workspace',event=>{if(event.detail.route!=='operations')stopOperationRead();if(event.detail.route!=='definitions')stopHTTPRead();openWorkspaceCatalogs(event.detail.route)});
+globalThis.addEventListener('goo:workspace',event=>{if(event.detail.route!=='services')stopOperationRead();if(event.detail.route!=='definitions')stopHTTPRead();openWorkspaceCatalogs(event.detail.route)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){stopOperationRead();stopHTTPRead()}});
 globalThis.addEventListener('pagehide',()=>{stopOperationRead();stopHTTPRead()});
 for(const event of ['input','change'])el('minutes').addEventListener(event,()=>{stopOperationRead('Scope changed. Inspect operations to read again.');stopHTTPRead('Scope changed. Evaluate the package to read again.')});
@@ -182,11 +182,13 @@ function openObservedService(intent,{current,onBack}){
  appWorkspace.navigate('explore',{writeHash:false});exploreMode(false);return false;
 }
 
+function operationsVisible(){return appWorkspace.current()==='services'&&!el('operationEntityPanel').hidden}
+function openOperations(){appWorkspace.navigate('services',{focus:true});entityTabs.select('operations')}
 let entityKind='services';
 const stageResourceQuestion=q=>{appWorkspace.navigate('explore');exploreMode(false);history.pushState(null,'',Workspace.questionLink(q));liveExploration.openQuestion(q,[],{stage:true})};
 const hostBrowser=HostBrowser.mount(el('hostEntityPanel'),{active:()=>entityKind==='hosts'&&appWorkspace.current()==='services',onReturn:()=>{appWorkspace.navigate('services');entityTabs.select('hosts')},onRecordQuestion:stageResourceQuestion});
 const kubernetesBrowser=KubernetesBrowser.mount(el('kubernetesEntityPanel'),{active:()=>entityKind==='kubernetes'&&appWorkspace.current()==='services',onReturn:()=>{appWorkspace.navigate('services');entityTabs.select('kubernetes')},onRecordQuestion:stageResourceQuestion});
-const entityTabs=ResourceTabs.mount([{key:'services',button:el('entitiesServices'),panel:el('serviceEntityPanel'),leave:()=>liveInventory.suspend()},{key:'hosts',button:el('entitiesHosts'),panel:el('hostEntityPanel'),leave:()=>hostBrowser.cancel()},{key:'kubernetes',button:el('entitiesKubernetes'),panel:el('kubernetesEntityPanel'),leave:()=>kubernetesBrowser.cancel()}],{onSelect:key=>entityKind=key});
+const entityTabs=ResourceTabs.mount([{key:'services',button:el('entitiesServices'),panel:el('serviceEntityPanel'),leave:()=>liveInventory.suspend()},{key:'hosts',button:el('entitiesHosts'),panel:el('hostEntityPanel'),leave:()=>hostBrowser.cancel()},{key:'kubernetes',button:el('entitiesKubernetes'),panel:el('kubernetesEntityPanel'),leave:()=>kubernetesBrowser.cancel()},{key:'operations',button:el('entitiesOperations'),panel:el('operationEntityPanel'),leave:()=>stopOperationRead()}],{onSelect:key=>{entityKind=key;appWorkspace.setServiceFamily(key);if(key==='operations')loadOperationCatalog()}});
 const definitionTabs=ResourceTabs.mount([
  {key:'records',button:el('definitionsRecords'),panel:el('definitionRecordsPanel')},
  {key:'measurements',button:el('definitionsMeasurements'),panel:el('definitionMeasurementsPanel')},

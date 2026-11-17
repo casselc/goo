@@ -33,17 +33,15 @@ prove the replacement journey, and record export/retention handling. No stored
 user data is authorized for deletion. A prerelease compatibility floor does not
 require keeping obsolete APIs or formats once their useful outcomes are moved.
 
-The [conformance integration design](../../CONFORMANCE_INTEGRATION.md) now specifies
-the shared carrier, preservation semantics and replacement journey gates. It is
-a design; none of its new producers/routes or retirements is delivered yet.
+The broader [conformance integration proposal](../../CONFORMANCE_INTEGRATION.md)
+is **set aside** following the user’s clarification. Do not implement its new
+span producer/capture family as a prerequisite for simplification.
 
-Recommended implementation order: establish the shared Services/view/capture
-carrier for conformance and subject navigation; port the useful Operations and
-prepared HTTP paths; verify their replacement journeys; retire parallel routes,
-stores and navigation. Then isolate domain/temporal extensions and retire review
-management while preserving basic annotation/export. Keep formatting and behavior
-changes separately reviewable. Do not expand formatting work across surfaces
-already selected for retirement.
+The delivered first visible move places the existing Operations interface under Services
+and removes the parallel workspace/navigation entry. Existing readers, renderer
+and operation capture store stay intact. Subsequent backend consolidation must
+show a concrete reduction in independent parts before adding a replacement.
+Prepared HTTP, extension isolation and other accepted cuts remain separate work.
 
 ## Decision
 

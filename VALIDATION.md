@@ -1,5 +1,31 @@
 # Validation record
 
+## Existing Operations moved under Services — 2026-11-17
+
+[Current entry and screenshots](docs/LIVE_OPERATIONS.md#where-to-open-it).
+This is a navigation/ownership move, not a new conformance producer or storage
+replacement. The larger integration design is explicitly set aside.
+
+- Operations is a native tab within Services. Its sidebar entry and independent
+  workspace route are removed. The existing renderer, reader endpoints, saved
+  operation captures and source/storage formats remain unchanged.
+- Package metadata loads only on tab entry (or existing Definitions catalog use).
+  Opening/reopening the tab does not read telemetry. Resource-tab leave cancels
+  operation work; current-result guards also require the Operations panel visible.
+  Saved return selects Services → Operations and retains the existing result.
+- Full UI regression suite: 2,111 tests pass, zero skipped. The subsequent focused
+  workspace/tab checks include the new local lookback-label case and pass.
+  Embedded Go runtime rebuild succeeds. No Go implementation changed.
+- The actual ClickHouse reader/capture journey passes, including 201 publication,
+  source-free saved return, deliberately delayed response cancelled on tab leave,
+  keyboard activation, responsive frames and the workspace Bombadil actor
+  (final run 34.6s). One earlier campaign produced no trace and was rejected by
+  the strict validator; the 30s campaign rerun produced a valid observed trace. This
+  uses configured declarations; empty observations remain Unobserved · unknown.
+- Existing operation journeys and Bombadil ownership rules now target the Services
+  tab. The full reservation/application workload suite was not rerun. No new
+  endpoint, producer, capture family, artifact conversion or deletion was added.
+
 ## Shared conformance/HTTP integration design — 2026-11-17
 
 [Implementation design](docs/CONFORMANCE_INTEGRATION.md), following the accepted

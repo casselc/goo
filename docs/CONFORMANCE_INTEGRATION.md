@@ -1,6 +1,11 @@
 # Fold Operations and prepared HTTP into shared investigations
 
-Status: implementation design, 2026-11-17. The user accepted **fold/unify, then
+Status: **set aside**, 2026-11-17. The user requested a smaller concrete move
+instead: existing Operations has moved into Services without a new span
+reader, capture family or storage change. This document is a historical proposal,
+not the next implementation plan.
+
+Original design status: The user accepted **fold/unify, then
 remove** for both parallel subsystems. No replacement below is implemented yet.
 See [accepted decisions](reviews/understandability/implementation-plan.md#accepted-product-decisions).
 

@@ -1,3 +1,4 @@
+const {openOperations}=require('./support/operations');
 const {openFilters}=require('./support/explore');
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs/promises');
@@ -76,7 +77,7 @@ test('08 woven Go operations reach the live investigation overview', async ({pag
   const data=await r.json();const rows=data.conformance.operations;
   return rows.some(r=>r.name==='checkout.reserve'&&r.calls>=2&&r.errors>=1)&&rows.some(r=>r.name==='checkout.panic'&&r.panics>=1);
  },{timeout:60000,intervals:[1000]}).toBe(true);
- await page.goto(investigation+'/#operations');
+ await openOperations(page,investigation);
  await page.locator('#minutes').fill('5');
  const response=page.waitForResponse(r=>r.url().includes('/api/operations?'));
  await page.getByRole('button',{name:'Inspect operations',exact:true}).click();
@@ -103,7 +104,7 @@ test('09 operation error heatmap retains its evidence basis through trace drilld
   const r=await request.get(investigation+'/api/operations?minutes=5');if(!r.ok())return false;
   live=await r.json();return live.spans.some(s=>s.operation==='checkout.reserve'&&s.outcome==='error'&&live.spans.some(child=>child.traceID===s.traceID&&child.parentSpanID===s.spanID));
  },{timeout:60000,intervals:[1000]}).toBe(true);
- await page.goto(investigation+'/#operations');await page.locator('#minutes').fill('5');
+ await openOperations(page,investigation);await page.locator('#minutes').fill('5');
  let operationRequests=0;page.on('request',r=>{if(r.url().includes('/api/operations?'))operationRequests++});
  const response=page.waitForResponse(r=>r.url().includes('/api/operations?'));
  await page.getByRole('button',{name:'Inspect operations',exact:true}).click();
@@ -156,7 +157,7 @@ test('10 scoped subject events connect related traces without merging tenants',a
   const r=await request.get(investigation+'/api/operations?minutes=5');if(!r.ok())return false;
   const d=await r.json();return d.spans.filter(s=>(s.events||[]).some(e=>e.subject?.id===id&&e.subject.tenant==='demo')).length===2&&d.spans.filter(s=>(s.events||[]).some(e=>e.subject?.id===id&&e.subject.tenant==='other')).length===1;
  },{timeout:60000,intervals:[1000]}).toBe(true);
- await page.goto(investigation+'/#operations');await page.locator('#minutes').fill('5');
+ await openOperations(page,investigation);await page.locator('#minutes').fill('5');
  let operationRequests=0;page.on('request',r=>{if(r.url().includes('/api/operations?'))operationRequests++});
  const response=page.waitForResponse(r=>r.url().includes('/api/operations?'));
  await page.getByRole('button',{name:'Inspect operations',exact:true}).click();
@@ -194,7 +195,7 @@ test('11 a second application loads the same operation views from YAML',async({p
  await expect(page.locator('#result')).toContainText('ready');const report=JSON.parse(await page.locator('#result').innerText());expect(report.id).toBeTruthy();
  await frame(page,'11a-second-go-application');
  await expect.poll(async()=>{const r=await request.get(investigation+'/api/operations?package=reports&minutes=5');if(!r.ok())return false;const d=await r.json();return d.spans.some(s=>(s.events||[]).some(e=>e.subject?.id===report.id&&e.subject.namespace==='report'))},{timeout:60000,intervals:[1000]}).toBe(true);
- await page.goto(investigation+'/#operations');await expect(page.locator('#operationPackage option')).toHaveCount(2);
+ await openOperations(page,investigation);await expect(page.locator('#operationPackage option')).toHaveCount(2);
  await page.locator('#operationPackage').selectOption('reports');await page.locator('#minutes').fill('5');
  const response=page.waitForResponse(r=>r.url().includes('/api/operations?')&&r.url().includes('package=reports'));
  await page.getByRole('button',{name:'Inspect operations',exact:true}).click();const data=await(await response).json();await expect(page.locator('#runOperations')).toBeEnabled();
@@ -210,12 +211,12 @@ test('11 a second application loads the same operation views from YAML',async({p
  await page.getByText('Operation binding and evidence basis',{exact:true}).click();await expect(page.locator('#operationExplain')).toContainText(reports.revision);
  await expect(page.locator('#operationExplain')).toContainText('Sampling and completeness remain unverified');
  await frame(page,'11c-package-contract-and-subject');
- await page.locator('#operationWaterfall').getByRole('button',{name:'Expand trace across services and find linked logs',exact:true}).click();await expect(page.locator('#workspaceTitle')).toHaveText('Explore');await expect(page.locator('#exploreTrace')).toContainText('report.generate');await page.locator('#exploreTrace .waterfall-row').first().click();await expect(page.locator('#exploreSpanDetails')).toContainText(report.id);await expect(page.locator('#exploreSpanDetails')).not.toContainText('reservation');await page.locator('#exploreContextClose').click();await page.getByRole('button',{name:'Operations',exact:true}).click();
+ await page.locator('#operationWaterfall').getByRole('button',{name:'Expand trace across services and find linked logs',exact:true}).click();await expect(page.locator('#workspaceTitle')).toHaveText('Explore');await expect(page.locator('#exploreTrace')).toContainText('report.generate');await page.locator('#exploreTrace .waterfall-row').first().click();await expect(page.locator('#exploreSpanDetails')).toContainText(report.id);await expect(page.locator('#exploreSpanDetails')).not.toContainText('reservation');await page.locator('#exploreContextClose').click();await openOperations(page);
  await page.locator('#operationPackage').selectOption('checkout');await expect(page.locator('#operationExplorer')).toBeEmpty();await expect(page.locator('#operationView')).toBeEmpty();
 });
 
 test('12 switching packages discards a late response from the previous scope',async({page})=>{
- await page.goto(investigation+'/#operations');await expect(page.locator('#operationPackage option')).toHaveCount(2);
+ await openOperations(page,investigation);await expect(page.locator('#operationPackage option')).toHaveCount(2);
  await page.locator('#operationPackage').selectOption('checkout');await page.locator('#minutes').fill('5');
  let markCaptured,release;
  const captured=new Promise(resolve=>{markCaptured=resolve});const gate=new Promise(resolve=>{release=resolve});
@@ -250,7 +251,7 @@ test('13 native counter rates retain unknown boundaries and link only contextual
  await expect.poll(async()=>{
   const response=await request.get(investigation+'/api/operations?minutes=2');scope=await response.json();const r=await request.get(investigation+'/api/counter-rates?package=checkout&fromMs='+scope.fromMs+'&toMs='+scope.toMs);if(!r.ok())return false;const d=await r.json();return d.rates.some(rate=>rate.result.series.some(s=>s.intervals.some(i=>i.state==='ok'&&i.perSecond>0)));
  },{timeout:60000,intervals:[1000]}).toBe(true);
- await page.goto(investigation+'/#operations');await expect(page.locator('#operationPackage option')).toHaveCount(2);await page.locator('#operationPackage').selectOption('checkout');await page.locator('#minutes').fill('2');
+ await openOperations(page,investigation);await expect(page.locator('#operationPackage option')).toHaveCount(2);await page.locator('#operationPackage').selectOption('checkout');await page.locator('#minutes').fill('2');
  const response=page.waitForResponse(r=>r.url().includes('/api/counter-rates?'));
  await page.getByRole('button',{name:'Inspect operations',exact:true}).click();const data=await(await response).json();expect(data.error).toBeUndefined();await expect(page.locator('#runOperations')).toBeEnabled();
  await expect(page.locator('#counterRateView')).toContainText('Native counter rates');await expect(page.locator('#counterRateView')).toContainText('contextual, not exact counter contributors');
@@ -270,7 +271,7 @@ test('14 native histogram heatmap preserves bucket bounds and contextual navigat
   const r=await request.get(investigation+'/api/histograms?package=checkout&fromMs='+scope.fromMs+'&toMs='+scope.toMs);if(!r.ok())return false;
   const d=await r.json();return d.histograms.some(h=>h.result.series.some(s=>s.intervals.some(i=>i.state==='ok'&&BigInt(i.distribution.count)>0n)));
  },{timeout:60000,intervals:[1000]}).toBe(true);
- await page.goto(investigation+'/#operations');await expect(page.locator('#operationPackage option')).toHaveCount(2);await page.locator('#operationPackage').selectOption('checkout');await page.locator('#minutes').fill('2');
+ await openOperations(page,investigation);await expect(page.locator('#operationPackage option')).toHaveCount(2);await page.locator('#operationPackage').selectOption('checkout');await page.locator('#minutes').fill('2');
  const response=page.waitForResponse(r=>r.url().includes('/api/histograms?'));await page.getByRole('button',{name:'Inspect operations',exact:true}).click();const data=await(await response).json();expect(data.error).toBeUndefined();await expect(page.locator('#runOperations')).toBeEnabled();
  for(const h of data.histograms)for(const s of h.result.series)for(const i of s.intervals){if(i.state!=='ok')expect(i.distribution).toBeUndefined();else expect(i.distribution.bucketCounts.reduce((a,b)=>a+BigInt(b),0n)).toBe(BigInt(i.distribution.count));}
  await page.locator('#histogramView > summary').click();await expect(page.locator('#histogramView table').first()).toBeVisible();
@@ -290,7 +291,7 @@ test('15 operation error ratios guide contextual error and trace investigation',
  await expect.poll(async()=>{const scope=await(await request.get(investigation+'/api/operations?minutes=2')).json();const r=await request.get(investigation+'/api/counter-rates?package=checkout&fromMs='+scope.fromMs+'&toMs='+scope.toMs);if(!r.ok())return false;const d=await r.json();return d.ratios?.some(e=>e.result.series.some(s=>s.stream.attributes['goo.operation.name']==='checkout.reserve'&&s.intervals.some(i=>i.state==='ok'||i.state==='no_data')))}, {timeout:60000,intervals:[1000]}).toBe(true);
  expect((await request.post(endpoint+'/invoke?scenario=ok')).status()).toBe(200);expect((await request.post(endpoint+'/invoke?scenario=error')).status()).toBe(503);
  await expect.poll(async()=>{const scope=await(await request.get(investigation+'/api/operations?minutes=2')).json();const r=await request.get(investigation+'/api/counter-rates?package=checkout&fromMs='+scope.fromMs+'&toMs='+scope.toMs);if(!r.ok())return false;const d=await r.json();return d.ratios.some(e=>e.result.series.some(s=>s.stream.attributes['goo.operation.name']==='checkout.reserve'&&s.intervals.some(i=>i.state==='ok'&&BigInt(i.errors)>0n&&contextual(i,scope))))},{timeout:60000,intervals:[1000]}).toBe(true);
- await page.goto(investigation+'/#operations');await expect(page.locator('#operationPackage option')).toHaveCount(2);await page.locator('#operationPackage').selectOption('checkout');await page.locator('#minutes').fill('2');
+ await openOperations(page,investigation);await expect(page.locator('#operationPackage option')).toHaveCount(2);await page.locator('#operationPackage').selectOption('checkout');await page.locator('#minutes').fill('2');
  const evidence=page.waitForResponse(r=>r.url().includes('/api/operations?'));const response=page.waitForResponse(r=>r.url().includes('/api/counter-rates?'));await page.getByRole('button',{name:'Inspect operations',exact:true}).click();const data=await(await response).json();const scope=await(await evidence).json();await expect(page.locator('#runOperations')).toBeEnabled();expect(data.error).toBeUndefined();
  for(const entry of data.ratios){expect(entry.result.counterBasis).toBe(data.rates.find(r=>r.contract.name===entry.contract.totalRate).result.basis);for(const s of entry.result.series)for(const i of s.intervals){if(i.state==='ok'){expect(BigInt(i.errors)<=BigInt(i.calls)).toBe(true);expect(i.percent).toBeGreaterThanOrEqual(0);expect(i.percent).toBeLessThanOrEqual(100)}else expect(i.percent).toBeUndefined()}}
  await page.locator('#errorRatioView > summary').click();const operation=page.locator('#errorRatioView section').filter({has:page.getByRole('heading',{name:'checkout.reserve / server',exact:true})});await expect(operation).toBeVisible();await expect(operation.locator('svg')).toBeVisible();await operation.screenshot({path:path.join(frames,'15a-operation-error-ratios.png')});
@@ -303,7 +304,7 @@ test('15 operation error ratios guide contextual error and trace investigation',
 test('16 declared fleet separates observed members from exact interval coverage',async({page,request})=>{
  for(const url of [process.env.GOO_OPERATION_URL||'http://127.0.0.1:8090',process.env.GOO_PEER_URL||'http://127.0.0.1:8092'])expect((await request.post(url+'/invoke?scenario=ok')).status()).toBe(200);
  await expect.poll(async()=>{const scope=await(await request.get(investigation+'/api/operations?minutes=2')).json();const r=await request.get(investigation+'/api/counter-rates?package=checkout&fromMs='+scope.fromMs+'&toMs='+scope.toMs);if(!r.ok())return false;const d=await r.json();return d.fleet?.result.members.every(m=>m.state==='observed')&&d.fleet.result.series.some(s=>s.intervals.some(i=>i.state==='unknown'))},{timeout:60000,intervals:[1000]}).toBe(true);
- await page.goto(investigation+'/#operations');await expect(page.locator('#operationPackage option')).toHaveCount(2);await page.locator('#operationPackage').selectOption('checkout');await page.locator('#minutes').fill('2');const response=page.waitForResponse(r=>r.url().includes('/api/counter-rates?'));await page.getByRole('button',{name:'Inspect operations',exact:true}).click();const data=await(await response).json();await expect(page.locator('#runOperations')).toBeEnabled();expect(data.error).toBeUndefined();
+ await openOperations(page,investigation);await expect(page.locator('#operationPackage option')).toHaveCount(2);await page.locator('#operationPackage').selectOption('checkout');await page.locator('#minutes').fill('2');const response=page.waitForResponse(r=>r.url().includes('/api/counter-rates?'));await page.getByRole('button',{name:'Inspect operations',exact:true}).click();const data=await(await response).json();await expect(page.locator('#runOperations')).toBeEnabled();expect(data.error).toBeUndefined();
  const fleet=data.fleet.result;expect(data.fleet.contract.members).toEqual(['woven-demo','woven-peer']);expect(fleet.members.every(m=>m.state==='observed')).toBe(true);
  for(const s of fleet.series)for(const i of s.intervals)if(i.supported<i.expected){expect(i.state).toBe('unknown');expect(i.calls).toBeUndefined();expect(i.errors).toBeUndefined();expect(i.percent).toBeUndefined()}
  await page.locator('#fleetCoverageView > summary').click();await expect(page.locator('#fleetCoverageView')).toContainText('2/2 declared members observed');await page.locator('#fleetMembers').screenshot({path:path.join(frames,'16a-declared-fleet-members.png')});
@@ -312,7 +313,7 @@ test('16 declared fleet separates observed members from exact interval coverage'
 });
 
 async function fleetSnapshot(request){const scope=await(await request.get(investigation+'/api/operations?minutes=2')).json();const response=await request.get(investigation+'/api/counter-rates?package=checkout&fromMs='+scope.fromMs+'&toMs='+scope.toMs);if(!response.ok())throw Error(await response.text());return response.json();}
-async function showFleet(page){await page.goto(investigation+'/#operations');await expect(page.locator('#operationPackage option')).toHaveCount(2);await page.locator('#operationPackage').selectOption('checkout');await page.locator('#minutes').fill('2');const response=page.waitForResponse(r=>r.url().includes('/api/counter-rates?'));await page.getByRole('button',{name:'Inspect operations',exact:true}).click();const data=await(await response).json();await expect(page.locator('#runOperations')).toBeEnabled();expect(data.error).toBeUndefined();await page.locator('#fleetCoverageView > summary').click();return data;}
+async function showFleet(page){await openOperations(page,investigation);await expect(page.locator('#operationPackage option')).toHaveCount(2);await page.locator('#operationPackage').selectOption('checkout');await page.locator('#minutes').fill('2');const response=page.waitForResponse(r=>r.url().includes('/api/counter-rates?'));await page.getByRole('button',{name:'Inspect operations',exact:true}).click();const data=await(await response).json();await expect(page.locator('#runOperations')).toBeEnabled();expect(data.error).toBeUndefined();await page.locator('#fleetCoverageView > summary').click();return data;}
 function reserveComparisons(data){return data.fleet.result.comparison.series.find(s=>s.stream.attributes['goo.operation.name']==='checkout.reserve').intervals;}
 
 test('17 live peer imbalance telemetry loss and restart retain honest comparison semantics',async({page,request})=>{
@@ -342,7 +343,7 @@ test('17 live peer imbalance telemetry loss and restart retain honest comparison
 test('18 late example catalog preserves edited operation lookback',async({page})=>{
  let captured,release;const fetched=new Promise(r=>captured=r),gate=new Promise(r=>release=r);
  await page.route('**/api/example-questions',async route=>{const response=await route.fetch();captured();await gate;await route.fulfill({response})});
- await page.goto(investigation+'/#examples');await fetched;await page.getByRole('button',{name:'Operations',exact:true}).click();await page.locator('#minutes').fill('2');release();await expect(page.locator('#exampleQuestionCards .definition-card')).not.toHaveCount(0);await expect(page.locator('#minutes')).toHaveValue('2');
+ await page.goto(investigation+'/#examples');await fetched;await openOperations(page);await page.locator('#minutes').fill('2');release();await expect(page.locator('#exampleQuestionCards .definition-card')).not.toHaveCount(0);await expect(page.locator('#minutes')).toHaveValue('2');
  await expect(page.locator('#operationPackage option')).toHaveCount(2);const response=page.waitForResponse(r=>r.url().includes('/api/operations?'));await page.getByRole('button',{name:'Inspect operations',exact:true}).click();const result=await(await response).json();expect(result.toMs-result.fromMs).toBe(120000);await expect(page.locator('#runOperations')).toBeEnabled();await expect(page.locator('#minutes')).toHaveValue('2');await frame(page,'18a-edited-lookback-survives-late-response');
 });
 
@@ -357,7 +358,7 @@ test('19 saved investigation reopens fixed evidence and refreshes late telemetry
  await expect.poll(async()=>{const r=await request.get(investigation+'/api/operations?minutes=2');if(!r.ok())return false;return (await r.json()).spans.some(s=>s.operation==='checkout.reserve'&&s.outcome==='error')},{timeout:45000,intervals:[1000]}).toBe(true);
  await expect.poll(async()=>{const scope=await(await request.get(investigation+'/api/operations?minutes=2')).json();const r=await request.get(investigation+'/api/counter-rates?package=checkout&fromMs='+scope.fromMs+'&toMs='+scope.toMs);if(!r.ok())return false;return (await r.json()).ratios?.some(e=>e.result.series.some(s=>s.stream.attributes['goo.operation.name']==='checkout.reserve'&&s.intervals.some(i=>i.state==='ok'&&BigInt(i.errors)>0n)))}, {timeout:60000,intervals:[1000]}).toBe(true);
  await page.goto(investigation+'/#investigations');await page.locator('#documentPanel > summary').click();await page.locator('#documentNew').click();await page.locator('#documentTitle').fill('Unpublished ownership note');await page.locator('#documentText').fill('Keep this unsaved note while inspecting operation evidence.');
- await page.goto(investigation+'/#operations');await page.locator('#minutes').fill('2');await expect(page.locator('#operationPackage option[value="checkout"]')).toHaveCount(1);await page.locator('#operationPackage').selectOption('checkout');await page.locator('#runOperations').click();await expect(page.locator('#runOperations')).toBeEnabled();await page.getByRole('button',{name:'Inspect errors for checkout.reserve',exact:true}).click();
+ await openOperations(page,investigation);await page.locator('#minutes').fill('2');await expect(page.locator('#operationPackage option[value="checkout"]')).toHaveCount(1);await page.locator('#operationPackage').selectOption('checkout');await page.locator('#runOperations').click();await expect(page.locator('#runOperations')).toBeEnabled();await page.getByRole('button',{name:'Inspect errors for checkout.reserve',exact:true}).click();
  await page.locator('#errorRatioView').evaluate(n=>n.open=true);await page.locator('#errorRatioView section').filter({has:page.getByRole('heading',{name:'checkout.reserve / server',exact:true})}).getByRole('button',{name:'Why did errors rise?',exact:true}).first().click();
  await page.locator('#fleetCoverageView').evaluate(n=>n.open=true);await page.locator('#fleetComparison .fleet-comparison-series').filter({has:page.getByRole('heading',{name:'checkout.reserve / server',exact:true})}).getByRole('button',{name:'Explain member comparison',exact:true}).first().click();
  await page.locator('#operationHeatmap .heat-cell:not([disabled])').first().click();
@@ -376,7 +377,7 @@ test('19 saved investigation reopens fixed evidence and refreshes late telemetry
  // A delayed genuine stored response cannot replace a newer package selection.
  let release,seen;const gate=new Promise(r=>release=r),fetched=new Promise(r=>seen=r);
  await page.route('**/api/investigations/'+next.id,async route=>{const upstream=await route.fetch();seen();await gate;await route.fulfill({response:upstream})});
- for(const id of ['savedTools','savedOperationTools']){const tools=page.locator('#'+id);if(!await tools.evaluate(e=>e.open))await tools.locator(':scope>summary').click()}await page.locator('#captureOpen').click();await fetched;await page.getByRole('button',{name:'Operations',exact:true}).click();await page.locator('#operationPackage').selectOption('reports');release();await expect(page.locator('#captureStatus')).toContainText('saved evidence was not displayed');await expect(page.locator('#operationView')).toBeEmpty();await expect(page.locator('#operationPackage')).toHaveValue('reports');
+ for(const id of ['savedTools','savedOperationTools']){const tools=page.locator('#'+id);if(!await tools.evaluate(e=>e.open))await tools.locator(':scope>summary').click()}await page.locator('#captureOpen').click();await fetched;await openOperations(page);await page.locator('#operationPackage').selectOption('reports');release();await expect(page.locator('#captureStatus')).toContainText('saved evidence was not displayed');await expect(page.locator('#operationView')).toBeEmpty();await expect(page.locator('#operationPackage')).toHaveValue('reports');
 
 });
 

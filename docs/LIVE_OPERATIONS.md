@@ -6,6 +6,23 @@ The Go package service checks those spans against the sample's source manifest.
 The investigation UI presents declared operations with compatible observed
 invocations, or `Unobserved · unknown` when evidence is absent.
 
+## Where to open it
+
+Open **Services → Operations**. There is no separate Operations sidebar entry or
+workspace route. The existing package selector, reader, conformance views and
+operation capture store are retained. Opening the tab only loads package metadata;
+**Inspect operations** still performs the source read. Leaving the tab cancels
+an active read, and returning from a saved operation capture selects this tab
+without rereading.
+
+The focused `journeys/services-operations.spec.js` checks this move with a real
+configured reader and capture endpoint, a deliberately delayed response, native
+keyboard tab activation, responsive layout and the workspace Bombadil actor.
+
+[Desktop](journeys/screenshots/services-operations-1440.png) ·
+[390px](journeys/screenshots/services-operations-390.png) ·
+[320px](journeys/screenshots/services-operations-320.png)
+
 ## Executable storyboard
 
 The eighth Playwright journey in `journeys/investigation.spec.js` executes this

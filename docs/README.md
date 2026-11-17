@@ -54,9 +54,9 @@ This index separates using Goo, extending it, and the development record.
 - [Paired-filter design matrix](../verification/gotogether/design/paired-filters.md): checked alternatives for independent lane filters under one shared scope; implementation remains planned.
 - [Ideal contract workflow](GOTOGETHER_IDEAL_WORKFLOW.md): design exercise spanning authoring, refactoring and operation.
 
-The planned [Operations/HTTP integration](CONFORMANCE_INTEGRATION.md) preserves
-conformance and subject navigation in shared Services/views/captures before
-retiring parallel subsystems. New producer and retirement work is not shipped.
+Operations is available under **Services → Operations** with its existing reader
+and capture behavior. The broader [integration proposal](CONFORMANCE_INTEGRATION.md)
+is set aside; the current change introduces no new producer or capture family.
 
 ## Understand the implementation
 
