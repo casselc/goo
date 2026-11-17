@@ -1,5 +1,10 @@
 # 187 · Incoming HTTP service overview
 
+Current extension: the same route widget now groups by route **and method**, with
+exact tuple drilldowns. See [the current HTTP walkthrough](../docs/HTTP_CONSOLIDATION.md)
+for updated screenshots and executed checks. The measurements below describe the
+original recorded run.
+
 The actual ordinary-OTel journey passes in **17.6 seconds** against core/source
 `13a8da1`, compact overview `d648655` and mobile label containment `a01141b`.
 The separate 45-second Bombadil campaign and bounded independent source-ledger

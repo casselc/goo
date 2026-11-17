@@ -36,6 +36,9 @@ func TestViewTemplateExpansionHTTPIsConfigurationOnly(t *testing.T) {
 	var in workbench.ViewTemplateExpansionRequest
 	for _, widget := range plan.Widgets {
 		if widget.Key == "dimension" {
+			// The UI's explicit Customize routes action requests a route-only
+			// chart template; the observed dashboard retains its joint table.
+			widget.Query.GroupBy = []exploration.Field{{Kind: "attribute", Key: "http.route"}}
 			in = workbench.ViewTemplateExpansionRequest{Template: "otel.http-server-routes", Version: 1, Widget: widget}
 		}
 	}
@@ -94,6 +97,9 @@ func TestAuthoredTemplateExpansionHTTPRejectsMixedArmsAndNeverReads(t *testing.T
 	var source workbench.ExplorationView
 	for _, widget := range plan.Widgets {
 		if widget.Key == "dimension" {
+			// The UI's explicit Customize routes action requests a route-only
+			// chart template; the observed dashboard retains its joint table.
+			widget.Query.GroupBy = []exploration.Field{{Kind: "attribute", Key: "http.route"}}
 			out, e := workbench.ExpandViewTemplate(workbench.ViewTemplateExpansionRequest{Template: "otel.http-server-routes", Version: 1, Widget: widget})
 			if e != nil {
 				t.Fatal(e)

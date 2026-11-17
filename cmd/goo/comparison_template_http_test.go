@@ -29,6 +29,8 @@ func TestComparisonTemplateHTTPBindsOnlyExplicitReferenceWithoutEvidenceReads(t 
 	var source workbench.ExplorationView
 	for _, w := range plan.Widgets {
 		if w.Key == "dimension" {
+			// Chart presets are route-only; the dashboard itself remains joint.
+			w.Query.GroupBy = []exploration.Field{{Kind: "attribute", Key: "http.route"}}
 			out, e := workbench.ExpandViewTemplate(workbench.ViewTemplateExpansionRequest{Template: "otel.http-server-routes", Version: 1, Widget: w})
 			if e != nil {
 				t.Fatal(e)

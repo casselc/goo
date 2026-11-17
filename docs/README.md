@@ -11,6 +11,7 @@ This index separates using Goo, extending it, and the development record.
 | Connect existing ClickHouse telemetry | [Generic startup](GENERIC_STARTUP.md) |
 | Understand supported workflows and limits | [Capability guide](CAPABILITY_GUIDE.md) |
 | Find which supported signals are available | [Source capabilities](SOURCE_CAPABILITIES.md) |
+| Inspect HTTP routes and methods together | [HTTP service consolidation](HTTP_CONSOLIDATION.md) |
 | Investigate metrics without known service or environment labels | [Metric scope discovery](METRIC_SCOPE_DISCOVERY.md) |
 | Return to held metric observations without rereading | [First-use acquisition](FIRST_USE_ACQUISITION.md) |
 | Plot held gauge points without another read | [Gauge Points](RAW_GAUGE_OBSERVATIONS.md#points-over-the-held-bank) and [component contract](UI_RAW_GAUGE_POINTS.md) |

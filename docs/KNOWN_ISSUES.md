@@ -4,7 +4,10 @@ Operations now lives under **Services → Operations**, using the existing reade
 and operation capture store. Its separate workspace/navigation entry is removed.
 The larger [conformance integration proposal](CONFORMANCE_INTEGRATION.md) is set
 aside; no new span producer or capture type is being introduced for this move.
-Prepared HTTP remains in Definitions for a separate simplification step.
+Prepared HTTP remains under Saved → Definitions → App contracts. The
+[replacement map](HTTP_CONSOLIDATION.md) records why its deduplicated policy
+outcomes cannot yet be replaced by ordinary span counts. Joint route/method
+inspection is now shared with the normal service view.
 
 [Shared UI polish](UI_POLISH_459.md) reduces attribute/control and service-card
 chrome, adds route-preserving skip navigation, and retains visible state labels

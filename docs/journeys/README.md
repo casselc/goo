@@ -1,5 +1,8 @@
 # User journeys and storyboards
 
+[HTTP route and method diagnosis](../HTTP_CONSOLIDATION.md) follows joint route/method
+rows into exact records and returns to the held dashboard.
+
 [Saved authoring](../SAVED_AUTHORING.md) covers import, immutable save/reopen and
 contextual Build in Saved, with desktop and narrow-screen captures.
 

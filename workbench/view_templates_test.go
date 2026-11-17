@@ -18,6 +18,9 @@ func httpRouteTemplateInput(t *testing.T) ViewTemplateExpansionRequest {
 	}
 	for _, widget := range plan.Widgets {
 		if widget.Key == "dimension" {
+			// The UI's explicit Customize routes action requests a route-only
+			// chart template; the observed dashboard retains its joint table.
+			widget.Query.GroupBy = []exploration.Field{{Kind: "attribute", Key: "http.route"}}
 			return ViewTemplateExpansionRequest{Template: "otel.http-server-routes", Version: 1, Widget: widget}
 		}
 	}
@@ -114,5 +117,13 @@ func TestViewTemplateRefusesUnsupportedAndWeakenedPopulations(t *testing.T) {
 	in.Widget.Query.Where = &exploration.Predicate{All: []exploration.Predicate{*in.Widget.Query.Where, {Any: []exploration.Predicate{{Field: &exploration.Field{Kind: "attribute", Key: "tenant"}, Op: "eq", Value: "a"}, {Field: &exploration.Field{Kind: "attribute", Key: "tenant"}, Op: "eq", Value: "b"}}}}}
 	if _, err := ExpandViewTemplate(in); err != nil {
 		t.Fatal("safe additional filter rejected", err)
+	}
+}
+
+func TestRouteChartTemplateDoesNotSilentlyDropMethodGrouping(t *testing.T) {
+	input := httpRouteTemplateInput(t)
+	input.Widget.Query.GroupBy = append(input.Widget.Query.GroupBy, exploration.Field{Kind: "attribute", Key: "http.request.method"})
+	if _, err := ExpandViewTemplate(input); err == nil {
+		t.Fatal("a joint table was silently reinterpreted as a route-only chart")
 	}
 }

@@ -46,6 +46,9 @@ Build and annotated-package entry points selecting its record editor. The separa
 Definitions workspace/navigation is removed. Existing definition APIs and stored
 revisions remain intact. Prepared HTTP remains available under application contracts;
 its evaluator retirement, extension isolation and other accepted cuts remain separate work.
+The [HTTP replacement map](../../HTTP_CONSOLIDATION.md) records the remaining
+policy/deduplication differences. Joint route/method inspection is now delivered
+in the existing service widget, with no extra read or independent evaluator.
 
 ## Decision
 

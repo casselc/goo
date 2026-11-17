@@ -33,6 +33,8 @@ func TestRecordListHTTPConfigurationRoundTripHasNoSourceRead(t *testing.T) {
 	var input workbench.ViewTemplateExpansionRequest
 	for _, widget := range plan.Widgets {
 		if widget.Key == "dimension" {
+			// Explicit route-only chart customization retains its original profile.
+			widget.Query.GroupBy = []exploration.Field{{Kind: "attribute", Key: "http.route"}}
 			input = workbench.ViewTemplateExpansionRequest{Template: "otel.http-server-routes", Version: 1, Widget: widget}
 		}
 	}

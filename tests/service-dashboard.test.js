@@ -45,3 +45,24 @@ test('dashboard planning uses supplied eligibility before bounded stream compact
  for(const profile of ['auto','all-spans','db-client','rpc-server','messaging-consumer'])assert.deepEqual(view.planningInput({...input,profile}).instruments.map(i=>i.kind),['gauge','stock','histogram']);
  assert.deepEqual(view.planningInput({...input,instruments:[mixed,missing,unsupported]}).instruments,[]);assert.deepEqual(input,before);
 });
+
+test('joint diagnosis narrows every displayed dimension without changing parent scope or missing/empty identities',()=>{
+ const fields=[{kind:'attribute',key:'http.route'},{kind:'attribute',key:'http.request.method'}];
+ const q={signal:'spans',environment:'prod',fromMs:1000,toMs:2000,limit:100,offset:100,groupBy:fields,where:{all:[{field:{kind:'column',key:'kind'},op:'eq',value:'Server'},{field:{kind:'column',key:'service'},op:'eq',value:"api'雪"}]},spanStatus:true,summary:'span-duration'};
+ const before=structuredClone(q);
+ for(const route of [null,'','/checkout','Missing key',"/a'雪"])for(const method of ['GET','POST','_OTHER']){
+  const child=view.diagnosisQuestion({question:q},route,method);
+  assert.deepEqual(child.where.all,[q.where,{field:fields[0],op:route===null?'missing':'eq',...(route===null?{}:{value:route})},{field:fields[1],op:'eq',value:method}]);
+  assert.equal(child.offset,0);assert.equal(child.fromMs,q.fromMs);assert.equal(child.toMs,q.toMs);assert.deepEqual(child.groupBy,fields);
+ }
+ assert.deepEqual(q,before);
+ for(const values of [[],['/checkout'],['/checkout','GET','extra'],[undefined,'GET'],['/checkout',200]])assert.throws(()=>view.diagnosisQuestion({question:q},...values));
+});
+
+test('joint HTTP diagnosis retains an explicit route-only customization with identical population selectors',()=>{
+ const widget={family:'http-server',key:'dimension',state:'supported',query:{signal:'spans',fromMs:1,toMs:100,where:{field:{kind:'column',key:'service'},op:'eq',value:'api'},groupBy:[{kind:'attribute',key:'http.route'},{kind:'attribute',key:'http.request.method'}]}};
+ const before=structuredClone(widget),template=view.customizationWidget(widget);
+ assert.deepEqual(template.query,{...widget.query,groupBy:[widget.query.groupBy[0]]});
+ template.query.where.value='elsewhere';assert.deepEqual(widget,before);
+ const ordinary={...widget,family:'rpc-server'};assert.equal(view.customizationWidget(ordinary),ordinary);
+});

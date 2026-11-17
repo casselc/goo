@@ -430,9 +430,10 @@ func PlanServiceDashboard(in DashboardRequest, declarations []DashboardDeclarati
 				w.Family = p.Profile
 			}
 			if httpActive {
-				w.Title = "HTTP server routes"
+				q.GroupBy = append(q.GroupBy, Field{Kind: "attribute", Key: "http.request.method"})
+				w.Title = "HTTP routes and methods"
 				w.Grain = "server-span-record"
-				w.Reason = "Missing and empty routes remain separate; only matching server span observations are counted"
+				w.Reason = "Joint route and method groups retain literal values and missing/empty routes; counts describe matching server span observations, not deduplicated requests or policy-classified outcomes"
 			}
 			if rpcActive {
 				w.Title = "RPC server methods"

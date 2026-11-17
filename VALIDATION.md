@@ -1,5 +1,39 @@
 # Validation record
 
+## Shared HTTP route/method inspection — first replacement slice
+
+- The existing HTTP route widget now groups by route and method, reusing its
+  typed question and read slot. Shared service diagnosis displays and narrows
+  every grouping dimension, with null/empty/literal values preserved. It retains
+  the ordinary table, duration comparison cells, source guards and held return.
+- Existing chart presets remain one-dimensional. The explicit **Customize
+  routes** action preserves their route-only query with the identical population
+  selectors/window, without relabeling the joint table as an authored chart.
+- Final checks: **2,116 UI tests passed, zero skipped**; `go test ./exploration
+  ./workbench ./cmd/goo` passed. Existing wire snapshots were regenerated and
+  reviewed for the intentional HTTP dimension change. Template tests now request
+  the explicit route-only shape and reject silent joint-to-chart narrowing.
+- Final actual browser journeys: existing HTTP response context **27.3s**;
+  route/method tuple drilldown, route-only customization and joint-group Bombadil
+  **1.1m**; original single-response Bombadil campaign **45.5s**. These use ordinary
+  OTLP, actual ClickHouse reads and an isolated native generic Go runtime. Checked
+  independent tuple counts and exact rows, source-free staging/held return, and
+  1440/390/320 px layouts with no page overflow.
+- Restored lost ephemeral Go cache directories/dependencies and restarted the
+  existing stopped ClickHouse container without deleting data. An initial browser
+  run hit `ERR_NETWORK_CHANGED` while the source network recovered; stable-source
+  reruns passed. The response campaign must run after its fixture-producing
+  journey. A subpixel scroll check now permits less than one pixel of rounding.
+- Historical HTTP template journeys/drivers were migrated to the explicit
+  route-only authoring action and expected query. Their JavaScript syntax was
+  checked; they were not all rerun. The current live journey verifies the actual
+  template expansion and zero telemetry reads for that action.
+- **Not complete:** the prepared HTTP panel/endpoint remain. Deduplicated identity,
+  declared failure ranges, missing-method/status handling and unknown-ratio
+  semantics still require preservation before retirement. No new evaluator,
+  endpoint, capture family or stored format was introduced. See the
+  [replacement map and screenshots](docs/HTTP_CONSOLIDATION.md).
+
 ## Reusable authoring moved into Saved
 
 - Removed the Definitions sidebar entry and workspace route. Saved now uses the
