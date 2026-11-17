@@ -54,6 +54,13 @@ This index separates using Goo, extending it, and the development record.
 - [Paired-filter design matrix](../verification/gotogether/design/paired-filters.md): checked alternatives for independent lane filters under one shared scope; implementation remains planned.
 - [Ideal contract workflow](GOTOGETHER_IDEAL_WORKFLOW.md): design exercise spanning authoring, refactoring and operation.
 
+## Understand the implementation
+
+Start with the [component walkthroughs](walkthroughs/README.md) for an afternoon
+reading path through each major component and its relationship to the whole.
+The [simplicity review](reviews/understandability/README.md) records proposed
+refactoring and the subsequent holistic Go, architecture and product assessment.
+
 ## Project status and development record
 
 [Ad-hoc live telemetry review](reviews/ADHOC_OTLP_REVIEW_2026_11_14.md) covers

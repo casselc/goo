@@ -1,5 +1,34 @@
 # Validation record
 
+## Component walkthroughs and whole-product simplicity review — 2026-11-17
+
+[Walkthrough index](docs/walkthroughs/README.md) and
+[review package](docs/reviews/understandability/README.md). Source baseline:
+`9119a967`; component work began 2026-11-16 and continued across midnight UTC.
+
+- Seven component walkthroughs cover runtime/source access, semantics,
+  discovery/native metrics, Activity, presentation, preservation and delivery.
+  Each names a read-first path, concrete flow, ownership boundaries, diagram and
+  focused checks. They orient one component in an afternoon; they do not claim
+  every implementation detail is already that easy to learn.
+- Component agents completed reviews before the independent Go specialist,
+  architect and product-manager pass. Each holistic report checked representative
+  current source in addition to the component findings. Proposed refactors are
+  explicitly distinguished from current implementation.
+- A subsequent independent adversarial critic challenged the product boundary
+  and audit process. Its cut list, counterarguments and explicit disagreements
+  are retained; the reconciled proposal puts a core/optional decision before
+  refactor-all and names one generic-journey dependency cut as next work.
+- Component reviewers ran targeted semantic/HTTP/source Go checks and focused
+  Activity/presentation/preservation UI checks; exact scopes and limits are in
+  their reports. No new full-suite, live-source, heap, load or latency campaign is
+  claimed for this documentation-only work. No product code changed.
+- All 291 local file-link targets across the 21 walkthrough/review documents
+  resolve; `git diff --check` passes. No source links or focused commands are
+  substituted for unexecuted integration/benchmark coverage.
+  This audit does not certify production performance, security or the afternoon
+  goal; the proposal gives concrete reading exercises and measured follow-ups.
+
 ## 462 Chronology state and parent-context consolidation — 2026-11-16
 
 [Contract](docs/CHRONOLOGY_CONSOLIDATION.md) and

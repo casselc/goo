@@ -1,5 +1,14 @@
 # Roadmap after measured operator consolidation
 
+> Latest user-requested work: [component walkthroughs](walkthroughs/README.md) and
+> [whole-product simplicity review](reviews/understandability/README.md), including
+> an adversarial essentials critique, are complete as documentation. The
+> [reconciled proposal](reviews/understandability/implementation-plan.md) recommends
+> a core/optional boundary decision and a bounded generic-journey dependency cut
+> before broad refactoring or further feature expansion. Those code changes are
+> not implemented. 463 remains the next feature proof; the earlier 464 sequence
+> below is now a coverage-driven candidate, not an automatic cadence commitment.
+
 The finite 427–429 cycle covers exact definition recall, paired evidence and
 measured scope/preservation controls. Executed results belong in
 [validation](../VALIDATION.md), not in this proposal's acceptance criteria.

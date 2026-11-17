@@ -4,6 +4,11 @@ Read the [README](README.md) for the product and [repository guidance](AGENTS.md
 for implementation conventions. The [documentation index](docs/README.md) links
 current behavior, architecture and the active roadmap.
 
+For a source-code orientation, start with the [component walkthroughs](docs/walkthroughs/README.md).
+They explain the main flows, owners and focused checks before the detailed design record.
+When changing an owner boundary or component entry point, update its walkthrough
+and diagram rather than creating another independent onboarding narrative.
+
 ## Build and test
 
 Use Go 1.27 or newer; [.go-version](.go-version) pins the validated compiler.
