@@ -14,6 +14,11 @@ specific code changes needed to make the source itself easier to read.
 Declared Operations is now a tab under Services, not another workspace route.
 `ResourceTabs` owns its visibility; the existing operation reader is cancelled
 on tab leave and Saved return selects the same tab. Its backend/store is retained.
+In `app.mjs`, `clearOperationViews` resets the shared display slots for both live
+and saved rendering. `clearOperationEvidence` additionally withdraws the live
+selection and its title, diagnostics and window label before another read. The
+request controller and generation guard still own cancellation and publication;
+the display reset never starts a read or modifies stored evidence.
 
 ## An afternoon reading path
 

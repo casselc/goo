@@ -100,6 +100,10 @@ test('Operations is a Services tab with the same read and saved-capture flow', a
     });
     await page.locator('#runOperations').click();
     await started;
+    // Pending reads must not retain the preceding result's metadata.
+    await expect(page.locator('#operationPackageTitle')).toBeEmpty();
+    await expect(page.locator('#operationExplain')).toBeEmpty();
+    await expect(page.locator('#operationMode')).toHaveText('No operation evidence loaded.');
     await page.getByRole('tab', {name:'Hosts', exact:true}).click();
     await expect(page.locator('#operationStatus')).toContainText('Read stopped');
     release();

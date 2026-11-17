@@ -59,13 +59,34 @@ function renderOperationData(data){
  el('operationStatus').textContent=data.conformance.warnings.join(' ');
  activeExplorer=Operations.overview(el,data);return activeExplorer;
 }
-function clearOperationEvidence(){activeRatio=null;activeComparison=null;for(const id of ['operationView','operationExplorer','fleetCoverageView','errorRatioView','counterRateView','histogramView']){el(id).replaceChildren();if(el(id).tagName==='DETAILS'){el(id).hidden=true;el(id).open=false;}}}
+// Both live reads and saved captures use the same display slots. Clearing them
+// grants no read authority and never changes a saved capture or its selection.
+function clearOperationViews(lookup = el) {
+ for (const id of ['operationView', 'operationExplorer', 'fleetCoverageView', 'errorRatioView', 'counterRateView', 'histogramView']) {
+  const node = lookup(id);
+  node.replaceChildren();
+  if (node.tagName === 'DETAILS') {
+   node.hidden = true;
+   node.open = false;
+  }
+ }
+}
+function clearOperationEvidence() {
+ activeOperation = null;
+ activeExplorer = null;
+ activeRatio = null;
+ activeComparison = null;
+ clearOperationViews();
+ el('operationPackageTitle').textContent = '';
+ el('operationExplain').textContent = '';
+ el('operationMode').textContent = 'No operation evidence loaded.';
+}
 function showSavedCapture(c){
  globalThis.dispatchEvent(new CustomEvent('goo:show-operation-capture'));
  appWorkspace.navigate('investigations',{writeHash:false});
  const saved=id=>el('saved-'+id),data=c.evidence.operations;
  const host=el('savedOperationEvidence');host.hidden=false;
- for(const id of ['operationView','operationExplorer','fleetCoverageView','errorRatioView','counterRateView','histogramView']){saved(id).replaceChildren();if(saved(id).tagName==='DETAILS'){saved(id).hidden=true;saved(id).open=false}}
+ clearOperationViews(saved);
  saved('operationPackageTitle').textContent=data.package.definition.title;
  const explorer=Operations.overview(saved,data,{prefix:'saved-'}),rates=c.evidence.rates,hist=c.evidence.histograms,views=new Set(data.package.definition.views);let ratio=null,comparison=null;
  if(rates){if(views.has('counter-rates'))Operations.renderRates(saved('counterRateView'),rates,explorer.choose);if(views.has('error-ratios'))ratio=Ratios.render(saved('errorRatioView'),rates,explorer.choose,{prefix:'saved-'});if(rates.fleet&&views.has('fleet-coverage'))comparison=Fleet.render(saved('fleetCoverageView'),rates.fleet,{prefix:'saved-'});}
@@ -79,9 +100,23 @@ function loadOperationCatalog(){if(operationCatalogStarted)return;operationCatal
 runtimeCapabilities.then(config=>config?.declaredOperations.state==='configured'?configurationJSON('/api/operation-packages'):null).then(packages=>{if(!packages)return;const select=el('operationPackage');select.replaceChildren();for(const p of packages){const option=textNode('option',p.definition.title);option.value=p.definition.name;select.append(option);const card=textNode('div');card.className='definition-card';card.append(textNode('h3',p.definition.title),textNode('p',p.definition.resource.service+' · '+p.definition.resource.environment),textNode('p',p.definition.views.join(' · ')));const details=textNode('details');details.append(textNode('summary','Definition and revision'),textNode('pre',JSON.stringify(p,null,2)));card.append(details);el('definitionCatalog').append(card)}if(activeOperation)select.value=activeOperation.package.definition.name}).catch(error=>{el('operationStatus').textContent=error.message});
 }
 
-el('operationPackage').onchange=()=>{stopOperationRead();el('operationMode').textContent='No operation evidence loaded.';activeOperation=null;activeExplorer=null;activeRatio=null;activeComparison=null;operationGeneration++;el('runOperations').disabled=false;el('operationView').replaceChildren();el('operationExplorer').replaceChildren();el('fleetCoverageView').replaceChildren();el('fleetCoverageView').hidden=true;el('fleetCoverageView').open=false;el('errorRatioView').replaceChildren();el('errorRatioView').hidden=true;el('errorRatioView').open=false;el('counterRateView').replaceChildren();el('counterRateView').hidden=true;el('counterRateView').open=false;el('histogramView').replaceChildren();el('histogramView').hidden=true;el('histogramView').open=false;el('operationExplain').textContent='';el('operationPackageTitle').textContent='';el('operationStatus').textContent='Package changed. Inspect operations to capture its evidence.'};
-el('runOperations').onclick=async()=>{
- if(!operationsVisible())return;stopOperationRead();const controller=operationController=new AbortController();activeOperation=null;activeExplorer=null;activeRatio=null;activeComparison=null;const generation=++operationGeneration;const current=()=>generation===operationGeneration&&!controller.signal.aborted&&operationsVisible();const button=el('runOperations');button.disabled=true;el('operationStatus').textContent='Reading operation evidence…';el('operationView').replaceChildren();el('operationExplorer').replaceChildren();el('fleetCoverageView').replaceChildren();el('fleetCoverageView').hidden=true;el('fleetCoverageView').open=false;el('errorRatioView').replaceChildren();el('errorRatioView').hidden=true;el('errorRatioView').open=false;el('counterRateView').replaceChildren();el('counterRateView').hidden=true;el('counterRateView').open=false;el('histogramView').replaceChildren();el('histogramView').hidden=true;el('histogramView').open=false;
+el('operationPackage').onchange = () => {
+ stopOperationRead();
+ operationGeneration++;
+ clearOperationEvidence();
+ el('runOperations').disabled = false;
+ el('operationStatus').textContent = 'Package changed. Inspect operations to capture its evidence.';
+};
+el('runOperations').onclick = async () => {
+ if (!operationsVisible()) return;
+ stopOperationRead();
+ const controller = operationController = new AbortController();
+ clearOperationEvidence();
+ const generation = ++operationGeneration;
+ const current = () => generation === operationGeneration && !controller.signal.aborted && operationsVisible();
+ const button = el('runOperations');
+ button.disabled = true;
+ el('operationStatus').textContent = 'Reading operation evidence…';
  try{const response=await Queries.getJSON('/api/operations?minutes='+encodeURIComponent(el('minutes').value)+(el('operationPackage').value?'&package='+encodeURIComponent(el('operationPackage').value):''),controller.signal);const data=response.data;if(!current())return;if(!response.ok)throw Error(data.error);
  const explorer=renderOperationData(data);if(!current())return;
  if(data.package.definition.views.includes('counter-rates')||data.package.definition.views.includes('error-ratios')||data.package.definition.views.includes('fleet-coverage')){

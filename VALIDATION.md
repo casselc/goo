@@ -1,5 +1,16 @@
 # Validation record
 
+## Operation display reset consolidation
+
+- Live read startup and package changes now clear the previous result title,
+  diagnostics and window label as well as charts. Saved/live chart-slot clearing
+  shares one helper; request cancellation and saved storage are unchanged.
+- UI regression suite: **2,112 passed, zero skipped**.
+- Real Services Operations journey: **passed (38.8s)**, including a held-response
+  assertion that pending reads contain no previous result metadata, save/return,
+  tab cancellation and the observed Bombadil campaign.
+- Embedded Go binary rebuilt successfully; no backend implementation changed.
+
 ## Existing Operations moved under Services — 2026-11-17
 
 [Current entry and screenshots](docs/LIVE_OPERATIONS.md#where-to-open-it).
