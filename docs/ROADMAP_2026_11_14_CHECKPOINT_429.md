@@ -6,8 +6,9 @@
 > [reconciled proposal](reviews/understandability/implementation-plan.md) recommends
 > a core/optional boundary decision and a bounded generic-journey dependency cut
 > before broad refactoring or further feature expansion. The generic/reservation
-> journey split is delivered; product-boundary and further owner changes remain
-> proposed. 463 remains the next feature proof; the earlier 464 sequence
+> journey split is delivered. [Product boundaries](reviews/understandability/implementation-plan.md#accepted-product-decisions)
+> are now confirmed by the user; their implementation and further owner changes
+> remain pending. 463 remains the next feature proof; the earlier 464 sequence
 > below is now a coverage-driven candidate, not an automatic cadence commitment.
 
 The finite 427–429 cycle covers exact definition recall, paired evidence and

@@ -53,8 +53,9 @@ proposal preserves those disagreements rather than implying unanimous approval
 of every cut. No code, data or requested capability was removed.
 
 The generic/reservation journey split has since been implemented and validated;
-the wider product-boundary and owner proposals remain open. See the reconciled
-proposal for that distinction.
+the user has since confirmed the [product boundaries](implementation-plan.md#accepted-product-decisions).
+Those choices are accepted; implementation and remaining owner refactors are
+pending. Historical review disagreements remain recorded below.
 
 ## What is already established
 
