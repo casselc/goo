@@ -1780,7 +1780,7 @@ td details {
 .fixed-question>.exploration-scope {margin-block:4px}
 .fixed-question .question-result-actions {margin-block:4px}
 .saved-workspace .section-heading {align-items:center}
-.saved-workspace>.saved-task-actions {border-bottom:1px solid var(--border);padding-bottom:8px}
+#savedEvidencePanel>.saved-task-actions {border-bottom:1px solid var(--border);padding-bottom:8px}
 @media(min-width:1440px){
  .record-detail-row .ui-inspector:not([hidden]) {position:fixed;inset:56px 16px 16px auto;width:min(440px,36vw);margin:0;z-index:25;display:flex;flex-direction:column;box-shadow:0 12px 48px #0009;background:var(--surface);border:1px solid var(--border);border-radius:8px}
  .record-detail-row .ui-inspector>.ui-inspector-body {min-height:0;overflow:auto;max-height:none;flex:1}

@@ -10,7 +10,10 @@
 > are now confirmed by the user; their implementation and further owner changes
 > remain pending. The larger [conformance/capture proposal](CONFORMANCE_INTEGRATION.md)
 > is set aside. The immediate delivered move places existing Operations under
-> Services and removes its separate workspace entry, without reader/storage changes. 463 remains the next feature proof; the earlier 464 sequence
+> Services and removes its separate workspace entry, without reader/storage changes.
+> [Reusable authoring](SAVED_AUTHORING.md) now lives under Saved; contextual Build
+> opens the same editor and the separate Definitions workspace is removed. Prepared
+> HTTP evaluator consolidation remains separate. 463 remains the next feature proof; the earlier 464 sequence
 > below is now a coverage-driven candidate, not an automatic cadence commitment.
 
 The finite 427–429 cycle covers exact definition recall, paired evidence and

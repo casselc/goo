@@ -20,6 +20,13 @@ selection and its title, diagnostics and window label before another read. The
 request controller and generation guard still own cancellation and publication;
 the display reset never starts a read or modifies stored evidence.
 
+Reusable authoring lives under Saved. `savedTabs` chooses evidence or definitions;
+`definitionTabs` chooses records, measurements or application contracts.
+`openDefinitions` is the single contextual entry for question drafts and annotated
+packages. The record editor's visibility handler retires pending work on either
+tab or workspace departure. Display tabs do not read telemetry; Preview and Run
+remain explicit actions. Evidence/document open events select the evidence tab.
+
 ## An afternoon reading path
 
 Read the named functions, not every imported feature implementation.

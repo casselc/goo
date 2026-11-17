@@ -1,3 +1,4 @@
+const {openDefinitions}=require('./support/definitions');
 const {openOperations}=require('./support/operations');
 const {test,expect}=require('@playwright/test');
 const {startBombadil}=require('./support/cross-app');
@@ -25,7 +26,7 @@ test('217 legacy owners stop every delayed source phase on leave and can explici
  await openOperations(page,base);await page.locator('#minutes').fill('5');
  for(const endpoint of ['/api/operations','/api/counter-rates','/api/histograms','/api/http-package']){
   const http=endpoint==='/api/http-package';
-  if(http)await page.locator('[data-workspace=definitions]').click();else await openOperations(page);if(http)await page.locator('#definitionsContracts').click();
+  if(http)await openDefinitions(page);else await openOperations(page);if(http)await page.locator('#definitionsContracts').click();
   const hold=await holdSource(page,endpoint);
   try{
    await page.locator(http?'#runHttpPackage':'#runOperations').click();await hold.started;

@@ -2,7 +2,7 @@
 import {initial,transition,withContext} from './guidance-content.mjs';
 import './guidance-view.mjs';
 import {nativeControlReady,revealFocus} from './dom-visibility.mjs';
-export function contextFor(route,measurements=false){return route==='explore'?(measurements?'measurements':'activity'):({__proto__:null,services:'services',operations:'operations',investigations:'saved',definitions:'definitions',examples:'examples'})[route]||'activity'}
+export function contextFor(route,measurements=false){return route==='explore'?(measurements?'measurements':'activity'):({__proto__:null,services:'services',operations:'operations',investigations:'saved',examples:'examples'})[route]||'activity'}
 export function mount({route=()=> 'explore'}={}){
  const trigger=document.getElementById('workspaceHelpToggle'),panel=document.getElementById('workspaceHelpPanel'),view=panel?.querySelector('goo-guidance'),work=document.getElementById('workspaceContent'),title=document.getElementById('workspaceTitle');
  if(!trigger||!panel||!view)return {dispose(){}};

@@ -1,3 +1,4 @@
+const {openDefinitions}=require('./support/definitions');
 const {test,expect}=require('@playwright/test');
 const {randomBytes}=require('node:crypto'),fs=require('node:fs/promises'),path=require('node:path');
 const {questionLink,readQuestionLink}=require('../ui/workspace.mjs');
@@ -96,7 +97,7 @@ test('174 numeric histogram rejects a late real plan after navigation and restor
  await page.route('**/api/numeric-histograms/selection',async route=>{const upstream=await route.fetch();expect(upstream.ok()).toBe(true);actualPlan=await upstream.json();arrived();await gate;try{await route.fulfill({response:upstream})}catch{/* navigation may already abort the transport */}});
  await section.getByRole('button',{name:'Inspect selected population',exact:true}).click();await held;
  // A real source-free planner response is held; it must lose ownership when this visit leaves.
- await page.goto(base+'/#definitions');await page.goto(base+'/#questions');await expect(section).toBeVisible();release();await page.unrouteAll({behavior:'wait'});await expect(section.locator('goo-time-bars button').first()).toBeVisible();expect(reads).toBe(before);await expect(page.locator('#exploreCount')).toContainText('120');
+ await openDefinitions(page,base);await page.goto(base+'/#questions');await expect(section).toBeVisible();release();await page.unrouteAll({behavior:'wait'});await expect(section.locator('goo-time-bars button').first()).toBeVisible();expect(reads).toBe(before);await expect(page.locator('#exploreCount')).toContainText('120');
  next=page.waitForResponse(r=>r.request().method()==='POST'&&r.url().endsWith('/api/explore'));await page.locator('#exploreRun').click();await next;expect(reads).toBe(before+1);
  const restored=section.locator('goo-time-bars button').last();await restored.focus();await restored.press('Space');await restored.press('Enter');await expect(section.locator('.numeric-distribution-selection')).toBeVisible();expect(reads).toBe(before+1);
  next=page.waitForResponse(r=>r.request().method()==='POST'&&r.url().endsWith('/api/explore'));await section.getByRole('button',{name:'Inspect selected population',exact:true}).click();await expect(page.locator('#exploration')).toHaveAttribute('data-question-phase','draft');expect(reads).toBe(before+1);await page.locator('#exploreRun').click();const child=await json(await next);expect(reads).toBe(before+2);expect(child.question.numericHistogram).toEqual(q.numericHistogram);expect(child.count).toBe('80');expect(errors).toEqual([]);

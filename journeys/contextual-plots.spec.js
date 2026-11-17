@@ -1,3 +1,4 @@
+const {openDefinitions}=require('./support/definitions');
 "use strict";
 
 const {
@@ -726,7 +727,7 @@ test('181 contextual plot dialogs lose ownership on dirty scope, navigation and 
   }
   await open();
   state.event('open');
-  await observeOwnership('navigation', async () => page.goto(base + '/#definitions'));
+  await observeOwnership('navigation', async () => openDefinitions(page,base));
   await page.goto(base + '/#explore');
   await expect(tail).toHaveAttribute('data-state', 'paused');
   await open();
@@ -763,7 +764,7 @@ test('181 Bombadil declares contextual numeric plots over ordinary telemetry', a
 test('181 synthetic contextual owner rejects hidden and detached stale confirmations', async ({page}) => {
   page.setDefaultNavigationTimeout(45000);
   const state = observe(page);
-  await page.goto(base + '/#definitions');
+  await openDefinitions(page,base);
   await expect(page.locator('#workspaceTitle')).toHaveText('Definitions');
   const evidence = await page.evaluate(async ()=>{const GooNumericPlot=await import('/numeric-plot.mjs');
     const host = document.createElement('section');

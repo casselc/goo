@@ -35,7 +35,7 @@ const uiConfiguration=configurationJSON('/api/ui-config').then(config=>{
  document.documentElement.dataset.profile=config.profile;document.documentElement.dataset.examples=config.examples.state;
  const examples=config.examples.state==='configured';el('sampleApplicationLink').hidden=!examples;document.querySelector('[data-workspace=examples]').hidden=!examples;
  for(const link of document.querySelectorAll('.operation-sample-links'))link.hidden=!examples;
- if(!examples){el('exampleQuestions').append(textNode('h2','Sample applications not configured'),textNode('p','Explore your telemetry or define reusable questions in Definitions.'));el('prebuilts').textContent='Example catalog is not configured.';}
+ if(!examples){el('exampleQuestions').append(textNode('h2','Sample applications not configured'),textNode('p','Explore your telemetry or build a reusable definition from Explore or open Saved.'));el('prebuilts').textContent='Example catalog is not configured.';}
  return config;
 }).catch(error=>{el('prebuilts').textContent='Example configuration unavailable · '+error.message;return null});
 el('runOperations').disabled=true;
@@ -131,7 +131,7 @@ el('runOperations').onclick = async () => {
  }catch(error){if(current())el('operationStatus').textContent=error.message}finally{if(operationController===controller)operationController=null;if(generation===operationGeneration)button.disabled=false}
 };
 el('runHttpPackage').onclick=async()=>{
- appWorkspace.navigate('definitions',{writeHash:false});definitionTabs.select('contracts');stopHTTPRead();const controller=httpController=new AbortController(),generation=++httpGeneration;const current=()=>generation===httpGeneration&&!controller.signal.aborted&&appWorkspace.current()==='definitions'&&definitionTabs.current()==='contracts';
+ if (!definitionsVisible() || definitionTabs.current() !== 'contracts') return;stopHTTPRead();const controller=httpController=new AbortController(),generation=++httpGeneration;const current=()=>generation===httpGeneration&&!controller.signal.aborted&&definitionsVisible()&&definitionTabs.current()==='contracts';
  const button=el('runHttpPackage');button.disabled=true;el('httpPackageStatus').textContent='Evaluating Go package…';el('httpPackageView').replaceChildren();
  try{const response=await Queries.getJSON('/api/http-package?minutes='+encodeURIComponent(el('minutes').value),controller.signal);const data=response.data;if(!current())return;if(!response.ok)throw Error(data.error);
  el('httpPackageStatus').textContent=data.warnings.join(' ');
@@ -158,14 +158,13 @@ function loadExampleCatalogs(){
 }
 function openWorkspaceCatalogs(route){
  if(route==='examples')loadExampleCatalogs();
- if(route==='definitions')loadDefinitionExamples();
- if(route==='definitions')loadOperationCatalog();
+
 }
 const appWorkspace=Workspace.mount();
 ContextualGuidance.mount({route:appWorkspace.current});
 openWorkspaceCatalogs(appWorkspace.current());
 // Source owners stop hidden/superseded work; saved publications are independent.
-globalThis.addEventListener('goo:workspace',event=>{if(event.detail.route!=='services')stopOperationRead();if(event.detail.route!=='definitions')stopHTTPRead();openWorkspaceCatalogs(event.detail.route)});
+globalThis.addEventListener('goo:workspace',event=>{if(event.detail.route!=='services')stopOperationRead();if(event.detail.route!=='investigations')stopHTTPRead();openWorkspaceCatalogs(event.detail.route)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){stopOperationRead();stopHTTPRead()}});
 globalThis.addEventListener('pagehide',()=>{stopOperationRead();stopHTTPRead()});
 for(const event of ['input','change'])el('minutes').addEventListener(event,()=>{stopOperationRead('Scope changed. Inspect operations to read again.');stopHTTPRead('Scope changed. Evaluate the package to read again.')});
@@ -224,12 +223,41 @@ const stageResourceQuestion=q=>{appWorkspace.navigate('explore');exploreMode(fal
 const hostBrowser=HostBrowser.mount(el('hostEntityPanel'),{active:()=>entityKind==='hosts'&&appWorkspace.current()==='services',onReturn:()=>{appWorkspace.navigate('services');entityTabs.select('hosts')},onRecordQuestion:stageResourceQuestion});
 const kubernetesBrowser=KubernetesBrowser.mount(el('kubernetesEntityPanel'),{active:()=>entityKind==='kubernetes'&&appWorkspace.current()==='services',onReturn:()=>{appWorkspace.navigate('services');entityTabs.select('kubernetes')},onRecordQuestion:stageResourceQuestion});
 const entityTabs=ResourceTabs.mount([{key:'services',button:el('entitiesServices'),panel:el('serviceEntityPanel'),leave:()=>liveInventory.suspend()},{key:'hosts',button:el('entitiesHosts'),panel:el('hostEntityPanel'),leave:()=>hostBrowser.cancel()},{key:'kubernetes',button:el('entitiesKubernetes'),panel:el('kubernetesEntityPanel'),leave:()=>kubernetesBrowser.cancel()},{key:'operations',button:el('entitiesOperations'),panel:el('operationEntityPanel'),leave:()=>stopOperationRead()}],{onSelect:key=>{entityKind=key;appWorkspace.setServiceFamily(key);if(key==='operations')loadOperationCatalog()}});
+function definitionsVisible() {
+ return appWorkspace.current() === 'investigations' && !el('savedDefinitionsPanel').hidden;
+}
+function notifyDefinitionVisibility() {
+ globalThis.dispatchEvent(new CustomEvent('goo:definition-visibility'));
+}
+const savedTabs = ResourceTabs.mount([
+ {key:'evidence', button:el('savedEvidenceTab'), panel:el('savedEvidencePanel')},
+ {key:'definitions', button:el('savedDefinitionsTab'), panel:el('savedDefinitionsPanel'), leave:()=>stopHTTPRead()},
+], {initial:'evidence', onSelect:family=>{
+ appWorkspace.setSavedFamily(family);
+ if (family === 'definitions') { loadDefinitionExamples(); loadOperationCatalog(); }
+ notifyDefinitionVisibility();
+}});
+function openDefinitions(family) {
+ appWorkspace.navigate('investigations');
+ savedTabs.select('definitions');
+ if (family) definitionTabs.select(family);
+}
+// Opening evidence always reveals its owner, even after editing definitions.
+for (const event of ['goo:show-general-capture', 'goo:show-retained-evidence', 'goo:show-operation-capture', 'goo:show-document']) {
+ globalThis.addEventListener(event, () => savedTabs.select('evidence'));
+}
+for (const event of ['hashchange', 'popstate']) {
+ globalThis.addEventListener(event, () => {
+  if (/^#(?:investigation|capture|document|annotation|evidence|kept)=/.test(location.hash)) savedTabs.select('evidence');
+ });
+}
 const definitionTabs=ResourceTabs.mount([
  {key:'records',button:el('definitionsRecords'),panel:el('definitionRecordsPanel')},
  {key:'measurements',button:el('definitionsMeasurements'),panel:el('definitionMeasurementsPanel')},
  {key:'contracts',button:el('definitionsContracts'),panel:el('definitionContractsPanel'),leave:()=>stopHTTPRead()},
-],{initial:'records',onSelect:family=>appWorkspace.setDefinitionFamily(family)});
-for(const event of ['goo:draft-telemetry-package','goo:preview-telemetry-package'])globalThis.addEventListener(event,()=>{appWorkspace.navigate('definitions');definitionTabs.select('records')});
+],{initial:'records',onSelect:family=>{appWorkspace.setDefinitionFamily(family);notifyDefinitionVisibility()}});
+for(const event of ['goo:draft-telemetry-package','goo:preview-telemetry-package'])globalThis.addEventListener(event,()=>{openDefinitions('records')});
+globalThis.addEventListener('goo:open-annotated-package',()=>openDefinitions('records'));
 TelemetryPackages.mount(el('telemetryPackages'));
 globalThis.addEventListener('goo:navigate-explore',()=>appWorkspace.navigate('explore'));
 const retainedContextReturn=ResourceReturn.mount(document.querySelector('[data-workspace-panel="explore"]'),{className:'retained-context-return'});let retainedContextLease=null;

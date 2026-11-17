@@ -34,6 +34,7 @@ This index separates using Goo, extending it, and the development record.
 | Find and stage a saved investigation | [Exact saved-view recall](EXACT_SAVED_VIEW_RECALL.md) |
 | Preserve evidence for both sides of a comparison | [Paired comparison capture](PAIRED_COMPARISON_CAPTURE.md) |
 | Understand scope and capture controls | [Measured scope/preservation controls](MEASURED_SCOPE_PRESERVATION.md) |
+| Find, import or edit reusable definitions | [Saved authoring](SAVED_AUTHORING.md) |
 | Create reusable views | [Authorable view templates](AUTHORABLE_VIEW_TEMPLATES.md) |
 | Query reported or missing attributes with CEL | [Attribute conditions](CEL_ATTRIBUTE_CONDITIONS.md) |
 | Author a record predicate with CEL | [CEL predicate pilot](CEL_PREDICATE_PILOT.md) |

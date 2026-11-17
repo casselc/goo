@@ -24,3 +24,19 @@ test('native bypass has an early anchor and focusable main target without requir
 });
 
 test('Services operations lookback is a local tab context without another workspace route',()=>{const f=fixture('#services'),minutes=document.getElementById('minutes'),events=f.events.length;f.owner.setServiceFamily('operations');assert.equal(minutes.getAttribute('aria-label'),'New operation read lookback minutes');assert.equal(f.owner.current(),'services');assert.equal(f.events.length,events);f.owner.setServiceFamily('services');assert.equal(minutes.getAttribute('aria-label'),'New discovery lookback minutes')});
+
+test('Saved hides the read default except while viewing application contracts',()=>{
+ const f=fixture('#investigations'),minutes=document.getElementById('minutes'),scope=minutes.closest('.scope-control');
+ assert.equal(scope.hidden,true);
+ f.owner.setSavedFamily('definitions');
+ assert.equal(scope.hidden,true);
+ f.owner.setDefinitionFamily('contracts');
+ assert.equal(scope.hidden,false);
+ assert.equal(minutes.getAttribute('aria-label'),'HTTP preview lookback minutes');
+ f.owner.setSavedFamily('evidence');
+ assert.equal(scope.hidden,true);
+ f.owner.setSavedFamily('definitions');
+ assert.equal(scope.hidden,false);
+ f.owner.setDefinitionFamily('records');
+ assert.equal(scope.hidden,true);
+});

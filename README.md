@@ -31,6 +31,10 @@ for a deployment target. See [capabilities and limits](docs/CAPABILITY_GUIDE.md)
 [Walk through an investigation](docs/journeys/investigation-reuse.md), including
 saving, reopening and returning to the original activity.
 
+The main navigation is **Explore → Services → Saved**. Reusable record and
+measurement definitions live in **Saved → Definitions**. Build a reusable question
+from Explore, or import YAML there; saving a definition does not capture telemetry.
+
 ## Try the demo
 
 With Docker and Compose v2 installed, run from this repository:

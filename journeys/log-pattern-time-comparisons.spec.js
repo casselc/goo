@@ -1,3 +1,4 @@
+const {openDefinitions}=require('./support/definitions');
 'use strict';
 
 const {test, expect} = require('@playwright/test');
@@ -551,7 +552,7 @@ test('183 real baseline delivery failure remains unavailable and held responses 
   });
   await page.locator('.population-run:visible').click(); await lateReady;
   state.event('held-run');
-  await page.goto(base + '/#definitions');
+  await openDefinitions(page,base);
   heldRelease(); await page.unrouteAll({behavior: 'wait'});
   await page.goto(base + '/#explore');
   expect(state.sourceOperations).toBe(5); expect(state.protocols).toBe(0);
@@ -563,7 +564,7 @@ test('183 real baseline delivery failure remains unavailable and held responses 
   const row = section(page).locator('tr[data-pattern="' + pattern(bodies.currentOnly(0)) + '"]');
   await row.getByText('Inspect a side', {exact: true}).click();
   await row.getByRole('link', {name: 'Open current pattern logs', exact: true}).evaluate(element => {window.__oldPatternTimeSide = element});
-  await page.goto(base + '/#definitions');
+  await openDefinitions(page,base);
   const before = await page.evaluate(() => ({url: location.href, stages: window.__patternTimeStages.length, connected: window.__oldPatternTimeSide.isConnected}));
   await page.evaluate(() => window.__oldPatternTimeSide.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window})));
   const after = await page.evaluate(() => ({url: location.href, stages: window.__patternTimeStages.length}));

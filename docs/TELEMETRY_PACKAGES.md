@@ -8,10 +8,10 @@ AST, validation and ClickHouse adapter as Explore.
 ## Author through investigation
 
 1. In **Explore**, select an environment, filter any retained fields and optionally
-   choose a breakdown. Run the question, then **Create package**. The action is
+   choose a breakdown. Run the question, then open **Edit question → Reusable question package → Save reusable question**. The action is
    disabled while results are unavailable or superseded: it uses the captured
    question, not unexecuted form inputs or the current row page as a denominator.
-2. In **Definitions → Telemetry packages**, name the package, choose a default
+2. In **Saved → Definitions → Records**, name the package, choose a default
    lookback and **Build package**. The original absolute window remains preview
    context. Its timestamps, row offset, row limit and data basis are not saved
    in the reusable definition.
@@ -98,7 +98,7 @@ stronger source-checked contract for the existing weave path.
 | `GET /api/telemetry-packages` | List bounded local saved definitions/revisions. |
 | `GET /api/telemetry-packages/{revision}` | Verify and load a content-addressed definition. |
 
-The Python proxy forwards to matching Go paths without `/api`. Definitions live
+The Go server serves these endpoints directly. Definitions live
 under `<investigations-dir>/telemetry-packages`, retained by the existing named
 volume. Publication uses synchronized temporary files and atomic non-overwriting
 links; loads validate both schema and digest. The revision hashes the normalized

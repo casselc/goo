@@ -1,3 +1,4 @@
+const {openDefinitions}=require('./support/definitions');
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs/promises');
 const path = require('node:path');
@@ -255,7 +256,7 @@ test('184 stale or closed controls cannot mutate retained trace owners', async (
   expect(await snapshot(page)).toEqual(initial); expect(state.source).toBe(sourceBefore); state.event('closed-controls');
   await plot.locator('details[data-section=groups] > summary').click();
   await plot.locator('details[data-section=diagnostics] > summary').click();
-  await page.goto(base + '/#definitions');
+  await openDefinitions(page,base);
   const beforeURL = page.url();
   await page.evaluate(() => { old184.group.click(); old184.row.click(); old184.waterfall.click(); });
   const afterURL = page.url();

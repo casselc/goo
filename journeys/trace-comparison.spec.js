@@ -1,3 +1,4 @@
+const {openDefinitions}=require('./support/definitions');
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs/promises');
 const path = require('node:path');
@@ -182,7 +183,7 @@ test('185 pending and hidden owners reject retained pin, compare and pair action
   }, rootIndex);
   expect(await page.locator('.trace-pair-attributes tbody tr').count()).toBe(0);
   expect(state.source).toBe(6); observations.closedPair = await ownerObservation(page); state.event('closed-pair', observations.closedPair);
-  await page.goto(base + '/#definitions');
+  await openDefinitions(page,base);
   const beforeURL = page.url();
   await page.evaluate(() => { retained185.pin.click(); retained185.compare.click(); retained185.clear.click(); retained185.pair.click(); });
   const afterURL = page.url(); expect(afterURL).toBe(beforeURL); expect(state.source).toBe(6); observations.hidden = await ownerObservation(page); state.event('hidden-actions', observations.hidden);

@@ -1,3 +1,4 @@
+const {openDefinitions}=require('./support/definitions');
 const {openOperations}=require('./support/operations');
 const {test,expect}=require('@playwright/test');
 const {startBombadil}=require('./support/cross-app');
@@ -15,11 +16,11 @@ test('219 Activity defers workspace catalogs, first open loads once, explicit re
  expect(observed.count('/api/measurement-packages')).toBe(1);
  await expect(page.locator('#exampleQuestionCards')).toHaveCount(0);await expect(page.locator('#measurementCards')).toHaveCount(0);
  const sourceBefore=observed.source();
- await page.locator('[data-workspace=definitions]').click();
+ await openDefinitions(page);
  await expect(page.locator('#definitionCatalog .definition-card')).not.toHaveCount(0);
  await expect(page.locator('#prebuilts details')).not.toHaveCount(0);
  for(const path of ['/api/prebuilts','/api/operation-packages'])expect(observed.count(path),path).toBe(1);
- await page.locator('[data-workspace=services]').click();await page.locator('[data-workspace=definitions]').click();
+ await page.locator('[data-workspace=services]').click();await openDefinitions(page);
  for(const path of ['/api/prebuilts','/api/operation-packages'])expect(observed.count(path),path).toBe(1);
  await page.locator('#definitionsContracts').click();await page.locator('[data-workspace=examples]').click();
  await expect(page.locator('#exampleQuestionCards .definition-card')).not.toHaveCount(0);
@@ -34,13 +35,13 @@ test('219 Activity defers workspace catalogs, first open loads once, explicit re
  const preview=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/telemetry-packages/plan');
  await page.locator('#guidedPackageSteps [data-workflow-package=checkout-spans]').click();expect((await preview).status()).toBe(200);await expect(page.locator('#definitionsRecords')).toHaveAttribute('aria-selected','true');await expect(page.locator('#definitionRecordsPanel')).toBeVisible();
  expect(observed.source()).toBe(sourceBefore);
- await page.locator('[data-workspace=definitions]').click();const before=observed.count('/api/measurement-packages');
+ await openDefinitions(page);const before=observed.count('/api/measurement-packages');
  await page.locator('#definitionsMeasurements').click();const refresh=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/measurement-packages');await page.locator('#measurementDefinitionRefresh').click();expect((await refresh).status()).toBe(200);
  expect(observed.count('/api/measurement-packages')).toBe(before+1);expect(observed.source()).toBe(sourceBefore);expect(observed.errors).toEqual([]);
 });
 
 for(const route of ['examples','definitions','operations'])test('219 direct '+route+' entry activates only its required deferred catalogs',async({page})=>{
- const observed=observe(page);if(route==='operations')await openOperations(page,base);else await page.goto(base+'/#'+route);
+ const observed=observe(page);if(route==='operations')await openOperations(page,base);else if(route==='definitions')await openDefinitions(page,base);else await page.goto(base+'/#'+route);
  if(route==='examples'){
   await expect(page.locator('#exampleQuestionCards .definition-card')).not.toHaveCount(0);await expect(page.locator('#measurementCards .definition-card')).not.toHaveCount(0);
   expect(observed.count('/api/example-questions')).toBe(1);expect(observed.count('/api/operation-packages')).toBe(0);expect(observed.count('/api/prebuilts')).toBe(0);

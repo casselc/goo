@@ -1,5 +1,31 @@
 # Validation record
 
+## Reusable authoring moved into Saved
+
+- Removed the Definitions sidebar entry and workspace route. Saved now uses the
+  existing native tab adapter for Investigations and Definitions, retaining the
+  record/measurement/contract families and their current APIs and stores.
+- Contextual question Build and annotated-package opening select the record
+  editor under Saved. Captures/documents and annotation links reveal evidence.
+  Leaving an authoring tab retires pending previews and old callbacks; drafts and
+  library selections remain local. Prepared HTTP still has its existing evaluator;
+  its removal is a separate, unfinished consolidation.
+- Final UI suite: **2,114 passed, zero skipped**. Includes new Saved lookback and
+  pending-preview tab-departure regression cases.
+- Final actual browser journeys: **Saved authoring passed (39.9s)** and
+  **Services Operations passed (46.1s)** on the rebuilt Go binary. Authoring uses
+  real import/plan/save/reopen APIs, YAML download, source-free Stage and contextual
+  Build from an executed question. Both journeys include observed bounded shared
+  Bombadil campaigns. Screenshot layouts at 1440, 390 and 320 px have no horizontal
+  overflow. The first authoring attempt exposed a journey error (editing controls
+  must be revealed after applying a question); the corrected final run passed.
+- Syntax checks passed for changed JavaScript and new journey/helper files.
+  Historical lab-specific journeys were migrated to the Saved entry helper but
+  were not all rerun. Additional definition/discovery/legacy ownership Bombadil
+  drivers were updated; only the shared workspace campaign was run this round.
+- [Workflow and screenshots](docs/SAVED_AUTHORING.md). No user data was deleted;
+  existing saved revisions, capture storage and endpoint formats remain intact.
+
 ## Operation display reset consolidation
 
 - Live read startup and package changes now clear the previous result title,

@@ -41,7 +41,11 @@ The delivered first visible move places the existing Operations interface under 
 and removes the parallel workspace/navigation entry. Existing readers, renderer
 and operation capture store stay intact. Subsequent backend consolidation must
 show a concrete reduction in independent parts before adding a replacement.
-Prepared HTTP, extension isolation and other accepted cuts remain separate work.
+Reusable authoring is also delivered under **Saved → Definitions**, with contextual
+Build and annotated-package entry points selecting its record editor. The separate
+Definitions workspace/navigation is removed. Existing definition APIs and stored
+revisions remain intact. Prepared HTTP remains available under application contracts;
+its evaluator retirement, extension isolation and other accepted cuts remain separate work.
 
 ## Decision
 

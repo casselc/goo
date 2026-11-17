@@ -1,5 +1,8 @@
 # User journeys and storyboards
 
+[Saved authoring](../SAVED_AUTHORING.md) covers import, immutable save/reopen and
+contextual Build in Saved, with desktop and narrow-screen captures.
+
 [CEL predicate authoring](cel-authoring.md) is a CLI/library storyboard: compile a
 versioned extension into the existing query model, preserve the parent scope and
 compare CEL/Goo/ClickHouse behavior. Interactive text editing remains planned.

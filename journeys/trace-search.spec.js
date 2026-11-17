@@ -1,3 +1,4 @@
+const {openDefinitions}=require('./support/definitions');
 const { test, expect } = require('@playwright/test');
 const { questionLink } = require('../ui/workspace.mjs');
 const { base, json, query, assertResult, seed, observe, output } = require('./186-trace-search-support');
@@ -195,7 +196,7 @@ test('186 closed, hidden and superseded trace searches cannot publish stale evid
   await page.evaluate(() => { retainedSearch186.run.click(); retainedSearch186.open.click(); retainedSearch186.add.click(); });
   expect(state.source).toBe(3); expect(await page.locator('.trace-search:visible').count()).toBe(0); state.event('closed', { observed: await ownerDOM(page) });
   await openSearch(page); await addErrorCondition(page);
-  await page.goto(base + '/#definitions'); const hiddenURL = page.url();
+  await openDefinitions(page,base); const hiddenURL = page.url();
   await page.evaluate(() => { retainedSearch186.run.click(); retainedSearch186.open.click(); retainedSearch186.add.click(); });
   expect(page.url()).toBe(hiddenURL); expect(state.source).toBe(3); state.event('hidden', { observed: await ownerDOM(page) });
   await page.goto(base + '/#explore'); await openSearch(page); await addErrorCondition(page);

@@ -5,6 +5,7 @@ export { noUncaughtExceptions, noUnhandledPromiseRejections } from '@antithesish
 
 const shell = extract(({ document, window }) => ({
   nativeSelected:document.querySelector('#exploreMeasurementsMode')?.getAttribute('aria-selected')==='true',
+  contractsActive: !document.querySelector<HTMLElement>('#savedDefinitionsPanel')?.hidden && document.querySelector('#definitionsContracts')?.getAttribute('aria-selected')==='true',
   savedLookbackHidden: document.querySelector('#minutes')?.closest<HTMLElement>('.scope-control')?.hidden === true,
   liveOwned: document.querySelector('#operations')?.closest('[data-workspace-panel]')?.getAttribute('data-workspace-panel') === 'services',
   savedHasEditor: !!document.querySelector('[data-workspace-panel=investigations] #operationPackage'),
@@ -23,7 +24,7 @@ export const sharedMenuState = always(() => !shell.current.ready || (shell.curre
 
 export const nativeHasOwnWindow=always(()=>!shell.current.ready||shell.current.selected[0]!=='explore'||!shell.current.nativeSelected||shell.current.savedLookbackHidden);
 
-export const savedHasNoLiveLookback = always(() => !shell.current.ready || shell.current.selected[0] !== 'investigations' || shell.current.savedLookbackHidden);
+export const savedHasNoLiveLookback = always(() => !shell.current.ready || shell.current.selected[0] !== 'investigations' || shell.current.contractsActive || shell.current.savedLookbackHidden);
 
 export const liveAndSavedOwnership = always(() => !shell.current.ready || (shell.current.liveOwned && !shell.current.savedHasEditor));
 
@@ -37,10 +38,15 @@ export const oneWorkspaceMatchesNavigation = always(() => !shell.current.ready |
 ));
 
 const navigate = registerCustomAction('goo.navigate', async (document, _window, route: string) => {
-  const button = document.querySelector<HTMLButtonElement>(`[data-workspace="${route}"]`);
+  const target = route.startsWith('saved:') ? 'investigations' : route;
+  const button = document.querySelector<HTMLButtonElement>(`[data-workspace="${target}"]`);
   if (!button) throw new Error(`Missing workspace: ${route}`);
   if (!button.getClientRects().length) document.querySelector<HTMLButtonElement>('.entry-menu')?.click();
   button.click();
+  if (route.startsWith('saved:')) {
+    document.querySelector<HTMLButtonElement>('#savedDefinitionsTab')?.click();
+    document.querySelector<HTMLButtonElement>('#definitions' + route.slice(6))?.click();
+  }
   const visited = new Set((document.documentElement.dataset.catalogVisited || '').split(','));
   visited.add(route);document.documentElement.dataset.catalogVisited = [...visited].join(',');
 });
@@ -48,7 +54,6 @@ const navigate = registerCustomAction('goo.navigate', async (document, _window, 
 export const workspaceNavigation = actions(() => {
   const state = shell.current;
   if (!state.ready) return ['Wait'];
-  if (!state.visited.includes('definitions')) return [navigate('definitions')];
   if (state.examples && !state.visited.includes('examples')) return [navigate('examples')];
-  return ['explore', 'services', 'investigations', 'definitions', ...(state.examples ? ['examples'] : [])].map(route => navigate(route));
+  return ['explore', 'services', 'investigations', 'saved:Records', 'saved:Measurements', 'saved:Contracts', ...(state.examples ? ['examples'] : [])].map(route => navigate(route));
 });

@@ -1,3 +1,4 @@
+const {openDefinitions}=require('./support/definitions');
 'use strict';
 
 const {test, expect} = require('@playwright/test');
@@ -408,7 +409,7 @@ test('182 stale pattern links cannot stage hidden or changed fixed scopes', asyn
     observations.push({action, before, after, reads: state.reads});
     state.event(action);
   }
-  await obsolete('hidden-owner', async () => page.goto(base + '/#definitions'));
+  await obsolete('hidden-owner', async () => openDefinitions(page,base));
   expect(observations[0].before.connected).toBe(true);
   await page.goto(base + '/#explore');
   await obsolete('dirty-owner', async () => {await page.getByRole('button',{name:'Edit question',exact:true}).click();await page.locator('#exploreEnvironment').fill(f.environment + '-draft')});
